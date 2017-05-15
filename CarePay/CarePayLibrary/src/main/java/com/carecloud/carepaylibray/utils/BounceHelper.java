@@ -39,6 +39,9 @@ public class BounceHelper extends ItemTouchHelper.Callback {
     }
 
 
+    /**
+     * Reset last swiped view offset
+     */
     public void clearLastSwipeView(){
         Log.d(TAG, "Clear Last Swiped: " + (lastSwipeView !=null));
         if(lastSwipeView !=null){

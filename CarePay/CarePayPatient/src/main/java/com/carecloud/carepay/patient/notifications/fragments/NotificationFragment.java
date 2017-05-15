@@ -123,7 +123,7 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                swipeHelper.clearLastSwipeView();
+                deleteNotificationRunnable.run();
             }
 
             @Override

@@ -23,11 +23,8 @@ public class SwipeHelper extends ItemTouchHelper.Callback {
 
     private static String TAG = SwipeHelper.class.getName();
 
-    private View lastSwipeView = null;
 
     private SwipeHelperListener listener;
-
-    private boolean swipeCompleted = false;
 
     /**
      * Constructor
@@ -35,14 +32,6 @@ public class SwipeHelper extends ItemTouchHelper.Callback {
      */
     public SwipeHelper(SwipeHelperListener listener){
         this.listener = listener;
-    }
-
-
-    public void clearLastSwipeView(){
-        Log.d(TAG, "Clear Last Swiped: " + (lastSwipeView !=null));
-        if(lastSwipeView !=null){
-            lastSwipeView.setVisibility(View.VISIBLE);
-        }
     }
 
 
@@ -58,11 +47,6 @@ public class SwipeHelper extends ItemTouchHelper.Callback {
 
             SwipeViewHolder swipeViewHolder = (SwipeViewHolder) viewHolder;
             View swipeView = swipeViewHolder.getSwipeableView();
-
-            if(lastSwipeView == null || !lastSwipeView.equals(swipeView)){
-                Log.d(TAG, "Set new last View");
-                lastSwipeView = swipeView;
-            }
 
             getDefaultUIUtil().onSelected(swipeView);
         }
@@ -102,7 +86,6 @@ public class SwipeHelper extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        swipeCompleted = true;
         Log.d(TAG, "View Swiped");
         SwipeViewHolder swipeViewHolder = (SwipeViewHolder) viewHolder;
         swipeViewHolder.displayUndoOption();
