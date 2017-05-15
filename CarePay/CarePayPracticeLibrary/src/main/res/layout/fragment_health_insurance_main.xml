@@ -2,19 +2,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="0dp"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:orientation="vertical"
-    android:padding="0dp">
+    android:orientation="vertical">
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/insurancePhotoAlert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimen_5dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/bg_round_border_lighting_yellow"
+        android:padding="@dimen/dimen_10dp"
+        android:textColor="@color/lightning_yellow"
+        android:visibility="gone"
+        app:customAssetFont="proxima_nova_regular"
+        tools:text="Your %s plan health insurance is still missing their card photos. How about taking them now?" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/available_health_insurance_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_70dp" />
+        android:layout_marginEnd="@dimen/dimen_40dp"
+        android:layout_marginTop="@dimen/dimen_60dp" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/health_insurance_add_another"
@@ -22,6 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:layout_marginBottom="@dimen/dimen_10dp"
+        android:layout_marginEnd="40dp"
         android:layout_marginTop="@dimen/dimen_25dp"
         android:background="@drawable/round_border_button_bg"
         android:paddingBottom="@dimen/dimen_10dp"

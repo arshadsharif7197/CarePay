@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
@@ -52,14 +53,31 @@ public class InsuranceLineItemsListAdapter extends
         final DemographicInsurancePayloadDTO lineItem = insuranceList.get(position);
         String plan = lineItem.getInsurancePlan();
         String provider = lineItem.getInsuranceProvider();
-        holder.name.setText(provider+" "+(plan!=null?plan:""));
+        holder.name.setText(provider + " " + (plan != null ? plan : ""));
         holder.type.setText(lineItem.getInsuranceType());
+        if (lineItem.getInsurancePhotos().size() == 0) {
+            holder.alertLayout.setVisibility(View.VISIBLE);
+            holder.edit.setText(Label.getLabel("demographics_insurance_add_photos_button"));
+            listener.showAlert(lineItem);
+        } else {
+            holder.alertLayout.setVisibility(View.INVISIBLE);
+            holder.edit.setText(Label.getLabel("practice_checin_edit_clickable_label"));
+        }
+
+
+        holder.edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onEditInsuranceClicked(lineItem);
+            }
+        });
+
     }
 
-    private void loadFilteredList(DemographicDTO demographicDTO){
+    private void loadFilteredList(DemographicDTO demographicDTO) {
         insuranceList.clear();
-        for(DemographicInsurancePayloadDTO insurance : demographicDTO.getPayload().getDemographics().getPayload().getInsurances()){
-            if(!insurance.isDelete()){
+        for (DemographicInsurancePayloadDTO insurance : demographicDTO.getPayload().getDemographics().getPayload().getInsurances()) {
+            if (!insurance.isDeleted()) {
                 insuranceList.add(insurance);
             }
         }
@@ -74,7 +92,9 @@ public class InsuranceLineItemsListAdapter extends
     }
 
     public interface OnInsuranceEditClickListener {
-        void onEditInsuranceClicked(int position);
+        void onEditInsuranceClicked(DemographicInsurancePayloadDTO position);
+
+        void showAlert(DemographicInsurancePayloadDTO demographicInsurancePayloadDTO);
     }
 
     class InsuranceDetailsListViewHolder extends RecyclerView.ViewHolder {
@@ -82,6 +102,7 @@ public class InsuranceLineItemsListAdapter extends
         CarePayTextView name;
         CarePayTextView type;
         CarePayTextView edit;
+        View alertLayout;
 
         InsuranceDetailsListViewHolder(View itemView) {
             super(itemView);
@@ -89,13 +110,7 @@ public class InsuranceLineItemsListAdapter extends
             name = (CarePayTextView) itemView.findViewById(R.id.health_insurance_name);
             type = (CarePayTextView) itemView.findViewById(R.id.health_insurance_type);
             edit = (CarePayTextView) itemView.findViewById(R.id.health_insurance_edit);
-
-            edit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onEditInsuranceClicked(getAdapterPosition());
-                }
-            });
+            alertLayout = itemView.findViewById(R.id.alertLayout);
         }
     }
 }
