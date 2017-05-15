@@ -71,7 +71,7 @@ public class PaymentPartialModeDialog extends BaseAmountInfoDialog {
         nextPaymentValueLabel = (CarePayTextView) childActionView.findViewById(R.id.nextPaymentValueLabel);
         totalPaymentTitleLabel = (CarePayTextView) childActionView.findViewById(R.id.totalPaymentTitleLabel);
         totalPaymentValueLabel = (CarePayTextView) childActionView.findViewById(R.id.totalPaymentValueLabel);
-        dialogHeaderlayout = (LinearLayout) this.rootView.findViewById(R.id.dialogHeaderlayout);
+        dialogHeaderlayout = (LinearLayout) this.rootView.findViewById(R.id.dialogHeaderLayout);
         payNowButton = (Button) childActionView.findViewById(R.id.payNowButton);
         onSettingStyle();
         onSetListener();

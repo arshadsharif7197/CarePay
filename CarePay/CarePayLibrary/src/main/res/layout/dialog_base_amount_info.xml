@@ -37,7 +37,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/dialogHeaderlayout"
+                android:id="@+id/dialogHeaderLayout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/apt_dl_header_ht"
                 android:layout_gravity="center"

@@ -104,8 +104,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             hideProgressDialog();
             nextButton.setEnabled(true);
             Log.d("makePaymentCallback", "=========================>\nworkflowDTO=" + workflowDTO.toString());
-            Gson gson = new Gson();
-            callback.showPaymentConfirmation(gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
+            callback.showPaymentConfirmation(workflowDTO);
             if(getDialog()!=null){
                 dismiss();
             }

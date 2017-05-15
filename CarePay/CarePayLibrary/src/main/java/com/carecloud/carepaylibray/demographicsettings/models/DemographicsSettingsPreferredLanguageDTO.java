@@ -16,7 +16,7 @@ public class DemographicsSettingsPreferredLanguageDTO {
     private String label;
     @SerializedName("options")
     @Expose
-    private String options;
+    private Object options;
 
     public String getType() {
         return type;
@@ -34,11 +34,11 @@ public class DemographicsSettingsPreferredLanguageDTO {
         this.label = label;
     }
 
-    public String getOptions() {
+    public Object getOptions() {
         return options;
     }
 
-    public void setOptions(String options) {
+    public void setOptions(Object options) {
         this.options = options;
     }
 

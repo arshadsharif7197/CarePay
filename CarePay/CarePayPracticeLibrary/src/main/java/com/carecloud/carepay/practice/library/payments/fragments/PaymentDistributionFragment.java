@@ -219,7 +219,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
                     generatePaymentsModel();
                     if(!hasPaymentError) {
-                        callback.onPayButtonClicked(paymentAmount, paymentsModel);
+                        callback.onPayButtonClicked(paymentAmount + chargesAmount, paymentsModel);
                         hideDialog();
                         if(resetAutoApplyOnError){
                             shouldAutoApply = true;
@@ -299,8 +299,20 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     }
 
     private void scrollAdapterToItem(BalanceItemDTO balanceItemDTO){
-        final int position = balanceItems.indexOf(balanceItemDTO);
-        int locationY = (int) balanceDetailsRecycler.getChildAt(position).getY();
+        int position;
+        int locationY;
+        position= balanceItems.indexOf(balanceItemDTO);
+        if(position > 0){
+            locationY = (int) balanceDetailsRecycler.getChildAt(position).getY();
+        }else{
+            //check the charges adapter
+            position = chargeItems.indexOf(balanceItemDTO);
+            if(position < 0){
+                //not found
+                return;
+            }
+            locationY = (int) newChargesRecycler.getChildAt(position).getY();
+        }
         Log.d("RecyclerView", "Scroll to Position: "+position+" at: "+locationY);
         scrollView.smoothScrollTo(0, locationY+10);
 
@@ -407,8 +419,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     }
 
     private void modifyLineItem(BalanceItemDTO updateBalanceItem, ProviderDTO updateProvider, LocationDTO updateLocation, Double updateAmount){
-        for(BalanceItemDTO balanceItem : balanceItems){
-            if(balanceItem.equals(updateBalanceItem)){
+        BalanceItemDTO balanceItem = updateBalanceItem;
+//        for(BalanceItemDTO balanceItem : balanceItems){
+//            if(balanceItem.equals(updateBalanceItem)){
                 if(updateAmount!=null){
                     double difference;
                     double currentAmount = balanceItem.getBalance();
@@ -439,9 +452,10 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
                 }
                 setAdapter();
                 return;
-            }
-        }
+//            }
+//        }
     }
+
 
     private void updatePaymentAmount(){
         if(paymentAmount >= balanceAmount){
@@ -622,24 +636,19 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         boolean isValid = true;
         BalanceItemDTO firstInvalidItem = null;
         for(BalanceItemDTO balanceItem : balanceItems){
-            if(balanceItem.getBalance() > 0) {
-                if (balanceItem.getLocation() == null || balanceItem.getLocation().getId() == null) {
-                    isValid = false;
-                    if(firstInvalidItem == null){
-                        firstInvalidItem = balanceItem;
-                    }
-                    if (balanceItem.getLocation() != null) {
-                        balanceItem.getLocation().setError(true);
-                    }
+            if(!isValidItem(balanceItem)){
+                isValid = false;
+                if(firstInvalidItem == null){
+                    firstInvalidItem = balanceItem;
                 }
-                if (balanceItem.getProvider() == null || balanceItem.getProvider().getId() == null) {
-                    isValid = false;
-                    if(firstInvalidItem == null){
-                        firstInvalidItem = balanceItem;
-                    }
-                    if (balanceItem.getProvider() != null) {
-                        balanceItem.getProvider().setError(true);
-                    }
+            }
+        }
+
+        for(BalanceItemDTO chargeItem : chargeItems){
+            if(!isValidItem(chargeItem)){
+                isValid = false;
+                if(firstInvalidItem == null){
+                    firstInvalidItem = chargeItem;
                 }
             }
         }
@@ -650,6 +659,25 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
         if(firstInvalidItem!=null){
             scrollAdapterToItem(firstInvalidItem);
+        }
+        return isValid;
+    }
+
+    private boolean isValidItem(BalanceItemDTO balanceItem){
+        boolean isValid = true;
+        if(balanceItem.getBalance() > 0) {
+            if (balanceItem.getLocation() == null || balanceItem.getLocation().getId() == null) {
+                isValid = false;
+                if (balanceItem.getLocation() != null) {
+                    balanceItem.getLocation().setError(true);
+                }
+            }
+            if (balanceItem.getProvider() == null || balanceItem.getProvider().getId() == null) {
+                isValid = false;
+                if (balanceItem.getProvider() != null) {
+                    balanceItem.getProvider().setError(true);
+                }
+            }
         }
         return isValid;
     }

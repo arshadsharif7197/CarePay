@@ -49,11 +49,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
-                <include
-                    android:id="@+id/apt_checked_in_view"
-                    layout="@layout/apt_checked_in_list_item"
-                    android:visibility="gone" />
-
             </LinearLayout>
 
             <include layout="@layout/no_appointment_layout"

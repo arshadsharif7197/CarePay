@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepay.patient.demographics.activities.NewDemographicsActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
+import com.carecloud.carepay.patient.demographics.activities.NewDemographicsActivity;
 import com.carecloud.carepay.patient.demographics.activities.ReviewDemographicsActivity;
 import com.carecloud.carepay.patient.notifications.activities.NotificationActivity;
 import com.carecloud.carepay.patient.payment.activities.PaymentActivity;

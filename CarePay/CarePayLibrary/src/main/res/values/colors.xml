@@ -66,6 +66,7 @@
     <color name="pastel_blue">#b0bec5</color>
     <color name="yellowGreen_blend">#337ed321</color>
     <color name="dark_blue">#263238</color>
+    <color name="dark_blue_translucent_90">#E5263238</color>
     <color name="dark_blue_transparent">#24263238</color>
     <color name="white_transparent">#26ffffff</color>
     <color name="manatee">#9ba4a9</color>

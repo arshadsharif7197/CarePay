@@ -302,8 +302,7 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            Gson gson = new Gson();
-            callback.showPaymentConfirmation(gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
+            callback.showPaymentConfirmation(workflowDTO);
             if (getDialog() != null) {
                 dismiss();
             }

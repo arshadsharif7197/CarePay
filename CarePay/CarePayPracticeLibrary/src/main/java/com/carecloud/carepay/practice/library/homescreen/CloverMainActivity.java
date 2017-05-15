@@ -39,6 +39,7 @@ import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
@@ -103,19 +104,10 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private void populateWithLabels() {
         HomeScreenLabelDTO labels = homeScreenDTO.getMetadata().getLabels();
         if (labels != null) {
-            ((TextView) findViewById(R.id.queueTitleTextView)).setText(labels.getCheckinginNotifications());
-            ((TextView) findViewById(R.id.alaertTitleTextView)).setText(labels.getAlerts());
-            ((TextView) findViewById(R.id.homeCheckinLabel)).setText(labels.getCheckinButton());
-            ((TextView) findViewById(R.id.homePaymentsLabel)).setText(labels.getPaymentsButton());
-            ((TextView) findViewById(R.id.homeAppointmentsLabel)).setText(labels.getAppointmentsButton());
-            ((TextView) findViewById(R.id.homeCheckoutLabel)).setText(labels.getCheckoutButton());
-            ((TextView) findViewById(R.id.homeShopLabel)).setText(labels.getShopButton());
-            ((TextView) findViewById(R.id.office_news_header)).setText(labels.getOfficenewsButton());
-
             // load mode switch options
             modeSwitchOptions.clear();
-            modeSwitchOptions.add(labels.getPatientModeLabel());
-            modeSwitchOptions.add(labels.getLogoutLabel());
+            modeSwitchOptions.add(Label.getLabel("patient_mode_button"));
+            modeSwitchOptions.add(Label.getLabel("logout_button"));
         }
     }
 

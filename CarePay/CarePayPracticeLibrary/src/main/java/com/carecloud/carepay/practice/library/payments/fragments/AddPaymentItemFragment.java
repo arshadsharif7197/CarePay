@@ -125,6 +125,7 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
         addTemplateItem(Label.getLabel("practice_payments_detail_dialog_insurance_copay"), 0, ResponsibilityType.co_pay);
         addTemplateItem(Label.getLabel("practice_payments_detail_dialog_co_insurance"), 0, ResponsibilityType.co_insurance);
         addTemplateItem(Label.getLabel("practice_payments_detail_dialog_insurance_deductible"), 0, ResponsibilityType.deductable);
+        addTemplateItem(Label.getLabel("practice_payments_detail_dialog_pre_payment"), 0, ResponsibilityType.prepayment);
 }
 
     private void addTemplateItem(String description, double amount, ResponsibilityType responsibilityType){

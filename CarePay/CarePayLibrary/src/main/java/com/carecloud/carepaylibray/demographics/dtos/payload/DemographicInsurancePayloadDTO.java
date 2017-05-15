@@ -17,20 +17,29 @@ public class DemographicInsurancePayloadDTO extends PatientModel {
     @Expose
     private List<DemographicInsurancePhotoDTO> insurancePhotos = new ArrayList<>();
 
-    @SerializedName("insurance_provider") @Expose
+    @SerializedName("insurance_provider")
+    @Expose
     private  String insuranceProvider;
 
-    @SerializedName("insurance_plan") @Expose
+    @SerializedName("insurance_plan")
+    @Expose
     private String insurancePlan;
 
-    @SerializedName("insurance_member_id") @Expose
+    @SerializedName("insurance_member_id")
+    @Expose
     private String insuranceMemberId;
 
-    @SerializedName("insurance_group_id") @Expose
+    @SerializedName("insurance_group_id")
+    @Expose
     private String insuranceGroupId;
 
-    @SerializedName("insurance_type") @Expose
+    @SerializedName("insurance_type")
+    @Expose
     private String insuranceType;
+
+    @SerializedName("delete")
+    @Expose
+    private boolean delete = false;
 
     /**
      * @return The insuranceProvider
@@ -96,5 +105,13 @@ public class DemographicInsurancePayloadDTO extends PatientModel {
 
     public void setInsuranceGroupId(String insuranceGroupId) {
         this.insuranceGroupId = insuranceGroupId;
+    }
+
+    public boolean isDelete() {
+        return delete;
+    }
+
+    public void setDelete(boolean delete) {
+        this.delete = delete;
     }
 }

@@ -293,7 +293,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
         initializeScanArea();
 
-        if(getDialog()!=null) {
+        if(getDialog()!=null || (hadInsurance && !isPatientMode)) {
             saveInsuranceButton = (Button) findViewById(R.id.save_insurance_changes);
         }else{
             saveInsuranceButton = (Button) findViewById(R.id.checkinDemographicsNextButton);
@@ -309,7 +309,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
             selectedTypeTextView.setText(Label.getLabel("demographics_choose"));
 
-            if (hasInsurance() && getDialog()!=null) {
+            if (hasInsurance() && (getDialog()!=null || !isPatientMode)) {
                 disappearViewById(R.id.remove_insurance_entry);
                 ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(
                         Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
@@ -354,7 +354,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         @Override
         public void onClick(View saveChanges) {
             if (editedIndex != NEW_INSURANCE) {
-                demographicDTO.getPayload().getDemographics().getPayload().getInsurances().remove(editedIndex);
+                demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex).setDelete(true);
             }
             closeDialog();
         }

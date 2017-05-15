@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -31,6 +32,8 @@ import com.google.gson.Gson;
 import com.google.gson.internal.Primitives;
 
 public abstract class BaseActivity extends AppCompatActivity implements ISession {
+
+    private static final int FULLSCREEN_VALUE = 0x10000000;
 
     private Dialog progressDialog;
     private CustomPopupNotification errorNotification;
@@ -274,5 +277,30 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         }
 
     }
+
+    /**
+     * Show/Hide system ui like status bar or navigation bar.
+     */
+    public void setSystemUiVisibility() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+    }
+
+    /**
+     * Updates layout so in clover and devices with navigation bar is on screen don't hide content
+     */
+    public void setNavigationBarVisibility() {
+        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+
+            View decorView = getWindow().getDecorView();
+            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE
+                    | FULLSCREEN_VALUE;
+            decorView.setSystemUiVisibility(uiOptions);
+        }
+    }
+
 
 }

@@ -1,16 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:orientation="vertical">
 
-    <include layout="@layout/toolbar_search"/>
+    <ImageView
+        android:id="@+id/closeViewLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/apt_imgview_ht"
+        android:layout_gravity="start"
+        android:layout_marginBottom="@dimen/apt_dl_margin_bottom"
+        android:gravity="start"
+        android:src="@drawable/icn_patient_mode_nav_close"
+        android:textColor="@color/white" />
+
+    <include layout="@layout/toolbar_search" />
+
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/search_recycler"
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_dialog_min_height"
-        android:id="@+id/search_recycler"
-        android:padding="@dimen/padding_xlarge"/>
+        android:padding="@dimen/padding_xlarge" />
 
 </LinearLayout>

@@ -13,7 +13,7 @@
         android:paddingBottom="@dimen/dimen_16dp"
         android:gravity="start"
         android:textAllCaps="true"
-        android:textSize="@dimen/text_size_16sp"
+        android:textSize="@dimen/text_size_18sp"
         android:textColor="@color/textview_default_textcolor"
         app:customAssetFont="proxima_nova_semi_bold"/>
 

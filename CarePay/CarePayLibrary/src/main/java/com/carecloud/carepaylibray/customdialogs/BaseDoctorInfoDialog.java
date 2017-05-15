@@ -89,10 +89,10 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
         CarePayTextView shortNameTextView = ((CarePayTextView) findViewById(R.id.appointShortnameTextView));
         shortNameTextView.setText(StringUtil.getShortName(payload.getProvider().getName()));
 
-        CarePayTextView nameTextView = ((CarePayTextView) findViewById(R.id.appointNameTextView));
+        CarePayTextView nameTextView = ((CarePayTextView) findViewById(R.id.providerName));
         nameTextView.setText(payload.getProvider().getName());
 
-        CarePayTextView typeTextView = ((CarePayTextView) findViewById(R.id.appointTypeTextView));
+        CarePayTextView typeTextView = ((CarePayTextView) findViewById(R.id.providerSpecialty));
         typeTextView.setText(payload.getProvider().getSpecialty().getName());
 
         // Appointment Place name
@@ -107,7 +107,7 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
             addressTextView.setText(placeAddress);
         }
 
-        findViewById(R.id.dialogAppointHeaderTextView).setOnClickListener(this);
+        findViewById(R.id.dialogAppointDismiss).setOnClickListener(this);
         findViewById(R.id.appointLocationImageView).setOnClickListener(this);
         findViewById(R.id.appointDailImageView).setOnClickListener(this);
         addActionLayout = findViewById(R.id.actionAddLayout);
@@ -130,7 +130,7 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
     @Override
     public void onClick(View view) {
         int viewId = view.getId();
-        if (viewId == R.id.dialogAppointHeaderTextView) {
+        if (viewId == R.id.dialogAppointDismiss) {
             cancel();
         } else if (viewId == R.id.appointLocationImageView) {
             onMapView(placeName, placeAddress);

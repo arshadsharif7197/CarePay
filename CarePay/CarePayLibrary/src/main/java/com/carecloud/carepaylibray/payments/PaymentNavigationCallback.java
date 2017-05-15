@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.payments;
 
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
@@ -41,9 +42,9 @@ public interface PaymentNavigationCallback {
 
     /**
      * Callback to display receipt
-     * @param paymentsModel receipt model
+     * @param workflowDTO receipt model
      */
-    void showPaymentConfirmation(PaymentsModel paymentsModel);
+    void showPaymentConfirmation(WorkflowDTO workflowDTO);
 
     /**
      * Callback to add new card

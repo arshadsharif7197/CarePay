@@ -31,6 +31,10 @@ public class ApplicationPreferences {
 
     private static final String PREFERENCE_IS_PATIENT_MODE_APPOINTMENTS = "is_patient_mode_appointments";
 
+    private static final String PREFERENCE_PATIENT_PHOTO_URL = "patient_photo_url";
+
+    private static final String PREFERENCE_IS_TUTORIAL_SHOWN = "is_tutorial_shown";
+
     private Context context;
 
     private String patientId;
@@ -41,6 +45,8 @@ public class ApplicationPreferences {
     private String userLanguage;
     private String practiceLanguage;
     private Boolean navigateToAppointments;
+    private Boolean isTutorialShown;
+    private String photoUrl;
 
     public ApplicationPreferences(Context context) {
         this.context = context;
@@ -80,7 +86,6 @@ public class ApplicationPreferences {
 
     /**
      * @return user preferred language. Returns null if not set.
-     *
      */
     public String getUserLanguageRaw() {
         if (null != userLanguage) {
@@ -107,7 +112,6 @@ public class ApplicationPreferences {
     }
 
     /**
-     *
      * @param newValue patientId
      */
     public void setPatientId(String newValue) {
@@ -127,7 +131,6 @@ public class ApplicationPreferences {
     }
 
     /**
-     *
      * @param newValue practiceId
      */
     public void setPracticeId(String newValue) {
@@ -136,7 +139,6 @@ public class ApplicationPreferences {
     }
 
     /**
-     *
      * @return practiceId
      */
     public String getPracticeId() {
@@ -148,7 +150,6 @@ public class ApplicationPreferences {
     }
 
     /**
-     *
      * @param newValue practiceManagement
      */
     public void setPracticeManagement(String newValue) {
@@ -157,7 +158,6 @@ public class ApplicationPreferences {
     }
 
     /**
-     *
      * @return practiceManagement
      */
     public String getPracticeManagement() {
@@ -169,7 +169,6 @@ public class ApplicationPreferences {
     }
 
     /**
-     *
      * @param newValue the userId
      */
     public void setUserId(String newValue) {
@@ -178,7 +177,6 @@ public class ApplicationPreferences {
     }
 
     /**
-     *
      * @return userId
      */
     public String getUserId() {
@@ -190,7 +188,25 @@ public class ApplicationPreferences {
     }
 
     /**
-     *
+     * @param photoUrl the user photoUrl
+     */
+    public void setUserPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+        writeStringToSharedPref(PREFERENCE_PATIENT_PHOTO_URL, photoUrl);
+    }
+
+    /**
+     * @return photoUrl
+     */
+    public String getUserPhotoUrl() {
+        if (photoUrl != null) {
+            return photoUrl;
+        }
+
+        return readStringFromSharedPref(PREFERENCE_PATIENT_PHOTO_URL);
+    }
+
+    /**
      * @param newValue the prefix
      */
     public void setPrefix(String newValue) {
@@ -199,7 +215,6 @@ public class ApplicationPreferences {
     }
 
     /**
-     *
      * @return prefix
      */
     public String getPrefix() {
@@ -210,6 +225,12 @@ public class ApplicationPreferences {
         return readStringFromSharedPref(PREFERENCE_PREFIX);
     }
 
+    private void writeBooleanToSharedPref(String key, Boolean value) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putBoolean(key, value);
+        editor.apply();
+    }
+
     private void writeStringToSharedPref(String key, String value) {
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putString(key, value);
@@ -218,25 +239,27 @@ public class ApplicationPreferences {
 
     /**
      * Save object to Shared Preferences. Object will be stored as a JSON String
-     * @param key preference key
+     *
+     * @param key    preference key
      * @param object object to save
      */
-    public void writeObjectToSharedPreference(String key, Object object){
+    public void writeObjectToSharedPreference(String key, Object object) {
         writeStringToSharedPref(key, new Gson().toJson(object));
     }
 
     /**
      * Retrieve a previously saved JSON object from Shared Prefferences
-     * @param key preference key
+     *
+     * @param key         preference key
      * @param objectClass S Type Object class for deserializing
-     * @param <S> Type
+     * @param <S>         Type
      * @return S Type object
      */
-    public <S> S getObjectFromSharedPreferences(String key, Class<S> objectClass){
+    public <S> S getObjectFromSharedPreferences(String key, Class<S> objectClass) {
         Gson gson = new Gson();
-        try{
+        try {
             return gson.fromJson(readStringFromSharedPref(key), objectClass);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
@@ -265,5 +288,24 @@ public class ApplicationPreferences {
         return context;
     }
 
+    /**
+     *
+     * @param tutorialShown a boolean indicating if the tutorial has been shown
+     */
+    public void setTutorialShown(Boolean tutorialShown) {
+        isTutorialShown = tutorialShown;
+        writeBooleanToSharedPref(PREFERENCE_IS_TUTORIAL_SHOWN, tutorialShown);
+    }
 
+    /**
+     *
+     * @return a boolean indicating if the tutorial has been shown
+     */
+    public boolean isTutorialShown() {
+        if (isTutorialShown != null) {
+            return isTutorialShown;
+        }
+
+        return readBooleanFromSharedPref(PREFERENCE_IS_TUTORIAL_SHOWN);
+    }
 }

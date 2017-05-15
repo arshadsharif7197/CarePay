@@ -60,7 +60,7 @@ public class PendingAppointmentRequestDialog extends BaseDoctorInfoDialog {
     @SuppressWarnings("deprecation")
     private void onColorHeaderForPending() {
         View view = getRootView();
-        view.findViewById(R.id.dialogHeaderlayout).setBackgroundResource(R.color.lightning_yellow);
+        view.findViewById(R.id.dialogHeaderLayout).setBackgroundResource(R.color.lightning_yellow);
         ((TextView) view.findViewById(R.id.appointDateTextView))
                 .setTextColor(context.getResources().getColor(R.color.white));
         ((TextView) view.findViewById(R.id.appointTimeTextView))

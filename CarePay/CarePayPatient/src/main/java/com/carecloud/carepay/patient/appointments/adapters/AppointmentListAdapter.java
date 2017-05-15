@@ -11,9 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
+import com.carecloud.carepaylibray.appointments.AppointmentDisplayUtil;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
@@ -30,15 +30,17 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by lmenendez on 5/2/17.
+ * Created by lmenendez on 5/2/17
  */
 
 public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentListAdapter.ViewHolder> {
-    public static final int VIEW_TYPE_HEADER = 1;
-    public static final int VIEW_TYPE_APPOINTMENT = 2;
+    private static final int VIEW_TYPE_HEADER = 1;
+    private static final int VIEW_TYPE_APPOINTMENT = 2;
 
     public interface SelectAppointmentCallback{
         void onItemTapped(AppointmentDTO appointmentDTO);
+
+        void onCheckoutTapped(AppointmentDTO appointmentDTO);
     }
 
     private Context context;
@@ -73,7 +75,7 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = null;
+        View view;
         if(viewType == VIEW_TYPE_HEADER){
             view = inflater.inflate(R.layout.appointment_list_header, parent, false);
         }else{
@@ -108,12 +110,11 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
         switch (style){
             case CHECKED_IN:{
                 holder.checkOutButton.setVisibility(View.VISIBLE);
-                //todo set checkout button listener
                 holder.checkOutButton.setClickable(false);
                 holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.emerald));
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
                 holder.initials.setBackgroundResource(R.drawable.round_list_tv_green);
-                holder.cellAvatar.setImageResource(R.drawable.round_list_tv_green);
+                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_checked_in);
                 break;
             }
             case PENDING:{
@@ -123,12 +124,13 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
                 holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.emerald));
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.emerald));
                 holder.initials.setBackgroundResource(R.drawable.round_list_tv_green_border);
-                holder.cellAvatar.setImageResource(R.drawable.round_list_tv_green_border);
+                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_upcoming);
                 break;
             }
             case REQUESTED:{
                 holder.todayTimeLayout.setVisibility(View.VISIBLE);
                 holder.todayTimeTextView.setText(dateUtil.getTime12Hour());
+                holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));
                 holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
                 holder.initials.setBackgroundResource(R.drawable.round_list_tv_orange);
@@ -170,7 +172,7 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
                 holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.grayRound));
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.emerald));
                 holder.initials.setBackgroundResource(R.drawable.round_list_tv_green_border);
-                holder.cellAvatar.setImageResource(R.drawable.round_list_tv_green_border);
+                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_upcoming);
                 break;
             }
             case REQUESTED_UPCOMING:{
@@ -197,13 +199,23 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
                 holder.cellAvatar.setVisibility(View.VISIBLE);
                 break;
             }
+            case CHECKED_OUT:{
+                holder.checkedOutLabel.setVisibility(View.VISIBLE);
+                holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
+                holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
+                holder.initials.setBackgroundResource(R.drawable.round_tv);
+                holder.initials.setVisibility(View.VISIBLE);
+                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_checked_out);
+                break;
+            }
             default:{
                 cleanupViews(holder);
             }
         }
 
+        int size = context.getResources().getDimensionPixelSize(R.dimen.payment_details_dialog_icon_size);
         Picasso.with(context).load(appointmentsPayload.getProvider().getPhoto())
-                .resize(58, 58)
+                .resize(size, size)
                 .centerCrop()
                 .transform(new CircleImageTransform())
                 .into(holder.profileImage, new Callback() {
@@ -229,6 +241,13 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
                 if(callback != null){
                     callback.onItemTapped(sortedAppointments.get(position));
                 }
+            }
+        });
+
+        holder.checkOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.onCheckoutTapped(sortedAppointments.get(position));
             }
         });
 
@@ -290,7 +309,7 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
 
         for(AppointmentDTO appointmentDTO : appointmentItems){
             if(appointmentDTO.getPayload().getDisplayStyle()==null){//required here to handle the case where user has only 1 appt and it was not run through comparator
-                appointmentDTO.getPayload().setDisplayStyle(determineDisplayStyle(appointmentDTO));
+                appointmentDTO.getPayload().setDisplayStyle(AppointmentDisplayUtil.determineDisplayStyle(appointmentDTO));
             }
 
             //check if we need to add a checked in header
@@ -327,55 +346,21 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
     private AppointmentDisplayStyle getDisplayStyle(AppointmentDTO appointmentDTO){
         AppointmentDisplayStyle displayStyle = appointmentDTO.getPayload().getDisplayStyle();
         if(displayStyle == null){
-            displayStyle = determineDisplayStyle(appointmentDTO);
+            displayStyle = AppointmentDisplayUtil.determineDisplayStyle(appointmentDTO);
             appointmentDTO.getPayload().setDisplayStyle(displayStyle);
         }
         return displayStyle;
     }
 
-    private AppointmentDisplayStyle determineDisplayStyle(AppointmentDTO appointmentDTO){
-        AppointmentsPayloadDTO appointmentsPayload =  appointmentDTO.getPayload();
-        switch (appointmentsPayload.getAppointmentStatus().getCode()){
-            case CarePayConstants.CHECKED_IN:
-            case CarePayConstants.IN_PROGRESS_IN_ROOM:
-            case CarePayConstants.IN_PROGRESS_OUT_ROOM:
-                return AppointmentDisplayStyle.CHECKED_IN;
-            case CarePayConstants.CHECKED_OUT:
-            case CarePayConstants.BILLED:
-            case CarePayConstants.MANUALLY_BILLED:
-                return AppointmentDisplayStyle.CHECKED_OUT;
-            case CarePayConstants.REQUESTED:
-                if(appointmentsPayload.isAppointmentToday()) {
-                    return AppointmentDisplayStyle.REQUESTED;
-                }else{
-                    return AppointmentDisplayStyle.REQUESTED_UPCOMING;
-                }
-            case CarePayConstants.CANCELLED:
-                if(appointmentsPayload.isAppointmentToday()) {
-                    return AppointmentDisplayStyle.CANCELED;
-                }else{
-                    return AppointmentDisplayStyle.CANCELED_UPCOMING;
-                }
-            case CarePayConstants.PENDING:
-            case CarePayConstants.CHECKING_IN:
-            default: {
-                if(appointmentsPayload.isAppointmentToday()) {
-                    if(appointmentsPayload.isAppointmentOver()){
-                        return AppointmentDisplayStyle.MISSED;
-                    }
-                    return AppointmentDisplayStyle.PENDING;
-                }
-                return AppointmentDisplayStyle.PENDING_UPCOMING;
-            }
-        }
-    }
 
     private void cleanupViews(ViewHolder holder){
         holder.checkOutButton.setVisibility(View.GONE);
+        holder.checkedOutLabel.setVisibility(View.GONE);
         holder.todayTimeLayout.setVisibility(View.GONE);
         holder.upcomingDateLayout.setVisibility(View.GONE);
         holder.todayTimeMessage.setVisibility(View.GONE);
         holder.cellAvatar.setVisibility(View.GONE);
+        holder.initials.setVisibility(View.VISIBLE);
         holder.itemView.setOnClickListener(null);//need to remove this for header just in case
     }
 
@@ -398,6 +383,7 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
         TextView upcomingTimeTextView;
 
         Button checkOutButton;
+        TextView checkedOutLabel;
 
         View listItemDivider;
 
@@ -429,6 +415,7 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
 
             //Check-Out
             checkOutButton = (Button) itemView.findViewById(R.id.check_out_button);
+            checkedOutLabel = (TextView) itemView.findViewById(R.id.checked_out_label);
 
             listItemDivider = itemView.findViewById(R.id.appointment_list_item_divider);
 

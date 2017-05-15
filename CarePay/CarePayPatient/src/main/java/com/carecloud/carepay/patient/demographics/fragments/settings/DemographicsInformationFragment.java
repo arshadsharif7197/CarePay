@@ -69,14 +69,14 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.smartystreets.api.us_zipcode.City;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 
 
 /**
@@ -241,11 +241,9 @@ public class DemographicsInformationFragment extends BaseFragment {
 
         TextView peronalInfoSectionTextview = (TextView) view.findViewById(R.id.reviewdemogrPersonalInfoLabel);
         TextView demographicSectionTextView = (TextView) view.findViewById(R.id.demographicsSectionLabel);
-        TextView addressSectionTextView = (TextView) view.findViewById(R.id.demographicsAddressSectionLabel);
 
         peronalInfoSectionTextview.setText(personalInfoString);
         demographicSectionTextView.setText(demographicsHeaderString);
-        addressSectionTextView.setText(addressHeaderString);
 
         String dateOfBirthString = !StringUtil.isNullOrEmpty(dobValString) ? DateUtil.getInstance().setDateRaw(dobValString).toStringWithFormatMmSlashDdSlashYyyy() : "";
         if (SystemUtil.isNotEmptyString(dateOfBirthString)) {
@@ -308,7 +306,6 @@ public class DemographicsInformationFragment extends BaseFragment {
 
         demographicSectionTextView.setTextSize(14);
         peronalInfoSectionTextview.setTextSize(14);
-        addressSectionTextView.setTextSize(14);
 
         updateProfileButton = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
         setTypefaces();

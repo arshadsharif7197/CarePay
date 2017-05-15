@@ -8,21 +8,27 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
+import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentDateRangeFragment;
+import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDialog;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepay.patient.appointments.fragments.AvailableHoursFragment;
 import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragment;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.appointment.DataDTO;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
@@ -37,8 +43,10 @@ import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.customdialogs.QrCodeViewDialog;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -49,7 +57,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AppointmentsActivity extends MenuPatientActivity implements AppointmentNavigationCallback {
+public class AppointmentsActivity extends MenuPatientActivity implements PatientAppointmentNavigationCallback {
 
     private AppointmentsResultModel appointmentsResultModel;
     private ResourcesPracticeDTO selectedResourcesPracticeDTO;
@@ -102,6 +110,13 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         setTransitionLogout(appointmentsResultModel.getMetadata().getTransitions().getLogout());
         setTransitionProfile(appointmentsResultModel.getMetadata().getLinks().getProfileUpdate());
         setTransitionAppointments(appointmentsResultModel.getMetadata().getLinks().getAppointments());
+        setTransitionNotifications(appointmentsResultModel.getMetadata().getLinks().getNotifications());
+
+        String userImageUrl = appointmentsResultModel.getPayload().getDemographicDTO().getPayload()
+                .getPersonalDetails().getProfilePhoto();
+        if (userImageUrl != null) {
+            getApplicationPreferences().setUserPhotoUrl(userImageUrl);
+        }
 
         inflateDrawer();
         gotoAppointmentFragment();
@@ -197,7 +212,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         selectedVisitTypeDTO = visitTypeDTO;
         AvailableHoursFragment availableHoursFragment = AvailableHoursFragment
                 .newInstance(appointmentsResultModel,
-                appointmentResourcesDTO.getResource(), null, null, visitTypeDTO);
+                        appointmentResourcesDTO.getResource(), null, null, visitTypeDTO);
         navigateToFragment(availableHoursFragment, true);
         displayToolbar(false, null);
     }
@@ -207,7 +222,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                            AppointmentsResultModel appointmentsResultModel) {
         AvailableHoursFragment availableHoursFragment = AvailableHoursFragment
                 .newInstance(appointmentsResultModel, appointmentResource,
-                startDate, endDate, visitTypeDTO);
+                        startDate, endDate, visitTypeDTO);
         navigateToFragment(availableHoursFragment, false);
         displayToolbar(false, null);
     }
@@ -254,7 +269,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     @Override
     public void confirmAppointment(AppointmentsSlotsDTO appointmentsSlot, AppointmentAvailabilityDTO availabilityDTO) {
         this.availabilityDTO = availabilityDTO;
-        ProviderDTO providersDTO = null;
+        ProviderDTO providersDTO;
         if (selectedAppointmentResourcesDTO != null) {
             providersDTO = selectedAppointmentResourcesDTO.getResource().getProvider();
         } else {
@@ -328,14 +343,18 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         }
         displayToolbar(true, null);
 
+        refreshAppointments();
+        showAppointmentConfirmation();
+    }
+
+    private void refreshAppointments(){
         AppointmentsListFragment fragment = (AppointmentsListFragment)
-                fragmentManager.findFragmentById(R.id.container_main);
+                getSupportFragmentManager().findFragmentById(R.id.container_main);
 
         if (fragment != null) {
             fragment.refreshAppointmentList();
         }
 
-        showAppointmentConfirmation();
     }
 
     private void showAppointmentConfirmation() {
@@ -367,4 +386,120 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             onAppointmentUnconfirmed();
         }
     };
+
+    @Override
+    public void onCancelAppointment(AppointmentDTO appointmentDTO) {
+        new CancelReasonAppointmentDialog(getContext(), appointmentDTO, appointmentsResultModel, new CancelReasonAppointmentDialog.CancelReasonAppointmentDialogListener() {
+            @Override
+            public void onCancelReasonAppointmentDialogCancelClicked(AppointmentDTO appointmentDTO, int cancellationReason, String cancellationReasonComment) {
+                onCancelAppointment(appointmentDTO, cancellationReason, cancellationReasonComment);
+            }
+        }).show();
+    }
+
+    @Override
+    public void onCancelAppointment(AppointmentDTO appointmentDTO, int cancellationReason, String cancellationReasonComment) {
+        Map<String, String> queries = new HashMap<>();
+        queries.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
+        queries.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
+        queries.put("patient_id", appointmentDTO.getMetadata().getPatientId());
+        queries.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
+
+        DataDTO data = appointmentsResultModel.getMetadata().getTransitions().getCancel().getData();
+        JsonObject postBodyObj = new JsonObject();
+        if (!StringUtil.isNullOrEmpty(cancellationReasonComment)) {
+            postBodyObj.addProperty(data.getCancellationComments().getName(), cancellationReasonComment);
+        }
+        if (cancellationReason != -1) {
+            postBodyObj.addProperty(data.getCancellationReasonId().getName(), cancellationReason);
+        }
+
+        String body = postBodyObj.toString();
+
+        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getCancel();
+        getWorkflowServiceHelper().execute(transitionDTO, cancelCallback, body, queries);
+    }
+
+    @Override
+    public void onCheckInStarted(AppointmentDTO appointmentDTO) {
+        Map<String, String> queries = new HashMap<>();
+        queries.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
+        queries.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
+        queries.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
+
+        Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
+        header.put("transition", "true");
+
+        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getCheckingIn();
+        getWorkflowServiceHelper().execute(transitionDTO, checkinCallback, queries, header);
+    }
+
+    @Override
+    public void onCheckOutStarted(AppointmentDTO appointmentDTO) {
+
+    }
+
+    @Override
+    public void onCheckInOfficeStarted(AppointmentDTO appointmentDTO) {
+        new QrCodeViewDialog(getContext(), appointmentDTO, appointmentsResultModel.getMetadata(), new QrCodeViewDialog.QRCodeViewDialogListener() {
+            @Override
+            public void onGenerateQRCodeError(String errorMessage) {
+                showErrorNotification(null);
+                Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), errorMessage);
+            }
+        }).show();
+    }
+
+    @Override
+    public void onRescheduleAppointment(AppointmentDTO appointmentDTO) {
+        rescheduleAppointment(appointmentDTO);
+    }
+
+    private WorkflowServiceCallback checkinCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    private WorkflowServiceCallback cancelCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_cancellation_success_message_HTML"));
+            refreshAppointments();
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+
+    @Override
+    public void displayAppointmentDetails(AppointmentDTO appointmentDTO) {
+        AppointmentDetailDialog detailDialog = AppointmentDetailDialog.newInstance(appointmentDTO);
+        detailDialog.show(getSupportFragmentManager(), detailDialog.getClass().getName());
+    }
 }
