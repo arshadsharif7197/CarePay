@@ -17,18 +17,19 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.adapters.ProviderAdapter;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
+import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ChooseProviderFragment extends BaseFragment implements ProviderAdapter.OnProviderListItemClickListener {
+public class ChooseProviderFragment extends BaseAppointmentFragment implements ProviderAdapter.OnProviderListItemClickListener {
 
     private RecyclerView providersRecyclerView;
     private ProgressBar appointmentProgressBar;
@@ -51,12 +52,29 @@ public class ChooseProviderFragment extends BaseFragment implements ProviderAdap
     private AppointmentNavigationCallback callback;
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
-        try{
-            callback = (AppointmentNavigationCallback) context;
-        }catch (ClassCastException cce){
+        attachCallback(context);
+    }
+
+    @Override
+    protected void attachCallback(Context context) {
+        try {
+            if(context instanceof AppointmentViewHandler){
+                callback = ((AppointmentViewHandler) context).getPresenter();
+            }else {
+                callback = (AppointmentNavigationCallback) context;
+            }
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement AppointmentNavigationCallback");
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(callback == null){
+            attachCallback(getContext());
         }
     }
 

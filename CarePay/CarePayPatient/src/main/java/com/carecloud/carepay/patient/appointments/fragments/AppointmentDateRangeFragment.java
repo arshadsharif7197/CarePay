@@ -15,14 +15,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
+import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
-import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.CustomCalendarCellDecorator;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -40,7 +41,7 @@ import java.util.concurrent.TimeUnit;
  * Created by arpit_jain1 on 10/10/2016.
  * Custom Calendar Fragment
  */
-public class AppointmentDateRangeFragment extends BaseFragment {
+public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
 
     private CalendarPickerView calendarPickerView;
     private Button applyDateRangeButton;
@@ -57,10 +58,27 @@ public class AppointmentDateRangeFragment extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        attachCallback(context);
+    }
+
+    @Override
+    protected void attachCallback(Context context) {
         try {
-            callback = (AppointmentNavigationCallback) context;
+            if(context instanceof AppointmentViewHandler){
+                callback = ((AppointmentViewHandler) context).getPresenter();
+            }else {
+                callback = (AppointmentNavigationCallback) context;
+            }
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Atached context must implement AppointmentNavigationCallback");
+            throw new ClassCastException("Attached context must implement AppointmentNavigationCallback");
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(callback == null){
+            attachCallback(getContext());
         }
     }
 
@@ -297,4 +315,5 @@ public class AppointmentDateRangeFragment extends BaseFragment {
         newStartDate = null;
         newEndDate = null;
     }
+
 }

@@ -29,8 +29,8 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseActivity;
-import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -47,7 +47,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public abstract class BaseAvailableHoursFragment extends BaseDialogFragment implements FilterableAvailableHoursAdapter.SelectAppointmentTimeSlotCallback, AvailableLocationsAdapter.SelectLocationCallback {
+public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFragment implements FilterableAvailableHoursAdapter.SelectAppointmentTimeSlotCallback, AvailableLocationsAdapter.SelectLocationCallback {
 
     private Date startDate;
     private Date endDate;
@@ -74,8 +74,17 @@ public abstract class BaseAvailableHoursFragment extends BaseDialogFragment impl
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        attachCallback(context);
+    }
+
+    @Override
+    protected void attachCallback(Context context) {
         try {
-            callback = (AppointmentNavigationCallback) context;
+            if(context instanceof AppointmentViewHandler){
+                callback = ((AppointmentViewHandler) context).getPresenter();
+            }else {
+                callback = (AppointmentNavigationCallback) context;
+            }
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement AppointmentNavigationCallback");
         }
@@ -119,6 +128,9 @@ public abstract class BaseAvailableHoursFragment extends BaseDialogFragment impl
     @Override
     public void onResume() {
         super.onResume();
+        if(callback == null){
+            attachCallback(getContext());
+        }
         Handler handler = new Handler();
         handler.post(new Runnable() {
             @Override
