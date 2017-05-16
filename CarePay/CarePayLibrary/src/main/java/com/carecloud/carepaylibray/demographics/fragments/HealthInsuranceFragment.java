@@ -9,18 +9,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.adapters.InsuranceLineItemsListAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment implements
         InsuranceLineItemsListAdapter.OnInsuranceEditClickListener {
+
+    private TextView insurancePhotoAlert;
 
     public interface InsuranceDocumentScannerListener {
         void editInsurance(DemographicDTO demographicDTO, Integer editedIndex, boolean showAsDialog);
@@ -52,7 +56,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         if (demographicDTO == null) {
             demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
@@ -91,6 +95,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         if (demographicDTO == null) {
             getActivity().getSupportFragmentManager().popBackStack();
         } else if (hasInsurance()) {
+            insurancePhotoAlert.setVisibility(View.GONE);
             adapter.setDemographicDTO(demographicDTO);
         } else {
             editInsurance(null, false);
@@ -100,7 +105,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     @Override
     public void onResume() {
         super.onResume();
-        if(callback == null){
+        if (callback == null) {
             attachCallback(getContext());
         }
         stepProgressBar.setCurrentProgressDot(4);
@@ -129,6 +134,8 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
      * @param view main view
      */
     public void initActiveSection(final View view) {
+
+        insurancePhotoAlert = (TextView) view.findViewById(R.id.insurancePhotoAlert);
         Button addAnotherButton = (Button) view.findViewById(R.id.health_insurance_add_another);
         addAnotherButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,8 +152,20 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     }
 
     @Override
-    public void onEditInsuranceClicked(int position) {
+    public void onEditInsuranceClicked(DemographicInsurancePayloadDTO demographicInsurancePayloadDTO) {
+        int position = demographicDTO.getPayload().getDemographics().getPayload().getInsurances()
+                .indexOf(demographicInsurancePayloadDTO);
         editInsurance(position, true);
+    }
+
+    @Override
+    public void showAlert(DemographicInsurancePayloadDTO demographicInsurancePayloadDTO) {
+        insurancePhotoAlert.setText(String
+                .format(Label.getLabel("demographics_insurance_no_photo_alert"),
+                        demographicInsurancePayloadDTO.getInsuranceProvider() + " "
+                                + (demographicInsurancePayloadDTO.getInsurancePlan() != null
+                                ? demographicInsurancePayloadDTO.getInsurancePlan() : "")));
+        insurancePhotoAlert.setVisibility(View.VISIBLE);
     }
 
     private void editInsurance(Integer editedIndex, boolean showAsDialog) {
