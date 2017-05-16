@@ -153,14 +153,8 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
     @Override
     public void onEditInsuranceClicked(DemographicInsurancePayloadDTO demographicInsurancePayloadDTO) {
-        int position = -1;
-        for (int i = 0; i < demographicDTO.getPayload().getDemographics().getPayload().getInsurances().size(); i++) {
-            DemographicInsurancePayloadDTO insurancePayloadDTO = demographicDTO.getPayload()
-                    .getDemographics().getPayload().getInsurances().get(i);
-            if (insurancePayloadDTO.equals(demographicInsurancePayloadDTO)) {
-                position = i;
-            }
-        }
+        int position = demographicDTO.getPayload().getDemographics().getPayload().getInsurances()
+                .indexOf(demographicInsurancePayloadDTO);
         editInsurance(position, true);
     }
 

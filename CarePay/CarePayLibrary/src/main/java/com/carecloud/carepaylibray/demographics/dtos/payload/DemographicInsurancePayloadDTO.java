@@ -37,7 +37,7 @@ public class DemographicInsurancePayloadDTO extends PatientModel {
     @Expose
     private String insuranceType;
 
-    @SerializedName("deleted")
+    @SerializedName("delete")
     @Expose
     private boolean deleted = false;
 
