@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.appointments;
 
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 
@@ -21,5 +22,7 @@ public interface PatientAppointmentNavigationCallback extends AppointmentNavigat
     void onCheckInOfficeStarted(AppointmentDTO appointmentDTO);
 
     void onRescheduleAppointment(AppointmentDTO appointmentDTO);
+
+    void getQueueStatus(AppointmentDTO appointmentDTO, WorkflowServiceCallback callback);
 
 }

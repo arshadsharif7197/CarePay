@@ -285,6 +285,18 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     }
 
     @Override
+    public void getQueueStatus(AppointmentDTO appointmentDTO, WorkflowServiceCallback callback) {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
+        queryMap.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
+        queryMap.put("patient_id", appointmentDTO.getMetadata().getPatientId());
+        queryMap.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
+
+        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getLinks().getQueueStatus();
+        viewHandler.getWorkflowServiceHelper().execute(transitionDTO, callback, queryMap);
+    }
+
+    @Override
     public void displayAppointmentDetails(AppointmentDTO appointmentDTO) {
         AppointmentDetailDialog detailDialog = AppointmentDetailDialog.newInstance(appointmentDTO);
         viewHandler.displayDialogFragment(detailDialog, false);

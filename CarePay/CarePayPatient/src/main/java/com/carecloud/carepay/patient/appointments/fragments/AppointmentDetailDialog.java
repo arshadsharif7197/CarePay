@@ -14,13 +14,17 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
-import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentDialogFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
+import com.carecloud.carepaylibray.appointments.models.QueueDTO;
+import com.carecloud.carepaylibray.appointments.models.QueueStatusPayloadDTO;
+import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -29,8 +33,10 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 /**
- * Created by lmenendez on 5/9/17.
+ * Created by lmenendez on 5/9/17
  */
 
 public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
@@ -204,26 +210,29 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     header.setBackgroundResource(R.drawable.appointment_dialog_green_bg);
                     appointmentDate.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                     appointmentTime.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
-                    queueLayout.setVisibility(View.VISIBLE);
-                    //// TODO: 5/9/17 make call to get queue status
-                    actionsLayout.setVisibility(View.VISIBLE);
-                    leftButton.setVisibility(View.VISIBLE);
-                    leftButton.setText(Label.getLabel("appointment_request_checkout_now"));
-                    leftButton.setOnClickListener(checkOutClick);
+                    if(appointmentDTO.getPayload().isAppointmentToday() || !appointmentDTO.getPayload().isAppointmentOver()) {
+                        callback.getQueueStatus(appointmentDTO, queueStatusCallback);
+                        actionsLayout.setVisibility(View.VISIBLE);
+                        leftButton.setVisibility(View.VISIBLE);
+                        leftButton.setText(Label.getLabel("appointment_request_checkout_now"));
+                        leftButton.setOnClickListener(checkOutClick);
+                    }
                     break;
                 }
                 case PENDING: {
                     header.setBackgroundResource(R.drawable.appointment_dialog_gray_bg);
-                    cancelAppointment.setVisibility(View.VISIBLE);
                     appointmentDate.setTextColor(ContextCompat.getColor(getContext(), R.color.textview_default_textcolor));
                     appointmentTime.setTextColor(ContextCompat.getColor(getContext(), R.color.slateGray));
                     actionsLayout.setVisibility(View.VISIBLE);
-                    leftButton.setVisibility(View.VISIBLE);
-                    leftButton.setText(Label.getLabel("appointments_check_in_at_office"));
-                    leftButton.setOnClickListener(scanClick);
-                    rightButton.setVisibility(View.VISIBLE);
-                    rightButton.setText(Label.getLabel("appointments_check_in_now"));
-                    rightButton.setOnClickListener(checkInClick);
+                    if(!appointmentDTO.getPayload().isAppointmentOver() && appointmentDTO.getPayload().isAppointmentToday()) {
+                        cancelAppointment.setVisibility(View.VISIBLE);
+                        leftButton.setVisibility(View.VISIBLE);
+                        leftButton.setText(Label.getLabel("appointments_check_in_at_office"));
+                        leftButton.setOnClickListener(scanClick);
+                        rightButton.setVisibility(View.VISIBLE);
+                        rightButton.setText(Label.getLabel("appointments_check_in_now"));
+                        rightButton.setOnClickListener(checkInClick);
+                    }
                     break;
                 }
                 case REQUESTED_UPCOMING:
@@ -261,21 +270,17 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 }
                 case PENDING_UPCOMING: {
                     header.setBackgroundResource(R.drawable.appointment_dialog_gray_bg);
-                    cancelAppointment.setVisibility(View.VISIBLE);
                     appointmentDate.setTextColor(ContextCompat.getColor(getContext(), R.color.textview_default_textcolor));
                     appointmentTime.setTextColor(ContextCompat.getColor(getContext(), R.color.slateGray));
-                    actionsLayout.setVisibility(View.VISIBLE);
-                    rightButton.setVisibility(View.VISIBLE);
-                    rightButton.setText(Label.getLabel("appointments_check_in_early"));
-                    rightButton.setOnClickListener(checkInClick);
+                    if(!appointmentDTO.getPayload().isAppointmentOver()) {
+                        cancelAppointment.setVisibility(View.VISIBLE);
+                        actionsLayout.setVisibility(View.VISIBLE);
+                        rightButton.setVisibility(View.VISIBLE);
+                        rightButton.setText(Label.getLabel("appointments_check_in_early"));
+                        rightButton.setOnClickListener(checkInClick);
+                    }
                     break;
                 }
-//                case REQUESTED_UPCOMING: {
-//                    break;
-//                }
-//                case CANCELED_UPCOMING: {
-//                    break;
-//                }
                 case CHECKED_OUT:{
                     header.setBackgroundResource(R.drawable.appointment_dialog_dark_gray_bg);
                     appointmentDate.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
@@ -299,6 +304,66 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         queueLayout.setVisibility(View.GONE);
         appointmentStatus.setVisibility(View.GONE);
     }
+
+    private WorkflowServiceCallback queueStatusCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            QueueStatusPayloadDTO queueStatusPayloadDTO = workflowDTO.getPayload(QueueStatusPayloadDTO.class);
+            List<QueueDTO> queueList = queueStatusPayloadDTO.getQueueStatus().getQueueStatusInnerPayload().getQueueList();
+
+            QueueDTO placeInQueue = findPlaceInQueue(queueList, appointmentDTO.getPayload().getId());
+            String place = ordinal(placeInQueue.getRank(), getOrdinalSufix());
+
+            queueLayout.setVisibility(View.VISIBLE);
+            queueStatus.setText(getFormattedText(Label.getLabel("appointment_queue_status"), place));
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            queueLayout.setVisibility(View.GONE);
+        }
+    };
+
+    private QueueDTO findPlaceInQueue(List<QueueDTO> queueDTOList, String appointmentId){
+        for(QueueDTO queueDTO: queueDTOList){
+            if(queueDTO.getAppointmentId().equals(appointmentId)){
+                return queueDTO;
+            }
+        }
+        return null;
+    }
+
+    private String ordinal(int number, String[] sufixes) {
+        switch (number % 100) {
+            case 11:
+            case 12:
+            case 13:
+                return number + sufixes[0];
+            default:
+                return number + sufixes[number % 10];
+        }
+    }
+
+    private String[] getOrdinalSufix() {
+        String th = Label.getLabel("appointment_dialog_ordinal_th");
+        String st = Label.getLabel("appointment_dialog_ordinal_st");
+        String nd = Label.getLabel("appointment_dialog_ordinal_nd");
+        String rd = Label.getLabel("appointment_dialog_ordinal_rd");
+        return new String[]{th, st, nd, rd, th, th, th, th, th, th};
+    }
+
+    private String getFormattedText(String formatString, String... fields){
+        if(!formatString.contains("%s")){
+            return formatString;
+        }
+        return String.format(formatString, fields);
+    }
+
 
     private void launchMapView(String address) {
         if (SystemUtil.isNotEmptyString(address)) {
