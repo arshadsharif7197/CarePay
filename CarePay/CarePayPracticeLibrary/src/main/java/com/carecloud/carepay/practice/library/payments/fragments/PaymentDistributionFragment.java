@@ -93,8 +93,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     private ProviderDTO defaultProvider;
 
     private boolean hasPaymentError = false;
-    private boolean shouldAutoApply = false;
-    private boolean resetAutoApplyOnError = false;
+//    private boolean shouldAutoApply = false;
+//    private boolean resetAutoApplyOnError = false;
 
 
     @Override
@@ -212,18 +212,18 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             @Override
             public void onClick(View view) {
                 if(validateBalanceItems()) {
-                    if(shouldAutoApply){
-                        resetAutoApplyOnError = true;
+//                    if(shouldAutoApply){
+//                        resetAutoApplyOnError = true;
                         distributeAmountOverBalanceItems(paymentAmount);
-                    }
+//                    }
 
                     generatePaymentsModel();
                     if(!hasPaymentError) {
                         callback.onPayButtonClicked(paymentAmount + chargesAmount, paymentsModel);
                         hideDialog();
-                        if(resetAutoApplyOnError){
-                            shouldAutoApply = true;
-                        }
+//                        if(resetAutoApplyOnError){
+//                            shouldAutoApply = true;
+//                        }
                     }
                 }
             }
@@ -268,10 +268,10 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             if(unappliedCredit > 0D){
                 unappliedLayout.setVisibility(View.VISIBLE);
                 setCurrency(unapplied, unappliedCredit);
-                shouldAutoApply = true;
+//                shouldAutoApply = true;
             }else{
                 unappliedLayout.setVisibility(View.GONE);
-                shouldAutoApply = false;
+//                shouldAutoApply = false;
             }
 
             setMaxAmounts();
@@ -629,7 +629,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         if(amount > 0){//there is some amount left over for the payment
             overPaymentAmount = amount;
         }
-        shouldAutoApply=false;
+//        shouldAutoApply=false;
     }
 
     private boolean validateBalanceItems(){
@@ -743,9 +743,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         }else if(balanceItem.getBalance()<0){
             SystemUtil.showErrorToast(getContext(), Label.getLabel("negative_payment_amount_error"));
             hasPaymentError = true;
-            if(resetAutoApplyOnError){
-                shouldAutoApply = true;
-            }
+//            if(resetAutoApplyOnError){
+//                shouldAutoApply = true;
+//            }
         }
     }
 
