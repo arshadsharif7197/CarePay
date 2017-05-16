@@ -12,7 +12,7 @@ import com.carecloud.carepaylibray.base.ISession;
 
 public interface AppointmentViewHandler extends ISession {
 
-    AppointmentPresenter getPresenter();
+    AppointmentPresenter getAppointmentPresenter();
 
     Context getContext();
 

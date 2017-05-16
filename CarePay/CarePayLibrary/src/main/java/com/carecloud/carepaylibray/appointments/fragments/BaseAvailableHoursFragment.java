@@ -81,7 +81,7 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
     protected void attachCallback(Context context) {
         try {
             if(context instanceof AppointmentViewHandler){
-                callback = ((AppointmentViewHandler) context).getPresenter();
+                callback = ((AppointmentViewHandler) context).getAppointmentPresenter();
             }else {
                 callback = (AppointmentNavigationCallback) context;
             }

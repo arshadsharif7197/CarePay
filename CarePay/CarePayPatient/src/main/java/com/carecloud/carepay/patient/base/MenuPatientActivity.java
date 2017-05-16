@@ -277,6 +277,10 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         MenuPatientActivity.transitionNotifications = transitionNotifications;
     }
 
+    public static TransitionDTO getTransitionAppointments(){
+        return transitionAppointments;
+    }
+
     /**
      * Display toolbar.
      *

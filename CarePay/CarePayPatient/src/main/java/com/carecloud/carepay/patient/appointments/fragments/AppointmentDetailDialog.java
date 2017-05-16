@@ -83,7 +83,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     protected void attachCallback(Context context) {
         try {
             if(context instanceof AppointmentViewHandler){
-                callback = (PatientAppointmentNavigationCallback) ((AppointmentViewHandler) context).getPresenter();
+                callback = (PatientAppointmentNavigationCallback) ((AppointmentViewHandler) context).getAppointmentPresenter();
             }else {
                 callback = (PatientAppointmentNavigationCallback) context;
             }
