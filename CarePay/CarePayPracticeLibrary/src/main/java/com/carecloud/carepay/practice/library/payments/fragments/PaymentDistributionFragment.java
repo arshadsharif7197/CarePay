@@ -219,7 +219,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
                     generatePaymentsModel();
                     if(!hasPaymentError) {
-                        callback.onPayButtonClicked(paymentAmount + chargesAmount, paymentsModel);
+                        callback.onPayButtonClicked(round(paymentAmount + chargesAmount), paymentsModel);
                         hideDialog();
 //                        if(resetAutoApplyOnError){
 //                            shouldAutoApply = true;
@@ -335,7 +335,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         for(PatientBalanceDTO patientBalance : paymentsModel.getPaymentPayload().getPatientBalances()){
             for(PendingBalanceDTO pendingBalance : patientBalance.getBalances()){
                 for(PendingBalancePayloadDTO pendingBalancePayload : pendingBalance.getPayload()){
-                    total+=pendingBalancePayload.getAmount();
+                    total = round(total + pendingBalancePayload.getAmount());
 //                    total-=pendingBalancePayload.getUnappliedCredit();
                     switch (pendingBalancePayload.getType()){
                         case PendingBalancePayloadDTO.CO_PAY_TYPE:
@@ -426,17 +426,17 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
                     double difference;
                     double currentAmount = balanceItem.getBalance();
 
-                    difference = currentAmount-updateAmount;
+                    difference = round(currentAmount-updateAmount);
                     if(unappliedCredit > 0) {
                         if(difference > unappliedCredit){
-                            difference -= unappliedCredit;
+                            difference = round(difference - unappliedCredit);
                             unappliedCredit = 0;
                         }else{
-                            unappliedCredit -= difference;
+                            unappliedCredit = round(unappliedCredit - difference);
                         }
                     }
                     balanceItem.setBalance(updateAmount);
-                    paymentAmount-=difference;
+                    paymentAmount = round(paymentAmount - difference);
                     updatePaymentAmount();
 
                 }
@@ -466,7 +466,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             paymentTotal.setTextColor(ContextCompat.getColor(getContext(), R.color.lightning_yellow));
         }
 
-        double totalAmount = paymentAmount + chargesAmount;
+        double totalAmount = round(paymentAmount + chargesAmount);
         payButton.setEnabled(totalAmount > 0);
 
         setCurrency(paymentTotal, totalAmount);
@@ -537,7 +537,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     @Override
     public void removeCharge(BalanceItemDTO chargeItem) {
         chargeItems.remove(chargeItem);
-        chargesAmount-=chargeItem.getBalance();
+        chargesAmount = round(chargesAmount - chargeItem.getBalance());
         updatePaymentAmount();
         setAdapter();
         setChargeLayoutVisibility();
@@ -560,7 +560,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             balanceItemDTO.setLocation(defaultLocation);
         }
         chargeItems.add(balanceItemDTO);
-        chargesAmount+=amount;
+        chargesAmount = round(chargesAmount + amount);
         updatePaymentAmount();
         setAdapter();
         setChargeLayoutVisibility();
@@ -615,12 +615,13 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
                 balanceItem.setBalance(0);
             }else {
                 if (amount >= balance) {
-                    amount = (double) Math.round((amount - balance) * 100) / 100;
+//                    amount = (double) Math.round((amount - balance) * 100) / 100;
+                    amount = round(amount - balance);
                 } else {
                     balance = amount;
                     balanceItem.setBalance(balance);
                     if (amount > 0) {
-                        amount -= balance;
+                        amount = round(amount - balance);
                     }
                 }
             }
@@ -685,7 +686,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     private void generatePaymentsModel(){
         hasPaymentError = false;
         PaymentPostModel postModel = new PaymentPostModel();
-        postModel.setAmount(paymentAmount + chargesAmount);
+        postModel.setAmount( round(paymentAmount + chargesAmount));
         for(BalanceItemDTO balanceItemDTO : balanceItems){
             addPaymentObject(balanceItemDTO, postModel);
         }
@@ -734,7 +735,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
             double paymentAmount = balanceItem.getBalance();
             if(paymentAmount > balanceItem.getMaxAmount()){
-                overPaymentAmount = overPaymentAmount + (paymentAmount - balanceItem.getMaxAmount());
+                overPaymentAmount = round(overPaymentAmount + round(paymentAmount - balanceItem.getMaxAmount()));
                 paymentAmount = balanceItem.getMaxAmount();
             }
             paymentObject.setAmount(paymentAmount);
@@ -747,6 +748,10 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 //                shouldAutoApply = true;
 //            }
         }
+    }
+
+    private static double round(double amount){
+        return (double) Math.round(amount * 100) / 100;
     }
 
 
