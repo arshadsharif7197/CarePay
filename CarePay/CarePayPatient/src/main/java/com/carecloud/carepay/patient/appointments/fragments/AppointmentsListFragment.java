@@ -23,15 +23,16 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.google.gson.Gson;
 
 import java.util.List;
 
-public class AppointmentsListFragment extends BaseFragment implements AppointmentListAdapter.SelectAppointmentCallback {
+public class AppointmentsListFragment extends BaseAppointmentFragment implements AppointmentListAdapter.SelectAppointmentCallback {
 
     private AppointmentsResultModel appointmentInfo;
     private ProgressBar appointmentProgressBar;
@@ -48,10 +49,27 @@ public class AppointmentsListFragment extends BaseFragment implements Appointmen
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        attachCallback(context);
+    }
+
+    @Override
+    protected void attachCallback(Context context) {
         try {
-            callback = (PatientAppointmentNavigationCallback) context;
+            if(context instanceof AppointmentViewHandler){
+                callback = (PatientAppointmentNavigationCallback) ((AppointmentViewHandler) context).getPresenter();
+            }else {
+                callback = (PatientAppointmentNavigationCallback) context;
+            }
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement AppointmentNavigationCallback");
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(callback == null){
+            attachCallback(getContext());
         }
     }
 

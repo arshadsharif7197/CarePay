@@ -14,12 +14,13 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
+import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
+import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentDialogFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
-import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -32,7 +33,7 @@ import com.squareup.picasso.Picasso;
  * Created by lmenendez on 5/9/17.
  */
 
-public class AppointmentDetailDialog extends BaseDialogFragment {
+public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
 
     private AppointmentDTO appointmentDTO;
 
@@ -73,12 +74,29 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     }
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
-        try{
-            callback = (PatientAppointmentNavigationCallback) context;
-        }catch (ClassCastException cce){
-            throw new ClassCastException("Attached context must implement AppointmentDetailsCallback");
+        attachCallback(context);
+    }
+
+    @Override
+    protected void attachCallback(Context context) {
+        try {
+            if(context instanceof AppointmentViewHandler){
+                callback = (PatientAppointmentNavigationCallback) ((AppointmentViewHandler) context).getPresenter();
+            }else {
+                callback = (PatientAppointmentNavigationCallback) context;
+            }
+        } catch (ClassCastException cce) {
+            throw new ClassCastException("Attached context must implement PatientAppointmentNavigationCallback");
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(callback == null){
+            attachCallback(getContext());
         }
     }
 

@@ -13,8 +13,8 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -45,7 +45,11 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
 
     private void setupCallback() {
         try {
-            callback = (AppointmentNavigationCallback) context;
+            if(context instanceof AppointmentViewHandler){
+                callback = ((AppointmentViewHandler) context).getPresenter();
+            }else {
+                callback = (AppointmentNavigationCallback) context;
+            }
         } catch (ClassCastException cce) {
             throw new ClassCastException("Provided Context must implement AppointmentNavigationCallback");
         }
