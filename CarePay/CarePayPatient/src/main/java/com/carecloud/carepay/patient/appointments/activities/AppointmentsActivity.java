@@ -18,13 +18,12 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.appointments.models.IdsDTO;
+import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class AppointmentsActivity extends MenuPatientActivity implements AppointmentViewHandler {
@@ -47,28 +46,26 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
         appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
         if (appointmentsResultModel.getPayload() != null) {
-            try {
-                List<IdsDTO> practicePatientIds = appointmentsResultModel.getPayload().getPracticePatientIds();
-                if (practicePatientIds.isEmpty()) {
-                    IdsDTO[] practicePatientIdArray = getApplicationPreferences().getObjectFromSharedPreferences(CarePayConstants.KEY_PRACTICE_PATIENT_IDS, IdsDTO[].class);
-                    practicePatientIds = Arrays.asList(practicePatientIdArray);
-                } else {
-                    getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants.KEY_PRACTICE_PATIENT_IDS, appointmentsResultModel.getPayload().getPracticePatientIds());
-                }
-                practiceId = practicePatientIds.get(0).getPracticeId();
-                practiceMgmt = practicePatientIds.get(0).getPracticeManagement();
-                patientId = practicePatientIds.get(0).getPatientId();
-                prefix = practicePatientIds.get(0).getPrefix();
-                userId = practicePatientIds.get(0).getUserId();
-                getApplicationPreferences().setPatientId(patientId);
-                getApplicationPreferences().setPracticeManagement(practiceMgmt);
-                getApplicationPreferences().setPracticeId(practiceId);
-                getApplicationPreferences().setUserId(userId);
-                getApplicationPreferences().setPrefix(prefix);
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println(e.getMessage());
+            List<PracticePatientIdsDTO> practicePatientIds = appointmentsResultModel.getPayload().getPracticePatientIds();
+            if (!practicePatientIds.isEmpty()) {
+                getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants.KEY_PRACTICE_PATIENT_IDS, appointmentsResultModel.getPayload().getPracticePatientIds());
             }
+//            else{
+//                PracticePatientIdsDTO[] practicePatientIdArray = getApplicationPreferences().getObjectFromSharedPreferences(CarePayConstants.KEY_PRACTICE_PATIENT_IDS, PracticePatientIdsDTO[].class);
+//                practicePatientIds = Arrays.asList(practicePatientIdArray);
+//            }
+
+
+//            practiceId = practicePatientIds.get(0).getPracticeId();
+//            practiceMgmt = practicePatientIds.get(0).getPracticeManagement();
+//            patientId = practicePatientIds.get(0).getPatientId();
+//            prefix = practicePatientIds.get(0).getPrefix();
+//            userId = practicePatientIds.get(0).getUserId();
+//            getApplicationPreferences().setPatientId(patientId);
+//            getApplicationPreferences().setPracticeManagement(practiceMgmt);
+//            getApplicationPreferences().setPracticeId(practiceId);
+//            getApplicationPreferences().setUserId(userId);
+//            getApplicationPreferences().setPrefix(prefix);
 
         }
 
