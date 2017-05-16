@@ -79,11 +79,11 @@ public class CustomMessageToast extends Toast {
                 statusBarColor = R.color.lightning_yellow;
                 break;
             case NOTIFICATION_TYPE_SUCCESS:
-                statusBarColor = R.color.emerald;
             default:
                 icon.setImageResource(R.drawable.icn_notification_basic_white_check);
                 container.setBackgroundResource(R.drawable.success_notification_background);
                 setDuration(Toast.LENGTH_SHORT);
+                statusBarColor = R.color.emerald;
                 break;
         }
 

@@ -113,10 +113,10 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         return insuranceList;
     }
 
-    public void showAlert() {
+    private void showAlert() {
         if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT) {
-            new CustomMessageToast(getActivity(), Label.getLabel("demographics_insurance_no_photo_alert")
-                    , CustomMessageToast.NOTIFICATION_TYPE_WARNING).show();
+            new CustomMessageToast(getActivity(), Label.getLabel("demographics_insurance_no_photo_alert"),
+                    CustomMessageToast.NOTIFICATION_TYPE_WARNING).show();
         } else {
             insurancePhotoAlert.setText(Label.getLabel("demographics_insurance_no_photo_alert"));
             insurancePhotoAlert.setVisibility(View.VISIBLE);
@@ -129,7 +129,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         } else if (hasInsurance()) {
             insurancePhotoAlert.setVisibility(View.GONE);
             adapter.setInsurancesList(getInsurances(demographicDTO));
-            if (showAlert){
+            if (showAlert) {
                 showAlert();
                 showAlert = false;
             }
