@@ -48,8 +48,9 @@ import java.util.Map;
  */
 
 public class PatientAppointmentPresenter extends AppointmentPresenter implements PatientAppointmentNavigationCallback {
-    private ResourcesPracticeDTO selectedResourcesPracticeDTO;
     private String patientId;
+    private String practiceId;
+    private String practiceMgmt;
     private AppointmentResourcesDTO selectedAppointmentResourcesDTO;
     private VisitTypeDTO selectedVisitTypeDTO;
     private AppointmentDTO appointmentDTO;
@@ -74,8 +75,10 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
 
     @Override
     public void selectVisitType(AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
-        selectedResourcesPracticeDTO = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getPractice();
+        ResourcesPracticeDTO selectedResourcesPracticeDTO = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getPractice();
         setPatientID(selectedResourcesPracticeDTO.getPracticeId());
+        practiceId = selectedResourcesPracticeDTO.getPracticeId();
+        practiceMgmt = selectedResourcesPracticeDTO.getPracticeMgmt();
 
         VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog.newInstance(appointmentResourcesDTO, appointmentsResultModel);
         viewHandler.displayDialogFragment(dialog, true);
@@ -146,6 +149,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
         } else {
             providersDTO = appointmentDTO.getPayload().getProvider();
             patientId = appointmentDTO.getMetadata().getPatientId();
+            practiceId = appointmentDTO.getMetadata().getPracticeId();
+            practiceMgmt =appointmentDTO.getMetadata().getPracticeMgmt();
         }
 
         AppointmentsPayloadDTO payloadDTO = new AppointmentsPayloadDTO();
@@ -174,8 +179,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     public void requestAppointment(AppointmentsSlotsDTO appointmentSlot, String comments) {
         Map<String, String> queryMap = new HashMap<>();
 //        queryMap.put("language", getApplicationPreferences().getUserLanguage());
-        queryMap.put("practice_mgmt", selectedResourcesPracticeDTO.getPracticeMgmt());
-        queryMap.put("practice_id", selectedResourcesPracticeDTO.getPracticeId());
+        queryMap.put("practice_mgmt", practiceMgmt);
+        queryMap.put("practice_id", practiceId);
 
         JsonObject patientJSONObj = new JsonObject();
         patientJSONObj.addProperty("id", patientId);
