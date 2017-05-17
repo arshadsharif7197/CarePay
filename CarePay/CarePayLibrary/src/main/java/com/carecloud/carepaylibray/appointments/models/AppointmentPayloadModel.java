@@ -22,7 +22,7 @@ public class AppointmentPayloadModel implements Serializable {
     private List<AppointmentDTO> appointments = new ArrayList<>();
     @SerializedName("practice_patient_ids")
     @Expose
-    private List<IdsDTO> practicePatientIds = new ArrayList<>();
+    private List<PracticePatientIdsDTO> practicePatientIds = new ArrayList<>();
     @SerializedName("providers")
     @Expose
     private List<AppointmentProvidersDTO> providers = new ArrayList<>();
@@ -184,14 +184,14 @@ public class AppointmentPayloadModel implements Serializable {
     /**
      * @return practice_patent_ids
      */
-    public List<IdsDTO> getPracticePatientIds() {
+    public List<PracticePatientIdsDTO> getPracticePatientIds() {
         return practicePatientIds;
     }
 
     /**
      * @param practicePatientIds practicePatientIds
      */
-    public void setPracticePatientIds(List<IdsDTO> practicePatientIds) {
+    public void setPracticePatientIds(List<PracticePatientIdsDTO> practicePatientIds) {
         this.practicePatientIds = practicePatientIds;
     }
 

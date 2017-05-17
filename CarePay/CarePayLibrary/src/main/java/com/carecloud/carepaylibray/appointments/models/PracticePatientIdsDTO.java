@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by harshal_patil on 1/31/2017.
  */
 
-public class IdsDTO {
+public class PracticePatientIdsDTO {
 
     @SerializedName("prefix")
     @Expose

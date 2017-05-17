@@ -23,6 +23,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemD
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
@@ -47,7 +48,9 @@ import java.util.Map;
  */
 
 public class PatientAppointmentPresenter extends AppointmentPresenter implements PatientAppointmentNavigationCallback {
-    private ResourcesPracticeDTO selectedResourcesPracticeDTO;
+    private String patientId;
+    private String practiceId;
+    private String practiceMgmt;
     private AppointmentResourcesDTO selectedAppointmentResourcesDTO;
     private VisitTypeDTO selectedVisitTypeDTO;
     private AppointmentDTO appointmentDTO;
@@ -72,7 +75,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
 
     @Override
     public void selectVisitType(AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
-        selectedResourcesPracticeDTO = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getPractice();
+        ResourcesPracticeDTO selectedResourcesPracticeDTO = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getPractice();
+        setPatientID(selectedResourcesPracticeDTO.getPracticeId());
+        practiceId = selectedResourcesPracticeDTO.getPracticeId();
+        practiceMgmt = selectedResourcesPracticeDTO.getPracticeMgmt();
+
         VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog.newInstance(appointmentResourcesDTO, appointmentsResultModel);
         viewHandler.displayDialogFragment(dialog, true);
     }
@@ -141,6 +148,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
             providersDTO = selectedAppointmentResourcesDTO.getResource().getProvider();
         } else {
             providersDTO = appointmentDTO.getPayload().getProvider();
+            patientId = appointmentDTO.getMetadata().getPatientId();
+            practiceId = appointmentDTO.getMetadata().getPracticeId();
+            practiceMgmt =appointmentDTO.getMetadata().getPracticeMgmt();
         }
 
         AppointmentsPayloadDTO payloadDTO = new AppointmentsPayloadDTO();
@@ -152,10 +162,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
 
         payloadDTO.setProvider(providersDTO);
         payloadDTO.setProviderId(providersDTO.getId().toString());
-//        payloadDTO.setResourceId(selectedAppointmentResourcesDTO.getResource().getId());
 
         PatientModel patientDTO = new PatientModel();
-        patientDTO.setPatientId(viewHandler.getApplicationPreferences().getPatientId());//todo this needs to work differently to support multi-practice
+        patientDTO.setPatientId(patientId);
         payloadDTO.setPatient(patientDTO);
 
         AppointmentDTO appointmentDTO = new AppointmentDTO();
@@ -170,11 +179,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     public void requestAppointment(AppointmentsSlotsDTO appointmentSlot, String comments) {
         Map<String, String> queryMap = new HashMap<>();
 //        queryMap.put("language", getApplicationPreferences().getUserLanguage());
-        queryMap.put("practice_mgmt", selectedResourcesPracticeDTO.getPracticeMgmt());
-        queryMap.put("practice_id", selectedResourcesPracticeDTO.getPracticeId());
+        queryMap.put("practice_mgmt", practiceMgmt);
+        queryMap.put("practice_id", practiceId);
 
         JsonObject patientJSONObj = new JsonObject();
-        patientJSONObj.addProperty("id", viewHandler.getApplicationPreferences().getPatientId());//todo this needs to work differently to support multi-practice
+        patientJSONObj.addProperty("id", patientId);
 
         JsonObject appointmentJSONObj = new JsonObject();
         appointmentJSONObj.addProperty("start_time", appointmentSlot.getStartTime());
@@ -205,15 +214,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     @Override
     public void onAppointmentRequestSuccess() {
         viewHandler.confirmAppointment();
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        int backStackCount = fragmentManager.getBackStackEntryCount();
-//        for (int i = 0; i < backStackCount; i++) {
-//            fragmentManager.popBackStackImmediate();
-//        }
-//        displayToolbar(true, null);
-//
-//        refreshAppointments();
-//        showAppointmentConfirmation();
     }
 
     @Override
@@ -285,10 +285,33 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     }
 
     @Override
+    public void getQueueStatus(AppointmentDTO appointmentDTO, WorkflowServiceCallback callback) {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
+        queryMap.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
+        queryMap.put("patient_id", appointmentDTO.getMetadata().getPatientId());
+        queryMap.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
+
+        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getLinks().getQueueStatus();
+        viewHandler.getWorkflowServiceHelper().execute(transitionDTO, callback, queryMap);
+    }
+
+    @Override
     public void displayAppointmentDetails(AppointmentDTO appointmentDTO) {
         AppointmentDetailDialog detailDialog = AppointmentDetailDialog.newInstance(appointmentDTO);
         viewHandler.displayDialogFragment(detailDialog, false);
 //        detailDialog.show(getSupportFragmentManager(), detailDialog.getClass().getName());
+    }
+
+
+    private void setPatientID(String practiceID){
+        PracticePatientIdsDTO[] practicePatientIdArray = viewHandler.getApplicationPreferences().getObjectFromSharedPreferences(CarePayConstants.KEY_PRACTICE_PATIENT_IDS, PracticePatientIdsDTO[].class);
+        for(PracticePatientIdsDTO practicePatientId : practicePatientIdArray){
+            if(practicePatientId.getPracticeId().equals(practiceID)){
+                patientId = practicePatientId.getPatientId();
+                return;
+            }
+        }
     }
 
 

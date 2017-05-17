@@ -46,7 +46,7 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
     private void setupCallback() {
         try {
             if(context instanceof AppointmentViewHandler){
-                callback = ((AppointmentViewHandler) context).getPresenter();
+                callback = ((AppointmentViewHandler) context).getAppointmentPresenter();
             }else {
                 callback = (AppointmentNavigationCallback) context;
             }

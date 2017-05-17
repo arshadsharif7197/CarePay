@@ -35,9 +35,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ChooseProviderFragment extends BaseAppointmentFragment implements ProviderAdapter.OnProviderListItemClickListener {
 
@@ -61,7 +59,7 @@ public class ChooseProviderFragment extends BaseAppointmentFragment implements P
     protected void attachCallback(Context context) {
         try {
             if(context instanceof AppointmentViewHandler){
-                callback = ((AppointmentViewHandler) context).getPresenter();
+                callback = ((AppointmentViewHandler) context).getAppointmentPresenter();
             }else {
                 callback = (AppointmentNavigationCallback) context;
             }
@@ -129,14 +127,8 @@ public class ChooseProviderFragment extends BaseAppointmentFragment implements P
     }
 
     private void getResourcesInformation() {
-        Map<String, String> queryMap = new HashMap<>();
-        // TODO Find the correct way once multiple practice starts working
-        queryMap.put("practice_mgmt", getApplicationPreferences().getPracticeManagement());
-        //TODO this will need to be updated once multiple practice support has been implemented
-        queryMap.put("practice_id", appointmentsResultModel.getPayload().getAppointmentsSettings().get(0).getPracticeId());
-
         TransitionDTO resourcesToSchedule = appointmentsResultModel.getMetadata().getLinks().getResourcesToSchedule();
-        getWorkflowServiceHelper().execute(resourcesToSchedule, scheduleResourcesCallback, queryMap);
+        getWorkflowServiceHelper().execute(resourcesToSchedule, scheduleResourcesCallback);
     }
 
     private WorkflowServiceCallback scheduleResourcesCallback = new WorkflowServiceCallback() {

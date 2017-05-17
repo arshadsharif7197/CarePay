@@ -2,10 +2,8 @@ package com.carecloud.carepay.patient.appointments.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -20,13 +18,12 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.appointments.models.IdsDTO;
+import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class AppointmentsActivity extends MenuPatientActivity implements AppointmentViewHandler {
@@ -49,28 +46,26 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
         appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
         if (appointmentsResultModel.getPayload() != null) {
-            try {
-                List<IdsDTO> practicePatientIds = appointmentsResultModel.getPayload().getPracticePatientIds();
-                if (practicePatientIds.isEmpty()) {
-                    IdsDTO[] practicePatientIdArray = getApplicationPreferences().getObjectFromSharedPreferences(CarePayConstants.KEY_PRACTICE_PATIENT_IDS, IdsDTO[].class);
-                    practicePatientIds = Arrays.asList(practicePatientIdArray);
-                } else {
-                    getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants.KEY_PRACTICE_PATIENT_IDS, appointmentsResultModel.getPayload().getPracticePatientIds());
-                }
-                practiceId = practicePatientIds.get(0).getPracticeId();
-                practiceMgmt = practicePatientIds.get(0).getPracticeManagement();
-                patientId = practicePatientIds.get(0).getPatientId();
-                prefix = practicePatientIds.get(0).getPrefix();
-                userId = practicePatientIds.get(0).getUserId();
-                getApplicationPreferences().setPatientId(patientId);
-                getApplicationPreferences().setPracticeManagement(practiceMgmt);
-                getApplicationPreferences().setPracticeId(practiceId);
-                getApplicationPreferences().setUserId(userId);
-                getApplicationPreferences().setPrefix(prefix);
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println(e.getMessage());
+            List<PracticePatientIdsDTO> practicePatientIds = appointmentsResultModel.getPayload().getPracticePatientIds();
+            if (!practicePatientIds.isEmpty()) {
+                getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants.KEY_PRACTICE_PATIENT_IDS, appointmentsResultModel.getPayload().getPracticePatientIds());
             }
+//            else{
+//                PracticePatientIdsDTO[] practicePatientIdArray = getApplicationPreferences().getObjectFromSharedPreferences(CarePayConstants.KEY_PRACTICE_PATIENT_IDS, PracticePatientIdsDTO[].class);
+//                practicePatientIds = Arrays.asList(practicePatientIdArray);
+//            }
+
+
+//            practiceId = practicePatientIds.get(0).getPracticeId();
+//            practiceMgmt = practicePatientIds.get(0).getPracticeManagement();
+//            patientId = practicePatientIds.get(0).getPatientId();
+//            prefix = practicePatientIds.get(0).getPrefix();
+//            userId = practicePatientIds.get(0).getUserId();
+//            getApplicationPreferences().setPatientId(patientId);
+//            getApplicationPreferences().setPracticeManagement(practiceMgmt);
+//            getApplicationPreferences().setPracticeId(practiceId);
+//            getApplicationPreferences().setUserId(userId);
+//            getApplicationPreferences().setPrefix(prefix);
 
         }
 
@@ -140,7 +135,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
     @Override
-    public AppointmentPresenter getPresenter() {
+    public AppointmentPresenter getAppointmentPresenter() {
         return presenter;
     }
 
@@ -148,21 +143,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     public void navigateToFragment(Fragment fragment, boolean addToBackStack) {
         replaceFragment(R.id.container_main, fragment, addToBackStack);
         displayToolbar(false, null);
-    }
-
-    @Override
-    public void displayDialogFragment(DialogFragment fragment, boolean addToBackStack){
-        String tag = fragment.getClass().getName();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        if(addToBackStack) {
-            ft.addToBackStack(tag);
-        }
-
-        fragment.show(ft, tag);
     }
 
     @Override
@@ -177,7 +157,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         refreshAppointments();
         showAppointmentConfirmation();
     }
-
 
     @Override
     public void refreshAppointments(){
