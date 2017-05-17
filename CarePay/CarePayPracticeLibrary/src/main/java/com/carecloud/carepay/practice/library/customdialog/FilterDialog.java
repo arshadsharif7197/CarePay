@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.customdialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v4.util.ArraySet;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -22,8 +23,12 @@ import com.carecloud.carepay.practice.library.checkin.filters.CustomFilterListAd
 import com.carecloud.carepay.practice.library.checkin.filters.CustomSearchAdapter;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.models.FilterModel;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.platform.AndroidPlatform;
+import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.utils.SystemUtil;
+
+import java.util.Set;
 
 public class FilterDialog extends PopupWindow
         implements CustomFilterListAdapter.CustomFilterListAdapterListener, CustomSearchAdapter.OnSearchChangedListener {
@@ -49,11 +54,11 @@ public class FilterDialog extends PopupWindow
     }
 
     /**
-     * @param context    the context to inflate custom popup layout
-     * @param parentView a parent view to get the {@link View#getWindowToken()} token from
-     * @param practicePaymentsFilter label on top of filter dialog
+     * @param context                                 the context to inflate custom popup layout
+     * @param parentView                              a parent view to get the {@link View#getWindowToken()} token from
+     * @param practicePaymentsFilter                  label on top of filter dialog
      * @param practicePaymentsFilterFindPatientByName label for patient search text view
-     * @param practicePaymentsFilterClearFilters label for clear filters button
+     * @param practicePaymentsFilterClearFilters      label for clear filters button
      */
     public FilterDialog(Context context,
                         View parentView,
@@ -92,7 +97,7 @@ public class FilterDialog extends PopupWindow
         filterableDataRecyclerView.setLayoutManager(filterableListLayoutManager);
 
         patientAdapter = new CustomSearchAdapter(context, this, filterModel.getPatients());
-        doctorsLocationsAdapter = new CustomFilterListAdapter(context, filterModel, this);
+        doctorsLocationsAdapter = new CustomFilterListAdapter(filterModel, this);
         filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
     }
 
@@ -117,14 +122,12 @@ public class FilterDialog extends PopupWindow
             @Override
             public void onClick(View view) {
                 clearPatientSearch();
-
                 applyFilter();
             }
 
             private void clearPatientSearch() {
                 searchPatientEditText.setText("");
                 searchPatientEditText.clearFocus();
-
                 InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getContentView().getWindowToken(), 0);
             }
@@ -181,9 +184,6 @@ public class FilterDialog extends PopupWindow
                 callBack.applyFilter();
             }
         });
-
-        SystemUtil.setProximaNovaSemiboldTypefaceEdittext(context, searchPatientEditText);
-        SystemUtil.setGothamRoundedMediumTypeface(context, clearFiltersButton);
     }
 
     public void showPopWindow() {
@@ -191,7 +191,7 @@ public class FilterDialog extends PopupWindow
     }
 
     @Override
-    public void onFilterChanged(FilterDataDTO filteredDataDTO) {
+    public void onFilterChanged() {
         applyFilter();
     }
 
@@ -204,5 +204,35 @@ public class FilterDialog extends PopupWindow
     private void applyFilter() {
         clearFiltersButton.setVisibility(View.VISIBLE);
         callBack.applyFilter();
+        saveFilter();
+    }
+
+    private void saveFilter() {
+        ((AndroidPlatform) Platform.get()).openSharedPreferences(ApplicationPreferences.PREFERENCE_CAREPAY)
+                .edit().putStringSet(ApplicationPreferences.PREFERENCE_FILTERED_PROVIDERS,
+                getFilteredDoctorsIds()).apply();
+        ((AndroidPlatform) Platform.get()).openSharedPreferences(ApplicationPreferences
+                .PREFERENCE_CAREPAY).edit().putStringSet(ApplicationPreferences.PREFERENCE_FILTERED_LOCATIONS,
+                getFilteredLocationsIds()).apply();
+    }
+
+    private Set<String> getFilteredDoctorsIds() {
+        Set<String> doctorsIds = new ArraySet<>();
+        for (FilterDataDTO doctor : filterModel.getDoctors()) {
+            if (doctor.isChecked()) {
+                doctorsIds.add(doctor.getId());
+            }
+        }
+        return doctorsIds;
+    }
+
+    private Set<String> getFilteredLocationsIds() {
+        Set<String> locationsIds = new ArraySet<>();
+        for (FilterDataDTO location : filterModel.getLocations()) {
+            if (location.isChecked()) {
+                locationsIds.add(location.getId());
+            }
+        }
+        return locationsIds;
     }
 }
