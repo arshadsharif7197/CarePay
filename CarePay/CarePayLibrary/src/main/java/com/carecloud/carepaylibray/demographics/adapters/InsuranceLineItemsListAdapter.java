@@ -6,10 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 
 import java.util.ArrayList;
@@ -19,21 +19,24 @@ public class InsuranceLineItemsListAdapter extends
         RecyclerView.Adapter<InsuranceLineItemsListAdapter.InsuranceDetailsListViewHolder> {
 
     private Context context;
+    private ApplicationMode.ApplicationType applicationType;
     private OnInsuranceEditClickListener listener;
     private List<DemographicInsurancePayloadDTO> insuranceList = new ArrayList<>();
 
     /**
-     * Constructor
-     *
-     * @param context        context
-     * @param demographicDTO Demographic DTO
+     * @param context         context
+     * @param insuranceList   list of insurances
+     * @param listener        the listener
+     * @param applicationType the application type
      */
-    public InsuranceLineItemsListAdapter(Context context, DemographicDTO demographicDTO,
-                                         OnInsuranceEditClickListener listener) {
+    public InsuranceLineItemsListAdapter(Context context, List<DemographicInsurancePayloadDTO> insuranceList,
+                                         OnInsuranceEditClickListener listener,
+                                         ApplicationMode.ApplicationType applicationType) {
 
         this.context = context;
         this.listener = listener;
-        loadFilteredList(demographicDTO);
+        this.applicationType = applicationType;
+        this.insuranceList = insuranceList;
     }
 
     @Override
@@ -54,16 +57,31 @@ public class InsuranceLineItemsListAdapter extends
         String plan = lineItem.getInsurancePlan();
         String provider = lineItem.getInsuranceProvider();
         holder.name.setText(provider + " " + (plan != null ? plan : ""));
-        holder.type.setText(lineItem.getInsuranceType());
-        if (lineItem.getInsurancePhotos().size() == 0) {
-            holder.alertLayout.setVisibility(View.VISIBLE);
-            holder.edit.setText(Label.getLabel("demographics_insurance_add_photos_button"));
-            listener.showAlert(lineItem);
+        if (applicationType == ApplicationMode.ApplicationType.PATIENT) {
+            if (lineItem.getInsurancePhotos().size() == 0) {
+                holder.separator.setBackgroundColor(context.getResources().getColor(R.color.lightning_yellow));
+                holder.name.setTextColor(context.getResources().getColor(R.color.lightning_yellow));
+            } else {
+                holder.separator.setBackgroundColor(context.getResources().getColor(R.color.gray_divider));
+                holder.name.setTextColor(context.getResources().getColor(R.color.textview_default_textcolor));
+            }
+            if (lineItem.getInsuranceType().toLowerCase().equals("primary")) {
+                holder.type.setText(Label.getLabel("demographics_insurance_primary_type"));
+            } else if (lineItem.getInsuranceType().toLowerCase().equals("secondary")) {
+                holder.type.setText(Label.getLabel("demographics_insurance_secondary_type"));
+            } else {
+                holder.type.setText(Label.getLabel("demographics_insurance_tertiary_type"));
+            }
         } else {
-            holder.alertLayout.setVisibility(View.INVISIBLE);
-            holder.edit.setText(Label.getLabel("practice_checin_edit_clickable_label"));
+            if (lineItem.getInsurancePhotos().size() == 0) {
+                holder.alertLayout.setVisibility(View.VISIBLE);
+                holder.edit.setText(Label.getLabel("demographics_insurance_add_photos_button"));
+            } else {
+                holder.alertLayout.setVisibility(View.INVISIBLE);
+                holder.edit.setText(Label.getLabel("practice_checin_edit_clickable_label"));
+            }
+            holder.type.setText(lineItem.getInsuranceType());
         }
-
 
         holder.edit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,27 +92,16 @@ public class InsuranceLineItemsListAdapter extends
 
     }
 
-    private void loadFilteredList(DemographicDTO demographicDTO) {
-        insuranceList.clear();
-        for (DemographicInsurancePayloadDTO insurance : demographicDTO.getPayload().getDemographics().getPayload().getInsurances()) {
-            if (!insurance.isDeleted()) {
-                insuranceList.add(insurance);
-            }
-        }
-    }
-
     /**
-     * @param demographicDTO Demographic DTO
+     * @param insuranceList the insurances list
      */
-    public void setDemographicDTO(DemographicDTO demographicDTO) {
-        loadFilteredList(demographicDTO);
+    public void setInsurancesList(List<DemographicInsurancePayloadDTO> insuranceList) {
+        this.insuranceList = insuranceList;
         notifyDataSetChanged();
     }
 
     public interface OnInsuranceEditClickListener {
         void onEditInsuranceClicked(DemographicInsurancePayloadDTO position);
-
-        void showAlert(DemographicInsurancePayloadDTO demographicInsurancePayloadDTO);
     }
 
     class InsuranceDetailsListViewHolder extends RecyclerView.ViewHolder {
@@ -103,14 +110,15 @@ public class InsuranceLineItemsListAdapter extends
         CarePayTextView type;
         CarePayTextView edit;
         View alertLayout;
+        View separator;
 
         InsuranceDetailsListViewHolder(View itemView) {
             super(itemView);
-
             name = (CarePayTextView) itemView.findViewById(R.id.health_insurance_name);
             type = (CarePayTextView) itemView.findViewById(R.id.health_insurance_type);
             edit = (CarePayTextView) itemView.findViewById(R.id.health_insurance_edit);
             alertLayout = itemView.findViewById(R.id.alertLayout);
+            separator = itemView.findViewById(R.id.separator);
         }
     }
 }
