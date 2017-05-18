@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by lmenendez on 2/28/17.
+ * Created by lmenendez on 2/28/17
  */
 
 public class ChooseCreditCardFragment extends BaseDialogFragment {
@@ -173,13 +173,6 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
                 nextButton.setEnabled(true);
             }
         });
-
-//        if (getDialog() != null) {
-//            //limit width of listview
-//            ViewGroup.LayoutParams layoutParams = creditCardsListView.getLayoutParams();
-//            layoutParams.width = (int) (getResources().getDisplayMetrics().widthPixels * .5);
-//            creditCardsListView.setLayoutParams(layoutParams);
-//        }
 
     }
 

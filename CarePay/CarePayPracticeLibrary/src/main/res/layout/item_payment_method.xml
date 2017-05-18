@@ -9,13 +9,12 @@
     android:gravity="center_vertical">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="@dimen/dimen_36dp"
+        android:layout_height="wrap_content"
         android:id="@+id/payment_method_image"
         android:src="@drawable/payment_cash_button_selector"
-        android:scaleType="centerCrop"
-        android:padding="@dimen/payment_method_layout_checkbox_margin"
-        android:adjustViewBounds="true"/>
+        android:scaleType="centerInside"
+        android:layout_gravity="center_vertical"/>
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:layout_width="0dp"

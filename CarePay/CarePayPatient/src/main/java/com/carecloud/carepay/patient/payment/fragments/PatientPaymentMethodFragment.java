@@ -1,27 +1,23 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
-import com.carecloud.carepay.patient.payment.PaymentResponsibilityModel;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiAccountsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.MerchantServiceMetadataDTO;
-import com.carecloud.carepaylibray.payments.adapter.PaymentMethodAdapter;
+import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.demographicsettings.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
-import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.android.gms.common.ConnectionResult;
@@ -56,7 +52,6 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     private Boolean isProgressBarVisible = false;
     private SupportWalletFragment walletFragment;
 
-    private ScrollView scrollviewChoices;
 
     private List lineItems;
     private boolean isAndroidPayReady;
@@ -91,15 +86,26 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         paymentMethodFragmentProgressBar = (ProgressBar) view.findViewById(R.id.paymentMethodFragmentProgressBar);
-        scrollviewChoices = (ScrollView) view.findViewById(R.id.scrollview_choices);
 
         if (googleApiClient == null) {
             setGoogleApiClient();
         }
         isAndroidPayReadyToUse();
-
     }
 
+    protected void setupTitleViews(View view) {
+        super.setupTitleViews(view);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        if(toolbar!=null){
+            toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivity().onBackPressed();
+                }
+            });
+        }
+    }
 
     private void setGoogleApiClient() {
         // [START basic_google_api_client]
@@ -140,7 +146,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
 
 
     private void isAndroidPayReadyToUse() {
-        showOrHideProgressDialog();
+        showOrHideProgressDialog(true);
         IsReadyToPayRequest req = IsReadyToPayRequest.newBuilder()
                 .addAllowedCardNetwork(WalletConstants.CardNetwork.MASTERCARD)
                 .addAllowedCardNetwork(WalletConstants.CardNetwork.VISA)
@@ -152,96 +158,44 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
                 new ResultCallback<BooleanResult>() {
                     @Override
                     public void onResult(@NonNull BooleanResult booleanResult) {
-                        showOrHideProgressDialog();
+                        showOrHideProgressDialog(false);
                         if (booleanResult.getStatus().isSuccess()) {
                             if (booleanResult.getValue()) {
-                                showOrHideProgressDialog();
                                 isAndroidPayReady = true;
                                 addAndroidPayPaymentMethod();
-                            } else {
-
-                                showOrHideProgressDialog();
                             }
-                        } else {
-                            // Error making isReadyToPay call
-                            Log.e(TAG, "isReadyToPay:" + booleanResult.getStatus().getStatusMessage());
-                            showOrHideProgressDialog();
                         }
                     }
                 });
 
-        addAndroidPayPaymentMethod();
     }
 
 
     private void addAndroidPayPaymentMethod() {
-        if (isAndroidPayReady) {
-            PaymentsMethodsDTO androidPayPaymentMethod = new PaymentsMethodsDTO();
-            androidPayPaymentMethod.setLabel(PaymentConstants.ANDROID_PAY);
-            androidPayPaymentMethod.setType(CarePayConstants.TYPE_ANDROID_PAY);
-            paymentMethodsList.add(androidPayPaymentMethod);
-//            addPaymentMethodOptionView(paymentMethodsList.size() - 1);
-
-            if (getPaymentMethodList() != null) {//listview already init
-                PaymentMethodAdapter adapter = (PaymentMethodAdapter) getPaymentMethodList().getAdapter();
-                adapter.setPaymentMethodsList(paymentMethodsList);
-                adapter.notifyDataSetChanged();
-
-            }
-        }
-
+        List<LineItem> lineItems = getLineItems(amountToMakePayment);
+        createWalletFragment(lineItems, amountToMakePayment);
     }
 
 
-    private void showOrHideProgressDialog() {
-
-        if (isProgressBarVisible) {
-            paymentMethodFragmentProgressBar.setVisibility(View.GONE);
-            isProgressBarVisible = false;
-        } else {
+    private void showOrHideProgressDialog(boolean show) {
+        if (show) {
             paymentMethodFragmentProgressBar.setVisibility(View.VISIBLE);
             isProgressBarVisible = true;
-        }
-
-    }
-
-
-    @Override
-    protected void handlePaymentButton(PaymentsMethodsDTO paymentMethod, double amount) {
-        if (paymentMethod.getType() == CarePayConstants.TYPE_ANDROID_PAY) {
-            setLineItems(paymentList.get(0).getPayload());
-            createAndAddWalletFragment(String.valueOf(amount));
         } else {
-            super.handlePaymentButton(paymentMethod, amount);
+            paymentMethodFragmentProgressBar.setVisibility(View.GONE);
+            isProgressBarVisible = false;
         }
+
     }
 
 
-    /**
-     * Create the wallet fragment. This will create the "Buy with Android Pay" button.
-     *
-     * @param totalPrice Amount received from the user
-     */
-    private void createAndAddWalletFragment(String totalPrice) {
-        WalletFragmentStyle walletFragmentStyle = new WalletFragmentStyle()
-                .setBuyButtonHeight(WalletFragmentStyle.Dimension.UNIT_DIP, CarePayConstants.ANDROID_PAY_BUTTON_HEIGHT)
-                .setBuyButtonWidth(WalletFragmentStyle.Dimension.MATCH_PARENT)
-                .setBuyButtonText(WalletFragmentStyle.BuyButtonText.LOGO_ONLY)
-                .setBuyButtonAppearance(WalletFragmentStyle.BuyButtonAppearance.ANDROID_PAY_LIGHT_WITH_BORDER)
-                .setMaskedWalletDetailsBackgroundColor(R.color.android_pay_background_color);
-
-        WalletFragmentOptions walletFragmentOptions = WalletFragmentOptions.newBuilder()
-                .setEnvironment(PaymentConstants.WALLET_ENVIRONMENT)
-                .setFragmentStyle(walletFragmentStyle)
-                .setTheme(WalletConstants.THEME_DARK)
-                .setMode(WalletFragmentMode.BUY_BUTTON)
-                .build();
+    private void createWalletFragment(List<LineItem> lineItems, Double amount) {
         walletFragment = SupportWalletFragment.newInstance(walletFragmentOptions);
 
         // Now initialize the Wallet Fragment
-        MaskedWalletRequest maskedWalletRequest = createMaskedWalletRequest(totalPrice);
+        MaskedWalletRequest maskedWalletRequest = createMaskedWalletRequest(lineItems, amount);
 
-        String accountName = getString(com.carecloud.carepay.patient.R.string.account_name);
+        String accountName = getString(R.string.account_name);
 
         WalletFragmentInitParams.Builder startParamsBuilder = WalletFragmentInitParams.newBuilder()
                 .setMaskedWalletRequest(maskedWalletRequest)
@@ -250,17 +204,10 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         walletFragment.initialize(startParamsBuilder.build());
 
         // add Wallet fragment to the UI
+        findViewById(R.id.dynamic_wallet_button_fragment).setVisibility(View.VISIBLE);
         getFragmentManager().beginTransaction()
-                .replace(com.carecloud.carepay.patient.R.id.dynamic_wallet_button_fragment, walletFragment)
+                .replace(R.id.dynamic_wallet_button_fragment, walletFragment)
                 .commit();
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                scrollviewChoices.fullScroll(ScrollView.FOCUS_DOWN);
-            }
-        }, 300);
-
     }
 
 
@@ -269,74 +216,72 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
      * {@code NETWORK_TOKEN} and the {@code publicKey} parameter is set to the public key
      * that was created by First Data.
      *
-     * @param totalPrice The amount the user entered
+     * @param amount The amount the user entered
      * @return A Masked Wallet request object
      */
-    private MaskedWalletRequest createMaskedWalletRequest(String totalPrice) {
+    private MaskedWalletRequest createMaskedWalletRequest(List<LineItem> lineItems, Double amount) {
         MaskedWalletRequest.Builder builder = MaskedWalletRequest.newBuilder()
                 .setMerchantName(PaymentConstants.MERCHANT_NAME)
                 .setPhoneNumberRequired(true)
                 .setShippingAddressRequired(true)
                 .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
-                .setEstimatedTotalPrice(totalPrice)
+                .setEstimatedTotalPrice(amount.toString())
 //                 Create a Cart with the current line items. Provide all the information
 //                 available up to this point with estimates for shipping and tax included.
                 .setCart(Cart.newBuilder()
                         .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
-                        .setTotalPrice(totalPrice)
-                        .setLineItems(getLineItems())
+                        .setTotalPrice(amount.toString())
+                        .setLineItems(lineItems)
                         .build());
 
         //  Set tokenization type and First Data issued public key
         PaymentMethodTokenizationParameters tokenizationParameters = PaymentMethodTokenizationParameters.newBuilder()
                 .setPaymentMethodTokenizationType(PaymentMethodTokenizationType.NETWORK_TOKEN)
-                .addParameter("publicKey", getPayeezyMerchantService().getAndroidPublicKey())
+                .addParameter("publicKey", getAndroidPublicKey())
                 .build();
         builder.setPaymentMethodTokenizationParameters(tokenizationParameters);
         return builder.build();
     }
 
-    private MerchantServiceMetadataDTO getPayeezyMerchantService() {
-        MerchantServiceMetadataDTO merchantServiceDTO = null;
-        for (DemographicsSettingsPapiAccountsDTO papiAccountDTO : paymentsModel.getPaymentPayload().getPapiAccounts()) {
-            if (papiAccountDTO.getType().contains("payeezy")) {
-                merchantServiceDTO = papiAccountDTO.getMetadata().getMerchantService();
+
+    private String getAndroidPublicKey(){
+        for(MerchantServicesDTO merchantServices : paymentsModel.getPaymentPayload().getMerchantServices()) {
+            if(merchantServices.getCode().equals(PaymentConstants.ANDROID_PAY_MERCHANT_SERVICE)){
+                return merchantServices.getMetadata().getAndroidPublicKey();
             }
         }
-
-        return merchantServiceDTO;
+        return "";
     }
 
-    /**
-     * Create a fake line item list. Set the amount to the one received from the user.
-     *
-     * @return List of line items
-     */
-    public List getLineItems() {
-        return lineItems;
-    }
 
-    private void setLineItems(List<PaymentPatientBalancesPayloadDTO> balances) {
+    private List<LineItem> getLineItems(Double amount) {
         List<LineItem> list = new ArrayList<LineItem>();
 
-        PaymentResponsibilityModel paymentModel = PaymentResponsibilityModel.getInstance();
-        paymentModel.balancesList = new ArrayList();
-
-        for (PaymentPatientBalancesPayloadDTO balance : balances) {
-            list.add(LineItem.newBuilder()
-                    .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
-                    .setDescription(balance.getBalanceType())
-                    .setQuantity("1")
-                    .setTotalPrice(balance.getTotal())
-                    .setUnitPrice(balance.getTotal())
-                    .build());
-            paymentModel.balance1 = balance.getTotal();
-            paymentModel.balancesList.add(paymentModel.balance1);
+        list.add(LineItem.newBuilder()
+                .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
+                .setDescription(Label.getLabel("payment_patient_payment_description"))
+                .setQuantity("1")
+                .setTotalPrice(amount.toString())
+                .setUnitPrice(amount.toString())
+                .build());
 
 
-        }
-
-        this.lineItems = list;
+        return list;
     }
+
+    private static WalletFragmentStyle walletFragmentStyle = new WalletFragmentStyle()
+            .setBuyButtonHeight(WalletFragmentStyle.Dimension.UNIT_DIP, CarePayConstants.ANDROID_PAY_BUTTON_HEIGHT)
+            .setBuyButtonWidth(WalletFragmentStyle.Dimension.MATCH_PARENT)
+            .setBuyButtonText(WalletFragmentStyle.BuyButtonText.LOGO_ONLY)
+            .setBuyButtonAppearance(WalletFragmentStyle.BuyButtonAppearance.ANDROID_PAY_LIGHT_WITH_BORDER)
+            .setMaskedWalletDetailsBackgroundColor(R.color.android_pay_background_color);
+
+    private static WalletFragmentOptions walletFragmentOptions = WalletFragmentOptions.newBuilder()
+            .setEnvironment(PaymentConstants.WALLET_ENVIRONMENT)
+            .setFragmentStyle(walletFragmentStyle)
+            .setTheme(WalletConstants.THEME_DARK)
+            .setMode(WalletFragmentMode.BUY_BUTTON)
+            .build();
+
 
 }

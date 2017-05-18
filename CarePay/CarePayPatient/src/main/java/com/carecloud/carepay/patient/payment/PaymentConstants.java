@@ -13,6 +13,8 @@ public class PaymentConstants {
     public static final String ANDROID_PAY_PAYMENT_TYPE = "android_pay";
     public static final String MERCHANT_NAME = "First data Corporation";
 
+    public static final String ANDROID_PAY_MERCHANT_SERVICE = "PZY";
+
     // Intent extra keys
     public static final String EXTRA_ITEM_ID = "com.firstdata.firstapi.androidpay.EXTRA_ITEM_ID";
     public static final String EXTRA_MASKED_WALLET = "com.firstdata.firstapi.androidpay.EXTRA_MASKED_WALLET";
