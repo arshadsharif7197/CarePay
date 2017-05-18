@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 
@@ -145,10 +146,13 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
             view.setSoundEffectsEnabled(false);
             view.setFocusable(true);
             view.setFocusableInTouchMode(true);
-            view.setOnClickListener(new View.OnClickListener() {
+            view.setOnTouchListener(new View.OnTouchListener() {
                 @Override
-                public void onClick(View view) {
-                    SystemUtil.hideSoftKeyboard(getContext(), view);
+                public boolean onTouch(View view, MotionEvent event) {
+                    if(event.getAction() == MotionEvent.ACTION_DOWN){
+                        SystemUtil.hideSoftKeyboard(getContext(), view);
+                    }
+                    return false;
                 }
             });
         }

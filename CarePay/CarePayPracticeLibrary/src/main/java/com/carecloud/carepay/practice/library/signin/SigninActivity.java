@@ -169,6 +169,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
             Gson gson = new Gson();
             String signInResponseString = gson.toJson(workflowDTO);
             UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString, UnifiedSignInResponse.class);
@@ -483,6 +484,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
 
         @Override
         public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
             getWorkflowServiceHelper().setAppAuthorizationHelper(null);
             setSignInButtonClickable(true);
             showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
