@@ -60,6 +60,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 
 public class PracticeModePracticeCheckInActivity extends BasePracticeActivity implements FilterDialog.FilterDialogListener, PracticePaymentNavigationCallback, AppointmentDetailDialog.AppointmentDialogCallback {
 
@@ -150,7 +151,7 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     }
 
     private void populateLists() {
-        ArrayList<FilterDataDTO> doctors = new ArrayList<>();
+        ArrayList<FilterDataDTO> providers = new ArrayList<>();
         ArrayList<FilterDataDTO> locations = new ArrayList<>();
         ArrayList<FilterDataDTO> patients = new ArrayList<>();
 
@@ -160,16 +161,18 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
         if (null == payload) {
             return;
         }
+        Set<String> providersSavedFilteredIds = getApplicationPreferences().getSelectedProvidersIds();
+        Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds();
 
         List<AppointmentDTO> appointments = payload.getAppointments();
         for (AppointmentDTO appointmentDTO : appointments) {
             AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
-            addProviderOnProviderFilterList(doctors, appointmentPayloadDTO);
-            addLocationOnFilterList(locations, appointmentPayloadDTO);
+            addProviderOnProviderFilterList(providers, appointmentPayloadDTO, providersSavedFilteredIds);
+            addLocationOnFilterList(locations, appointmentPayloadDTO, locationsSavedFilteredIds);
             addPatientOnFilterList(patients, appointmentPayloadDTO, photoMap);
         }
 
-        filter.setDoctors(doctors);
+        filter.setDoctors(providers);
         filter.setLocations(locations);
         filter.setPatients(patients);
     }
@@ -184,11 +187,16 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
         applyFilter();
     }
 
-    private void addLocationOnFilterList(ArrayList<FilterDataDTO> locationsList, AppointmentPayloadDTO appointmentPayloadDTO) {
+    private void addLocationOnFilterList(ArrayList<FilterDataDTO> locationsList,
+                                         AppointmentPayloadDTO appointmentPayloadDTO,
+                                         Set<String> locationsSavedFilteredIds) {
         FilterDataDTO filterDataDTO;
         LocationDTO locationDTO = appointmentPayloadDTO.getLocation();
         filterDataDTO = new FilterDataDTO(locationDTO.getId(), locationDTO.getName(), FilterDataDTO.FilterDataType.LOCATION);
         if (locationsList.indexOf(filterDataDTO) < 0) {
+            if ((locationsSavedFilteredIds != null) && locationsSavedFilteredIds.contains(String.valueOf(locationDTO.getId()))) {
+                filterDataDTO.setChecked(true);
+            }
             locationsList.add(filterDataDTO);
         }
     }
@@ -207,10 +215,15 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
         }
     }
 
-    private void addProviderOnProviderFilterList(ArrayList<FilterDataDTO> doctors, AppointmentPayloadDTO appointmentPayloadDTO) {
+    private void addProviderOnProviderFilterList(ArrayList<FilterDataDTO> doctors,
+                                                 AppointmentPayloadDTO appointmentPayloadDTO,
+                                                 Set<String> selectedProvidersIds) {
         ProviderDTO providerDTO = appointmentPayloadDTO.getProvider();
         FilterDataDTO filterDataDTO = new FilterDataDTO(providerDTO.getId(), providerDTO.getName(), FilterDataDTO.FilterDataType.PROVIDER);
         if (doctors.indexOf(filterDataDTO) < 0) {
+            if ((selectedProvidersIds != null) && selectedProvidersIds.contains(String.valueOf(providerDTO.getId()))) {
+                filterDataDTO.setChecked(true);
+            }
             doctors.add(filterDataDTO);
         }
     }
