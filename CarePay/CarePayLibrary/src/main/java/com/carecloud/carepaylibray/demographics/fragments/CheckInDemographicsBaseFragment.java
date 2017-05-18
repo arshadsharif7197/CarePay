@@ -324,6 +324,9 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                 }
                 storeOption.setLabel(option.getLabel());
                 storeOption.setName(option.getName());
+                if(getView()!=null) {
+                    checkIfEnableButton(getView());
+                }
             }
         };
     }
