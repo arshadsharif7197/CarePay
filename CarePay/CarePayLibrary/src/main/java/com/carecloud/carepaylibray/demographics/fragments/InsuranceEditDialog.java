@@ -547,7 +547,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
 
     private void getInsuranceDropdownLists() {
-        DemographicMetadataEntityInsurancesDTO insurancesMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getInsurances();
+        DemographicMetadataEntityInsurancesDTO insurancesMetaDTO = demographicDTO.getMetadata().getNewDataModel().getDemographic().getInsurances();
         if (insurancesMetaDTO != null) {
             DemographicMetadataPropertiesInsuranceDTO properties = insurancesMetaDTO.getProperties()
                     .getItems().getInsurance().getProperties();

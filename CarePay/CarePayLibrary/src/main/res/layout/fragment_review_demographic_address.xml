@@ -25,7 +25,6 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/addressEditTextId"
                 style="@style/SigninSignupEditStyle"
-                android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
                 android:imeOptions="actionNext"
                 android:inputType="textPostalAddress"
                 android:maxLength="50"
@@ -43,14 +42,12 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                 android:id="@+id/address2TextInputLayout"
                 style="@style/SigninSignupTextInputStyle"
-                android:layout_weight="1"
                 app:hintTextAppearance="@style/FloatingLabelStyle"
                 app:customAssetFont="proxima_nova_semi_bold">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                     android:id="@+id/addressEditText2Id"
                     style="@style/SigninSignupEditStyle"
-                    android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
                     android:imeOptions="actionNext"
                     android:inputType="textPostalAddress"
                     android:maxLength="50"

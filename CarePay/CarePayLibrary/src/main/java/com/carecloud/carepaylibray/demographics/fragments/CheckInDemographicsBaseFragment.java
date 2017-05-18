@@ -1,16 +1,23 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
+import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -18,9 +25,12 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -29,6 +39,7 @@ import com.google.gson.Gson;
 import com.marcok.stepprogressbar.StepProgressBar;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -170,10 +181,20 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         boolean isEnabled = passConstraints(view);
         nextButton.setEnabled(isEnabled);
         nextButton.setClickable(isEnabled);
-        Context context = getActivity();
-        if (context != null && getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-            nextButton.setBackground(ContextCompat.getDrawable(context, isEnabled ? R.drawable.bg_green_overlay : R.drawable.bg_silver_overlay));
+//        if (getContext() != null && getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+//            nextButton.setBackground(ContextCompat.getDrawable(getContext(), isEnabled ? R.drawable.bg_green_overlay : R.drawable.bg_silver_overlay));
+//        }
+    }
+
+    protected void initSelectableInput(TextView textView, DemographicsOption storeOption, String value){
+        storeOption.setName(value);
+        storeOption.setLabel(value);
+
+        if(StringUtil.isNullOrEmpty(value)){
+            value = Label.getLabel("demographics_choose");
         }
+        textView.setText(value);
+
     }
 
     protected abstract boolean passConstraints(View view);
@@ -199,6 +220,16 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         getWorkflowServiceHelper().execute(transitionDTO, consentformcallback, demogrPayloadString, queries, header);
     }
 
+
+    protected void setVisibility(View view, boolean isDisplayed){
+        if(isDisplayed){
+            view.setVisibility(View.VISIBLE);
+        }else{
+            view.setVisibility(View.GONE);
+        }
+    }
+
+
     @Override
     public  boolean navigateBack(){
         return preventNavBack;
@@ -214,8 +245,149 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             } else {
                 checkinFlowCallback = (CheckinFlowCallback) context;
             }
-        } catch (ClassCastException e) {
+        } catch (ClassCastException cce) {
             throw new ClassCastException(context.toString() + " must implement CheckinFlowCallback");
         }
     }
+
+    protected TextWatcher getValidateEmptyTextWatcher(final TextInputLayout inputLayout){
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(StringUtil.isNullOrEmpty(editable.toString())){
+                    inputLayout.setErrorEnabled(true);
+                    inputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
+                }else{
+                    inputLayout.setError(null);
+                }
+                checkIfEnableButton(getView());
+            }
+        };
+    }
+
+    protected TextWatcher clearValidationErrorsOnTextChange(final TextInputLayout inputLayout){
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(!StringUtil.isNullOrEmpty(editable.toString())) {
+                    inputLayout.setError(null);
+                    inputLayout.setErrorEnabled(false);
+                }
+            }
+        };
+    }
+
+    protected TextWatcher phoneInputFormatter = new TextWatcher() {
+        int lastLength;
+
+        @Override
+        public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+            lastLength = sequence.length();
+        }
+
+        @Override
+        public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            StringUtil.autoFormatPhone(editable, lastLength);
+        }
+    };
+
+    protected OnOptionSelectedListener getDefaultOnOptionsSelectedListener(final TextView textView, final DemographicsOption storeOption){
+        return new OnOptionSelectedListener() {
+            @Override
+            public void onOptionSelected(DemographicsOption option) {
+                if(textView!=null){
+                    textView.setText(option.getLabel());
+                }
+                storeOption.setLabel(option.getLabel());
+                storeOption.setName(option.getName());
+            }
+        };
+    }
+
+    protected View.OnClickListener getSelectOptionsListener(final List<DemographicsOption> options, final OnOptionSelectedListener listener, final String title) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showChooseDialog(getContext(), options, title, listener);
+            }
+        };
+    }
+
+
+    private void showChooseDialog(Context context,
+                                        List<DemographicsOption> options,
+                                        String title,
+                                        final OnOptionSelectedListener listener) {
+
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+        // add cancel button
+        dialog.setNegativeButton(Label.getLabel("demographics_cancel_label"), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int pos) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        // create dialog layout
+        View customView = LayoutInflater.from(context).inflate(R.layout.alert_list_layout, null, false);
+        dialog.setView(customView);
+        TextView titleTextView = (TextView) customView.findViewById(R.id.title_view);
+        titleTextView.setText(title);
+        titleTextView.setVisibility(View.VISIBLE);
+
+
+        // create the adapter
+        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
+        CustomOptionsAdapter customOptionsAdapter = new CustomOptionsAdapter(context, options);
+        listView.setAdapter(customOptionsAdapter);
+
+
+        final AlertDialog alert = dialog.create();
+        alert.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        alert.show();
+
+        // set item click listener
+        AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long row) {
+                DemographicsOption selectedOption = (DemographicsOption) adapterView.getAdapter().getItem(position);
+                if (listener != null) {
+                    listener.onOptionSelected(selectedOption);
+                }
+                alert.dismiss();
+            }
+        };
+        listView.setOnItemClickListener(clickListener);
+    }
+
+    public interface OnOptionSelectedListener{
+        void  onOptionSelected(DemographicsOption option);
+    }
+
+
+
 }

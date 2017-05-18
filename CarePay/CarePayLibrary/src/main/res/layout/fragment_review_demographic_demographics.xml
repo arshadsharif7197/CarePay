@@ -1,99 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout android:id="@+id/reviewdemographicsDemographicContainer"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-              >
-
-    <TextView
-        android:id="@+id/demographicsSectionLabel"
-        style="@style/reviewDemographicBlue."
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp" />
-
+<LinearLayout
+    android:id="@+id/reviewdemographicsDemographicContainer"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/genderDemographicsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/consentform_relativeLayout_margin"
-        android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/genderTextView"
-            style="@style/DemographicsDocsLabelStyle"
-            android:layout_width="0dp"
-            android:layout_weight="1" />
-
-        <TextView
-            android:id="@+id/chooseGenderTextView"
-            style="@style/DemographicsDocsClickableTextStyle"
-            android:layout_width="wrap_content" />
-    </LinearLayout>
-
-    <View
-        style="@style/Consent_Form_View_Style"
-        android:layout_width="match_parent" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/consentform_relativeLayout_margin"
-        android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/raceDataTextView"
-            style="@style/DemographicsDocsLabelStyle"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight=".30"/>
+            android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/raceListDataTextView"
-            style="@style/DemographicsDocsClickableTextStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAlignment="textEnd"
-            android:layout_weight=".70"/>
-    </LinearLayout>
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                style="@style/DemographicsDocsLabelStyle"
+                android:layout_width="wrap_content"
+                tools:text="Gender"
+                breeze:textKey="demographics_review_gender"
+                app:customAssetFont="proxima_nova_regular"/>
 
-    <View
-        style="@style/Consent_Form_View_Style"
-        android:layout_width="match_parent" />
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/chooseGenderTextView"
+                style="@style/DemographicsDocsClickableTextStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="end"
+                tools:text="Choose"
+                app:customAssetFont="proxima_nova_regular"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/consentform_relativeLayout_margin"
-        android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
-        android:orientation="horizontal">
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/ethnicityDataTextView"
-            style="@style/DemographicsDocsLabelStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".35" />
-
-        <TextView
-            android:id="@+id/ethnicityListDataTextView"
-            style="@style/DemographicsDocsClickableTextStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAlignment="textEnd"
-            android:layout_weight=".65" />
+        <View
+            style="@style/Consent_Form_View_Style"
+            android:layout_width="match_parent" />
 
     </LinearLayout>
 
-    <View
-        style="@style/Consent_Form_View_Style"
-        android:layout_width="match_parent" />
+    <LinearLayout
+        android:id="@+id/raceDemographicsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
+            android:orientation="horizontal">
 
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/raceDataTextView"
+                style="@style/DemographicsDocsLabelStyle"
+                android:layout_width="wrap_content"
+                tools:text="Race"
+                breeze:textKey="demographics_review_race"
+                app:customAssetFont="proxima_nova_regular"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/chooseRaceTextView"
+                style="@style/DemographicsDocsClickableTextStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="end"
+                tools:text="Choose"
+                app:customAssetFont="proxima_nova_regular"/>
+
+        </LinearLayout>
+
+        <View
+            style="@style/Consent_Form_View_Style"
+            android:layout_width="match_parent" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/secondaryRaceDemographicsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
+            android:orientation="horizontal">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                style="@style/DemographicsDocsLabelStyle"
+                android:layout_width="wrap_content"
+                tools:text="Secondary Race"
+                breeze:textKey="demographics_secondary_race"
+                app:customAssetFont="proxima_nova_regular"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/chooseSecondaryRace"
+                style="@style/DemographicsDocsClickableTextStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="end"
+                tools:text="Choose"
+                app:customAssetFont="proxima_nova_regular"/>
+
+        </LinearLayout>
+
+        <View
+            style="@style/Consent_Form_View_Style"
+            android:layout_width="match_parent" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ethnicityDemographicsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
+            android:orientation="horizontal">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                style="@style/DemographicsDocsLabelStyle"
+                android:layout_width="wrap_content"
+                tools:text="Ethnicity"
+                breeze:textKey="demographics_review_ethnicity"
+                app:customAssetFont="proxima_nova_regular"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/chooseEthnicityTextView"
+                style="@style/DemographicsDocsClickableTextStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="end"
+                tools:text="Choose"
+                app:customAssetFont="proxima_nova_regular"/>
+
+        </LinearLayout>
+
+        <View
+            style="@style/Consent_Form_View_Style"
+            android:layout_width="match_parent" />
+
+    </LinearLayout>
+
+    <include layout="@layout/fragment_expanded_demographics"/>
 
 </LinearLayout>

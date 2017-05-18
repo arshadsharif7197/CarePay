@@ -11,14 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
@@ -32,42 +30,33 @@ import com.carecloud.carepaylibray.utils.ValidationHelper;
 
 
 /**
- * Created by jorge on 27/02/17.
+ * Created by jorge on 27/02/17
  */
 
 public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
 
     private DemographicDTO demographicDTO;
     private UpdateProfilePictureListener callback;
+    private DemographicDataModel dataModel;
 
     @Override
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
-
+        dataModel = demographicDTO.getMetadata().getNewDataModel();
         preventNavBack = getArguments().getBoolean(PREVENT_NAV_BACK);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-        initNextButton(view);
-        setHeaderTitle(
-                Label.getLabel("demographics_review_peronsonalinfo_section"),
-                Label.getLabel("demographics_personal_info_heading"),
-                Label.getLabel("demographics_personal_info_subheading"),
-                view);
-
-        formatEditText(view);
-        initViewFromModels(view);
-        checkIfEnableButton(view);
-        //(view.findViewById(R.id.toolbar_layout)).setVisibility(View.INVISIBLE);
-        return view;
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
-//        callback.loadPictureFragment();
+        initialiseUIFields(view);
+        initViews(view);
+        checkIfEnableButton(view);
     }
 
     @Override
@@ -99,235 +88,162 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         }
     }
 
-    private void formatEditText(final View view) {
-        final DemographicMetadataEntityAddressDTO addressMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getAddress();
-        final DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getPersonalDetails();
-
-        setTextListener(persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getFirstName().getValidations().get(0).getErrorMessage(), R.id.reviewdemogrFirstNameTextInput, R.id.reviewdemogrFirstNameEdit, view);
-        setTextFocusListener(R.id.reviewdemogrFirstNameEdit, R.id.reviewdemogrFirstNameTextInput, view);
-
-        setTextListener(persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getLastName().getValidations().get(0).getErrorMessage(), R.id.reviewdemogrLastNameTextInput, R.id.reviewdemogrLastNameEdit, view);
-        setTextFocusListener(R.id.reviewdemogrLastNameEdit, R.id.reviewdemogrLastNameTextInput, view);
-
-        final TextInputLayout doblabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
-        final EditText dobEditText = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
-        dobEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dobEditText.setSelection(dobEditText.length());
-            }
-        });
-
-        dobEditText.addTextChangedListener(new TextWatcher() {
-            int prevLen = 0;
-
-            @Override
-            public void beforeTextChanged(CharSequence dob, int start, int count, int after) {
-                prevLen = dob.length();
-            }
-
-            @Override
-            public void onTextChanged(CharSequence dob, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String dob = dobEditText.getText().toString();
-                if (!StringUtil.isNullOrEmpty(dob)) {
-                    doblabel.setErrorEnabled(false);
-                    doblabel.setError(null);
-                }
-                StringUtil.autoFormatDateOfBirth(editable, prevLen);
-                checkIfEnableButton(view);
-            }
-        });
-
-
-        setTextFocusListener(R.id.revewidemogrDOBEdit, R.id.reviewdemogrDOBTextInput, view);
-
-        final TextInputLayout phoneNumberLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
-        final EditText phoneNumberEditText = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
-        setTextFocusListener(R.id.reviewgrdemoPhoneNumberEdit, R.id.reviewdemogrPhoneNumberTextInput, view);
-
-
-        phoneNumberEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                phoneNumberEditText.setSelection(phoneNumberEditText.length());
-            }
-        });
-
-        phoneNumberEditText.addTextChangedListener(new TextWatcher() {
-            int len = 0;
-
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
-                len = charSequence.length();
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable phonenumber) {
-                String phone = phoneNumberEditText.getText().toString();
-                boolean isPhoneEmpty = StringUtil.isNullOrEmpty(phone);
-                if (!isPhoneEmpty) {
-                    phoneNumberLabel.setError(null);
-                    phoneNumberLabel.setErrorEnabled(false);
-                } else {
-                    final String phoneNumberError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getPhone().getValidations().get(0).getErrorMessage();
-                    phoneNumberLabel.setError(phoneNumberError);
-                    phoneNumberLabel.setErrorEnabled(true);
-                }
-                // auto-format as typing
-                StringUtil.autoFormatPhone(phonenumber, len);
-                checkIfEnableButton(view);
-            }
-        });
-
-
-        setTextFocusListener(R.id.reviewdemogrMiddleNameEdit, R.id.reviewdemogrMiddleNameTextInputLayout, view);
-
+    private void initialiseUIFields(View view) {
+        setHeaderTitle(
+                Label.getLabel("demographics_review_peronsonalinfo_section"),
+                Label.getLabel("demographics_personal_info_heading"),
+                Label.getLabel("demographics_personal_info_subheading"),
+                view);
+        initNextButton(view);
     }
 
-    private void setTextListener(final String message, final int layOutTextLabel, final int textEditableId, final View view) {
-        final TextInputLayout textLayout = (TextInputLayout) view.findViewById(layOutTextLabel);
-        final EditText editText = (EditText) view.findViewById(textEditableId);
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
 
-            }
+    private void initViews(View view){
+        DemographicPayloadDTO demographicPayload = demographicDTO.getPayload().getDemographics().getPayload();
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                boolean isTextEmpty = checkTextEmptyValue(textEditableId, view);
-                if (!isTextEmpty) {
-                    textLayout.setError(null);
-                    textLayout.setErrorEnabled(false);
-                } else {
-                    textLayout.setError(message);
-                    textLayout.setErrorEnabled(true);
-                }
-                checkIfEnableButton(view);
-            }
-        });
-
-    }
-
-    private void setTextFocusListener(int textEditableId, int inputLayoutId, View view) {
-        View editText = view.findViewById(textEditableId);
-        TextInputLayout inputLayout = (TextInputLayout) view.findViewById(inputLayoutId);
-        editText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(inputLayout, null));
-    }
-
-    private void initViewFromModels(View view) {
-        DemographicAddressPayloadDTO demographicAddressPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getAddress();
-        if (demographicAddressPayloadDTO != null) {
-
-            String phonenumber = demographicAddressPayloadDTO.getPhone();
-            if (SystemUtil.isNotEmptyString(phonenumber)) {
-                phonenumber = StringUtil.formatPhoneNumber(phonenumber);
-            }
-            initTextInputLayoutValue(phonenumber, R.id.reviewgrdemoPhoneNumberEdit, view);
+        TextInputLayout firstNameLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrFirstNameTextInput);
+        EditText firstName = (EditText) view.findViewById(R.id.reviewdemogrFirstNameEdit);
+        firstName.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(firstNameLayout, null));
+        setVisibility(firstNameLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getFirstName().isDisplayed());
+        firstName.setText(demographicPayload.getPersonalDetails().getFirstName());
+        firstName.getOnFocusChangeListener().onFocusChange(firstName, !StringUtil.isNullOrEmpty(firstName.getText().toString()));
+        if(dataModel.getDemographic().getPersonalDetails().getProperties().getFirstName().isRequired()) {
+            firstName.addTextChangedListener(getValidateEmptyTextWatcher(firstNameLayout));
         }
 
-        PatientModel demographicPersDetailsPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
-        if (demographicPersDetailsPayloadDTO != null) {
 
-            //Personal Details
+        TextInputLayout lastNameLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrLastNameTextInput);
+        EditText lastName = (EditText) view.findViewById(R.id.reviewdemogrLastNameEdit);
+        lastName.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(lastNameLayout, null));
+        setVisibility(lastNameLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getLastName().isDisplayed());
+        lastName.setText(demographicPayload.getPersonalDetails().getLastName());
+        lastName.getOnFocusChangeListener().onFocusChange(lastName, !StringUtil.isNullOrEmpty(lastName.getText().toString()));
+        if(dataModel.getDemographic().getPersonalDetails().getProperties().getLastName().isRequired()) {
+            lastName.addTextChangedListener(getValidateEmptyTextWatcher(lastNameLayout));
+        }
 
-            String lastName = demographicPersDetailsPayloadDTO.getLastName();
-            initTextInputLayoutValue(lastName, R.id.reviewdemogrLastNameEdit, view);
 
-            String middleName = demographicPersDetailsPayloadDTO.getMiddleName();
-            initTextInputLayoutValue(middleName, R.id.reviewdemogrMiddleNameEdit, view);
+        TextInputLayout middleNameLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrMiddleNameTextInputLayout);
+        EditText middleName = (EditText) view.findViewById(R.id.reviewdemogrMiddleNameEdit);
+        middleName.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(middleNameLayout, null));
+        setVisibility(middleNameLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isDisplayed());
+        middleName.setText(demographicPayload.getPersonalDetails().getMiddleName());
+        middleName.getOnFocusChangeListener().onFocusChange(middleName, !StringUtil.isNullOrEmpty(middleName.getText().toString()));
+        if(dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isRequired()) {
+            middleName.addTextChangedListener(getValidateEmptyTextWatcher(middleNameLayout));
+            View middleNameOptional = view.findViewById(R.id.reviewdemogrMiddleNameOptionalLabel);
+            middleNameOptional.setVisibility(View.GONE);
+        }
 
-            String datetime = demographicPersDetailsPayloadDTO.getDateOfBirth();
-            EditText dobEditText = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
-            if (datetime != null) {
-                String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).toStringWithFormatMmSlashDdSlashYyyy();
-                dobEditText.setText(dateOfBirthString);
-                dobEditText.getOnFocusChangeListener().onFocusChange(dobEditText, false);
-            }
 
-            String firstName = demographicPersDetailsPayloadDTO.getFirstName();
-            initTextInputLayoutValue(firstName, R.id.reviewdemogrFirstNameEdit, view);
+        TextInputLayout dateBirthLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
+        final EditText dateOfBirth = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
+        dateOfBirth.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(dateBirthLayout, null));
+        setVisibility(dateBirthLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getDateOfBirth().isDisplayed());
+        dateOfBirth.addTextChangedListener(dateInputFormatter);
+        dateOfBirth.setOnClickListener(selectEndOnClick);
+
+        String dateString = demographicPayload.getPersonalDetails().getFormattedDateOfBirth();
+        dateOfBirth.setText(dateString);
+        dateOfBirth.getOnFocusChangeListener().onFocusChange(dateOfBirth, !StringUtil.isNullOrEmpty(dateString));
+        if(dataModel.getDemographic().getPersonalDetails().getProperties().getDateOfBirth().isRequired()) {
+            dateOfBirth.addTextChangedListener(getValidateEmptyTextWatcher(dateBirthLayout));
+        }else{
+            dateOfBirth.addTextChangedListener(clearValidationErrorsOnTextChange(dateBirthLayout));
+        }
+
+
+        TextInputLayout phoneNumberLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
+        EditText phoneNumber = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
+        phoneNumber.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(phoneNumberLayout, null));
+        setVisibility(phoneNumberLayout, dataModel.getDemographic().getAddress().getProperties().getPhone().isDisplayed());
+        phoneNumber.addTextChangedListener(phoneInputFormatter);
+        phoneNumber.setOnClickListener(selectEndOnClick);
+
+        String phoneNumberString = demographicPayload.getAddress().getPhone();
+        phoneNumber.setText(StringUtil.formatPhoneNumber(phoneNumberString));
+        phoneNumber.getOnFocusChangeListener().onFocusChange(phoneNumber, !StringUtil.isNullOrEmpty(phoneNumberString));
+        if(dataModel.getDemographic().getAddress().getProperties().getPhone().isRequired()) {
+            phoneNumber.addTextChangedListener(getValidateEmptyTextWatcher(phoneNumberLayout));
+        }else {
+            phoneNumber.addTextChangedListener(clearValidationErrorsOnTextChange(phoneNumberLayout));
         }
 
     }
 
-    private void initTextInputLayoutValue(String value, int textEditableId, View view) {
-        EditText editText = (EditText) view.findViewById(textEditableId);
-        if (SystemUtil.isNotEmptyString(value)) {
-            editText.setText(value);
-            editText.getOnFocusChangeListener().onFocusChange(editText, true);
+
+    private TextWatcher dateInputFormatter = new TextWatcher() {
+        int lastLength;
+
+        @Override
+        public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+            lastLength = sequence.length();
         }
-    }
 
-    private boolean isPhoneNumberValid(TextInputLayout phoneNumberLabel, EditText phoneNumberEditText) {
-        DemographicMetadataEntityAddressDTO addressMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getAddress();
+        @Override
+        public void onTextChanged(CharSequence sequence, int start, int before, int count) {
 
-        final String phoneError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED :
-                addressMetaDTO.getProperties().getPhone().getValidations().get(0).getErrorMessage();
-        final String phoneValidation = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED :
-                (String) addressMetaDTO.getProperties().getPhone().getValidations().get(0).getValue();
-
-        String phone = phoneNumberEditText.getText().toString();
-        if (!StringUtil.isNullOrEmpty(phone)
-                && !ValidationHelper.isValidString(phone.trim(), phoneValidation)) {
-            phoneNumberLabel.setErrorEnabled(true);
-            phoneNumberLabel.setError(phoneError);
-            return false;
         }
-        phoneNumberLabel.setError(null);
-        phoneNumberLabel.setErrorEnabled(false);
 
-        return true;
-    }
-
-    private boolean isDateOfBirthValid(TextInputLayout doblabel, EditText dobEditText) {
-        DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getPersonalDetails();
-        final String errorMessage = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getDateOfBirth().getValidations().get(0).getErrorMessage();
-        String dob = dobEditText.getText().toString();
-        if (!StringUtil.isNullOrEmpty(dob)) {
-            boolean isValid = DateUtil.isValidateStringDateOfBirth(dob);
-            doblabel.setErrorEnabled(!isValid);
-            doblabel.setError(isValid ? null : errorMessage);
-            return isValid;
+        @Override
+        public void afterTextChanged(Editable editable) {
+            StringUtil.autoFormatDateOfBirth(editable, lastLength);
         }
-        return true;
-    }
+    };
 
-    private boolean checkFormatedFields(View view) {
-        TextInputLayout phoneNumberLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
-        EditText phoneNumberEditText = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
-        boolean isPhoneValid = isPhoneNumberValid(phoneNumberLabel, phoneNumberEditText);
-        if (!isPhoneValid) {
-            return false;
+
+    private View.OnClickListener selectEndOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            EditText editText = (EditText) view;
+            editText.setSelection(editText.length());
         }
-        TextInputLayout doblabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
-        EditText dobEditText = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
-        return isDateOfBirthValid(doblabel, dobEditText);
-    }
+    };
+
+
 
     @Override
     protected boolean passConstraints(View view) {
-        boolean isPhoneEmpty = checkTextEmptyValue(R.id.reviewgrdemoPhoneNumberEdit, view);
-        boolean isFirstNameEmpty = checkTextEmptyValue(R.id.reviewdemogrFirstNameEdit, view);
-        boolean isLastNameEmpty = checkTextEmptyValue(R.id.reviewdemogrLastNameEdit, view);
-        boolean isdobEmpty = checkTextEmptyValue(R.id.revewidemogrDOBEdit, view);
+        if(dataModel.getDemographic().getPersonalDetails().getProperties().getFirstName().isRequired()
+                && checkTextEmptyValue(R.id.reviewdemogrFirstNameEdit, view)) {
+            return false;
+        }
+        if(dataModel.getDemographic().getPersonalDetails().getProperties().getLastName().isRequired()
+                && checkTextEmptyValue(R.id.reviewdemogrLastNameEdit, view)){
+            return false;
+        }
+        if(dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isRequired()
+                && checkTextEmptyValue(R.id.reviewdemogrMiddleNameEdit, view)){
+            return false;
+        }
+        if(dataModel.getDemographic().getPersonalDetails().getProperties().getDateOfBirth().isRequired()
+                && checkTextEmptyValue(R.id.revewidemogrDOBEdit, view)) {
+            return false;
+        }
+        if(dataModel.getDemographic().getAddress().getProperties().getPhone().isRequired()
+                && checkTextEmptyValue(R.id.reviewgrdemoPhoneNumberEdit, view)) {
+            return false;
+        }
 
-        return !isPhoneEmpty && !isdobEmpty && !isFirstNameEmpty && !isLastNameEmpty && checkFormatedFields(view);
+        //This validation is required regardless of whether fields are required
+        EditText dateOfBirth = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
+        if(!StringUtil.isNullOrEmpty(dateOfBirth.getText().toString()) && !DateUtil.isValidateStringDateOfBirth(dateOfBirth.getText().toString())) {
+            TextInputLayout dateBirthLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
+            dateBirthLayout.setErrorEnabled(true);
+            dateBirthLayout.setError(Label.getLabel("demographics_date_validation_msg"));
+            return false;
+        }
+
+        EditText phoneNumber = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
+        String pattern = "\\d{3}-\\d{3}-\\d{4}";
+        if(!StringUtil.isNullOrEmpty(phoneNumber.getText().toString()) && !ValidationHelper.isValidString(phoneNumber.getText().toString().trim(), pattern)){
+            TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
+            phoneLayout.setErrorEnabled(true);
+            phoneLayout.setError(Label.getLabel("demographics_phone_number_validation_msg"));
+            return false;
+        }
+
+        return true;
     }
 
     @Override

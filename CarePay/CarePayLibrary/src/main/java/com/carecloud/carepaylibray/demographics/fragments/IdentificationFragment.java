@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemIdDocDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
@@ -40,7 +39,8 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
         initNextButton(view);
 
         DemographicIdDocPayloadDTO idDocument = demographicDTO.getPayload().getDemographics().getPayload().getIdDocument();
-        initialiseChildFragment(idDocument, demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments().getProperties().getItems().getIdentityDocument());
+        initialiseChildFragment(idDocument
+                /*, demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments().getProperties().getItems().getIdentityDocument()*/);
         return view;
     }
 
@@ -74,8 +74,8 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
         return updatableDemographicDTO;
     }
 
-    private void initialiseChildFragment(DemographicIdDocPayloadDTO demPayloadIdDocDTO,
-                                         DemographicMetadataEntityItemIdDocDTO demographicMetadataEntityItemIdDocDTO) {
+    private void initialiseChildFragment(DemographicIdDocPayloadDTO demPayloadIdDocDTO
+                                         /*, DemographicMetadataEntityItemIdDocDTO demographicMetadataEntityItemIdDocDTO*/) {
 
         FragmentManager fm = getChildFragmentManager();
         String tag = IdDocScannerFragment.class.getSimpleName();
@@ -85,9 +85,9 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
             Bundle args = new Bundle();
             DtoHelper.bundleDto(args, demPayloadIdDocDTO);
 
-            if (null != demographicMetadataEntityItemIdDocDTO) {
-                DtoHelper.bundleDto(args, demographicMetadataEntityItemIdDocDTO);
-            }
+//            if (null != demographicMetadataEntityItemIdDocDTO) {
+//                DtoHelper.bundleDto(args, demographicMetadataEntityItemIdDocDTO);
+//            }
 
             fragment.setArguments(args);
         }

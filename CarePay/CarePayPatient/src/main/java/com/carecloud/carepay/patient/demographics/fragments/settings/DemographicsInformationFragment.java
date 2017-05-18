@@ -211,8 +211,8 @@ public class DemographicsInformationFragment extends BaseFragment {
         getDemographicDetails();
         getLabels();
 
-        raceDataTextView = (TextView) view.findViewById(R.id.raceListDataTextView);
-        ethnicityDataTextView = (TextView) view.findViewById(R.id.ethnicityListDataTextView);
+        raceDataTextView = (TextView) view.findViewById(R.id.chooseRaceTextView);
+        ethnicityDataTextView = (TextView) view.findViewById(R.id.chooseEthnicityTextView);
         selectGender = (TextView) view.findViewById(R.id.chooseGenderTextView);
         languageLabelTextView = (TextView) view.findViewById(R.id.languageTextView);
 
@@ -240,10 +240,10 @@ public class DemographicsInformationFragment extends BaseFragment {
         setEditTexts();
 
         TextView peronalInfoSectionTextview = (TextView) view.findViewById(R.id.reviewdemogrPersonalInfoLabel);
-        TextView demographicSectionTextView = (TextView) view.findViewById(R.id.demographicsSectionLabel);
+//        TextView demographicSectionTextView = (TextView) view.findViewById(R.id.demographicsSectionLabel);
 
         peronalInfoSectionTextview.setText(personalInfoString);
-        demographicSectionTextView.setText(demographicsHeaderString);
+//        demographicSectionTextView.setText(demographicsHeaderString);
 
         String dateOfBirthString = !StringUtil.isNullOrEmpty(dobValString) ? DateUtil.getInstance().setDateRaw(dobValString).toStringWithFormatMmSlashDdSlashYyyy() : "";
         if (SystemUtil.isNotEmptyString(dateOfBirthString)) {
@@ -304,7 +304,7 @@ public class DemographicsInformationFragment extends BaseFragment {
 
         driverLicenseEditText.setHint(driverLicenseString);
 
-        demographicSectionTextView.setTextSize(14);
+//        demographicSectionTextView.setTextSize(14);
         peronalInfoSectionTextview.setTextSize(14);
 
         updateProfileButton = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
