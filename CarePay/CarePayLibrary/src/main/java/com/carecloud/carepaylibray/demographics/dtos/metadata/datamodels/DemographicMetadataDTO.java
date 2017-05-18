@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels;
 
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.links.DemographicLinksDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.transitions.DemographicTransitionsDTO;
 import com.google.gson.annotations.Expose;
@@ -19,8 +20,7 @@ public class DemographicMetadataDTO {
     private DemographicTransitionsDTO transitions = new DemographicTransitionsDTO();
 
     @SerializedName("data_models")
-    @Expose
-    private DemographicMetadataDataModelsDTO dataModels = new DemographicMetadataDataModelsDTO();
+    private DemographicDataModel newDataModel = new DemographicDataModel();
 
     /**
      *
@@ -54,19 +54,11 @@ public class DemographicMetadataDTO {
         this.transitions = transitions;
     }
 
-    /**
-     * Getter.
-     * @return demographics metadata entities
-     */
-    public DemographicMetadataDataModelsDTO getDataModels() {
-        return dataModels;
+    public DemographicDataModel getNewDataModel() {
+        return newDataModel;
     }
 
-    /**
-     * Setter.
-     * @param dataModels The demographics metadata entities
-     */
-    public void setDataModels(DemographicMetadataDataModelsDTO dataModels) {
-        this.dataModels = dataModels;
+    public void setNewDataModel(DemographicDataModel newDataModel) {
+        this.newDataModel = newDataModel;
     }
 }
