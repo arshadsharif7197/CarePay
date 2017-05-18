@@ -36,4 +36,13 @@
     <color name="count_bg">#61D3DF</color>
     <color name="popup_background">#37474f</color>
     <color name="keypad_divider">@color/light_gray</color>
+
+    <!--PracticeMode - PatientMode-->
+    <color name="practice_mode_background">#37474F</color>
+    <color name="practice_mode_action_bar">@color/dark_blue</color>
+    <color name="patient_mode_action_bar">@color/colorPrimaryDark</color>
+    <color name="practice_mode_counter_background">@color/dark_blue</color>
+    <color name="practice_mode_counter_text">@color/soft_sky</color>
+    <color name="patient_mode_counter_background">@color/count_bg</color>
+    <color name="patient_mode_counter_text">@color/white</color>
 </resources>

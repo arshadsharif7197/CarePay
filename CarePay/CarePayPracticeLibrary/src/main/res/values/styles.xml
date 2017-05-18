@@ -20,6 +20,20 @@
         <item name="colorControlActivated">@color/light_gray</item>
     </style>
 
+    <style name="PracticeModeActivity" parent="AppThemePractice">
+        <item name="practiceBackgroundColor">@color/practice_mode_background</item>
+        <item name="practiceActionBarColor">@color/practice_mode_action_bar</item>
+        <item name="counterBackgroundColor">@color/practice_mode_counter_background</item>
+        <item name="counterTextColor">@color/practice_mode_counter_text</item>
+    </style>
+
+    <style name="PatientModeActivity" parent="AppThemePractice">
+        <item name="practiceBackgroundColor">@drawable/screen_background</item>
+        <item name="practiceActionBarColor">@color/patient_mode_action_bar</item>
+        <item name="counterBackgroundColor">@color/patient_mode_counter_background</item>
+        <item name="counterTextColor">@color/patient_mode_counter_text</item>
+    </style>
+
     <style name="ChangeModeDialogOptions">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

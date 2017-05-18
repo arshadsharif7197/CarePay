@@ -84,6 +84,8 @@
 
     <color name="transparent_20">#33ffffff</color>
     <color name="optional_gray">#90a4ae</color>
-    <color name="confirm_pin_sub_title">#9FE5ED</color>
+    <color name="soft_sky">#9FE5ED</color>
+    <color name="confirm_pin_sub_title">@color/soft_sky</color>
     <color name="screen_gradient">#41949D</color>
+
 </resources>
