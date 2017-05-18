@@ -176,18 +176,18 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         int lastLength;
 
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            lastLength = s.length();
+        public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+            lastLength = sequence.length();
         }
 
         @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        public void onTextChanged(CharSequence sequence, int start, int before, int count) {
 
         }
 
         @Override
-        public void afterTextChanged(Editable s) {
-            StringUtil.autoFormatDateOfBirth(s, lastLength);
+        public void afterTextChanged(Editable editable) {
+            StringUtil.autoFormatDateOfBirth(editable, lastLength);
         }
     };
 

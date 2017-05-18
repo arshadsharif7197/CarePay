@@ -245,7 +245,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             } else {
                 checkinFlowCallback = (CheckinFlowCallback) context;
             }
-        } catch (ClassCastException e) {
+        } catch (ClassCastException cce) {
             throw new ClassCastException(context.toString() + " must implement CheckinFlowCallback");
         }
     }
@@ -253,17 +253,17 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     protected TextWatcher getValidateEmptyTextWatcher(final TextInputLayout inputLayout){
         return new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(CharSequence sequence, int start, int before, int count) {
 
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                if(StringUtil.isNullOrEmpty(s.toString())){
+            public void afterTextChanged(Editable editable) {
+                if(StringUtil.isNullOrEmpty(editable.toString())){
                     inputLayout.setErrorEnabled(true);
                     inputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
                 }else{
@@ -277,18 +277,18 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     protected TextWatcher clearValidationErrorsOnTextChange(final TextInputLayout inputLayout){
         return new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(CharSequence sequence, int start, int before, int count) {
 
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                if(!StringUtil.isNullOrEmpty(s.toString())) {
+            public void afterTextChanged(Editable editable) {
+                if(!StringUtil.isNullOrEmpty(editable.toString())) {
                     inputLayout.setError(null);
                     inputLayout.setErrorEnabled(false);
                 }
@@ -300,18 +300,18 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         int lastLength;
 
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            lastLength = s.length();
+        public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+            lastLength = sequence.length();
         }
 
         @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        public void onTextChanged(CharSequence sequence, int start, int before, int count) {
 
         }
 
         @Override
-        public void afterTextChanged(Editable s) {
-            StringUtil.autoFormatPhone(s, lastLength);
+        public void afterTextChanged(Editable editable) {
+            StringUtil.autoFormatPhone(editable, lastLength);
         }
     };
 
@@ -354,7 +354,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
         // create dialog layout
         View customView = LayoutInflater.from(context).inflate(R.layout.alert_list_layout, null, false);
-        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
         dialog.setView(customView);
         TextView titleTextView = (TextView) customView.findViewById(R.id.title_view);
         titleTextView.setText(title);
@@ -362,6 +361,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
 
         // create the adapter
+        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
         CustomOptionsAdapter customOptionsAdapter = new CustomOptionsAdapter(context, options);
         listView.setAdapter(customOptionsAdapter);
 
