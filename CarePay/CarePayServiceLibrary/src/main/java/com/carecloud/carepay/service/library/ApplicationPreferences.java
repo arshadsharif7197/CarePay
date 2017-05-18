@@ -2,8 +2,11 @@ package com.carecloud.carepay.service.library;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.ArraySet;
 
 import com.google.gson.Gson;
+
+import java.util.Set;
 
 
 /**
@@ -13,7 +16,7 @@ public class ApplicationPreferences {
 
     private static final String DEFAULT_STRING_PREFERENCES = "-";
 
-    private static final String PREFERENCE_CAREPAY = "Preference_CarePay";
+    public static final String PREFERENCE_CAREPAY = "Preference_CarePay";
 
     private static final String PREFERENCE_USER_SELECTED_LANGUAGE = "user_selected_language";
 
@@ -35,6 +38,10 @@ public class ApplicationPreferences {
 
     private static final String PREFERENCE_IS_TUTORIAL_SHOWN = "is_tutorial_shown";
 
+    public static final String PREFERENCE_FILTERED_PROVIDERS = "filteredDoctors";
+
+    public static final String PREFERENCE_FILTERED_LOCATIONS = "filteredLocations";
+
     private Context context;
 
     private String patientId;
@@ -47,6 +54,7 @@ public class ApplicationPreferences {
     private Boolean navigateToAppointments;
     private Boolean isTutorialShown;
     private String photoUrl;
+    private Integer[] selectedProvidersIds;
 
     public ApplicationPreferences(Context context) {
         this.context = context;
@@ -280,6 +288,10 @@ public class ApplicationPreferences {
         return getSharedPreferences().getBoolean(key, defaultValue);
     }
 
+    private Set<String> readStringSetFromSharedPref(String key) {
+        return getSharedPreferences().getStringSet(key, null);
+    }
+
     private SharedPreferences getSharedPreferences() {
         return context.getSharedPreferences(PREFERENCE_CAREPAY, Context.MODE_PRIVATE);
     }
@@ -307,5 +319,13 @@ public class ApplicationPreferences {
         }
 
         return readBooleanFromSharedPref(PREFERENCE_IS_TUTORIAL_SHOWN);
+    }
+
+    public Set<String> getSelectedProvidersIds() {
+        return readStringSetFromSharedPref(PREFERENCE_FILTERED_PROVIDERS);
+    }
+
+    public Set<String> getSelectedLocationsIds() {
+        return readStringSetFromSharedPref(PREFERENCE_FILTERED_LOCATIONS);
     }
 }

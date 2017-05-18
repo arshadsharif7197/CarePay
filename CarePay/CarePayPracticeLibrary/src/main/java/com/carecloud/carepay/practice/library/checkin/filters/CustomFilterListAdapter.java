@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,20 +41,16 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         /**
          * Called upon a filter change.
-         *
-         * @param filteredDataDTO The Data DTO that is filtered.
          */
-        void onFilterChanged(FilterDataDTO filteredDataDTO);
+        void onFilterChanged();
     }
 
     /**
      * Constructor.
      *
-     * @param context context
-     * @param filterModel   Filter Model
+     * @param filterModel Filter Model
      */
-    public CustomFilterListAdapter(Context context,
-                                   FilterModel filterModel,
+    public CustomFilterListAdapter(FilterModel filterModel,
                                    CustomFilterListAdapterListener callback) {
         this.context = context;
         this.filterModel = filterModel;
@@ -142,7 +137,6 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
             super(view);
             checkBox = (CheckBox) view.findViewById(R.id.patientItemCheckBox);
             selectedItemImageView = (ImageView) view.findViewById(R.id.selectedItemImageView);
-            SystemUtil.setProximaNovaSemiboldTypeface(context, checkBox);
             checkBox.setOnCheckedChangeListener(onCheckedChangeListener);
         }
 
@@ -155,7 +149,7 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
                 } else {
                     selectedItemImageView.setVisibility(View.GONE);
                 }
-                callback.onFilterChanged(filterDataDTO);
+                callback.onFilterChanged();
             }
         };
 
@@ -181,7 +175,6 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
         ViewHolderFilterableSectionHeader(View view) {
             super(view);
             headerItemTextView = (TextView) view.findViewById(R.id.headerItemTextView);
-            SystemUtil.setGothamRoundedBoldTypeface(context, headerItemTextView);
         }
 
         TextView getTextView() {
