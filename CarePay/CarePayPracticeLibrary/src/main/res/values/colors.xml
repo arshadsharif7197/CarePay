@@ -1,71 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#5BC5D0</color>
-    <color name="colorPrimaryDark">#489DA6</color>
     <color name="page_indicator">#4D5BC5D0</color>
-
-    <color name="white">#ffffff</color>
-    <color name="black">#000000</color>
-    <color name="transparent_apt">#00000000</color>
     <color name="transparent_70">#80ffffff</color>
-
     <color name="colorAccent">#acacac</color>
-    <color name="slateGray">#607d8b</color>
+
     <color name="find_patient_bg">#CC142C2E</color>
-    <color name="charcoal">#ff37474f</color>
-    <!--<color name="rich_electric_blue">#ff009bde</color>-->
-
-    <color name="light_gray">#CFD8DC</color>
-    <color name="munsell">#ffeceff1</color>
-    <color name="glitter">#ccebf9</color>
-
-    <color name="cardinal">#c31e30</color>
     <color name="amaranth">#ffe63248</color>
-    <color name="harvard_crimson">#d0021b</color>
     <color name="brick_red">#d14c4c</color>
-
     <color name="yellowGreen">#5BD063</color>
     <color name="checkin_item_border">#80C8E9</color>
     <color name="taupe_gray1">#848d92</color>
-    <!--<color name="rich_electric_blue_1">#018fcc</color>-->
-
-    <color name="paint_color_thumbnail">#BAB399</color>
-    <color name="payne_gray">#FF546E7A</color>
-    <color name="grayRound">#546e7a</color>
-    <color name="Feldgrau">#455a64</color>
-
-    <!-- Cognito -->
-    <color name="toolbar_items">#CBCBCB</color>
-    <color name="alert">#AC1600</color>
-    <color name="success">#37A51C</color>
-    <!--<color name="button_pressed">#2A5C91</color>-->
-
-    <!--<color name="text_border_selected">#4EA9DC</color>-->
-    <!--<color name="curious_blue">#0092d1</color>-->
-    <color name="warning">#E94700</color>
-    <color name="grey_100">#F5F7F7</color>
-    <color name="grey_300">#8D9496</color>
-    <color name="grey_400">#5A5D5E</color>
-    <color name="grey_500">#404142</color>
-    <color name="grey_600">#303232</color>
-    <color name="grey_700">#1D1E1E</color>
-
-    <color name="divider_color">#c4c4c4</color>
-    <color name="checked_in_appointment_bg">#fffdea</color>
     <color name="news_item_divider">#3378909C</color>
-
-    <color name="cadet_gray">#ff90a4ae</color>
-    <color name="pastel_blue">#b0bec5</color>
-
-    <color name="yellowGreen_blend">#337ed321</color>
-    <color name="white_transparent">#26ffffff</color>
     <color name="manatee">#9ba4a9</color>
 
     <!-- Custom Filter Popup -->
     <color name="popup_list_text_color">#5a717c</color>
     <color name="custom_filter_list_divider_background">#d0d0d0</color>
-    <color name="manatee_lite">#4Dd7d7d7</color>
-    <!--<color name="change_mode_divider_color">#0295d7</color>-->
 
     <!-- Custom Appointment Detail Dialog -->
     <color name="charcoal_78">#c637474f</color>
@@ -82,18 +32,8 @@
     <color name="scan_camera_bg">#50acacac</color>
 
     <!--Payments-->
-    <!--<color name="screen_header">#056DA3</color>-->
     <color name="filter_on">#34590C</color>
     <color name="count_bg">#61D3DF</color>
-
-    <color name="lightSlateGray">#78909C</color>
-    <!--<color name="bright_cerulean">#ff1f9bde</color>-->
     <color name="popup_background">#37474f</color>
-    <color name="gray">#ffb0bec5</color>
-    <!--<color name="darkblue">#176D9C</color>-->
-    <color name="light_gray_dialog">#eceff1</color>
-    <color name="overlay_green">#7ED321</color>
     <color name="keypad_divider">@color/light_gray</color>
-    <!--<color name="button_default">#329AD6</color>-->
-    <!--<color name="blue_de_france">#35a5e1</color>-->
 </resources>
