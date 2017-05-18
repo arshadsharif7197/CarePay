@@ -6,13 +6,13 @@
     android:id="@+id/activity_practice_appointments"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/screen_background"
+    android:background="?practiceBackgroundColor"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
+        android:background="?practiceActionBarColor"
         android:paddingBottom="@dimen/dimen_5dp"
         android:paddingTop="@dimen/dimen_5dp">
 
@@ -28,6 +28,7 @@
             android:padding="@dimen/dimen_10dp"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_20sp"
+            breeze:textKey="go_back"
             app:customAssetFont="gotham_rounded_medium" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -37,7 +38,8 @@
             android:layout_centerInParent="true"
             android:paddingEnd="0dp"
             android:paddingStart="@dimen/dimen_10dp"
-            android:textColor="@color/confirm_pin_sub_title"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
             android:textSize="@dimen/text_size_20sp"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="activity_heading" />
@@ -65,6 +67,7 @@
                 android:padding="@dimen/dimen_10dp"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_20sp"
+                breeze:textKey="practice_checkin_filter_find_patient"
                 app:customAssetFont="proxima_nova_regular" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -80,6 +83,7 @@
                 android:padding="@dimen/dimen_10dp"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_20sp"
+                breeze:textKey="practice_checkin_filter"
                 app:customAssetFont="proxima_nova_regular" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -153,7 +157,8 @@
                     android:paddingStart="20dp"
                     android:paddingTop="10dp"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_16sp" />
+                    android:textSize="@dimen/text_size_16sp"
+                    breeze:textKey="change_date_range_label"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/activity_practice_appointments_show_all_appointments_label"
@@ -169,7 +174,8 @@
                     android:paddingTop="10dp"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_16sp"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    breeze:textKey="all_appointments_label"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/activity_practice_appointments_show_pending_appointments_label"
@@ -200,7 +206,8 @@
                     android:layout_centerVertical="true"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_22sp"
-                    app:customAssetFont="gotham_rounded_medium" />
+                    app:customAssetFont="gotham_rounded_medium"
+                    breeze:textKey="today_label" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/practice_patient_count"
@@ -211,7 +218,7 @@
                     android:layout_toEndOf="@+id/practice_patient_count_label"
                     android:background="@drawable/queue_counter_noborder_background"
                     android:gravity="center"
-                    android:textColor="@color/white"
+                    android:textColor="?counterTextColor"
                     android:textSize="@dimen/text_size_16sp"
                     android:textStyle="bold"
                     app:customAssetFont="gotham_rounded_bold" />
@@ -225,7 +232,8 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_22sp"
                     android:visibility="gone"
-                    app:customAssetFont="gotham_rounded_medium" />
+                    app:customAssetFont="gotham_rounded_medium"
+                    breeze:textKey="pending_label" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/practice_pending_count"

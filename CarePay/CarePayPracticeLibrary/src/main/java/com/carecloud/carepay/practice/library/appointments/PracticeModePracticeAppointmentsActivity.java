@@ -146,15 +146,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         TextView addAppointmentTextView = (TextView) findViewById(R.id.activity_practice_appointments_add);
         addAppointmentTextView.setOnClickListener(getFindPatientListener(false));
 
-        setTextViewById(R.id.practice_go_back, Label.getLabel("go_back"));
-        setTextViewById(R.id.activity_practice_appointments_change_date_range_label, Label.getLabel("change_date_range_label"));
-        setTextViewById(R.id.activity_practice_appointments_show_all_appointments_label, Label.getLabel("all_appointments_label"));
-        setTextViewById(R.id.practice_patient_count_label, Label.getLabel("today_label"));
-        setTextViewById(R.id.practice_pending_count_label, Label.getLabel("pending_label"));
-        setTextViewById(R.id.practice_filter_label, Label.getLabel("practice_checkin_filter"));
-        findPatientTextView.setText(Label.getLabel("practice_checkin_filter_find_patient"));
-
-
         findViewById(R.id.practice_go_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
