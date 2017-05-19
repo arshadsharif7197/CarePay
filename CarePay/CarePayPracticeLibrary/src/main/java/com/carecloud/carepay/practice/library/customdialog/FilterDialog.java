@@ -26,6 +26,7 @@ import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 
 import java.util.Set;
@@ -180,6 +181,7 @@ public class FilterDialog extends PopupWindow
             public void onClick(View view) {
                 clearSearchImageView.performClick();
                 filterModel.clear();
+                saveFilter();
                 filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
                 callBack.applyFilter();
             }
@@ -208,11 +210,13 @@ public class FilterDialog extends PopupWindow
     }
 
     private void saveFilter() {
+        String practiceId = ((BaseActivity) context).getApplicationMode().getUserPracticeDTO().getPracticeId();
+        String userId = ((BaseActivity) context).getApplicationMode().getUserPracticeDTO().getUserId();
         ((AndroidPlatform) Platform.get()).openSharedPreferences(ApplicationPreferences.PREFERENCE_CAREPAY)
-                .edit().putStringSet(ApplicationPreferences.PREFERENCE_FILTERED_PROVIDERS,
+                .edit().putStringSet(practiceId + userId + ApplicationPreferences.PREFERENCE_FILTERED_PROVIDERS,
                 getFilteredDoctorsIds()).apply();
         ((AndroidPlatform) Platform.get()).openSharedPreferences(ApplicationPreferences
-                .PREFERENCE_CAREPAY).edit().putStringSet(ApplicationPreferences.PREFERENCE_FILTERED_LOCATIONS,
+                .PREFERENCE_CAREPAY).edit().putStringSet(practiceId + userId + ApplicationPreferences.PREFERENCE_FILTERED_LOCATIONS,
                 getFilteredLocationsIds()).apply();
     }
 

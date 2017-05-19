@@ -2,7 +2,6 @@ package com.carecloud.carepay.service.library;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.ArraySet;
 
 import com.google.gson.Gson;
 
@@ -54,7 +53,6 @@ public class ApplicationPreferences {
     private Boolean navigateToAppointments;
     private Boolean isTutorialShown;
     private String photoUrl;
-    private Integer[] selectedProvidersIds;
 
     public ApplicationPreferences(Context context) {
         this.context = context;
@@ -150,7 +148,7 @@ public class ApplicationPreferences {
      * @return practiceId
      */
     public String getPracticeId() {
-        if (null != practiceId) {
+        if (practiceId != null) {
             return practiceId;
         }
 
@@ -188,7 +186,7 @@ public class ApplicationPreferences {
      * @return userId
      */
     public String getUserId() {
-        if (null != userId) {
+        if (userId != null) {
             return userId;
         }
 
@@ -301,7 +299,6 @@ public class ApplicationPreferences {
     }
 
     /**
-     *
      * @param tutorialShown a boolean indicating if the tutorial has been shown
      */
     public void setTutorialShown(Boolean tutorialShown) {
@@ -310,7 +307,6 @@ public class ApplicationPreferences {
     }
 
     /**
-     *
      * @return a boolean indicating if the tutorial has been shown
      */
     public boolean isTutorialShown() {
@@ -321,11 +317,11 @@ public class ApplicationPreferences {
         return readBooleanFromSharedPref(PREFERENCE_IS_TUTORIAL_SHOWN);
     }
 
-    public Set<String> getSelectedProvidersIds() {
-        return readStringSetFromSharedPref(PREFERENCE_FILTERED_PROVIDERS);
+    public Set<String> getSelectedProvidersIds(String practiceId, String userId) {
+        return readStringSetFromSharedPref(practiceId + userId + PREFERENCE_FILTERED_PROVIDERS);
     }
 
-    public Set<String> getSelectedLocationsIds() {
-        return readStringSetFromSharedPref(PREFERENCE_FILTERED_LOCATIONS);
+    public Set<String> getSelectedLocationsIds(String practiceId, String userId) {
+        return readStringSetFromSharedPref(practiceId + userId + PREFERENCE_FILTERED_LOCATIONS);
     }
 }
