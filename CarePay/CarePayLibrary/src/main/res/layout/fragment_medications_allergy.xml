@@ -209,7 +209,7 @@
                     android:maxLines="1"
                     android:singleLine="true"
                     android:hint="Add unlisted medication"
-                    app:customAssetFont="proxima_nova_regular"/>
+                    app:customAssetFont="gotham_rounded_medium"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -227,7 +227,7 @@
         android:enabled="true"
         style="@style/InTakeNextButtonStyle"
         breeze:textKey="demographics_review_next_button"
-        app:customAssetFont="gotham_rounded_light"/>
+        app:customAssetFont="gotham_rounded_medium"/>
 
 
 </LinearLayout>
