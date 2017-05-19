@@ -200,7 +200,9 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
         secondaryPhone.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(secondaryPhoneLayout, null));
         setVisibility(secondaryPhoneLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryPhoneNumber().isDisplayed());
         secondaryPhone.addTextChangedListener(phoneInputFormatter);
-        secondaryPhone.setText(demographicPayload.getPersonalDetails().getSecondaryPhoneNumber());
+
+        String secondaryPhoneNumberString = demographicPayload.getPersonalDetails().getSecondaryPhoneNumber();
+        secondaryPhone.setText(StringUtil.formatPhoneNumber(secondaryPhoneNumberString));
         secondaryPhone.getOnFocusChangeListener().onFocusChange(secondaryPhone, !StringUtil.isNullOrEmpty(secondaryPhone.getText().toString()));
         if(dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryPhoneNumber().isRequired()) {
             secondaryPhone.addTextChangedListener(getValidateEmptyTextWatcher(secondaryPhoneLayout));
