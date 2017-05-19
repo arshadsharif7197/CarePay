@@ -91,8 +91,10 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
             List<PatientBalanceDTO> patientBalancesList = paymentsModel.getPaymentPayload().getPatientBalances();
 
-            Set<String> providersSavedFilteredIds = getApplicationPreferences().getSelectedProvidersIds();
-            Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds();
+            String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
+            String userId = getApplicationMode().getUserPracticeDTO().getUserId();
+            Set<String> providersSavedFilteredIds = getApplicationPreferences().getSelectedProvidersIds(practiceId, userId);
+            Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
             filter.setDoctors(addProviderOnProviderFilterList(paymentsModel, providersSavedFilteredIds));
             filter.setLocations(addLocationOnFilterList(paymentsModel, locationsSavedFilteredIds));
             filter.setPatients(addPatientOnFilterList(patientBalancesList));
