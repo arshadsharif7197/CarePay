@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentType;
+import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -34,16 +35,6 @@ import java.util.Map;
  * Created by lmenendez on 3/1/17.
  */
 public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implements BaseAddCreditCardFragment.IAuthoriseCreditCardResponse {
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            callback = (PaymentNavigationCallback) context;
-        } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached context must implement PaymentNavigationCallback");
-        }
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

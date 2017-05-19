@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.adapter.PaymentMethodAdapter;
@@ -22,6 +21,7 @@ import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ import java.util.List;
  * Created by lmenendez on 2/27/17
  */
 
-public abstract class PaymentMethodFragment extends BaseDialogFragment {
+public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
 
     public static final String TAG = PaymentMethodFragment.class.getSimpleName();
 
@@ -51,11 +51,14 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
 
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            callback = (PaymentNavigationCallback) context;
-        } catch (ClassCastException cce) {
+    public void attachCallback(Context context){
+        try{
+            if(context instanceof PaymentViewHandler){
+                callback = ((PaymentViewHandler) context).getPaymentPresenter();
+            }else{
+                callback = (PaymentNavigationCallback) context;
+            }
+        }catch (ClassCastException cce) {
             throw new ClassCastException("Attached Context must implement PaymentMethocActionCallback");
         }
     }
@@ -72,6 +75,14 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
             }
             paymentList = paymentsModel.getPaymentPayload().getPatientBalances();
             initPaymentTypeMap();
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(callback==null){
+            attachCallback(getContext());
         }
     }
 
@@ -163,7 +174,7 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
                 }
 
                 if ((previousBalance + coPay) > 0) {
-                    callback.onPaymentPlanAction();
+                    callback.onPaymentPlanAction(paymentsModel);
                 }
             }
         }

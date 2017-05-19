@@ -23,12 +23,13 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.List;
 
 /**
- * Created by lmenendez on 2/28/17.
+ * Created by lmenendez on 2/28/17
  */
 
 public class PartialPaymentDialog extends Dialog implements View.OnClickListener, TextWatcher {
@@ -63,7 +64,11 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         this.paymentsDTO = paymentsDTO;
 
         try {
-            payNowClickListener = (PaymentNavigationCallback) context;
+            if(context instanceof PaymentViewHandler){
+                payNowClickListener = ((PaymentViewHandler) context).getPaymentPresenter();
+            }else {
+                payNowClickListener = (PaymentNavigationCallback) context;
+            }
         } catch (ClassCastException cce) {
             throw new ClassCastException("Dialog Context must implement PayNowClickListener for callback");
         }

@@ -159,11 +159,9 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
                     @Override
                     public void onResult(@NonNull BooleanResult booleanResult) {
                         showOrHideProgressDialog(false);
-                        if (booleanResult.getStatus().isSuccess()) {
-                            if (booleanResult.getValue()) {
-                                isAndroidPayReady = true;
-                                addAndroidPayPaymentMethod();
-                            }
+                        if (booleanResult.getStatus().isSuccess() && booleanResult.getValue()) {
+                            isAndroidPayReady = true;
+                            addAndroidPayPaymentMethod();
                         }
                     }
                 });
