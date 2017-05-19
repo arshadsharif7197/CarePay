@@ -151,7 +151,7 @@ public class PaymentActivity extends BasePatientActivity implements PaymentViewH
     public void navigateToFragment(final Fragment fragment, final boolean addToBackStack) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(com.carecloud.carepay.patient.R.id.payment_frag_holder, fragment, fragment.getClass().getSimpleName());
+        transaction.replace(R.id.payment_frag_holder, fragment, fragment.getClass().getSimpleName());
         if (addToBackStack) {
             transaction.addToBackStack(fragment.getClass().getName());
         }

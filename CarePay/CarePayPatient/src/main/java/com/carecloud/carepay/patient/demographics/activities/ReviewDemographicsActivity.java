@@ -2,60 +2,75 @@ package com.carecloud.carepay.patient.demographics.activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.patient.payment.PatientPaymentPresenter;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenterImpl;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
+import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 
-public class ReviewDemographicsActivity extends BasePatientActivity implements DemographicsView {
+public class ReviewDemographicsActivity extends BasePatientActivity implements DemographicsView, PaymentViewHandler {
+    private static final String KEY_PAYMENT_DTO = "KEY_PAYMENT_DTO";
 
-    private DemographicsPresenter presenter;
+    private DemographicsPresenter demographicsPresenter;
+    private PatientPaymentPresenter paymentPresenter;
+
+    private String paymentWorkflow;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demographic_review);
 
-        presenter = new DemographicsPresenterImpl(this, savedInstanceState, false);
+        demographicsPresenter = new DemographicsPresenterImpl(this, savedInstanceState, false);
+        if(savedInstanceState!=null && savedInstanceState.containsKey(KEY_PAYMENT_DTO)){
+            paymentWorkflow = savedInstanceState.getString(KEY_PAYMENT_DTO);
+            initPaymentPresenter(paymentWorkflow);
+        }
     }
 
     @Override
     protected void onDestroy() {
-        presenter.onDestroy();
+        demographicsPresenter.onDestroy();
         super.onDestroy();
     }
 
     @Override
     public void onSaveInstanceState(Bundle icicle){
-        presenter.onSaveInstanceState(icicle);
+        demographicsPresenter.onSaveInstanceState(icicle);
+        icicle.putString(KEY_PAYMENT_DTO, paymentWorkflow);
         super.onSaveInstanceState(icicle);
     }
 
     @Override
     public void onStop() {
-        presenter.onStop();
+        demographicsPresenter.onStop();
         super.onStop();
     }
 
     @Override
     public void navigateToConsentForms(WorkflowDTO workflowDTO) {
-        presenter.navigateToConsentForms(workflowDTO);
+        demographicsPresenter.navigateToConsentForms(workflowDTO);
     }
 
     @Override
     public void navigateToIntakeForms(WorkflowDTO workflowDTO) {
-        presenter.navigateToIntakeForms(workflowDTO);
+        demographicsPresenter.navigateToIntakeForms(workflowDTO);
     }
 
     @Override
     public void navigateToMedicationsAllergy(WorkflowDTO workflowDTO) {
-        presenter.navigateToMedicationsAllergy(workflowDTO);
+        demographicsPresenter.navigateToMedicationsAllergy(workflowDTO);
     }
 
     @Override
@@ -79,8 +94,38 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         textView.setText(String.format(Label.getLabel(key), currentPage, totalPages));
     }
 
+    public void getPaymentInformation(String workflowJson) {
+        paymentWorkflow = workflowJson;
+        PaymentsModel paymentsModel = initPaymentPresenter(paymentWorkflow);
+        paymentPresenter.startPaymentProcess(paymentsModel);
+    }
+
+    private PaymentsModel initPaymentPresenter(String workflowJson){
+        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowJson);
+        paymentPresenter = new PatientPaymentPresenter(this, paymentsModel);
+        return paymentsModel;
+    }
+
     @Override
     public DemographicsPresenter getPresenter() {
-        return presenter;
+        return demographicsPresenter;
+    }
+
+    @Override
+    public PaymentPresenter getPaymentPresenter() {
+        return paymentPresenter;
+    }
+
+    @Override
+    public void navigateToFragment(Fragment fragment, boolean addToBackStack) {
+        demographicsPresenter.navigateToFragment(fragment, addToBackStack);
+    }
+
+    @Override
+    public void exitPaymentProcess(boolean cancelled) {
+        if(getCallingActivity()!=null){
+            setResult(cancelled ? RESULT_CANCELED : RESULT_OK);
+        }
+        finish();
     }
 }

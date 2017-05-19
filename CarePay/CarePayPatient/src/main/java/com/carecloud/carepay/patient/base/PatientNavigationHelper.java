@@ -104,6 +104,10 @@ public class PatientNavigationHelper {
                 break;
             }
             case NavigationStateConstants.PAYMENTS: {
+                if(context instanceof ReviewDemographicsActivity){
+                    ((ReviewDemographicsActivity) context).getPaymentInformation(workflowDTO.toString());
+                    return;
+                }
                 intent = new Intent(context, accessPaymentsBalances ? ViewPaymentBalanceHistoryActivity.class : PaymentActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
