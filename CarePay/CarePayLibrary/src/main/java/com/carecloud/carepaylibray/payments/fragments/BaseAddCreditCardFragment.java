@@ -418,6 +418,8 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         setAddressFieldsEnabled(false);
         setDefaultBillingAddressTexts();
 
+        hideKeyboardOnViewTouch(view.findViewById(R.id.container_main));
+
     }
 
 

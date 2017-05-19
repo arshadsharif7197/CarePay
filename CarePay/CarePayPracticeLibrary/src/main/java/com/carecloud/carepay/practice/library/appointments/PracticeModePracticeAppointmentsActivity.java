@@ -49,7 +49,6 @@ import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBa
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -223,8 +222,10 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         if (null == payload) {
             return;
         }
-        Set<String> providersSavedFilteredIds = getApplicationPreferences().getSelectedProvidersIds();
-        Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds();
+        String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
+        String userId = getApplicationMode().getUserPracticeDTO().getUserId();
+        Set<String> providersSavedFilteredIds = getApplicationPreferences().getSelectedProvidersIds(practiceId, userId);
+        Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
 
         List<AppointmentDTO> appointments = payload.getAppointments();
         for (AppointmentDTO appointmentDTO : appointments) {
@@ -495,7 +496,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             updateAppointment(workflowDTO);
-            SystemUtil.showSuccessToast(getContext(), Label.getLabel(confirmationMessageText));
+            showSuccessToast(Label.getLabel(confirmationMessageText));
             DtoHelper.putExtra(getIntent(), checkInDTO);
             initializeCheckinDto();
             applyFilter();
