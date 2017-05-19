@@ -23,6 +23,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -332,9 +333,8 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler {
                                         final String[] options, String title, String cancelLabel,
                                         final TextView selectionDestination,
                                         final OnClickItemCallback callback) {
-        final android.support.v7.app.AlertDialog.Builder dialog
+        final AlertDialog.Builder dialog
                 = new AlertDialog.Builder(activity);
-        dialog.setTitle(title);
         // add cancel button
         dialog.setNegativeButton(cancelLabel, new DialogInterface.OnClickListener() {
             @Override
@@ -348,12 +348,19 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler {
                 (ViewGroup) activity.getWindow().getDecorView().getRootView(),
                 false);
         ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
+        TextView titleTextView = (TextView) customView.findViewById(R.id.title_view);
+        titleTextView.setText(title);
+        titleTextView.setVisibility(View.VISIBLE);
+
+
+
         // create the adapter
         CustomAlertAdapter customAlertAdapter = new CustomAlertAdapter(activity, Arrays.asList(options));
         listView.setAdapter(customAlertAdapter);
         // show the dialog
         dialog.setView(customView);
-        final android.support.v7.app.AlertDialog alert = dialog.create();
+        final AlertDialog alert = dialog.create();
+        alert.requestWindowFeature(Window.FEATURE_NO_TITLE);
         alert.show();
 
         // set item click listener

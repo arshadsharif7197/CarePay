@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
+import com.carecloud.carepaylibray.customcomponents.SwipeViewHolder;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Picasso;
@@ -217,7 +218,7 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
 
     }
 
-    public class BalanceViewHolder extends RecyclerView.ViewHolder{
+    public class BalanceViewHolder extends SwipeViewHolder{
 
         private TextView description;
         private TextView providerName;
@@ -303,6 +304,16 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
                 return removeButton.getMeasuredWidth();
             }
             return clearButton.getMeasuredWidth();
+        }
+
+        @Override
+        public View getSwipeableView() {
+            return rowLayout;
+        }
+
+        @Override
+        public void displayUndoOption() {
+
         }
     }
 

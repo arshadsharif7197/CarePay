@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -253,6 +254,26 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         }
         transaction.commit();
     }
+
+    /**
+     * Display a fragment as a Dialog
+     * @param fragment must be a Dialog Fragment
+     * @param addToBackStack optional flag to add this transaction to back stack
+     */
+    public void displayDialogFragment(DialogFragment fragment, boolean addToBackStack){
+        String tag = fragment.getClass().getName();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        if(addToBackStack) {
+            ft.addToBackStack(tag);
+        }
+
+        fragment.show(ft, tag);
+    }
+
 
     /**
      * @param errorMessage the error message

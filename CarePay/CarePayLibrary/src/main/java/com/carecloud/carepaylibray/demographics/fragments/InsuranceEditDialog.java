@@ -354,7 +354,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         @Override
         public void onClick(View saveChanges) {
             if (editedIndex != NEW_INSURANCE) {
-                demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex).setDelete(true);
+                demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex).setDeleted(true);
             }
             closeDialog();
         }
@@ -547,7 +547,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
 
     private void getInsuranceDropdownLists() {
-        DemographicMetadataEntityInsurancesDTO insurancesMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getInsurances();
+        DemographicMetadataEntityInsurancesDTO insurancesMetaDTO = demographicDTO.getMetadata().getNewDataModel().getDemographic().getInsurances();
         if (insurancesMetaDTO != null) {
             DemographicMetadataPropertiesInsuranceDTO properties = insurancesMetaDTO.getProperties()
                     .getItems().getInsurance().getProperties();

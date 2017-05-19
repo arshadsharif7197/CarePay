@@ -30,9 +30,9 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialog;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialogFragment;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiAccountsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.MerchantServiceMetadataDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
@@ -51,9 +51,6 @@ import com.smartystreets.api.us_zipcode.City;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-//import com.carecloud.carepaylibray.utils.payeezysdk.sdk.payeezydirecttransactions.RequestTask;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -119,14 +116,14 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
             if (arguments != null) {
                 Gson gson = new Gson();
                 String payloadString;
-                if(addressPayloadDTO==null) {
+                if (addressPayloadDTO == null) {
                     payloadString = getApplicationPreferences().readStringFromSharedPref(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE);
                     addressPayloadDTO = new DemographicAddressPayloadDTO();
                     if (payloadString.length() > 1) {
                         addressPayloadDTO = gson.fromJson(payloadString, DemographicAddressPayloadDTO.class);
                     }
                 }
-                if(arguments.containsKey(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE)){
+                if (arguments.containsKey(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE)) {
                     payloadString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
                     PaymentsModel paymentsModel = gson.fromJson(payloadString, PaymentsModel.class);
                     papiAccountsDTO = paymentsModel.getPaymentPayload().getPapiAccounts();
@@ -204,7 +201,7 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
             }
         });
 
-
+        nameOnCardEditText.addTextChangedListener(textWatcher);
         verificationCodeEditText.addTextChangedListener(textWatcher);
         address1EditText.addTextChangedListener(textWatcher);
         zipCodeEditText.addTextChangedListener(textWatcher);
@@ -285,12 +282,12 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
         return fullCard.substring(fullCard.length() - 4, fullCard.length());
     }
 
-    private void setupTitleViews(View view){
+    private void setupTitleViews(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
-        if(toolbar!=null) {
+        if (toolbar != null) {
             title = (TextView) toolbar.findViewById(com.carecloud.carepaylibrary.R.id.respons_toolbar_title);
             toolbar.setTitle("");
-            if(getDialog()==null) {
+            if (getDialog() == null) {
                 toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), com.carecloud.carepaylibrary.R.drawable.icn_nav_back));
                 toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                     @Override
@@ -298,14 +295,14 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
                         getActivity().onBackPressed();
                     }
                 });
-            }else{
+            } else {
                 View close = view.findViewById(R.id.closeViewLayout);
-                if(close!=null){
+                if (close != null) {
                     close.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             dismiss();
-                            if(callback!=null){
+                            if (callback != null) {
                                 callback.onPayButtonClicked(amountToMakePayment, paymentsModel);
                             }
                         }
@@ -399,6 +396,8 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
         setAddressFieldsEnabled(false);
         setDefaultBillingAddressTexts();
 
+        hideKeyboardOnViewTouch(view.findViewById(R.id.container_main));
+
     }
 
 
@@ -446,32 +445,25 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
     }
 
     private void authorizeCreditCard() {
-//        String amount = String.valueOf((int) amountToMakePayment>0?amountToMakePayment:1);//this is to create an authorization
-        String amount = String.valueOf(1);//this is to create an authorization
         String currency = "USD";
         String cvv = creditCardsPayloadDTO.getCvv();
         String expiryDate = creditCardsPayloadDTO.getExpireDt();
         String name = creditCardsPayloadDTO.getNameOnCard();
         String cardType = creditCardsPayloadDTO.getCardType();
         String number = getCardNumber();
-        String state = billingInformationDTO.getState();
-        String addressline1 = billingInformationDTO.getLine1();
-        String zip = billingInformationDTO.getZip();
-        String country = "US";
-        String city = billingInformationDTO.getCity();
 
         try {
             MerchantServiceMetadataDTO merchantServiceDTO = null;
-            for(MerchantServicesDTO merchantService : merchantServicesList){
-                if(merchantService.getName().toLowerCase().contains("payeezy")){
+            for (MerchantServicesDTO merchantService : merchantServicesList) {
+                if (merchantService.getName().toLowerCase().contains("payeezy")) {
                     merchantServiceDTO = merchantService.getMetadata();
                     break;
                 }
             }
 
-            String tokenUrl = merchantServiceDTO.getBaseUrl()+merchantServiceDTO.getUrlPath();
-            if(!tokenUrl.endsWith("?")){
-                tokenUrl+="?";
+            String tokenUrl = merchantServiceDTO.getBaseUrl() + merchantServiceDTO.getUrlPath();
+            if (!tokenUrl.endsWith("?")) {
+                tokenUrl += "?";
             }
 
             TransactionDataProvider.tokenUrl = tokenUrl;
@@ -485,11 +477,7 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
             String tokenType = merchantServiceDTO.getTokenType();
             String tokenAuth = merchantServiceDTO.getTokenizationAuth();
             PayeezyRequestTask requestTask = new PayeezyRequestTask(getContext(), this);
-            requestTask.execute("gettokenvisa", tokenAuth, "", currency, tokenType,  cardType, name, number, expiryDate, cvv);
-//            requestTask.execute("posttokenvisa", currency, tokenType, number, name, expiryDate, cvv, cardType, "false", "");
-
-//            RequestTask requestTask = new RequestTask(getActivity(), BaseAddCreditCardFragment.this, merchantServiceDTO);
-//            requestTask.execute("authorize", amount, currency, paymentMethod, cvv, expiryDate, name, type, number, state, addressline1, zip, country, city);
+            requestTask.execute("gettokenvisa", tokenAuth, "", currency, tokenType, cardType, name, number, expiryDate, cvv);
             System.out.println("first authorize call end");
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -498,11 +486,11 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
     }
 
     private void setDefaultBillingAddressTexts() {
-        if(addressPayloadDTO!=null && !StringUtil.isNullOrEmpty(addressPayloadDTO.getAddress1())) {
+        if (addressPayloadDTO != null && !StringUtil.isNullOrEmpty(addressPayloadDTO.getAddress1())) {
             address1EditText.setText(addressPayloadDTO.getAddress1());
             address1EditText.getOnFocusChangeListener().onFocusChange(address1EditText, !StringUtil.isNullOrEmpty(addressPayloadDTO.getAddress1()));
 
-            address2EditText.setText(!StringUtil.isNullOrEmpty(addressPayloadDTO.getAddress2())?addressPayloadDTO.getAddress2():" ");
+            address2EditText.setText(!StringUtil.isNullOrEmpty(addressPayloadDTO.getAddress2()) ? addressPayloadDTO.getAddress2() : " ");
             address2EditText.getOnFocusChangeListener().onFocusChange(address2EditText, !StringUtil.isNullOrEmpty(addressPayloadDTO.getAddress2()));
 
             zipCodeEditText.setText(addressPayloadDTO.getZipcode());
@@ -513,7 +501,7 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
 
             stateAutoCompleteTextView.setText(addressPayloadDTO.getState());
             stateAutoCompleteTextView.getOnFocusChangeListener().onFocusChange(stateAutoCompleteTextView, !StringUtil.isNullOrEmpty(addressPayloadDTO.getState()));
-        }else{
+        } else {
             useProfileAddressCheckBox.setChecked(false);
             useProfileAddressCheckBox.setEnabled(false);
             setAddressFieldsEnabled(true);
@@ -706,17 +694,17 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
 
             String group1 = "(\\\"value\\\":\")";
             String group2 = "(\\d+)";
-            String regex = group1+group2;
+            String regex = group1 + group2;
             String tokenValue = null;
             Matcher matcher = Pattern.compile(regex).matcher(resString);
-            if(matcher.find()){
+            if (matcher.find()) {
                 tokenValue = matcher.group().replaceAll(group1, "");
             }
 
-            if(tokenValue!=null && tokenValue.matches(group2)){
+            if (tokenValue != null && tokenValue.matches(group2)) {
                 creditCardsPayloadDTO.setToken(tokenValue);
                 authoriseCreditCardResponseCallback.onAuthorizeCreditCardSuccess();
-            }else{
+            } else {
                 nextButton.setEnabled(true);
                 authoriseCreditCardResponseCallback.onAuthorizeCreditCardFailed();
 

@@ -10,6 +10,13 @@
     android:orientation="vertical"
     android:padding="0dp">
 
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/insurancePhotoAlert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/lightning_yellow"
+        android:visibility="gone" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/available_health_insurance_list"
         android:layout_width="match_parent"

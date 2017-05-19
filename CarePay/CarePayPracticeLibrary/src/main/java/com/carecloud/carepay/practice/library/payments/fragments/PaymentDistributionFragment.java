@@ -1,7 +1,6 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
@@ -11,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -41,6 +39,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentApplication;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentNewCharge;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
+import com.carecloud.carepaylibray.utils.BounceHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -54,7 +53,7 @@ import java.util.List;
  */
 
 public class PaymentDistributionFragment extends BaseDialogFragment implements PaymentDistributionAdapter.PaymentDistributionCallback, PopupPickerAdapter.PopupPickCallback,
-        AddPaymentItemFragment.AddItemCallback, PaymentDistributionEntryFragment.PaymentDistributionAmountCallback {
+        AddPaymentItemFragment.AddItemCallback, PaymentDistributionEntryFragment.PaymentDistributionAmountCallback, BounceHelper.BounceHelperListener {
 
     private TextView patientName;
     private TextView balance;
@@ -67,6 +66,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     private View newChargesLayout;
     private RecyclerView newChargesRecycler;
     private Button payButton;
+
+    private BounceHelper balanceViewSwipeHelper;
+    private BounceHelper chargeViewSwipeHelper;
 
     private PopupPickerWindow locationPickerWindow;
     private PopupPickerWindow providerPickerWindow;
@@ -85,7 +87,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
     private NumberFormat currencyFormatter;
 
-    private View lastSwipeView = null;
+//    private View lastSwipeView = null;
 
     private List<LocationDTO> locations;
     private List<ProviderDTO> providers;
@@ -144,7 +146,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         balanceDetailsRecycler.setLayoutManager(balanceLayoutManager);
         balanceDetailsRecycler.addOnScrollListener(scrollListener);
 
-        ItemTouchHelper balanceTouchHelper = new ItemTouchHelper(new SwipeHelperCallback());
+        balanceViewSwipeHelper = new BounceHelper(this);
+        ItemTouchHelper balanceTouchHelper = new ItemTouchHelper(balanceViewSwipeHelper);
         balanceTouchHelper.attachToRecyclerView(balanceDetailsRecycler);
 
 
@@ -154,7 +157,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         newChargesRecycler.setLayoutManager(chargesLayoutManager);
         newChargesRecycler.addOnScrollListener(scrollListener);
 
-        ItemTouchHelper chargesTouchHelper = new ItemTouchHelper(new SwipeHelperCallback());
+        chargeViewSwipeHelper = new BounceHelper(this);
+        ItemTouchHelper chargesTouchHelper = new ItemTouchHelper(chargeViewSwipeHelper);
         chargesTouchHelper.attachToRecyclerView(newChargesRecycler);
 
         setInitialValues(view);
@@ -336,7 +340,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             for(PendingBalanceDTO pendingBalance : patientBalance.getBalances()){
                 for(PendingBalancePayloadDTO pendingBalancePayload : pendingBalance.getPayload()){
                     total = round(total + pendingBalancePayload.getAmount());
-//                    total-=pendingBalancePayload.getUnappliedCredit();
                     switch (pendingBalancePayload.getType()){
                         case PendingBalancePayloadDTO.CO_PAY_TYPE:
                         case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
@@ -420,11 +423,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
     private void modifyLineItem(BalanceItemDTO updateBalanceItem, ProviderDTO updateProvider, LocationDTO updateLocation, Double updateAmount){
         BalanceItemDTO balanceItem = updateBalanceItem;
-//        for(BalanceItemDTO balanceItem : balanceItems){
-//            if(balanceItem.equals(updateBalanceItem)){
-                if(updateAmount!=null){
-                    double difference;
-                    double currentAmount = balanceItem.getBalance();
+        if(updateAmount!=null){
+            double difference;
+            double currentAmount = balanceItem.getBalance();
 
                     difference = round(currentAmount-updateAmount);
                     if(unappliedCredit > 0) {
@@ -439,21 +440,29 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
                     paymentAmount = round(paymentAmount - difference);
                     updatePaymentAmount();
 
-                }
+        }
 
-                if(updateProvider!=null){
-                    balanceItem.setProvider(updateProvider);
-                    balanceItem.setProviderId(updateProvider.getId());
-                }
+        if(updateProvider!=null){
+            balanceItem.setProvider(updateProvider);
+            balanceItem.setProviderId(updateProvider.getId());
+        }
 
-                if(updateLocation!=null){
-                    balanceItem.setLocation(updateLocation);
-                    balanceItem.setLocationId(updateLocation.getId());
-                }
-                setAdapter();
-                return;
-//            }
-//        }
+        if(updateLocation!=null){
+            balanceItem.setLocation(updateLocation);
+            balanceItem.setLocationId(updateLocation.getId());
+        }
+//        setAdapter();
+
+        int index = balanceItems.indexOf(balanceItem);
+        if(index >= 0){
+            balanceDetailsRecycler.getAdapter().notifyItemChanged(index);
+        }else{
+            index = chargeItems.indexOf(balanceItem);
+            if(index >= 0){
+                newChargesRecycler.getAdapter().notifyItemChanged(index);
+            }
+        }
+
     }
 
 
@@ -493,6 +502,11 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             super.onScrolled(recyclerView, dx, dy);
         }
     };
+
+    @Override
+    public void startNewSwipe() {
+        clearPickers();
+    }
 
     @Override
     public void pickProvider(View view, BalanceItemDTO balanceItem) {
@@ -601,9 +615,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     }
 
     private void clearLastSwipeView(){
-        if(lastSwipeView !=null){
-            lastSwipeView.setLeft(0);
-        }
+        balanceViewSwipeHelper.clearLastSwipeView();
+        chargeViewSwipeHelper.clearLastSwipeView();
     }
 
 
@@ -754,99 +767,4 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         return (double) Math.round(amount * 100) / 100;
     }
 
-
-    private class SwipeHelperCallback extends ItemTouchHelper.Callback {
-        private float clearWidth = 0;
-        private float maxSwipe = 0;
-
-        private boolean bounceBack = false;
-
-        @Override
-        public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
-            if(viewHolder!=null) {
-                maxSwipe = 0;
-                clearLastSwipeView();
-                clearPickers();
-                PaymentDistributionAdapter.BalanceViewHolder paymentViewHolder = (PaymentDistributionAdapter.BalanceViewHolder) viewHolder;
-
-                View swipeView = paymentViewHolder.getRowLayout();
-                if(lastSwipeView == null || !lastSwipeView.equals(swipeView)){
-                    lastSwipeView = swipeView;
-                }
-
-                getDefaultUIUtil().onSelected(swipeView);
-            }
-        }
-
-        @Override
-        public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder){
-            final PaymentDistributionAdapter.BalanceViewHolder paymentViewHolder = (PaymentDistributionAdapter.BalanceViewHolder) viewHolder;
-            getDefaultUIUtil().clearView(paymentViewHolder.getRowLayout());
-
-        }
-
-
-        @Override
-        public void onChildDraw(Canvas canvas, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float distanceX, float distanceY, int actionState, boolean isCurrentlyActive) {
-            PaymentDistributionAdapter.BalanceViewHolder paymentViewHolder = (PaymentDistributionAdapter.BalanceViewHolder) viewHolder;
-            View rowLayout = paymentViewHolder.getRowLayout();
-
-            getDefaultUIUtil().onDraw(canvas, recyclerView, rowLayout, distanceX, distanceY, actionState, isCurrentlyActive);
-
-            float swipeDistance = Math.abs(distanceX);
-            if( swipeDistance > maxSwipe){
-                maxSwipe = swipeDistance;
-            }
-        }
-
-
-        @Override
-        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-//            clearLastSwipeView();
-            recyclerView.setOnTouchListener(swipeTouchListener);
-            getMaxDistance(viewHolder);
-            return makeMovementFlags(0, ItemTouchHelper.LEFT);
-        }
-
-        @Override
-        public int convertToAbsoluteDirection(int flags, int layoutDirection) {
-            return bounceBack ? 0 : super.convertToAbsoluteDirection(flags, layoutDirection);
-        }
-
-        @Override
-        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-            return false;
-        }
-
-        @Override
-        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-
-        }
-
-        private View.OnTouchListener swipeTouchListener = new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
-                    bounceBack = true;
-                    if (maxSwipe > clearWidth) {
-                        lastSwipeView.setLeft((int)-clearWidth);
-                    }
-                } else {
-                    bounceBack = false;
-                }
-                return false;
-            }
-        };
-
-
-        private void getMaxDistance(RecyclerView.ViewHolder viewHolder) {
-            if(clearWidth == 0) {
-                PaymentDistributionAdapter.BalanceViewHolder paymentViewHolder = (PaymentDistributionAdapter.BalanceViewHolder) viewHolder;
-                clearWidth = paymentViewHolder.getSwipeWidth();
-            }
-        }
-
-
-
-    }
 }

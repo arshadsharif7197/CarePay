@@ -9,18 +9,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.adapters.InsuranceLineItemsListAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment implements
         InsuranceLineItemsListAdapter.OnInsuranceEditClickListener {
+
+    private TextView insurancePhotoAlert;
+    private boolean showAlert = false;
 
     public interface InsuranceDocumentScannerListener {
         void editInsurance(DemographicDTO demographicDTO, Integer editedIndex, boolean showAsDialog);
@@ -52,7 +62,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         if (demographicDTO == null) {
             demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
@@ -76,10 +86,13 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         RecyclerView recyclerView = ((RecyclerView) findViewById(R.id.available_health_insurance_list));
         if (recyclerView != null) {
-            adapter = new InsuranceLineItemsListAdapter(getContext(), demographicDTO, this);
+            if (adapter == null) {
+                List<DemographicInsurancePayloadDTO> insuranceList = getInsurances(demographicDTO);
+                adapter = new InsuranceLineItemsListAdapter(getContext(), insuranceList, this,
+                        getApplicationMode().getApplicationType());
+            }
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setAdapter(adapter);
         }
@@ -87,11 +100,39 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         initializeViews();
     }
 
+    private List<DemographicInsurancePayloadDTO> getInsurances(DemographicDTO demographicDTO) {
+        List<DemographicInsurancePayloadDTO> insuranceList = new ArrayList<>();
+        for (DemographicInsurancePayloadDTO insurance : demographicDTO.getPayload().getDemographics().getPayload().getInsurances()) {
+            if (!insurance.isDeleted()) {
+                insuranceList.add(insurance);
+                if (insurance.getInsurancePhotos().size() == 0) {
+                    showAlert = true;
+                }
+            }
+        }
+        return insuranceList;
+    }
+
+    private void showAlert() {
+        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT) {
+            new CustomMessageToast(getActivity(), Label.getLabel("demographics_insurance_no_photo_alert"),
+                    CustomMessageToast.NOTIFICATION_TYPE_WARNING).show();
+        } else {
+            insurancePhotoAlert.setText(Label.getLabel("demographics_insurance_no_photo_alert"));
+            insurancePhotoAlert.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void initializeViews() {
         if (demographicDTO == null) {
             getActivity().getSupportFragmentManager().popBackStack();
         } else if (hasInsurance()) {
-            adapter.setDemographicDTO(demographicDTO);
+            insurancePhotoAlert.setVisibility(View.GONE);
+            adapter.setInsurancesList(getInsurances(demographicDTO));
+            if (showAlert) {
+                showAlert();
+                showAlert = false;
+            }
         } else {
             editInsurance(null, false);
         }
@@ -100,7 +141,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     @Override
     public void onResume() {
         super.onResume();
-        if(callback == null){
+        if (callback == null) {
             attachCallback(getContext());
         }
         stepProgressBar.setCurrentProgressDot(4);
@@ -129,6 +170,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
      * @param view main view
      */
     public void initActiveSection(final View view) {
+        insurancePhotoAlert = (TextView) view.findViewById(R.id.insurancePhotoAlert);
         Button addAnotherButton = (Button) view.findViewById(R.id.health_insurance_add_another);
         addAnotherButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,7 +187,9 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     }
 
     @Override
-    public void onEditInsuranceClicked(int position) {
+    public void onEditInsuranceClicked(DemographicInsurancePayloadDTO demographicInsurancePayloadDTO) {
+        int position = demographicDTO.getPayload().getDemographics().getPayload().getInsurances()
+                .indexOf(demographicInsurancePayloadDTO);
         editInsurance(position, true);
     }
 

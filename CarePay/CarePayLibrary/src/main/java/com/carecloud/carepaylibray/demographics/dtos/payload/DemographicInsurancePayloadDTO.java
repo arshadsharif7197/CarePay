@@ -39,7 +39,7 @@ public class DemographicInsurancePayloadDTO extends PatientModel {
 
     @SerializedName("delete")
     @Expose
-    private boolean delete = false;
+    private boolean deleted = false;
 
     /**
      * @return The insuranceProvider
@@ -107,11 +107,11 @@ public class DemographicInsurancePayloadDTO extends PatientModel {
         this.insuranceGroupId = insuranceGroupId;
     }
 
-    public boolean isDelete() {
-        return delete;
+    public boolean isDeleted() {
+        return deleted;
     }
 
-    public void setDelete(boolean delete) {
-        this.delete = delete;
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

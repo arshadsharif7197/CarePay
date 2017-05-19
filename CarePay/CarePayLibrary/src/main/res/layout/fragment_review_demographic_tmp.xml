@@ -197,7 +197,7 @@
                     android:layout_weight=".30"/>
 
                 <TextView
-                    android:id="@+id/raceListDataTextView"
+                    android:id="@+id/chooseRaceTextView"
                     style="@style/DemographicsDocsClickableTextStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -224,7 +224,7 @@
                     android:layout_weight=".35" />
 
                 <TextView
-                    android:id="@+id/ethnicityListDataTextView"
+                    android:id="@+id/chooseEthnicityTextView"
                     style="@style/DemographicsDocsClickableTextStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

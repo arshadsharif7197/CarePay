@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusable="true"
@@ -27,18 +28,19 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:padding="@dimen/custom_filter_popup_header_padding">
+
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:layout_width="wrap_content"
                 android:id="@+id/titleTextView"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:drawableLeft="@drawable/icn_filter"
                 android:drawablePadding="@dimen/drawable_padding"
+                android:gravity="center_vertical"
+                android:includeFontPadding="false"
                 android:padding="@dimen/view_padding"
                 android:text="@string/not_defined"
                 android:textColor="@android:color/white"
-                android:gravity="center_vertical"
-                android:includeFontPadding="false"
                 android:textSize="20sp"
                 app:customAssetFont="gotham_rounded_bold" />
 
@@ -55,8 +57,8 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginBottom="@dimen/view_margin"
             android:layout_below="@id/header_layout"
+            android:layout_marginBottom="@dimen/view_margin"
             android:background="@color/popup_list_text_color" />
 
         <LinearLayout
@@ -66,7 +68,7 @@
             android:layout_below="@id/divider"
             android:orientation="horizontal">
 
-            <EditText
+            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/searchPatientEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -76,11 +78,12 @@
                 android:drawableLeft="@drawable/icn_search_small"
                 android:drawablePadding="@dimen/drawable_padding"
                 android:hint="@string/not_defined"
+                android:maxLines="1"
                 android:paddingBottom="@dimen/drawable_padding"
                 android:paddingLeft="@dimen/drawable_padding"
                 android:paddingRight="@dimen/search_edittext_padding_right"
                 android:paddingTop="@dimen/drawable_padding"
-                android:maxLines="1" />
+                app:customAssetFont="proxima_nova_semi_bold" />
 
             <ImageView
                 android:id="@+id/clearSearchImageView"
@@ -93,25 +96,25 @@
                 android:visibility="gone" />
         </LinearLayout>
 
-        <Button
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/clearFiltersButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="@color/overlay_green"
-            android:text="@string/not_defined"
-            android:visibility="visible"/>
+            android:visibility="visible"
+            app:customAssetFont="gotham_rounded_medium"
+            tools:text="@string/not_defined" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/filterableDataRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            android:layout_below="@id/search_layout"
             android:layout_above="@id/clearFiltersButton"
+            android:layout_below="@id/search_layout"
             android:layout_marginLeft="@dimen/view_margin"
             android:layout_marginRight="@dimen/view_margin"
-            android:layout_marginTop="@dimen/view_margin"
-            />
+            android:layout_marginTop="@dimen/view_margin" />
 
 
     </RelativeLayout>

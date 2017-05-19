@@ -37,7 +37,7 @@ import com.google.android.gms.wallet.WalletConstants;
 import com.google.gson.Gson;
 
 /**
- * Created by jorge on 29/12/16.
+ * Created by jorge on 29/12/16
  */
 public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity implements PaymentFragmentActivityInterface {
 
@@ -65,9 +65,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                 .findViewById(com.carecloud.carepaylibrary.R.id.appointmentsDrawerIdTextView);
 
         paymentsDTO = getConvertedDTO(PaymentsModel.class);
-        practiceId = paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeId();
-        practiceMgmt = paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeMgmt();
-        patientId = paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPatientId();
+//        practiceId = paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeId();
+//        practiceMgmt = paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeMgmt();
+//        patientId = paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPatientId();
 
         toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.balance_history_toolbar);
         toolBarTitle = Label.getLabel("payment_patient_balance_toolbar");
@@ -107,9 +107,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
      * a {@link MaskedWallet} object is attached to the Intent. The Confirmation Activity is
      * then launched, providing it with the {@link MaskedWallet} object.
      *
-     * @param //requestCode The code that was set in the Masked Wallet Request
-     * @param //resultCode  The result of the request execution
-     * @param //data        Intent carrying the results
+     * @param requestCode The code that was set in the Masked Wallet Request
+     * @param resultCode  The result of the request execution
+     * @param data        Intent carrying the results
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -26,18 +26,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by jorge on 10/01/17.
+ * Created by jorge on 10/01/17
  */
 
 public class MenuPatientActivity extends BasePatientActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String LOG_TAG = MenuPatientActivity.class.getSimpleName();
+//    private static final String LOG_TAG = MenuPatientActivity.class.getSimpleName();
     //keys
-    protected String practiceId;
-    protected String practiceMgmt;
-    protected String patientId;
-    protected String prefix;
-    protected String userId;
+//    protected String practiceId;
+//    protected String practiceMgmt;
+//    protected String patientId;
+//    protected String prefix;
+//    protected String userId;
 
     //transitions
     private static TransitionDTO transitionBalance;
@@ -67,9 +67,9 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         } else {
             appointmentsDrawerUserIdTextView.setText("");
         }
-        patientId = getApplicationPreferences().getPatientId();
-        practiceId = getApplicationPreferences().getPracticeId();
-        practiceMgmt = getApplicationPreferences().getPracticeManagement();
+//        patientId = getApplicationPreferences().getPatientId();
+//        practiceId = getApplicationPreferences().getPracticeId();
+//        practiceMgmt = getApplicationPreferences().getPracticeManagement();
 
         String imageUrl = getApplicationPreferences().getUserPhotoUrl();
         ImageView userImageView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.appointmentDrawerIdImageView);
@@ -81,10 +81,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (toggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return toggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
 
@@ -236,7 +233,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         }
     };
 
-    private WorkflowServiceCallback notificationsWorkflowCallback = new WorkflowServiceCallback() {//TODO this is currently pointed at appointments endpoint
+    private WorkflowServiceCallback notificationsWorkflowCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();
@@ -277,6 +274,10 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         MenuPatientActivity.transitionNotifications = transitionNotifications;
     }
 
+    public static TransitionDTO getTransitionAppointments(){
+        return transitionAppointments;
+    }
+
     /**
      * Display toolbar.
      *
@@ -289,8 +290,10 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         }
         if (visibility) {
             setSupportActionBar(toolbar);
-            getSupportActionBar().show();
-        } else {
+            if(getSupportActionBar() !=null){
+                getSupportActionBar().show();
+            }
+        } else if(getSupportActionBar()!=null) {
             getSupportActionBar().hide();
         }
     }

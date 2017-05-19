@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.customdialogs;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -16,42 +15,23 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.VisitTypeListAdapter;
 import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
+import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentDialogFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class VisitTypeFragmentDialog extends BaseDialogFragment {
+public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment {
 
     private AppointmentNavigationCallback callback;
     private List<VisitTypeDTO> visitTypeList;
-    private String cancelString;
     private AppointmentResourcesDTO model;
     private AppointmentsResultModel appointmentsResultModel;
-
-    @Override
-    protected String getCancelString() {
-        return cancelString;
-    }
-
-    @Override
-    protected int getCancelImageResource() {
-        return R.drawable.icn_close;
-    }
-
-    @Override
-    protected int getContentLayout() {
-        return R.layout.dialog_visit_type;
-    }
-
-    @Override
-    protected boolean getCancelable() {
-        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
-    }
 
     /**
      * Creates a VisitTypeFragmentDialog fragment
@@ -75,10 +55,27 @@ public class VisitTypeFragmentDialog extends BaseDialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        attachCallback(context);
+    }
+
+    @Override
+    protected void attachCallback(Context context) {
         try {
-            callback = (AppointmentNavigationCallback) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement AppointmentNavigationCallback");
+            if(context instanceof AppointmentViewHandler){
+                callback = ((AppointmentViewHandler) context).getAppointmentPresenter();
+            }else {
+                callback = (AppointmentNavigationCallback) context;
+            }
+        } catch (ClassCastException cce) {
+            throw new ClassCastException("Attached context must implement AppointmentNavigationCallback");
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(callback == null){
+            attachCallback(getContext());
         }
     }
 
@@ -93,24 +90,39 @@ public class VisitTypeFragmentDialog extends BaseDialogFragment {
         super.onCreate(savedInstanceState);
 
         Bundle arguments = getArguments();
-        this.cancelString = arguments.getString("cancelString");
         model = DtoHelper.getConvertedDTO(AppointmentResourcesDTO.class, arguments);
         appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, arguments);
         visitTypeList = model.getResource().getVisitReasons();
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+        return inflater.inflate(R.layout.dialog_visit_type, container, false);
+    }
 
+    @Override
+    public void onViewCreated(View view, Bundle icicle){
         sortVisitTypeListByName();
         initializeViews(view);
-
-        return view;
     }
 
     protected void initializeViews(View view) {
-        view.findViewById(R.id.closeViewLayout).setVisibility(View.GONE);
+        hideKeyboardOnViewTouch(view);
+
+        View closeView = view.findViewById(R.id.closeViewLayout);
+        if(closeView!=null) {
+            view.findViewById(R.id.closeViewLayout).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dismiss();
+                }
+            });
+
+        }
+
+        setCancelable(closeView==null);
+
         if (view.findViewById(R.id.visit_type_header_title) != null) {
             TextView title = (TextView) view.findViewById(R.id.visit_type_header_title);
             title.setText(Label.getLabel("visit_type_heading"));
@@ -125,7 +137,6 @@ public class VisitTypeFragmentDialog extends BaseDialogFragment {
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
             title.setLayoutParams(layoutParams);
             title.setGravity(Gravity.CENTER_HORIZONTAL);
-            view.findViewById(R.id.closeViewLayout).setVisibility(View.VISIBLE);
         }
 
         // Load and display list

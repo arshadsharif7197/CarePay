@@ -3,6 +3,7 @@
 
     <!-- Default dimens which will be use for any default styling  -->
     <dimen name="dimen_1dp">1dp</dimen>
+    <dimen name="dimen_3dp">3dp</dimen>
     <dimen name="dimen_4dp">4dp</dimen>
     <dimen name="dimen_5dp">5dp</dimen>
     <dimen name="dimen_8dp">8dp</dimen>
@@ -30,6 +31,7 @@
     <dimen name="dimen_48dp">48dp</dimen>
     <dimen name="dimen_60dp">60dp</dimen>
     <dimen name="dimen_70dp">70dp</dimen>
+    <dimen name="dimen_80dp">80dp</dimen>
     <dimen name="dimen_88dp">88dp</dimen>
     <dimen name="dimen_100dp">100dp</dimen>
     <dimen name="dimen_114dp">114dp</dimen>
@@ -48,6 +50,7 @@
     <dimen name="dimen_minus_5dp">-5dp</dimen>
 
     <dimen name="text_size_11">11sp</dimen>
+    <dimen name="text_size_12sp">12sp</dimen>
     <dimen name="text_size_13">13sp</dimen>
     <dimen name="text_size_14">14sp</dimen>
     <dimen name="text_size_15">15sp</dimen>

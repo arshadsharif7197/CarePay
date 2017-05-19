@@ -13,43 +13,99 @@ public class PatientModel {
 
     @SerializedName("first_name")
     @Expose
-    protected String firstName;
+    private String firstName;
 
     @SerializedName("middle_name")
     @Expose
-    protected String middleName;
+    private String middleName;
 
     @SerializedName("last_name")
     @Expose
-    protected String lastName;
+    private String lastName;
 
     @SerializedName("date_of_birth")
     @Expose
-    protected String dateOfBirth;
+    private String dateOfBirth;
 
     @SerializedName("gender")
     @Expose
-    protected String gender;
+    private String gender;
 
     @SerializedName("ethnicity")
     @Expose
-    protected String ethnicity;
+    private String ethnicity;
 
     @SerializedName("primary_race")
     @Expose
-    protected String primaryRace;
+    private String primaryRace;
 
     @SerializedName("secondary_race")
     @Expose
-    protected String secondaryRace;
+    private String secondaryRace;
 
     @SerializedName("profile_photo")
     @Expose
-    protected String profilePhoto;
+    private String profilePhoto;
 
     @SerializedName("primary_phone_number")
     @Expose
     private String primaryPhoneNumber;
+
+    @SerializedName("preferred_language")
+    @Expose
+    private String preferredLanguage;
+
+    @SerializedName("preferred_name")
+    @Expose
+    private String preferredName;
+
+    @SerializedName("email_address")
+    @Expose
+    private String emailAddress;
+
+    @SerializedName("ssn")
+    @Expose
+    private String socialSecurityNumber;
+
+    @SerializedName("drivers_license_number")
+    @Expose
+    private String driversLicenseNumber;
+
+    @SerializedName("drivers_license_state")
+    @Expose
+    private String driversLicenseState;
+
+    @SerializedName("secondary_phone_number")
+    @Expose
+    private String secondaryPhoneNumber;
+
+    @SerializedName("secondary_phone_type")
+    @Expose
+    private String secondaryPhoneNumberType;
+
+    @SerializedName("preferred_contact")
+    @Expose
+    private String preferredContact;
+
+    @SerializedName("marital_status")
+    @Expose
+    private String maritalStatus;
+
+    @SerializedName("employment_status")
+    @Expose
+    private String employmentStatus;
+
+    @SerializedName("ec_relationship_type")
+    @Expose
+    private String emergencyContactRelationship;
+
+    @SerializedName("referral_source")
+    @Expose
+    private String referralSource;
+
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
+    }
 
     public String getPatientId() {
         return patientId;
@@ -131,6 +187,122 @@ public class PatientModel {
         return primaryPhoneNumber;
     }
 
+    public String getShortName() {
+        return StringUtil.getShortName(getFullName());
+    }
+
+    public void setPrimaryPhoneNumber(String primaryPhoneNumber) {
+        this.primaryPhoneNumber = primaryPhoneNumber;
+    }
+
+    public String getPreferredLanguage() {
+        return preferredLanguage;
+    }
+
+    public void setPreferredLanguage(String preferredLanguage) {
+        this.preferredLanguage = preferredLanguage;
+    }
+
+    public String getPreferredName() {
+        return preferredName;
+    }
+
+    public void setPreferredName(String preferredName) {
+        this.preferredName = preferredName;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
+    public String getSocialSecurityNumber() {
+        return socialSecurityNumber;
+    }
+
+    public void setSocialSecurityNumber(String socialSecurityNumber) {
+        this.socialSecurityNumber = socialSecurityNumber;
+    }
+
+    public String getDriversLicenseNumber() {
+        return driversLicenseNumber;
+    }
+
+    public void setDriversLicenseNumber(String driversLicenseNumber) {
+        this.driversLicenseNumber = driversLicenseNumber;
+    }
+
+    public String getDriversLicenseState() {
+        return driversLicenseState;
+    }
+
+    public void setDriversLicenseState(String driversLicenseState) {
+        this.driversLicenseState = driversLicenseState;
+    }
+
+    public String getSecondaryPhoneNumber() {
+        return secondaryPhoneNumber;
+    }
+
+    public void setSecondaryPhoneNumber(String secondaryPhoneNumber) {
+        this.secondaryPhoneNumber = secondaryPhoneNumber;
+    }
+
+    public String getSecondaryPhoneNumberType() {
+        return secondaryPhoneNumberType;
+    }
+
+    public void setSecondaryPhoneNumberType(String secondaryPhoneNumberType) {
+        this.secondaryPhoneNumberType = secondaryPhoneNumberType;
+    }
+
+    public String getPreferredContact() {
+        return preferredContact;
+    }
+
+    public void setPreferredContact(String preferredContact) {
+        this.preferredContact = preferredContact;
+    }
+
+    public String getMaritalStatus() {
+        return maritalStatus;
+    }
+
+    public void setMaritalStatus(String maritalStatus) {
+        this.maritalStatus = maritalStatus;
+    }
+
+    public String getEmploymentStatus() {
+        return employmentStatus;
+    }
+
+    public void setEmploymentStatus(String employmentStatus) {
+        this.employmentStatus = employmentStatus;
+    }
+
+    public String getEmergencyContactRelationship() {
+        return emergencyContactRelationship;
+    }
+
+    public void setEmergencyContactRelationship(String emergencyContactRelationship) {
+        this.emergencyContactRelationship = emergencyContactRelationship;
+    }
+
+    public String getReferralSource() {
+        return referralSource;
+    }
+
+    public void setReferralSource(String referralSource) {
+        this.referralSource = referralSource;
+    }
+
+
+    /**
+     * @return formatted DOB
+     */
     public String getFormattedDateOfBirth() {
         if (StringUtil.isNullOrEmpty(dateOfBirth)) {
             return "";
@@ -139,9 +311,6 @@ public class PatientModel {
         return DateUtil.getInstance().setDateRaw(dateOfBirth).toStringWithFormatMmSlashDdSlashYyyy();
     }
 
-    public void setPatientId(String patientId) {
-        this.patientId = patientId;
-    }
 
     /**
      * @return full name
@@ -164,7 +333,6 @@ public class PatientModel {
         return name;
     }
 
-    public String getShortName() {
-        return StringUtil.getShortName(getFullName());
-    }
+
+
 }

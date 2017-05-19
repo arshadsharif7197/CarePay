@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 
+import java.util.Set;
+
 
 /**
  * Created by Jahirul Bhuiyan on 9/6/2016.
@@ -13,7 +15,7 @@ public class ApplicationPreferences {
 
     private static final String DEFAULT_STRING_PREFERENCES = "-";
 
-    private static final String PREFERENCE_CAREPAY = "Preference_CarePay";
+    public static final String PREFERENCE_CAREPAY = "Preference_CarePay";
 
     private static final String PREFERENCE_USER_SELECTED_LANGUAGE = "user_selected_language";
 
@@ -34,6 +36,10 @@ public class ApplicationPreferences {
     private static final String PREFERENCE_PATIENT_PHOTO_URL = "patient_photo_url";
 
     private static final String PREFERENCE_IS_TUTORIAL_SHOWN = "is_tutorial_shown";
+
+    public static final String PREFERENCE_FILTERED_PROVIDERS = "filteredDoctors";
+
+    public static final String PREFERENCE_FILTERED_LOCATIONS = "filteredLocations";
 
     private Context context;
 
@@ -142,7 +148,7 @@ public class ApplicationPreferences {
      * @return practiceId
      */
     public String getPracticeId() {
-        if (null != practiceId) {
+        if (practiceId != null) {
             return practiceId;
         }
 
@@ -180,7 +186,7 @@ public class ApplicationPreferences {
      * @return userId
      */
     public String getUserId() {
-        if (null != userId) {
+        if (userId != null) {
             return userId;
         }
 
@@ -280,6 +286,10 @@ public class ApplicationPreferences {
         return getSharedPreferences().getBoolean(key, defaultValue);
     }
 
+    private Set<String> readStringSetFromSharedPref(String key) {
+        return getSharedPreferences().getStringSet(key, null);
+    }
+
     private SharedPreferences getSharedPreferences() {
         return context.getSharedPreferences(PREFERENCE_CAREPAY, Context.MODE_PRIVATE);
     }
@@ -289,7 +299,6 @@ public class ApplicationPreferences {
     }
 
     /**
-     *
      * @param tutorialShown a boolean indicating if the tutorial has been shown
      */
     public void setTutorialShown(Boolean tutorialShown) {
@@ -298,7 +307,6 @@ public class ApplicationPreferences {
     }
 
     /**
-     *
      * @return a boolean indicating if the tutorial has been shown
      */
     public boolean isTutorialShown() {
@@ -307,5 +315,13 @@ public class ApplicationPreferences {
         }
 
         return readBooleanFromSharedPref(PREFERENCE_IS_TUTORIAL_SHOWN);
+    }
+
+    public Set<String> getSelectedProvidersIds(String practiceId, String userId) {
+        return readStringSetFromSharedPref(practiceId + userId + PREFERENCE_FILTERED_PROVIDERS);
+    }
+
+    public Set<String> getSelectedLocationsIds(String practiceId, String userId) {
+        return readStringSetFromSharedPref(practiceId + userId + PREFERENCE_FILTERED_LOCATIONS);
     }
 }
