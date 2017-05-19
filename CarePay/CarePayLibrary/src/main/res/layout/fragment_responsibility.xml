@@ -64,7 +64,7 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/pay_total_amount_button"
                 style="@style/ResponsButtonStyle"
-                customAssetFont="gotham_rounded_medium"
+                app:customAssetFont="gotham_rounded_medium"
                 android:clickable="false"
                 android:enabled="false"
                 breeze:textKey="payment_pay_total_amount_button" />
