@@ -94,6 +94,10 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         textView.setText(String.format(Label.getLabel(key), currentPage, totalPages));
     }
 
+    /**
+     * Start the Payment portion of check-in
+     * @param workflowJson workflow string
+     */
     public void getPaymentInformation(String workflowJson) {
         paymentWorkflow = workflowJson;
         PaymentsModel paymentsModel = initPaymentPresenter(paymentWorkflow);
