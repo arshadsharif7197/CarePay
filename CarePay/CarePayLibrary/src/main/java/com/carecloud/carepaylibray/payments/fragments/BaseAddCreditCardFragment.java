@@ -396,6 +396,8 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
         setAddressFieldsEnabled(false);
         setDefaultBillingAddressTexts();
 
+        hideKeyboardOnViewTouch(view.findViewById(R.id.container_main));
+
     }
 
 
