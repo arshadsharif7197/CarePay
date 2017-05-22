@@ -71,6 +71,7 @@
         <item name="android:paddingTop">@dimen/dimen_14dp</item>
         <item name="android:textColor">@drawable/text_color</item>
         <item name="android:textSize">@dimen/text_size_22sp</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">

@@ -16,7 +16,7 @@ import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import java.text.NumberFormat;
 
 /**
- * Created by pjohnson on 3/23/17.
+ * Created by pjohnson on 3/23/17
  */
 public abstract class PartialPaymentBaseDialogFragment extends BaseDialogFragment implements View.OnClickListener {
 
@@ -26,14 +26,14 @@ public abstract class PartialPaymentBaseDialogFragment extends BaseDialogFragmen
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
-        return inflater.inflate(R.layout.dialog_enter_amount, container, false);
+        return inflater.inflate(R.layout.dialog_partial_payment, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         amountText = (EditText) view.findViewById(R.id.enter_amount_text);
-        amountText.addTextChangedListener(textWatcher);
+        amountText.addTextChangedListener(payAmountTextFormatter);
         String symbol = NumberFormat.getCurrencyInstance().getCurrency().getSymbol();
         amountSymbol = (TextView) view.findViewById(R.id.amountSymbolTextView);
         amountSymbol.setText(symbol);
@@ -87,7 +87,7 @@ public abstract class PartialPaymentBaseDialogFragment extends BaseDialogFragmen
     }
 
 
-    private TextWatcher textWatcher = new TextWatcher() {
+    private TextWatcher payAmountTextFormatter = new TextWatcher() {
         private boolean amountChangeFlag = true;
         private String balanceBeforeTextChange;
 

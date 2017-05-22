@@ -3,6 +3,8 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,7 +16,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 /**
- * Created by pjohnson on 23/03/17.
+ * Created by pjohnson on 23/03/17
  */
 
 public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDialogFragment {
@@ -22,6 +24,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
     private PaymentsModel paymentsModel;
     private double amount;
     private PaymentNavigationCallback callback;
+    private TextView pendingAmountTextView;
 
     /**
      * @param paymentResultModel the payment model
@@ -58,9 +61,10 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
     @Override
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
-        TextView pendingAmountTextView = (TextView) view.findViewById(R.id.pendingAmountTextView);
+        pendingAmountTextView = (TextView) view.findViewById(R.id.pendingAmountTextView);
         pendingAmountTextView.setVisibility(View.VISIBLE);
-        pendingAmountTextView.setText(Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount(amount));
+        updatePendingAmountText(amount);
+        amountText.addTextChangedListener(updatePendingListener);
     }
 
     @Override
@@ -71,4 +75,31 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
             dismiss();
         }
     }
+
+    private void updatePendingAmountText(double amount){
+        pendingAmountTextView.setText(Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount(amount));
+    }
+
+    private TextWatcher updatePendingListener = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            double entry = 0D;
+            try{
+                entry = Double.parseDouble(editable.toString());
+            }catch (NumberFormatException nfe){
+                nfe.printStackTrace();
+            }
+            updatePendingAmountText(amount - entry);
+        }
+    };
 }

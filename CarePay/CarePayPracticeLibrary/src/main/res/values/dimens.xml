@@ -72,6 +72,7 @@
     <dimen name="text_size_30sp">30sp</dimen>
     <dimen name="text_size_36sp">36sp</dimen>
     <dimen name="text_size_40sp">40sp</dimen>
+    <dimen name="text_size_50sp">50sp</dimen>
 
     <dimen name="appointment_cart_padding">10dp</dimen>
     <dimen name="appointment_cart_elevation">30dp</dimen>
