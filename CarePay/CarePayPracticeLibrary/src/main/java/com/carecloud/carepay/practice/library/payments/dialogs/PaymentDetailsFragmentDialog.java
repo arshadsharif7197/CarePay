@@ -84,7 +84,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
 
     @Override
     protected int getCancelImageResource() {
-        return R.drawable.icn_arrow_up;
+        return R.drawable.icn_arrow_left;
     }
 
     @Override

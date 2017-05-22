@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/profile_image_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dialog_header_height">
+        android:layout_height="@dimen/dialog_header_height"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/rowLayout">
 
         <ImageView
             android:id="@+id/profile_bg_image"
@@ -57,7 +60,7 @@
                 android:padding="4dp"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_34sp"
-                app:customAssetFont="proxima_nova_extra_bold" />
+                app:customAssetFont="proxima_nova_semi_bold" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/patient_provider_name"
@@ -170,10 +173,12 @@
             android:layout_weight="1"
             android:background="@drawable/blue_border_rounded_button_selector"
             android:enabled="false"
+            tools:text="Pay Partial"
             app:customAssetFont="gotham_rounded_medium"/>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/payment_pay_button"
+            style="@style/BreezeButtonStyleDark"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_5dp"
@@ -183,7 +188,7 @@
             android:paddingTop="@dimen/dimen_14dp"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_22sp"
-            tools:ignore="ButtonStyle"
+            tools:text="Pay Now"
             app:customAssetFont="gotham_rounded_medium"/>
     </LinearLayout>
 </RelativeLayout>

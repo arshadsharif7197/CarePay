@@ -30,8 +30,9 @@
                 android:gravity="center_horizontal"
                 android:paddingTop="@dimen/dimen_28dp"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_40sp"
-                app:customAssetFont="proxima_nova_extra_bold" />
+                android:textSize="@dimen/text_size_50sp"
+                tools:text="$9,108.00"
+                app:customAssetFont="gotham_rounded_medium" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/providerImageTextView"
@@ -66,9 +67,10 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/placeNameTextView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:text="The\n Manchester\n Clinic"
+                tools:text="The\n Manchester\n Clinic"
                 android:maxLines="3"
                 android:ellipsize="end"
                 android:textColor="@color/lightning_yellow"
@@ -89,13 +91,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dimen_10dp"
                 android:layout_marginTop="@dimen/dimen_10dp"
+                style="@style/BreezeButtonStyleDark"
                 android:background="@drawable/bg_green_overlay"
                 android:gravity="center"
                 android:paddingBottom="@dimen/dimen_10dp"
                 android:paddingTop="@dimen/dimen_10dp"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22sp"
-                breeze:textKey="payment_pay_button" />
+                tools:text="Pay"
+                breeze:textKey="payment_pay_button"
+                app:customAssetFont="gotham_rounded_medium"/>
 
         </LinearLayout>
     </LinearLayout>
