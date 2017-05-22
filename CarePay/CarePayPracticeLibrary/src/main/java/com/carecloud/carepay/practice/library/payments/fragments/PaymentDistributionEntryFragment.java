@@ -13,7 +13,7 @@ import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 /**
- * Created by lmenendez on 3/17/17.
+ * Created by lmenendez on 3/17/17
  */
 public class PaymentDistributionEntryFragment extends PartialPaymentBaseDialogFragment implements View.OnClickListener {
     public interface PaymentDistributionAmountCallback {

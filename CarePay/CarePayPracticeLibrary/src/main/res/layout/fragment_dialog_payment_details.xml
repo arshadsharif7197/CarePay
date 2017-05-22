@@ -55,7 +55,7 @@
                 android:padding="4dp"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_34sp"
-                app:customAssetFont="proxima_nova_extra_bold" />
+                app:customAssetFont="proxima_nova_semi_bold" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/patient_provider_name"
@@ -84,17 +84,20 @@
         android:id="@+id/payButtonContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:background="@drawable/patient_mode_dialog_body_bg"
-        android:padding="@dimen/dimen_10dp">
+        android:padding="@dimen/dimen_10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/payment_details_pay_now_button"
+            style="@style/BreezeButtonStyleDark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/green_rounded_button_selector"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_22sp" />
+            android:textSize="@dimen/text_size_22sp"
+            app:customAssetFont="gotham_rounded_medium"/>
 
     </FrameLayout>
 
