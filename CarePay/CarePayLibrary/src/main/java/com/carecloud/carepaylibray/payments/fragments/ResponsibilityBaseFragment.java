@@ -16,9 +16,11 @@ import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
@@ -61,9 +63,18 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
     protected void fillDetailAdapter(View view, List<PendingBalanceDTO> paymentList) {
         RecyclerView paymentDetailsListRecyclerView = ((RecyclerView) view.findViewById(R.id.responsibility_line_item_recycle_view));
         paymentDetailsListRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), paymentList, this);
+        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), getAllPendingBalancePayloads(paymentList), this);
         paymentDetailsListRecyclerView.setAdapter(adapter);
     }
+
+    protected List<PendingBalancePayloadDTO> getAllPendingBalancePayloads(List<PendingBalanceDTO> pendingBalances){
+        List<PendingBalancePayloadDTO> pendingBalancePayloads = new ArrayList<>();
+        for(PendingBalanceDTO pendingBalance : pendingBalances){
+            pendingBalancePayloads.addAll(pendingBalance.getPayload());
+        }
+        return pendingBalancePayloads;
+    }
+
 
     protected void getPaymentInformation() {
         Bundle arguments = getArguments();
