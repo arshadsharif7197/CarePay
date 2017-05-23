@@ -218,7 +218,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onPaymentPlanAction() {
+    public void onPaymentPlanAction(PaymentsModel paymentsModel) {
         PatientPaymentPlanFragment fragment = new PatientPaymentPlanFragment();
 
         Bundle args = new Bundle();

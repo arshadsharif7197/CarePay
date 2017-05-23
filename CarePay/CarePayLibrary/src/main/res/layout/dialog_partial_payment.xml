@@ -1,45 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:breeze="http://schemas.android.com/tools"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/containerLayout"
     android:layout_width="wrap_content"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:background="@color/transparent_apt"
-    android:minWidth="326dp"
+    android:minWidth="@dimen/dialog_width"
     android:orientation="vertical">
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/closeViewLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/dimen_26dp"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <ImageView
+            android:id="@+id/cancel_img"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/icn_patient_mode_nav_close"/>
 
-            <ImageView
-                android:id="@+id/button_bg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/dialog_button_bg" />
-
-            <ImageView
-                android:id="@+id/cancel_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/icn_close" />
-        </RelativeLayout>
-    </LinearLayout>
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:background="@color/white"
         android:gravity="center_horizontal"
@@ -49,10 +39,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:background="@color/colorPrimary"
-            android:gravity="center"
-            android:minHeight="@dimen/payment_header_height"
+            android:gravity="center_horizontal"
             android:orientation="vertical">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -61,7 +49,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
-                android:text="How much will you be paying today?"
+                android:paddingEnd="@dimen/dimen_10dp"
+                android:paddingStart="@dimen/dimen_10dp"
+                android:paddingTop="@dimen/dimen_10dp"
+                tools:text="How much will you be paying today?"
                 android:textColor="@color/glitter"
                 app:customAssetFont="gotham_rounded_book"
                 breeze:textKey="payment_partial_amount_title" />
@@ -69,16 +60,20 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_15dp"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                     android:id="@+id/amountSymbolTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:textColor="@color/white_transparent"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    tools:text="$"
                     android:textSize="@dimen/payment_header_amount_size"
                     app:customAssetFont="gotham_rounded_medium" />
 
@@ -89,6 +84,7 @@
                     android:background="@android:color/transparent"
                     android:hint="0.00"
                     android:inputType="numberDecimal"
+                    android:textCursorDrawable="@color/transparent_apt"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white_transparent"
                     android:textSize="@dimen/payment_header_amount_size"
@@ -101,229 +97,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="@dimen/dimen_30dp"
-            android:layout_marginTop="@dimen/dimen_30dp"
+            android:layout_marginBottom="@dimen/dimen_20dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
             android:gravity="center_horizontal"
+            android:textSize="@dimen/text_size_16"
             android:textColor="@color/payne_gray"
             app:customAssetFont="proxima_nova_semi_bold" />
 
         <LinearLayout
-            android:id="@+id/keyBoardLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/payment_side_margin"
-            android:layout_marginRight="@dimen/payment_side_margin"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/lightSlateGray"
-                android:orientation="horizontal">
-
-                <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                    android:id="@+id/key_one"
-                    android:layout_width="@dimen/button_height"
-                    android:layout_height="@dimen/button_width"
-                    android:layout_marginEnd="@dimen/key_border_width"
-                    android:background="@drawable/key_selector"
-                    android:gravity="center"
-                    android:text="1"
-                    android:textColor="@color/charcoal"
-                    android:textSize="@dimen/button_pin_text_size"
-                    app:customAssetFont="gotham_rounded_medium" />
-
-                <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                    android:id="@+id/key_two"
-                    android:layout_width="@dimen/button_height"
-                    android:layout_height="@dimen/button_width"
-                    android:layout_marginBottom="@dimen/key_border_width"
-                    android:layout_marginEnd="@dimen/key_border_width"
-                    android:background="@drawable/key_selector"
-                    android:gravity="center"
-                    android:text="2"
-                    android:textColor="@color/charcoal"
-                    android:textSize="@dimen/button_pin_text_size"
-                    app:customAssetFont="gotham_rounded_medium" />
-
-                <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                    android:id="@+id/key_three"
-                    android:layout_width="@dimen/button_height"
-                    android:layout_height="@dimen/button_width"
-                    android:layout_marginBottom="@dimen/key_border_width"
-                    android:background="@drawable/key_selector"
-                    android:gravity="center"
-                    android:text="3"
-                    android:textColor="@color/charcoal"
-                    android:textSize="@dimen/button_pin_text_size"
-                    app:customAssetFont="gotham_rounded_medium" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/lightSlateGray"
-                android:orientation="horizontal">
-
-                <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                    android:id="@+id/key_four"
-                    android:layout_width="@dimen/button_height"
-                    android:layout_height="@dimen/button_width"
-                    android:layout_marginBottom="@dimen/key_border_width"
-                    android:layout_marginEnd="@dimen/key_border_width"
-                    android:background="@drawable/key_selector"
-                    android:gravity="center"
-                    android:text="4"
-                    android:textColor="@color/charcoal"
-                    android:textSize="@dimen/button_pin_text_size"
-                    app:customAssetFont="gotham_rounded_medium" />
-
-                <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                    android:id="@+id/key_five"
-                    android:layout_width="@dimen/button_height"
-                    android:layout_height="@dimen/button_width"
-                    android:layout_marginBottom="@dimen/key_border_width"
-                    android:layout_marginEnd="@dimen/key_border_width"
-                    android:background="@drawable/key_selector"
-                    android:gravity="center"
-                    android:text="5"
-                    android:textColor="@color/charcoal"
-                    android:textSize="@dimen/button_pin_text_size"
-                    app:customAssetFont="gotham_rounded_medium" />
-
-                <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                    android:id="@+id/key_six"
-                    android:layout_width="@dimen/button_height"
-                    android:layout_height="@dimen/button_width"
-                    android:layout_marginBottom="@dimen/key_border_width"
-                    android:background="@drawable/key_selector"
-                    android:gravity="center"
-                    android:text="6"
-                    android:textColor="@color/charcoal"
-                    android:textSize="@dimen/button_pin_text_size"
-                    app:customAssetFont="gotham_rounded_medium" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/lightSlateGray"
-                android:orientation="horizontal">
-
-                <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                    android:id="@+id/key_seven"
-                    android:layout_width="@dimen/button_height"
-                    android:layout_height="@dimen/button_width"
-                    android:layout_marginBottom="@dimen/key_border_width"
-                    android:layout_marginEnd="@dimen/key_border_width"
-                    android:background="@drawable/key_selector"
-                    android:gravity="center"
-                    android:text="7"
-                    android:textColor="@color/charcoal"
-                    android:textSize="@dimen/button_pin_text_size"
-                    app:customAssetFont="gotham_rounded_medium" />
-
-                <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                    android:id="@+id/key_eighth"
-                    android:layout_width="@dimen/button_height"
-                    android:layout_height="@dimen/button_width"
-                    android:layout_marginBottom="@dimen/key_border_width"
-                    android:layout_marginEnd="@dimen/key_border_width"
-                    android:background="@drawable/key_selector"
-                    android:gravity="center"
-                    android:text="8"
-                    android:textColor="@color/charcoal"
-                    android:textSize="@dimen/button_pin_text_size"
-                    app:customAssetFont="gotham_rounded_medium" />
-
-                <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                    android:id="@+id/key_nine"
-                    android:layout_width="@dimen/button_height"
-                    android:layout_height="@dimen/button_width"
-                    android:layout_marginBottom="@dimen/key_border_width"
-                    android:background="@drawable/key_selector"
-                    android:gravity="center"
-                    android:text="9"
-                    android:textColor="@color/charcoal"
-                    android:textSize="@dimen/button_pin_text_size"
-                    app:customAssetFont="gotham_rounded_medium" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/lightSlateGray"
-                android:orientation="horizontal">
-
-                <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                    android:id="@+id/key_blank"
-                    android:layout_width="@dimen/button_height"
-                    android:layout_height="@dimen/button_width"
-                    android:layout_marginEnd="@dimen/key_border_width"
-                    android:background="@drawable/key_selector"
-                    android:gravity="center"
-                    android:text=""
-                    android:textColor="@color/charcoal"
-                    android:textSize="@dimen/button_pin_text_size"
-                    app:customAssetFont="gotham_rounded_medium" />
-
-                <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                    android:id="@+id/key_zero"
-                    android:layout_width="@dimen/button_height"
-                    android:layout_height="@dimen/button_width"
-                    android:layout_marginEnd="@dimen/key_border_width"
-                    android:background="@drawable/key_selector"
-                    android:gravity="center"
-                    android:text="0"
-                    android:textColor="@color/charcoal"
-                    android:textSize="@dimen/button_pin_text_size"
-                    app:customAssetFont="gotham_rounded_medium" />
-
-                <LinearLayout
-                    android:layout_width="@dimen/button_height"
-                    android:layout_height="@dimen/button_width"
-                    android:layout_gravity="center"
-                    android:background="@drawable/key_selector"
-                    android:gravity="center">
-
-                    <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                        android:id="@+id/key_clear"
-                        android:layout_width="@dimen/button_delete_key_width"
-                        android:layout_height="@dimen/button_delete_key_height"
-                        android:layout_gravity="center"
-                        android:background="@drawable/ic_keyboard_delete"
-                        android:gravity="center"
-                        android:text=""
-                        android:textColor="@color/colorPrimary"
-                        app:customAssetFont="gotham_rounded_medium" />
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/payment_side_margin"
-            android:layout_marginRight="@dimen/payment_side_margin"
-            android:gravity="center_horizontal"
+            android:paddingStart="@dimen/dimen_20dp"
+            android:paddingEnd="@dimen/dimen_20dp"
             android:orientation="vertical">
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/apt_dl_boader_ht"
-                android:layout_marginTop="@dimen/payment_header_top_margin"
+                android:layout_height="@dimen/dimen_1dp"
                 android:background="@color/light_gray_dialog" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/payPartialButton"
-                style="@style/SigninSignupButtonStyle"
-                android:layout_marginTop="@dimen/payment_button_margin_top"
-                android:text="PAY PARTIAL AMOUNT"
+                style="@style/ResponsButtonStyle"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                tools:text="PAY PARTIAL AMOUNT"
+                android:textSize="@dimen/text_size_13"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="payment_partial_amount_button" />
         </LinearLayout>

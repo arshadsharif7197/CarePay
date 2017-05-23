@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.adapter.PaymentMethodAdapter;
@@ -22,6 +21,7 @@ import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.util.ArrayList;
@@ -29,17 +29,18 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by lmenendez on 2/27/17.
+ * Created by lmenendez on 2/27/17
  */
 
-public abstract class PaymentMethodFragment extends BaseDialogFragment {
+public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
 
     public static final String TAG = PaymentMethodFragment.class.getSimpleName();
 
-    private Button paymentChoiceButton;
     protected ListView paymentMethodList;
 
     protected PaymentsModel paymentsModel;
+    protected double amountToMakePayment;
+
     protected List<PatientBalanceDTO> paymentList = new ArrayList<>();
     protected List<PaymentsMethodsDTO> paymentMethodsList = new ArrayList<>();
     protected HashMap<String, Integer> paymentTypeMap;
@@ -50,11 +51,14 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
 
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            callback = (PaymentNavigationCallback) context;
-        } catch (ClassCastException cce) {
+    public void attachCallback(Context context){
+        try{
+            if(context instanceof PaymentViewHandler){
+                callback = ((PaymentViewHandler) context).getPaymentPresenter();
+            }else{
+                callback = (PaymentNavigationCallback) context;
+            }
+        }catch (ClassCastException cce) {
             throw new ClassCastException("Attached Context must implement PaymentMethocActionCallback");
         }
     }
@@ -63,13 +67,23 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle bundle = getArguments();
-
-        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, bundle);
-        if (!paymentsModel.getPaymentPayload().getPaymentSettings().isEmpty()) {
-            paymentMethodsList = paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments().getPaymentMethods();//todo need to lookup appropriate settings for prctice id on selected balance
+        if(bundle!=null) {
+            amountToMakePayment = bundle.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
+            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, bundle);
+            if (!paymentsModel.getPaymentPayload().getPaymentSettings().isEmpty()) {
+                paymentMethodsList = paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments().getPaymentMethods();//todo need to lookup appropriate settings for prctice id on selected balance
+            }
+            paymentList = paymentsModel.getPaymentPayload().getPatientBalances();
+            initPaymentTypeMap();
         }
-        paymentList = paymentsModel.getPaymentPayload().getPatientBalances();
-        initPaymentTypeMap();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(callback==null){
+            attachCallback(getContext());
+        }
     }
 
     @Override
@@ -93,12 +107,6 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
         createPaymentPlanButton.setText(Label.getLabel("payment_create_plan_text"));
         createPaymentPlanButton.setEnabled(false);//TODO enable this when ready to support payment plans
 
-        paymentChoiceButton = (Button) view.findViewById(R.id.paymentChoiceButton);
-        paymentChoiceButton.setOnClickListener(paymentChoiceButtonListener);
-        paymentChoiceButton.setEnabled(false);
-        paymentChoiceButton.setText(Label.getLabel("payment_chooce_method"));
-
-
         paymentMethodList = (ListView) view.findViewById(R.id.list_payment_types);
         final PaymentMethodAdapter paymentMethodAdapter = new PaymentMethodAdapter(getContext(), paymentMethodsList, paymentTypeMap);
 
@@ -107,13 +115,7 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 PaymentsMethodsDTO paymentMethod = paymentMethodsList.get(position);
-                paymentMethodAdapter.setSelectedItem(position);
-                paymentMethodAdapter.notifyDataSetChanged();
-
-                paymentChoiceButton.setText(paymentMethod.getButtonLabel());
-                paymentChoiceButton.setTag(paymentMethod);
-                paymentChoiceButton.setEnabled(true);
-
+                handlePaymentButton(paymentMethod, amountToMakePayment);
             }
         });
 
@@ -172,20 +174,9 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
                 }
 
                 if ((previousBalance + coPay) > 0) {
-                    callback.onPaymentPlanAction();
+                    callback.onPaymentPlanAction(paymentsModel);
                 }
             }
-        }
-    };
-
-    private View.OnClickListener paymentChoiceButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            PaymentsMethodsDTO paymentMethod = (PaymentsMethodsDTO) view.getTag();
-            Bundle bundle = getArguments();
-            double amount = bundle.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
-
-            handlePaymentButton(paymentMethod, amount);
         }
     };
 

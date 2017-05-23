@@ -38,7 +38,7 @@ public interface PaymentNavigationCallback {
     /**
      * Callback to start payment plan workflow
      */
-    void onPaymentPlanAction();
+    void onPaymentPlanAction(PaymentsModel paymentsModel);
 
     /**
      * Callback to display receipt
