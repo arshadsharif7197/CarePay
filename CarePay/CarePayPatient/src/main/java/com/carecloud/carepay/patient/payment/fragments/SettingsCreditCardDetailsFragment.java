@@ -58,6 +58,11 @@ public class SettingsCreditCardDetailsFragment extends BaseFragment {
     }
 
 
+    /**
+     * Instantiate new SettingsCreditCardDetailsFragment
+     * @param creditCardsPayloadDTO creditCard info
+     * @return new fragment
+     */
     public static SettingsCreditCardDetailsFragment newInstance(DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO){
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
