@@ -27,13 +27,14 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
-import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.fragments.BasePaymentDialogFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPayloadPlansDTO;
+import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -46,7 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PaymentPlanFragment extends BaseFragment {
+public class PaymentPlanFragment extends BasePaymentDialogFragment {
 
     private static final String LOG_TAG = PaymentPlanFragment.class.getSimpleName();
 
@@ -74,13 +75,25 @@ public class PaymentPlanFragment extends BaseFragment {
     private boolean isMPEdited;
     private PaymentNavigationCallback callback;
 
+
     @Override
-    public void onAttach(Context context){
-        super.onAttach(context);
+    protected void attachCallback(Context context) {
         try{
-            callback = (PaymentNavigationCallback) context;
+            if(context instanceof PaymentViewHandler){
+                callback = ((PaymentViewHandler) context).getPaymentPresenter();
+            }else {
+                callback = (PaymentNavigationCallback) context;
+            }
         }catch(ClassCastException cce){
             throw new ClassCastException("Attached context must implement PaymentNavigationCallback");
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(callback == null){
+            attachCallback(getContext());
         }
     }
 

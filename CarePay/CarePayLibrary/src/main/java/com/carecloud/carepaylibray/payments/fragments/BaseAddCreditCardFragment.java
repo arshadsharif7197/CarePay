@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.payments.fragments;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -25,7 +26,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialog;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialogFragment;
@@ -38,6 +38,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.TokenizationService;
+import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.payments.utils.CardPattern;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -55,7 +56,7 @@ import java.util.regex.Pattern;
 /**
  * A simple {@link Fragment} subclass.
  */
-public abstract class BaseAddCreditCardFragment extends BaseDialogFragment implements PayeezyRequestTask.AuthorizeCreditCardCallback, SimpleDatePickerDialog.OnDateSetListener {
+public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragment implements PayeezyRequestTask.AuthorizeCreditCardCallback, SimpleDatePickerDialog.OnDateSetListener {
 
     public interface IAuthoriseCreditCardResponse {
         void onAuthorizeCreditCardSuccess();
@@ -104,6 +105,27 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
 
     protected PaymentNavigationCallback callback;
     protected PaymentsModel paymentsModel;
+
+    @Override
+    protected void attachCallback(Context context) {
+        try {
+            if(context instanceof PaymentViewHandler){
+                callback = ((PaymentViewHandler) context).getPaymentPresenter();
+            }else {
+                callback = (PaymentNavigationCallback) context;
+            }
+        } catch (ClassCastException cce) {
+            throw new ClassCastException("Attached context must implement PaymentNavigationCallback");
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(callback == null){
+            attachCallback(getContext());
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

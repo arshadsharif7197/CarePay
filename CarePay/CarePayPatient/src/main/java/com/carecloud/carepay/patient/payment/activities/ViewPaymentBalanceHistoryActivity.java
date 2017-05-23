@@ -239,7 +239,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void onPaymentPlanAction() {
+    public void onPaymentPlanAction(PaymentsModel paymentsModel) {
         PaymentPlanFragment fragment = new PaymentPlanFragment();
 
         Bundle args = new Bundle();

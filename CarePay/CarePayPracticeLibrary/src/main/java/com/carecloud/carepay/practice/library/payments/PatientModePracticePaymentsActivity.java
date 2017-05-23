@@ -164,7 +164,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
     }
 
     @Override
-    public void onPaymentPlanAction() {
+    public void onPaymentPlanAction(PaymentsModel paymentsModel) {
 
     }
 

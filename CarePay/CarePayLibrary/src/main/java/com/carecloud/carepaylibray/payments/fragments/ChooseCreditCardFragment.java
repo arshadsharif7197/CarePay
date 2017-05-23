@@ -20,7 +20,6 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.adapter.CreditCardsAdapter;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
@@ -35,6 +34,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentType;
+import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -45,10 +45,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by lmenendez on 2/28/17.
+ * Created by lmenendez on 2/28/17
  */
 
-public class ChooseCreditCardFragment extends BaseDialogFragment {
+public class ChooseCreditCardFragment extends BasePaymentDialogFragment {
 
     private Button nextButton;
     private Activity activity;
@@ -81,12 +81,23 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    protected void attachCallback(Context context) {
         try {
-            callback = (PaymentNavigationCallback) context;
+            if(context instanceof PaymentViewHandler){
+                callback = ((PaymentViewHandler) context).getPaymentPresenter();
+            }else {
+                callback = (PaymentNavigationCallback) context;
+            }
         } catch (ClassCastException cce) {
             throw new ClassCastException("attached context must implement PaymentNavigationCallback");
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(callback == null){
+            attachCallback(getContext());
         }
     }
 
@@ -173,13 +184,6 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
                 nextButton.setEnabled(true);
             }
         });
-
-//        if (getDialog() != null) {
-//            //limit width of listview
-//            ViewGroup.LayoutParams layoutParams = creditCardsListView.getLayoutParams();
-//            layoutParams.width = (int) (getResources().getDisplayMetrics().widthPixels * .5);
-//            creditCardsListView.setLayoutParams(layoutParams);
-//        }
 
     }
 

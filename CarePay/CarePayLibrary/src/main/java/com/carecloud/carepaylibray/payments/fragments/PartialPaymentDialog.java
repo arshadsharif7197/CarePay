@@ -4,9 +4,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -19,29 +19,29 @@ import android.widget.Toast;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.text.NumberFormat;
 import java.util.List;
 
 /**
- * Created by lmenendez on 2/28/17.
+ * Created by lmenendez on 2/28/17
  */
 
 public class PartialPaymentDialog extends Dialog implements View.OnClickListener, TextWatcher {
     private Context context;
-    //private JSONObject paymentModel;
-    private EditText enterPartialAmountEditText;
-    private CarePayTextView partialPaymentTotalAmountTitle;
-    private CarePayTextView amountSymbolTextView;
-    private CarePayTextView partialPaymentPayingToday;
+
+    private EditText amountText;
+    private TextView partialPaymentTotalAmountTitle;
+    private TextView amountSymbol;
     private Button payPartialButton;
-    //changes are needed when model will come
+
     private double fullAmount = 0.00;
-    private String amountSymbol = "$";
     private PaymentsModel paymentsDTO;
 
     private double insuranceCopay;
@@ -49,8 +49,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private boolean amountChangeFlag = true;
     private String balanceBeforeTextChange;
 
-    //private boolean deviceLarge;
-    protected PaymentNavigationCallback payNowClickListener;
+    private PaymentNavigationCallback payNowClickListener;
 
     /**
      * Contructor
@@ -63,7 +62,11 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         this.paymentsDTO = paymentsDTO;
 
         try {
-            payNowClickListener = (PaymentNavigationCallback) context;
+            if(context instanceof PaymentViewHandler){
+                payNowClickListener = ((PaymentViewHandler) context).getPaymentPresenter();
+            }else {
+                payNowClickListener = (PaymentNavigationCallback) context;
+            }
         } catch (ClassCastException cce) {
             throw new ClassCastException("Dialog Context must implement PayNowClickListener for callback");
         }
@@ -76,67 +79,67 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_partial_payment);
         setCancelable(false);
-        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
-        getWindow().setAttributes(params);
-        //onSetListener();
-
+        if(getWindow()!=null) {
+            getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            WindowManager.LayoutParams params = getWindow().getAttributes();
+            params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
+            getWindow().setAttributes(params);
+        }
         initViews();
     }
 
     private void initViews() {
-        enterPartialAmountEditText = (EditText) findViewById(R.id.enterPartialAmountEditText);
-        partialPaymentTotalAmountTitle = (CarePayTextView) findViewById(R.id.partialPaymentTotalAmountTitle);
+        amountText = (EditText) findViewById(R.id.enterPartialAmountEditText);
+        partialPaymentTotalAmountTitle = (TextView) findViewById(R.id.partialPaymentTotalAmountTitle);
         payPartialButton = (Button) findViewById(R.id.payPartialButton);
-        amountSymbolTextView = (CarePayTextView) findViewById(R.id.amountSymbolTextView);
-        partialPaymentPayingToday = (CarePayTextView) findViewById(R.id.partialPaymentPayingToday);
-        enterPartialAmountEditText.addTextChangedListener(this);
-        partialPaymentTotalAmountTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-        partialPaymentTotalAmountTitle.setTextColor(context.getResources().getColor(R.color.payne_gray));
+        amountSymbol = (TextView) findViewById(R.id.amountSymbolTextView);
+
+        amountText.addTextChangedListener(this);
         payPartialButton.setOnClickListener(this);
         payPartialButton.setEnabled(false);
-        amountSymbolTextView.setText(CarePayConstants.DOLLAR);
-        amountSymbolTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 60);
-        amountSymbolTextView.setTextColor(context.getResources().getColor(R.color.white_transparent));
-        LinearLayout closeLinearLayout = (LinearLayout) findViewById(com.carecloud.carepaylibrary.R.id.closeViewLayout);
-        closeLinearLayout.setOnClickListener(this);
-        partialPaymentPayingToday.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-        partialPaymentPayingToday.setTextColor(context.getResources().getColor(R.color.glitter));
+
+        String symbol = NumberFormat.getCurrencyInstance().getCurrency().getSymbol();
+        amountSymbol.setText(symbol);
+
+        View closeView = findViewById(com.carecloud.carepaylibrary.R.id.closeViewLayout);
+        closeView.setOnClickListener(this);
+
         calculateFullAmount(partialPaymentTotalAmountTitle);
+
     }
 
     @Override
     public void onClick(View view) {
         int viewId = view.getId();
         if (viewId == R.id.closeViewLayout) {
+            SystemUtil.hideSoftKeyboard(context, view);
             cancel();
-        } else if(viewId == R.id.key_clear) {
-            onEnterNumberClear();
-
         }else if (viewId == R.id.payPartialButton) {
-            onPaymentClick(enterPartialAmountEditText, paymentsDTO);
-
-        }else {
-            String buttonValue = ((Button) view).getText().toString();
-            onEnterNumber(buttonValue);
+            onPaymentClick(amountText, paymentsDTO);
         }
     }
 
     @Override
     public void afterTextChanged(Editable str) {
+        if (str.length() > 0) {
+            amountSymbol.setTextColor(ContextCompat.getColor(context, R.color.white));
+            amountText.setHint(null);
+        } else {
+            amountSymbol.setTextColor(ContextCompat.getColor(context, R.color.white_transparent));
+            amountText.setHint("0.00");
+        }
     }
 
     @Override
     public void beforeTextChanged(CharSequence str, int start, int count, int after) {
-        //amountSymbolTextView.setTextColor(context.getResources().getColor(R.color.white));
+        //amountSymbol.setTextColor(context.getResources().getColor(R.color.white));
         balanceBeforeTextChange = str.toString();
     }
 
     @Override
     public void onTextChanged(CharSequence str, int start, int before, int count) {
-        String amountEditText = enterPartialAmountEditText.getText().toString();
+        String amountEditText = amountText.getText().toString();
         try {
             if (amountChangeFlag) {
                 // flag to avoid the onTextChanged listener call after setText manipulated number
@@ -144,37 +147,37 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
                 //when deleting a decimal point, delete any non-integral portion of the number
                 if (balanceBeforeTextChange.contains(".") && !amountEditText.contains(".")) {
                     amountEditText = balanceBeforeTextChange.substring(0, balanceBeforeTextChange.indexOf("."));
-                    enterPartialAmountEditText.setText(amountEditText);
-                    enterPartialAmountEditText.setSelection(amountEditText.length());
+                    amountText.setText(amountEditText);
+                    amountText.setSelection(amountEditText.length());
                 } else
                     // user cannot enter amount less than 1
                     if (amountEditText.equalsIgnoreCase(".") || Double.parseDouble(amountEditText) < 1) {
                         amountEditText = "0";
-                        enterPartialAmountEditText.setText(amountEditText);
+                        amountText.setText(amountEditText);
                     } else
                         // Only when user enters dot, we should show the decimal values as 00
                         if (amountEditText.endsWith(".")) {
                             amountEditText = amountEditText + "00";
-                            enterPartialAmountEditText.setText(amountEditText);
-                            enterPartialAmountEditText.setSelection(amountEditText.length() - 2);
+                            amountText.setText(amountEditText);
+                            amountText.setSelection(amountEditText.length() - 2);
                             // When user removes dot, we should show the integer before that
                         } else if (amountEditText.endsWith(".0")) {
-                            enterPartialAmountEditText.setText(amountEditText.substring(0, amountEditText.length() - 2));
-                            enterPartialAmountEditText.setSelection(enterPartialAmountEditText.length());
+                            amountText.setText(amountEditText.substring(0, amountEditText.length() - 2));
+                            amountText.setSelection(amountText.length());
                             // When user enters number, we should simply append the number entered
                             // Also adjusting the cursor position after removing DOT and appending number
                         } else {
                             if (amountEditText.contains(".") && amountEditText.length() - 3 > amountEditText.indexOf(".")) {
-                                //enterPartialAmountEditText.setText(new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER).format(Double.parseDouble(amountEditText)));
+                                //amountText.setText(new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER).format(Double.parseDouble(amountEditText)));
                                 amountEditText = amountEditText.substring(0, amountEditText.indexOf(".") + 3);
-                                enterPartialAmountEditText.setText(amountEditText);
+                                amountText.setText(amountEditText);
                             } else {
-                                enterPartialAmountEditText.setText(amountEditText);
+                                amountText.setText(amountEditText);
                             }
-                            if (enterPartialAmountEditText.getText().toString().endsWith("0") && amountEditText.contains(".")) {
-                                enterPartialAmountEditText.setSelection(enterPartialAmountEditText.length() - 1);
+                            if (amountText.getText().toString().endsWith("0") && amountEditText.contains(".")) {
+                                amountText.setSelection(amountText.length() - 1);
                             } else {
-                                enterPartialAmountEditText.setSelection(enterPartialAmountEditText.length());
+                                amountText.setSelection(amountText.length());
                             }
                         }
             } else {
@@ -184,7 +187,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
             e.printStackTrace();
         }
         // Calculating the remaining amount after entering partial payment amount
-        onPendingAmountValidation(amountEditText, payPartialButton, partialPaymentTotalAmountTitle, amountSymbolTextView);
+        onPendingAmountValidation(amountEditText, payPartialButton, partialPaymentTotalAmountTitle, amountSymbol);
     }
 
     private void onPendingAmountValidation(String amountEditText, Button payPartialButton, TextView partialPaymentTotalAmountTitle,TextView amountSymbolTextView) {
@@ -200,7 +203,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
             }
             partialPaymentTotalAmountTitle.setText(Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount((double) Math.round((fullAmount - amountPay) * 100) / 100));
         } else {
-            //amountSymbolTextView.setTextColor(context.getResources().getColor(R.color.white_transparent));
+            //amountSymbol.setTextColor(context.getResources().getColor(R.color.white_transparent));
             payPartialButton.setEnabled(false);
             partialPaymentTotalAmountTitle.setText(Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount(fullAmount));
         }
@@ -213,20 +216,6 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         }catch (NumberFormatException nfe){
             nfe.printStackTrace();
             Toast.makeText(context, "Please enter valid amount!", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void onEnterNumber(String numberStr) {
-        String actualValue = enterPartialAmountEditText.getText().toString();
-        numberStr = actualValue + numberStr;
-        enterPartialAmountEditText.setText(numberStr);
-    }
-
-    private void onEnterNumberClear() {
-        String actualValue = enterPartialAmountEditText.getText().toString();
-        if (actualValue.length() > 0) {
-            actualValue = actualValue.substring(0, actualValue.length() - 1);
-            enterPartialAmountEditText.setText(actualValue);
         }
     }
 

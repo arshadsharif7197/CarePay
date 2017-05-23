@@ -9,22 +9,22 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
+import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.google.gson.Gson;
 
 import java.text.NumberFormat;
 
 /**
- * Created by lmenendez on 3/24/17.
+ * Created by lmenendez on 3/24/17
  */
 
-public class PaymentConfirmationFragment extends BaseDialogFragment {
+public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
 
     private PaymentNavigationCallback callback;
     private PaymentsModel paymentsModel;
@@ -35,12 +35,23 @@ public class PaymentConfirmationFragment extends BaseDialogFragment {
 
 
     @Override
-    public void onAttach(Context context){
-        super.onAttach(context);
+    protected void attachCallback(Context context) {
         try{
-            callback = (PaymentNavigationCallback) context;
+            if(context instanceof PaymentViewHandler){
+                callback = ((PaymentViewHandler) context).getPaymentPresenter();
+            }else {
+                callback = (PaymentNavigationCallback) context;
+            }
         }catch (ClassCastException cce){
             throw new ClassCastException("Attached Context must implement PaymentNavigationCallback");
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(callback == null){
+            attachCallback(getContext());
         }
     }
 

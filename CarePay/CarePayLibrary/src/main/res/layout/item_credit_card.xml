@@ -9,13 +9,11 @@
     android:gravity="center_vertical">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="@dimen/dimen_36dp"
+        android:layout_height="wrap_content"
         android:id="@+id/credit_card_image"
         android:src="@drawable/payment_credit_card_button_selector"
-        android:scaleType="centerCrop"
-        android:padding="@dimen/payment_method_layout_checkbox_margin"
-        android:adjustViewBounds="true"/>
+        android:scaleType="centerInside"/>
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:layout_width="0dp"
@@ -23,22 +21,22 @@
         android:layout_weight="1"
         android:id="@+id/credit_card_text"
         android:gravity="start"
-        android:textSize="@dimen/text_size_22"
+        android:textSize="@dimen/text_size_17"
         android:textColor="@color/radio_button_selector"
-        android:padding="@dimen/payment_method_layout_checkbox_margin"
+        android:padding="@dimen/dimen_8dp"
         app:customAssetFont="proxima_nova_regular"/>
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/credit_card_default"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/credit_card_default"
         android:background="@drawable/button_rounded_gray_background"
+        android:paddingBottom="@dimen/dimen_3dp"
+        android:paddingEnd="@dimen/dimen_8dp"
+        android:paddingStart="@dimen/dimen_8dp"
+        android:paddingTop="@dimen/dimen_3dp"
         android:text="Default"
         android:textSize="@dimen/text_size_13"
-        android:paddingTop="@dimen/dimen_5dp"
-        android:paddingBottom="@dimen/dimen_5dp"
-        android:paddingStart="@dimen/dimen_10dp"
-        android:paddingEnd="@dimen/dimen_10dp"
         app:customAssetFont="proxima_nova_regular"/>
 
     <ImageView

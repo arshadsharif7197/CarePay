@@ -207,7 +207,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         leftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.onPaymentPlanAction();
+                callback.onPaymentPlanAction(paymentsModel);
             }
         });
 
