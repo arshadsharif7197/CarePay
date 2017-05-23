@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
+import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -49,29 +51,57 @@ public class SettingsCreditCardDetailsFragment extends BaseFragment {
     private DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO = null;
     private static final String TAG = SettingsCreditCardDetailsFragment.class.getName();
 
+    private DemographicsSettingsFragmentListener callback;
+
     public interface IOnCreditCardOperationSuccess {
         void onCreditCardOperation(DemographicsSettingsDTO demographicsSettingsDTO);
+    }
+
+
+    public static SettingsCreditCardDetailsFragment newInstance(DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO){
+        Bundle bundle = new Bundle();
+        Gson gson = new Gson();
+        String creditCardsPayloadDTOString = gson.toJson(creditCardsPayloadDTO);
+        bundle.putString(CarePayConstants.CREDIT_CARD_BUNDLE, creditCardsPayloadDTOString);
+
+        SettingsCreditCardDetailsFragment settingsCreditCardDetailsFragment = new SettingsCreditCardDetailsFragment();
+        settingsCreditCardDetailsFragment.setArguments(bundle);
+        return settingsCreditCardDetailsFragment;
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            callback = (DemographicsSettingsFragmentListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement SettingsCreditCardListFragmentListener");
+        }
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         Bundle arguments = getArguments();
         if (arguments != null) {
             Gson gson = new Gson();
             String demographicsSettingsDTOString = arguments.getString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE);
-            demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
+//            demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
+            demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
 
             demographicsSettingsDTOString = arguments.getString(CarePayConstants.CREDIT_CARD_BUNDLE);
             creditCardsPayloadDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsCreditCardsPayloadDTO.class);
         }
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_credit_card_details, container, false);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
@@ -172,7 +202,7 @@ public class SettingsCreditCardDetailsFragment extends BaseFragment {
             setAsDefaultPayload.put("card_id", creditCardsPayloadDTO.getPayload().getHashCreditCardsId());
             setAsDefaultPayload.put("is_default", true);
             String body = setAsDefaultPayload.toString();
-            TransitionDTO transitionDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getTransitions().getUpdateCreditCard();
+            TransitionDTO transitionDTO = demographicsSettingsDTO.getMetadata().getTransitions().getUpdateCreditCard();
             getWorkflowServiceHelper().execute(transitionDTO, creditCardOperationCallback, body, null, getWorkflowServiceHelper().getPreferredLanguageHeader());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -184,7 +214,7 @@ public class SettingsCreditCardDetailsFragment extends BaseFragment {
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("card_id", creditCardsPayloadDTO.getPayload().getHashCreditCardsId());
 
-            TransitionDTO transitionDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getTransitions().getDeleteCreditCard();
+            TransitionDTO transitionDTO = demographicsSettingsDTO.getMetadata().getTransitions().getDeleteCreditCard();
             getWorkflowServiceHelper().execute(transitionDTO, creditCardOperationCallback, queryMap, getWorkflowServiceHelper().getPreferredLanguageHeader());
         } catch (Exception e) {
             e.printStackTrace();

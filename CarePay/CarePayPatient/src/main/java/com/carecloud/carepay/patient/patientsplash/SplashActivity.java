@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.carecloud.carepay.patient.BuildConfig;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.patientsplash.dtos.SelectLanguageDTO;
@@ -93,10 +94,11 @@ public class SplashActivity extends BasePatientActivity {
         // dynamic transition
         getWorkflowServiceHelper().executeApplicationStartRequest(applicationStartCallback);
 
-        NewRelic.withApplicationToken(
-                getString(R.string.new_relic_application_token)
-        ).start(this.getApplication());
-
+        if(!BuildConfig.FLAVOR.equals("development")) {
+            NewRelic.withApplicationToken(
+                    getString(R.string.new_relic_application_token)
+            ).start(this.getApplication());
+        }
         Intent intent = new Intent(this, RegistrationIntentService.class);
         startService(intent);
     }

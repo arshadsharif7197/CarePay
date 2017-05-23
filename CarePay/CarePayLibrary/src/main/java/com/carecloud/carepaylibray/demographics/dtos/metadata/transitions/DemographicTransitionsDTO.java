@@ -17,6 +17,34 @@ public class DemographicTransitionsDTO {
     @Expose
     private TransitionDTO updateDemographics = new TransitionDTO();
 
+    @SerializedName("add_credit_card")
+    @Expose
+    private TransitionDTO addCreditCard = new TransitionDTO();
+
+    @SerializedName("delete_credit_card")
+    @Expose
+    private TransitionDTO deleteCreditCard = new TransitionDTO();
+
+    @SerializedName("update_documents")
+    @Expose
+    private TransitionDTO udateDocuments = new TransitionDTO();
+
+    @SerializedName("update_notifications")
+    @Expose
+    private TransitionDTO updateNotifications = new TransitionDTO();
+
+    @SerializedName("update_credit_card")
+    @Expose
+    private TransitionDTO updateCreditCard = new TransitionDTO();
+
+    @SerializedName("change_login_email")
+    @Expose
+    private TransitionDTO changeLoginEmail = new TransitionDTO();
+
+    @SerializedName("change_password")
+    @Expose
+    private TransitionDTO changePassword = new TransitionDTO();
+
     /**
      *
      * @return
@@ -48,5 +76,61 @@ public class DemographicTransitionsDTO {
      */
     public void setUpdateDemographics(TransitionDTO updateDemographics) {
         this.updateDemographics = updateDemographics;
+    }
+
+    public TransitionDTO getAddCreditCard() {
+        return addCreditCard;
+    }
+
+    public void setAddCreditCard(TransitionDTO addCreditCard) {
+        this.addCreditCard = addCreditCard;
+    }
+
+    public TransitionDTO getDeleteCreditCard() {
+        return deleteCreditCard;
+    }
+
+    public void setDeleteCreditCard(TransitionDTO deleteCreditCard) {
+        this.deleteCreditCard = deleteCreditCard;
+    }
+
+    public TransitionDTO getUdateDocuments() {
+        return udateDocuments;
+    }
+
+    public void setUdateDocuments(TransitionDTO udateDocuments) {
+        this.udateDocuments = udateDocuments;
+    }
+
+    public TransitionDTO getUpdateNotifications() {
+        return updateNotifications;
+    }
+
+    public void setUpdateNotifications(TransitionDTO updateNotifications) {
+        this.updateNotifications = updateNotifications;
+    }
+
+    public TransitionDTO getUpdateCreditCard() {
+        return updateCreditCard;
+    }
+
+    public void setUpdateCreditCard(TransitionDTO updateCreditCard) {
+        this.updateCreditCard = updateCreditCard;
+    }
+
+    public TransitionDTO getChangeLoginEmail() {
+        return changeLoginEmail;
+    }
+
+    public void setChangeLoginEmail(TransitionDTO changeLoginEmail) {
+        this.changeLoginEmail = changeLoginEmail;
+    }
+
+    public TransitionDTO getChangePassword() {
+        return changePassword;
+    }
+
+    public void setChangePassword(TransitionDTO changePassword) {
+        this.changePassword = changePassword;
     }
 }

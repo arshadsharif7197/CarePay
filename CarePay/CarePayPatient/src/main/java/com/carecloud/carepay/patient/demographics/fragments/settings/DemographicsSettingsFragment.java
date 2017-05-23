@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -128,7 +127,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 if (callback != null) {
-                    callback.showHelpFragment();
+                    callback.displayHelpFragment();
                 }
             }
         });
@@ -149,15 +148,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
         editTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                EditProfileFragment fragment = (EditProfileFragment)
-                        fm.findFragmentByTag(EditProfileFragment.class.getSimpleName());
-                if (fragment == null) {
-                    fragment = EditProfileFragment.newInstance();
-                }
-                fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
-                        EditProfileFragment.class.getSimpleName()).addToBackStack(null).commit();
-
+                callback.displayEditProfileFragment();
             }
         });
 
@@ -165,15 +156,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
         demographicsTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                DemographicsInformationFragment fragment = (DemographicsInformationFragment)
-                        fm.findFragmentByTag(DemographicsInformationFragment.class.getSimpleName());
-                if (fragment == null) {
-                    fragment = DemographicsInformationFragment.newInstance();
-                }
-                fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
-                        DemographicsInformationFragment.class.getSimpleName()).addToBackStack(null).commit();
-
+                callback.displayDemographicsFragment();
             }
         });
 
@@ -181,15 +164,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
         documentsTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                DemographicsSettingsDocumentsFragment fragment = (DemographicsSettingsDocumentsFragment)
-                        fm.findFragmentByTag(DemographicsSettingsDocumentsFragment.class.getSimpleName());
-                if (fragment == null) {
-                    fragment = DemographicsSettingsDocumentsFragment.newInstance();
-                }
-                fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
-                        DemographicsSettingsDocumentsFragment.class.getSimpleName()).addToBackStack(null).commit();
-
+                callback.displayDocumentsFragment();
             }
         });
 
@@ -197,7 +172,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
         creditCardsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.initializeCreditCardListFragment();
+                callback.displayCreditCardListFragment();
             }
         });
 
@@ -215,7 +190,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("push", pushNotificationCheckBox.isChecked());
         jsonObject.addProperty("email", emailNotificationCheckBox.isChecked());
-        TransitionDTO transitionDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO()
+        TransitionDTO transitionDTO = demographicsSettingsDTO.getMetadata()
                 .getTransitions().getUpdateNotifications();
         getWorkflowServiceHelper().execute(transitionDTO, updateNotificationPreferencesCallback, jsonObject.toString());
     }

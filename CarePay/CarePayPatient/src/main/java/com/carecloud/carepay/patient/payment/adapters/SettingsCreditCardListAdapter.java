@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -16,13 +15,13 @@ import java.util.List;
 
 public class SettingsCreditCardListAdapter extends RecyclerView.Adapter<SettingsCreditCardListAdapter.SettingsCreditCardListViewHolder> {
 
-    public interface IOnCreditCardDetailClickListener {
-        void onCreditCardDetailClickListener(int position);
+    public interface OnCreditCardDetailClickListener {
+        void onCreditCardDetailClickListener(DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO);
     }
 
     private Context context;
     private List<DemographicsSettingsCreditCardsPayloadDTO> creditCardList;
-    private IOnCreditCardDetailClickListener onCreditCardDetailClickListener;
+    private OnCreditCardDetailClickListener onCreditCardDetailClickListener;
 
     /**
      * Instantiates a new Settings credit card list adapter.
@@ -32,7 +31,7 @@ public class SettingsCreditCardListAdapter extends RecyclerView.Adapter<Settings
      * @param callback       the callback
      */
     public SettingsCreditCardListAdapter(Context context, List<DemographicsSettingsCreditCardsPayloadDTO> creditCardList,
-                                         IOnCreditCardDetailClickListener callback) {
+                                         OnCreditCardDetailClickListener callback) {
         this.context = context;
         this.creditCardList = creditCardList;
         this.onCreditCardDetailClickListener = callback;
@@ -53,16 +52,14 @@ public class SettingsCreditCardListAdapter extends RecyclerView.Adapter<Settings
 
         if (creditCardsPayloadDTO.getPayload().isDefault()) {
             holder.defaultTextView.setVisibility(View.VISIBLE);
-            holder.defaultTextView.setText(Label.getLabel("setting_default"));
         } else {
             holder.defaultTextView.setVisibility(View.GONE);
         }
 
-        holder.detailsTextView.setText(Label.getLabel("setting_details"));
         holder.detailsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onCreditCardDetailClickListener.onCreditCardDetailClickListener(position);
+                onCreditCardDetailClickListener.onCreditCardDetailClickListener(creditCardsPayloadDTO);
             }
         });
     }

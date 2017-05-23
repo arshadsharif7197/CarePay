@@ -2,9 +2,7 @@ package com.carecloud.carepay.patient.payment.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,29 +16,30 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
 import com.carecloud.carepay.patient.payment.adapters.SettingsCreditCardListAdapter;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.gson.Gson;
 
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsCreditCardListFragment extends BaseFragment implements SettingsCreditCardListAdapter.IOnCreditCardDetailClickListener {
+public class SettingsCreditCardListFragment extends BaseFragment implements SettingsCreditCardListAdapter.OnCreditCardDetailClickListener {
 
     private RecyclerView creditCardsListRecyclerView;
     private LinearLayout noCreditCardsView;
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
-    private ISettingsCreditCardListFragmentListener activityCallback;
 
-    public interface ISettingsCreditCardListFragmentListener {
-        void initializeAddNewCreditCardFragment();
+    private DemographicsSettingsFragmentListener callback;
+
+
+    public static SettingsCreditCardListFragment newInstance(){
+        return new SettingsCreditCardListFragment();
     }
 
     @Override
@@ -50,7 +49,7 @@ public class SettingsCreditCardListFragment extends BaseFragment implements Sett
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            activityCallback = (ISettingsCreditCardListFragmentListener) context;
+            callback = (DemographicsSettingsFragmentListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement SettingsCreditCardListFragmentListener");
@@ -58,14 +57,16 @@ public class SettingsCreditCardListFragment extends BaseFragment implements Sett
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            Gson gson = new Gson();
-            String demographicsSettingsDTOString = arguments.getString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE);
-            demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
-        }
+        demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
+
+//        Bundle arguments = getArguments();
+//        if (arguments != null) {
+//            Gson gson = new Gson();
+//            String demographicsSettingsDTOString = arguments.getString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE);
+//            demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
+//        }
     }
 
     @Override
@@ -92,12 +93,9 @@ public class SettingsCreditCardListFragment extends BaseFragment implements Sett
         creditCardsListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         noCreditCardsView = (LinearLayout) view.findViewById(R.id.no_credit_cards_view);
-        ((TextView) view.findViewById(R.id.no_credit_cards_label)).setText(Label.getLabel("no_credit_card_label"));
-        ((TextView) view.findViewById(R.id.no_credit_cards_info)).setText(Label.getLabel("no_credit_card_info"));
 
         Button addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
-        addNewCardButton.setText(Label.getLabel("credit_card_add_new"));
 
         loadCreditCardsList(demographicsSettingsDTO);
     }
@@ -125,38 +123,12 @@ public class SettingsCreditCardListFragment extends BaseFragment implements Sett
     private View.OnClickListener addNewCardButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            activityCallback.initializeAddNewCreditCardFragment();
+            callback.displayAddCreditCardFragment();
         }
     };
 
     @Override
-    public void onCreditCardDetailClickListener(int position) {
-        Bundle bundle = new Bundle();
-        Gson gson = new Gson();
-        String creditCardsPayloadDTOString = gson.toJson(demographicsSettingsDTO.getPayload()
-                .getPatientCreditCards().get(position));
-        bundle.putString(CarePayConstants.CREDIT_CARD_BUNDLE, creditCardsPayloadDTOString);
-
-        creditCardsPayloadDTOString = gson.toJson(demographicsSettingsDTO);
-        bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, creditCardsPayloadDTOString);
-
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        SettingsCreditCardDetailsFragment fragment = (SettingsCreditCardDetailsFragment)
-                fm.findFragmentByTag(SettingsCreditCardDetailsFragment.class.getSimpleName());
-        if (fragment == null) {
-            fragment = new SettingsCreditCardDetailsFragment();
-        }
-
-        //fix for random crashes
-        if (fragment.getArguments() != null) {
-            fragment.getArguments().putAll(bundle);
-        } else {
-            fragment.setArguments(bundle);
-        }
-
-        fm.beginTransaction().replace(com.carecloud.carepay.patient.R.id.activity_demographics_settings,
-                fragment, SettingsCreditCardDetailsFragment.class.getSimpleName())
-                .addToBackStack(SettingsCreditCardDetailsFragment.class.getName()).commit();
-        fm.executePendingTransactions();
+    public void onCreditCardDetailClickListener(DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO) {
+        callback.displayCreditCardDetailsFragment(creditCardsPayloadDTO);
     }
 }
