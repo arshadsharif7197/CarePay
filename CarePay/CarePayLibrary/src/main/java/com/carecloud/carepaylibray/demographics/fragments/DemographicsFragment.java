@@ -462,8 +462,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
 
 
         EditText secondaryPhoneNumber = (EditText) view.findViewById(R.id.secondaryPhone);
-        String phonePattern = "\\d{3}-\\d{3}-\\d{4}";
-        if(!StringUtil.isNullOrEmpty(secondaryPhoneNumber.getText().toString()) && !ValidationHelper.isValidString(secondaryPhoneNumber.getText().toString().trim(), phonePattern)){
+        if(!StringUtil.isNullOrEmpty(secondaryPhoneNumber.getText().toString()) && !ValidationHelper.isValidString(secondaryPhoneNumber.getText().toString().trim(), ValidationHelper.PHONE_NUMBER_PATTERN)){
             TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.secondaryPhoneInputLayout);
             phoneLayout.setErrorEnabled(true);
             phoneLayout.setError(Label.getLabel("demographics_phone_number_validation_msg"));
@@ -471,8 +470,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
         }
 
         EditText emailAddress = (EditText) view.findViewById(R.id.email);
-        String emailPattern = "^[A-Z0-9a-z\\\\._%+-]+@([A-Za-z0-9-]+\\\\.)+[A-Za-z]{2,4}$";
-        if(!StringUtil.isNullOrEmpty(emailAddress.getText().toString()) && !ValidationHelper.isValidString(emailAddress.getText().toString().trim(), emailPattern)){
+        if(!StringUtil.isNullOrEmpty(emailAddress.getText().toString()) && !ValidationHelper.isValidString(emailAddress.getText().toString().trim(), ValidationHelper.EMAIL_PATTERN)){
             TextInputLayout emailLayout = (TextInputLayout) view.findViewById(R.id.emailInputLayout);
             emailLayout.setErrorEnabled(true);
             emailLayout.setError(Label.getLabel("demographics_email_validation_msg"));

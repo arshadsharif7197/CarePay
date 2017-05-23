@@ -31,14 +31,6 @@ import java.util.Map;
 
 public class MenuPatientActivity extends BasePatientActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-//    private static final String LOG_TAG = MenuPatientActivity.class.getSimpleName();
-    //keys
-//    protected String practiceId;
-//    protected String practiceMgmt;
-//    protected String patientId;
-//    protected String prefix;
-//    protected String userId;
-
     //transitions
     private static TransitionDTO transitionBalance;
     private static TransitionDTO transitionProfile;
@@ -67,9 +59,6 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         } else {
             appointmentsDrawerUserIdTextView.setText("");
         }
-//        patientId = getApplicationPreferences().getPatientId();
-//        practiceId = getApplicationPreferences().getPracticeId();
-//        practiceMgmt = getApplicationPreferences().getPracticeManagement();
 
         String imageUrl = getApplicationPreferences().getUserPhotoUrl();
         ImageView userImageView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.appointmentDrawerIdImageView);

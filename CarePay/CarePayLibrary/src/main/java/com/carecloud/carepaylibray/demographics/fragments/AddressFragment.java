@@ -284,8 +284,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         }
 
         EditText zipCode = (EditText) view.findViewById(R.id.zipCodeId);
-        String pattern = "^[0-9]{5}(?:-[0-9]{4})?$";
-        if(!StringUtil.isNullOrEmpty(zipCode.getText().toString()) && !ValidationHelper.isValidString(zipCode.getText().toString(), pattern)){
+        if(!StringUtil.isNullOrEmpty(zipCode.getText().toString()) && !ValidationHelper.isValidString(zipCode.getText().toString(), ValidationHelper.ZIP_CODE_PATTERN)){
             TextInputLayout zipLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
             zipLayout.setErrorEnabled(true);
             zipLayout.setError(Label.getLabel("demographics_zip_code_validation_msg"));
