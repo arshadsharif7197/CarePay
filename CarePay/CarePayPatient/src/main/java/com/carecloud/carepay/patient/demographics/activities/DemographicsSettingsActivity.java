@@ -17,8 +17,8 @@ import com.carecloud.carepay.patient.demographics.fragments.settings.HelpFragmen
 import com.carecloud.carepay.patient.demographics.fragments.settings.SupportFragment;
 import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
 import com.carecloud.carepay.patient.payment.fragments.SettingAddCreditCardFragment;
-import com.carecloud.carepay.patient.payment.fragments.SettingsCreditCardDetailsFragment;
-import com.carecloud.carepay.patient.payment.fragments.SettingsCreditCardListFragment;
+import com.carecloud.carepay.patient.payment.fragments.CreditCardDetailsFragment;
+import com.carecloud.carepay.patient.payment.fragments.CreditCardListFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraFragment;
@@ -33,7 +33,6 @@ import com.google.gson.Gson;
  * Main activity for Settings workflow
  */
 public class DemographicsSettingsActivity extends BasePatientActivity implements
-        SettingsCreditCardDetailsFragment.IOnCreditCardOperationSuccess,
         DemographicsSettingsFragmentListener,
         CarePayCameraReady, CarePayCameraCallback {
 
@@ -79,16 +78,12 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
 
     @Override
     public void onCreditCardOperation(DemographicsSettingsDTO demographicsSettingsDTO) {
-        if (getSupportFragmentManager().findFragmentByTag(SettingsCreditCardListFragment.class.getName()) != null) {
-            ((SettingsCreditCardListFragment) getSupportFragmentManager()
-                    .findFragmentByTag(SettingsCreditCardListFragment.class.getName()))
+        if (getSupportFragmentManager().findFragmentByTag(CreditCardListFragment.class.getName()) != null) {
+            ((CreditCardListFragment) getSupportFragmentManager()
+                    .findFragmentByTag(CreditCardListFragment.class.getName()))
                     .loadCreditCardsList(demographicsSettingsDTO);
         }
-        if (getSupportFragmentManager().findFragmentByTag(DemographicsSettingsFragment.class.getName()) != null) {
-            ((DemographicsSettingsFragment) getSupportFragmentManager()
-                    .findFragmentByTag(DemographicsSettingsFragment.class.getName()))
-                    .updateCreditCardsList(demographicsSettingsDTO);
-        }
+        this.demographicsSettingsDTO = demographicsSettingsDTO;
     }
 
     /**
@@ -124,15 +119,6 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
 
     @Override
     public void displayDemographicsFragment() {
-//        FragmentManager fm = getActivity().getSupportFragmentManager();
-//        DemographicsInformationFragment fragment = (DemographicsInformationFragment)
-//                fm.findFragmentByTag(DemographicsInformationFragment.class.getSimpleName());
-//        if (fragment == null) {
-//            fragment = DemographicsInformationFragment.newInstance();
-//        }
-//        fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
-//                DemographicsInformationFragment.class.getSimpleName()).addToBackStack(null).commit();
-//
         DemographicsInformationFragment demographicsInformationFragment = DemographicsInformationFragment.newInstance();
         replaceFragment(demographicsInformationFragment, true);
     }
@@ -165,10 +151,10 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
 
         FragmentManager fm = getSupportFragmentManager();
-        SettingsCreditCardListFragment fragment = (SettingsCreditCardListFragment)
-                fm.findFragmentByTag(SettingsCreditCardListFragment.class.getSimpleName());
+        CreditCardListFragment fragment = (CreditCardListFragment)
+                fm.findFragmentByTag(CreditCardListFragment.class.getSimpleName());
         if (fragment == null) {
-            fragment = new SettingsCreditCardListFragment();
+            fragment = new CreditCardListFragment();
         }
 
         //fix for random crashes
@@ -183,55 +169,14 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
 
     @Override
     public void displayAddCreditCardFragment() {
-//        FragmentManager fragmentmanager = getSupportFragmentManager();
-//        SettingAddCreditCardFragment fragment = (SettingAddCreditCardFragment)
-//                fragmentmanager.findFragmentByTag(SettingAddCreditCardFragment.class.getSimpleName());
-//        if (fragment == null) {
-//            fragment = new SettingAddCreditCardFragment();
-//        }
-//
-        Bundle bundle = new Bundle();
-        Gson gson = new Gson();
-        bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, gson.toJson(demographicsSettingsDTO));
-//        fragment.setArguments(bundle);
-//        navigateToFragment(fragment, true);
-
         SettingAddCreditCardFragment settingAddCreditCardFragment = new SettingAddCreditCardFragment();
-        settingAddCreditCardFragment.setArguments(bundle);
         replaceFragment(settingAddCreditCardFragment, true);
     }
 
     @Override
     public void displayCreditCardDetailsFragment(DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO) {
-//        Bundle bundle = new Bundle();
-//        Gson gson = new Gson();
-//        String creditCardsPayloadDTOString = gson.toJson(creditCardsPayloadDTO);
-//        bundle.putString(CarePayConstants.CREDIT_CARD_BUNDLE, creditCardsPayloadDTOString);
-//
-//        creditCardsPayloadDTOString = gson.toJson(demographicsSettingsDTO);
-//        bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, creditCardsPayloadDTOString);
-//
-//        FragmentManager fm = getActivity().getSupportFragmentManager();
-//        SettingsCreditCardDetailsFragment fragment = (SettingsCreditCardDetailsFragment)
-//                fm.findFragmentByTag(SettingsCreditCardDetailsFragment.class.getSimpleName());
-//        if (fragment == null) {
-//            fragment = new SettingsCreditCardDetailsFragment();
-//        }
-//
-//        //fix for random crashes
-//        if (fragment.getArguments() != null) {
-//            fragment.getArguments().putAll(bundle);
-//        } else {
-//            fragment.setArguments(bundle);
-//        }
-//
-//        fm.beginTransaction().replace(com.carecloud.carepay.patient.R.id.activity_demographics_settings,
-//                fragment, SettingsCreditCardDetailsFragment.class.getSimpleName())
-//                .addToBackStack(SettingsCreditCardDetailsFragment.class.getName()).commit();
-//        fm.executePendingTransactions();
-
-        SettingsCreditCardDetailsFragment settingsCreditCardDetailsFragment = SettingsCreditCardDetailsFragment.newInstance(creditCardsPayloadDTO);
-        replaceFragment(settingsCreditCardDetailsFragment, true);
+        CreditCardDetailsFragment creditCardDetailsFragment = CreditCardDetailsFragment.newInstance(creditCardsPayloadDTO);
+        replaceFragment(creditCardDetailsFragment, true);
     }
 
     @Override

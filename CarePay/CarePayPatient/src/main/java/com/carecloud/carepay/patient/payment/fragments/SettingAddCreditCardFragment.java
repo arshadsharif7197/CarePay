@@ -1,14 +1,17 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
+import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -16,6 +19,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.payments.fragments.BaseAddCreditCardFragment;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -27,70 +31,48 @@ import java.util.Map;
 public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment implements BaseAddCreditCardFragment.IAuthoriseCreditCardResponse {
 
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
+    private DemographicsSettingsFragmentListener callback;
+
+    @Override
+    protected void attachCallback(Context context) {
+        try {
+            callback = (DemographicsSettingsFragmentListener) context;
+        } catch (ClassCastException cce) {
+            throw new ClassCastException("Attached context must implement PaymentNavigationCallback");
+        }
+    }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            Gson gson = new Gson();
-            String demographicsSettingsDTOString = arguments.getString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE);
-            demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
-        }
+//        Bundle arguments = getArguments();
+//        if (arguments != null) {
+//            Gson gson = new Gson();
+//            String demographicsSettingsDTOString = arguments.getString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE);
+//            demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
+//        }
+        demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
+        merchantServicesList = demographicsSettingsDTO.getPayload().getMerchantServices();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setAuthorizeCallback(this);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onViewCreated(View view, Bundle icicle){
         title.setText(Label.getLabel("new_credit_card_heading"));
-        initilizeViews();
-    }
-
-    private void initilizeViews() {
-        creditCardNoTextInput.setTag(Label.getLabel("credit_card_number_label"));
-        creditCardNoEditText.setHint(Label.getLabel("credit_card_number_label"));
-
-        nameOnCardTextInputLayout.setTag(Label.getLabel("credit_card_name_label"));
-        nameOnCardEditText.setHint(Label.getLabel("credit_card_name_label"));
-
-        verificationCodeTextInput.setTag(Label.getLabel("credit_card_cvc_label"));
-        verificationCodeEditText.setHint(Label.getLabel("credit_card_cvc_label"));
-
-        expirationDateTextView.setText(Label.getLabel("credit_card_expiration_label"));
-        pickDateTextView.setText(Label.getLabel("credit_card_pick_date_label"));
-
-        saveCardOnFileCheckBox.setVisibility(View.GONE);
-        saveCardOnFileCheckBox.setEnabled(true);
-        setAsDefaultCheckBox.setText(Label.getLabel("edit_credit_card_default_label"));
-        setAsDefaultCheckBox.setEnabled(true);
-
-        billingAddressTextView.setText(Label.getLabel("credit_card_billing_address_label"));
-        useProfileAddressCheckBox.setText(Label.getLabel("setting_use_profile_address"));
-
-        address1TextInput.setTag(Label.getLabel("address1_label"));
-        address1EditText.setHint(Label.getLabel("address1_label"));
-
-        address2TextInput.setTag(Label.getLabel("address2_label"));
-        address2EditText.setHint(Label.getLabel("address2_label"));
-
-        zipCodeTextInput.setTag(Label.getLabel("zipcode_label"));
-        zipCodeEditText.setHint(Label.getLabel("zipcode_label"));
-
-        cityTextInput.setTag(Label.getLabel("city_label"));
-        cityEditText.setHint(Label.getLabel("city_label"));
-
-        stateTextInput.setTag(Label.getLabel("state_label"));
-        stateAutoCompleteTextView.setHint(Label.getLabel("state_label"));
-
         nextButton.setText(Label.getLabel("credit_card_add_new"));
+        nextButton.setBackgroundResource(R.drawable.bg_green_selector);
+        saveCardOnFileCheckBox.setChecked(true);
+        saveCardOnFileCheckBox.setEnabled(false);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
     }
+
 
     private WorkflowServiceCallback addNewCreditCardCallback = new WorkflowServiceCallback() {
         @Override
@@ -104,9 +86,9 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
             Gson gson = new Gson();
             DemographicsSettingsDTO removeCreditCardResponseDTO = gson.fromJson(workflowDTO.toString(),
                     DemographicsSettingsDTO.class);
-            demographicsSettingsDTO.getPayload().setPatientCreditCards(removeCreditCardResponseDTO.getPayload()
-                    .getPatientCreditCards());
-            ((DemographicsSettingsActivity) getActivity()).onCreditCardOperation(demographicsSettingsDTO);
+            demographicsSettingsDTO.getPayload().setPatientCreditCards(removeCreditCardResponseDTO.getPayload().getPatientCreditCards());
+            callback.onCreditCardOperation(demographicsSettingsDTO);
+            SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
             getActivity().onBackPressed();
         }
 

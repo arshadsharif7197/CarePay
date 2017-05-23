@@ -20,8 +20,6 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/nextButton"
             android:choiceMode="singleChoice"
-            android:elevation="17dp"
-            android:padding="@dimen/payment_method_parent_layout_padding"
             android:visibility="visible" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton

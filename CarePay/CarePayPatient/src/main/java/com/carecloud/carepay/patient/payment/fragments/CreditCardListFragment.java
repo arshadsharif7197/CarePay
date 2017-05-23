@@ -3,8 +3,6 @@ package com.carecloud.carepay.patient.payment.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -17,7 +15,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
-import com.carecloud.carepay.patient.payment.adapters.SettingsCreditCardListAdapter;
+import com.carecloud.carepay.patient.payment.adapters.CreditCardListAdapter;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
@@ -29,17 +27,17 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsCreditCardListFragment extends BaseFragment implements SettingsCreditCardListAdapter.OnCreditCardDetailClickListener {
+public class CreditCardListFragment extends BaseFragment implements CreditCardListAdapter.OnCreditCardDetailClickListener {
 
     private RecyclerView creditCardsListRecyclerView;
     private LinearLayout noCreditCardsView;
-    private DemographicsSettingsDTO demographicsSettingsDTO = null;
+    private DemographicsSettingsDTO demographicsSettingsDTO;
 
     private DemographicsSettingsFragmentListener callback;
 
 
-    public static SettingsCreditCardListFragment newInstance(){
-        return new SettingsCreditCardListFragment();
+    public static CreditCardListFragment newInstance(){
+        return new CreditCardListFragment();
     }
 
     @Override
@@ -60,37 +58,34 @@ public class SettingsCreditCardListFragment extends BaseFragment implements Sett
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
-
-//        Bundle arguments = getArguments();
-//        if (arguments != null) {
-//            Gson gson = new Gson();
-//            String demographicsSettingsDTOString = arguments.getString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE);
-//            demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
-//        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_settings_credit_cards_list, container, false);
+        return inflater.inflate(R.layout.fragment_settings_credit_cards_list, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle icicle){
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(Label.getLabel("credit_cards_label"));
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
-        toolbar.setTitle("");
 
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(),
-                R.drawable.icn_nav_back));
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
+        toolbar.setNavigationIcon(R.drawable.icn_nav_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
         initializeViews(view);
-        return view;
     }
 
     private void initializeViews(View view) {
         creditCardsListRecyclerView = (RecyclerView) view.findViewById(R.id.creditCardsListRecyclerView);
-        creditCardsListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        creditCardsListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         noCreditCardsView = (LinearLayout) view.findViewById(R.id.no_credit_cards_view);
 
@@ -107,15 +102,14 @@ public class SettingsCreditCardListFragment extends BaseFragment implements Sett
      */
     public void loadCreditCardsList(DemographicsSettingsDTO demographicsSettingsDTO) {
         if (demographicsSettingsDTO != null) {
-            this.demographicsSettingsDTO = demographicsSettingsDTO;
             List<DemographicsSettingsCreditCardsPayloadDTO> creditCardList = demographicsSettingsDTO.getPayload().getPatientCreditCards();
 
             if (creditCardList.isEmpty()) {
                 creditCardsListRecyclerView.setVisibility(View.GONE);
                 noCreditCardsView.setVisibility(View.VISIBLE);
             } else {
-                creditCardsListRecyclerView.setAdapter(new SettingsCreditCardListAdapter(getActivity(),
-                        creditCardList, this));
+                noCreditCardsView.setVisibility(View.GONE);
+                creditCardsListRecyclerView.setAdapter(new CreditCardListAdapter(getContext(), creditCardList, this));
             }
         }
     }
@@ -128,7 +122,7 @@ public class SettingsCreditCardListFragment extends BaseFragment implements Sett
     };
 
     @Override
-    public void onCreditCardDetailClickListener(DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO) {
+    public void onCreditCardDetail(DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO) {
         callback.displayCreditCardDetailsFragment(creditCardsPayloadDTO);
     }
 }

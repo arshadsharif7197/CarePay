@@ -255,15 +255,5 @@ public class DemographicsSettingsFragment extends BaseFragment {
         }
     };
 
-    /**
-     * Update credit cards list.
-     *
-     * @param demographicsSettingsDTO the demographics settings dto
-     */
-    public void updateCreditCardsList(DemographicsSettingsDTO demographicsSettingsDTO) {
-        if (demographicsSettingsDTO != null) {
-            this.demographicsSettingsDTO = demographicsSettingsDTO;
-        }
-    }
 }
 

@@ -37,6 +37,27 @@ import java.util.Map;
 public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implements BaseAddCreditCardFragment.IAuthoriseCreditCardResponse {
 
     @Override
+    protected void attachCallback(Context context) {
+        try {
+            if(context instanceof PaymentViewHandler){
+                callback = ((PaymentViewHandler) context).getPaymentPresenter();
+            }else {
+                callback = (PaymentNavigationCallback) context;
+            }
+        } catch (ClassCastException cce) {
+            throw new ClassCastException("Attached context must implement PaymentNavigationCallback");
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(callback == null){
+            attachCallback(getContext());
+        }
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
