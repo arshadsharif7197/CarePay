@@ -11,6 +11,12 @@ import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 public interface DemographicsSettingsFragmentListener extends FragmentActivityInterface {
     void displayEditProfileFragment();
 
+    void displayUpdateEmailFragment();
+
+    void displayUpdatePasswordFragment();
+
+    void displayUpdateNameFragment();
+
     void displayDemographicsFragment();
 
     void displayExpandedDemographicsFragment();

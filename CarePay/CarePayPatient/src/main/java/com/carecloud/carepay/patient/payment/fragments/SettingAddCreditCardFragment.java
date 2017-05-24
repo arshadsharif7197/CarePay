@@ -46,12 +46,6 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Bundle arguments = getArguments();
-//        if (arguments != null) {
-//            Gson gson = new Gson();
-//            String demographicsSettingsDTOString = arguments.getString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE);
-//            demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
-//        }
         demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
         merchantServicesList = demographicsSettingsDTO.getPayload().getMerchantServices();
     }

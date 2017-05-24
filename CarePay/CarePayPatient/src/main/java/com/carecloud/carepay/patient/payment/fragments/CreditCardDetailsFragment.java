@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -112,11 +111,9 @@ public class CreditCardDetailsFragment extends BaseFragment {
         title.setText(StringUtil.getFormattedCardNumber(
                 creditCardsPayloadDTO.getPayload().getCardType(),
                 creditCardsPayloadDTO.getPayload().getCardNumber()));
-        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
-
         toolbar.setTitle("");
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        callback.setToolbar(toolbar);
 
         initializeViews(view);
 
