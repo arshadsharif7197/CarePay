@@ -4,7 +4,7 @@
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/screen_background"
+    android:background="?practiceBackgroundColor"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true">
 
