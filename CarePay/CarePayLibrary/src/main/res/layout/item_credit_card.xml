@@ -5,7 +5,8 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/payment_method_layout_checkbox_margin"
+    android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
+    android:layout_marginBottom="@dimen/payment_method_layout_checkbox_margin"
     android:gravity="center_vertical">
 
     <ImageView

@@ -1,11 +1,9 @@
 package com.carecloud.carepaylibray.payments.fragments;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -38,7 +36,6 @@ import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.TokenizationService;
-import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.payments.utils.CardPattern;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -101,67 +98,49 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     protected PaymentCreditCardsPayloadDTO creditCardsPayloadDTO;
     protected PaymentsCreditCardBillingInformationDTO billingInformationDTO;
     protected IAuthoriseCreditCardResponse authoriseCreditCardResponseCallback;
-    private List<MerchantServicesDTO> merchantServicesList;
+    protected List<MerchantServicesDTO> merchantServicesList;
 
     protected PaymentNavigationCallback callback;
     protected PaymentsModel paymentsModel;
 
-    @Override
-    protected void attachCallback(Context context) {
-        try {
-            if(context instanceof PaymentViewHandler){
-                callback = ((PaymentViewHandler) context).getPaymentPresenter();
-            }else {
-                callback = (PaymentNavigationCallback) context;
-            }
-        } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached context must implement PaymentNavigationCallback");
-        }
-    }
 
     @Override
-    public void onResume(){
-        super.onResume();
-        if(callback == null){
-            attachCallback(getContext());
+    public void onCreate(Bundle icicle){
+        super.onCreate(icicle);
+        Bundle arguments = getArguments();
+        Gson gson = new Gson();
+        String payloadString;
+        if (arguments != null) {
+            if (arguments.containsKey(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE)) {
+                payloadString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
+                PaymentsModel paymentsModel = gson.fromJson(payloadString, PaymentsModel.class);
+                papiAccountsDTO = paymentsModel.getPaymentPayload().getPapiAccounts();
+                merchantServicesList = paymentsModel.getPaymentPayload().getMerchantServices();
+            }
+            if (arguments.containsKey(CarePayConstants.PAYMENT_AMOUNT_BUNDLE)) {
+                amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
+            }
         }
+        if (addressPayloadDTO == null) {
+            payloadString = getApplicationPreferences().readStringFromSharedPref(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE);
+            addressPayloadDTO = new DemographicAddressPayloadDTO();
+            if (payloadString.length() > 1) {
+                addressPayloadDTO = gson.fromJson(payloadString, DemographicAddressPayloadDTO.class);
+            }
+        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View addNewCreditCardView = inflater.inflate(com.carecloud.carepaylibrary.R.layout.fragment_add_new_credit_card,
+        View addNewCreditCardView = inflater.inflate(com.carecloud.carepaylibrary.R.layout.fragment_add_new_credit_card,
                 container, false);
-        try {
-            Bundle arguments = getArguments();
-            if (arguments != null) {
-                Gson gson = new Gson();
-                String payloadString;
-                if (addressPayloadDTO == null) {
-                    payloadString = getApplicationPreferences().readStringFromSharedPref(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE);
-                    addressPayloadDTO = new DemographicAddressPayloadDTO();
-                    if (payloadString.length() > 1) {
-                        addressPayloadDTO = gson.fromJson(payloadString, DemographicAddressPayloadDTO.class);
-                    }
-                }
-                if (arguments.containsKey(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE)) {
-                    payloadString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
-                    PaymentsModel paymentsModel = gson.fromJson(payloadString, PaymentsModel.class);
-                    papiAccountsDTO = paymentsModel.getPaymentPayload().getPapiAccounts();
-                    merchantServicesList = paymentsModel.getPaymentPayload().getMerchantServices();
-                }
-                if (arguments.containsKey(CarePayConstants.PAYMENT_AMOUNT_BUNDLE)) {
-                    amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         setupTitleViews(addNewCreditCardView);
         initializeViews(addNewCreditCardView);
-//        setTypefaces();
+
         setTextWatchers();
 
         hideKeyboardOnViewTouch(addNewCreditCardView);
@@ -305,12 +284,12 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     }
 
     private void setupTitleViews(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         if (toolbar != null) {
-            title = (TextView) toolbar.findViewById(com.carecloud.carepaylibrary.R.id.respons_toolbar_title);
+            title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
             toolbar.setTitle("");
             if (getDialog() == null) {
-                toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), com.carecloud.carepaylibrary.R.drawable.icn_nav_back));
+                toolbar.setNavigationIcon(R.drawable.icn_nav_back);
                 toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -341,31 +320,34 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     }
 
     private void initializeViews(View view) {
-        creditCardNoTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.creditCardNoTextInputLayout);
-        creditCardNoEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.creditCardNoEditText);
+        creditCardNoTextInput = (TextInputLayout) view.findViewById(R.id.creditCardNoTextInputLayout);
+        creditCardNoEditText = (EditText) view.findViewById(R.id.creditCardNoEditText);
 
         cardTypeTextView = (CarePayTextView) view.findViewById(R.id.cardTypeTextView);
 
-        nameOnCardTextInputLayout = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.nameOnCardTextInputLayout);
-        nameOnCardEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.nameOnCardEditText);
+        nameOnCardTextInputLayout = (TextInputLayout) view.findViewById(R.id.nameOnCardTextInputLayout);
+        nameOnCardEditText = (EditText) view.findViewById(R.id.nameOnCardEditText);
 
-        verificationCodeTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.verificationCodeTextInputLayout);
-        verificationCodeEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.verificationCodeEditText);
+        verificationCodeTextInput = (TextInputLayout) view.findViewById(R.id.verificationCodeTextInputLayout);
+        verificationCodeEditText = (EditText) view.findViewById(R.id.verificationCodeEditText);
 
-        expirationDateTextView = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.expirationDateTextView);
-        pickDateTextView = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.pickDateTextView);
+        expirationDateTextView = (TextView) view.findViewById(R.id.expirationDateTextView);
+        pickDateTextView = (TextView) view.findViewById(R.id.pickDateTextView);
         pickDateTextView.setOnClickListener(pickDateListener);
 
-        saveCardOnFileCheckBox = (CheckBox) view.findViewById(com.carecloud.carepaylibrary.R.id.saveCardOnFileCheckBox);
+        saveCardOnFileCheckBox = (CheckBox) view.findViewById(R.id.saveCardOnFileCheckBox);
         saveCardOnFileCheckBox.setChecked(false);
-        saveCardOnFileCheckBox.setOnClickListener(new View.OnClickListener() {
+        saveCardOnFileCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                setCardAsDefaultLogic((CheckBox) view);
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                setAsDefaultCheckBox.setEnabled(isChecked);
+                if (!isChecked) {
+                    setAsDefaultCheckBox.setChecked(false);
+                }
             }
         });
 
-        setAsDefaultCheckBox = (CheckBox) view.findViewById(com.carecloud.carepaylibrary.R.id.setAsDefaultCheckBox);
+        setAsDefaultCheckBox = (CheckBox) view.findViewById(R.id.setAsDefaultCheckBox);
         setAsDefaultCheckBox.setEnabled(false);
         setAsDefaultCheckBox.setChecked(false);
 
@@ -373,19 +355,19 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         useProfileAddressCheckBox = (CheckBox) view.findViewById(R.id.useProfileAddressCheckBox);
         useProfileAddressCheckBox.setOnCheckedChangeListener(useProfileAddressListener);
 
-        address1TextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.address1TextInputLayout);
-        address1EditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.addressEditTextId);
+        address1TextInput = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
+        address1EditText = (EditText) view.findViewById(R.id.addressEditTextId);
 
-        address2TextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.address2TextInputLayout);
-        address2EditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.addressEditText2Id);
+        address2TextInput = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
+        address2EditText = (EditText) view.findViewById(R.id.addressEditText2Id);
 
-        zipCodeTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.zipCodeTextInputLayout);
-        zipCodeEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.zipCodeId);
+        zipCodeTextInput = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
+        zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeId);
 
-        cityTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.cityTextInputLayout);
-        cityEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.cityId);
+        cityTextInput = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
+        cityEditText = (EditText) view.findViewById(R.id.cityId);
 
-        stateTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.stateTextInputLayout);
+        stateTextInput = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
         stateAutoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.addNewCredidCardStateAutoCompleteTextView);
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
@@ -401,7 +383,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
             }
         });
 
-        nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.nextButton);
+        nextButton = (Button) view.findViewById(R.id.nextButton);
         nextButton.setOnClickListener(nextButtonListener);
 
         setChangeFocusListeners();
@@ -422,20 +404,6 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
 
     }
 
-
-    /**
-     * SHMRK-1843
-     * 1. 'Set as default' checkbox should be enabled onle when 'Save card on file' check box is enabled.
-     * 2. If both 'Set as default' and 'Save card on file' checkboxes were checked, then
-     * un-checking 'Save card on file' checkbox should also un-check 'Set as default' checkbox.
-     */
-    private void setCardAsDefaultLogic(CheckBox saveCardOnFileCheckBox) {
-        setAsDefaultCheckBox.setEnabled(saveCardOnFileCheckBox.isChecked());
-
-        if (!saveCardOnFileCheckBox.isChecked()) {
-            setAsDefaultCheckBox.setChecked(false);
-        }
-    }
 
     private View.OnClickListener nextButtonListener = new View.OnClickListener() {
         @Override

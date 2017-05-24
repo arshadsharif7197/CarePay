@@ -388,7 +388,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void onPaymentPlanAction() {
+    public void onPaymentPlanAction(PaymentsModel paymentsModel) {
         PatientPaymentPlanFragment fragment = new PatientPaymentPlanFragment();
 
         Bundle args = new Bundle();

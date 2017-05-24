@@ -1,6 +1,8 @@
 
 package com.carecloud.carepaylibray.demographicsettings.models;
 
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.DemographicMetadataDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -9,28 +11,28 @@ public class DemographicsSettingsDTO implements DTO{
 
     @SerializedName("metadata")
     @Expose
-    private DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = new DemographicsSettingsMetadataDTO();
+    private DemographicMetadataDTO metadata = new DemographicMetadataDTO();
     @SerializedName("payload")
     @Expose
-    private DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = new DemographicsSettingsPayloadDTO();
+    private DemographicPayloadResponseDTO payload = new DemographicPayloadResponseDTO();
     @SerializedName("state")
     @Expose
     private String state;
 
-    public DemographicsSettingsMetadataDTO getDemographicsSettingsMetadataDTO() {
-        return demographicsSettingsMetadataDTO;
+    public DemographicMetadataDTO getMetadata() {
+        return metadata;
     }
 
-    public void setDemographicsSettingsMetadataDTO(DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO) {
-        this.demographicsSettingsMetadataDTO = demographicsSettingsMetadataDTO;
+    public void setMetadata(DemographicMetadataDTO metadata) {
+        this.metadata = metadata;
     }
 
-    public DemographicsSettingsPayloadDTO getPayload() {
-        return demographicsSettingsPayloadDTO;
+    public DemographicPayloadResponseDTO getPayload() {
+        return payload;
     }
 
-    public void setPayload(DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO) {
-        this.demographicsSettingsPayloadDTO = demographicsSettingsPayloadDTO;
+    public void setPayload(DemographicPayloadResponseDTO demographicsSettingsPayloadDTO) {
+        this.payload = demographicsSettingsPayloadDTO;
     }
 
     public String getState() {

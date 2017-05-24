@@ -29,34 +29,33 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsField;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsPersonalSection;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.DemographicMetadataDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.transitions.DemographicTransitionsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDataModelsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDetailsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsFirstNameDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLastNameDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMiddleNameDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPropertiesDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsTransitionsDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
 
-    private DemographicsSettingsDTO demographicsSettingsDTO;
+    private DemographicDTO demographicsSettingsDTO;
     private String firstNameString = null;
     private String middleNameString = null;
     private String lastNameString = null;
@@ -101,7 +100,7 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
+        demographicsSettingsDTO = (DemographicDTO) callback.getDto();
     }
 
     @Nullable
@@ -193,25 +192,25 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
     }
 
     private void getProfileProperties() {
-        DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
+        DemographicMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getMetadata();
         if (demographicsSettingsMetadataDTO != null) {
-            DemographicsSettingsDataModelsDTO demographicsSettingsDataModelsDTO = demographicsSettingsMetadataDTO.getDataModels();
+            DemographicDataModel demographicsSettingsDataModelsDTO = demographicsSettingsMetadataDTO.getNewDataModel();
             if (demographicsSettingsDataModelsDTO != null) {
-                DemographicsSettingsDetailsDTO demographicsSettingsDetailsDTO = demographicsSettingsDataModelsDTO.getDemographic();
+                DemographicDataModel.Demographic demographicsSettingsDetailsDTO = demographicsSettingsDataModelsDTO.getDemographic();
                 if (demographicsSettingsDetailsDTO != null) {
-                    DemographicsSettingsPersonalDetailsPropertiesDTO demographicsSettingsPersonalDetailsPreopertiesDTO = demographicsSettingsDetailsDTO.getPersonalDetails();
-                    DemographicsSettingsPersonalDetailsDTO demographicsSettingsPersonalDetailsDTO = demographicsSettingsPersonalDetailsPreopertiesDTO.getProperties();
-                    DemographicsSettingsFirstNameDTO demographicsSettingsFirstNameDTO = demographicsSettingsPersonalDetailsDTO.getFirstName();
-                    DemographicsSettingsLastNameDTO demographicsSettingsLastNameDTO = demographicsSettingsPersonalDetailsDTO.getLastName();
-                    DemographicsSettingsMiddleNameDTO demographicsSettingsMiddleNameDTO = demographicsSettingsPersonalDetailsDTO.getMiddleName();
+                    DemographicsPersonalSection demographicsSettingsPersonalDetailsPreopertiesDTO = demographicsSettingsDetailsDTO.getPersonalDetails();
+                    DemographicsPersonalSection.Properties demographicsSettingsPersonalDetailsDTO = demographicsSettingsPersonalDetailsPreopertiesDTO.getProperties();
+                    DemographicsField demographicsSettingsFirstNameDTO = demographicsSettingsPersonalDetailsDTO.getFirstName();
+                    DemographicsField demographicsSettingsLastNameDTO = demographicsSettingsPersonalDetailsDTO.getLastName();
+                    DemographicsField demographicsSettingsMiddleNameDTO = demographicsSettingsPersonalDetailsDTO.getMiddleName();
 
-                    firstNameString = demographicsSettingsFirstNameDTO.getLabel();
-                    lastNameString = demographicsSettingsLastNameDTO.getLabel();
-                    middleNameString = demographicsSettingsMiddleNameDTO.getLabel();
-
-                    firstNameEditText.setHint(firstNameString);
-                    lastNameEditText.setHint(lastNameString);
-                    middleNameEditText.setHint(middleNameString);
+//                    firstNameString = demographicsSettingsFirstNameDTO.(); TODO make sure this is set properly in xml
+//                    lastNameString = demographicsSettingsLastNameDTO.getLabel();
+//                    middleNameString = demographicsSettingsMiddleNameDTO.getLabel();
+//
+//                    firstNameEditText.setHint(firstNameString);
+//                    lastNameEditText.setHint(lastNameString);
+//                    middleNameEditText.setHint(middleNameString);
                 }
             }
         }
@@ -219,9 +218,9 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
     }
 
     private void getPersonalDetails() {
-        DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+        DemographicPayloadResponseDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
         if (demographicsSettingsPayloadDTO != null) {
-            DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
+            DemographicPayloadInfoDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
             DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
             PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
             String firstNameValString = demographicsPersonalDetails.getFirstName();
@@ -286,11 +285,11 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
     }
 
     private void formatEditText() {
-        DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-        DemographicsSettingsDataModelsDTO demographicsSettingsDataModelsDTO = demographicsSettingsMetadataDTO.getDataModels();
-        DemographicsSettingsDetailsDTO demographicsSettingsDemographicsDTO = demographicsSettingsDataModelsDTO.getDemographic();
-        DemographicsSettingsPersonalDetailsPropertiesDTO demographicsSettingsPersonalDetailsDTO = demographicsSettingsDemographicsDTO.getPersonalDetails();
-        demographicsSettingsDetailsDTO = demographicsSettingsPersonalDetailsDTO.getProperties();
+        DemographicMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getMetadata();
+        DemographicDataModel demographicsSettingsDataModelsDTO = demographicsSettingsMetadataDTO.getNewDataModel();
+        DemographicDataModel.Demographic demographicsSettingsDemographicsDTO = demographicsSettingsDataModelsDTO.getDemographic();
+        DemographicsPersonalSection demographicsSettingsPersonalDetailsDTO = demographicsSettingsDemographicsDTO.getPersonalDetails();
+//        demographicsSettingsDetailsDTO = demographicsSettingsPersonalDetailsDTO.getProperties();
 
         firstNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -310,9 +309,9 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
                     firstNameLabel.setError(null);
                     firstNameLabel.setErrorEnabled(false);
                 } else {
-                    demographicsSettingsFirstNameDTO = demographicsSettingsDetailsDTO.getFirstName();
-                    final String firstNameError = demographicsSettingsFirstNameDTO.getValidations().get(0).getErrorMessage();
-                    firstNameLabel.setError(firstNameError);
+//                    demographicsSettingsFirstNameDTO = demographicsSettingsDetailsDTO.getFirstName();
+//                    final String firstNameError = demographicsSettingsFirstNameDTO.getValidations().get(0).getErrorMessage();
+//                    firstNameLabel.setError(firstNameError);
                     firstNameLabel.setErrorEnabled(true);
                 }
 
@@ -353,14 +352,14 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
             public void onClick(View view) {
                 if (isAllFieldsValid()) {
                     updateProfileButton.setEnabled(false);
-                    DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
+                    DemographicMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getMetadata();
                     if (demographicsSettingsMetadataDTO != null) {
-                        DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
+                        DemographicTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
                         TransitionDTO demographicsSettingsUpdateDemographicsDTO = demographicsSettingsTransitionsDTO.getUpdateDemographics();
                         Map<String, String> header = null;
-                        DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+                        DemographicPayloadResponseDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
                         if (demographicsSettingsPayloadDTO != null) {
-                            DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
+                            DemographicPayloadInfoDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
                             DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
                             PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
                             demographicsPersonalDetails.setFirstName(firstNameEditText.getText().toString());

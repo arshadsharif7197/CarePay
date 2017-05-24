@@ -221,7 +221,7 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
             public void onClick(View view) {
                 if (isEmailValid() && isPasswordValid()) {
                     DemographicsSettingsEmailProperties demographicsSettingsEmailProperties = demographicsSettingsDTO
-                            .getDemographicsSettingsMetadataDTO().getTransitions().getChangeLoginEmail()
+                            .getMetadata().getTransitions().getChangeLoginEmail()
                             .getHeader().getMaintenance().getProperties();
                     DemographicsSettingsLoginEmailDTO demographicsSettingsLoginEmailDTO = demographicsSettingsEmailProperties.getLoginEmail();
                     DemographicsSettingsProposedEmailDTO demographicsSettingsProposedEmailDTO = demographicsSettingsEmailProperties.getProposedEmail();
@@ -244,7 +244,7 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
                     DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
                     if (demographicsSettingsPayloadDTO != null) {
                         getWorkflowServiceHelper().execute(demographicsSettingsDTO
-                                        .getDemographicsSettingsMetadataDTO().getTransitions().getChangeLoginEmail(),
+                                        .getMetadata().getTransitions().getChangeLoginEmail(),
                                 updateEmailCallback, null, null, header);
                     }
                 }

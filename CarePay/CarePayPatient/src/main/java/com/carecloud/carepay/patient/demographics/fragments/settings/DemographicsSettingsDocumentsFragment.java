@@ -26,31 +26,28 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.DemographicMetadataDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.transitions.DemographicTransitionsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapper;
 import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapperCollection;
 import com.carecloud.carepaylibray.demographics.misc.OnClickRemoveOrAddCallback;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsTransitionsDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class DemographicsSettingsDocumentsFragment extends BaseFragment {
@@ -190,14 +187,14 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
     }
 
     private void getOptions() {
-        DemographicMetadataEntityIdDocsDTO idDocsMetaDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getDataModels()
-                .getDemographic().getIdentityDocuments();
-        // init doc types
-        List<String> docTypesStrings = new ArrayList<>();
-        for (MetadataOptionDTO o : idDocsMetaDTO.getProperties().getItems().getIdentityDocument().getProperties().getIdentityDocumentType().getOptions()) {
-            docTypesStrings.add(o.getLabel());
-        }
-        docTypes = docTypesStrings.toArray(new String[0]);
+//        DemographicMetadataEntityIdDocsDTO idDocsMetaDTO = demographicsSettingsDTO.getMetadata().getNewDataModel()
+//                .getDemographic().getIdentityDocuments();
+//        // init doc types
+//        List<String> docTypesStrings = new ArrayList<>();
+//        for (MetadataOptionDTO o : idDocsMetaDTO.getProperties().getItems().getIdentityDocument().getProperties().getIdentityDocumentType().getOptions()) {
+//            docTypesStrings.add(o.getLabel());
+//        }
+//        docTypes = docTypesStrings.toArray(new String[0]);
     }
 
     private void getPayloadDTOs() {
@@ -249,12 +246,12 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
                     }
                 }
 
-                DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-                DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
+                DemographicMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getMetadata();
+                DemographicTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
                 TransitionDTO demographicsSettingsUpdateDemographicsDTO = demographicsSettingsTransitionsDTO.getUpdateDemographics();
                 Map<String, String> header = null;
-                DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-                DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
+                DemographicPayloadResponseDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+                DemographicPayloadInfoDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
                 DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
                 List<DemographicInsurancePayloadDTO> demographicsInsuranceDetailsPayloadDTO = demographicPayload.getInsurances();
                 for (int i = 0; i <= demographicsInsuranceDetailsPayloadDTO.size() - 1; i++) {

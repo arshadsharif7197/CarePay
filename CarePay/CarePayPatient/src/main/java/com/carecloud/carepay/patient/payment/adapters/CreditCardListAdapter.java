@@ -7,22 +7,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class SettingsCreditCardListAdapter extends RecyclerView.Adapter<SettingsCreditCardListAdapter.SettingsCreditCardListViewHolder> {
+public class CreditCardListAdapter extends RecyclerView.Adapter<CreditCardListAdapter.SettingsCreditCardListViewHolder> {
 
-    public interface IOnCreditCardDetailClickListener {
-        void onCreditCardDetailClickListener(int position);
+    public interface OnCreditCardDetailClickListener {
+        void onCreditCardDetail(DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO);
     }
 
     private Context context;
-    private List<DemographicsSettingsCreditCardsPayloadDTO> creditCardList;
-    private IOnCreditCardDetailClickListener onCreditCardDetailClickListener;
+    private List<DemographicsSettingsCreditCardsPayloadDTO> creditCardList = new ArrayList<>();
+    private OnCreditCardDetailClickListener onCreditCardDetailClickListener;
 
     /**
      * Instantiates a new Settings credit card list adapter.
@@ -31,8 +31,8 @@ public class SettingsCreditCardListAdapter extends RecyclerView.Adapter<Settings
      * @param creditCardList the credit card list
      * @param callback       the callback
      */
-    public SettingsCreditCardListAdapter(Context context, List<DemographicsSettingsCreditCardsPayloadDTO> creditCardList,
-                                         IOnCreditCardDetailClickListener callback) {
+    public CreditCardListAdapter(Context context, List<DemographicsSettingsCreditCardsPayloadDTO> creditCardList,
+                                 OnCreditCardDetailClickListener callback) {
         this.context = context;
         this.creditCardList = creditCardList;
         this.onCreditCardDetailClickListener = callback;
@@ -46,30 +46,29 @@ public class SettingsCreditCardListAdapter extends RecyclerView.Adapter<Settings
     }
 
     @Override
-    public void onBindViewHolder(final SettingsCreditCardListViewHolder holder, final int position) {
+    public void onBindViewHolder(final SettingsCreditCardListViewHolder holder, int position) {
         final DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO = creditCardList.get(position);
-        holder.creditCardTextView.setText(StringUtil.getEncodedCardNumber(creditCardsPayloadDTO.getPayload()
-                .getCardType(), creditCardsPayloadDTO.getPayload().getCardNumber()));
+        holder.creditCardTextView.setText(StringUtil.getEncodedCardNumber(
+                creditCardsPayloadDTO.getPayload().getCardType(),
+                creditCardsPayloadDTO.getPayload().getCardNumber()));
 
         if (creditCardsPayloadDTO.getPayload().isDefault()) {
             holder.defaultTextView.setVisibility(View.VISIBLE);
-            holder.defaultTextView.setText(Label.getLabel("setting_default"));
         } else {
             holder.defaultTextView.setVisibility(View.GONE);
         }
 
-        holder.detailsTextView.setText(Label.getLabel("setting_details"));
-        holder.detailsTextView.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onCreditCardDetailClickListener.onCreditCardDetailClickListener(position);
+                onCreditCardDetailClickListener.onCreditCardDetail(creditCardsPayloadDTO);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return creditCardList != null ? creditCardList.size() : 0;
+        return creditCardList.size();
     }
 
     class SettingsCreditCardListViewHolder extends RecyclerView.ViewHolder {
@@ -81,8 +80,8 @@ public class SettingsCreditCardListAdapter extends RecyclerView.Adapter<Settings
         SettingsCreditCardListViewHolder(View itemView) {
             super(itemView);
 
-            creditCardTextView = (CarePayTextView) itemView.findViewById(R.id.creditCardTextView);
-            defaultTextView = (CarePayTextView) itemView.findViewById(R.id.defaultTextView);
+            creditCardTextView = (CarePayTextView) itemView.findViewById(R.id.credit_card_text);
+            defaultTextView = (CarePayTextView) itemView.findViewById(R.id.credit_card_default);
             detailsTextView = (CarePayTextView) itemView.findViewById(R.id.detailsTextView);
         }
     }
