@@ -15,6 +15,10 @@ import android.widget.Toast;
 import com.carecloud.breezemini.payments.postmodel.cloverpayment.CloverPaymentDTO;
 import com.carecloud.breezemini.payments.postmodel.credittransaction.CreditTransactionDTO;
 import com.carecloud.breezemini.payments.postmodel.processpayment.PaymentLineItem;
+import com.carecloud.breezemini.services.ServiceCallback;
+import com.carecloud.breezemini.services.ServiceHelper;
+import com.carecloud.breezemini.services.ServiceRequestDTO;
+import com.carecloud.breezemini.services.ServiceResponseDTO;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.util.CloverAuth;
 import com.clover.sdk.v1.BindingException;
@@ -33,9 +37,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import io.deepstream.DeepstreamClient;
@@ -72,11 +78,44 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         setSystemUiVisibility();
 
+        geAuthToken();
         if (account == null) {
             account = CloverAccount.getAccount(SplashActivity.this);
             authenticateCloverAccount();
         }
     }
+
+    private void geAuthToken() {
+        Map<String, String> queryMap = new HashMap<>();
+        Map<String, String> header = new HashMap<>();
+        header.put("transition", "true");
+        header.put("x-api-key", HttpConstants.getApiStartKey());
+        ServiceHelper serviceHelper =  new ServiceHelper();
+        ServiceRequestDTO serviceRequestDTO = new ServiceRequestDTO();
+        serviceRequestDTO.setUrl(BuildConfig.API_START_URL);
+        serviceRequestDTO.setMethod("GET");
+        serviceHelper.execute(serviceRequestDTO, signInCallback, queryMap, header);
+    }
+
+    private ServiceCallback signInCallback = new ServiceCallback() {
+
+        @Override
+        public void onPreExecute() {
+        }
+
+
+        @Override
+        public void onPostExecute(ServiceResponseDTO serviceResponseDTO) {
+
+        }
+
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+
+        }
+
+    };
 
     @Override
     protected void onRestart() {
