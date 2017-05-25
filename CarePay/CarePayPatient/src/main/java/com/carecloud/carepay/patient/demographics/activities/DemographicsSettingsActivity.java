@@ -223,4 +223,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         onBackPressed();
     }
 
+    public void addFragment(Fragment fragment, boolean addToBackStack) {
+        addFragment(R.id.activity_demographics_settings, fragment, addToBackStack);
+    }
 }

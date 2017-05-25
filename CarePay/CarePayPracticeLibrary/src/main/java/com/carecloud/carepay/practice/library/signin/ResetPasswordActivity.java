@@ -39,4 +39,9 @@ public class ResetPasswordActivity extends BasePracticeActivity implements Fragm
     public void replaceFragment(Fragment fragment, boolean addToBackStack) {
         replaceFragment(R.id.fragmentContainer, fragment, addToBackStack);
     }
+
+    @Override
+    public void addFragment(Fragment fragment, boolean addToBackStack) {
+        addFragment(R.id.fragmentContainer, fragment, addToBackStack);
+    }
 }

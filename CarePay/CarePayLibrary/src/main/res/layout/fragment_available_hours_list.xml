@@ -1,6 +1,4 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,17 +19,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/dimen_16dp"
             android:layout_marginEnd="@dimen/dimen_8dp"
+            android:layout_marginStart="@dimen/dimen_16dp"
             android:text="@string/locations_label"
             android:textColor="@color/white"
-            app:customAssetFont="proxima_nova_regular"/>
+            app:customAssetFont="proxima_nova_regular" />
 
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/available_locations_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/available_locations_recycler"
-            android:visibility="visible"/>
+            android:visibility="visible" />
 
         <FrameLayout
             android:id="@+id/appointment_available_single_location"
@@ -45,10 +43,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"
                 android:layout_marginRight="@dimen/dimen_8dp"
-                android:text="Location"
-                android:ellipsize="end"
                 android:background="@drawable/rounded_button_blue_border_selected"
-                app:customAssetFont="proxima_nova_regular"/>
+                android:ellipsize="end"
+                android:text="Location"
+                app:customAssetFont="proxima_nova_regular" />
 
         </FrameLayout>
 
@@ -63,6 +61,7 @@
             android:id="@+id/available_hours_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:paddingLeft="@dimen/apt_available_hours_list_padding"
             android:paddingRight="@dimen/apt_available_hours_list_padding" />
 
@@ -87,21 +86,11 @@
 
         </FrameLayout>
 
-        <include layout="@layout/no_appointment_layout"
-                 android:id="@+id/no_appointment_layout"/>
+        <include
+            android:id="@+id/no_appointment_layout"
+            layout="@layout/no_appointment_layout" />
 
 
     </FrameLayout>
-
-    <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
-        <!--android:id="@+id/edit_date_range_button"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="@dimen/add_apt_available_hours_edit_range_height"-->
-        <!--android:layout_margin="@dimen/apt_available_hours_list_padding"-->
-        <!--android:background="@drawable/button_blue_border"-->
-        <!--android:text="@string/edit_date_range_button_label"-->
-        <!--android:textColor="@color/colorPrimary"-->
-        <!--android:textSize="@dimen/apt_list_upcoming_month_txt_size"-->
-        <!--android:visibility="gone" />-->
 
 </LinearLayout>

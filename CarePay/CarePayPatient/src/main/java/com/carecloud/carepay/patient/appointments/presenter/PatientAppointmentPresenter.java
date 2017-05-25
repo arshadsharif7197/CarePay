@@ -266,7 +266,35 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
 
     @Override
     public void onCheckOutStarted(AppointmentDTO appointmentDTO) {
+        Map<String, String> queries = new HashMap<>();
+        queries.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
+        queries.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
+        queries.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
+        queries.put("patient_id", appointmentDTO.getMetadata().getPatientId());
+        Map<String, String> header = viewHandler.getWorkflowServiceHelper().getApplicationStartHeaders();
+        header.put("transition", "true");
+        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getCheckingOut();
+        final Bundle bundle = new Bundle();
+        bundle.putString(NextAppointmentActivity.APPOINTMENT_ID, appointmentDTO.getPayload().getId());
+        viewHandler.getWorkflowServiceHelper().execute(transitionDTO, new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                viewHandler.showProgressDialog();
+            }
 
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                viewHandler.hideProgressDialog();
+                PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, bundle);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                viewHandler.hideProgressDialog();
+                viewHandler.showErrorNotification(exceptionMessage);
+                Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            }
+        }, queries, header);
     }
 
     @Override
