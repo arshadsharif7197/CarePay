@@ -44,7 +44,7 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
+public class UpdateEmailFragment extends BaseFragment {
     private DemographicsSettingsDTO demographicsSettingsDTO;
     private DemographicsSettingsFragmentListener callback;
 
@@ -56,15 +56,15 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
     private TextInputLayout passwordLabelLayout;
     private View rootView;
 
-    public DemographicsSettingUpdateEmailFragment() {
+    public UpdateEmailFragment() {
 
     }
 
     /**
-     * @return an instance of DemographicsSettingUpdateEmailFragment
+     * @return an instance of UpdateEmailFragment
      */
-    public static DemographicsSettingUpdateEmailFragment newInstance() {
-        return new DemographicsSettingUpdateEmailFragment();
+    public static UpdateEmailFragment newInstance() {
+        return new UpdateEmailFragment();
     }
 
     @Override
@@ -76,12 +76,6 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
             throw new ClassCastException(context.toString()
                     + " must implement DemographicsSettingsFragmentListener");
         }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        callback = null;
     }
 
     @Override

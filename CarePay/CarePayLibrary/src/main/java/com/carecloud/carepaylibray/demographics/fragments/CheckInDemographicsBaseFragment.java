@@ -44,7 +44,7 @@ import java.util.Map;
 
 
 /**
- * Created by jorge on 27/02/17.
+ * Created by jorge on 27/02/17
  */
 
 public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragment {
@@ -115,7 +115,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         }
         toolbar.setTitle("");
         if(!preventNavBack) {
-            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_nav_back));
+            toolbar.setNavigationIcon(R.drawable.icn_nav_back);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -181,17 +181,17 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         boolean isEnabled = passConstraints(view);
         nextButton.setEnabled(isEnabled);
         nextButton.setClickable(isEnabled);
-//        if (getContext() != null && getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-//            nextButton.setBackground(ContextCompat.getDrawable(getContext(), isEnabled ? R.drawable.bg_green_overlay : R.drawable.bg_silver_overlay));
-//        }
     }
 
-    protected void initSelectableInput(TextView textView, DemographicsOption storeOption, String value){
+    protected void initSelectableInput(TextView textView, DemographicsOption storeOption, String value, View optional){
         storeOption.setName(value);
         storeOption.setLabel(value);
 
         if(StringUtil.isNullOrEmpty(value)){
             value = Label.getLabel("demographics_choose");
+            if(optional!=null) {
+                optional.setVisibility(View.VISIBLE);
+            }
         }
         textView.setText(value);
 
@@ -315,12 +315,15 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         }
     };
 
-    protected OnOptionSelectedListener getDefaultOnOptionsSelectedListener(final TextView textView, final DemographicsOption storeOption){
+    protected OnOptionSelectedListener getDefaultOnOptionsSelectedListener(final TextView textView, final DemographicsOption storeOption, final View optional){
         return new OnOptionSelectedListener() {
             @Override
             public void onOptionSelected(DemographicsOption option) {
                 if(textView!=null){
                     textView.setText(option.getLabel());
+                }
+                if(optional != null){
+                    optional.setVisibility(View.GONE);
                 }
                 storeOption.setLabel(option.getLabel());
                 storeOption.setName(option.getName());

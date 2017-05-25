@@ -124,7 +124,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                     case Activity.RESULT_OK:
                         MaskedWallet maskedWallet =
                                 data.getParcelableExtra(WalletConstants.EXTRA_MASKED_WALLET);
-                        Fragment fragment = getSupportFragmentManager().findFragmentByTag(ResponsibilityFragment.class.getSimpleName());
+                        Fragment fragment = getSupportFragmentManager().findFragmentByTag(ResponsibilityFragment.class.getName());
                         if (fragment != null) {
                             getSupportFragmentManager().beginTransaction().remove(fragment).commit();
                         }

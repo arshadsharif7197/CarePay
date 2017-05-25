@@ -49,6 +49,7 @@
     <dimen name="dimen_390dp">390dp</dimen>
     <dimen name="dimen_minus_5dp">-5dp</dimen>
 
+    <dimen name="text_size_9sp">9sp</dimen>
     <dimen name="text_size_11">11sp</dimen>
     <dimen name="text_size_12sp">12sp</dimen>
     <dimen name="text_size_13">13sp</dimen>

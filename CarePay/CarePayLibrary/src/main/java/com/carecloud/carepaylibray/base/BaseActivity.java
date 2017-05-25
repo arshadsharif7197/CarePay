@@ -247,10 +247,10 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
      */
     public void replaceFragment(int containerId, Fragment fragment, boolean addToBackStack) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        String tag = fragment.getClass().getCanonicalName();
+        String tag = fragment.getClass().getName();
         transaction.replace(containerId, fragment, tag);
         if (addToBackStack) {
-            transaction.addToBackStack(null);
+            transaction.addToBackStack(tag);
         }
         transaction.commit();
     }
