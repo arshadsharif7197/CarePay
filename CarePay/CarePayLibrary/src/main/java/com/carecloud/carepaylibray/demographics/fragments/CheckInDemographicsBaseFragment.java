@@ -177,10 +177,14 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     }
 
     protected void checkIfEnableButton(View view) {
-        Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
-        boolean isEnabled = passConstraints(view);
-        nextButton.setEnabled(isEnabled);
-        nextButton.setClickable(isEnabled);
+        if(view!=null) {
+            Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
+            boolean isEnabled = passConstraints(view);
+            if(nextButton!=null) {
+                nextButton.setEnabled(isEnabled);
+                nextButton.setClickable(isEnabled);
+            }
+        }
     }
 
     protected void initSelectableInput(TextView textView, DemographicsOption storeOption, String value, View optional){

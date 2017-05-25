@@ -136,18 +136,12 @@ public class FindPatientDialog extends Dialog {
                     findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
                 } else if (charSequence.length() > 3) {
                     ((ISession) context).getWorkflowServiceHelper().interrupt();
-                    //InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    //manager.hideSoftInputFromWindow(findPatientEditBox.getWindowToken(), 0);
-
-                    Map<String, String> queryMap = new HashMap<>();
-                    queryMap.put("practice_mgmt", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
-                    queryMap.put("practice_id", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeId());
 
                     query = charSequence.toString().toUpperCase();
                     JsonArray postModel = new JsonArray();
                     postModel.add(query);
                     String postBody = postModel.toString();
-                    ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, findPatientCallback, postBody, queryMap);
+                    ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, findPatientCallback, postBody);
                 }
             }
         };
