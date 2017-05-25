@@ -4,12 +4,13 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.demographics.fragments.settings.ChangePasswordFragment;
+import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsExpandedFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsInformationFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsSettingsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.EditProfileFragment;
@@ -43,12 +44,15 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     DemographicsSettingsDTO demographicsSettingsDTO;
     private CarePayCameraCallback carePayCameraCallback;
 
+    private View rootView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demographics_settings);
 
         demographicsSettingsDTO = getConvertedDTO(DemographicsSettingsDTO.class);
+        rootView = findViewById(R.id.activity_demographics_settings);
 
         getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE,
                 demographicsSettingsDTO.getPayload().getDemographics().getPayload().getAddress());
@@ -62,7 +66,6 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            SystemUtil.hideSoftKeyboard(this);
             onBackPressed();
         }
         if (item.getItemId() == R.id.action_remove_credit_card) {
@@ -73,6 +76,8 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
 
     @Override
     public void onBackPressed() {
+        rootView.requestFocus();
+        SystemUtil.hideSoftKeyboard(this);
         if (getFragmentManager().getBackStackEntryCount() == 0) {
             super.onBackPressed();
         } else {
@@ -88,22 +93,6 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
                     .loadCreditCardsList(demographicsSettingsDTO);
         }
         this.demographicsSettingsDTO = demographicsSettingsDTO;
-    }
-
-    /**
-     * Helper method to replace fragments
-     *
-     * @param fragment       The fragment
-     * @param addToBackStack Whether to add the transaction to back-stack
-     */
-    public void navigateToFragment(final Fragment fragment, final boolean addToBackStack) {
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.activity_demographics_settings, fragment, fragment.getClass().getSimpleName());
-        if (addToBackStack) {
-            transaction.addToBackStack(fragment.getClass().getName());
-        }
-        transaction.commitAllowingStateLoss();
     }
 
     @Override
@@ -138,7 +127,8 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
 
     @Override
     public void displayExpandedDemographicsFragment() {
-
+        DemographicsExpandedFragment demographicsExpandedFragment = DemographicsExpandedFragment.newInstance();
+        replaceFragment(demographicsExpandedFragment, true);
     }
 
     @Override
@@ -232,4 +222,5 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     public void goOneStepBack() {
         onBackPressed();
     }
+
 }

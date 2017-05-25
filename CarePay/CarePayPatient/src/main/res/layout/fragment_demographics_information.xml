@@ -62,6 +62,41 @@
 
             <include layout="@layout/fragment_base_demographics" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
+                    android:orientation="horizontal">
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        style="@style/DemographicsDocsLabelStyle"
+                        android:layout_width="wrap_content"
+                        app:customAssetFont="proxima_nova_regular"
+                        breeze:textKey="demographics_additional"
+                        tools:text="Additional Demographics"/>
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/add_additional_info"
+                        style="@style/DemographicsDocsClickableTextStyle"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        app:customAssetFont="proxima_nova_regular"
+                        breeze:textKey="demographics_add_info_button"
+                        tools:text="Add Info"/>
+
+                </LinearLayout>
+
+                <View
+                    style="@style/Consent_Form_View_Style"
+                    android:layout_width="match_parent"/>
+
+            </LinearLayout>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/demographicsAddressSectionLabel"

@@ -103,9 +103,9 @@ public class UpdateNameFragment extends DemographicsBaseSettingsFragment {
         TextInputLayout firstNameLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrFirstNameTextInput);
         firstName = (EditText) view.findViewById(R.id.reviewdemogrFirstNameEdit);
         firstName.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(firstNameLayout, null));
-        setVisibility(firstNameLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getFirstName().isDisplayed());
         firstName.setText(demographicPayload.getPersonalDetails().getFirstName());
         firstName.getOnFocusChangeListener().onFocusChange(firstName, !StringUtil.isNullOrEmpty(firstName.getText().toString()));
+        setVisibility(firstNameLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getFirstName().isDisplayed());
         if (dataModel.getDemographic().getPersonalDetails().getProperties().getFirstName().isRequired()) {
             firstName.addTextChangedListener(getValidateEmptyTextWatcher(firstNameLayout));
         }
@@ -114,9 +114,9 @@ public class UpdateNameFragment extends DemographicsBaseSettingsFragment {
         TextInputLayout lastNameLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrLastNameTextInput);
         lastName = (EditText) view.findViewById(R.id.reviewdemogrLastNameEdit);
         lastName.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(lastNameLayout, null));
-        setVisibility(lastNameLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getLastName().isDisplayed());
         lastName.setText(demographicPayload.getPersonalDetails().getLastName());
         lastName.getOnFocusChangeListener().onFocusChange(lastName, !StringUtil.isNullOrEmpty(lastName.getText().toString()));
+        setVisibility(lastNameLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getLastName().isDisplayed());
         if (dataModel.getDemographic().getPersonalDetails().getProperties().getLastName().isRequired()) {
             lastName.addTextChangedListener(getValidateEmptyTextWatcher(lastNameLayout));
         }
@@ -125,9 +125,9 @@ public class UpdateNameFragment extends DemographicsBaseSettingsFragment {
         TextInputLayout middleNameLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrMiddleNameTextInputLayout);
         middleName = (EditText) view.findViewById(R.id.reviewdemogrMiddleNameEdit);
         middleName.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(middleNameLayout, null));
-        setVisibility(middleNameLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isDisplayed());
         middleName.setText(demographicPayload.getPersonalDetails().getMiddleName());
         middleName.getOnFocusChangeListener().onFocusChange(middleName, !StringUtil.isNullOrEmpty(middleName.getText().toString()));
+        setVisibility(middleNameLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isDisplayed());
         if (dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isRequired()) {
             middleName.addTextChangedListener(getValidateEmptyTextWatcher(middleNameLayout));
             View middleNameOptional = view.findViewById(R.id.reviewdemogrMiddleNameOptionalLabel);
