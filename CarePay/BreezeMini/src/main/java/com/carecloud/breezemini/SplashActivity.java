@@ -78,7 +78,6 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         setSystemUiVisibility();
 
-//        if()
         geAuthToken();
         if (account == null) {
             account = CloverAccount.getAccount(SplashActivity.this);
@@ -102,7 +101,6 @@ public class SplashActivity extends AppCompatActivity {
 
         @Override
         public void onPreExecute() {
-//            showProgressDialog();
         }
 
 

@@ -17,13 +17,12 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by Jahirul Bhuiyan on 10/24/2016.
+ * Created by Kavin Kannan on 05/25/2017
  * This is an generic class use for API call using retrofit.
  * Any HTTP request will be created from this class.
  * Default header for HTTP request are added by default.
  * Default Base URL created from HttpConstants.
  */
-
 public class ServiceGenerator {
 
     private static String API_BASE_URL = HttpConstants.getApiBaseUrl();
@@ -39,6 +38,11 @@ public class ServiceGenerator {
     private ServiceGenerator() {
     }
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static ServiceGenerator getInstance() {
         if (instance == null) {
             instance = new ServiceGenerator();
@@ -49,12 +53,22 @@ public class ServiceGenerator {
     /**
      * Create the retrofil service for the specific service class
      *
+     * @param <S>          the type parameter
      * @param serviceClass Specific service class for converting in to retrofit service model
+     * @return the s
      */
     public <S> S createService(Class<S> serviceClass) {
         return createService(serviceClass, null);
     }
 
+    /**
+     * Create service s.
+     *
+     * @param <S>          the type parameter
+     * @param serviceClass the service class
+     * @param headers      the headers
+     * @return the s
+     */
     public <S> S createService(Class<S> serviceClass, Map<String, String> headers) {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.readTimeout(HttpConstants.READ_TIMEOUT_MS, TimeUnit.MILLISECONDS);

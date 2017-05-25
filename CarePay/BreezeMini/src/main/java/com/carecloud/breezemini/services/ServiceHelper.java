@@ -15,7 +15,6 @@ import retrofit2.Response;
 /**
  * Created by kkannan on 5/23/17.
  */
-
 public class ServiceHelper {
 
 
@@ -28,6 +27,8 @@ public class ServiceHelper {
 
 
     /**
+     * Gets application start headers.
+     *
      * @return app start headers
      */
     public Map<String, String> getApplicationStartHeaders() {
@@ -48,26 +49,71 @@ public class ServiceHelper {
         execute(serviceRequestDTO, callback, null, null, getApplicationStartHeaders());
     }
 
+    /**
+     * Execute.
+     *
+     * @param serviceRequestDTO the service request dto
+     * @param callback          the callback
+     */
     public void execute(@NonNull ServiceRequestDTO serviceRequestDTO, @NonNull ServiceCallback callback) {
         execute(serviceRequestDTO, callback, null, null, null);
     }
 
+    /**
+     * Execute.
+     *
+     * @param serviceRequestDTO the service request dto
+     * @param callback          the callback
+     * @param jsonBody          the json body
+     */
     public void execute(@NonNull ServiceRequestDTO serviceRequestDTO, @NonNull final ServiceCallback callback, String jsonBody) {
         execute(serviceRequestDTO, callback, jsonBody, null);
     }
 
+    /**
+     * Execute.
+     *
+     * @param serviceRequestDTO the service request dto
+     * @param callback          the callback
+     * @param queryMap          the query map
+     */
     public void execute(@NonNull ServiceRequestDTO serviceRequestDTO, @NonNull final ServiceCallback callback, Map<String, String> queryMap) {
         execute(serviceRequestDTO, callback, null, queryMap, null);
     }
 
+    /**
+     * Execute.
+     *
+     * @param serviceRequestDTO the service request dto
+     * @param callback          the callback
+     * @param jsonBody          the json body
+     * @param queryMap          the query map
+     */
     public void execute(@NonNull ServiceRequestDTO serviceRequestDTO, @NonNull final ServiceCallback callback, String jsonBody, Map<String, String> queryMap) {
         execute(serviceRequestDTO, callback, jsonBody, queryMap, null);
     }
 
+    /**
+     * Execute.
+     *
+     * @param serviceRequestDTO the service request dto
+     * @param callback          the callback
+     * @param queryMap          the query map
+     * @param customHeaders     the custom headers
+     */
     public void execute(@NonNull ServiceRequestDTO serviceRequestDTO, @NonNull final ServiceCallback callback, Map<String, String> queryMap, Map<String, String> customHeaders) {
         execute(serviceRequestDTO, callback, null, queryMap, customHeaders);
     }
 
+    /**
+     * Execute.
+     *
+     * @param serviceRequestDTO the service request dto
+     * @param callback          the callback
+     * @param jsonBody          the json body
+     * @param queryMap          the query map
+     * @param customHeaders     the custom headers
+     */
     public void execute(@NonNull ServiceRequestDTO serviceRequestDTO, @NonNull final ServiceCallback callback, String jsonBody, Map<String, String> queryMap, Map<String, String> customHeaders) {
         executeRequest(serviceRequestDTO, callback, jsonBody, queryMap, customHeaders, 0);
     }
