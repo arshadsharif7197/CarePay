@@ -128,7 +128,7 @@
                     android:background="@drawable/queue_counter_noborder_background"
                     android:gravity="center"
                     android:text="0"
-                    android:textColor="?counterTextColor"
+                    android:textColor="@color/practice_mode_counter_text"
                     android:textSize="16sp"
                     app:customAssetFont="gotham_rounded_bold" />
             </LinearLayout>
@@ -171,7 +171,7 @@
                     android:background="@drawable/queue_counter_noborder_background"
                     android:gravity="center"
                     android:text="0"
-                    android:textColor="?counterTextColor"
+                    android:textColor="@color/practice_mode_counter_text"
                     android:textSize="16sp"
                     app:customAssetFont="gotham_rounded_bold" />
             </LinearLayout>

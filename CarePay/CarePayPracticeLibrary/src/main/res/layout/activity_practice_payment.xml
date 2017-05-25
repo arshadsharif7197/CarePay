@@ -139,7 +139,7 @@
                     android:layout_marginStart="@dimen/dimen_8dp"
                     android:background="@drawable/queue_counter_noborder_background"
                     android:gravity="center"
-                    android:textColor="?counterTextColor"
+                    android:textColor="@color/practice_mode_counter_text"
                     android:textSize="@dimen/text_size_16sp"
                     android:textStyle="bold"
                     app:customAssetFont="gotham_rounded_bold" />
