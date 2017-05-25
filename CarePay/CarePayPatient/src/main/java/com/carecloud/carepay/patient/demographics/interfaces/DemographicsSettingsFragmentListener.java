@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.demographics.interfaces;
 
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
@@ -22,6 +23,8 @@ public interface DemographicsSettingsFragmentListener extends FragmentActivityIn
     void displayExpandedDemographicsFragment();
 
     void displayDocumentsFragment();
+
+    void editInsurance(DemographicDTO demographicDTO, int position);
 
     void displayCreditCardListFragment();
 

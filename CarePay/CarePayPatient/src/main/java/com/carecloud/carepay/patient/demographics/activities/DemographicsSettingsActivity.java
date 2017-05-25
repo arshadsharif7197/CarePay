@@ -11,10 +11,10 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.demographics.fragments.settings.ChangePasswordFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsInformationFragment;
-import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsSettingsDocumentsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsSettingsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.EditProfileFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.HelpFragment;
+import com.carecloud.carepay.patient.demographics.fragments.settings.SettingsDocumentsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.SupportFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.UpdateEmailFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.UpdateNameFragment;
@@ -26,6 +26,8 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraFragment;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
@@ -35,7 +37,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
  * Main activity for Settings workflow
  */
 public class DemographicsSettingsActivity extends BasePatientActivity implements
-        DemographicsSettingsFragmentListener,
+        DemographicsSettingsFragmentListener, InsuranceEditDialog.InsuranceEditDialogListener,
         CarePayCameraReady, CarePayCameraCallback {
 
     DemographicsSettingsDTO demographicsSettingsDTO;
@@ -141,42 +143,20 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
 
     @Override
     public void displayDocumentsFragment() {
-//        FragmentManager fm = getActivity().getSupportFragmentManager();
-//        DemographicsSettingsDocumentsFragment fragment = (DemographicsSettingsDocumentsFragment)
-//                fm.findFragmentByTag(DemographicsSettingsDocumentsFragment.class.getSimpleName());
-//        if (fragment == null) {
-//            fragment = DemographicsSettingsDocumentsFragment.newInstance();
-//        }
-//        fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
-//                DemographicsSettingsDocumentsFragment.class.getSimpleName()).addToBackStack(null).commit();
-//
-        DemographicsSettingsDocumentsFragment demographicsSettingsDocumentsFragment = DemographicsSettingsDocumentsFragment.newInstance();
-        replaceFragment(demographicsSettingsDocumentsFragment, true);
+        SettingsDocumentsFragment settingsDocumentsFragment = SettingsDocumentsFragment.newInstance();
+        replaceFragment(settingsDocumentsFragment, true);
     }
 
     @Override
+    public void editInsurance(DemographicDTO demographicDTO, int editedIndex) {
+        InsuranceEditDialog insuranceEditDialog = InsuranceEditDialog.newInstance(demographicDTO, editedIndex, false);
+
+        replaceFragment(insuranceEditDialog, true);
+    }
+
+
+    @Override
     public void displayCreditCardListFragment() {
-//        Bundle bundle = new Bundle();
-//        Gson gson = new Gson();
-//        String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
-//        bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
-//
-//        FragmentManager fm = getSupportFragmentManager();
-//        CreditCardListFragment fragment = (CreditCardListFragment)
-//                fm.findFragmentByTag(CreditCardListFragment.class.getSimpleName());
-//        if (fragment == null) {
-//            fragment = new CreditCardListFragment();
-//        }
-//
-//        //fix for random crashes
-//        if (fragment.getArguments() != null) {
-//            fragment.getArguments().putAll(bundle);
-//        } else {
-//            fragment.setArguments(bundle);
-//        }
-//
-//        navigateToFragment(fragment, true);
-//
         CreditCardListFragment creditCardListFragment = new CreditCardListFragment();
         replaceFragment(creditCardListFragment, true);
     }
@@ -232,5 +212,24 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     @Override
     public void replaceFragment(Fragment fragment, boolean addToBackStack) {
         replaceFragment(R.id.activity_demographics_settings, fragment, addToBackStack);
+    }
+
+    @Override
+    public void onInsuranceEdited(DemographicDTO demographicDTO, boolean proceed) {
+        SystemUtil.hideSoftKeyboard(this);
+        onBackPressed();
+
+        FragmentManager fm = getSupportFragmentManager();
+
+        // Update Health Insurance Fragment
+        String tag = SettingsDocumentsFragment.class.getName();
+        SettingsDocumentsFragment settingsDocumentsFragment = (SettingsDocumentsFragment) fm.findFragmentByTag(tag);
+
+        settingsDocumentsFragment.updateInsuranceList(demographicDTO);
+    }
+
+    @Override
+    public void goOneStepBack() {
+        onBackPressed();
     }
 }

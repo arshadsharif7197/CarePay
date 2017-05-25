@@ -106,7 +106,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
         title.setText(Label.getLabel("demographics_label"));
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
