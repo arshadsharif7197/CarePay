@@ -147,7 +147,7 @@ public class NextAppointmentFragment extends BaseFragment {
         visitTypeTextView = (TextView) view.findViewById(R.id.visitTypeTextView);
         visitTypeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 showVisitTypeFragment();
             }
         });
@@ -155,7 +155,7 @@ public class NextAppointmentFragment extends BaseFragment {
         visitTimeTextView = (TextView) view.findViewById(R.id.visitTimeTextView);
         visitTimeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 showAvailableHoursFragment();
             }
         });
@@ -163,7 +163,7 @@ public class NextAppointmentFragment extends BaseFragment {
         Button scheduleLaterButton = (Button) view.findViewById(R.id.scheduleLaterButton);
         scheduleLaterButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 scheduleAppointmentLater();
             }
         });
@@ -171,7 +171,7 @@ public class NextAppointmentFragment extends BaseFragment {
         scheduleAppointmentButton = (Button) getView().findViewById(R.id.scheduleAppointmentButton);
         scheduleAppointmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 scheduleAppointment();
             }
         });
@@ -232,6 +232,9 @@ public class NextAppointmentFragment extends BaseFragment {
                 makeAppointmentJSONObj.toString(), queryMap, header);
     }
 
+    /**
+     * show available hours fragment
+     */
     public void showAvailableHoursFragment() {
         AvailableHoursFragment availableHoursFragment = AvailableHoursFragment
                 .newInstance(appointmentsResultModel, appointmentResourceDTO.getResource(),
@@ -338,12 +341,20 @@ public class NextAppointmentFragment extends BaseFragment {
         return null;
     }
 
+    /**
+     *
+     * @param visitTypeDTO the visit type
+     */
     public void setVisitType(VisitTypeDTO visitTypeDTO) {
         visitType = visitTypeDTO;
         visitTypeTextView.setText(visitTypeDTO.getName());
         visitTimeTextView.setEnabled(true);
     }
 
+    /**
+     *
+     * @param appointmentsSlot the location and time of the appointment
+     */
     public void setLocationAndTime(AppointmentsSlotsDTO appointmentsSlot) {
         this.appointmentSlot = appointmentsSlot;
         String nextAppointmentDate = getNextAppointmentDate(appointmentsSlot.getStartTime());
