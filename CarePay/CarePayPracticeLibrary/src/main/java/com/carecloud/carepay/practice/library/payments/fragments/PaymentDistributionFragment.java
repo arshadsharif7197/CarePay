@@ -409,6 +409,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
                     break;
                 }
             }
+        }else if(locations.size() == 1){
+            defaultLocation = locations.get(0);
         }
 
         if(providerID!=null){
@@ -418,6 +420,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
                     break;
                 }
             }
+        }else if(providers.size() == 1){
+            defaultProvider = providers.get(0);
         }
     }
 
