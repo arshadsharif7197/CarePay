@@ -180,46 +180,50 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
 
         View genderLayout = view.findViewById(R.id.genderDemographicsLayout);
         TextView chooseGender = (TextView) view.findViewById(R.id.chooseGenderTextView);
+        View genderOptional = view.findViewById(R.id.genderOptional);
         setVisibility(genderLayout, personalInfoSection.getProperties().getGender().isDisplayed());
         chooseGender.setOnClickListener(
                 getSelectOptionsListener(personalInfoSection.getProperties().getGender().getOptions(),
-                        getDefaultOnOptionsSelectedListener(chooseGender, selectedGender),
+                        getDefaultOnOptionsSelectedListener(chooseGender, selectedGender, genderOptional),
                         Label.getLabel("demographics_review_gender")));
         String gender = demographicPayload.getPersonalDetails().getGender();
-        initSelectableInput(chooseGender, selectedGender, gender);
+        initSelectableInput(chooseGender, selectedGender, gender, genderOptional);
 
 
         View raceLayout = view.findViewById(R.id.raceDemographicsLayout);
         TextView chooseRace = (TextView) view.findViewById(R.id.chooseRaceTextView);
+        View raceOptional = view.findViewById(R.id.raceOptional);
         setVisibility(raceLayout, personalInfoSection.getProperties().getPrimaryRace().isDisplayed());
         chooseRace.setOnClickListener(
                 getSelectOptionsListener(personalInfoSection.getProperties().getPrimaryRace().getOptions(),
-                        getDefaultOnOptionsSelectedListener(chooseRace, selectedRace),
+                        getDefaultOnOptionsSelectedListener(chooseRace, selectedRace, raceOptional),
                         Label.getLabel("demographics_review_race")));
         String race = demographicPayload.getPersonalDetails().getPrimaryRace();
-        initSelectableInput(chooseRace, selectedRace, race);
+        initSelectableInput(chooseRace, selectedRace, race, raceOptional);
 
 
         View secondaryRaceLayout = view.findViewById(R.id.secondaryRaceDemographicsLayout);
         TextView chooseSecondaryRace = (TextView) view.findViewById(R.id.chooseSecondaryRace);
+        View secondaryRaceOptional = view.findViewById(R.id.secondaryRaceOptional);
         setVisibility(secondaryRaceLayout, personalInfoSection.getProperties().getSecondaryRace().isDisplayed());
         chooseSecondaryRace.setOnClickListener(
                 getSelectOptionsListener(personalInfoSection.getProperties().getSecondaryRace().getOptions(),
-                        getDefaultOnOptionsSelectedListener(chooseSecondaryRace, selectedSecondaryRace),
+                        getDefaultOnOptionsSelectedListener(chooseSecondaryRace, selectedSecondaryRace, secondaryRaceOptional),
                         Label.getLabel("demographics_secondary_race")));
         String secondaryRace = demographicPayload.getPersonalDetails().getSecondaryRace();
-        initSelectableInput(chooseSecondaryRace, selectedSecondaryRace, secondaryRace);
+        initSelectableInput(chooseSecondaryRace, selectedSecondaryRace, secondaryRace, secondaryRaceOptional);
 
 
         View ethnicityLayout = view.findViewById(R.id.ethnicityDemographicsLayout);
         TextView chooseEthnicity = (TextView) view.findViewById(R.id.chooseEthnicityTextView);
+        View ethnicityOptional = view.findViewById(R.id.ethnicityOptional);
         setVisibility(ethnicityLayout, personalInfoSection.getProperties().getEthnicity().isDisplayed());
         chooseEthnicity.setOnClickListener(
                 getSelectOptionsListener(personalInfoSection.getProperties().getEthnicity().getOptions(),
-                        getDefaultOnOptionsSelectedListener(chooseEthnicity, selectedEthnicity),
+                        getDefaultOnOptionsSelectedListener(chooseEthnicity, selectedEthnicity, ethnicityOptional),
                         Label.getLabel("demographics_review_ethnicity")));
         String ethnicity = demographicPayload.getPersonalDetails().getEthnicity();
-        initSelectableInput(chooseEthnicity, selectedEthnicity, ethnicity);
+        initSelectableInput(chooseEthnicity, selectedEthnicity, ethnicity, ethnicityOptional);
     }
 
     private void initAddressInfo(View view, DemographicPayloadDTO demographicPayload) {
@@ -280,11 +284,11 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         setVisibility(stateInputLayout, addressSection.getProperties().getState().isDisplayed());
         stateEditText.setOnClickListener(
                 getSelectOptionsListener(addressSection.getProperties().getState().getOptions(),
-                        getDefaultOnOptionsSelectedListener(stateEditText, selectedState),
+                        getDefaultOnOptionsSelectedListener(stateEditText, selectedState, null),
                         Label.getLabel("demographics_documents_title_select_state")));
 
         String state = demographicPayload.getAddress().getState();
-        initSelectableInput(stateEditText, selectedState, state);
+        initSelectableInput(stateEditText, selectedState, state, null);
         stateEditText.getOnFocusChangeListener().onFocusChange(stateEditText, true);
 
     }

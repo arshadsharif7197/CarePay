@@ -46,12 +46,15 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
         return StringUtil.isNullOrEmpty(editText.getText().toString());
     }
 
-    protected void initSelectableInput(TextView textView, DemographicsOption storeOption, String value){
+    protected void initSelectableInput(TextView textView, DemographicsOption storeOption, String value, View optional){
         storeOption.setName(value);
         storeOption.setLabel(value);
 
         if(StringUtil.isNullOrEmpty(value)){
             value = Label.getLabel("demographics_choose");
+            if(optional!=null) {
+                optional.setVisibility(View.VISIBLE);
+            }
         }
         textView.setText(value);
 
@@ -160,12 +163,15 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
         }
     };
 
-    protected OnOptionSelectedListener getDefaultOnOptionsSelectedListener(final TextView textView, final DemographicsOption storeOption){
+    protected OnOptionSelectedListener getDefaultOnOptionsSelectedListener(final TextView textView, final DemographicsOption storeOption, final View optional){
         return new OnOptionSelectedListener() {
             @Override
             public void onOptionSelected(DemographicsOption option) {
                 if(textView!=null){
                     textView.setText(option.getLabel());
+                }
+                if(optional != null){
+                    optional.setVisibility(View.GONE);
                 }
                 storeOption.setLabel(option.getLabel());
                 storeOption.setName(option.getName());

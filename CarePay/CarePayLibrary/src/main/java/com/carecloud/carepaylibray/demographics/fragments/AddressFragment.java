@@ -172,11 +172,11 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         setVisibility(stateInputLayout, addressSection.getProperties().getState().isDisplayed());
         stateEditText.setOnClickListener(
                 getSelectOptionsListener(addressSection.getProperties().getState().getOptions(),
-                getDefaultOnOptionsSelectedListener(stateEditText, selectedState),
+                getDefaultOnOptionsSelectedListener(stateEditText, selectedState, null),
                 Label.getLabel("demographics_documents_title_select_state")));
 
         String state = demographicPayload.getAddress().getState();
-        initSelectableInput(stateEditText, selectedState, state);
+        initSelectableInput(stateEditText, selectedState, state, null);
         stateEditText.getOnFocusChangeListener().onFocusChange(stateEditText, true);
     }
 

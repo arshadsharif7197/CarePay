@@ -22,16 +22,24 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 style="@style/DemographicsDocsLabelStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 tools:text="Gender"
                 breeze:textKey="demographics_review_gender"
                 app:customAssetFont="proxima_nova_regular"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/genderOptional"
+                style="@style/DemographicsOptionalLabelStyle"
+                tools:text="Optional"
+                breeze:textKey="demographics_details_optional_hint"
+                app:customAssetFont="proxima_nova_semi_bold"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/chooseGenderTextView"
                 style="@style/DemographicsDocsClickableTextStyle"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="@dimen/dimen_10dp"
                 android:gravity="end"
                 tools:text="Choose"
                 app:customAssetFont="proxima_nova_regular"/>
@@ -59,16 +67,24 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/raceDataTextView"
                 style="@style/DemographicsDocsLabelStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 tools:text="Race"
                 breeze:textKey="demographics_review_race"
                 app:customAssetFont="proxima_nova_regular"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/raceOptional"
+                style="@style/DemographicsOptionalLabelStyle"
+                tools:text="Optional"
+                breeze:textKey="demographics_details_optional_hint"
+                app:customAssetFont="proxima_nova_semi_bold"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/chooseRaceTextView"
                 style="@style/DemographicsDocsClickableTextStyle"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="@dimen/dimen_10dp"
                 android:gravity="end"
                 tools:text="Choose"
                 app:customAssetFont="proxima_nova_regular"/>
@@ -95,16 +111,24 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 style="@style/DemographicsDocsLabelStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 tools:text="Secondary Race"
                 breeze:textKey="demographics_secondary_race"
                 app:customAssetFont="proxima_nova_regular"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/secondaryRaceOptional"
+                style="@style/DemographicsOptionalLabelStyle"
+                tools:text="Optional"
+                breeze:textKey="demographics_details_optional_hint"
+                app:customAssetFont="proxima_nova_semi_bold"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/chooseSecondaryRace"
                 style="@style/DemographicsDocsClickableTextStyle"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="@dimen/dimen_10dp"
                 android:gravity="end"
                 tools:text="Choose"
                 app:customAssetFont="proxima_nova_regular"/>
@@ -131,16 +155,24 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 style="@style/DemographicsDocsLabelStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="demographics_review_ethnicity"
                 tools:text="Ethnicity"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/ethnicityOptional"
+                style="@style/DemographicsOptionalLabelStyle"
+                tools:text="Optional"
+                breeze:textKey="demographics_details_optional_hint"
+                app:customAssetFont="proxima_nova_semi_bold"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/chooseEthnicityTextView"
                 style="@style/DemographicsDocsClickableTextStyle"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="@dimen/dimen_10dp"
                 android:gravity="end"
                 app:customAssetFont="proxima_nova_regular"
                 tools:text="Choose"/>

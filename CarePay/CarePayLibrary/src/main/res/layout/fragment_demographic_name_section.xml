@@ -55,6 +55,7 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/reviewdemogrMiddleNameOptionalLabel"
             style="@style/SignupRequireHintStyle"
+            android:textAllCaps="true"
             android:textColor="@color/cadet_gray"
             breeze:textKey="demographics_details_optional_hint"
             app:customAssetFont="proxima_nova_regular"/>
