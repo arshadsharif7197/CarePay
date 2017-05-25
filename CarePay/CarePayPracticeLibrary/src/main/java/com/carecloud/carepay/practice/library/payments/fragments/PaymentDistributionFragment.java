@@ -88,17 +88,12 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
     private NumberFormat currencyFormatter;
 
-//    private View lastSwipeView = null;
-
     private List<LocationDTO> locations;
     private List<ProviderDTO> providers;
     private LocationDTO defaultLocation;
     private ProviderDTO defaultProvider;
 
     private boolean hasPaymentError = false;
-//    private boolean shouldAutoApply = false;
-//    private boolean resetAutoApplyOnError = false;
-
 
     @Override
     public void onAttach(Context context){
@@ -217,18 +212,12 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             @Override
             public void onClick(View view) {
                 if(validateBalanceItems()) {
-//                    if(shouldAutoApply){
-//                        resetAutoApplyOnError = true;
                     distributeAmountOverBalanceItems(paymentAmount);
-//                    }
 
                     generatePaymentsModel();
                     if(!hasPaymentError) {
                         callback.onPayButtonClicked(round(paymentAmount + chargesAmount), paymentsModel);
                         hideDialog();
-//                        if(resetAutoApplyOnError){
-//                            shouldAutoApply = true;
-//                        }
                     }
                 }
             }
@@ -274,10 +263,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
                 originalUnapplied = unappliedCredit;
                 unappliedLayout.setVisibility(View.VISIBLE);
                 setCurrency(unapplied, unappliedCredit);
-//                shouldAutoApply = true;
             }else{
                 unappliedLayout.setVisibility(View.GONE);
-//                shouldAutoApply = false;
             }
 
             setMaxAmounts();
@@ -460,7 +447,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             balanceItem.setLocation(updateLocation);
             balanceItem.setLocationId(updateLocation.getId());
         }
-//        setAdapter();
 
         int index = balanceItems.indexOf(balanceItem);
         if(index >= 0){
@@ -637,7 +623,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
                 balanceItem.setBalance(0);
             }else {
                 if (amount >= balance) {
-//                    amount = (double) Math.round((amount - balance) * 100) / 100;
                     amount = round(amount - balance);
                 } else {
                     balance = amount;
@@ -652,7 +637,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         if(amount > 0){//there is some amount left over for the payment
             overPaymentAmount = amount;
         }
-//        shouldAutoApply=false;
     }
 
     private boolean validateBalanceItems(){
@@ -766,9 +750,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         }else if(balanceItem.getBalance()<0){
             SystemUtil.showErrorToast(getContext(), Label.getLabel("negative_payment_amount_error"));
             hasPaymentError = true;
-//            if(resetAutoApplyOnError){
-//                shouldAutoApply = true;
-//            }
         }
     }
 

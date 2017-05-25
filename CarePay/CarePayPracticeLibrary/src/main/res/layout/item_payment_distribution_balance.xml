@@ -13,20 +13,31 @@
         android:layout_height="@dimen/dimen_81dp"
         android:background="@color/light_gray">
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/clear_button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@color/remove_red"
-            android:padding="@dimen/dimen_16dp"
-            android:layout_gravity="end"
-            android:gravity="center"
-            android:textSize="@dimen/text_size_20"
-            android:textColor="@color/white"
-            breeze:textKey="payment_clear_button"
-            app:customAssetFont="proxima_nova_regular"
-            android:visibility="visible"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+            <View
+                android:layout_width="@dimen/dimen_10dp"
+                android:layout_height="match_parent"
+                android:layout_weight="6"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/clear_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/remove_red"
+                android:padding="@dimen/dimen_16dp"
+                android:gravity="center"
+                android:textSize="@dimen/text_size_20"
+                android:textColor="@color/white"
+                breeze:textKey="payment_clear_button"
+                app:customAssetFont="proxima_nova_regular"
+                android:visibility="visible"/>
+
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/payment_info_row"
