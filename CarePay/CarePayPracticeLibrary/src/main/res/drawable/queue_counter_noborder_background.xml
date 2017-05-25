@@ -2,7 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
 
-    <solid android:color="?counterBackgroundColor" />
+    <solid android:color="@color/practice_mode_counter_background" />
     <size
         android:width="@dimen/home_alert_checkin_number_wrapper_width"
         android:height="@dimen/home_alert_checkin_number_wrapper_height" />

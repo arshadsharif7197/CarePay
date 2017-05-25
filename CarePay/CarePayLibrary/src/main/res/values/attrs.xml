@@ -19,6 +19,4 @@
     <attr name="keepStatusBar" format="boolean"/>
     <attr name="practiceBackgroundColor" format="reference|color" />
     <attr name="practiceActionBarColor" format="reference|color" />
-    <attr name="counterTextColor" format="reference|color" />
-    <attr name="counterBackgroundColor" format="reference|color" />
 </resources>
