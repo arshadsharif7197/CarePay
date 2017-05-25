@@ -214,6 +214,10 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         }
     }
 
+    /**
+     * Refresh this fragments list of insurances
+     * @param demographicDTO updated demographic dto payload
+     */
     public void updateInsuranceList(DemographicDTO demographicDTO) {
         this.demographicDTO = demographicDTO;
         if(getView()!=null) {
