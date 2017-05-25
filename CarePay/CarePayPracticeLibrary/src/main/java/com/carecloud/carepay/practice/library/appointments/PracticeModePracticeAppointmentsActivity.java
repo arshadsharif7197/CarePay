@@ -436,24 +436,12 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
         }
 
-        String tag = PracticeAppointmentDialog.class.getSimpleName();
-
-        // DialogFragment.show() will take care of adding the fragment
-        // in a transaction.  We also want to remove any currently showing
-        // dialog, so make our own transaction and take care of that here.
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-
         PracticeAppointmentDialog dialog = PracticeAppointmentDialog.newInstance(
                 dialogStyle,
                 appointmentDTO,
                 PracticeModePracticeAppointmentsActivity.this
         );
-        dialog.show(ft, tag);
+        displayDialogFragment(dialog, true);
     }
 
     private void confirmAppointment(AppointmentDTO appointmentDTO) {
