@@ -58,4 +58,9 @@ public class SigninSignupActivity extends BasePatientActivity implements Fragmen
     public void replaceFragment(Fragment fragment, boolean addToBackStack) {
         replaceFragment(R.id.layoutSigninSignup, fragment, addToBackStack);
     }
+
+    @Override
+    public void addFragment(Fragment fragment, boolean addToBackStack) {
+        addFragment(R.id.layoutSigninSignup, fragment, addToBackStack);
+    }
 }

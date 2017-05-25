@@ -276,6 +276,11 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         replaceFragment(R.id.add_balance_history_frag_holder, fragment, addToBackStack);
     }
 
+    @Override
+    public void addFragment(Fragment fragment, boolean addToBackStack) {
+        addFragment(R.id.add_balance_history_frag_holder, fragment, addToBackStack);
+    }
+
     public void showNoPaymentsLayout() {
         replaceFragment(NoPaymentsFragment.newInstance(), false);
     }

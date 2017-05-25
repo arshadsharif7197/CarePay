@@ -14,8 +14,8 @@ import android.widget.TextView;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.VisitTypeListAdapter;
-import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentDialogFragment;
+import com.carecloud.carepaylibray.appointments.interfaces.VisitTypeInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
@@ -28,7 +28,7 @@ import java.util.List;
 
 public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment {
 
-    private AppointmentNavigationCallback callback;
+    private VisitTypeInterface callback;
     private List<VisitTypeDTO> visitTypeList;
     private AppointmentResourcesDTO model;
     private AppointmentsResultModel appointmentsResultModel;
@@ -61,20 +61,20 @@ public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment {
     @Override
     protected void attachCallback(Context context) {
         try {
-            if(context instanceof AppointmentViewHandler){
+            if (context instanceof AppointmentViewHandler) {
                 callback = ((AppointmentViewHandler) context).getAppointmentPresenter();
-            }else {
-                callback = (AppointmentNavigationCallback) context;
+            } else {
+                callback = (VisitTypeInterface) context;
             }
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached context must implement AppointmentNavigationCallback");
+            throw new ClassCastException("Attached context must implement VisitTypeInterface");
         }
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(callback == null){
+        if (callback == null) {
             attachCallback(getContext());
         }
     }
@@ -102,7 +102,7 @@ public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         sortVisitTypeListByName();
         initializeViews(view);
     }
@@ -111,7 +111,7 @@ public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment {
         hideKeyboardOnViewTouch(view);
 
         View closeView = view.findViewById(R.id.closeViewLayout);
-        if(closeView!=null) {
+        if (closeView != null) {
             view.findViewById(R.id.closeViewLayout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -121,7 +121,7 @@ public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment {
 
         }
 
-        setCancelable(closeView==null);
+        setCancelable(closeView == null);
 
         if (view.findViewById(R.id.visit_type_header_title) != null) {
             TextView title = (TextView) view.findViewById(R.id.visit_type_header_title);
@@ -147,7 +147,7 @@ public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 VisitTypeDTO selectedVisitType = visitTypeList.get(position);
                 dismiss();
-                callback.selectTime(selectedVisitType, model, appointmentsResultModel);
+                callback.onVisitTypeSelected(selectedVisitType, model, appointmentsResultModel);
 
             }
         });
