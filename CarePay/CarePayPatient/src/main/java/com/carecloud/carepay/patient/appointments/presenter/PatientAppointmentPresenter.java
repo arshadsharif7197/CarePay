@@ -10,6 +10,7 @@ import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDia
 import com.carecloud.carepay.patient.appointments.fragments.AvailableHoursFragment;
 import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragment;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.checkout.NextAppointmentActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.appointment.DataDTO;
@@ -74,7 +75,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     }
 
     @Override
-    public void selectVisitType(AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
+    public void onProviderSelected(AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
         ResourcesPracticeDTO selectedResourcesPracticeDTO = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getPractice();
         setPatientID(selectedResourcesPracticeDTO.getPracticeId());
         practiceId = selectedResourcesPracticeDTO.getPracticeId();
@@ -85,8 +86,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     }
 
     @Override
-    public void selectTime(VisitTypeDTO visitTypeDTO, AppointmentResourcesDTO appointmentResourcesDTO,
-                           AppointmentsResultModel appointmentsResultModel) {
+    public void onVisitTypeSelected(VisitTypeDTO visitTypeDTO, AppointmentResourcesDTO appointmentResourcesDTO,
+                                    AppointmentsResultModel appointmentsResultModel) {
         selectedAppointmentResourcesDTO = appointmentResourcesDTO;
         selectedVisitTypeDTO = visitTypeDTO;
         AvailableHoursFragment availableHoursFragment = AvailableHoursFragment
@@ -96,8 +97,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     }
 
     @Override
-    public void selectTime(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource,
-                           AppointmentsResultModel appointmentsResultModel) {
+    public void onDateRangeSelected(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource,
+                                    AppointmentsResultModel appointmentsResultModel) {
         AvailableHoursFragment availableHoursFragment = AvailableHoursFragment
                 .newInstance(appointmentsResultModel, appointmentResource,
                         startDate, endDate, visitTypeDTO);
@@ -142,7 +143,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     }
 
     @Override
-    public void confirmAppointment(AppointmentsSlotsDTO appointmentsSlot, AppointmentAvailabilityDTO availabilityDTO) {
+    public void onHoursAndLocationSelected(AppointmentsSlotsDTO appointmentsSlot, AppointmentAvailabilityDTO availabilityDTO) {
         ProviderDTO providersDTO;
         if (selectedAppointmentResourcesDTO != null) {
             providersDTO = selectedAppointmentResourcesDTO.getResource().getProvider();
@@ -150,7 +151,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
             providersDTO = appointmentDTO.getPayload().getProvider();
             patientId = appointmentDTO.getMetadata().getPatientId();
             practiceId = appointmentDTO.getMetadata().getPracticeId();
-            practiceMgmt =appointmentDTO.getMetadata().getPracticeMgmt();
+            practiceMgmt = appointmentDTO.getMetadata().getPracticeMgmt();
         }
 
         AppointmentsPayloadDTO payloadDTO = new AppointmentsPayloadDTO();
@@ -260,7 +261,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
         header.put("transition", "true");
 
         TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getCheckingIn();
-        viewHandler.getWorkflowServiceHelper().execute(transitionDTO, checkinCallback, queries, header);
+        viewHandler.getWorkflowServiceHelper().execute(transitionDTO, checkInCallback, queries, header);
     }
 
     @Override
@@ -304,10 +305,10 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     }
 
 
-    private void setPatientID(String practiceID){
+    private void setPatientID(String practiceID) {
         PracticePatientIdsDTO[] practicePatientIdArray = viewHandler.getApplicationPreferences().getObjectFromSharedPreferences(CarePayConstants.KEY_PRACTICE_PATIENT_IDS, PracticePatientIdsDTO[].class);
-        for(PracticePatientIdsDTO practicePatientId : practicePatientIdArray){
-            if(practicePatientId.getPracticeId().equals(practiceID)){
+        for (PracticePatientIdsDTO practicePatientId : practicePatientIdArray) {
+            if (practicePatientId.getPracticeId().equals(practiceID)) {
                 patientId = practicePatientId.getPatientId();
                 return;
             }
@@ -336,7 +337,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
         }
     };
 
-    private WorkflowServiceCallback checkinCallback = new WorkflowServiceCallback() {
+    private WorkflowServiceCallback checkInCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             viewHandler.showProgressDialog();
@@ -376,7 +377,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
             onAppointmentUnconfirmed();
         }
     };
-
 
 
 }

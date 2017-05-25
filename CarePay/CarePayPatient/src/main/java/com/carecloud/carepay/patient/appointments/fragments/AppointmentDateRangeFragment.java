@@ -15,15 +15,16 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentFragment;
+import com.carecloud.carepaylibray.appointments.interfaces.DateRangeInterface;
+import com.carecloud.carepaylibray.appointments.interfaces.VisitTypeInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.customcomponents.CustomCalendarCellDecorator;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -53,7 +54,7 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
     private AppointmentResourcesItemDTO selectedResourcesDTO;
     private AppointmentsResultModel resourcesToScheduleDTO;
 
-    private AppointmentNavigationCallback callback;
+    private DateRangeInterface callback;
 
     @Override
     public void onAttach(Context context) {
@@ -64,10 +65,10 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
     @Override
     protected void attachCallback(Context context) {
         try {
-            if(context instanceof AppointmentViewHandler){
+            if (context instanceof AppointmentViewHandler) {
                 callback = ((AppointmentViewHandler) context).getAppointmentPresenter();
-            }else {
-                callback = (AppointmentNavigationCallback) context;
+            } else {
+                callback = (DateRangeInterface) context;
             }
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement AppointmentNavigationCallback");
@@ -75,9 +76,9 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(callback == null){
+        if (callback == null) {
             attachCallback(getContext());
         }
     }
@@ -233,6 +234,7 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
     View.OnClickListener navigationOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+
             getActivity().onBackPressed();
         }
     };
@@ -303,7 +305,7 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
     View.OnClickListener applyButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            callback.selectTime(newStartDate, newEndDate, selectedVisitTypeDTO, selectedResourcesDTO, resourcesToScheduleDTO);
+            callback.onDateRangeSelected(newStartDate, newEndDate, selectedVisitTypeDTO, selectedResourcesDTO, resourcesToScheduleDTO);
         }
     };
 
