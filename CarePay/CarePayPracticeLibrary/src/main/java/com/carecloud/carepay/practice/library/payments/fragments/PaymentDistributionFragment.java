@@ -84,6 +84,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     private double chargesAmount;
     private double overPaymentAmount;
     private double unappliedCredit = 0D;
+    private double originalUnapplied = 0D;
 
     private NumberFormat currencyFormatter;
 
@@ -218,7 +219,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
                 if(validateBalanceItems()) {
 //                    if(shouldAutoApply){
 //                        resetAutoApplyOnError = true;
-                        distributeAmountOverBalanceItems(paymentAmount);
+                    distributeAmountOverBalanceItems(paymentAmount);
 //                    }
 
                     generatePaymentsModel();
@@ -270,6 +271,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             }
 
             if(unappliedCredit > 0D){
+                originalUnapplied = unappliedCredit;
                 unappliedLayout.setVisibility(View.VISIBLE);
                 setCurrency(unapplied, unappliedCredit);
 //                shouldAutoApply = true;
@@ -375,6 +377,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         for(BalanceItemDTO balanceItemDTO : balanceItems){
             balanceItemDTO.setBalance(balanceItemDTO.getMaxAmount());
         }
+        unappliedCredit = originalUnapplied;
     }
 
     private void setDefaultProviderLocation(){
@@ -431,18 +434,20 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             double difference;
             double currentAmount = balanceItem.getBalance();
 
-                    difference = round(currentAmount-updateAmount);
-                    if(unappliedCredit > 0) {
-                        if(difference > unappliedCredit){
-                            difference = round(difference - unappliedCredit);
-                            unappliedCredit = 0;
-                        }else{
-                            unappliedCredit = round(unappliedCredit - difference);
-                        }
-                    }
-                    balanceItem.setBalance(updateAmount);
-                    paymentAmount = round(paymentAmount - difference);
-                    updatePaymentAmount();
+            difference = round(currentAmount-updateAmount);
+
+            if(paymentAmount <= balanceAmount && unappliedCredit > 0) {
+                if (difference > unappliedCredit) {
+                    difference = round(difference - unappliedCredit);
+                    unappliedCredit = 0;
+                } else {
+                    unappliedCredit = round(unappliedCredit - difference);
+                }
+
+            }
+            balanceItem.setBalance(updateAmount);
+            paymentAmount = round(paymentAmount - difference);
+            updatePaymentAmount();
 
         }
 
