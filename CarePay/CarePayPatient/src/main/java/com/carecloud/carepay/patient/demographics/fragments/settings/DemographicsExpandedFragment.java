@@ -124,10 +124,10 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         TextInputLayout preferredNameLayout = (TextInputLayout) view.findViewById(R.id.preferredNameInputLayout);
         EditText preferredName = (EditText) view.findViewById(R.id.preferredName);
         preferredName.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(preferredNameLayout, null));
-        setVisibility(preferredNameLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getPreferredName().isDisplayed());
+        setVisibility(preferredNameLayout, personalInfoSection.getProperties().getPreferredName().isDisplayed());
         preferredName.setText(demographicPayload.getPersonalDetails().getPreferredName());
         preferredName.getOnFocusChangeListener().onFocusChange(preferredName, !StringUtil.isNullOrEmpty(preferredName.getText().toString()));
-        if(dataModel.getDemographic().getPersonalDetails().getProperties().getPreferredName().isRequired()) {
+        if(personalInfoSection.getProperties().getPreferredName().isRequired()) {
             preferredName.addTextChangedListener(getValidateEmptyTextWatcher(preferredNameLayout));
         }
 
@@ -135,10 +135,10 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         TextInputLayout socialSecurityLayout = (TextInputLayout) view.findViewById(R.id.socialSecurityInputLayout);
         EditText socialSecurity = (EditText) view.findViewById(R.id.socialSecurityNumber);
         socialSecurity.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(socialSecurityLayout, null));
-        setVisibility(socialSecurityLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getSocialSecurityNumber().isDisplayed());
+        setVisibility(socialSecurityLayout, personalInfoSection.getProperties().getSocialSecurityNumber().isDisplayed());
         socialSecurity.setText(demographicPayload.getPersonalDetails().getSocialSecurityNumber());
         socialSecurity.getOnFocusChangeListener().onFocusChange(socialSecurity, !StringUtil.isNullOrEmpty(socialSecurity.getText().toString()));
-        if(dataModel.getDemographic().getPersonalDetails().getProperties().getSocialSecurityNumber().isRequired()) {
+        if(personalInfoSection.getProperties().getSocialSecurityNumber().isRequired()) {
             socialSecurity.addTextChangedListener(getValidateEmptyTextWatcher(socialSecurityLayout));
         }
 
@@ -146,10 +146,10 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         TextInputLayout emailAddressLayout = (TextInputLayout) view.findViewById(R.id.emailInputLayout);
         EditText emailAddress = (EditText) view.findViewById(R.id.email);
         emailAddress.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(emailAddressLayout, null));
-        setVisibility(emailAddressLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getEmailAddress().isDisplayed());
+        setVisibility(emailAddressLayout, personalInfoSection.getProperties().getEmailAddress().isDisplayed());
         emailAddress.setText(demographicPayload.getPersonalDetails().getEmailAddress());
         emailAddress.getOnFocusChangeListener().onFocusChange(emailAddress, !StringUtil.isNullOrEmpty(emailAddress.getText().toString()));
-        if(dataModel.getDemographic().getPersonalDetails().getProperties().getEmailAddress().isRequired()) {
+        if(personalInfoSection.getProperties().getEmailAddress().isRequired()) {
             emailAddress.addTextChangedListener(getValidateEmptyTextWatcher(emailAddressLayout));
         }
 
@@ -168,10 +168,10 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         TextInputLayout driverLicenseLayout = (TextInputLayout) view.findViewById(R.id.driverLicenseInputLayout);
         EditText driverLicense = (EditText) view.findViewById(R.id.driverLicense);
         driverLicense.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(driverLicenseLayout, null));
-        setVisibility(driverLicenseLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getDriversLicenseNumber().isDisplayed());
+        setVisibility(driverLicenseLayout, personalInfoSection.getProperties().getDriversLicenseNumber().isDisplayed());
         driverLicense.setText(demographicPayload.getPersonalDetails().getDriversLicenseNumber());
         driverLicense.getOnFocusChangeListener().onFocusChange(driverLicense, !StringUtil.isNullOrEmpty(driverLicense.getText().toString()));
-        if(dataModel.getDemographic().getPersonalDetails().getProperties().getDriversLicenseNumber().isRequired()) {
+        if(personalInfoSection.getProperties().getDriversLicenseNumber().isRequired()) {
             driverLicense.addTextChangedListener(getValidateEmptyTextWatcher(driverLicenseLayout));
         }
 
@@ -190,13 +190,13 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         TextInputLayout secondaryPhoneLayout = (TextInputLayout) view.findViewById(R.id.secondaryPhoneInputLayout);
         EditText secondaryPhone = (EditText) view.findViewById(R.id.secondaryPhone);
         secondaryPhone.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(secondaryPhoneLayout, null));
-        setVisibility(secondaryPhoneLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryPhoneNumber().isDisplayed());
+        setVisibility(secondaryPhoneLayout, personalInfoSection.getProperties().getSecondaryPhoneNumber().isDisplayed());
         secondaryPhone.addTextChangedListener(phoneInputFormatter);
 
         String secondaryPhoneNumberString = demographicPayload.getPersonalDetails().getSecondaryPhoneNumber();
         secondaryPhone.setText(StringUtil.formatPhoneNumber(secondaryPhoneNumberString));
         secondaryPhone.getOnFocusChangeListener().onFocusChange(secondaryPhone, !StringUtil.isNullOrEmpty(secondaryPhone.getText().toString()));
-        if(dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryPhoneNumber().isRequired()) {
+        if(personalInfoSection.getProperties().getSecondaryPhoneNumber().isRequired()) {
             secondaryPhone.addTextChangedListener(getValidateEmptyTextWatcher(secondaryPhoneLayout));
         }else{
             secondaryPhone.addTextChangedListener(clearValidationErrorsOnTextChange(secondaryPhoneLayout));
