@@ -51,11 +51,12 @@
                 android:layout_marginTop="@dimen/payment_header_top_margin" />
         </LinearLayout>
 
-        <Button
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/actionButton"
             style="@style/ResponsButtonStyle"
             android:layout_margin="@dimen/payment_side_margin"
             android:background="@drawable/button_blue_border"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"
+            app:customAssetFont="proxima_nova_semi_bold"/>
     </LinearLayout>
 </LinearLayout>

@@ -25,21 +25,11 @@
             tools:ignore="ContentDescription" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/payment_details_pay_now_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/button_green_fill_background"
-        android:textColor="@color/white"
-        android:textSize="@dimen/apt_dl_textview_size" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/payment_details_pay_now_button"
         android:layout_below="@id/headerContainer"
-        android:background="@drawable/payment_receipt_bg"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -47,6 +37,7 @@
             android:layout_height="@dimen/payment_details_dialog_header_height">
 
             <LinearLayout
+                android:id="@+id/header_layout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/payment_details_dialog_total_paid_view_height"
                 android:background="@drawable/top_left_right_rounded_background">
@@ -62,6 +53,13 @@
                     app:customAssetFont="gotham_rounded_medium" />
             </LinearLayout>
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_below="@+id/header_layout"
+                android:layout_alignParentBottom="true"/>
+
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/avTextView"
                 android:layout_width="@dimen/payment_details_dialog_icon_size"
@@ -73,15 +71,33 @@
                 android:src="@drawable/icn_placeholder_user_profile_png"
                 android:textColor="@color/lightSlateGray"
                 app:customAssetFont="gotham_rounded_medium" />
+
         </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/white">
 
             <include layout="@layout/payment_details_view" />
 
         </LinearLayout>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <Button
+                android:id="@+id/payment_details_pay_now_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_10dp"
+                android:background="@drawable/button_green_fill_background"
+                android:textColor="@color/white"
+                android:textSize="@dimen/apt_dl_textview_size"/>
+
+        </FrameLayout>
     </LinearLayout>
 </RelativeLayout>

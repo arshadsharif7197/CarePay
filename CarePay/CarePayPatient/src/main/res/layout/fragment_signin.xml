@@ -128,7 +128,8 @@
                     android:gravity="start"
                     android:text="@string/language_textview"
                     app:customAssetFont="proxima_nova_semi_bold"
-                    breeze:textKey="change_language_link" />
+                    breeze:textKey="change_language_link"
+                    android:visibility="invisible"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/forgotPasswordTextView"

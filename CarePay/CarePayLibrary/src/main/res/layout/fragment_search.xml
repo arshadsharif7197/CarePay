@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:orientation="vertical">
 
     <ImageView
@@ -21,6 +20,7 @@
         android:id="@+id/search_recycler"
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_dialog_min_height"
-        android:padding="@dimen/padding_xlarge" />
+        android:padding="@dimen/padding_xlarge"
+        android:background="@color/white"/>
 
 </LinearLayout>

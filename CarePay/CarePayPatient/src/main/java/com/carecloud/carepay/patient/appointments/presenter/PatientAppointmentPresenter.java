@@ -131,6 +131,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
 
         selectedAppointmentResourcesDTO = new AppointmentResourcesDTO();
         selectedAppointmentResourcesDTO.setResource(resourcesItemDTO);
+        practiceId = appointmentDTO.getMetadata().getPracticeId();
+        practiceMgmt = appointmentDTO.getMetadata().getPracticeMgmt();
+        patientId = appointmentDTO.getMetadata().getPatientId();
 
         ResourcesToScheduleDTO resourcesToSchedule = new ResourcesToScheduleDTO();
         resourcesToSchedule.getPractice().setPracticeId(appointmentDTO.getMetadata().getPracticeId());
