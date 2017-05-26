@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
+import com.carecloud.carepay.patient.checkout.NextAppointmentActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.patient.demographics.activities.NewDemographicsActivity;
 import com.carecloud.carepay.patient.demographics.activities.ReviewDemographicsActivity;
@@ -37,22 +38,31 @@ public class PatientNavigationHelper {
     /**
      * Navigation using application context
      *
-     * @param context       activity context
-     * @param workflowDTO   response DTO
+     * @param context     activity context
+     * @param workflowDTO response DTO
      */
     public static void navigateToWorkflow(Context context, WorkflowDTO workflowDTO) {
         navigateToWorkflow(context, workflowDTO, false, 0);
     }
 
+    public static void navigateToWorkflow(Context context, WorkflowDTO workflowDTO, Bundle info) {
+        navigateToWorkflow(context, workflowDTO, false, 0, info);
+    }
+
+    public static void navigateToWorkflow(Context context, WorkflowDTO workflowDTO, boolean expectsResult, int requestCode) {
+        navigateToWorkflow(context, workflowDTO, expectsResult, requestCode, null);
+    }
+
     /**
      * Navigation using application context
      *
-     * @param context     activity context
+     * @param context       activity context
      * @param expectsResult should launch with startActivityForResult
      * @param requestCode   RequestCode for activity Result
-     * @param workflowDTO WorkflowDTO
+     * @param workflowDTO   WorkflowDTO
      */
-    public static void navigateToWorkflow(Context context, WorkflowDTO workflowDTO, boolean expectsResult, int requestCode) {
+    public static void navigateToWorkflow(Context context, WorkflowDTO workflowDTO, boolean expectsResult,
+                                          int requestCode, Bundle info) {
         Intent intent = null;
         if (workflowDTO == null || StringUtil.isNullOrEmpty(workflowDTO.getState())) {
             return;
@@ -87,7 +97,7 @@ public class PatientNavigationHelper {
                 if (context instanceof ReviewDemographicsActivity) {
                     ((ReviewDemographicsActivity) context).navigateToConsentForms(workflowDTO);
                     return;
-                }else{
+                } else {
                     intent = new Intent(context, ReviewDemographicsActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 }
@@ -97,7 +107,7 @@ public class PatientNavigationHelper {
                 if (context instanceof ReviewDemographicsActivity) {
                     ((ReviewDemographicsActivity) context).navigateToIntakeForms(workflowDTO);
                     return;
-                }else{
+                } else {
                     intent = new Intent(context, ReviewDemographicsActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 }
@@ -131,10 +141,14 @@ public class PatientNavigationHelper {
                 if (context instanceof ReviewDemographicsActivity) {
                     ((ReviewDemographicsActivity) context).navigateToMedicationsAllergy(workflowDTO);
                     return;
-                }else{
+                } else {
                     intent = new Intent(context, ReviewDemographicsActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 }
+                break;
+            }
+            case NavigationStateConstants.PATIENT_APP_CHECKOUT: {
+                intent = new Intent(context, NextAppointmentActivity.class);
                 break;
             }
             default: {
@@ -149,13 +163,14 @@ public class PatientNavigationHelper {
 
         Bundle bundle = new Bundle();
         bundle.putLong(WorkflowDTO.class.getSimpleName(), workFlowRecord.save());
-        if (intent != null) {
-            intent.putExtras(bundle);
-            if (expectsResult && context instanceof Activity) {
-                ((Activity) context).startActivityForResult(intent, requestCode);
-            } else {
-                context.startActivity(intent);
-            }
+        intent.putExtras(bundle);
+        if (info != null) {
+            intent.putExtra(NavigationStateConstants.EXTRA_INFO, info);
+        }
+        if (expectsResult && context instanceof Activity) {
+            ((Activity) context).startActivityForResult(intent, requestCode);
+        } else {
+            context.startActivity(intent);
         }
     }
 }

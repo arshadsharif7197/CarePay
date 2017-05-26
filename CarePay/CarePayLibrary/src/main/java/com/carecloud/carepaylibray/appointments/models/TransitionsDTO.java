@@ -30,6 +30,10 @@ public class TransitionsDTO {
     @Expose
     private TransitionDTO checkingIn = new TransitionDTO();
 
+    @SerializedName("checking_out")
+    @Expose
+    private TransitionDTO checkingOut = new TransitionDTO();
+
     @SerializedName("make_appointment")
     @Expose
     private TransitionDTO makeAppointment = new TransitionDTO();
@@ -41,6 +45,10 @@ public class TransitionsDTO {
     @SerializedName("mark_as_read")
     @Expose
     private TransitionDTO readNotifications = new TransitionDTO();
+
+    @SerializedName("continue")
+    @Expose
+    private TransitionDTO continueTransition = new TransitionDTO();
 
     /**
      * @return The checkingIn
@@ -57,7 +65,20 @@ public class TransitionsDTO {
     }
 
     /**
-     *
+     * @return The checkingOut
+     */
+    public TransitionDTO getCheckingOut() {
+        return checkingOut;
+    }
+
+    /**
+     * @param checkingOut The checking_out
+     */
+    public void setCheckingOut(TransitionDTO checkingOut) {
+        this.checkingOut = checkingOut;
+    }
+
+    /**
      * @return The cancel
      */
     public TransitionDTO getCancel() {
@@ -139,5 +160,13 @@ public class TransitionsDTO {
 
     public void setReadNotifications(TransitionDTO readNotifications) {
         this.readNotifications = readNotifications;
+    }
+
+    public TransitionDTO getContinueTransition() {
+        return continueTransition;
+    }
+
+    public void setContinueTransition(TransitionDTO continueTransition) {
+        this.continueTransition = continueTransition;
     }
 }

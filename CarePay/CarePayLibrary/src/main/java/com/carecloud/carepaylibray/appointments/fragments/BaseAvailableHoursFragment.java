@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,9 +19,9 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.adapters.AvailableLocationsAdapter;
 import com.carecloud.carepaylibray.appointments.adapters.FilterableAvailableHoursAdapter;
+import com.carecloud.carepaylibray.appointments.interfaces.AvailableHoursInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -68,7 +69,7 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
     private Map<String, LocationDTO> selectedLocations = new HashMap<>();
     private SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
 
-    private AppointmentNavigationCallback callback;
+    private AvailableHoursInterface callback;
 
 
     @Override
@@ -80,10 +81,10 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
     @Override
     protected void attachCallback(Context context) {
         try {
-            if(context instanceof AppointmentViewHandler){
+            if (context instanceof AppointmentViewHandler) {
                 callback = ((AppointmentViewHandler) context).getAppointmentPresenter();
-            }else {
-                callback = (AppointmentNavigationCallback) context;
+            } else {
+                callback = (AvailableHoursInterface) context;
             }
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement AppointmentNavigationCallback");
@@ -118,7 +119,7 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         inflateToolbar(view);
         inflateUIComponents(view);
         setupEditDateButton(view);
@@ -128,7 +129,7 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
     @Override
     public void onResume() {
         super.onResume();
-        if(callback == null){
+        if (callback == null) {
             attachCallback(getContext());
         }
         Handler handler = new Handler();
@@ -144,12 +145,12 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
     }
 
     protected void inflateToolbar(View view) {
-        hideDefaultActionBar();
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.add_appointment_toolbar);
-
         titleView = (TextView) toolbar.findViewById(R.id.add_appointment_toolbar_title);
         titleView.setText(R.string.apt_available_hours_title);
         toolbar.setTitle("");
+
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     }
 
 
@@ -190,7 +191,7 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
 
     private void setAdapters() {
         List<LocationDTO> locations = extractAvailableLocations(availabilityDTO);
-        FilterableAvailableHoursAdapter.LocationMode locationMode = locations.size()>1? FilterableAvailableHoursAdapter.LocationMode.MULTI: FilterableAvailableHoursAdapter.LocationMode.SINGLE;
+        FilterableAvailableHoursAdapter.LocationMode locationMode = locations.size() > 1 ? FilterableAvailableHoursAdapter.LocationMode.MULTI : FilterableAvailableHoursAdapter.LocationMode.SINGLE;
 
         FilterableAvailableHoursAdapter hoursAdapter;
         if (availableHoursRecycleView.getAdapter() == null) {
@@ -223,11 +224,11 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
             singleLocationText.setText(locations.get(0).getName());
         }
 
-        if(hoursAdapter.getItemCount() < 1){
+        if (hoursAdapter.getItemCount() < 1) {
             noAppointmentLayout.setVisibility(View.VISIBLE);
             locationsLayout.setVisibility(View.GONE);
             availableHoursRecycleView.setVisibility(View.GONE);
-        }else{
+        } else {
             noAppointmentLayout.setVisibility(View.GONE);
             locationsLayout.setVisibility(View.VISIBLE);
             availableHoursRecycleView.setVisibility(View.VISIBLE);
@@ -241,7 +242,7 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
             endDate = startDate;
         }
 
-        if(titleView != null) {
+        if (titleView != null) {
             String today = Label.getLabel("today_label");
             String tomorrow = Label.getLabel("add_appointment_tomorrow");
             String thisMonth = Label.getLabel("this_month_label");
@@ -253,7 +254,7 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
     }
 
 
-    protected void selectDateRange(){
+    protected void selectDateRange() {
         callback.selectDateRange(startDate, endDate, selectedVisitTypeDTO, selectedResource, resourcesToScheduleDTO);
     }
 
@@ -275,12 +276,12 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
     }
 
 
-    private List<AppointmentsSlotsDTO> getAllAvailableTimeSlots(){
+    private List<AppointmentsSlotsDTO> getAllAvailableTimeSlots() {
         List<AppointmentsSlotsDTO> timeSlots = new ArrayList<>();
-        if(availabilityDTO != null && !availabilityDTO.getPayload().getAppointmentAvailability().getPayload().isEmpty()){
+        if (availabilityDTO != null && !availabilityDTO.getPayload().getAppointmentAvailability().getPayload().isEmpty()) {
             List<AppointmentAvailabilityPayloadDTO> availabilityPayloadDTOs = availabilityDTO.getPayload().getAppointmentAvailability().getPayload();
             timeSlots = groupAllLocationSlotsByTime(availabilityPayloadDTOs);
-            if(!timeSlots.isEmpty()){
+            if (!timeSlots.isEmpty()) {
                 Collections.sort(timeSlots, new Comparator<AppointmentsSlotsDTO>() {
                     @Override
                     public int compare(AppointmentsSlotsDTO lhs, AppointmentsSlotsDTO rhs) {
@@ -344,7 +345,7 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
 
     @Override
     public void onSelectAppointmentTimeSlot(AppointmentsSlotsDTO appointmentsSlotsDTO) {
-        callback.confirmAppointment(appointmentsSlotsDTO, availabilityDTO);
+        callback.onHoursAndLocationSelected(appointmentsSlotsDTO, availabilityDTO);
     }
 
     @Override
@@ -363,7 +364,7 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
             updateSelectedLocationsForAdapter();
         }
 
-        if(availableHoursRecycleView.getAdapter()!=null){
+        if (availableHoursRecycleView.getAdapter() != null) {
             FilterableAvailableHoursAdapter adapter = (FilterableAvailableHoursAdapter) availableHoursRecycleView.getAdapter();
             adapter.updateFilteredSlots();
         }

@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.appointments;
+package com.carecloud.carepaylibray.appointments.interfaces;
 
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -14,20 +14,12 @@ import java.util.Date;
  * Created by lmenendez on 3/2/17.
  */
 
-public interface AppointmentNavigationCallback {
+public interface AppointmentNavigationCallback extends VisitTypeInterface, AvailableHoursInterface, DateRangeInterface {
     void newAppointment();
 
     void rescheduleAppointment(AppointmentDTO appointmentDTO);
 
-    void selectVisitType(AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel);
-
-    void selectTime(VisitTypeDTO visitTypeDTO, AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel);
-
-    void selectTime(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource, AppointmentsResultModel appointmentsResultModel);
-
-    void selectDateRange(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource, AppointmentsResultModel appointmentsResultModel);
-
-    void confirmAppointment(AppointmentsSlotsDTO appointmentsSlot, AppointmentAvailabilityDTO availabilityDTO);
+    void onProviderSelected(AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel);
 
     void requestAppointment(AppointmentsSlotsDTO appointmentSlot, String comments);
 

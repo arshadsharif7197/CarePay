@@ -2,7 +2,7 @@ package com.carecloud.carepaylibray.appointments.presenter;
 
 import android.content.Context;
 
-import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
+import com.carecloud.carepaylibray.appointments.interfaces.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 
 /**
