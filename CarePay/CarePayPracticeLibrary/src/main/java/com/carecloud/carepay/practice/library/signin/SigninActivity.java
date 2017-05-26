@@ -2,6 +2,8 @@ package com.carecloud.carepay.practice.library.signin;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
@@ -114,6 +116,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
 
         if (signInScreenMode == SignInScreenMode.PRACTICE_MODE_SIGNIN) {
             setUpLanguageSpinner();
+            displayVersionNumber();
         } else if (signInScreenMode == SignInScreenMode.PATIENT_MODE_SIGNIN) {
             TextView signInTitle = (TextView) findViewById(R.id.signinTitleTextview);
             signInTitle.setText(Label.getLabel("carepay_signin_title"));
@@ -129,6 +132,17 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
                 return false;
             }
         });
+
+    }
+
+    private void displayVersionNumber(){
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            TextView versionNumber = (TextView) findViewById(R.id.version_number);
+            versionNumber.setText(packageInfo.versionName);
+        }catch (PackageManager.NameNotFoundException nne){
+            nne.printStackTrace();
+        }
     }
 
     private void signIn() {

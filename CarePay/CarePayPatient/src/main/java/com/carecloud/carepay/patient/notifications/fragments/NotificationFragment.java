@@ -239,7 +239,7 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
                 notificationsAdapter.clearRemovedNotification(notificationItem);
                 notificationItems.remove(notificationItem);
                 notificationsRecycler.getAdapter().notifyItemRemoved(index);
-//                deleteNotification(notificationItem); todo enable this when ready
+                deleteNotification(notificationItem);
                 notificationItem = null;
             }
         }
