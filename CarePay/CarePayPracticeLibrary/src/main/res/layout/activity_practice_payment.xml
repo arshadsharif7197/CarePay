@@ -6,13 +6,13 @@
     android:id="@+id/activity_practice_payment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/screen_background"
+    android:background="?practiceBackgroundColor"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
+        android:background="?practiceActionBarColor"
         android:paddingBottom="@dimen/dimen_15dp"
         android:paddingTop="@dimen/dimen_15dp">
 
@@ -139,7 +139,7 @@
                     android:layout_marginStart="@dimen/dimen_8dp"
                     android:background="@drawable/queue_counter_noborder_background"
                     android:gravity="center"
-                    android:textColor="@color/white"
+                    android:textColor="@color/practice_mode_counter_text"
                     android:textSize="@dimen/text_size_16sp"
                     android:textStyle="bold"
                     app:customAssetFont="gotham_rounded_bold" />

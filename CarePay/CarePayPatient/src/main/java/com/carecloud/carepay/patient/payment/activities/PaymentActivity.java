@@ -9,38 +9,33 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.patient.payment.PatientPaymentPresenter;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.ConfirmationActivity;
-import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
-import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
 import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
-import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
-import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
-import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
+import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
+import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
-import com.google.gson.Gson;
 
-public class PaymentActivity extends BasePatientActivity implements PaymentNavigationCallback {
+public class PaymentActivity extends BasePatientActivity implements PaymentViewHandler {
     PaymentsModel paymentsDTO;
+    PatientPaymentPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
         paymentsDTO = getConvertedDTO(PaymentsModel.class);
-        ResponsibilityFragment responsibilityFragment = ResponsibilityFragment.newInstance(paymentsDTO, true);
-        navigateToFragment(responsibilityFragment, false);
+
+        initPresenter();
+
+        presenter.startPaymentProcess(paymentsDTO);
     }
 
     @Override
@@ -51,6 +46,11 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
         }
         return true;
     }
+
+    private void initPresenter(){
+        this.presenter = new PatientPaymentPresenter(this, paymentsDTO);
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -137,6 +137,11 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
         }
     }
 
+    @Override
+    public PaymentPresenter getPaymentPresenter() {
+        return presenter;
+    }
+
     /**
      * Helper method to replace fragments
      *
@@ -146,7 +151,7 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
     public void navigateToFragment(final Fragment fragment, final boolean addToBackStack) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(com.carecloud.carepay.patient.R.id.payment_frag_holder, fragment, fragment.getClass().getSimpleName());
+        transaction.replace(R.id.payment_frag_holder, fragment, fragment.getClass().getSimpleName());
         if (addToBackStack) {
             transaction.addToBackStack(fragment.getClass().getName());
         }
@@ -154,74 +159,11 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
     }
 
     @Override
-    public void startPaymentProcess(PaymentsModel paymentsModel) {
-
-    }
-
-    @Override
-    public void startPartialPayment(double owedAmount) {
-
-    }
-
-    @Override
-    public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
-        navigateToFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount), true);
-    }
-
-    @Override
-    public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
-        if (paymentsDTO.getPaymentPayload().getPatientCreditCards() != null && !paymentsDTO.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsDTO, selectedPaymentMethod.getLabel(), amount);
-            navigateToFragment(fragment, true);
-        } else {
-            showAddCard(amount, paymentsModel);
+    public void exitPaymentProcess(boolean cancelled) {
+        if(getCallingActivity()!=null){
+            setResult(cancelled ? RESULT_CANCELED : RESULT_OK);
         }
+        finish();
     }
 
-    @Override
-    public void showAddCard(double amount, PaymentsModel paymentsModel) {
-        Gson gson = new Gson();
-        Bundle args = new Bundle();
-        String paymentsDTOString = gson.toJson(paymentsDTO);
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
-        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-        Fragment fragment = new AddNewCreditCardFragment();
-        fragment.setArguments(args);
-        navigateToFragment(fragment, true);
-    }
-
-    @Override
-    public void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO) {
-
-    }
-
-    @Override
-    public void cancelPaymentProcess(PaymentsModel paymentsModel) {
-
-    }
-
-    @Override
-    public void onPaymentPlanAction() {
-        PaymentPlanFragment fragment = new PaymentPlanFragment();
-
-        Bundle args = new Bundle();
-        Gson gson = new Gson();
-        String paymentsDTOString = gson.toJson(paymentsDTO);
-        args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-        fragment.setArguments(args);
-
-        navigateToFragment(fragment, true);
-    }
-
-    @Override
-    public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
-//        Gson gson = new Gson();
-        Bundle args = new Bundle();
-//        String paymentsDTOString = gson.toJson(paymentsModel);
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
-
-        PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
-        confirmationFragment.setArguments(args);
-        confirmationFragment.show(getSupportFragmentManager(), confirmationFragment.getClass().getSimpleName());
-    }
 }

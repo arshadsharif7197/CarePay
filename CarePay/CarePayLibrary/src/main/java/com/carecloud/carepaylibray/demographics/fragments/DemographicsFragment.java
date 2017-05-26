@@ -87,46 +87,50 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
 
         View genderLayout = view.findViewById(R.id.genderDemographicsLayout);
         TextView chooseGender = (TextView) view.findViewById(R.id.chooseGenderTextView);
+        View genderOptional = view.findViewById(R.id.genderOptional);
         setVisibility(genderLayout, personalInfoSection.getProperties().getGender().isDisplayed());
         chooseGender.setOnClickListener(
                 getSelectOptionsListener(personalInfoSection.getProperties().getGender().getOptions(),
-                getDefaultOnOptionsSelectedListener(chooseGender, selectedGender),
+                getDefaultOnOptionsSelectedListener(chooseGender, selectedGender, genderOptional),
                 Label.getLabel("demographics_review_gender")));
         String gender = demographicPayload.getPersonalDetails().getGender();
-        initSelectableInput(chooseGender, selectedGender, gender);
+        initSelectableInput(chooseGender, selectedGender, gender, genderOptional);
 
 
         View raceLayout = view.findViewById(R.id.raceDemographicsLayout);
         TextView chooseRace = (TextView) view.findViewById(R.id.chooseRaceTextView);
+        View raceOptional = view.findViewById(R.id.raceOptional);
         setVisibility(raceLayout, personalInfoSection.getProperties().getPrimaryRace().isDisplayed());
         chooseRace.setOnClickListener(
                 getSelectOptionsListener(personalInfoSection.getProperties().getPrimaryRace().getOptions(),
-                        getDefaultOnOptionsSelectedListener(chooseRace, selectedRace),
+                        getDefaultOnOptionsSelectedListener(chooseRace, selectedRace, raceOptional),
                         Label.getLabel("demographics_review_race")));
         String race = demographicPayload.getPersonalDetails().getPrimaryRace();
-        initSelectableInput(chooseRace, selectedRace, race);
+        initSelectableInput(chooseRace, selectedRace, race, raceOptional);
 
 
         View secondaryRaceLayout = view.findViewById(R.id.secondaryRaceDemographicsLayout);
         TextView chooseSecondaryRace = (TextView) view.findViewById(R.id.chooseSecondaryRace);
+        View secondaryRaceOptional = view.findViewById(R.id.secondaryRaceOptional);
         setVisibility(secondaryRaceLayout, personalInfoSection.getProperties().getSecondaryRace().isDisplayed());
         chooseSecondaryRace.setOnClickListener(
                 getSelectOptionsListener(personalInfoSection.getProperties().getSecondaryRace().getOptions(),
-                        getDefaultOnOptionsSelectedListener(chooseSecondaryRace, selectedSecondaryRace),
+                        getDefaultOnOptionsSelectedListener(chooseSecondaryRace, selectedSecondaryRace, secondaryRaceOptional),
                         Label.getLabel("demographics_secondary_race")));
         String secondaryRace = demographicPayload.getPersonalDetails().getSecondaryRace();
-        initSelectableInput(chooseSecondaryRace, selectedSecondaryRace, secondaryRace);
+        initSelectableInput(chooseSecondaryRace, selectedSecondaryRace, secondaryRace, secondaryRaceOptional);
 
 
         View ethnicityLayout = view.findViewById(R.id.ethnicityDemographicsLayout);
         TextView chooseEthnicity = (TextView) view.findViewById(R.id.chooseEthnicityTextView);
+        View ethnicityOptional = view.findViewById(R.id.ethnicityOptional);
         setVisibility(ethnicityLayout, personalInfoSection.getProperties().getEthnicity().isDisplayed());
         chooseEthnicity.setOnClickListener(
                 getSelectOptionsListener(personalInfoSection.getProperties().getEthnicity().getOptions(),
-                        getDefaultOnOptionsSelectedListener(chooseEthnicity, selectedEthnicity),
+                        getDefaultOnOptionsSelectedListener(chooseEthnicity, selectedEthnicity, ethnicityOptional),
                         Label.getLabel("demographics_review_ethnicity")));
         String ethnicity = demographicPayload.getPersonalDetails().getEthnicity();
-        initSelectableInput(chooseEthnicity, selectedEthnicity, ethnicity);
+        initSelectableInput(chooseEthnicity, selectedEthnicity, ethnicity, ethnicityOptional);
 
 
         TextInputLayout preferredNameLayout = (TextInputLayout) view.findViewById(R.id.preferredNameInputLayout);
@@ -137,6 +141,10 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
         preferredName.getOnFocusChangeListener().onFocusChange(preferredName, !StringUtil.isNullOrEmpty(preferredName.getText().toString()));
         if(dataModel.getDemographic().getPersonalDetails().getProperties().getPreferredName().isRequired()) {
             preferredName.addTextChangedListener(getValidateEmptyTextWatcher(preferredNameLayout));
+        }else if(personalInfoSection.getProperties().getPreferredName().isDisplayed() &&
+                StringUtil.isNullOrEmpty(demographicPayload.getPersonalDetails().getPreferredName())){
+            View preferredNameOptional = view.findViewById(R.id.preferredNameOptional);
+            preferredNameOptional.setVisibility(View.VISIBLE);
         }
 
 
@@ -148,6 +156,10 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
         socialSecurity.getOnFocusChangeListener().onFocusChange(socialSecurity, !StringUtil.isNullOrEmpty(socialSecurity.getText().toString()));
         if(dataModel.getDemographic().getPersonalDetails().getProperties().getSocialSecurityNumber().isRequired()) {
             socialSecurity.addTextChangedListener(getValidateEmptyTextWatcher(socialSecurityLayout));
+        }else if(personalInfoSection.getProperties().getSocialSecurityNumber().isDisplayed() &&
+                StringUtil.isNullOrEmpty(demographicPayload.getPersonalDetails().getSocialSecurityNumber())){
+            View socialSecurityOptional = view.findViewById(R.id.socialSecurityOptional);
+            socialSecurityOptional.setVisibility(View.VISIBLE);
         }
 
 
@@ -159,18 +171,23 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
         emailAddress.getOnFocusChangeListener().onFocusChange(emailAddress, !StringUtil.isNullOrEmpty(emailAddress.getText().toString()));
         if(dataModel.getDemographic().getPersonalDetails().getProperties().getEmailAddress().isRequired()) {
             emailAddress.addTextChangedListener(getValidateEmptyTextWatcher(emailAddressLayout));
+        }else if(personalInfoSection.getProperties().getEmailAddress().isDisplayed() &&
+                StringUtil.isNullOrEmpty(demographicPayload.getPersonalDetails().getEmailAddress())){
+            View emailAddressOptional = view.findViewById(R.id.emailOptional);
+            emailAddressOptional.setVisibility(View.VISIBLE);
         }
 
 
         View preferredLanguageLayout = view.findViewById(R.id.preferredLanguageDemographicsLayout);
         TextView choosePreferredLanguage = (TextView) view.findViewById(R.id.choosePreferredLanguage);
+        View preferredLanguageOptional = view.findViewById(R.id.preferredLanguageOptional);
         setVisibility(preferredLanguageLayout, personalInfoSection.getProperties().getPreferredLanguage().isDisplayed());
         choosePreferredLanguage.setOnClickListener(
                 getSelectOptionsListener(personalInfoSection.getProperties().getPreferredLanguage().getOptions(),
-                        getDefaultOnOptionsSelectedListener(choosePreferredLanguage, selectedPreferredLanguage),
+                        getDefaultOnOptionsSelectedListener(choosePreferredLanguage, selectedPreferredLanguage, preferredLanguageOptional),
                         Label.getLabel("demographics_preferred_language")));
         String preferredLanguage = demographicPayload.getPersonalDetails().getPreferredLanguage();
-        initSelectableInput(choosePreferredLanguage, selectedPreferredLanguage, preferredLanguage);
+        initSelectableInput(choosePreferredLanguage, selectedPreferredLanguage, preferredLanguage, preferredLanguageOptional);
 
 
         TextInputLayout driverLicenseLayout = (TextInputLayout) view.findViewById(R.id.driverLicenseInputLayout);
@@ -181,18 +198,23 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
         driverLicense.getOnFocusChangeListener().onFocusChange(driverLicense, !StringUtil.isNullOrEmpty(driverLicense.getText().toString()));
         if(dataModel.getDemographic().getPersonalDetails().getProperties().getDriversLicenseNumber().isRequired()) {
             driverLicense.addTextChangedListener(getValidateEmptyTextWatcher(driverLicenseLayout));
+        }else if(personalInfoSection.getProperties().getDriversLicenseNumber().isDisplayed() &&
+                StringUtil.isNullOrEmpty(demographicPayload.getPersonalDetails().getDriversLicenseNumber())){
+            View driverLicenseOptional = view.findViewById(R.id.driverLicenseOptional);
+            driverLicenseOptional.setVisibility(View.VISIBLE);
         }
 
 
         View driverLicenseStateLayout = view.findViewById(R.id.driverLicenseStateDemographicsLayout);
         TextView choosedriverLicenseState = (TextView) view.findViewById(R.id.chooseDriverLicenseState);
+        View driverLicenseStateOptional = view.findViewById(R.id.driverLicenseStateOptional);
         setVisibility(driverLicenseStateLayout, personalInfoSection.getProperties().getDriversLicenseState().isDisplayed());
         choosedriverLicenseState.setOnClickListener(
                 getSelectOptionsListener(personalInfoSection.getProperties().getDriversLicenseState().getOptions(),
-                        getDefaultOnOptionsSelectedListener(choosedriverLicenseState, selectedDriverLicenseState),
+                        getDefaultOnOptionsSelectedListener(choosedriverLicenseState, selectedDriverLicenseState, driverLicenseStateOptional),
                         Label.getLabel("demographics_driver_license_state")));
         String driverLicenseState = demographicPayload.getPersonalDetails().getDriversLicenseState();
-        initSelectableInput(choosedriverLicenseState, selectedDriverLicenseState, driverLicenseState);
+        initSelectableInput(choosedriverLicenseState, selectedDriverLicenseState, driverLicenseState, driverLicenseStateOptional);
 
 
         TextInputLayout secondaryPhoneLayout = (TextInputLayout) view.findViewById(R.id.secondaryPhoneInputLayout);
@@ -208,73 +230,84 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
             secondaryPhone.addTextChangedListener(getValidateEmptyTextWatcher(secondaryPhoneLayout));
         }else{
             secondaryPhone.addTextChangedListener(clearValidationErrorsOnTextChange(secondaryPhoneLayout));
+            if(personalInfoSection.getProperties().getSecondaryPhoneNumber().isDisplayed() &&
+                    StringUtil.isNullOrEmpty(demographicPayload.getPersonalDetails().getSecondaryPhoneNumber())){
+                View secondaryPhoneOptional = view.findViewById(R.id.secondaryPhoneOptional);
+                secondaryPhoneOptional.setVisibility(View.VISIBLE);
+            }
         }
 
 
         View secondaryPhoneTypeLayout = view.findViewById(R.id.secondaryPhoneTypeDemographicsLayout);
         TextView chooseSecondaryPhoneType = (TextView) view.findViewById(R.id.chooseSecondaryPhoneType);
+        View secondaryPhoneTypeOptional = view.findViewById(R.id.secondaryPhoneTypeOptional);
         setVisibility(secondaryPhoneTypeLayout, personalInfoSection.getProperties().getSecondaryPhoneNumberType().isDisplayed());
         chooseSecondaryPhoneType.setOnClickListener(
                 getSelectOptionsListener(personalInfoSection.getProperties().getSecondaryPhoneNumberType().getOptions(),
-                        getDefaultOnOptionsSelectedListener(chooseSecondaryPhoneType, selectedSecondaryPhoneType),
+                        getDefaultOnOptionsSelectedListener(chooseSecondaryPhoneType, selectedSecondaryPhoneType, secondaryPhoneTypeOptional),
                         Label.getLabel("demographics_secondary_phone_type")));
         String secondaryPhoneType = demographicPayload.getPersonalDetails().getSecondaryPhoneNumberType();
-        initSelectableInput(chooseSecondaryPhoneType, selectedSecondaryPhoneType, secondaryPhoneType);
+        initSelectableInput(chooseSecondaryPhoneType, selectedSecondaryPhoneType, secondaryPhoneType, secondaryPhoneTypeOptional);
 
 
         View preferredContactMethodLayout = view.findViewById(R.id.preferredContactMethodDemographicsLayout);
         TextView choosePreferredContactMethod = (TextView) view.findViewById(R.id.choosePreferredContactMethod);
+        View contactMethodOptional = view.findViewById(R.id.contactMethodOptional);
         setVisibility(preferredContactMethodLayout, personalInfoSection.getProperties().getPreferredContact().isDisplayed());
         choosePreferredContactMethod.setOnClickListener(
                 getSelectOptionsListener(personalInfoSection.getProperties().getPreferredContact().getOptions(),
-                        getDefaultOnOptionsSelectedListener(choosePreferredContactMethod, selectedContactMethod),
+                        getDefaultOnOptionsSelectedListener(choosePreferredContactMethod, selectedContactMethod, contactMethodOptional),
                         Label.getLabel("demographics_preferred_contact_method")));
         String preferredContactMethod = demographicPayload.getPersonalDetails().getPreferredContact();
-        initSelectableInput(choosePreferredContactMethod, selectedContactMethod, preferredContactMethod);
+        initSelectableInput(choosePreferredContactMethod, selectedContactMethod, preferredContactMethod, contactMethodOptional);
 
 
         View maritalStatusLayout = view.findViewById(R.id.maritalStatusDemographicsLayout);
         TextView chooseMaritalStatus = (TextView) view.findViewById(R.id.chooseMaritalStatus);
+        View maritalStatusOptional = view.findViewById(R.id.maritalStatusOptional);
         setVisibility(maritalStatusLayout, personalInfoSection.getProperties().getMaritalStatus().isDisplayed());
         chooseMaritalStatus.setOnClickListener(
                 getSelectOptionsListener(personalInfoSection.getProperties().getMaritalStatus().getOptions(),
-                        getDefaultOnOptionsSelectedListener(chooseMaritalStatus, selectedMaritalStatus),
+                        getDefaultOnOptionsSelectedListener(chooseMaritalStatus, selectedMaritalStatus, maritalStatusOptional),
                         Label.getLabel("demographics_marital_status")));
         String maritalStatus = demographicPayload.getPersonalDetails().getMaritalStatus();
-        initSelectableInput(chooseMaritalStatus, selectedMaritalStatus, maritalStatus);
+        initSelectableInput(chooseMaritalStatus, selectedMaritalStatus, maritalStatus, maritalStatusOptional);
 
 
         View employmentStatusLayout = view.findViewById(R.id.employmentStatusDemographicsLayout);
         TextView chooseEmploymentStatus = (TextView) view.findViewById(R.id.chooseEmploymentStatus);
+        View employmentStatusOptional = view.findViewById(R.id.employmentStatusOptional);
         setVisibility(employmentStatusLayout, personalInfoSection.getProperties().getEmploymentStatus().isDisplayed());
         chooseEmploymentStatus.setOnClickListener(
                 getSelectOptionsListener(personalInfoSection.getProperties().getEmploymentStatus().getOptions(),
-                        getDefaultOnOptionsSelectedListener(chooseEmploymentStatus, selectedEmploymentStatus),
+                        getDefaultOnOptionsSelectedListener(chooseEmploymentStatus, selectedEmploymentStatus, employmentStatusOptional),
                         Label.getLabel("demographics_employment_status")));
         String employmentStatus = demographicPayload.getPersonalDetails().getEmploymentStatus();
-        initSelectableInput(chooseEmploymentStatus, selectedEmploymentStatus, employmentStatus);
+        initSelectableInput(chooseEmploymentStatus, selectedEmploymentStatus, employmentStatus, employmentStatusOptional);
 
 
         View emergencyContactRelationshipLayout = view.findViewById(R.id.emergencyContactRelationshipDemographicsLayout);
         TextView chooseEmergencyContactRelationship = (TextView) view.findViewById(R.id.chooseEmergencyContactRelationship);
+        View emergencyContactRelationshipOptional = view.findViewById(R.id.emergencyContactRelationshipOptional);
         setVisibility(emergencyContactRelationshipLayout, personalInfoSection.getProperties().getEmergencyContactRelationship().isDisplayed());
         chooseEmergencyContactRelationship.setOnClickListener(
                 getSelectOptionsListener(personalInfoSection.getProperties().getEmergencyContactRelationship().getOptions(),
-                        getDefaultOnOptionsSelectedListener(chooseEmergencyContactRelationship, selectedEmergencyContactRelationship),
+                        getDefaultOnOptionsSelectedListener(chooseEmergencyContactRelationship, selectedEmergencyContactRelationship, emergencyContactRelationshipOptional),
                         Label.getLabel("demographics_emergency_contact_relationship")));
         String emergencyContactRelationship = demographicPayload.getPersonalDetails().getEmergencyContactRelationship();
-        initSelectableInput(chooseEmergencyContactRelationship, selectedEmergencyContactRelationship, emergencyContactRelationship);
+        initSelectableInput(chooseEmergencyContactRelationship, selectedEmergencyContactRelationship, emergencyContactRelationship, emergencyContactRelationshipOptional);
 
 
         View referralSourceLayout = view.findViewById(R.id.referralSourceDemographicsLayout);
         TextView chooseReferralSource = (TextView) view.findViewById(R.id.chooseReferralSource);
+        View referralSourceOptional = view.findViewById(R.id.referralSourceOptional);
         setVisibility(referralSourceLayout, personalInfoSection.getProperties().getReferralSource().isDisplayed());
         chooseReferralSource.setOnClickListener(
                 getSelectOptionsListener(personalInfoSection.getProperties().getReferralSource().getOptions(),
-                        getDefaultOnOptionsSelectedListener(chooseReferralSource, selectedReferralSource),
+                        getDefaultOnOptionsSelectedListener(chooseReferralSource, selectedReferralSource, referralSourceOptional),
                         Label.getLabel("demographics_referral_source")));
         String referralSource = demographicPayload.getPersonalDetails().getReferralSource();
-        initSelectableInput(chooseReferralSource, selectedReferralSource, referralSource);
+        initSelectableInput(chooseReferralSource, selectedReferralSource, referralSource, referralSourceOptional);
 
     }
 
@@ -462,8 +495,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
 
 
         EditText secondaryPhoneNumber = (EditText) view.findViewById(R.id.secondaryPhone);
-        String phonePattern = "\\d{3}-\\d{3}-\\d{4}";
-        if(!StringUtil.isNullOrEmpty(secondaryPhoneNumber.getText().toString()) && !ValidationHelper.isValidString(secondaryPhoneNumber.getText().toString().trim(), phonePattern)){
+        if(!StringUtil.isNullOrEmpty(secondaryPhoneNumber.getText().toString()) && !ValidationHelper.isValidString(secondaryPhoneNumber.getText().toString().trim(), ValidationHelper.PHONE_NUMBER_PATTERN)){
             TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.secondaryPhoneInputLayout);
             phoneLayout.setErrorEnabled(true);
             phoneLayout.setError(Label.getLabel("demographics_phone_number_validation_msg"));
@@ -471,8 +503,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
         }
 
         EditText emailAddress = (EditText) view.findViewById(R.id.email);
-        String emailPattern = "^[A-Z0-9a-z\\\\._%+-]+@([A-Za-z0-9-]+\\\\.)+[A-Za-z]{2,4}$";
-        if(!StringUtil.isNullOrEmpty(emailAddress.getText().toString()) && !ValidationHelper.isValidString(emailAddress.getText().toString().trim(), emailPattern)){
+        if(!StringUtil.isNullOrEmpty(emailAddress.getText().toString()) && !ValidationHelper.isValidString(emailAddress.getText().toString().trim(), ValidationHelper.EMAIL_PATTERN)){
             TextInputLayout emailLayout = (TextInputLayout) view.findViewById(R.id.emailInputLayout);
             emailLayout.setErrorEnabled(true);
             emailLayout.setError(Label.getLabel("demographics_email_validation_msg"));

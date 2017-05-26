@@ -18,9 +18,6 @@ public class DemographicsSettingsPayloadDTO {
     @SerializedName("patient_credit_cards")
     @Expose
     private List<DemographicsSettingsCreditCardsPayloadDTO> patientCreditCards = new ArrayList<>();
-    @SerializedName("demographics")
-    @Expose
-    private DemographicsSettingsDemographicsDTO demographics = new DemographicsSettingsDemographicsDTO();
     @SerializedName("current_email")
     @Expose
     private String currentEmail;
@@ -63,24 +60,6 @@ public class DemographicsSettingsPayloadDTO {
 
     public void setDemographicSettingsNotificationDTO(DemographicSettingsNotificationDTO demographicSettingsNotificationDTO) {
         this.demographicSettingsNotificationDTO = demographicSettingsNotificationDTO;
-    }
-
-    /**
-     * Gets demographics.
-     *
-     * @return the demographics
-     */
-    public DemographicsSettingsDemographicsDTO getDemographics() {
-        return demographics;
-    }
-
-    /**
-     * Sets demographics.
-     *
-     * @param demographics the demographics
-     */
-    public void setDemographics(DemographicsSettingsDemographicsDTO demographics) {
-        this.demographics = demographics;
     }
 
     /**

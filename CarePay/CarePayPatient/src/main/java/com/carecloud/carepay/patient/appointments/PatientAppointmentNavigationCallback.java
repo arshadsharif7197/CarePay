@@ -1,7 +1,7 @@
 package com.carecloud.carepay.patient.appointments;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
+import com.carecloud.carepaylibray.appointments.interfaces.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 
 /**

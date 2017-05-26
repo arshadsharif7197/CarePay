@@ -190,7 +190,7 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
 
     @Override
     public void onProviderListItemClickListener(int position) {
-        selectVisitType(resources.get(position), scheduleResourcesModel);
+        onProviderSelected(resources.get(position), scheduleResourcesModel);
     }
 
     @Override

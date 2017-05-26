@@ -5,8 +5,8 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
-import com.carecloud.carepaylibray.demographicsettings.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiAccountsDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -66,7 +66,7 @@ public class PaymentsPayloadDTO implements Serializable {
     @SerializedName("merchant_services")
     @Expose
     private List<MerchantServicesDTO> merchantServices = new ArrayList<>();
-    @SerializedName("user_practices")
+    @SerializedName(value = "user_practices", alternate = "practice_information")
     @Expose
     private List<UserPracticeDTO> userPractices = new ArrayList<>();
     @SerializedName("payment_post_model")

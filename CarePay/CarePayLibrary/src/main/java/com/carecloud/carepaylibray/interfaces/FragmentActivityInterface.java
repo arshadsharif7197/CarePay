@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.interfaces;
 
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 
@@ -10,11 +11,15 @@ import android.support.v7.widget.Toolbar;
 public interface FragmentActivityInterface extends DTOInterface {
     void replaceFragment(Fragment fragment, boolean addToBackStack);
 
+    void addFragment(Fragment fragment, boolean addToBackStack);
+
     void showErrorToast(String exceptionMessage);
 
     void setToolbar(Toolbar toolbar);
 
-    void showSuccessToast(String forgot_password_confirmation_success_message);
+    void showSuccessToast(String successMessage);
 
-    void setActionBarTitle(String forgot_password_confirmation_screen_title);
+    void setActionBarTitle(String title);
+
+    void displayDialogFragment(DialogFragment fragment, boolean addToBackStack);
 }

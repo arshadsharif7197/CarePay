@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/payment_method_layout_checkbox_margin"
+    android:gravity="center_vertical">
+
+    <ImageView
+        android:layout_width="@dimen/dimen_36dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/credit_card_image"
+        android:src="@drawable/payment_credit_card_button_selector"
+        android:scaleType="centerInside"
+        android:layout_gravity="center_vertical"/>
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:id="@+id/credit_card_text"
+        android:gravity="start"
+        android:textSize="@dimen/text_size_22"
+        android:textColor="@color/radio_button_selector"
+        android:padding="@dimen/payment_method_layout_checkbox_margin"
+        app:customAssetFont="proxima_nova_regular"/>
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/credit_card_default"
+        android:background="@drawable/button_rounded_gray_background"
+        android:text="Default"
+        android:textSize="@dimen/text_size_13"
+        android:paddingTop="@dimen/dimen_5dp"
+        android:paddingBottom="@dimen/dimen_5dp"
+        android:paddingStart="@dimen/dimen_10dp"
+        android:paddingEnd="@dimen/dimen_10dp"
+        app:customAssetFont="proxima_nova_regular"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/credit_card_check"
+        android:src="@drawable/radio_button_selector"
+        android:padding="@dimen/payment_method_layout_checkbox_margin"/>
+
+</LinearLayout>

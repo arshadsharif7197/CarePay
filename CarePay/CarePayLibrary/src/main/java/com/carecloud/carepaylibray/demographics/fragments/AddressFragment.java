@@ -172,11 +172,11 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         setVisibility(stateInputLayout, addressSection.getProperties().getState().isDisplayed());
         stateEditText.setOnClickListener(
                 getSelectOptionsListener(addressSection.getProperties().getState().getOptions(),
-                getDefaultOnOptionsSelectedListener(stateEditText, selectedState),
+                getDefaultOnOptionsSelectedListener(stateEditText, selectedState, null),
                 Label.getLabel("demographics_documents_title_select_state")));
 
         String state = demographicPayload.getAddress().getState();
-        initSelectableInput(stateEditText, selectedState, state);
+        initSelectableInput(stateEditText, selectedState, state, null);
         stateEditText.getOnFocusChangeListener().onFocusChange(stateEditText, true);
     }
 
@@ -284,8 +284,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         }
 
         EditText zipCode = (EditText) view.findViewById(R.id.zipCodeId);
-        String pattern = "^[0-9]{5}(?:-[0-9]{4})?$";
-        if(!StringUtil.isNullOrEmpty(zipCode.getText().toString()) && !ValidationHelper.isValidString(zipCode.getText().toString(), pattern)){
+        if(!StringUtil.isNullOrEmpty(zipCode.getText().toString()) && !ValidationHelper.isValidString(zipCode.getText().toString(), ValidationHelper.ZIP_CODE_PATTERN)){
             TextInputLayout zipLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
             zipLayout.setErrorEnabled(true);
             zipLayout.setError(Label.getLabel("demographics_zip_code_validation_msg"));

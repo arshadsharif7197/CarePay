@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
@@ -13,6 +14,7 @@ import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPr
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.notifications.fragments.NotificationFragment;
 import com.carecloud.carepay.patient.notifications.models.NotificationItem;
+import com.carecloud.carepay.patient.notifications.models.NotificationStatus;
 import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -24,6 +26,11 @@ import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by lmenendez on 2/8/17
  */
@@ -31,6 +38,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 public class NotificationActivity extends MenuPatientActivity implements NotificationFragment.NotificationCallback, AppointmentViewHandler {
 
     private PatientAppointmentPresenter appointmentPresenter;
+    private NotificationsDTO notificationsDTO;
 
     @Override
     public void onCreate(Bundle icicle){
@@ -42,7 +50,7 @@ public class NotificationActivity extends MenuPatientActivity implements Notific
         appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0)
                 .findViewById(com.carecloud.carepaylibrary.R.id.appointmentsDrawerIdTextView);
 
-        NotificationsDTO notificationsDTO = getConvertedDTO(NotificationsDTO.class);
+        notificationsDTO = getConvertedDTO(NotificationsDTO.class);
         NotificationFragment notificationFragment = NotificationFragment.newInstance(notificationsDTO);
         navigateToFragment(notificationFragment, false);
 
@@ -69,6 +77,9 @@ public class NotificationActivity extends MenuPatientActivity implements Notific
                 AppointmentDTO appointment = notificationItem.getPayload().getAppointment();
                 if(appointmentPresenter !=null){
                     appointmentPresenter.displayAppointmentDetails(appointment);
+                    if(notificationItem.getPayload().getReadStatus()== NotificationStatus.unread) {
+                        markNotificationRead(notificationItem);
+                    }
                 }else{
                     initPresenter(appointment);
                 }
@@ -135,4 +146,32 @@ public class NotificationActivity extends MenuPatientActivity implements Notific
         });
     }
 
+
+    private void markNotificationRead(NotificationItem notificationItem){
+        TransitionDTO readNotifications = notificationsDTO.getMetadata().getTransitions().getReadNotifications();
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("notification_id", notificationItem.getPayload().getNotificationId());
+        JSONObject payload = new JSONObject(properties);
+
+        getWorkflowServiceHelper().execute(readNotifications, readNotificationsCallback, payload.toString());
+
+    }
+
+    private WorkflowServiceCallback readNotificationsCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            Log.d(NotificationActivity.class.getName(), "Notification marked as read");
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            Log.d(NotificationActivity.class.getName(), "Notification NOT marked as read");
+        }
+    };
 }

@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 
 import com.carecloud.carepay.practice.library.R;
@@ -13,7 +12,6 @@ import com.carecloud.carepay.practice.library.payments.CloverPaymentAdapter;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
-import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -23,8 +21,6 @@ import com.google.gson.Gson;
  * A simple {@link Fragment} subclass.
  */
 public class PracticePaymentMethodFragment extends PaymentMethodFragment {
-
-    protected double amountToMakePayment;
 
     /**
      *
@@ -48,15 +44,6 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
     }
 
     @Override
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
-        Bundle bundle = getArguments();
-        if(bundle!=null) {
-            amountToMakePayment = bundle.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_payment_method_practice, container, false);
     }
@@ -65,13 +52,6 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         setSwipeCardNowVisibility(view);
-        paymentMethodList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                PaymentsMethodsDTO paymentMethod = paymentMethodsList.get(position);
-                handlePaymentButton(paymentMethod, amountToMakePayment);
-            }
-        });
     }
 
     @Override

@@ -6,7 +6,7 @@
     android:id="@+id/activity_how_to_check_in"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/screen_background"
+    android:background="?practiceBackgroundColor"
     android:orientation="vertical"
     android:paddingBottom="@dimen/dimen_21dp"
     android:paddingLeft="@dimen/dimen_20dp"

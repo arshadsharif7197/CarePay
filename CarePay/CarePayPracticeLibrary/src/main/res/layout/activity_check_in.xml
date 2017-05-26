@@ -6,14 +6,14 @@
     android:id="@+id/activity_checked_in"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/screen_background"
+    android:background="?practiceBackgroundColor"
     android:orientation="vertical"
     tools:ignore="MissingPrefix">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
+        android:background="?practiceActionBarColor"
         android:padding="4dp">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -27,11 +27,11 @@
             android:gravity="center_vertical"
             android:includeFontPadding="false"
             android:paddingEnd="0dp"
-            breeze:textKey="go_back"
             android:paddingStart="@dimen/dimen_10dp"
             android:textColor="@color/white"
             android:textSize="20sp"
-            app:customAssetFont="gotham_rounded_medium" />
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="go_back" />
 
         <LinearLayout
             android:id="@+id/filterLayout"
@@ -59,11 +59,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                breeze:textKey="practice_checkin_filter"
                 android:includeFontPadding="false"
                 android:textColor="@color/white"
                 android:textSize="20sp"
-                app:customAssetFont="proxima_nova_regular" />
+                app:customAssetFont="proxima_nova_regular"
+                breeze:textKey="practice_checkin_filter" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/filterOnTextView"
@@ -72,7 +72,6 @@
                 android:background="@drawable/bg_green_overlay"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                breeze:textKey="practice_checkin_filter_On"
                 android:paddingBottom="6dp"
                 android:paddingEnd="15dp"
                 android:paddingStart="15dp"
@@ -80,7 +79,8 @@
                 android:textColor="@color/filter_on"
                 android:textSize="18sp"
                 android:visibility="gone"
-                app:customAssetFont="proxima_nova_extra_bold" />
+                app:customAssetFont="proxima_nova_extra_bold"
+                breeze:textKey="practice_checkin_filter_On" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -114,11 +114,11 @@
                     android:id="@+id/checkingInTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    breeze:textKey="practice_checkin_detail_dialog_checking_in"
-                    android:textSize="20sp"
                     android:textAllCaps="true"
-                    app:customAssetFont="gotham_rounded_medium" />
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    app:customAssetFont="gotham_rounded_medium"
+                    breeze:textKey="practice_checkin_detail_dialog_checking_in" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/checkingInCounterTextview"
@@ -127,9 +127,9 @@
                     android:layout_marginStart="10dp"
                     android:background="@drawable/queue_counter_noborder_background"
                     android:gravity="center"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
                     android:text="0"
+                    android:textColor="@color/practice_mode_counter_text"
+                    android:textSize="16sp"
                     app:customAssetFont="gotham_rounded_bold" />
             </LinearLayout>
 
@@ -157,11 +157,11 @@
                     android:id="@+id/waitingRoomTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    breeze:textKey="practice_checkin_waiting_room"
                     android:textAllCaps="true"
+                    android:textColor="@color/white"
                     android:textSize="20sp"
-                    app:customAssetFont="gotham_rounded_medium" />
+                    app:customAssetFont="gotham_rounded_medium"
+                    breeze:textKey="practice_checkin_waiting_room" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/waitingCounterTextview"
@@ -171,7 +171,7 @@
                     android:background="@drawable/queue_counter_noborder_background"
                     android:gravity="center"
                     android:text="0"
-                    android:textColor="@color/white"
+                    android:textColor="@color/practice_mode_counter_text"
                     android:textSize="16sp"
                     app:customAssetFont="gotham_rounded_bold" />
             </LinearLayout>
@@ -199,12 +199,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        breeze:textKey="practice_checkin_drop_here_label"
                         android:drawablePadding="@dimen/dimen_10dp"
                         android:drawableTop="@drawable/icn_drop_here"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_22sp"
-                        app:customAssetFont="gotham_rounded_medium" />
+                        app:customAssetFont="gotham_rounded_medium"
+                        breeze:textKey="practice_checkin_drop_here_label" />
                 </RelativeLayout>
             </RelativeLayout>
         </LinearLayout>

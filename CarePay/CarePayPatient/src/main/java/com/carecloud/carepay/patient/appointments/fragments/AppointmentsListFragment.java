@@ -71,6 +71,7 @@ public class AppointmentsListFragment extends BaseAppointmentFragment implements
         if(callback == null){
             attachCallback(getContext());
         }
+        doRefreshAction();
     }
 
     @Override
@@ -143,6 +144,9 @@ public class AppointmentsListFragment extends BaseAppointmentFragment implements
     }
 
     private void loadAppointmentList() {
+        if (appointmentsItems != null) {
+            appointmentsItems.clear();
+        }
 
         // Initialize views
         init();
@@ -201,10 +205,6 @@ public class AppointmentsListFragment extends BaseAppointmentFragment implements
     }
 
     private void doRefreshAction(){
-        if (appointmentsItems != null) {
-            appointmentsItems.clear();
-        }
-
         // API call to fetch latest appointments
         TransitionDTO transitionDTO = appointmentInfo.getMetadata().getLinks().getAppointments();
         getWorkflowServiceHelper().execute(transitionDTO, pageRefreshCallback);

@@ -20,24 +20,7 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/nextButton"
             android:choiceMode="singleChoice"
-            android:elevation="17dp"
-            android:padding="@dimen/payment_method_parent_layout_padding"
             android:visibility="visible" />
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/nextButton"
-            android:scrollbars="none"
-            android:visibility="gone">
-
-            <RadioGroup
-                android:id="@+id/chooseCreditCardRadioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="vertical" />
-        </ScrollView>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/addNewCardButton"

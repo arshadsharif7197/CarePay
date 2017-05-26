@@ -1,0 +1,187 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.carecloud.carepay.patient.checkout.NextAppointmentFragment">
+
+    <include
+        android:id="@+id/toolbar_layout"
+        layout="@layout/toolbar_responsibility" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        android:id="@+id/scheduleLaterButton"
+        style="@style/SigninNewAccountButtonStyle"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        app:customAssetFont="gotham_rounded_bold"
+        breeze:textKey="schedule_appointment_later_button_label"
+        tools:text="SCHEDULE LATER" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        android:id="@+id/scheduleAppointmentButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/scheduleLaterButton"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:background="@drawable/button_selector"
+        android:enabled="false"
+        android:textColor="@color/white"
+        app:customAssetFont="gotham_rounded_bold"
+        breeze:textKey="schedule_appointment_button_label"
+        tools:text="SCHEDULE APPOINMENT" />
+
+    <RelativeLayout
+        android:id="@+id/providerContainer"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_160dp"
+        android:layout_below="@id/toolbar_layout"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginTop="30dp">
+
+        <View
+            android:id="@+id/providerMessageHeader"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_10dp"
+            android:layout_marginTop="@dimen/dimen_40dp"
+            android:background="@drawable/provider_message_header_selector" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_110dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/round_bottom_dark_blue_background"
+            android:gravity="bottom"
+            android:orientation="vertical">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/providerMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:layout_marginEnd="@dimen/dimen_10dp"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:textColor="@color/white"
+                app:customAssetFont="proxima_nova_regular"
+                breeze:textKey="next_appointment_default_provider_message" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/providerPicImageView"
+            android:layout_width="@dimen/dimen_80dp"
+            android:layout_height="@dimen/dimen_80dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/icn_placeholder_user_profile_png" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/providerInitials"
+            android:layout_width="@dimen/dimen_80dp"
+            android:layout_height="@dimen/dimen_80dp"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="start"
+            android:background="@drawable/round_list_tv"
+            android:gravity="center_vertical|center_horizontal"
+            android:src="@drawable/icn_placeholder_user_profile_png"
+            android:textColor="@color/lightSlateGray"
+            android:textSize="@dimen/apt_dl_text_big"
+            app:customAssetFont="gotham_rounded_medium" />
+    </RelativeLayout>
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/visitTypeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/providerContainer"
+        android:layout_marginBottom="@dimen/dimen_10dp"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:paddingEnd="@dimen/dimen_10dp"
+        android:paddingStart="@dimen/dimen_10dp"
+        android:textColor="@color/textview_default_textcolor"
+        app:customAssetFont="proxima_nova_regular"
+        breeze:textKey="next_appointment_choose_visit_type_label"
+        tools:text="Choose Visit Type" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/visitTypeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/providerContainer"
+        android:layout_marginBottom="@dimen/dimen_10dp"
+        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_toEndOf="@id/visitTypeLabel"
+        android:ellipsize="end"
+        android:gravity="end"
+        android:maxLines="1"
+        android:paddingEnd="@dimen/dimen_10dp"
+        android:paddingStart="@dimen/dimen_10dp"
+        android:textColor="@color/colorPrimary"
+        app:customAssetFont="proxima_nova_regular"
+        app:paddingEnd="@dimen/dimen_10dp"
+        breeze:textKey="next_appointment_choose_visit_type_hint"
+        tools:text="Follow-Up" />
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:layout_below="@id/visitTypeLabel"
+        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:background="@color/light_gray" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/visitTimeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/separator"
+        android:layout_marginBottom="@dimen/dimen_10dp"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:paddingEnd="@dimen/dimen_10dp"
+        android:paddingStart="@dimen/dimen_10dp"
+        android:textColor="@color/textview_default_textcolor"
+        app:customAssetFont="proxima_nova_regular"
+        breeze:textKey="next_appointment_choose_when_label"
+        tools:text="Choose When" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/visitTimeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/separator"
+        android:layout_marginBottom="@dimen/dimen_10dp"
+        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:enabled="false"
+        android:paddingEnd="@dimen/dimen_10dp"
+        android:paddingStart="@dimen/dimen_10dp"
+        android:textColor="@color/colorPrimary"
+        app:customAssetFont="proxima_nova_regular"
+        app:paddingEnd="@dimen/dimen_10dp"
+        breeze:textKey="next_appointment_choose_when_hint"
+        tools:text="Pick a Date" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:layout_below="@id/visitTimeLabel"
+        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:background="@color/light_gray" />
+
+
+</RelativeLayout>

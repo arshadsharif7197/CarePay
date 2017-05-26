@@ -2,17 +2,16 @@
 <resources>
     <color name="colorPrimary">#5BC5D0</color>
     <color name="colorPrimaryDark">#489DA6</color>
-    <color name="left_panel_color">#4EAAB3</color>
+    <color name="colorAccent">#acacac</color>
 
+    <color name="left_panel_color">#4EAAB3</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="transparent_apt">#00000000</color>
 
-    <color name="colorAccent">#acacac</color>
     <color name="lightSlateGray">#78909C</color>
     <color name="charcoal">#ff37474f</color>
     <color name="cadet_gray">#ff90a4ae</color>
-    <!--<color name="rich_electric_blue">#ff009bde</color>-->
     <color name="light_gray">#CFD8DC</color>
     <color name="light_gray_trans">#4BCFD8DC</color>
 
@@ -24,16 +23,12 @@
     <color name="light_blue_subtitle">#9FE5ED</color>
 
     <color name="textview_default_textcolor">#37474F</color>
-    <!--<color name="bright_cerulean">#ff1f9bde</color>-->
     <color name="dark_gray">#ff9fa7ab</color>
     <color name="munsell">#ffeceff1</color>
     <color name="payne_gray">#FF546E7A</color>
-    <!--<color name="darkblue">#176D9C</color>-->
 
     <color name="overlay_green">#7ED321</color>
     <color name="light_gray_dialog">#eceff1</color>
-
-    <!--<color name="button_default">#329AD6</color>-->
     <color name="emerald">#5BD063</color>
     <color name="harvard_crimson">#d0021b</color>
     <color name="paint_color_thumbnail">#BAB399</color>
@@ -44,9 +39,6 @@
     <color name="toolbar_items">#CBCBCB</color>
     <color name="alert">#AC1600</color>
     <color name="success">#37A51C</color>
-    <!--<color name="button_pressed">#2A5C91</color>-->
-    <!--<color name="text_border_selected">#4EA9DC</color>-->
-    <!--<color name="curious_blue">#0092d1</color>-->
     <color name="warning">#E94700</color>
     <color name="grey_100">#F5F7F7</color>
     <color name="grey_300">#8D9496</color>
@@ -92,6 +84,9 @@
 
     <color name="transparent_20">#33ffffff</color>
     <color name="optional_gray">#90a4ae</color>
-    <color name="confirm_pin_sub_title">#9FE5ED</color>
+    <color name="soft_sky">#9FE5ED</color>
+    <color name="confirm_pin_sub_title">@color/soft_sky</color>
     <color name="screen_gradient">#41949D</color>
+
+    <color name="greenProviderMessageHeader">#5BD064</color>
 </resources>

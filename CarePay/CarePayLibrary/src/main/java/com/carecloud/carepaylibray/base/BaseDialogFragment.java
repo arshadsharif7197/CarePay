@@ -5,8 +5,6 @@ import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -32,7 +30,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     private DialogInterface.OnCancelListener onCancelListener;
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         isPracticeAppPatientMode = ((ISession) getActivity()).getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
     }
@@ -51,43 +49,44 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     }
 
     @Override
-    public void onDismiss(DialogInterface dialogInterface){
+    public void onDismiss(DialogInterface dialogInterface) {
         super.onDismiss(dialogInterface);
-        if(onDismissListener!=null){
+        if (onDismissListener != null) {
             onDismissListener.onDismiss(dialogInterface);
         }
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(dialog!=null) {
+        if (dialog != null) {
             View decorView = dialog.getWindow().getDecorView();
             hideKeyboardOnViewTouch(decorView);
         }
     }
 
     @Override
-    public int getTheme(){
+    public int getTheme() {
         return R.style.Base_Dialog_MinWidth;
     }
 
     /**
      * Set a listener when the dialog is dimissed. Will be ignored if fragment is not shown as a dialog
+     *
      * @param dismissListener listener
      */
-    public void setOnDismissListener(Dialog.OnDismissListener dismissListener){
+    public void setOnDismissListener(Dialog.OnDismissListener dismissListener) {
         this.onDismissListener = dismissListener;
     }
 
     /**
      * Set a listener when the dialog is canceled. Will be ignored if fragment is not shown as a dialog
+     *
      * @param cancelListener listener
      */
-    public void setOnCancelListener(Dialog.OnCancelListener cancelListener){
+    public void setOnCancelListener(Dialog.OnCancelListener cancelListener) {
         this.onCancelListener = cancelListener;
     }
-
 
 
     public boolean enableViewById(int id) {
@@ -141,15 +140,15 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         return rootView.findViewById(id);
     }
 
-    protected void hideKeyboardOnViewTouch(View view){
-        if(isPracticeAppPatientMode && view!=null){
+    protected void hideKeyboardOnViewTouch(View view) {
+        if (isPracticeAppPatientMode && view != null) {
             view.setSoundEffectsEnabled(false);
             view.setFocusable(true);
             view.setFocusableInTouchMode(true);
             view.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent event) {
-                    if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
                         SystemUtil.hideSoftKeyboard(getContext(), view);
                     }
                     return false;
@@ -211,26 +210,11 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         }
     }
 
-    protected void hideDefaultActionBar(){
-        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-        if(actionBar!=null){
-            actionBar.hide();
-        }
-    }
-
-    protected void showDefaultActionBar() {
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.show();
-        }
-    }
-
-
     /**
      * Display Previously hidden fragment
      */
-    public void showDialog(){
-        if(getDialog()!=null){
+    public void showDialog() {
+        if (getDialog() != null) {
             getDialog().show();
         }
     }
@@ -238,8 +222,8 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     /**
      * hide dialog fragment without dismissing
      */
-    public void hideDialog(){
-        if(getDialog()!=null){
+    public void hideDialog() {
+        if (getDialog() != null) {
             getDialog().hide();
         }
     }

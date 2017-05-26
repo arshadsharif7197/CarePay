@@ -168,6 +168,10 @@ public class ConfirmationResetPasswordFragment extends BaseFragment {
             // First create an intent with only the package name of the first registered email app
             // and build a picked based on it
             Intent intentChooser = pm.getLaunchIntentForPackage(ri.activityInfo.packageName);
+            if(intentChooser == null){
+                showErrorNotification("No Mail Application Available");
+                return;
+            }
             Intent openInChooser =
                     Intent.createChooser(intentChooser, Label.getLabel("forgot_password_confirmation_launch_mail_dialog_button"));
 

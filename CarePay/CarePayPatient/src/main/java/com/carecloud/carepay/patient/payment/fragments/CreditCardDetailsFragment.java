@@ -1,12 +1,11 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
+import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -30,6 +29,7 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -41,105 +41,116 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A simple {@link Fragment} subclass
  */
-public class SettingsCreditCardDetailsFragment extends BaseFragment {
+public class CreditCardDetailsFragment extends BaseFragment {
 
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
     private DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO = null;
-    private static final String TAG = SettingsCreditCardDetailsFragment.class.getName();
+    private static final String TAG = CreditCardDetailsFragment.class.getName();
 
-    public interface IOnCreditCardOperationSuccess {
-        void onCreditCardOperation(DemographicsSettingsDTO demographicsSettingsDTO);
+    private DemographicsSettingsFragmentListener callback;
+
+
+    /**
+     * Instantiate new CreditCardDetailsFragment
+     * @param creditCardsPayloadDTO creditCard info
+     * @return new fragment
+     */
+    public static CreditCardDetailsFragment newInstance(DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO){
+        Bundle bundle = new Bundle();
+        Gson gson = new Gson();
+        String creditCardsPayloadDTOString = gson.toJson(creditCardsPayloadDTO);
+        bundle.putString(CarePayConstants.CREDIT_CARD_BUNDLE, creditCardsPayloadDTOString);
+
+        CreditCardDetailsFragment creditCardDetailsFragment = new CreditCardDetailsFragment();
+        creditCardDetailsFragment.setArguments(bundle);
+        return creditCardDetailsFragment;
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            callback = (DemographicsSettingsFragmentListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement SettingsCreditCardListFragmentListener");
+        }
+
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            Gson gson = new Gson();
+            demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
+
+            String demographicsSettingsDTOString = arguments.getString(CarePayConstants.CREDIT_CARD_BUNDLE);
+            creditCardsPayloadDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsCreditCardsPayloadDTO.class);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            Gson gson = new Gson();
-            String demographicsSettingsDTOString = arguments.getString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE);
-            demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
-
-            demographicsSettingsDTOString = arguments.getString(CarePayConstants.CREDIT_CARD_BUNDLE);
-            creditCardsPayloadDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsCreditCardsPayloadDTO.class);
-        }
-
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_credit_card_details, container, false);
+        return inflater.inflate(R.layout.fragment_credit_card_details, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle icicle){
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
-        title.setText(StringUtil.getFormattedCardNumber(creditCardsPayloadDTO.getPayload()
-                .getCardType(), creditCardsPayloadDTO.getPayload().getCardNumber()));
-        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
+        title.setText(StringUtil.getFormattedCardNumber(
+                creditCardsPayloadDTO.getPayload().getCardType(),
+                creditCardsPayloadDTO.getPayload().getCardNumber()));
         toolbar.setTitle("");
-
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(),
-                R.drawable.icn_nav_back));
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.icn_nav_back);
+        callback.setToolbar(toolbar);
 
         initializeViews(view);
-        return view;
+
     }
 
     private void initializeViews(View view) {
 
-        Button setAsDefaultButton = (Button) view.findViewById(R.id.setAsDefaultButton);
-        setAsDefaultButton.setOnClickListener(setAsDefaultButtonListener);
-        setAsDefaultButton.setText(Label.getLabel("setting_set_as_default"));
+        if (demographicsSettingsDTO != null && creditCardsPayloadDTO!=null) {
+            CarePayTextView nameOnCardValue = (CarePayTextView) view.findViewById(R.id.nameOnCardValue);
+            nameOnCardValue.setText(creditCardsPayloadDTO.getPayload().getNameOnCard());
 
-        if (demographicsSettingsDTO != null) {
-            try {
-                CarePayTextView nameOnCardLabel = (CarePayTextView) view.findViewById(R.id.nameOnCardLabel);
-                CarePayTextView nameOnCardValue = (CarePayTextView) view.findViewById(R.id.nameOnCardValue);
-                nameOnCardLabel.setText(Label.getLabel("credit_card_name_label"));
-                nameOnCardValue.setText(creditCardsPayloadDTO.getPayload().getNameOnCard());
+            CarePayTextView cardNumberValue = (CarePayTextView) view.findViewById(R.id.cardNumberValue);
+            cardNumberValue.setText(getMaskedCardNumber(creditCardsPayloadDTO.getPayload().getCardNumber(), creditCardsPayloadDTO.getPayload().getCardType()));
 
-                CarePayTextView cardNumberLabel = (CarePayTextView) view.findViewById(R.id.cardNumberLabel);
-                CarePayTextView cardNumberValue = (CarePayTextView) view.findViewById(R.id.cardNumberValue);
-                cardNumberLabel.setText(Label.getLabel("credit_card_number_label"));
-                cardNumberValue.setText(creditCardsPayloadDTO.getPayload().getCardNumber());
+            CarePayTextView expirationDateValue = (CarePayTextView) view.findViewById(R.id.expirationDateValue);
+            expirationDateValue.setText(creditCardsPayloadDTO.getPayload().getExpireDt());
 
-                CarePayTextView expirationDateLabel = (CarePayTextView) view.findViewById(R.id.expirationDateLabel);
-                CarePayTextView expirationDateValue = (CarePayTextView) view.findViewById(R.id.expirationDateValue);
-                expirationDateLabel.setText(Label.getLabel("credit_card_expiration_label"));
-                expirationDateValue.setText(creditCardsPayloadDTO.getPayload().getExpireDt());
+            CarePayTextView addressValue = (CarePayTextView) view.findViewById(R.id.addressValue);
 
-                CarePayTextView billingAddressLabel = (CarePayTextView) view.findViewById(R.id.billingAddressLabel);
-                billingAddressLabel.setText(Label.getLabel("credit_card_billing_address_label"));
 
-                CarePayTextView addressLabel = (CarePayTextView) view.findViewById(R.id.addressLabel);
-                CarePayTextView addressValue = (CarePayTextView) view.findViewById(R.id.addressValue);
-                addressLabel.setText(Label.getLabel("setting_address"));
 
-                DemographicAddressPayloadDTO addressDTO = demographicsSettingsDTO.getPayload().getDemographics()
-                        .getPayload().getAddress();
-                addressValue.setText(addressDTO.getAddress1());
+            DemographicAddressPayloadDTO addressDTO = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getAddress();
+            addressValue.setText(addressDTO.getAddress1());
 
-                CarePayTextView zipcodeLabel = (CarePayTextView) view.findViewById(R.id.zipcodeLabel);
-                CarePayTextView zipcodeValue = (CarePayTextView) view.findViewById(R.id.zipcodeValue);
-                zipcodeLabel.setText(Label.getLabel("zipcode_label"));
-                zipcodeValue.setText(addressDTO.getZipcode());
+            CarePayTextView zipcodeValue = (CarePayTextView) view.findViewById(R.id.zipcodeValue);
+            zipcodeValue.setText(addressDTO.getZipcode());
 
-                CarePayTextView cityLabel = (CarePayTextView) view.findViewById(R.id.cityLabel);
-                CarePayTextView cityValue = (CarePayTextView) view.findViewById(R.id.cityValue);
-                cityLabel.setText(Label.getLabel("city_label"));
-                cityValue.setText(addressDTO.getCity());
+            CarePayTextView cityValue = (CarePayTextView) view.findViewById(R.id.cityValue);
+            cityValue.setText(addressDTO.getCity());
 
-                CarePayTextView stateLabel = (CarePayTextView) view.findViewById(R.id.stateLabel);
-                CarePayTextView stateValue = (CarePayTextView) view.findViewById(R.id.stateValue);
-                stateLabel.setText(Label.getLabel("state_label"));
-                stateValue.setText(addressDTO.getState());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            CarePayTextView stateValue = (CarePayTextView) view.findViewById(R.id.stateValue);
+            stateValue.setText(addressDTO.getState());
+
+            Button setAsDefaultButton = (Button) view.findViewById(R.id.setAsDefaultButton);
+            setAsDefaultButton.setOnClickListener(setAsDefaultButtonListener);
+
+            setAsDefaultButton.setEnabled(!creditCardsPayloadDTO.getPayload().isDefault());
         }
     }
 
@@ -159,6 +170,32 @@ public class SettingsCreditCardDetailsFragment extends BaseFragment {
         return super.onOptionsItemSelected(item);
     }
 
+    private String  getMaskedCardNumber(String cardNumber, String cardType){
+        if(cardNumber == null){
+            cardNumber = "";
+        }
+        String formatted = "";
+        int maxlength = maxLength(cardType);
+        for(int i=0; i<maxlength-cardNumber.length(); i++){
+            if(((i == 10 || i == 4)&& maxlength == 15) || ((i%4 == 0) && maxlength == 16)){
+                formatted+=" ";
+            }
+            formatted += "X";
+        }
+        if(maxlength == 16) {
+            formatted += " ";
+        }
+        formatted += cardNumber;
+        return formatted;
+    }
+
+    private int maxLength(String cardType){
+        if(cardType.toLowerCase().contains("amex") || (cardType.toLowerCase().contains("american") && cardType.toLowerCase().contains("express"))){
+            return 15;
+        }
+        return 16;
+    }
+
     private View.OnClickListener setAsDefaultButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -172,7 +209,7 @@ public class SettingsCreditCardDetailsFragment extends BaseFragment {
             setAsDefaultPayload.put("card_id", creditCardsPayloadDTO.getPayload().getHashCreditCardsId());
             setAsDefaultPayload.put("is_default", true);
             String body = setAsDefaultPayload.toString();
-            TransitionDTO transitionDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getTransitions().getUpdateCreditCard();
+            TransitionDTO transitionDTO = demographicsSettingsDTO.getMetadata().getTransitions().getUpdateCreditCard();
             getWorkflowServiceHelper().execute(transitionDTO, creditCardOperationCallback, body, null, getWorkflowServiceHelper().getPreferredLanguageHeader());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -184,7 +221,7 @@ public class SettingsCreditCardDetailsFragment extends BaseFragment {
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("card_id", creditCardsPayloadDTO.getPayload().getHashCreditCardsId());
 
-            TransitionDTO transitionDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getTransitions().getDeleteCreditCard();
+            TransitionDTO transitionDTO = demographicsSettingsDTO.getMetadata().getTransitions().getDeleteCreditCard();
             getWorkflowServiceHelper().execute(transitionDTO, creditCardOperationCallback, queryMap, getWorkflowServiceHelper().getPreferredLanguageHeader());
         } catch (Exception e) {
             e.printStackTrace();
@@ -201,15 +238,11 @@ public class SettingsCreditCardDetailsFragment extends BaseFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             try {
-                Gson gson = new Gson();
-                DemographicsSettingsDTO removeCreditCardResponseDTO = gson.fromJson(workflowDTO.toString(),
-                        DemographicsSettingsDTO.class);
-                demographicsSettingsDTO.getPayload().setPatientCreditCards(removeCreditCardResponseDTO.getPayload()
-                        .getPatientCreditCards());
-                ((DemographicsSettingsActivity) getActivity()).onCreditCardOperation(demographicsSettingsDTO);
+                DemographicsSettingsDTO removeCreditCardResponseDTO = DtoHelper.getConvertedDTO(DemographicsSettingsDTO.class, workflowDTO);
+                demographicsSettingsDTO.getPayload().setPatientCreditCards(removeCreditCardResponseDTO.getPayload().getPatientCreditCards());
+                callback.onCreditCardOperation(demographicsSettingsDTO);
+                SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
                 getActivity().onBackPressed();
-
-                SystemUtil.showSuccessToast(getActivity(), Label.getLabel("settings_saved_success_message"));
             } catch (Exception e) {
                 Log.e(TAG, "Credit Card onPostExecute" + e.getMessage());
                 showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
@@ -226,7 +259,7 @@ public class SettingsCreditCardDetailsFragment extends BaseFragment {
     };
 
     private void showConfirmRemoveDialog() {
-        new AlertDialog.Builder(getActivity())
+        new AlertDialog.Builder(getContext())
                 .setMessage("This credit card will be removed?")
                 .setPositiveButton(Label.getLabel("edit_credit_card_remove_label"), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {

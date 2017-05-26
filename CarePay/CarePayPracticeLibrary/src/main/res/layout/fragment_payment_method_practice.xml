@@ -184,18 +184,6 @@
         android:padding="@dimen/dimen_15dp">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
-            android:id="@+id/createPaymentPlanButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dimen_5dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_blue_border_selector"
-            android:textAllCaps="false"
-            android:textColor="@color/primary_color_enabled_selector"
-            android:textSize="@dimen/text_size_22"
-            app:customAssetFont="gotham_rounded_medium" />
-
-        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/paymentChoiceButton"
             style="@style/PaymentMethodButtonStyle"
             android:layout_width="match_parent"

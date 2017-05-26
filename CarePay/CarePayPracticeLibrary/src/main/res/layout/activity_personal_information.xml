@@ -6,7 +6,7 @@
     android:id="@+id/activity_personal_information"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/screen_background"
+    android:background="?practiceBackgroundColor"
     android:orientation="vertical"
     android:paddingBottom="@dimen/dimen_20dp"
     android:paddingLeft="@dimen/dimen_20dp"

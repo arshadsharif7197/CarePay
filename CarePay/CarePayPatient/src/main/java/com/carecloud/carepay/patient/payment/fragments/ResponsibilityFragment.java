@@ -79,7 +79,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         payLaterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO:Add code to pay later
+                actionCallback.cancelPaymentProcess(paymentDTO);
             }
         });
 

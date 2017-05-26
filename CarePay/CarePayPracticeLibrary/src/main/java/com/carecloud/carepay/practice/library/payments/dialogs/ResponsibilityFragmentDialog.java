@@ -28,6 +28,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
@@ -199,9 +200,18 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
     private void initializePaymentLines(View view, List<PendingBalanceDTO> balances) {
         RecyclerView amountDetails = (RecyclerView) view.findViewById(R.id.payment_responsibility_balance_details);
         amountDetails.setLayoutManager(new LinearLayoutManager(getContext()));
-        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(getContext(), balances, this);
+        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(getContext(), getAllPendingBalancePayloads(balances), this);
         amountDetails.setAdapter(adapter);
     }
+
+    protected List<PendingBalancePayloadDTO> getAllPendingBalancePayloads(List<PendingBalanceDTO> pendingBalances){
+        List<PendingBalancePayloadDTO> pendingBalancePayloads = new ArrayList<>();
+        for(PendingBalanceDTO pendingBalance : pendingBalances){
+            pendingBalancePayloads.addAll(pendingBalance.getPayload());
+        }
+        return pendingBalancePayloads;
+    }
+
 
     private void initializeOwedAmount(List<PendingBalanceDTO> balances) {
         for (PendingBalanceDTO patiencePayload : balances) {

@@ -145,15 +145,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         TextView addAppointmentTextView = (TextView) findViewById(R.id.activity_practice_appointments_add);
         addAppointmentTextView.setOnClickListener(getFindPatientListener(false));
 
-        setTextViewById(R.id.practice_go_back, Label.getLabel("go_back"));
-        setTextViewById(R.id.activity_practice_appointments_change_date_range_label, Label.getLabel("change_date_range_label"));
-        setTextViewById(R.id.activity_practice_appointments_show_all_appointments_label, Label.getLabel("all_appointments_label"));
-        setTextViewById(R.id.practice_patient_count_label, Label.getLabel("today_label"));
-        setTextViewById(R.id.practice_pending_count_label, Label.getLabel("pending_label"));
-        setTextViewById(R.id.practice_filter_label, Label.getLabel("practice_checkin_filter"));
-        findPatientTextView.setText(Label.getLabel("practice_checkin_filter_find_patient"));
-
-
         findViewById(R.id.practice_go_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -445,24 +436,12 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
         }
 
-        String tag = PracticeAppointmentDialog.class.getSimpleName();
-
-        // DialogFragment.show() will take care of adding the fragment
-        // in a transaction.  We also want to remove any currently showing
-        // dialog, so make our own transaction and take care of that here.
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-
         PracticeAppointmentDialog dialog = PracticeAppointmentDialog.newInstance(
                 dialogStyle,
                 appointmentDTO,
                 PracticeModePracticeAppointmentsActivity.this
         );
-        dialog.show(ft, tag);
+        displayDialogFragment(dialog, true);
     }
 
     private void confirmAppointment(AppointmentDTO appointmentDTO) {
@@ -573,7 +552,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     @Override
-    public void onPaymentPlanAction() {
+    public void onPaymentPlanAction(PaymentsModel paymentsModel) {
 
     }
 
@@ -714,6 +693,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            finish();
         }
 
         @Override

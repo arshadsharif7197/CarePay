@@ -2,17 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_splash"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/screen_background"
+    android:background="?practiceBackgroundColor"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context="com.carecloud.carepay.practice.library.splash.SplashActivity">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:src="@drawable/logo_light"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        android:src="@drawable/logo_light" />
 
 </RelativeLayout>

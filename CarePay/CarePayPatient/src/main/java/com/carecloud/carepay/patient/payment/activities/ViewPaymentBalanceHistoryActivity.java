@@ -124,7 +124,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                     case Activity.RESULT_OK:
                         MaskedWallet maskedWallet =
                                 data.getParcelableExtra(WalletConstants.EXTRA_MASKED_WALLET);
-                        Fragment fragment = getSupportFragmentManager().findFragmentByTag(ResponsibilityFragment.class.getSimpleName());
+                        Fragment fragment = getSupportFragmentManager().findFragmentByTag(ResponsibilityFragment.class.getName());
                         if (fragment != null) {
                             getSupportFragmentManager().beginTransaction().remove(fragment).commit();
                         }
@@ -239,7 +239,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void onPaymentPlanAction() {
+    public void onPaymentPlanAction(PaymentsModel paymentsModel) {
         PaymentPlanFragment fragment = new PaymentPlanFragment();
 
         Bundle args = new Bundle();
@@ -274,6 +274,11 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void replaceFragment(Fragment fragment, boolean addToBackStack) {
         replaceFragment(R.id.add_balance_history_frag_holder, fragment, addToBackStack);
+    }
+
+    @Override
+    public void addFragment(Fragment fragment, boolean addToBackStack) {
+        addFragment(R.id.add_balance_history_frag_holder, fragment, addToBackStack);
     }
 
     public void showNoPaymentsLayout() {

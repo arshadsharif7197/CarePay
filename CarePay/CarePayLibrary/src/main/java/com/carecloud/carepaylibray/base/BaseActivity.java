@@ -229,8 +229,10 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
      * @param toolbar the toolbar
      */
     public void setToolbar(Toolbar toolbar) {
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_nav_back));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         if (toolbar != null) {
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -247,8 +249,22 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
      */
     public void replaceFragment(int containerId, Fragment fragment, boolean addToBackStack) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        String tag = fragment.getClass().getCanonicalName();
+        String tag = fragment.getClass().getName();
         transaction.replace(containerId, fragment, tag);
+        if (addToBackStack) {
+            transaction.addToBackStack(tag);
+        }
+        transaction.commit();
+    }
+
+    /**
+     * @param fragment       the new fragment
+     * @param addToBackStack if true, addFragment to back stack
+     */
+    public void addFragment(int containerId, Fragment fragment, boolean addToBackStack) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        String tag = fragment.getClass().getCanonicalName();
+        transaction.add(containerId, fragment, tag);
         if (addToBackStack) {
             transaction.addToBackStack(null);
         }
@@ -257,17 +273,18 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
 
     /**
      * Display a fragment as a Dialog
-     * @param fragment must be a Dialog Fragment
-     * @param addToBackStack optional flag to add this transaction to back stack
+     *
+     * @param fragment       must be a Dialog Fragment
+     * @param addToBackStack optional flag to addFragment this transaction to back stack
      */
-    public void displayDialogFragment(DialogFragment fragment, boolean addToBackStack){
+    public void displayDialogFragment(DialogFragment fragment, boolean addToBackStack) {
         String tag = fragment.getClass().getName();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
         if (prev != null) {
             ft.remove(prev);
         }
-        if(addToBackStack) {
+        if (addToBackStack) {
             ft.addToBackStack(tag);
         }
 

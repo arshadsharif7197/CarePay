@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 
 import com.carecloud.carepaylibray.customcomponents.SwipeViewHolder;
@@ -21,7 +20,7 @@ public class BounceHelper extends ItemTouchHelper.Callback {
 
     private static String TAG = BounceHelper.class.getName();
 
-    private View lastSwipeView = null;
+    private SwipeViewHolder lastSwipeView = null;
 
     private float clearWidth = 0;
     private float maxSwipe = 0;
@@ -45,7 +44,7 @@ public class BounceHelper extends ItemTouchHelper.Callback {
     public void clearLastSwipeView(){
         Log.d(TAG, "Clear Last Swiped: " + (lastSwipeView !=null));
         if(lastSwipeView !=null){
-            lastSwipeView.setLeft(0);
+            lastSwipeView.getSwipeableView().setLeft(0);
         }
     }
 
@@ -54,8 +53,6 @@ public class BounceHelper extends ItemTouchHelper.Callback {
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         Log.d(TAG, "Selection Changed");
         if(viewHolder!=null) {
-            maxSwipe = 0;
-
             clearLastSwipeView();
             if(listener!=null) {
                 listener.startNewSwipe();
@@ -64,11 +61,6 @@ public class BounceHelper extends ItemTouchHelper.Callback {
             SwipeViewHolder swipeViewHolder = (SwipeViewHolder) viewHolder;
 
             View swipeView = swipeViewHolder.getSwipeableView();
-            if(lastSwipeView == null || !lastSwipeView.equals(swipeView)){
-                Log.d(TAG, "Set new last View");
-                lastSwipeView = swipeView;
-            }
-
             getDefaultUIUtil().onSelected(swipeView);
         }
     }
@@ -77,8 +69,11 @@ public class BounceHelper extends ItemTouchHelper.Callback {
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder){
         Log.d(TAG, "Clearing Views");
         SwipeViewHolder swipeViewHolder = (SwipeViewHolder) viewHolder;
-        getDefaultUIUtil().clearView(swipeViewHolder.getSwipeableView());
-
+        if(maxSwipe > clearWidth) {
+            lastSwipeView = swipeViewHolder;
+        }
+        maxSwipe = 0;
+        bounceBack =false;
     }
 
 
@@ -94,15 +89,15 @@ public class BounceHelper extends ItemTouchHelper.Callback {
         if( swipeDistance > maxSwipe){
             maxSwipe = swipeDistance;
             Log.d(TAG, "Max Swipe Distance: "+maxSwipe);
+        }else if(bounceBack){
+            swipeViewHolder.getSwipeableView().setLeft((int) -clearWidth);
         }
     }
 
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-
         Log.d(TAG, "Get Movement Flags & Set Touch Listener");
-        recyclerView.setOnTouchListener(swipeTouchListener);
 
         setClearWidth(viewHolder);
         return makeMovementFlags(0, ItemTouchHelper.LEFT);
@@ -110,8 +105,11 @@ public class BounceHelper extends ItemTouchHelper.Callback {
 
     @Override
     public int convertToAbsoluteDirection(int flags, int layoutDirection) {
-        int absoluteDirection = bounceBack ? 0 : super.convertToAbsoluteDirection(flags, layoutDirection);
+        int absoluteDirection = maxSwipe > clearWidth ? 0 : super.convertToAbsoluteDirection(flags, layoutDirection);
         Log.d(TAG, "Set Absolute Swipe Direction: "+absoluteDirection);
+        if(absoluteDirection == 0){
+            bounceBack = true;
+        }
         return absoluteDirection;
     }
 
@@ -122,33 +120,8 @@ public class BounceHelper extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-
+        Log.d(TAG, "Swipe Completed");
     }
-
-    private View.OnTouchListener swipeTouchListener = new View.OnTouchListener() {
-
-        @Override
-        public boolean onTouch(View view, MotionEvent event) {
-            Log.d(TAG, "Triggered Touch Listener");
-
-            if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
-                bounceBack = true;
-                if (maxSwipe > clearWidth) {
-                    Log.d(TAG, "Max Swipe reached, shift views");
-                    lastSwipeView.setLeft((int)-clearWidth);
-                }
-            } else {
-                if(event.getAction() == MotionEvent.ACTION_DOWN && maxSwipe > 0){
-                    Log.d(TAG, "Action Down, reset MaxSwipe");
-                    maxSwipe = 0;
-                }
-                bounceBack = false;
-            }
-            Log.d(TAG, "Set Bounceback: "+bounceBack);
-            return false;
-        }
-    };
-
 
 
     private void setClearWidth(RecyclerView.ViewHolder viewHolder) {

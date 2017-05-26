@@ -50,23 +50,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             if (!practicePatientIds.isEmpty()) {
                 getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants.KEY_PRACTICE_PATIENT_IDS, appointmentsResultModel.getPayload().getPracticePatientIds());
             }
-//            else{
-//                PracticePatientIdsDTO[] practicePatientIdArray = getApplicationPreferences().getObjectFromSharedPreferences(CarePayConstants.KEY_PRACTICE_PATIENT_IDS, PracticePatientIdsDTO[].class);
-//                practicePatientIds = Arrays.asList(practicePatientIdArray);
-//            }
-
-
-//            practiceId = practicePatientIds.get(0).getPracticeId();
-//            practiceMgmt = practicePatientIds.get(0).getPracticeManagement();
-//            patientId = practicePatientIds.get(0).getPatientId();
-//            prefix = practicePatientIds.get(0).getPrefix();
-//            userId = practicePatientIds.get(0).getUserId();
-//            getApplicationPreferences().setPatientId(patientId);
-//            getApplicationPreferences().setPracticeManagement(practiceMgmt);
-//            getApplicationPreferences().setPracticeId(practiceId);
-//            getApplicationPreferences().setUserId(userId);
-//            getApplicationPreferences().setPrefix(prefix);
-
         }
 
         setTransitionBalance(appointmentsResultModel.getMetadata().getLinks().getPatientBalances());

@@ -24,7 +24,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
+import com.carecloud.carepaylibray.appointments.interfaces.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
@@ -197,6 +197,6 @@ public class ChooseProviderFragment extends BaseAppointmentFragment implements P
     @Override
     public void onProviderListItemClickListener(int position) {
         AppointmentResourcesDTO selectedResource = resources.get(position - 1);
-        callback.selectVisitType(selectedResource, resourcesToScheduleModel);
+        callback.onProviderSelected(selectedResource, resourcesToScheduleModel);
     }
 }

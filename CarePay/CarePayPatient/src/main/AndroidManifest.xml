@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <uses-feature android:name="android.hardware.camera" />
+
     <uses-permission
         android:name="android.permission.USE_CREDENTIALS"
         tools:node="remove" />
@@ -41,6 +42,7 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="com.carecloud.carepay.restart" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -50,11 +52,10 @@
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
             android:name=".demographics.activities.ReviewDemographicsActivity"
-            android:screenOrientation="sensorPortrait"/>
+            android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".selectlanguage.SelectLanguageActivity"
             android:screenOrientation="sensorPortrait" />
-
         <activity
             android:name=".signinsignuppatient.SigninSignupActivity"
             android:screenOrientation="sensorPortrait"
@@ -73,7 +74,6 @@
         <activity
             android:name=".payment.activities.ViewPaymentBalanceHistoryActivity"
             android:screenOrientation="sensorPortrait" />
-
         <activity
             android:name=".payment.androidpay.ConfirmationActivity"
             android:screenOrientation="sensorPortrait" />
@@ -87,7 +87,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity" />
         </activity>
-
         <activity
             android:name=".notifications.activities.NotificationActivity"
             android:screenOrientation="sensorPortrait" />
@@ -109,6 +108,9 @@
 
         <activity
             android:name=".tutorial.tutorial.TutorialActivity"
+            android:screenOrientation="sensorPortrait" />
+        <activity
+            android:name=".checkout.NextAppointmentActivity"
             android:screenOrientation="sensorPortrait" />
     </application>
 

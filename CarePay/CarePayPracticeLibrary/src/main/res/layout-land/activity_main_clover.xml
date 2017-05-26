@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/screen_background"
+    android:background="?practiceBackgroundColor"
     android:orientation="vertical">
 
     <FrameLayout
@@ -56,9 +54,9 @@
                     style="@style/HomeScreenAlertStyle"
                     android:paddingEnd="@dimen/home_alert_text_padding_end"
                     android:paddingStart="@dimen/home_alert_text_padding_start"
+                    app:customAssetFont="gotham_rounded_medium"
                     breeze:textKey="checkingin_notifications"
-                    tools:text="Checking In"
-                    app:customAssetFont="gotham_rounded_medium" />
+                    tools:text="Checking In" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/checkedInCounterTextview"
@@ -85,9 +83,9 @@
                     style="@style/HomeScreenAlertStyle"
                     android:paddingEnd="@dimen/home_alert_text_padding_end"
                     android:paddingStart="@dimen/home_alert_text_padding_start"
-                    tools:text="Alerts"
+                    app:customAssetFont="gotham_rounded_medium"
                     breeze:textKey="alerts"
-                    app:customAssetFont="gotham_rounded_medium" />
+                    tools:text="Alerts" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/alertTextView"
@@ -154,9 +152,9 @@
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/homeCheckinLabel"
                     style="@style/HomeButtonTextStyle"
-                    tools:text="@string/home_icon_check_in"
+                    app:customAssetFont="gotham_rounded_book"
                     breeze:textKey="checkin_button"
-                    app:customAssetFont="gotham_rounded_book" />
+                    tools:text="@string/home_icon_check_in" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -191,9 +189,9 @@
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/homePaymentsLabel"
                     style="@style/HomeButtonTextStyle"
-                    tools:text="Payments"
+                    app:customAssetFont="gotham_rounded_book"
                     breeze:textKey="payments_button"
-                    app:customAssetFont="gotham_rounded_book" />
+                    tools:text="Payments" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -227,9 +225,9 @@
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/homeAppointmentsLabel"
                     style="@style/HomeButtonTextStyle"
-                    tools:text="Appointment"
+                    app:customAssetFont="gotham_rounded_book"
                     breeze:textKey="appointments_button"
-                    app:customAssetFont="gotham_rounded_book" />
+                    tools:text="Appointment" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -272,9 +270,9 @@
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/homeCheckoutLabel"
                     style="@style/HomeButtonTextStyle"
-                    tools:text="Check-Out"
+                    app:customAssetFont="gotham_rounded_book"
                     breeze:textKey="checkout_button"
-                    app:customAssetFont="gotham_rounded_book" />
+                    tools:text="Check-Out" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -309,9 +307,9 @@
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/homeShopLabel"
                     style="@style/HomeButtonTextStyle"
-                    tools:text="Shop"
+                    app:customAssetFont="gotham_rounded_book"
                     breeze:textKey="shop_button"
-                    app:customAssetFont="gotham_rounded_book" />
+                    tools:text="Shop" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -336,9 +334,9 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/popup_background"
                     android:textSize="@dimen/text_size_24sp"
-                    tools:text="Office News"
+                    app:customAssetFont="gotham_rounded_medium"
                     breeze:textKey="officenews_button"
-                    app:customAssetFont="gotham_rounded_medium" />
+                    tools:text="Office News" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/office_news_list"

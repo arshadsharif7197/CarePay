@@ -235,8 +235,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         }
 
         EditText phoneNumber = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
-        String pattern = "\\d{3}-\\d{3}-\\d{4}";
-        if(!StringUtil.isNullOrEmpty(phoneNumber.getText().toString()) && !ValidationHelper.isValidString(phoneNumber.getText().toString().trim(), pattern)){
+        if(!StringUtil.isNullOrEmpty(phoneNumber.getText().toString()) && !ValidationHelper.isValidString(phoneNumber.getText().toString().trim(), ValidationHelper.PHONE_NUMBER_PATTERN)){
             TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
             phoneLayout.setErrorEnabled(true);
             phoneLayout.setError(Label.getLabel("demographics_phone_number_validation_msg"));

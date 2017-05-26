@@ -45,7 +45,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by pjohnson on 16/03/17.
+ * Created by pjohnson on 16/03/17
  */
 public class PatientModePracticePaymentsActivity extends BasePracticeActivity implements PaymentBalancesAdapter.PaymentRecyclerViewCallback,
         PaymentNavigationCallback, ResponsibilityFragmentDialog.PayResponsibilityCallback {
@@ -80,8 +80,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
                 goToHome(paymentResultModel.getPaymentsMetadata().getPaymentsTransitions().getLogout());
             }
         });
-        //TODO: this should be replaced by the proper key
-        logoutTextview.setText("Log Out");
+        logoutTextview.setText(Label.getLabel("practice_app_logout_text"));
     }
 
     private boolean hasNoPayments() {
@@ -108,8 +107,8 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         paymentBalancesAdapter.setCallback(this);
         recyclerView.setAdapter(paymentBalancesAdapter);
 
-        ((TextView) findViewById(R.id.title)).setText("Select a pending payment");
-        ((TextView) findViewById(R.id.subtitle)).setText(Label.getLabel("no_payment_description"));
+        ((TextView) findViewById(R.id.title)).setText(Label.getLabel("select_pending_payment_title"));
+        ((TextView) findViewById(R.id.subtitle)).setText(Label.getLabel("no_pending_payment_description"));
 
     }
 
@@ -117,7 +116,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         findViewById(R.id.emptyPaymentsImageView).setVisibility(View.VISIBLE);
         findViewById(R.id.appointmentsRecyclerView).setVisibility(View.GONE);
         ((TextView) findViewById(R.id.title)).setText(Label.getLabel("no_payment_title"));
-        ((TextView) findViewById(R.id.subtitle)).setText(Label.getLabel("no_payment_description"));
+        ((TextView) findViewById(R.id.subtitle)).setText(Label.getLabel("no_pending_payment_description"));
     }
 
     @Override
@@ -165,7 +164,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
     }
 
     @Override
-    public void onPaymentPlanAction() {
+    public void onPaymentPlanAction(PaymentsModel paymentsModel) {
 
     }
 

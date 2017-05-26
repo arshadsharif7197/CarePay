@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
@@ -19,7 +18,7 @@ import java.util.List;
 public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLineItemsListAdapter.ViewHolder> {
 
     private Context context;
-    private List<PendingBalanceDTO> detailsList;
+    private List<PendingBalancePayloadDTO> detailsList;
     private PaymentLineItemCallback callback;
 
     /**
@@ -28,7 +27,7 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
      * @param context     context
      * @param detailsList details list
      */
-    public PaymentLineItemsListAdapter(Context context, List<PendingBalanceDTO> detailsList,
+    public PaymentLineItemsListAdapter(Context context, List<PendingBalancePayloadDTO> detailsList,
                                        PaymentLineItemCallback callback) {
         this.context = context;
         this.detailsList = detailsList;
@@ -49,25 +48,20 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-
-        PendingBalanceDTO pendingBalanceDTO = detailsList.get(position);
-
-        if (!pendingBalanceDTO.getPayload().isEmpty()) {
-            final PendingBalancePayloadDTO paymentLineItem = pendingBalanceDTO.getPayload().get(0);
-            holder.paymentDetailLabel.setText(paymentLineItem.getType());
-            holder.paymentDetailAmount.setText(StringUtil.getFormattedBalanceAmount(paymentLineItem.getAmount()));
-            if (paymentLineItem.getDetails().size() > 1) {
-                holder.lineItemNameLabelDetails.setText(Label.getLabel("payment_responsibility_details"));
-                holder.lineItemNameLabelDetails.setVisibility(View.VISIBLE);
-                holder.lineItemNameLabelDetails.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        callback.onDetailItemClick(paymentLineItem);
-                    }
-                });
-            }else if (holder.lineItemNameLabelDetails.getVisibility() == View.VISIBLE) {
-                holder.lineItemNameLabelDetails.setVisibility(View.GONE);
-            }
+        final PendingBalancePayloadDTO paymentLineItem = detailsList.get(position);;
+        holder.paymentDetailLabel.setText(paymentLineItem.getType());
+        holder.paymentDetailAmount.setText(StringUtil.getFormattedBalanceAmount(paymentLineItem.getAmount()));
+        if (paymentLineItem.getDetails().size() > 1) {
+            holder.lineItemNameLabelDetails.setText(Label.getLabel("payment_responsibility_details"));
+            holder.lineItemNameLabelDetails.setVisibility(View.VISIBLE);
+            holder.lineItemNameLabelDetails.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callback.onDetailItemClick(paymentLineItem);
+                }
+            });
+        }else if (holder.lineItemNameLabelDetails.getVisibility() == View.VISIBLE) {
+            holder.lineItemNameLabelDetails.setVisibility(View.INVISIBLE);
         }
     }
 

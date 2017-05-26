@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.ProviderSearchAdapter;
-import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
+import com.carecloud.carepaylibray.appointments.interfaces.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
@@ -142,7 +142,7 @@ public class PracticeChooseProviderDialog extends BaseDialogFragment
         @Override
         public void onClick(View view) {
             if(selectedProvider != null){
-                callback.selectVisitType(selectedProvider, resourcesToScheduleModel);
+                callback.onProviderSelected(selectedProvider, resourcesToScheduleModel);
                 dismiss();
             }
         }

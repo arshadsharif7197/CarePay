@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:id="@+id/demographicsReviewRootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:descendantFocusability="beforeDescendants"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+
+    <include layout="@layout/toolbar_demographics_settings" />
+
+    <ScrollView
+        android:id="@+id/adddemoScrollview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/adddemoLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="17dp"
+            android:paddingEnd="17dp"
+            android:paddingBottom="@dimen/dimen_20dp"
+            android:paddingTop="@dimen/dimen_20dp"
+            android:orientation="vertical">
+
+
+            <include layout="@layout/fragment_expanded_demographics" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        android:id="@+id/buttonAddDemographicInfo"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@drawable/settings_button_selector"
+        android:gravity="center"
+        tools:text="Save Changes"
+        breeze:textKey="profile_save_button_label"
+        android:textColor="@color/white" />
+</LinearLayout>

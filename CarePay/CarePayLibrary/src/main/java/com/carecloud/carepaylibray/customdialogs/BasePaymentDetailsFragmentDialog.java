@@ -8,6 +8,7 @@ import android.view.View;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 public abstract class BasePaymentDetailsFragmentDialog extends BaseDialogFragment implements View.OnClickListener {
@@ -19,10 +20,26 @@ public abstract class BasePaymentDetailsFragmentDialog extends BaseDialogFragmen
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        attachCallback(context);
+    }
+
+    protected void attachCallback(Context context){
         try {
-            callback = (PaymentNavigationCallback) context;
+            if(context instanceof PaymentViewHandler){
+                callback = ((PaymentViewHandler) context).getPaymentPresenter();
+            }else {
+                callback = (PaymentNavigationCallback) context;
+            }
         } catch (ClassCastException cce) {
             throw new ClassCastException("Provided context must implement PaymentNavigationCallback");
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(callback==null){
+            attachCallback(getContext());
         }
     }
 

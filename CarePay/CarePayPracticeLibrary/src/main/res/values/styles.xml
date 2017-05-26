@@ -20,6 +20,16 @@
         <item name="colorControlActivated">@color/light_gray</item>
     </style>
 
+    <style name="PracticeModeActivity" parent="AppThemePractice">
+        <item name="practiceBackgroundColor">@color/practice_mode_background</item>
+        <item name="practiceActionBarColor">@color/practice_mode_action_bar</item>
+    </style>
+
+    <style name="PatientModeActivity" parent="AppThemePractice">
+        <item name="practiceBackgroundColor">@drawable/screen_background</item>
+        <item name="practiceActionBarColor">@color/patient_mode_action_bar</item>
+    </style>
+
     <style name="ChangeModeDialogOptions">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -71,6 +81,7 @@
         <item name="android:paddingTop">@dimen/dimen_14dp</item>
         <item name="android:textColor">@drawable/text_color</item>
         <item name="android:textSize">@dimen/text_size_22sp</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">

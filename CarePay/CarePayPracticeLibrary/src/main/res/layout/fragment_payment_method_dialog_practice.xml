@@ -127,17 +127,6 @@
                 android:visibility="gone"
                 app:customAssetFont="gotham_rounded_medium" />
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/paymentChoiceButton"
-                style="@style/PaymentMethodButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_5dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_yellow_overlay"
-                android:visibility="gone"
-                app:customAssetFont="gotham_rounded_medium" />
-
         </LinearLayout>
 
         <FrameLayout

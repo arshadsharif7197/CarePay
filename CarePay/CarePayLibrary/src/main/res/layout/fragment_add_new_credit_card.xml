@@ -423,7 +423,7 @@
 
                             <com.carecloud.carepaylibray.customcomponents.CarePayAutoCompleteTextView
                                 android:id="@+id/addNewCredidCardStateAutoCompleteTextView"
-                                style="@style/EditTextStyle"
+                                style="@style/PaymentAddCreditCardInputStyle"
                                 android:imeOptions="actionDone"
                                 android:inputType="textAutoComplete"
                                 android:maxLength="2"

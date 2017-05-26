@@ -224,7 +224,7 @@
             style="@style/BreezeButtonStyleDark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            breeze:textKey="button_ok"
+            breeze:textKey="payment_ok"
             app:customAssetFont="proxima_nova_semi_bold" />
 
 
