@@ -48,6 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_weight="1"
+            android:gravity="end"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/textview_textsize"
             android:textStyle="bold"

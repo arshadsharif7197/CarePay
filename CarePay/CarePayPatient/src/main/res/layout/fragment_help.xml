@@ -19,7 +19,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/dimen_30dp"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/dimen_5dp"
             android:src="@drawable/icn_settings_headphone" />
@@ -48,7 +48,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/dimen_30dp"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/dimen_5dp"
             android:src="@drawable/icn_settings_question" />
@@ -77,7 +77,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/dimen_30dp"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/dimen_5dp"
             android:src="@drawable/icn_settings_check" />
@@ -106,7 +106,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/dimen_30dp"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/dimen_5dp"
             android:src="@drawable/icn_settings_key" />
@@ -168,7 +168,8 @@
         android:layout_marginStart="@dimen/dimen_16dp"
         android:layout_marginTop="@dimen/dimen_8dp"
         android:background="@drawable/grey_bottom_border"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:layout_width="0dp"
@@ -200,6 +201,7 @@
         android:textSize="@dimen/text_size_14"
         android:textStyle="bold"
         app:customAssetFont="proxima_nova_regular"
-        breeze:textKey="help_overlay_hint" />
+        breeze:textKey="help_overlay_hint"
+        android:visibility="gone"/>
 
 </LinearLayout>

@@ -90,7 +90,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         if (googleApiClient == null) {
             setGoogleApiClient();
         }
-        isAndroidPayReadyToUse();
+//        isAndroidPayReadyToUse(); TODO need to reenable this when ready
     }
 
     protected void setupTitleViews(View view) {
