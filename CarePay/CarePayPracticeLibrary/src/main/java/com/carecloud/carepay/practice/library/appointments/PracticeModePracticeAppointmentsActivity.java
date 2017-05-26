@@ -693,6 +693,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            finish();
         }
 
         @Override
