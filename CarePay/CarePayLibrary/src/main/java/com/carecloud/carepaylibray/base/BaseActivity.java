@@ -144,7 +144,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             }
             errorNotification.showPopWindow();
         } catch (Exception e) {
-            Log.e("Base Activity", e.getMessage());
+            Log.e("Base Activity", e.getMessage()+"");
         }
     }
 
