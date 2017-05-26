@@ -26,7 +26,7 @@ public abstract class PartialPaymentBaseDialogFragment extends BaseDialogFragmen
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
-        return inflater.inflate(R.layout.dialog_partial_payment, container, false);
+        return inflater.inflate(R.layout.dialog_fragment_partial_payment, container, false);
     }
 
     @Override
