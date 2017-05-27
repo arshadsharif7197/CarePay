@@ -106,7 +106,8 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
     private PaymentsModel initPaymentPresenter(String workflowJson){
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowJson);
-        paymentPresenter = new PatientPaymentPresenter(this, paymentsModel);
+        String patientID = demographicsPresenter.getDemographicDTO().getPayload().getDemographics().getMetadata().getPatientId();
+        paymentPresenter = new PatientPaymentPresenter(this, paymentsModel, patientID);
         return paymentsModel;
     }
 

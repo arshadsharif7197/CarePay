@@ -1,12 +1,13 @@
 package com.carecloud.carepaylibray.payments;
 
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 
 /**
- * Created by lmenendez on 2/28/17.
+ * Created by lmenendez on 2/28/17
  */
 
 public interface PaymentNavigationCallback {
@@ -64,4 +65,11 @@ public interface PaymentNavigationCallback {
      * @param paymentsModel payment model
      */
     void cancelPaymentProcess(PaymentsModel paymentsModel);
+
+    /**
+     * Return the practice info associated to the current payment flow
+     * Should fill the PracticeID, PracticeMgmt, & PatientID
+     * @return
+     */
+    UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel);
 }

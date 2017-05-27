@@ -48,7 +48,8 @@ public class PaymentActivity extends BasePatientActivity implements PaymentViewH
     }
 
     private void initPresenter(){
-        this.presenter = new PatientPaymentPresenter(this, paymentsDTO);
+        String defaultPatientId = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPatientId();
+        this.presenter = new PatientPaymentPresenter(this, paymentsDTO, defaultPatientId);
     }
 
 

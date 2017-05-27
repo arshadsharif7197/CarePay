@@ -35,7 +35,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
      * @param payLaterButtonVisibility a boolean that indicates the visibility of the pay later button
      * @return an instance of ResponsibilityFragment
      */
-    public static ResponsibilityFragment newInstance(PaymentsModel paymentsDTO, boolean payLaterButtonVisibility) {
+    public static ResponsibilityFragment newInstance(PaymentsModel paymentsDTO, PendingBalanceDTO selectedBalance, boolean payLaterButtonVisibility) {
         ResponsibilityFragment fragment = new ResponsibilityFragment();
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsDTO);

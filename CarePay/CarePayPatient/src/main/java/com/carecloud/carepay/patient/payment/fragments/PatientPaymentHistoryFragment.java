@@ -127,9 +127,10 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
 
     @Override
     public void onBalanceListItemClickListener(int position) {
-        PendingBalancePayloadDTO selectedBalance = paymentsDTO.getPaymentPayload().getPatientBalances()
-                .get(0).getBalances().get(0).getPayload().get(position);
-        callback.loadPaymentAmountScreen(selectedBalance, paymentsDTO);
+        PaymentsBalancesItem selectedBalancesItem = getPendingBalancesList(paymentsDTO).get(position);
+//        PendingBalancePayloadDTO selectedBalance = paymentsDTO.getPaymentPayload().getPatientBalances()
+//                .get(0).getBalances().get(0).getPayload().get(position);
+        callback.loadPaymentAmountScreen(selectedBalancesItem, paymentsDTO);
     }
 
     private List<PaymentsBalancesItem> getPendingBalancesList(PaymentsModel paymentModel) {

@@ -7,6 +7,7 @@ import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragm
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
 import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
@@ -24,8 +25,8 @@ import com.google.gson.Gson;
 
 public class PatientPaymentPresenter extends PaymentPresenter {
 
-    public PatientPaymentPresenter(PaymentViewHandler viewHandler, PaymentsModel paymentsModel) {
-        super(viewHandler, paymentsModel);
+    public PatientPaymentPresenter(PaymentViewHandler viewHandler, PaymentsModel paymentsModel, String patientId) {
+        super(viewHandler, paymentsModel, patientId);
     }
 
     @Override
@@ -74,6 +75,16 @@ public class PatientPaymentPresenter extends PaymentPresenter {
     @Override
     public void cancelPaymentProcess(PaymentsModel paymentsModel) {
         viewHandler.exitPaymentProcess(true);
+    }
+
+    @Override
+    public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
+        for (UserPracticeDTO userPracticeDTO : paymentsModel.getPaymentPayload().getUserPractices()){
+            if(userPracticeDTO.getPatientId()!=null && userPracticeDTO.getPatientId().equals(patientId)){
+                return userPracticeDTO;
+            }
+        }
+        return null;
     }
 
     @Override
