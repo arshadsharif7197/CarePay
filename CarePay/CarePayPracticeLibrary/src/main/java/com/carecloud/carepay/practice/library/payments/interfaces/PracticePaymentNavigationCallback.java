@@ -3,7 +3,7 @@ package com.carecloud.carepay.practice.library.payments.interfaces;
 import com.carecloud.carepay.practice.library.payments.fragments.AddPaymentItemFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionEntryFragment;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
 
 import java.util.List;

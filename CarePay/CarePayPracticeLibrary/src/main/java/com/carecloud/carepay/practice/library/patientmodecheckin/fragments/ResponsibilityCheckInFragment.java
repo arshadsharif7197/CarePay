@@ -139,7 +139,7 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
         payPartialButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionCallback.startPartialPayment(total);
+                actionCallback.onPartialPaymentClicked(total);
             }
         });
 

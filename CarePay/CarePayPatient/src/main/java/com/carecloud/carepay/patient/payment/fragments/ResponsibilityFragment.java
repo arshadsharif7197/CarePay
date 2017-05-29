@@ -79,7 +79,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         payLaterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionCallback.cancelPaymentProcess(paymentDTO);
+                actionCallback.onPayLaterClicked(paymentDTO);
             }
         });
 
@@ -133,7 +133,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
     }
 
     protected void doPayment() {
-        actionCallback.onPayButtonClicked(total, paymentDTO);
+        actionCallback.onPayButtonClicked(total,paymentDTO );
     }
 
     @Override

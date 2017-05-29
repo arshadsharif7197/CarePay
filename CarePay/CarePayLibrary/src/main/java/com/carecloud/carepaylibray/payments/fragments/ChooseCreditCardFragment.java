@@ -20,8 +20,9 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.adapter.CreditCardsAdapter;
+import com.carecloud.carepaylibray.payments.interfaces.ChooseCreditCardInterface;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -59,7 +60,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment {
     protected double amountToMakePayment;
 
     protected String titleLabel;
-    private PaymentNavigationCallback callback;
+    private ChooseCreditCardInterface callback;
 
     private List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = new ArrayList<>();
 
@@ -86,10 +87,10 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment {
             if(context instanceof PaymentViewHandler){
                 callback = ((PaymentViewHandler) context).getPaymentPresenter();
             }else {
-                callback = (PaymentNavigationCallback) context;
+                callback = (ChooseCreditCardInterface) context;
             }
         } catch (ClassCastException cce) {
-            throw new ClassCastException("attached context must implement PaymentNavigationCallback");
+            throw new ClassCastException("attached context must implement ChooseCreditCardInterface");
         }
     }
 

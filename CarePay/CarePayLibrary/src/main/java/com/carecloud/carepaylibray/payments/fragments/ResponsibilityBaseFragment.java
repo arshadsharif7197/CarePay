@@ -13,7 +13,8 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.interfaces.ResponsibilityPaymentInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
@@ -38,7 +39,7 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
     protected String payLaterString;
     protected double total;
 
-    protected PaymentNavigationCallback actionCallback;
+    protected ResponsibilityPaymentInterface actionCallback;
 
     @Override
     public void attachCallback(Context context) {
@@ -46,10 +47,10 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
             if(context instanceof PaymentViewHandler){
                 actionCallback = ((PaymentViewHandler) context).getPaymentPresenter();
             }else {
-                actionCallback = (PaymentNavigationCallback) context;
+                actionCallback = (ResponsibilityPaymentInterface) context;
             }
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached Context must implement ResponsibilityActionCallback");
+            throw new ClassCastException("Attached Context must implement PaymentNavigationCallback");
         }
     }
 
