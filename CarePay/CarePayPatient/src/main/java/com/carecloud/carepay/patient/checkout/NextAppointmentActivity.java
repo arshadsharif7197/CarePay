@@ -69,7 +69,8 @@ public class NextAppointmentActivity extends BasePatientActivity implements Frag
 
     private void showResponsibilityFragment() {
         replaceFragment(ResponsibilityFragment
-                .newInstance(getConvertedDTO(PaymentsModel.class), false), false);
+                        .newInstance(getConvertedDTO(PaymentsModel.class), false, "checkout_responsibility_title"),
+                false);
     }
 
     @Override

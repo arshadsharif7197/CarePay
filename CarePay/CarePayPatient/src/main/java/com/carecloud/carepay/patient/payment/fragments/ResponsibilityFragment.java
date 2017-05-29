@@ -36,10 +36,24 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
      * @return an instance of ResponsibilityFragment
      */
     public static ResponsibilityFragment newInstance(PaymentsModel paymentsDTO, boolean payLaterButtonVisibility) {
+        return newInstance(paymentsDTO, payLaterButtonVisibility, null);
+    }
+
+    /**
+     * @param paymentsDTO              the payments DTO
+     * @param payLaterButtonVisibility a boolean that indicates the visibility of the pay later button
+     * @param title                    the toolbar title
+     * @return an instance of ResponsibilityFragment
+     */
+    public static ResponsibilityFragment newInstance(PaymentsModel paymentsDTO, boolean payLaterButtonVisibility,
+                                                     String title) {
         ResponsibilityFragment fragment = new ResponsibilityFragment();
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsDTO);
         args.putBoolean("payLaterButtonVisibility", payLaterButtonVisibility);
+        if (title != null) {
+            args.putString("title", title);
+        }
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,6 +83,9 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         toolbar.setTitle("");
         getPaymentLabels();
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+        if (getArguments().getString("title") != null) {
+            paymentsTitleString = getArguments().getString("title");
+        }
         title.setText(paymentsTitleString);
 
 
@@ -133,7 +150,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
     }
 
     protected void doPayment() {
-        actionCallback.onPayButtonClicked(total,paymentDTO );
+        actionCallback.onPayButtonClicked(total, paymentDTO);
     }
 
     @Override
