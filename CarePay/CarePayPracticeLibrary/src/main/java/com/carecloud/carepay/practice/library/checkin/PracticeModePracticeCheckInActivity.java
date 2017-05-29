@@ -447,8 +447,9 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     }
 
     @Override
-    public void completePaymentProcess(PaymentsModel paymentsModel) {
+    public void completePaymentProcess(WorkflowDTO workflowDTO) {
         Gson gson = new Gson();
+        PaymentsModel paymentsModel = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
         PatientBalanceDTO balance = paymentsModel.getPaymentPayload().getPatientBalances().get(0);
         String patientBalance = gson.toJson(balance);
         UpdatePatientBalancesDTO updatePatientBalance = gson.fromJson(patientBalance, UpdatePatientBalancesDTO.class);

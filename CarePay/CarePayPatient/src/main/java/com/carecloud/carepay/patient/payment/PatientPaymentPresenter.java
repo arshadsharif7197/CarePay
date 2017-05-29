@@ -66,7 +66,7 @@ public class PatientPaymentPresenter extends PaymentPresenter {
     }
 
     @Override
-    public void completePaymentProcess(PaymentsModel updatePatientBalancesDTO) {
+    public void completePaymentProcess(WorkflowDTO workflowDTO) {
         viewHandler.exitPaymentProcess(false);
     }
 

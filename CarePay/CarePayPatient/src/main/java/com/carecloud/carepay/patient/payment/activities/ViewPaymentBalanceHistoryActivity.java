@@ -228,7 +228,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void completePaymentProcess(PaymentsModel updatePatientBalancesDTO) {
+    public void completePaymentProcess(WorkflowDTO workflowDTO) {
 
     }
 

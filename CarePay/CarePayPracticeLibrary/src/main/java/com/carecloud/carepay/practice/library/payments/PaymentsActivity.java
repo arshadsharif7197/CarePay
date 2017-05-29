@@ -309,7 +309,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    completePaymentProcess(new UpdatePatientBalancesDTO());
+                    showPaymentDistributionFragment(new UpdatePatientBalancesDTO());
                 }
             };
             dialogFragment.setOnDismissListener(dismissListener);
@@ -364,7 +364,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void startPartialPayment(double owedAmount) {
+    public void onPartialPaymentClicked(double owedAmount) {
 
     }
 
@@ -426,17 +426,27 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO) {
+    public void completePaymentProcess(WorkflowDTO workflowDTO) {
+        Gson gson = new Gson();
+        PaymentsModel paymentsModel = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
+        PatientBalanceDTO balance = paymentsModel.getPaymentPayload().getPatientBalances().get(0);
+        String patientBalance = gson.toJson(balance);
+        UpdatePatientBalancesDTO updatePatientBalance = gson.fromJson(patientBalance, UpdatePatientBalancesDTO.class);
+
+        showPaymentDistributionFragment(updatePatientBalance);
+    }
+
+    private void showPaymentDistributionFragment(UpdatePatientBalancesDTO updatePatientBalance) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
         if (fragment != null) {
             fragment.dismiss();
         }
-        updatePatientBalance(updatePatientBalancesDTO);
+        updatePatientBalance(updatePatientBalance);
     }
 
     @Override
-    public void cancelPaymentProcess(PaymentsModel paymentsModel) {
+    public void onPayLaterClicked(PaymentsModel paymentsModel) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
         if (fragment != null) {
@@ -475,4 +485,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
 
+    @Override
+    public void onDetailCancelClicked(PaymentsModel paymentsModel) {
+        startPaymentProcess(paymentsModel);
+    }
 }

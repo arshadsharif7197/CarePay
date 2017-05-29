@@ -199,12 +199,12 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void completePaymentProcess(PaymentsModel updatePatientBalancesDTO) {
+    public void completePaymentProcess(WorkflowDTO workflowDTO) {
         Intent intent = getIntent();
-        String worflowString = intent.getStringExtra(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
-        if(worflowString != null){
+        String workflowString = intent.getStringExtra(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
+        if(workflowString != null){
             Gson gson = new Gson();
-            PracticeNavigationHelper.navigateToWorkflow(getContext(), gson.fromJson(worflowString, WorkflowDTO.class));
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), gson.fromJson(workflowString, WorkflowDTO.class));
         }else {
             setResult(CarePayConstants.HOME_PRESSED, intent);
             finish();

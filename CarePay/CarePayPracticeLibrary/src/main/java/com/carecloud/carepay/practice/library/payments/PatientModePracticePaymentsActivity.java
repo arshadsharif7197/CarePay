@@ -192,7 +192,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
     }
 
     @Override
-    public void completePaymentProcess(PaymentsModel updatePatientBalancesDTO) {
+    public void completePaymentProcess(WorkflowDTO workflowDTO) {
         refreshBalance();
     }
 

@@ -76,7 +76,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
         }
     }
 
-    private void updatePendingAmountText(double amount){
+    private void updatePendingAmountText(double amount) {
         pendingAmountTextView.setText(Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount(amount));
     }
 
@@ -94,9 +94,9 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
         @Override
         public void afterTextChanged(Editable editable) {
             double entry = 0D;
-            try{
+            try {
                 entry = Double.parseDouble(editable.toString());
-            }catch (NumberFormatException nfe){
+            } catch (NumberFormatException nfe) {
                 nfe.printStackTrace();
             }
             updatePendingAmountText(amount - entry);

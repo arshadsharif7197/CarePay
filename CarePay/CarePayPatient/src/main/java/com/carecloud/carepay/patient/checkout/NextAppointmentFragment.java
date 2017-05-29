@@ -187,15 +187,15 @@ public class NextAppointmentFragment extends BaseFragment {
     }
 
     private void scheduleAppointmentLater() {
-        Map<String, String> queries = new HashMap<>();
-        queries.put("practice_mgmt", selectedAppointment.getMetadata().getPracticeMgmt());
-        queries.put("practice_id", selectedAppointment.getMetadata().getPracticeId());
-        queries.put("appointment_id", selectedAppointment.getMetadata().getAppointmentId());
-        queries.put("patient_id", selectedAppointment.getMetadata().getPatientId());
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", selectedAppointment.getMetadata().getPracticeMgmt());
+        queryMap.put("practice_id", selectedAppointment.getMetadata().getPracticeId());
+        queryMap.put("appointment_id", selectedAppointment.getMetadata().getAppointmentId());
+        queryMap.put("patient_id", selectedAppointment.getMetadata().getPatientId());
         Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
         header.put("transition", "true");
         TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getContinueTransition();
-        getWorkflowServiceHelper().execute(transitionDTO, continueCallback, queries, header);
+        getWorkflowServiceHelper().execute(transitionDTO, continueCallback, queryMap, header);
     }
 
     private void scheduleAppointment() {
@@ -257,8 +257,7 @@ public class NextAppointmentFragment extends BaseFragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            showErrorNotification(exceptionMessage);
+            onFailureCallback(exceptionMessage);
         }
     };
 
@@ -286,11 +285,15 @@ public class NextAppointmentFragment extends BaseFragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            showErrorNotification(exceptionMessage);
-            Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            onFailureCallback(exceptionMessage);
         }
     };
+
+    private void onFailureCallback(String exceptionMessage) {
+        hideProgressDialog();
+        showErrorNotification(exceptionMessage);
+        Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+    }
 
     WorkflowServiceCallback resourcesToScheduleCallback = new WorkflowServiceCallback() {
         @Override
@@ -313,9 +316,7 @@ public class NextAppointmentFragment extends BaseFragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            showErrorNotification(exceptionMessage);
-            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+            onFailureCallback(exceptionMessage);
         }
     };
 

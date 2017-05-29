@@ -8,12 +8,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentCompletedInterface;
-import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.google.gson.Gson;
@@ -28,6 +27,7 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
 
     private PaymentCompletedInterface callback;
     private PaymentsModel paymentsModel;
+    private WorkflowDTO workflowDTO;
     private PatientPaymentPayload patientPaymentPayload;
 
     NumberFormat currencyFormatter;
@@ -62,6 +62,7 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
         if (args != null) {
             Gson gson = new Gson();
             String paymentPayload = args.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
+            workflowDTO = gson.fromJson(paymentPayload, WorkflowDTO.class);
             paymentsModel = gson.fromJson(paymentPayload, PaymentsModel.class);
             patientPaymentPayload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload().get(0);
         }
@@ -108,7 +109,7 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
         @Override
         public void onClick(View view) {
             dismiss();
-            callback.completePaymentProcess(paymentsModel);
+            callback.completePaymentProcess(workflowDTO);
         }
     };
 
