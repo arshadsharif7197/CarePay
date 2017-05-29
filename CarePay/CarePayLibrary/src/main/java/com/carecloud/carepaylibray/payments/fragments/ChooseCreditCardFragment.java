@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
@@ -56,6 +57,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment {
 
     private int selectedCreditCard = -1;
     protected PaymentsModel paymentsModel;
+    private UserPracticeDTO userPracticeDTO;
     protected double amountToMakePayment;
 
     protected String titleLabel;
@@ -113,6 +115,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment {
 
             if (paymentsModel != null) {
                 creditCardList = paymentsModel.getPaymentPayload().getPatientCreditCards();
+                userPracticeDTO = callback.getPracticeInfo(paymentsModel);
             }
         }
 
@@ -250,12 +253,17 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment {
     }
 
     private void postPayment(String paymentModelJson) {
-        PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
         Map<String, String> queries = new HashMap<>();
-        queries.put("practice_mgmt", metadata.getPracticeMgmt());
-        queries.put("practice_id", metadata.getPracticeId());
-        queries.put("patient_id", metadata.getPatientId());
-
+        if(userPracticeDTO!=null){
+            queries.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
+            queries.put("practice_id", userPracticeDTO.getPracticeId());
+            queries.put("patient_id", userPracticeDTO.getPatientId());
+        }else {
+            PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
+            queries.put("practice_mgmt", metadata.getPracticeMgmt());
+            queries.put("practice_id", metadata.getPracticeId());
+            queries.put("patient_id", metadata.getPatientId());
+        }
 
         Map<String, String> header = new HashMap<>();
         header.put("transition", "true");

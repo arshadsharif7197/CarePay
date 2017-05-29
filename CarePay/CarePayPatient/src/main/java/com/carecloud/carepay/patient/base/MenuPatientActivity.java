@@ -164,9 +164,8 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-
             hideProgressDialog();
-
+            PatientNavigationHelper.setAccessPaymentsBalances(false);
             navigateToWorkflow(workflowDTO);
         }
 
@@ -189,6 +188,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
+            PatientNavigationHelper.setAccessPaymentsBalances(false);
             navigateToWorkflow(workflowDTO);
         }
 
@@ -209,6 +209,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
+            PatientNavigationHelper.setAccessPaymentsBalances(false);
             //need to manually redirect this response to the notifications screen temporarily
             workflowDTO.setState(NavigationStateConstants.PURCHASE);
             navigateToWorkflow(workflowDTO);
@@ -231,6 +232,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
+            PatientNavigationHelper.setAccessPaymentsBalances(false);
             navigateToWorkflow(workflowDTO);
         }
 

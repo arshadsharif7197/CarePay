@@ -32,6 +32,7 @@ import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragmen
 import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.android.gms.wallet.MaskedWallet;
@@ -46,6 +47,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     private static boolean isPaymentDone;
     private PaymentsModel paymentsDTO;
     private UserPracticeDTO selectedUserPractice;
+    private PendingBalanceDTO selectedBalancesItem;
 
     public Bundle bundle;
     private String toolBarTitle;
@@ -181,7 +183,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void startPaymentProcess(PaymentsModel paymentsModel) {
-        ResponsibilityFragment responsibilityFragment = ResponsibilityFragment.newInstance(paymentsModel, false);
+        ResponsibilityFragment responsibilityFragment = ResponsibilityFragment.newInstance(paymentsModel, selectedBalancesItem, false);
         replaceFragment(responsibilityFragment, true);
     }
 
@@ -292,11 +294,19 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void loadPaymentAmountScreen(PaymentsBalancesItem paymentsBalancesItem, PaymentsModel paymentDTO) {
+    public void loadPaymentAmountScreen(PaymentsBalancesItem selectedBalancesItem, PaymentsModel paymentDTO) {
 //        ResponsibilityFragment responsibilityFragment = ResponsibilityFragment.newInstance(paymentDTO, false);
 //        replaceFragment(responsibilityFragment, true);
-        selectedUserPractice = DtoHelper.getConvertedDTO(UserPracticeDTO.class, DtoHelper.getStringDTO(paymentsBalancesItem.getMetadata()));
+        setPendingBalance(selectedBalancesItem);
+        selectedUserPractice = DtoHelper.getConvertedDTO(UserPracticeDTO.class, DtoHelper.getStringDTO(selectedBalancesItem.getMetadata()));
         startPaymentProcess(paymentDTO);
         displayToolbar(false, null);
+    }
+
+    private void setPendingBalance(PaymentsBalancesItem selectedBalancesItem){
+        PendingBalanceDTO pendingBalanceDTO = new PendingBalanceDTO();
+        pendingBalanceDTO.setMetadata(selectedBalancesItem.getMetadata());
+        pendingBalanceDTO.getPayload().add(selectedBalancesItem.getBalance());
+        this.selectedBalancesItem = pendingBalanceDTO;
     }
 }

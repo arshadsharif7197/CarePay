@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
@@ -32,9 +33,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by lmenendez on 3/1/17.
+ * Created by lmenendez on 3/1/17
  */
 public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implements BaseAddCreditCardFragment.IAuthoriseCreditCardResponse {
+
+    private UserPracticeDTO userPracticeDTO;
+
 
     @Override
     protected void attachCallback(Context context) {
@@ -65,7 +69,10 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             Gson gson = new Gson();
             String paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
             paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
-            addressPayloadDTO = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getAddress();
+            if(paymentsModel!=null) {
+                addressPayloadDTO = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getAddress();
+                userPracticeDTO = callback.getPracticeInfo(paymentsModel);
+            }
         }
     }
 
@@ -127,7 +134,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             hideProgressDialog();
             nextButton.setEnabled(true);
             SystemUtil.showErrorToast(getContext(), CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -140,10 +147,6 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
 
 
     private void makePaymentCall() {
-        if (amountToMakePayment == 0) {
-            return;//TODO something else needs to happen here...
-        }
-
         PaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
         if (postModel != null && postModel.getAmount() > 0) {
             processPayment(postModel);
@@ -190,11 +193,17 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
     }
 
     private void postPayment(String paymentModelJson) {
-        PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
         Map<String, String> queries = new HashMap<>();
-        queries.put("patient_id", metadata.getPatientId());
-
-
+        if(userPracticeDTO!=null){
+            queries.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
+            queries.put("practice_id", userPracticeDTO.getPracticeId());
+            queries.put("patient_id", userPracticeDTO.getPatientId());
+        }else {
+            PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
+            queries.put("practice_mgmt", metadata.getPracticeMgmt());
+            queries.put("practice_id", metadata.getPracticeId());
+            queries.put("patient_id", metadata.getPatientId());
+        }
         Map<String, String> header = new HashMap<>();
         header.put("transition", "true");
 
@@ -222,6 +231,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
 
     @Override
     public void onAuthorizeCreditCardSuccess() {
+        nextButton.setEnabled(true);
         if (saveCardOnFileCheckBox.isChecked()) {
             addNewCreditCardCall();
         } else {
@@ -231,6 +241,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
 
     @Override
     public void onAuthorizeCreditCardFailed() {
+        nextButton.setEnabled(true);
         new LargeAlertDialog(getActivity(), Label.getLabel("payment_failed_error"), Label.getLabel("payment_change_payment_label"), R.color.Feldgrau, R.drawable.icn_card_error, getLargeAlertInterface()).show();
     }
 

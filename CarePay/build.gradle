@@ -23,6 +23,11 @@ allprojects {
     }
 }
 
+allprojects {
+    buildDir = "/private/tmp/studio/${rootProject.name}/${project.name}"
+}
+
+
 subprojects {
 
     buildscript {

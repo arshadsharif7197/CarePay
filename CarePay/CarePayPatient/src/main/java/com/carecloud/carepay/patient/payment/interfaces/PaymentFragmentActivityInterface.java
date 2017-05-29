@@ -11,5 +11,5 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 
 public interface PaymentFragmentActivityInterface extends FragmentActivityInterface, PaymentNavigationCallback {
 
-    void loadPaymentAmountScreen(PaymentsBalancesItem paymentsBalancesItem, PaymentsModel paymentDTO);
+    void loadPaymentAmountScreen(PaymentsBalancesItem selectedBalancesItem, PaymentsModel paymentDTO);
 }

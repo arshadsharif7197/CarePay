@@ -26,9 +26,10 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.List;
 
 public class ResponsibilityFragment extends ResponsibilityBaseFragment {
+
+    private PendingBalanceDTO selectedBalance;
 
     /**
      * @param paymentsDTO              the payments DTO
@@ -39,6 +40,9 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         ResponsibilityFragment fragment = new ResponsibilityFragment();
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsDTO);
+        if (selectedBalance != null) {
+            DtoHelper.bundleDto(args, selectedBalance);
+        }
         args.putBoolean("payLaterButtonVisibility", payLaterButtonVisibility);
         fragment.setArguments(args);
         return fragment;
@@ -83,39 +87,39 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
             }
         });
 
-        List<PendingBalanceDTO> paymentList = paymentDTO.getPaymentPayload()
-                .getPatientBalances().get(0).getBalances();
-
+//        List<PendingBalanceDTO> paymentList = paymentDTO.getPaymentPayload()
+//                .getPatientBalances().get(0).getBalances();
+//
         total = 0;
-        if (paymentList != null && paymentList.size() > 0) {
-            fillDetailAdapter(view, paymentList);
-            for (PendingBalancePayloadDTO payment : paymentList.get(0).getPayload()) {
-                total += payment.getAmount();
-            }
-            if (total > 0) {
-                payTotalAmountButton.setClickable(true);
-                payTotalAmountButton.setEnabled(true);
-                makePartialPaymentButton.setEnabled(true);
-                makePartialPaymentButton.setEnabled(true);
-                payLaterButton.setEnabled(true);
-                payLaterButton.setEnabled(true);
-
-                payTotalAmountButton.setTextColor(Color.WHITE);
-                makePartialPaymentButton.setTextColor(getResources().getColor(R.color.colorPrimary));
-                payLaterButton.setTextColor(getResources().getColor(R.color.colorPrimary));
-            }
-
-            try {
-                NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
-
-                TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);
-                responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
-
-            } catch (NumberFormatException ex) {
-                ex.printStackTrace();
-                Log.e(LOG_TAG, ex.getMessage());
-            }
+        fillDetailAdapter(view, selectedBalance.getPayload());
+        for (PendingBalancePayloadDTO payment : selectedBalance.getPayload()) {
+            total += payment.getAmount();
         }
+        if (total > 0) {
+            payTotalAmountButton.setClickable(true);
+            payTotalAmountButton.setEnabled(true);
+            makePartialPaymentButton.setEnabled(true);
+            makePartialPaymentButton.setEnabled(true);
+            payLaterButton.setEnabled(true);
+            payLaterButton.setEnabled(true);
+
+            payTotalAmountButton.setTextColor(Color.WHITE);
+            int color = ContextCompat.getColor(getContext(), R.color.colorPrimary);
+            makePartialPaymentButton.setTextColor(color);
+            payLaterButton.setTextColor(color);
+        }
+
+        try {
+            NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
+
+            TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);
+            responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
+
+        } catch (NumberFormatException ex) {
+            ex.printStackTrace();
+            Log.e(LOG_TAG, ex.getMessage());
+        }
+
 
         payTotalAmountButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,6 +134,18 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
                 new PatientPartialPaymentDialog(getActivity(), paymentDTO).show();
             }
         });
+    }
+
+    @Override
+    protected void getPaymentInformation() {
+        super.getPaymentInformation();
+        Bundle args = getArguments();
+        if (args != null) {
+            selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
+        }
+        if (selectedBalance == null) {
+            selectedBalance = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
+        }
     }
 
     protected void doPayment() {
