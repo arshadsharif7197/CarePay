@@ -48,8 +48,7 @@ import java.util.Map;
  */
 public class NextAppointmentFragment extends BaseFragment {
 
-    private Toolbar toolbar;
-    private FragmentActivityInterface callback;
+    private CheckOutInterface callback;
     private AppointmentsResultModel appointmentsResultModel;
     private AppointmentDTO selectedAppointment;
     private TextView visitTypeTextView;
@@ -82,7 +81,7 @@ public class NextAppointmentFragment extends BaseFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (FragmentActivityInterface) context;
+            callback = (CheckOutInterface) context;
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached Context must implement ResponsibilityActionCallback");
         }
@@ -104,7 +103,6 @@ public class NextAppointmentFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_next_appointment, container, false);
     }
 
@@ -116,7 +114,7 @@ public class NextAppointmentFragment extends BaseFragment {
     }
 
     private void setUpToolbar(View view) {
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         callback.setToolbar(toolbar);
         TextView title = (TextView) toolbar.findViewById(com.carecloud.carepaylibrary.R.id.respons_toolbar_title);
         title.setText(Label.getLabel("next_appointment_toolbar_title"));
@@ -252,7 +250,7 @@ public class NextAppointmentFragment extends BaseFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             onAppointmentRequestSuccess();
-            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            callback.showAllDoneFragment(workflowDTO);
         }
 
         @Override
@@ -280,7 +278,7 @@ public class NextAppointmentFragment extends BaseFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            callback.showAllDoneFragment(workflowDTO);
         }
 
         @Override
