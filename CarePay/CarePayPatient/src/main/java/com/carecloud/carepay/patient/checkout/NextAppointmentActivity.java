@@ -12,6 +12,7 @@ import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.interfaces.AvailableHoursInterface;
 import com.carecloud.carepaylibray.appointments.interfaces.DateRangeInterface;
@@ -69,7 +70,7 @@ public class NextAppointmentActivity extends BasePatientActivity implements Frag
 
     private void showResponsibilityFragment() {
         replaceFragment(ResponsibilityFragment
-                        .newInstance(getConvertedDTO(PaymentsModel.class), false, "checkout_responsibility_title"),
+                        .newInstance(getConvertedDTO(PaymentsModel.class), null, false, "checkout_responsibility_title"),
                 false);
     }
 
@@ -196,6 +197,17 @@ public class NextAppointmentActivity extends BasePatientActivity implements Frag
         PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
         confirmationFragment.setArguments(args);
         confirmationFragment.show(getSupportFragmentManager(), confirmationFragment.getClass().getSimpleName());
+    }
+
+    @Override
+    public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
+        String patientId = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getMetadata().getPatientId();
+        for (UserPracticeDTO userPracticeDTO : paymentsModel.getPaymentPayload().getUserPractices()){
+            if(userPracticeDTO.getPatientId()!=null && userPracticeDTO.getPatientId().equals(patientId)){
+                return userPracticeDTO;
+            }
+        }
+        return null;
     }
 
     @Override
