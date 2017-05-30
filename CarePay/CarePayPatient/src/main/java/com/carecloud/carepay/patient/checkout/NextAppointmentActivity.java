@@ -24,7 +24,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.interfaces.DTO;
-import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
@@ -35,7 +34,7 @@ import com.google.gson.Gson;
 
 import java.util.Date;
 
-public class NextAppointmentActivity extends BasePatientActivity implements FragmentActivityInterface,
+public class NextAppointmentActivity extends BasePatientActivity implements CheckOutInterface,
         VisitTypeInterface, AvailableHoursInterface, DateRangeInterface, PaymentNavigationCallback {
 
     private DTO checkOutDto;
@@ -202,6 +201,10 @@ public class NextAppointmentActivity extends BasePatientActivity implements Frag
 
     @Override
     public void startPaymentProcess(PaymentsModel paymentsModel) {
+    }
 
+    public void showAllDoneFragment(WorkflowDTO workflowDTO) {
+        AllDoneDialogFragment fragment = AllDoneDialogFragment.newInstance(workflowDTO);
+        displayDialogFragment(fragment, true);
     }
 }
