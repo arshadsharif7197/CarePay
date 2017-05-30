@@ -12,7 +12,7 @@ public interface PaymentInterface {
      * Callback to launch the payment method selector
      *
      * @param amount amount to pay
-     * @param paymentsModel
+     * @param paymentsModel the payment model
      */
     void onPayButtonClicked(double amount, PaymentsModel paymentsModel);
 }

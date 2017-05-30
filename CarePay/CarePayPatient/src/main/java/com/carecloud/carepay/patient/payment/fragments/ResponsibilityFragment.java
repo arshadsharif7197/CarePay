@@ -47,13 +47,13 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
      */
     public static ResponsibilityFragment newInstance(PaymentsModel paymentsDTO, boolean payLaterButtonVisibility,
                                                      String title) {
-        ResponsibilityFragment fragment = new ResponsibilityFragment();
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsDTO);
         args.putBoolean("payLaterButtonVisibility", payLaterButtonVisibility);
         if (title != null) {
             args.putString("title", title);
         }
+        ResponsibilityFragment fragment = new ResponsibilityFragment();
         fragment.setArguments(args);
         return fragment;
     }
