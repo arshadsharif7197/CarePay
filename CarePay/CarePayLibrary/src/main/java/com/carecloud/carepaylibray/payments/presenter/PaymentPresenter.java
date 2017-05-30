@@ -1,6 +1,6 @@
 package com.carecloud.carepaylibray.payments.presenter;
 
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 
 /**
