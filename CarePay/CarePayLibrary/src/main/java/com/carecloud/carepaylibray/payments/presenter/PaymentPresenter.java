@@ -13,6 +13,12 @@ public abstract class PaymentPresenter implements PaymentNavigationCallback {
     protected PaymentViewHandler viewHandler;
     protected String patientId;
 
+    /**
+     * Constructor
+     * @param viewHandler Payment View Handler
+     * @param paymentsModel Payment Model DTO
+     * @param patientId Selected Patient ID
+     */
     public PaymentPresenter(PaymentViewHandler viewHandler, PaymentsModel paymentsModel, String patientId){
         this.viewHandler = viewHandler;
         this.paymentsModel = paymentsModel;

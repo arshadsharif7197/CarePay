@@ -69,7 +69,7 @@ public interface PaymentNavigationCallback {
     /**
      * Return the practice info associated to the current payment flow
      * Should fill the PracticeID, PracticeMgmt, & PatientID
-     * @return
+     * @return practice info ssociated to current patient payment
      */
     UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel);
 }
