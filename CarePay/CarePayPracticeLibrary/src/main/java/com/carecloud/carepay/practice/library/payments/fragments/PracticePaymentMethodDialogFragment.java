@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -19,6 +21,8 @@ import com.google.gson.Gson;
  * A simple {@link Fragment} subclass.
  */
 public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFragment {
+
+    protected PaymentMethodDialogInterface dialogCallback;
 
     /**
      *
@@ -42,6 +46,17 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
     }
 
     @Override
+    public void attachCallback(Context context) {
+        super.attachCallback(context);
+        try{
+            dialogCallback = (PaymentMethodDialogInterface) context;
+        }catch (ClassCastException cce){
+            throw new ClassCastException("Attached context must imlement PaymentMethodDialogInterface");
+        }
+    }
+
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_payment_method_dialog_practice, container, false);
     }
@@ -54,7 +69,7 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
             @Override
             public void onClick(View view) {
                 dismiss();
-                callback.onPayLaterClicked(paymentsModel);
+                dialogCallback.onDismissPaymentMethodDialog(paymentsModel);
             }
         });
         TextView title = (TextView) view.findViewById(R.id.respons_toolbar_title);

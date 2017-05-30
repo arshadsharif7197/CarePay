@@ -469,11 +469,7 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
 
     @Override
     public void onPayLaterClicked(PaymentsModel paymentsModel) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
-        if (fragment != null) {
-            fragment.showDialog();
-        }
+
     }
 
     @Override
@@ -595,5 +591,14 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     @Override
     public void onDetailCancelClicked(PaymentsModel paymentsModel) {
         startPaymentProcess(paymentsModel);
+    }
+
+    @Override
+    public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
+        if (fragment != null) {
+            fragment.showDialog();
+        }
     }
 }

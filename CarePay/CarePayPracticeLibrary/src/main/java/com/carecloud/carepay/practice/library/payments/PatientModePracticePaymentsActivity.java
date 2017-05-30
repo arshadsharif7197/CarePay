@@ -30,6 +30,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
@@ -48,7 +49,7 @@ import java.util.Map;
  * Created by pjohnson on 16/03/17
  */
 public class PatientModePracticePaymentsActivity extends BasePracticeActivity implements PaymentBalancesAdapter.PaymentRecyclerViewCallback,
-        PaymentNavigationCallback, ResponsibilityFragmentDialog.PayResponsibilityCallback {
+        PaymentNavigationCallback, ResponsibilityFragmentDialog.PayResponsibilityCallback, PaymentMethodDialogInterface {
 
     private PaymentsModel paymentResultModel;
 
@@ -317,6 +318,11 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
 
     @Override
     public void onDetailCancelClicked(PaymentsModel paymentsModel) {
+        startPaymentProcess(paymentsModel);
+    }
+
+    @Override
+    public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
         startPaymentProcess(paymentsModel);
     }
 }
