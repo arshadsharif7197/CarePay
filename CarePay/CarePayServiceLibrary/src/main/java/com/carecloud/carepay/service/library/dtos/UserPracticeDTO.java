@@ -15,6 +15,9 @@ public class UserPracticeDTO {
     @SerializedName("user_id")
     @Expose
     private String userId;
+    @SerializedName("patient_id")
+    @Expose
+    private String patientId;
     @SerializedName("practice_mgmt")
     @Expose
     private String practiceMgmt;
@@ -109,5 +112,13 @@ public class UserPracticeDTO {
 
     public void setPracticePhoto(String practicePhoto) {
         this.practicePhoto = practicePhoto;
+    }
+
+    public String getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
     }
 }

@@ -24,7 +24,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class PatientNavigationHelper {
 
-    private static boolean accessPaymentsBalances;
+    private static boolean accessPaymentsBalances = false;
 
     /**
      * Access pending payments and history payments from menu.

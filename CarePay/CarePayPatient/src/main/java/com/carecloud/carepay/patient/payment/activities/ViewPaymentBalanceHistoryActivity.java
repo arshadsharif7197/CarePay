@@ -22,14 +22,19 @@ import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
 import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
+import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
@@ -42,6 +47,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     private static boolean isPaymentDone;
     private PaymentsModel paymentsDTO;
+    private UserPracticeDTO selectedUserPractice;
+    private PendingBalanceDTO selectedBalancesItem;
+
     public Bundle bundle;
     private String toolBarTitle;
 
@@ -64,9 +72,6 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                 .findViewById(com.carecloud.carepaylibrary.R.id.appointmentsDrawerIdTextView);
 
         paymentsDTO = getConvertedDTO(PaymentsModel.class);
-//        practiceId = paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeId();
-//        practiceMgmt = paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeMgmt();
-//        patientId = paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPatientId();
 
         toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.balance_history_toolbar);
         toolBarTitle = Label.getLabel("payment_patient_balance_toolbar");
@@ -74,8 +79,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         inflateDrawer();
 
 
-        if (hasPayments()
-                || hasCharges()) {
+        if (hasPayments() || hasCharges()) {
             replaceFragment(new PaymentBalanceHistoryFragment(), false);
         } else {
             showNoPaymentsLayout();
@@ -180,7 +184,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void startPaymentProcess(PaymentsModel paymentsModel) {
-
+        ResponsibilityFragment responsibilityFragment = ResponsibilityFragment.newInstance(paymentsModel, selectedBalancesItem, false);
+        replaceFragment(responsibilityFragment, true);
     }
 
     @Override
@@ -238,6 +243,11 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
+    public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
+        return selectedUserPractice;
+    }
+
+    @Override
     public void onPaymentPlanAction(PaymentsModel paymentsModel) {
         PaymentPlanFragment fragment = new PaymentPlanFragment();
 
@@ -285,14 +295,24 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void loadPaymentAmountScreen(PendingBalancePayloadDTO model, PaymentsModel paymentDTO) {
-        ResponsibilityFragment responsibilityFragment = ResponsibilityFragment.newInstance(paymentDTO, false);
-        replaceFragment(responsibilityFragment, true);
+    public void loadPaymentAmountScreen(PaymentsBalancesItem selectedBalancesItem, PaymentsModel paymentDTO) {
+//        ResponsibilityFragment responsibilityFragment = ResponsibilityFragment.newInstance(paymentDTO, false);
+//        replaceFragment(responsibilityFragment, true);
+        setPendingBalance(selectedBalancesItem);
+        selectedUserPractice = DtoHelper.getConvertedDTO(UserPracticeDTO.class, DtoHelper.getStringDTO(selectedBalancesItem.getMetadata()));
+        startPaymentProcess(paymentDTO);
         displayToolbar(false, null);
     }
 
     @Override
     public void onDetailCancelClicked(PaymentsModel paymentsModel) {
         loadPaymentAmountScreen(null, paymentsModel);
+    }
+
+    private void setPendingBalance(PaymentsBalancesItem selectedBalancesItem){
+        PendingBalanceDTO pendingBalanceDTO = new PendingBalanceDTO();
+        pendingBalanceDTO.setMetadata(selectedBalancesItem.getMetadata());
+        pendingBalanceDTO.getPayload().add(selectedBalancesItem.getBalance());
+        this.selectedBalancesItem = pendingBalanceDTO;
     }
 }

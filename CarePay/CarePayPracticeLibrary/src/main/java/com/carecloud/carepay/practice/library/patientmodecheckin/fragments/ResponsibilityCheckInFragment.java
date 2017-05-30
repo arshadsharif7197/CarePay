@@ -103,7 +103,7 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
                         total += payment.getAmount();
                     }
 
-                    fillDetailAdapter(view, paymentList);
+                    fillDetailAdapter(view, getAllPendingBalancePayloads(paymentList));
 
                     try {
                         if (total > 0) {

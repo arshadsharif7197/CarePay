@@ -22,6 +22,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseC
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePartialPaymentDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
@@ -29,6 +30,7 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
@@ -39,8 +41,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
 public class PatientModeCheckinActivity extends BasePracticeActivity implements
-        DemographicsView,
-        PaymentNavigationCallback {
+        DemographicsView, PaymentNavigationCallback, PaymentMethodDialogInterface {
 
     public final static int SUBFLOW_PAYMENTS = 3;
 
@@ -217,6 +218,14 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
+    public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
+        if(paymentsModel!=null && !paymentsModel.getPaymentPayload().getUserPractices().isEmpty()){
+            return paymentsModel.getPaymentPayload().getUserPractices().get(0);
+        }
+        return null;
+    }
+
+    @Override
     public void onPaymentPlanAction(PaymentsModel paymentsModel) {
         PatientPaymentPlanFragment fragment = new PatientPaymentPlanFragment();
 
@@ -339,6 +348,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void onDetailCancelClicked(PaymentsModel paymentsModel) {
-        startPaymentProcess(paymentsModel);
+
+    }
+
+    @Override
+    public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
+
     }
 }

@@ -68,10 +68,10 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
         appCompatActivity = (AppCompatActivity) getActivity();
     }
 
-    protected void fillDetailAdapter(View view, List<PendingBalanceDTO> paymentList) {
+    protected void fillDetailAdapter(View view, List<PendingBalancePayloadDTO> pendingBalancePayloads) {
         RecyclerView paymentDetailsListRecyclerView = ((RecyclerView) view.findViewById(R.id.responsibility_line_item_recycle_view));
         paymentDetailsListRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), getAllPendingBalancePayloads(paymentList), this);
+        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), pendingBalancePayloads, this);
         paymentDetailsListRecyclerView.setAdapter(adapter);
     }
 
