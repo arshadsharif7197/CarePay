@@ -31,7 +31,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressP
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiAccountsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.MerchantServiceMetadataDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.MerchantServicesDTO;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -100,12 +100,12 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     protected IAuthoriseCreditCardResponse authoriseCreditCardResponseCallback;
     protected List<MerchantServicesDTO> merchantServicesList;
 
-    protected PaymentNavigationCallback callback;
+    protected PaymentConfirmationInterface callback;
     protected PaymentsModel paymentsModel;
 
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle arguments = getArguments();
         Gson gson = new Gson();

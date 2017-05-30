@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -76,7 +76,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
         }
     }
 
-    private void updatePendingAmountText(double amount){
+    private void updatePendingAmountText(double amount) {
         pendingAmountTextView.setText(Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount(amount));
     }
 
@@ -94,9 +94,9 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
         @Override
         public void afterTextChanged(Editable editable) {
             double entry = 0D;
-            try{
+            try {
                 entry = Double.parseDouble(editable.toString());
-            }catch (NumberFormatException nfe){
+            } catch (NumberFormatException nfe) {
                 nfe.printStackTrace();
             }
             updatePendingAmountText(amount - entry);

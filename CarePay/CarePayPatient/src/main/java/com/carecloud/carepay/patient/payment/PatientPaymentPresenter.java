@@ -13,7 +13,6 @@ import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.google.gson.Gson;
@@ -35,7 +34,7 @@ public class PatientPaymentPresenter extends PaymentPresenter {
     }
 
     @Override
-    public void startPartialPayment(double owedAmount) {
+    public void onPartialPaymentClicked(double owedAmount) {
 
     }
 
@@ -67,12 +66,12 @@ public class PatientPaymentPresenter extends PaymentPresenter {
     }
 
     @Override
-    public void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO) {
+    public void completePaymentProcess(WorkflowDTO workflowDTO) {
         viewHandler.exitPaymentProcess(false);
     }
 
     @Override
-    public void cancelPaymentProcess(PaymentsModel paymentsModel) {
+    public void onPayLaterClicked(PaymentsModel paymentsModel) {
         viewHandler.exitPaymentProcess(true);
     }
 
@@ -99,4 +98,8 @@ public class PatientPaymentPresenter extends PaymentPresenter {
         viewHandler.displayDialogFragment(confirmationFragment, false);
     }
 
+    @Override
+    public void onDetailCancelClicked(PaymentsModel paymentsModel) {
+        startPaymentProcess(paymentsModel);
+    }
 }

@@ -31,7 +31,6 @@ import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragmen
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
-import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
 import com.google.gson.Gson;
@@ -185,7 +184,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void startPartialPayment(double owedAmount) {
+    public void onPartialPaymentClicked(double owedAmount) {
 
     }
 
@@ -229,12 +228,12 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO) {
+    public void completePaymentProcess(WorkflowDTO workflowDTO) {
 
     }
 
     @Override
-    public void cancelPaymentProcess(PaymentsModel paymentsModel) {
+    public void onPayLaterClicked(PaymentsModel paymentsModel) {
 
     }
 
@@ -290,5 +289,10 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         ResponsibilityFragment responsibilityFragment = ResponsibilityFragment.newInstance(paymentDTO, false);
         replaceFragment(responsibilityFragment, true);
         displayToolbar(false, null);
+    }
+
+    @Override
+    public void onDetailCancelClicked(PaymentsModel paymentsModel) {
+        loadPaymentAmountScreen(null, paymentsModel);
     }
 }

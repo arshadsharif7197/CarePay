@@ -29,7 +29,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
@@ -37,7 +37,6 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
-import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
@@ -137,7 +136,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
     }
 
     @Override
-    public void startPartialPayment(double owedAmount) {
+    public void onPartialPaymentClicked(double owedAmount) {
         String tag = PracticePartialPaymentDialogFragment.class.getSimpleName();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         PracticePartialPaymentDialogFragment dialog = PracticePartialPaymentDialogFragment
@@ -193,18 +192,18 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
     }
 
     @Override
-    public void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO) {
+    public void completePaymentProcess(WorkflowDTO workflowDTO) {
         refreshBalance();
     }
 
     @Override
-    public void cancelPaymentProcess(PaymentsModel paymentsModel) {
+    public void onPayLaterClicked(PaymentsModel paymentsModel) {
 
     }
 
     @Override
     public void onLeftActionTapped(PaymentsModel paymentsModel, double owedAmount) {
-        startPartialPayment(owedAmount);
+        onPartialPaymentClicked(owedAmount);
     }
 
     @Override
@@ -307,4 +306,8 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         }
     }
 
+    @Override
+    public void onDetailCancelClicked(PaymentsModel paymentsModel) {
+        startPaymentProcess(paymentsModel);
+    }
 }

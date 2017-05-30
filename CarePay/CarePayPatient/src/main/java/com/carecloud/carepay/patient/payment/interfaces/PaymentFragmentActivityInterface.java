@@ -1,7 +1,7 @@
 package com.carecloud.carepay.patient.payment.interfaces;
 
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 

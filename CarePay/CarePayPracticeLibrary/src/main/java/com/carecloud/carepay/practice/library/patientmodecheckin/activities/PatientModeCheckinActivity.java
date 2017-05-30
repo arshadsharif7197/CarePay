@@ -29,12 +29,11 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
-import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
@@ -161,7 +160,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void startPartialPayment(double owedAmount) {
+    public void onPartialPaymentClicked(double owedAmount) {
         String tag = PracticePartialPaymentDialogFragment.class.getSimpleName();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         PracticePartialPaymentDialogFragment dialog = PracticePartialPaymentDialogFragment
@@ -200,12 +199,12 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO) {
+    public void completePaymentProcess(WorkflowDTO workflowDTO) {
         Intent intent = getIntent();
-        String worflowString = intent.getStringExtra(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
-        if(worflowString != null){
+        String workflowString = intent.getStringExtra(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
+        if(workflowString != null){
             Gson gson = new Gson();
-            PracticeNavigationHelper.navigateToWorkflow(getContext(), gson.fromJson(worflowString, WorkflowDTO.class));
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), gson.fromJson(workflowString, WorkflowDTO.class));
         }else {
             setResult(CarePayConstants.HOME_PRESSED, intent);
             finish();
@@ -213,7 +212,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void cancelPaymentProcess(PaymentsModel paymentsModel) {
+    public void onPayLaterClicked(PaymentsModel paymentsModel) {
 
     }
 
@@ -338,4 +337,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
 
+    @Override
+    public void onDetailCancelClicked(PaymentsModel paymentsModel) {
+        startPaymentProcess(paymentsModel);
+    }
 }
