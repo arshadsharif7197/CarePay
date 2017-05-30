@@ -8,12 +8,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentCompletedInterface;
 import com.carecloud.carepaylibray.payments.models.PatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.google.gson.Gson;
@@ -26,62 +25,62 @@ import java.text.NumberFormat;
 
 public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
 
-    private PaymentNavigationCallback callback;
+    private PaymentCompletedInterface callback;
     private PaymentsModel paymentsModel;
+    private WorkflowDTO workflowDTO;
     private PatientPaymentPayload patientPaymentPayload;
-    private PatientBalanceDTO balance;
 
     NumberFormat currencyFormatter;
 
 
     @Override
     protected void attachCallback(Context context) {
-        try{
-            if(context instanceof PaymentViewHandler){
+        try {
+            if (context instanceof PaymentViewHandler) {
                 callback = ((PaymentViewHandler) context).getPaymentPresenter();
-            }else {
-                callback = (PaymentNavigationCallback) context;
+            } else {
+                callback = (PaymentCompletedInterface) context;
             }
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached Context must implement PaymentNavigationCallback");
         }
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(callback == null){
+        if (callback == null) {
             attachCallback(getContext());
         }
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
         Bundle args = getArguments();
-        if(args!=null){
+        if (args != null) {
             Gson gson = new Gson();
             String paymentPayload = args.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
+            workflowDTO = gson.fromJson(paymentPayload, WorkflowDTO.class);
             paymentsModel = gson.fromJson(paymentPayload, PaymentsModel.class);
             patientPaymentPayload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload().get(0);
-            balance = paymentsModel.getPaymentPayload().getPatientBalances().get(0);
         }
         currencyFormatter = NumberFormat.getCurrencyInstance();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_payment_confirmation, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         View okButton = view.findViewById(R.id.button_ok);
         okButton.setOnClickListener(dismissPopupListener);
 
         View closeButton = view.findViewById(R.id.dialog_close_header);
-        if(closeButton!=null){
+        if (closeButton != null) {
             closeButton.setOnClickListener(dismissPopupListener);
         }
 
@@ -110,10 +109,7 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
         @Override
         public void onClick(View view) {
             dismiss();
-            Gson gson = new Gson();
-            String patientBalance = gson.toJson(balance);
-            UpdatePatientBalancesDTO updatePatientBalance = gson.fromJson(patientBalance, UpdatePatientBalancesDTO.class);
-            callback.completePaymentProcess(updatePatientBalance);
+            callback.completePaymentProcess(workflowDTO);
         }
     };
 

@@ -54,7 +54,7 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
             @Override
             public void onClick(View view) {
                 dismiss();
-                callback.cancelPaymentProcess(paymentsModel);
+                callback.onPayLaterClicked(paymentsModel);
             }
         });
         TextView title = (TextView) view.findViewById(R.id.respons_toolbar_title);

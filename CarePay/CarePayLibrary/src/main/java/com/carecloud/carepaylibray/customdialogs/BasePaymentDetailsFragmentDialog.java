@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentDetailInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
@@ -15,7 +15,7 @@ public abstract class BasePaymentDetailsFragmentDialog extends BaseDialogFragmen
 
     protected PaymentsModel paymentReceiptModel;
     protected PendingBalancePayloadDTO paymentPayload;
-    protected PaymentNavigationCallback callback;
+    protected PaymentDetailInterface callback;
 
     @Override
     public void onAttach(Context context) {
@@ -23,22 +23,22 @@ public abstract class BasePaymentDetailsFragmentDialog extends BaseDialogFragmen
         attachCallback(context);
     }
 
-    protected void attachCallback(Context context){
+    protected void attachCallback(Context context) {
         try {
-            if(context instanceof PaymentViewHandler){
+            if (context instanceof PaymentViewHandler) {
                 callback = ((PaymentViewHandler) context).getPaymentPresenter();
-            }else {
-                callback = (PaymentNavigationCallback) context;
+            } else {
+                callback = (PaymentDetailInterface) context;
             }
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Provided context must implement PaymentNavigationCallback");
+            throw new ClassCastException("Provided context must implement PaymentDetailInterface");
         }
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(callback==null){
+        if (callback == null) {
             attachCallback(getContext());
         }
     }
@@ -75,8 +75,8 @@ public abstract class BasePaymentDetailsFragmentDialog extends BaseDialogFragmen
     }
 
     @Override
-    protected void onDialogCancel(){
+    protected void onDialogCancel() {
         dismiss();
-        callback.startPaymentProcess(paymentReceiptModel);
+        callback.onDetailCancelClicked(paymentReceiptModel);
     }
 }

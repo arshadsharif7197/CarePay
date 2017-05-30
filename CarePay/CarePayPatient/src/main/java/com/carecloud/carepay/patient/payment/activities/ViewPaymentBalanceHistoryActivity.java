@@ -188,7 +188,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void startPartialPayment(double owedAmount) {
+    public void onPartialPaymentClicked(double owedAmount) {
 
     }
 
@@ -232,12 +232,12 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO) {
+    public void completePaymentProcess(WorkflowDTO workflowDTO) {
 
     }
 
     @Override
-    public void cancelPaymentProcess(PaymentsModel paymentsModel) {
+    public void onPayLaterClicked(PaymentsModel paymentsModel) {
 
     }
 
@@ -301,6 +301,11 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         selectedUserPractice = DtoHelper.getConvertedDTO(UserPracticeDTO.class, DtoHelper.getStringDTO(selectedBalancesItem.getMetadata()));
         startPaymentProcess(paymentDTO);
         displayToolbar(false, null);
+    }
+
+    @Override
+    public void onDetailCancelClicked(PaymentsModel paymentsModel) {
+        loadPaymentAmountScreen(null, paymentsModel);
     }
 
     private void setPendingBalance(PaymentsBalancesItem selectedBalancesItem){

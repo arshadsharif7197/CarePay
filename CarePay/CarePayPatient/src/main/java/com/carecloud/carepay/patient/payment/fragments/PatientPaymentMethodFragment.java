@@ -49,17 +49,10 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     //Patient Specific Stuff
     private ProgressBar paymentMethodFragmentProgressBar;
     private GoogleApiClient googleApiClient;
-    private Boolean isProgressBarVisible = false;
-    private SupportWalletFragment walletFragment;
-
-
-    private List lineItems;
-    private boolean isAndroidPayReady;
 
     /**
-     *
      * @param paymentsModel the payments DTO
-     * @param amount the amount
+     * @param amount        the amount
      * @return an instance of PatientPaymentMethodFragment
      */
     public static PatientPaymentMethodFragment newInstance(PaymentsModel paymentsModel, double amount) {
@@ -96,7 +89,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     protected void setupTitleViews(View view) {
         super.setupTitleViews(view);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
-        if(toolbar!=null){
+        if (toolbar != null) {
             toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -160,7 +153,6 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
                     public void onResult(@NonNull BooleanResult booleanResult) {
                         showOrHideProgressDialog(false);
                         if (booleanResult.getStatus().isSuccess() && booleanResult.getValue()) {
-                            isAndroidPayReady = true;
                             addAndroidPayPaymentMethod();
                         }
                     }
@@ -178,17 +170,15 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     private void showOrHideProgressDialog(boolean show) {
         if (show) {
             paymentMethodFragmentProgressBar.setVisibility(View.VISIBLE);
-            isProgressBarVisible = true;
         } else {
             paymentMethodFragmentProgressBar.setVisibility(View.GONE);
-            isProgressBarVisible = false;
         }
 
     }
 
 
     private void createWalletFragment(List<LineItem> lineItems, Double amount) {
-        walletFragment = SupportWalletFragment.newInstance(walletFragmentOptions);
+        SupportWalletFragment walletFragment = SupportWalletFragment.newInstance(walletFragmentOptions);
 
         // Now initialize the Wallet Fragment
         MaskedWalletRequest maskedWalletRequest = createMaskedWalletRequest(lineItems, amount);
@@ -242,9 +232,9 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     }
 
 
-    private String getAndroidPublicKey(){
-        for(MerchantServicesDTO merchantServices : paymentsModel.getPaymentPayload().getMerchantServices()) {
-            if(merchantServices.getCode().equals(PaymentConstants.ANDROID_PAY_MERCHANT_SERVICE)){
+    private String getAndroidPublicKey() {
+        for (MerchantServicesDTO merchantServices : paymentsModel.getPaymentPayload().getMerchantServices()) {
+            if (merchantServices.getCode().equals(PaymentConstants.ANDROID_PAY_MERCHANT_SERVICE)) {
                 return merchantServices.getMetadata().getAndroidPublicKey();
             }
         }

@@ -109,8 +109,8 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
         AppointmentDisplayStyle style = appointmentsPayload.getDisplayStyle();
         switch (style){
             case CHECKED_IN:{
-//                holder.checkOutButton.setVisibility(View.VISIBLE);todo reenable this when ready
-//                holder.checkOutButton.setClickable(false);
+                holder.checkOutButton.setVisibility(View.VISIBLE);
+                holder.checkOutButton.setClickable(true);
                 holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.emerald));
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
                 holder.initials.setBackgroundResource(R.drawable.round_list_tv_green);

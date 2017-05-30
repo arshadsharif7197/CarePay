@@ -17,7 +17,8 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.CreditCardModel;
@@ -46,10 +47,10 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             if(context instanceof PaymentViewHandler){
                 callback = ((PaymentViewHandler) context).getPaymentPresenter();
             }else {
-                callback = (PaymentNavigationCallback) context;
+                callback = (PaymentConfirmationInterface) context;
             }
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached context must implement PaymentNavigationCallback");
+            throw new ClassCastException("Attached context must implement PaymentConfirmationInterface");
         }
     }
 

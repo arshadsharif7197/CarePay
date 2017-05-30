@@ -19,7 +19,8 @@ import android.widget.Toast;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentInterface;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
@@ -49,11 +50,12 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private boolean amountChangeFlag = true;
     private String balanceBeforeTextChange;
 
-    private PaymentNavigationCallback payNowClickListener;
+    private PaymentInterface payNowClickListener;
 
     /**
      * Contructor
-     * @param context context must implement PayNowClickListener
+     *
+     * @param context     context must implement PayNowClickListener
      * @param paymentsDTO payment model
      */
     public PartialPaymentDialog(Context context, PaymentsModel paymentsDTO) {
@@ -62,13 +64,13 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         this.paymentsDTO = paymentsDTO;
 
         try {
-            if(context instanceof PaymentViewHandler){
+            if (context instanceof PaymentViewHandler) {
                 payNowClickListener = ((PaymentViewHandler) context).getPaymentPresenter();
-            }else {
-                payNowClickListener = (PaymentNavigationCallback) context;
+            } else {
+                payNowClickListener = (PaymentInterface) context;
             }
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Dialog Context must implement PayNowClickListener for callback");
+            throw new ClassCastException("Dialog Context must implement PaymentInterface for callback");
         }
 
     }
@@ -79,7 +81,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_partial_payment);
         setCancelable(false);
-        if(getWindow()!=null) {
+        if (getWindow() != null) {
             getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
             WindowManager.LayoutParams params = getWindow().getAttributes();
             params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -115,7 +117,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         if (viewId == R.id.closeViewLayout) {
             SystemUtil.hideSoftKeyboard(context, view);
             cancel();
-        }else if (viewId == R.id.payPartialButton) {
+        } else if (viewId == R.id.payPartialButton) {
             onPaymentClick(amountText, paymentsDTO);
         }
     }
@@ -190,7 +192,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         onPendingAmountValidation(amountEditText, payPartialButton, partialPaymentTotalAmountTitle, amountSymbol);
     }
 
-    private void onPendingAmountValidation(String amountEditText, Button payPartialButton, TextView partialPaymentTotalAmountTitle,TextView amountSymbolTextView) {
+    private void onPendingAmountValidation(String amountEditText, Button payPartialButton, TextView partialPaymentTotalAmountTitle, TextView amountSymbolTextView) {
         if (amountEditText != null && amountEditText.length() > 0) {
             if (amountEditText.length() == 1 && amountEditText.equalsIgnoreCase(".")) {
                 amountEditText = "0.";
@@ -213,13 +215,13 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         try {
             payNowClickListener.onPayButtonClicked(Double.parseDouble(enterPartialAmountEditText.getText().toString()), paymentsDTO);
             cancel();
-        }catch (NumberFormatException nfe){
+        } catch (NumberFormatException nfe) {
             nfe.printStackTrace();
             Toast.makeText(context, "Please enter valid amount!", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void calculateFullAmount(TextView partialPaymentTotalAmountTitle){
+    private void calculateFullAmount(TextView partialPaymentTotalAmountTitle) {
         if (paymentsDTO != null && !paymentsDTO.getPaymentPayload().getPatientBalances().isEmpty()) {
             List<PendingBalancePayloadDTO> paymentList = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
 

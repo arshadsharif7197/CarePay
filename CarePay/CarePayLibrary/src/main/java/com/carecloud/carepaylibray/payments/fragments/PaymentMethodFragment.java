@@ -15,8 +15,8 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.adapter.PaymentMethodAdapter;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodInterface;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
@@ -45,21 +45,21 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
     protected List<PaymentsMethodsDTO> paymentMethodsList = new ArrayList<>();
     protected HashMap<String, Integer> paymentTypeMap;
 
-    protected PaymentNavigationCallback callback;
+    protected PaymentMethodInterface callback;
 
     public abstract View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle);//make sure all implementations create a proper view
 
 
     @Override
-    public void attachCallback(Context context){
-        try{
-            if(context instanceof PaymentViewHandler){
+    public void attachCallback(Context context) {
+        try {
+            if (context instanceof PaymentViewHandler) {
                 callback = ((PaymentViewHandler) context).getPaymentPresenter();
-            }else{
-                callback = (PaymentNavigationCallback) context;
+            } else {
+                callback = (PaymentMethodInterface) context;
             }
-        }catch (ClassCastException cce) {
-            throw new ClassCastException("Attached Context must implement PaymentMethocActionCallback");
+        } catch (ClassCastException cce) {
+            throw new ClassCastException("Attached Context must implement PaymentMethodInterface");
         }
     }
 
@@ -67,7 +67,7 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle bundle = getArguments();
-        if(bundle!=null) {
+        if (bundle != null) {
             amountToMakePayment = bundle.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
             paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, bundle);
             if (!paymentsModel.getPaymentPayload().getPaymentSettings().isEmpty()) {
@@ -79,9 +79,9 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(callback==null){
+        if (callback == null) {
             attachCallback(getContext());
         }
     }

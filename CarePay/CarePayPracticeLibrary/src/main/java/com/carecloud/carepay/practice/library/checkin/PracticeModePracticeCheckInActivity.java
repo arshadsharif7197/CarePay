@@ -236,7 +236,7 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
         @Override
         public boolean onDrag(View view, DragEvent dragEvent) {
             String patientId = "";
-            if(dragEvent.getClipDescription()!=null) {
+            if (dragEvent.getClipDescription() != null) {
                 patientId = dragEvent.getClipDescription().getLabel().toString();
             }
             switch (dragEvent.getAction()) {
@@ -392,7 +392,7 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     }
 
     @Override
-    public void startPartialPayment(double owedAmount) {
+    public void onPartialPaymentClicked(double owedAmount) {
 
     }
 
@@ -406,7 +406,8 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
 //        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
-        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
+                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel,
                     selectedPaymentMethod.getLabel(), amount);
             fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
@@ -447,20 +448,30 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     }
 
     @Override
-    public void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO) {
+    public void completePaymentProcess(WorkflowDTO workflowDTO) {
+        Gson gson = new Gson();
+        PaymentsModel paymentsModel = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
+        PatientBalanceDTO balance = paymentsModel.getPaymentPayload().getPatientBalances().get(0);
+        String patientBalance = gson.toJson(balance);
+        UpdatePatientBalancesDTO updatePatientBalance = gson.fromJson(patientBalance, UpdatePatientBalancesDTO.class);
+
+        showPaymentDistributionFragment(updatePatientBalance);
+    }
+
+    private void showPaymentDistributionFragment(UpdatePatientBalancesDTO updatePatientBalance) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
-        if(fragment!=null) {
+        if (fragment != null) {
             fragment.dismiss();
         }
-        updatePatientBalance(updatePatientBalancesDTO);
+        updatePatientBalance(updatePatientBalance);
     }
 
     @Override
-    public void cancelPaymentProcess(PaymentsModel paymentsModel) {
+    public void onPayLaterClicked(PaymentsModel paymentsModel) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
-        if(fragment!=null) {
+        if (fragment != null) {
             fragment.showDialog();
         }
     }
@@ -539,13 +550,13 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
 
     @Override
     protected void processExternalPaymentFailure(PaymentExecution paymentExecution, int resultCode) {
-        if(resultCode == CarePayConstants.PAYMENT_RETRY_PENDING_RESULT_CODE){
+        if (resultCode == CarePayConstants.PAYMENT_RETRY_PENDING_RESULT_CODE) {
             //Display a success notification and do some cleanup
             PaymentQueuedDialogFragment dialogFragment = new PaymentQueuedDialogFragment();
             DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    completePaymentProcess(new UpdatePatientBalancesDTO());
+                    showPaymentDistributionFragment(new UpdatePatientBalancesDTO());
                 }
             };
             dialogFragment.setOnDismissListener(dismissListener);
@@ -553,7 +564,6 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
 
         }
     }
-
 
     private void updatePatientBalance(UpdatePatientBalancesDTO updateBalance) {
         ListIterator<PatientBalanceDTO> iterator = checkInDTO.getPayload().getPatientBalances().listIterator();
@@ -582,4 +592,8 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     }
 
 
+    @Override
+    public void onDetailCancelClicked(PaymentsModel paymentsModel) {
+        startPaymentProcess(paymentsModel);
+    }
 }
