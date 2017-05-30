@@ -309,7 +309,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    showPaymentDistributionFragment(new UpdatePatientBalancesDTO());
+                    hidePaymentDistributionFragment(new UpdatePatientBalancesDTO());
                 }
             };
             dialogFragment.setOnDismissListener(dismissListener);
@@ -433,16 +433,18 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         String patientBalance = gson.toJson(balance);
         UpdatePatientBalancesDTO updatePatientBalance = gson.fromJson(patientBalance, UpdatePatientBalancesDTO.class);
 
-        showPaymentDistributionFragment(updatePatientBalance);
+        hidePaymentDistributionFragment(updatePatientBalance);
     }
 
-    private void showPaymentDistributionFragment(UpdatePatientBalancesDTO updatePatientBalance) {
+    private void hidePaymentDistributionFragment(UpdatePatientBalancesDTO updatePatientBalance) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
         if (fragment != null) {
             fragment.dismiss();
         }
-        updatePatientBalance(updatePatientBalance);
+        if (updatePatientBalance != null) {
+            updatePatientBalance(updatePatientBalance);
+        }
     }
 
     @Override

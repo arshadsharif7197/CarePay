@@ -28,11 +28,7 @@ import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
-import com.carecloud.carepaylibray.payments.interfaces.ChooseCreditCardInterface;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentCompletedInterface;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentDetailInterface;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodInterface;
-import com.carecloud.carepaylibray.payments.interfaces.ResponsibilityPaymentInterface;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.google.gson.Gson;
@@ -40,8 +36,7 @@ import com.google.gson.Gson;
 import java.util.Date;
 
 public class NextAppointmentActivity extends BasePatientActivity implements FragmentActivityInterface,
-        VisitTypeInterface, AvailableHoursInterface, DateRangeInterface, ResponsibilityPaymentInterface,
-        PaymentDetailInterface, PaymentMethodInterface, ChooseCreditCardInterface, PaymentCompletedInterface {
+        VisitTypeInterface, AvailableHoursInterface, DateRangeInterface, PaymentNavigationCallback {
 
     private DTO checkOutDto;
     public static final String APPOINTMENT_ID = "appointmentId";
@@ -195,12 +190,18 @@ public class NextAppointmentActivity extends BasePatientActivity implements Frag
 
         PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
         confirmationFragment.setArguments(args);
-        confirmationFragment.show(getSupportFragmentManager(), confirmationFragment.getClass().getSimpleName());
+
+        displayDialogFragment(confirmationFragment, true);
     }
 
     @Override
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
         PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO,
                 getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO));
+    }
+
+    @Override
+    public void startPaymentProcess(PaymentsModel paymentsModel) {
+
     }
 }
