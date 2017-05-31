@@ -32,6 +32,8 @@ android {
             buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
 
+            buildConfigField 'String', 'NEW_RELIC_ID', '"AAbf82b0d56666f5c6c2e080a83b2c9786ee2c99df"'
+
             buildConfigField 'boolean', 'useUnifiedAuth', 'true'
         }
         qa {
@@ -41,6 +43,8 @@ android {
             buildConfigField 'String', 'X_API_KEY', '"VMGQTfHsuP5PSi3UbyXWh7xGWMflwZtHa55LZyXr"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
 
+            buildConfigField 'String', 'NEW_RELIC_ID', '"AA4b18a2f2c8c5dca5576296b3a0e5bc67b7629718"'
+
             buildConfigField 'boolean', 'useUnifiedAuth', 'true'
         }
         staging {
@@ -49,6 +53,8 @@ android {
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry-staging.carecloud.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"WQRPwvVVL89qyr9TqzGOo9Qx8jKOYxmO9eRdNFpq"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
+
+            buildConfigField 'String', 'NEW_RELIC_ID', '"AA4b18a2f2c8c5dca5576296b3a0e5bc67b7629718"'
 
             buildConfigField 'boolean', 'useUnifiedAuth', 'true'
         }
@@ -60,6 +66,8 @@ android {
             buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
 
+            buildConfigField 'String', 'NEW_RELIC_ID', '"AA4b18a2f2c8c5dca5576296b3a0e5bc67b7629718"'
+
             buildConfigField 'boolean', 'useUnifiedAuth', 'true'
         }
         production {
@@ -68,6 +76,8 @@ android {
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.gobreeze.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"Jbr3ZMKbC54bezcc7DWjn7I5I4M8cEHl6Be9cAYT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
+
+            buildConfigField 'String', 'NEW_RELIC_ID', '"AA35b4f8a06cf80fa183849e8159ae58f2a9c8a0b0"'
 
             buildConfigField 'boolean', 'useUnifiedAuth', 'true'
         }
@@ -78,5 +88,5 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':CarePayPracticeLibrary')
     compile 'com.clover.sdk:clover-android-sdk:latest.release'
-    compile 'com.newrelic.agent.android:android-agent:5.12.2'
+    compile 'com.newrelic.agent.android:android-agent:5.12.3'
 }

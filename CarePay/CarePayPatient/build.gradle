@@ -37,6 +37,8 @@ android {
             buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"WSS://STAR-CLUSTER.DEVELOPMENT.CARECLOUD.COM"'
 
+            buildConfigField 'String', 'NEW_RELIC_ID', '"AA11d2bb94e604c1b3a506dcda65bd7dfa9995d110"'
+
             buildConfigField 'boolean', 'useUnifiedAuth', 'true'
         }
         qa {
@@ -45,6 +47,8 @@ android {
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.qa.carecloud.com/workflow/shamrock/patient_app/language_selection/start"'
             buildConfigField 'String', 'X_API_KEY', '"VMGQTfHsuP5PSi3UbyXWh7xGWMflwZtHa55LZyXr"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
+
+            buildConfigField 'String', 'NEW_RELIC_ID', '"AAb24320f2a02bf87d9faf0d7aff73bbeca08d264f"'
 
             buildConfigField 'boolean', 'useUnifiedAuth', 'true'
         }
@@ -55,6 +59,8 @@ android {
             buildConfigField 'String', 'X_API_KEY', '"WQRPwvVVL89qyr9TqzGOo9Qx8jKOYxmO9eRdNFpq"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
 
+            buildConfigField 'String', 'NEW_RELIC_ID', '"AAb24320f2a02bf87d9faf0d7aff73bbeca08d264f"'
+
             buildConfigField 'boolean', 'useUnifiedAuth', 'true'
         }
         production {
@@ -63,6 +69,8 @@ android {
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.gobreeze.com/workflow/shamrock/patient_app/language_selection/start"'
             buildConfigField 'String', 'X_API_KEY', '"Jbr3ZMKbC54bezcc7DWjn7I5I4M8cEHl6Be9cAYT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
+
+            buildConfigField 'String', 'NEW_RELIC_ID', '"AA2faf2a0d9f02e9595012ede7e6a30ddda5e1b250"'
 
             buildConfigField 'boolean', 'useUnifiedAuth', 'true'
         }
@@ -77,7 +85,7 @@ configurations.all {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':CarePayLibrary')
-    compile 'com.newrelic.agent.android:android-agent:5.12.2'
+    compile 'com.newrelic.agent.android:android-agent:5.12.3'
     // Android Pay
     compile 'com.google.android.gms:play-services-auth:10.2.1'
     compile 'com.google.android.gms:play-services-wallet:10.2.1'

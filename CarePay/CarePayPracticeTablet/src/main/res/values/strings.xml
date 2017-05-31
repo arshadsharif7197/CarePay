@@ -1,4 +1,4 @@
 <resources>
-    <string name="new_relic_application_token">AAae417ce2d433e6eb08fb05d2beffd8ac08f5917c</string>
+    <!--<string name="new_relic_application_token">AAae417ce2d433e6eb08fb05d2beffd8ac08f5917c</string>-->
     <string name="mixpanel_application_token">0191c29a6357d500973052dcfb314c55</string>
 </resources>
