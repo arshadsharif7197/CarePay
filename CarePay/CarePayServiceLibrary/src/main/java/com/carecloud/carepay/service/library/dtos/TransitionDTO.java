@@ -22,7 +22,7 @@ public class TransitionDTO {
     private String url;
     @SerializedName("query_string")
     @Expose
-    private  JsonObject queryString;
+    private JsonObject queryString;
     @SerializedName("data")
     @Expose
     private DataDTO data = new DataDTO();
@@ -34,72 +34,56 @@ public class TransitionDTO {
     private DemographicsSettingsHeaderDTO header = new DemographicsSettingsHeaderDTO();
 
     /**
-     *
-     * @return
-     * The method
+     * @return The method
      */
     public String getMethod() {
         return method;
     }
 
     /**
-     *
-     * @param method
-     * The method
+     * @param method The method
      */
     public void setMethod(String method) {
         this.method = method;
     }
 
     /**
-     *
-     * @return
-     * The url
+     * @return The url
      */
     public String getUrl() {
         return url;
     }
 
     /**
-     *
-     * @param url
-     * The url
+     * @param url The url
      */
     public void setUrl(String url) {
         this.url = url;
     }
 
     /**
-     *
-     * @return
-     * The queryString
+     * @return The queryString
      */
     public JsonObject getQueryString() {
         return queryString;
     }
 
     /**
-     *
-     * @param queryString
-     * The query_string
+     * @param queryString The query_string
      */
     public void setQueryString(JsonObject queryString) {
         this.queryString = queryString;
     }
 
     /**
-     *
-     * @return
-     *     The data
+     * @return The data
      */
     public DataDTO getData() {
         return data;
     }
 
     /**
-     *
-     * @param data
-     *     The data
+     * @param data The data
      */
     public void setData(DataDTO data) {
         this.data = data;
@@ -124,7 +108,6 @@ public class TransitionDTO {
     }
 
     /**
-     *
      * @return header
      */
     public DemographicsSettingsHeaderDTO getHeader() {
@@ -132,7 +115,6 @@ public class TransitionDTO {
     }
 
     /**
-     *
      * @param header the header
      */
     public void setHeader(DemographicsSettingsHeaderDTO header) {

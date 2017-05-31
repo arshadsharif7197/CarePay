@@ -28,7 +28,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
-import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -250,7 +249,7 @@ public class NextAppointmentFragment extends BaseFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             onAppointmentRequestSuccess();
-            callback.showAllDoneFragment(workflowDTO);
+            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override
@@ -278,7 +277,7 @@ public class NextAppointmentFragment extends BaseFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            callback.showAllDoneFragment(workflowDTO);
+            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override
@@ -341,7 +340,6 @@ public class NextAppointmentFragment extends BaseFragment {
     }
 
     /**
-     *
      * @param visitTypeDTO the visit type
      */
     public void setVisitType(VisitTypeDTO visitTypeDTO) {
@@ -351,7 +349,6 @@ public class NextAppointmentFragment extends BaseFragment {
     }
 
     /**
-     *
      * @param appointmentsSlot the location and time of the appointment
      */
     public void setLocationAndTime(AppointmentsSlotsDTO appointmentsSlot) {

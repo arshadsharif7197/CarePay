@@ -151,6 +151,7 @@ public class PatientNavigationHelper {
                 break;
             }
             case NavigationStateConstants.PATIENT_APP_CHECKOUT:
+            case NavigationStateConstants.PATIENT_FORM_CHECKOUT:
             case NavigationStateConstants.PATIENT_PAY_CHECKOUT: {
                 intent = new Intent(context, NextAppointmentActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

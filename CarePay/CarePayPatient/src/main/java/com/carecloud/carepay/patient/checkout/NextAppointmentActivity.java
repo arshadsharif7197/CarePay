@@ -51,11 +51,18 @@ public class NextAppointmentActivity extends BasePatientActivity implements Chec
             if (NavigationStateConstants.PATIENT_APP_CHECKOUT.equals(extra.getString("state"))) {
                 checkOutDto = getConvertedDTO(AppointmentsResultModel.class);
                 showNextAppointmentFragment(appointmentId);
-            } else {
+            } else if (NavigationStateConstants.PATIENT_PAY_CHECKOUT.equals(extra.getString("state"))) {
                 checkOutDto = getConvertedDTO(PaymentsModel.class);
                 showResponsibilityFragment();
+            } else if (NavigationStateConstants.PATIENT_FORM_CHECKOUT.equals(extra.getString("state"))) {
+                checkOutDto = getConvertedDTO(AppointmentsResultModel.class);
+                showCheckOutFormFragment();
             }
         }
+    }
+
+    private void showCheckOutFormFragment() {
+        replaceFragment(CheckOutFormFragment.newInstance((AppointmentsResultModel) checkOutDto), false);
     }
 
     private void showNextAppointmentFragment(String appointmentId) {
@@ -197,8 +204,8 @@ public class NextAppointmentActivity extends BasePatientActivity implements Chec
     @Override
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
         String patientId = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getMetadata().getPatientId();
-        for (UserPracticeDTO userPracticeDTO : paymentsModel.getPaymentPayload().getUserPractices()){
-            if(userPracticeDTO.getPatientId()!=null && userPracticeDTO.getPatientId().equals(patientId)){
+        for (UserPracticeDTO userPracticeDTO : paymentsModel.getPaymentPayload().getUserPractices()) {
+            if (userPracticeDTO.getPatientId() != null && userPracticeDTO.getPatientId().equals(patientId)) {
                 return userPracticeDTO;
             }
         }
