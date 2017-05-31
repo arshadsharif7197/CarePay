@@ -179,6 +179,7 @@ public class SigninFragment extends BaseFragment {
             getWorkflowServiceHelper().execute(signInTransition, unifiedLoginCallback, gson.toJson(signInDTO),
                     queryParams, headers);
             getAppAuthorizationHelper().setUser(userName);
+            getApplicationPreferences().setUserId(userName);
         }
     }
 

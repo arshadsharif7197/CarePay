@@ -53,18 +53,25 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
-        String userId = getAppAuthorizationHelper().getCurrUser();
-        if (userId != null) {
-            appointmentsDrawerUserIdTextView.setText(userId);
-        } else {
-            appointmentsDrawerUserIdTextView.setText("");
-        }
 
         String imageUrl = getApplicationPreferences().getUserPhotoUrl();
         ImageView userImageView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.appointmentDrawerIdImageView);
         if (!StringUtil.isNullOrEmpty(imageUrl)) {
             Picasso.with(this).load(imageUrl).placeholder(R.drawable.icn_placeholder_user_profile_png)
                     .transform(new CircleImageTransform()).into(userImageView);
+        }
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if(appointmentsDrawerUserIdTextView!=null){
+            String userId = getApplicationPreferences().getUserId();
+            if (userId != null) {
+                appointmentsDrawerUserIdTextView.setText(userId);
+            } else {
+                appointmentsDrawerUserIdTextView.setText("");
+            }
         }
     }
 
