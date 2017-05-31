@@ -54,16 +54,15 @@
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:minHeight="@dimen/dimen_400dp">
+            android:layout_height="@dimen/dimen_400dp"
+            android:background="@color/white">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <ListView
+                <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:padding="@dimen/payment_method_parent_layout_padding"
                     android:id="@+id/list_credit_cards"
                     android:choiceMode="singleChoice"

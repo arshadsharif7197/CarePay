@@ -4,14 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,9 +21,8 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.payments.adapter.CreditCardsAdapter;
+import com.carecloud.carepaylibray.payments.adapter.CreditCardsListAdapter;
 import com.carecloud.carepaylibray.payments.interfaces.ChooseCreditCardInterface;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -50,11 +49,11 @@ import java.util.Map;
  * Created by lmenendez on 2/28/17
  */
 
-public class ChooseCreditCardFragment extends BasePaymentDialogFragment {
+public class ChooseCreditCardFragment extends BasePaymentDialogFragment implements CreditCardsListAdapter.CreditCardSelectionListener {
 
     private Button nextButton;
     private Activity activity;
-    private ListView creditCardsListView;
+    private RecyclerView creditCardsRecyclerView;
 
     private int selectedCreditCard = -1;
     protected PaymentsModel paymentsModel;
@@ -176,18 +175,10 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment {
         Button addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
 
-        creditCardsListView = (ListView) view.findViewById(R.id.list_credit_cards);
-        final CreditCardsAdapter creditCardsAdapter = new CreditCardsAdapter(getContext(), creditCardList);
-        creditCardsListView.setAdapter(creditCardsAdapter);
-        creditCardsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectedCreditCard = position;
-                creditCardsAdapter.setSelectedItem(position);
-                creditCardsAdapter.notifyDataSetChanged();
-                nextButton.setEnabled(true);
-            }
-        });
+        creditCardsRecyclerView = (RecyclerView) view.findViewById(R.id.list_credit_cards);
+        creditCardsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        final CreditCardsListAdapter creditCardsListAdapter = new CreditCardsListAdapter(getContext(), creditCardList, this);
+        creditCardsRecyclerView.setAdapter(creditCardsListAdapter);
 
     }
 
@@ -340,4 +331,11 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment {
     };
 
 
+    @Override
+    public void onCreditCardItemSelected(int position) {
+        selectedCreditCard = position;
+        CreditCardsListAdapter creditCardsListAdapter = (CreditCardsListAdapter) creditCardsRecyclerView.getAdapter();
+        creditCardsListAdapter.setSelectedItem(position);
+        creditCardsListAdapter.notifyDataSetChanged();
+    }
 }
