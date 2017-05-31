@@ -7,11 +7,11 @@ import android.util.Log;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.isNotEmptyString;
+
 import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.isNotEmptyString;
 
 public class StringUtil {
 
@@ -107,6 +107,9 @@ public class StringUtil {
      * @return formated string
      */
     public static String formatPhoneNumber(String phoneNumber) {
+        if(phoneNumber == null){
+            return null;
+        }
         StringBuilder phoneNumberString = new StringBuilder();
         phoneNumberString.append(phoneNumber);
         if (phoneNumberString.length() > 0) {
