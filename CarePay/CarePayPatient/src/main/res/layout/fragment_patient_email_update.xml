@@ -21,7 +21,7 @@
         <android.support.design.widget.TextInputLayout
             android:id="@+id/signInEmailTextInputLayout"
             style="@style/TextInputLayoutStyle"
-            app:customAssetFont="proxima_nova_regular"
+            app:customAssetFont="proxima_nova_semi_bold"
             app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
@@ -35,7 +35,7 @@
         <android.support.design.widget.TextInputLayout
             android:id="@+id/oldPasswordTextInputLayout"
             style="@style/TextInputLayoutStyle"
-            app:customAssetFont="proxima_nova_regular"
+            app:customAssetFont="proxima_nova_semi_bold"
             app:hintTextAppearance="@style/FloatingLabelStyle"
             app:passwordToggleEnabled="false">
 
