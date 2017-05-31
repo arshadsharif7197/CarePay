@@ -15,9 +15,8 @@ public class PracticeTabletSplashActivity extends SplashActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        NewRelic.withApplicationToken(
-            getString(R.string.new_relic_application_token)
-        ).start(this.getApplication());
+        String newRelicId = BuildConfig.NEW_RELIC_ID;
+        NewRelic.withApplicationToken(newRelicId).start(this.getApplication());
 
         MixPanelUtil.logEvent("Practice App Start");
     }

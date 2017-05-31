@@ -94,11 +94,9 @@ public class SplashActivity extends BasePatientActivity {
         // dynamic transition
         getWorkflowServiceHelper().executeApplicationStartRequest(applicationStartCallback);
 
-        if(!BuildConfig.FLAVOR.equals("development")) {
-            NewRelic.withApplicationToken(
-                    getString(R.string.new_relic_application_token)
-            ).start(this.getApplication());
-        }
+        String newRelicId = BuildConfig.NEW_RELIC_ID;
+        NewRelic.withApplicationToken(newRelicId).start(this.getApplication());
+
         Intent intent = new Intent(this, RegistrationIntentService.class);
         startService(intent);
     }
