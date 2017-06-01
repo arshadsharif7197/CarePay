@@ -187,7 +187,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
                         getDefaultOnOptionsSelectedListener(chooseGender, selectedGender, genderOptional),
                         Label.getLabel("demographics_review_gender")));
         String gender = demographicPayload.getPersonalDetails().getGender();
-        initSelectableInput(chooseGender, selectedGender, gender, genderOptional);
+        initSelectableInput(chooseGender, selectedGender, gender, personalInfoSection.getProperties().getGender().isRequired()?null:genderOptional);
 
 
         View raceLayout = view.findViewById(R.id.raceDemographicsLayout);
@@ -199,7 +199,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
                         getDefaultOnOptionsSelectedListener(chooseRace, selectedRace, raceOptional),
                         Label.getLabel("demographics_review_race")));
         String race = demographicPayload.getPersonalDetails().getPrimaryRace();
-        initSelectableInput(chooseRace, selectedRace, race, raceOptional);
+        initSelectableInput(chooseRace, selectedRace, race, personalInfoSection.getProperties().getPrimaryRace().isRequired()?null:raceOptional);
 
 
         View secondaryRaceLayout = view.findViewById(R.id.secondaryRaceDemographicsLayout);
@@ -211,7 +211,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
                         getDefaultOnOptionsSelectedListener(chooseSecondaryRace, selectedSecondaryRace, secondaryRaceOptional),
                         Label.getLabel("demographics_secondary_race")));
         String secondaryRace = demographicPayload.getPersonalDetails().getSecondaryRace();
-        initSelectableInput(chooseSecondaryRace, selectedSecondaryRace, secondaryRace, secondaryRaceOptional);
+        initSelectableInput(chooseSecondaryRace, selectedSecondaryRace, secondaryRace, personalInfoSection.getProperties().getSecondaryRace().isRequired()?null:secondaryRaceOptional);
 
 
         View ethnicityLayout = view.findViewById(R.id.ethnicityDemographicsLayout);
@@ -223,7 +223,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
                         getDefaultOnOptionsSelectedListener(chooseEthnicity, selectedEthnicity, ethnicityOptional),
                         Label.getLabel("demographics_review_ethnicity")));
         String ethnicity = demographicPayload.getPersonalDetails().getEthnicity();
-        initSelectableInput(chooseEthnicity, selectedEthnicity, ethnicity, ethnicityOptional);
+        initSelectableInput(chooseEthnicity, selectedEthnicity, ethnicity, personalInfoSection.getProperties().getEthnicity().isRequired()?null:ethnicityOptional);
     }
 
     private void initAddressInfo(View view, DemographicPayloadDTO demographicPayload) {

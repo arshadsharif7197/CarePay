@@ -11,9 +11,18 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.ResponsibilityType;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by pjohnson on 23/03/17
@@ -71,7 +80,9 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
     public void onClick(View view) {
         super.onClick(view);
         if ((view.getId() == R.id.enter_amount_button) && !StringUtil.isNullOrEmpty(amountText.getText().toString())) {
-            callback.onPayButtonClicked(Double.parseDouble(amountText.getText().toString()), paymentsModel);
+            double amount = Double.parseDouble(amountText.getText().toString());
+            createPaymentModel(amount);
+            callback.onPayButtonClicked(amount, paymentsModel);
             dismiss();
         }
     }
@@ -102,4 +113,72 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
             updatePendingAmountText(amount - entry);
         }
     };
+
+    private void createPaymentModel(double payAmount){
+        PaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
+        if( postModel == null){
+            postModel = new PaymentPostModel();
+        }
+        postModel.setAmount(payAmount);
+
+        List<PendingBalancePayloadDTO> responsibilityTypes = getPendingResponsibilityTypes();
+        for(PendingBalancePayloadDTO responsibility : responsibilityTypes){
+            if(payAmount > 0D) {
+                double itemAmount;
+                if (payAmount >= responsibility.getAmount()) {
+                    itemAmount = responsibility.getAmount();
+                } else {
+                    itemAmount = payAmount;
+                }
+                payAmount = (double) Math.round((payAmount - itemAmount) * 100) / 100;
+
+                PaymentObject paymentObject = new PaymentObject();
+                paymentObject.setAmount(itemAmount);
+                switch (responsibility.getType()){
+                    case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
+                        paymentObject.setResponsibilityType(ResponsibilityType.co_insurance);
+                        break;
+                    case PendingBalancePayloadDTO.DEDUCTIBLE_TYPE:
+                        paymentObject.setResponsibilityType(ResponsibilityType.deductable);
+                        break;
+                    case PendingBalancePayloadDTO.CO_PAY_TYPE:
+                    default:
+                        paymentObject.setResponsibilityType(ResponsibilityType.co_pay);
+                        break;
+                }
+                postModel.addPaymentMethod(paymentObject);
+            }
+        }
+
+        if(payAmount > 0){//payment is greater than any responsibility types
+            PaymentObject paymentObject = new PaymentObject();
+            paymentObject.setAmount(payAmount);
+            paymentObject.setDescription("Unapplied Amount");
+
+            postModel.addPaymentMethod(paymentObject);
+        }
+
+        paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
+    }
+
+    private List<PendingBalancePayloadDTO> getPendingResponsibilityTypes(){
+        List<PendingBalancePayloadDTO> responsibilityTypes = new ArrayList<>();
+        for(PatientBalanceDTO patientBalanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()){
+            for(PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()){
+                for(PendingBalancePayloadDTO pendingBalancePayloadDTO : pendingBalanceDTO.getPayload()){
+                    switch (pendingBalancePayloadDTO.getType()){
+                        case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
+                        case PendingBalancePayloadDTO.CO_PAY_TYPE:
+                        case PendingBalancePayloadDTO.DEDUCTIBLE_TYPE:
+                            responsibilityTypes.add(pendingBalancePayloadDTO);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+        return responsibilityTypes;
+    }
+
 }
