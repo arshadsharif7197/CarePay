@@ -23,5 +23,5 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':CarePayLibrary')
-
+    compile 'com.newrelic.agent.android:android-agent:5.12.3'
 }
