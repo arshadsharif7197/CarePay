@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraFragment;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.PermissionsUtil;
@@ -31,7 +32,7 @@ import java.util.List;
  *
  */
 
-public class MediaScannerPresenter {
+public class MediaScannerPresenter implements CarePayCameraReady {
 
     public static final String ACTION_PICTURE = "demographics_take_pic_option";
     public static final String ACTION_GALLERY = "demographics_select_gallery_option";
@@ -39,7 +40,6 @@ public class MediaScannerPresenter {
 
     private Context context;
     private MediaViewInterface mediaViewInterface;
-    private CarePayCameraReady cameraReady;
 
     private String pendingAction;
 
@@ -51,7 +51,6 @@ public class MediaScannerPresenter {
      */
     public MediaScannerPresenter(Context context, CarePayCameraReady cameraReady, MediaViewInterface mediaViewInterface){
         this.context = context;
-        this.cameraReady = cameraReady;
         this.mediaViewInterface = mediaViewInterface;
     }
 
@@ -155,7 +154,7 @@ public class MediaScannerPresenter {
         if(PermissionsUtil.checkPermissionCamera(context)){
             CarePayCameraCallback cameraCallback = mediaViewInterface.getCameraCallback();
             if(cameraCallback!=null) {
-                cameraReady.captureImage(cameraCallback);
+                captureImage(cameraCallback);
             }
         }else{
             setPendingAction(ACTION_PICTURE);
@@ -180,6 +179,12 @@ public class MediaScannerPresenter {
         mediaOptions.add(ACTION_CANCEL);
 
         return mediaOptions;
+    }
+
+    @Override
+    public void captureImage(CarePayCameraCallback callback) {
+        CarePayCameraFragment carePayCameraFragment = new CarePayCameraFragment();
+        displayDialogFragment(carePayCameraFragment, false);
     }
 
     private class MediaActionAdapter extends BaseAdapter {
