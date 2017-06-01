@@ -7,11 +7,11 @@ import android.util.Log;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.isNotEmptyString;
+
 import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.isNotEmptyString;
 
 public class StringUtil {
 
@@ -64,8 +64,10 @@ public class StringUtil {
      * @return The string with capitalized first letters
      */
     public static String captialize(String source) {
-
-        source = source.toLowerCase();
+        if(source == null){
+            return "";
+        }
+        source = source.replaceAll("( ){2,}", " ").toLowerCase();
         StringBuilder res = new StringBuilder();
 
         String[] strArr = source.split(" ");
