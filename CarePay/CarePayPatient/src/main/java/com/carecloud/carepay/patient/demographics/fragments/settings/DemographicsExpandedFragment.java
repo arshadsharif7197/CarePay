@@ -368,21 +368,21 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         }
 
 
+        TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.secondaryPhoneInputLayout);
         EditText secondaryPhoneNumber = (EditText) view.findViewById(R.id.secondaryPhone);
-        if(secondaryPhoneNumber.getVisibility() == View.VISIBLE &&
+        if(phoneLayout.getVisibility() == View.VISIBLE &&
                 !StringUtil.isNullOrEmpty(secondaryPhoneNumber.getText().toString()) &&
                 !ValidationHelper.isValidString(secondaryPhoneNumber.getText().toString().trim(), ValidationHelper.PHONE_NUMBER_PATTERN)){
-            TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.secondaryPhoneInputLayout);
             phoneLayout.setErrorEnabled(true);
             phoneLayout.setError(Label.getLabel("demographics_phone_number_validation_msg"));
             return false;
         }
 
+        TextInputLayout emailLayout = (TextInputLayout) view.findViewById(R.id.emailInputLayout);
         EditText emailAddress = (EditText) view.findViewById(R.id.email);
-        if(emailAddress.getVisibility() == View.VISIBLE &&
+        if(emailLayout.getVisibility() == View.VISIBLE &&
                 !StringUtil.isNullOrEmpty(emailAddress.getText().toString()) &&
                 !ValidationHelper.isValidString(emailAddress.getText().toString().trim(), ValidationHelper.EMAIL_PATTERN)){
-            TextInputLayout emailLayout = (TextInputLayout) view.findViewById(R.id.emailInputLayout);
             emailLayout.setErrorEnabled(true);
             emailLayout.setError(Label.getLabel("demographics_email_validation_msg"));
             return false;

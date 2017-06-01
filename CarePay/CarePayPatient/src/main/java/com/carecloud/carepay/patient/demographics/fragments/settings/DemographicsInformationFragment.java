@@ -356,31 +356,31 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
 
 
         //These are for validating correct input regardless of required fields
+        TextInputLayout dateBirthLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
         EditText dateOfBirth = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
-        if (dateOfBirth.getVisibility() == View.VISIBLE &&
+        if (dateBirthLayout.getVisibility() == View.VISIBLE &&
                 !StringUtil.isNullOrEmpty(dateOfBirth.getText().toString()) &&
                 !DateUtil.isValidateStringDateOfBirth(dateOfBirth.getText().toString())) {
-            TextInputLayout dateBirthLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
             dateBirthLayout.setErrorEnabled(true);
             dateBirthLayout.setError(Label.getLabel("demographics_date_validation_msg"));
             return false;
         }
 
+        TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
         EditText phoneNumber = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
-        if (phoneNumber.getVisibility() == View.VISIBLE &&
+        if (phoneLayout.getVisibility() == View.VISIBLE &&
                 !StringUtil.isNullOrEmpty(phoneNumber.getText().toString()) &&
                 !ValidationHelper.isValidString(phoneNumber.getText().toString().trim(), ValidationHelper.PHONE_NUMBER_PATTERN)) {
-            TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
             phoneLayout.setErrorEnabled(true);
             phoneLayout.setError(Label.getLabel("demographics_phone_number_validation_msg"));
             return false;
         }
 
+        TextInputLayout zipLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
         EditText zipCode = (EditText) view.findViewById(R.id.zipCodeId);
-        if (zipCode.getVisibility() == View.VISIBLE &&
+        if (zipLayout.getVisibility() == View.VISIBLE &&
                 !StringUtil.isNullOrEmpty(zipCode.getText().toString()) &&
                 !ValidationHelper.isValidString(zipCode.getText().toString(), ValidationHelper.ZIP_CODE_PATTERN)) {
-            TextInputLayout zipLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
             zipLayout.setErrorEnabled(true);
             zipLayout.setError(Label.getLabel("demographics_zip_code_validation_msg"));
             return false;
