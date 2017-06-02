@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -238,6 +240,27 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         if (addressSection.getProperties().getAddress1().isRequired()) {
             address.addTextChangedListener(getValidateEmptyTextWatcher(addressInputLayout));
         }
+        address.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (StringUtil.isNullOrEmpty(editable.toString())) {
+                    address2.setEnabled(false);
+                    address2.setText("");
+                } else {
+                    address2.setEnabled(true);
+                }
+            }
+        });
 
 
         TextInputLayout address2InputLayout = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);

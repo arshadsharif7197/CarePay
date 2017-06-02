@@ -208,6 +208,28 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         zipCodeEditText.addTextChangedListener(textWatcher);
         cityEditText.addTextChangedListener(textWatcher);
         stateAutoCompleteTextView.addTextChangedListener(textWatcher);
+
+        address1EditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (StringUtil.isNullOrEmpty(editable.toString())) {
+                    address2EditText.setEnabled(false);
+                    address2EditText.setText("");
+                } else {
+                    address2EditText.setEnabled(true);
+                }
+            }
+        });
     }
 
     private TextWatcher textWatcher = new TextWatcher() {

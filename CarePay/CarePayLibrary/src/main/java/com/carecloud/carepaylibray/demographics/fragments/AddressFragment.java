@@ -136,32 +136,29 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         address.setText(demographicPayload.getAddress().getAddress1());
         address.getOnFocusChangeListener().onFocusChange(address, !StringUtil.isNullOrEmpty(address.getText().toString()));
         if (addressSection.getProperties().getAddress1().isRequired()) {
-            address.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence sequence, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    if (StringUtil.isNullOrEmpty(editable.toString())) {
-                        addressInputLayout.setErrorEnabled(true);
-                        addressInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
-                        address2.setEnabled(false);
-                        address2.setText("");
-                    } else {
-                        addressInputLayout.setError(null);
-                        address2.setEnabled(true);
-                    }
-                    checkIfEnableButton(getView());
-                }
-            });
+            address.addTextChangedListener(getValidateEmptyTextWatcher(address2InputLayout));
         }
+        address.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (StringUtil.isNullOrEmpty(editable.toString())) {
+                    address2.setEnabled(false);
+                    address2.setText("");
+                } else {
+                    address2.setEnabled(true);
+                }
+            }
+        });
 
         TextInputLayout zipCodeInputLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
         EditText zipCode = (EditText) view.findViewById(R.id.zipCodeId);
