@@ -32,7 +32,7 @@
 
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                        android:id="@+id/balance_history_toolbar_title"
+                        android:id="@+id/toolbar_title"
                         style="@style/ResponsibilityToolbarTextStyle"
                         app:customAssetFont="gotham_rounded_medium"
                         android:layout_width="wrap_content"
