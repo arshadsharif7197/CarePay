@@ -28,14 +28,13 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
+import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
 import com.google.gson.Gson;
@@ -190,7 +189,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void onPartialPaymentClicked(double owedAmount) {
-
+        new PartialPaymentDialog(this, paymentsDTO).show();
     }
 
     @Override

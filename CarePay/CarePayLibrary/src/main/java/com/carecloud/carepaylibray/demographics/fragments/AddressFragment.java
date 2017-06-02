@@ -302,11 +302,12 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
             return false;
         }
 
+        TextInputLayout zipLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
         EditText zipCode = (EditText) view.findViewById(R.id.zipCodeId);
-        if (zipCode.getVisibility() == View.VISIBLE &&
+
+        if(zipLayout.getVisibility() == View.VISIBLE &&
                 !StringUtil.isNullOrEmpty(zipCode.getText().toString()) &&
-                !ValidationHelper.isValidString(zipCode.getText().toString(), ValidationHelper.ZIP_CODE_PATTERN)) {
-            TextInputLayout zipLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
+                !ValidationHelper.isValidString(zipCode.getText().toString(), ValidationHelper.ZIP_CODE_PATTERN)){
             zipLayout.setErrorEnabled(true);
             zipLayout.setError(Label.getLabel("demographics_zip_code_validation_msg"));
             return false;

@@ -27,6 +27,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -249,7 +250,11 @@ public class NextAppointmentFragment extends BaseFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             onAppointmentRequestSuccess();
-            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            if (NavigationStateConstants.APPOINTMENTS.equals(workflowDTO.getState())) {
+                callback.showAllDoneFragment(workflowDTO);
+            } else {
+                PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            }
         }
 
         @Override
@@ -277,7 +282,11 @@ public class NextAppointmentFragment extends BaseFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            if (NavigationStateConstants.APPOINTMENTS.equals(workflowDTO.getState())) {
+                callback.showAllDoneFragment(workflowDTO);
+            } else {
+                PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            }
         }
 
         @Override

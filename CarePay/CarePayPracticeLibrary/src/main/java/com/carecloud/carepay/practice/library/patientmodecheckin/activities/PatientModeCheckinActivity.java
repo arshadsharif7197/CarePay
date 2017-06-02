@@ -162,26 +162,25 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void onPartialPaymentClicked(double owedAmount) {
-        String tag = PracticePartialPaymentDialogFragment.class.getSimpleName();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         PracticePartialPaymentDialogFragment dialog = PracticePartialPaymentDialogFragment
                 .newInstance(paymentDTO, owedAmount);
-        dialog.show(ft, tag);
+        displayDialogFragment(dialog, false);
     }
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         PracticePaymentMethodDialogFragment fragment = PracticePaymentMethodDialogFragment
-                .newInstance(paymentDTO, amount);
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+                .newInstance(paymentsModel, amount);
+        displayDialogFragment(fragment, false);
     }
 
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
-        if (paymentDTO.getPaymentPayload().getPatientCreditCards() != null && !paymentDTO.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel,
                     selectedPaymentMethod.getLabel(), amount);
-            fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+            displayDialogFragment(fragment, false);
         } else {
             showAddCard(amount, paymentsModel);
         }
@@ -191,12 +190,12 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
         Gson gson = new Gson();
         Bundle args = new Bundle();
-        String paymentsDTOString = gson.toJson(paymentDTO);
+        String paymentsDTOString = gson.toJson(paymentsModel);
         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
         DialogFragment fragment = new PracticeAddNewCreditCardFragment();
         fragment.setArguments(args);
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        displayDialogFragment(fragment, false);
     }
 
     @Override
@@ -231,7 +230,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
         Bundle args = new Bundle();
         Gson gson = new Gson();
-        String paymentsDTOString = gson.toJson(paymentDTO);
+        String paymentsDTOString = gson.toJson(paymentsModel);
         args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
         fragment.setArguments(args);
 
@@ -247,7 +246,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
         PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
         confirmationFragment.setArguments(args);
-        confirmationFragment.show(getSupportFragmentManager(), confirmationFragment.getClass().getSimpleName());
+        displayDialogFragment(confirmationFragment, false);
     }
 
     @Override
@@ -315,7 +314,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 if (jsonPayload != null) {
                     Gson gson = new Gson();
                     WorkflowDTO workflowDTO = gson.fromJson(jsonPayload, WorkflowDTO.class);
-//                    PaymentsModel paymentsModel = gson.fromJson(jsonPayload, PaymentsModel.class);
                     showPaymentConfirmation(workflowDTO);
                 }
                 break;
@@ -340,7 +338,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 }
             };
             dialogFragment.setOnDismissListener(dismissListener);
-            dialogFragment.show(getSupportFragmentManager(), dialogFragment.getClass().getName());
+            displayDialogFragment(dialogFragment, false);
 
         }
     }
