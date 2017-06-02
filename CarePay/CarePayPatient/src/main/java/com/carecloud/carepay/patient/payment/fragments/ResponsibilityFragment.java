@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.payment.dialogs.PatientPartialPaymentDialog;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
@@ -148,7 +147,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         makePartialPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new PatientPartialPaymentDialog(getActivity(), paymentDTO).show();
+                actionCallback.onPartialPaymentClicked(total);
             }
         });
     }
@@ -166,6 +165,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
     }
 
     protected void doPayment() {
+        createPaymentModel(total);
         actionCallback.onPayButtonClicked(total, paymentDTO);
     }
 
@@ -182,4 +182,6 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog.newInstance(paymentDTO, paymentLineItem);
         dialog.show(ft, tag);
     }
+
+
 }

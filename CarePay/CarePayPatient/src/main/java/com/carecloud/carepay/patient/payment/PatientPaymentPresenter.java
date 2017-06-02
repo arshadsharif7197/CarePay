@@ -11,6 +11,7 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
+import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -36,7 +37,7 @@ public class PatientPaymentPresenter extends PaymentPresenter {
 
     @Override
     public void onPartialPaymentClicked(double owedAmount) {
-
+        new PartialPaymentDialog(viewHandler.getContext(), paymentsModel).show();
     }
 
     @Override
