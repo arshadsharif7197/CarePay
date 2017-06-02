@@ -28,6 +28,7 @@ public class MediaCameraFragment extends BaseDialogFragment implements CarePayCa
 
     public interface MediaCameraCallback{
         void onMediaFileCreated(File file);
+
         void displayCameraFragment(String tempFile);
     }
 
@@ -36,6 +37,11 @@ public class MediaCameraFragment extends BaseDialogFragment implements CarePayCa
     private String tempFile;
     private MediaCameraCallback callback;
 
+    /**
+     * Create a new instance of media fragment
+     * @param tempFile name of temporary file for storing captured image
+     * @return new MediaCameraFragment
+     */
     public static MediaCameraFragment newInstance(String tempFile){
         Bundle args = new Bundle();
         args.putString(BUNDLE_KEY_FILE, tempFile);

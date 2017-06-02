@@ -139,9 +139,9 @@ public class MediaScannerPresenter {
             Bitmap bitmap = null;
             switch (requestCode) {
                 case REQUEST_CODE_GALLERY: {
-                    //TODO bitmap = ImageCaptureHelper.onSelectFromGalleryResult(context, targetImageView, data, cameraType, getImageShape());
+                    bitmap = ImageCaptureHelper.getBitmapFromGalleryResult(context, data);
                     if (bitmap != null) {
-                        mediaViewInterface.setCapturedBitmap(bitmap, "", captureView);
+                        mediaViewInterface.setCapturedBitmap(bitmap, data.getDataString(), captureView);
                     } else {
                         //// TODO: 6/2/17 show error message
                     }
@@ -190,19 +190,30 @@ public class MediaScannerPresenter {
     }
 
     private void handlePictureAction(){
-        if(PermissionsUtil.checkPermissionCamera(context)){
-            captureImage();
-        }else{
-            setPendingAction(ACTION_PICTURE);
+        setPendingAction(ACTION_PICTURE);
+        if(mediaViewInterface.getCallingFragment()!=null){
+            if(!PermissionsUtil.checkPermissionCamera(mediaViewInterface.getCallingFragment())){
+                return;
+            }
+        }else if(!PermissionsUtil.checkPermissionCamera(context)){
+            return;
         }
+
+        captureImage();
     }
 
     private void handleGalleryAction(){
-        if(PermissionsUtil.checkPermission(context)){
-            mediaViewInterface.handleStartActivityForResult(ImageCaptureHelper.galleryIntent(), REQUEST_CODE_GALLERY);
-        }else{
-            setPendingAction(ACTION_GALLERY);
+        setPendingAction(ACTION_GALLERY);
+        if(mediaViewInterface.getCallingFragment()!=null){
+            if(!PermissionsUtil.checkPermission(mediaViewInterface.getCallingFragment())){
+                return;
+            }
+        }else if(!PermissionsUtil.checkPermission(context)){
+            return;
         }
+
+        mediaViewInterface.handleStartActivityForResult(ImageCaptureHelper.galleryIntent(), REQUEST_CODE_GALLERY);
+
     }
 
     private List<String> getMediaOptions(boolean includeGallery){
@@ -259,7 +270,5 @@ public class MediaScannerPresenter {
             return itemView;
         }
     }
-
-
 
 }
