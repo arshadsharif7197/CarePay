@@ -144,15 +144,15 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         }
     }
 
-    private void setAlertCount(PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO){
+    private void setAlertCount(PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO) {
         HomeScreenAlertsDTO alertsDTO = practiceHomeScreenPayloadDTO.getAlerts();
-        if(alertsDTO != null){
+        if (alertsDTO != null) {
             TextView alertText = (TextView) findViewById(R.id.alertTextView);
             int alertCounter = alertsDTO.getCount();
             alertText.setText(String.valueOf(alertCounter));
-            if(alertCounter == 0){
-                alertText.setBackgroundResource(R.drawable.queue_counter_background);
-            }
+//            if(alertCounter == 0){
+//                alertText.setBackgroundResource(R.drawable.queue_counter_background);
+//            }
         }
     }
 
@@ -241,7 +241,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         disableUnavailableItems();
     }
 
-    private void disableUnavailableItems(){
+    private void disableUnavailableItems() {
 //        if(homeScreenMode == HomeScreenMode.PATIENT_HOME){
 //            setViewsDisabled((ViewGroup) findViewById(R.id.homePaymentsClickable));
 //        }
@@ -274,7 +274,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
      *
      * @return the confirmation pin dialog . confirmation pin dialog listener
      */
-    public ConfirmationPinDialog.ConfirmationPinDialogListener getConfirmationPinDialogCallBacK(){
+    public ConfirmationPinDialog.ConfirmationPinDialogListener getConfirmationPinDialogCallBacK() {
         return new ConfirmationPinDialog.ConfirmationPinDialogListener() {
 
             @Override
@@ -425,15 +425,16 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
     /**
      * Log out transition
+     *
      * @param transitionsDTO the transitionsDTO
      */
-    private void logOut(TransitionDTO transitionsDTO){
+    private void logOut(TransitionDTO transitionsDTO) {
         Map<String, String> query = new HashMap<>();
         Map<String, String> headers = new HashMap<>();
-        if(!HttpConstants.isUseUnifiedAuth()) {
+        if (!HttpConstants.isUseUnifiedAuth()) {
             headers.put("x-api-key", HttpConstants.getApiStartKey());
             headers.put("Authorization", getAppAuthorizationHelper().getCurrSession().getIdToken().getJWTToken());
-        }else{
+        } else {
             headers.putAll(getWorkflowServiceHelper().getApplicationStartHeaders());
         }
         query.put("transition", "true");
@@ -470,7 +471,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             getApplicationMode().clearUserPracticeDTO();
-            if(!HttpConstants.isUseUnifiedAuth()) {
+            if (!HttpConstants.isUseUnifiedAuth()) {
                 // log out previous user from Cognito
                 getAppAuthorizationHelper().getPool().getUser().signOut();
                 getAppAuthorizationHelper().setUser(null);
@@ -597,7 +598,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             final PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
             logOut(transitionsDTO.getLogout());
             getAppAuthorizationHelper().setUser(null);
-            getApplicationMode().setUserPracticeDTO(getAppAuthorizationHelper(),null);
+            getApplicationMode().setUserPracticeDTO(getAppAuthorizationHelper(), null);
         }
 
         super.onBackPressed();
