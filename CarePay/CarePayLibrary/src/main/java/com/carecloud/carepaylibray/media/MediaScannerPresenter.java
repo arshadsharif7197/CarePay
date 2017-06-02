@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,9 +16,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
-import com.carecloud.carepaylibray.carepaycamera.CarePayCameraFragment;
-import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.PermissionsUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -32,28 +30,52 @@ import java.util.List;
  *
  */
 
-public class MediaScannerPresenter implements CarePayCameraReady {
+public class MediaScannerPresenter {
 
-    public static final String ACTION_PICTURE = "demographics_take_pic_option";
-    public static final String ACTION_GALLERY = "demographics_select_gallery_option";
-    public static final String ACTION_CANCEL = "demographics_cancel_label";
+    public static final int REQUEST_CODE_CAMERA = 0x555;
+    public static final int REQUEST_CODE_GALLERY = 0x666;
+    public static final int REQUEST_CODE_CAPTURE = 0x777;
+
+    public static final String DATA_CAPTURED_IMAGE_KEY = "capturedImageKey";
+
+    private static final String ACTION_PICTURE = "demographics_take_pic_option";
+    private static final String ACTION_GALLERY = "demographics_select_gallery_option";
+    private static final String ACTION_CANCEL = "demographics_cancel_label";
 
     private Context context;
     private MediaViewInterface mediaViewInterface;
+    private View captureView;
 
     private String pendingAction;
 
     /**
      * Presenter for handling any views that require use of the Camera or Gallery
      * @param context context
-     * @param cameraReady camera callback
      * @param mediaViewInterface  view interface
      */
-    public MediaScannerPresenter(Context context, CarePayCameraReady cameraReady, MediaViewInterface mediaViewInterface){
+    public MediaScannerPresenter(Context context, MediaViewInterface mediaViewInterface){
         this.context = context;
         this.mediaViewInterface = mediaViewInterface;
     }
 
+    /**
+     * Presenter for handling any views that require use of the Camera or Gallery
+     * @param context context
+     * @param mediaViewInterface  view interface
+     * @param captureView view for setting captured image
+     */
+    public MediaScannerPresenter(Context context, MediaViewInterface mediaViewInterface, View captureView) {
+        this(context, mediaViewInterface);
+        this.captureView = captureView;
+    }
+
+    /**
+     * Change the capture view for this presenter
+     * @param captureView new view for setting captured image
+     */
+    public void setCaptureView(View captureView){
+        this.captureView = captureView;
+    }
 
     /**
      * Start Image Selection by presenting a set of choices
@@ -106,24 +128,41 @@ public class MediaScannerPresenter implements CarePayCameraReady {
     }
 
     /**
-     * Forward activity Result handling to Presenter
-     * @param requestCode requestCode
-     * @param resultCode resultCode
+     * Forward Activity Result handling
+     * @param requestCode request Code
+     * @param resultCode result Code
      * @param data intent data
+     * @return true if handled
      */
-    public void handleActivityResult(int requestCode, int resultCode, Intent data){
+    public boolean handleActivityResult(int requestCode, int resultCode, Intent data){
         if (resultCode == Activity.RESULT_OK) {
             Bitmap bitmap = null;
-            if (requestCode == ImageCaptureHelper.SELECT_FILE) {
-               //TODO bitmap = ImageCaptureHelper.onSelectFromGalleryResult(context, targetImageView, data, cameraType, getImageShape());
-            }
-
-            if(bitmap != null) {
-                mediaViewInterface.getCameraCallback().onCapturedSuccess(bitmap);
-            }else{
-                mediaViewInterface.getCameraCallback().onCaptureFail();
+            switch (requestCode) {
+                case REQUEST_CODE_GALLERY: {
+                    //TODO bitmap = ImageCaptureHelper.onSelectFromGalleryResult(context, targetImageView, data, cameraType, getImageShape());
+                    if (bitmap != null) {
+                        mediaViewInterface.setCapturedBitmap(bitmap, "", captureView);
+                    } else {
+                        //// TODO: 6/2/17 show error message
+                    }
+                    return true;
+                }
+                case REQUEST_CODE_CAPTURE: {
+                    String filePath = null;
+                    if(data!=null){
+                        filePath = data.getStringExtra(DATA_CAPTURED_IMAGE_KEY);
+                    }
+                    if(filePath!=null) {
+                        bitmap = BitmapFactory.decodeFile(filePath);
+                        mediaViewInterface.setCapturedBitmap(bitmap, filePath, captureView);
+                    }
+                    return true;
+                }
+                default:
+                    return false;
             }
         }
+        return false;
     }
 
     private DialogInterface.OnClickListener getActionItemClickListener(final List<String> mediaOptions) {
@@ -152,10 +191,7 @@ public class MediaScannerPresenter implements CarePayCameraReady {
 
     private void handlePictureAction(){
         if(PermissionsUtil.checkPermissionCamera(context)){
-            CarePayCameraCallback cameraCallback = mediaViewInterface.getCameraCallback();
-            if(cameraCallback!=null) {
-                captureImage(cameraCallback);
-            }
+            captureImage();
         }else{
             setPendingAction(ACTION_PICTURE);
         }
@@ -163,7 +199,7 @@ public class MediaScannerPresenter implements CarePayCameraReady {
 
     private void handleGalleryAction(){
         if(PermissionsUtil.checkPermission(context)){
-            mediaViewInterface.startActivityForResult(ImageCaptureHelper.galleryIntent(), ImageCaptureHelper.SELECT_FILE);
+            mediaViewInterface.handleStartActivityForResult(ImageCaptureHelper.galleryIntent(), REQUEST_CODE_GALLERY);
         }else{
             setPendingAction(ACTION_GALLERY);
         }
@@ -181,10 +217,9 @@ public class MediaScannerPresenter implements CarePayCameraReady {
         return mediaOptions;
     }
 
-    @Override
-    public void captureImage(CarePayCameraCallback callback) {
-        CarePayCameraFragment carePayCameraFragment = new CarePayCameraFragment();
-        displayDialogFragment(carePayCameraFragment, false);
+    private void captureImage() {
+        Intent intent = new Intent(context, MediaCameraActivity.class);
+        mediaViewInterface.handleStartActivityForResult(intent, REQUEST_CODE_CAPTURE);
     }
 
     private class MediaActionAdapter extends BaseAdapter {

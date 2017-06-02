@@ -1,20 +1,20 @@
 package com.carecloud.carepaylibray.media;
 
 import android.content.Intent;
-
-import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
+import android.graphics.Bitmap;
+import android.view.View;
 
 /**
- * Created by lmenendez on 4/24/17.
+ * Created by lmenendez on 4/24/17
  */
 
 public interface MediaViewInterface {
 
     void handleRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults);
 
-    CarePayCameraCallback getCameraCallback();
+    boolean handleActivityResult(int requestCode, int resultCode, Intent data);
 
-    void startActivityForResult(Intent intent, int requestCode);
+    void setCapturedBitmap(Bitmap bitmap, String path, View view);
 
-    void onActivityResult(int requestCode, int resultCode, Intent data);
+    void handleStartActivityForResult(Intent intent, int requestCode);
 }
