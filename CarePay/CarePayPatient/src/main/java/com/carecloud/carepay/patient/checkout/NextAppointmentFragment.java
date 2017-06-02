@@ -27,8 +27,8 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
-import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -48,8 +48,7 @@ import java.util.Map;
  */
 public class NextAppointmentFragment extends BaseFragment {
 
-    private Toolbar toolbar;
-    private FragmentActivityInterface callback;
+    private CheckOutInterface callback;
     private AppointmentsResultModel appointmentsResultModel;
     private AppointmentDTO selectedAppointment;
     private TextView visitTypeTextView;
@@ -82,7 +81,7 @@ public class NextAppointmentFragment extends BaseFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (FragmentActivityInterface) context;
+            callback = (CheckOutInterface) context;
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached Context must implement ResponsibilityActionCallback");
         }
@@ -104,7 +103,6 @@ public class NextAppointmentFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_next_appointment, container, false);
     }
 
@@ -116,7 +114,7 @@ public class NextAppointmentFragment extends BaseFragment {
     }
 
     private void setUpToolbar(View view) {
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         callback.setToolbar(toolbar);
         TextView title = (TextView) toolbar.findViewById(com.carecloud.carepaylibrary.R.id.respons_toolbar_title);
         title.setText(Label.getLabel("next_appointment_toolbar_title"));
@@ -187,15 +185,15 @@ public class NextAppointmentFragment extends BaseFragment {
     }
 
     private void scheduleAppointmentLater() {
-        Map<String, String> queries = new HashMap<>();
-        queries.put("practice_mgmt", selectedAppointment.getMetadata().getPracticeMgmt());
-        queries.put("practice_id", selectedAppointment.getMetadata().getPracticeId());
-        queries.put("appointment_id", selectedAppointment.getMetadata().getAppointmentId());
-        queries.put("patient_id", selectedAppointment.getMetadata().getPatientId());
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", selectedAppointment.getMetadata().getPracticeMgmt());
+        queryMap.put("practice_id", selectedAppointment.getMetadata().getPracticeId());
+        queryMap.put("appointment_id", selectedAppointment.getMetadata().getAppointmentId());
+        queryMap.put("patient_id", selectedAppointment.getMetadata().getPatientId());
         Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
         header.put("transition", "true");
         TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getContinueTransition();
-        getWorkflowServiceHelper().execute(transitionDTO, continueCallback, queries, header);
+        getWorkflowServiceHelper().execute(transitionDTO, continueCallback, queryMap, header);
     }
 
     private void scheduleAppointment() {
@@ -252,13 +250,16 @@ public class NextAppointmentFragment extends BaseFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             onAppointmentRequestSuccess();
-            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            if (NavigationStateConstants.APPOINTMENTS.equals(workflowDTO.getState())) {
+                callback.showAllDoneFragment(workflowDTO);
+            } else {
+                PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            }
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            showErrorNotification(exceptionMessage);
+            onFailureCallback(exceptionMessage);
         }
     };
 
@@ -281,16 +282,24 @@ public class NextAppointmentFragment extends BaseFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            if (NavigationStateConstants.APPOINTMENTS.equals(workflowDTO.getState())) {
+                callback.showAllDoneFragment(workflowDTO);
+            } else {
+                PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            }
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            showErrorNotification(exceptionMessage);
-            Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            onFailureCallback(exceptionMessage);
         }
     };
+
+    private void onFailureCallback(String exceptionMessage) {
+        hideProgressDialog();
+        showErrorNotification(exceptionMessage);
+        Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+    }
 
     WorkflowServiceCallback resourcesToScheduleCallback = new WorkflowServiceCallback() {
         @Override
@@ -313,9 +322,7 @@ public class NextAppointmentFragment extends BaseFragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            showErrorNotification(exceptionMessage);
-            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+            onFailureCallback(exceptionMessage);
         }
     };
 
@@ -342,7 +349,6 @@ public class NextAppointmentFragment extends BaseFragment {
     }
 
     /**
-     *
      * @param visitTypeDTO the visit type
      */
     public void setVisitType(VisitTypeDTO visitTypeDTO) {
@@ -352,7 +358,6 @@ public class NextAppointmentFragment extends BaseFragment {
     }
 
     /**
-     *
      * @param appointmentsSlot the location and time of the appointment
      */
     public void setLocationAndTime(AppointmentsSlotsDTO appointmentsSlot) {

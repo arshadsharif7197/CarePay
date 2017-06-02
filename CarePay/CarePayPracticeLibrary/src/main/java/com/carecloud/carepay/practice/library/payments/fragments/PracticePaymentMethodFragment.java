@@ -23,9 +23,8 @@ import com.google.gson.Gson;
 public class PracticePaymentMethodFragment extends PaymentMethodFragment {
 
     /**
-     *
      * @param paymentsModel the payments model
-     * @param amount the amount
+     * @param amount        the amount
      * @return an instance of PracticePaymentMethodFragment
      */
     public static PracticePaymentMethodFragment newInstance(PaymentsModel paymentsModel, double amount) {
@@ -64,7 +63,7 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
         Button swipeCreditCarNowButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
         View swipeCreditCardNowLayout = view.findViewById(R.id.swipeCreditCardNowLayout);
         swipeCreditCarNowButton.setEnabled(isCloverDevice);
-        swipeCreditCardNowLayout.setVisibility(isCloverDevice?View.VISIBLE:View.GONE);
+        swipeCreditCardNowLayout.setVisibility(isCloverDevice ? View.VISIBLE : View.GONE);
         swipeCreditCarNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,7 +73,7 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
 
     }
 
-    protected void handleSwipeCard(){
+    protected void handleSwipeCard() {
         CloverPaymentAdapter cloverPaymentAdapter = new CloverPaymentAdapter(getActivity(), paymentsModel);
         PaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
         if (paymentPostModel == null) {

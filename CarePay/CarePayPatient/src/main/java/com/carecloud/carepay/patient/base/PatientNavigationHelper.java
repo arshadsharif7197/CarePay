@@ -24,7 +24,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class PatientNavigationHelper {
 
-    private static boolean accessPaymentsBalances;
+    private static boolean accessPaymentsBalances = false;
 
     /**
      * Access pending payments and history payments from menu.
@@ -66,6 +66,9 @@ public class PatientNavigationHelper {
         Intent intent = null;
         if (workflowDTO == null || StringUtil.isNullOrEmpty(workflowDTO.getState())) {
             return;
+        }
+        if (info == null) {
+            info = new Bundle();
         }
         switch (workflowDTO.getState()) {
             case NavigationStateConstants.LANGUAGE_SELECTION:
@@ -114,7 +117,7 @@ public class PatientNavigationHelper {
                 break;
             }
             case NavigationStateConstants.PAYMENTS: {
-                if(context instanceof ReviewDemographicsActivity){
+                if (context instanceof ReviewDemographicsActivity) {
                     ((ReviewDemographicsActivity) context).getPaymentInformation(workflowDTO.toString());
                     return;
                 }
@@ -147,8 +150,12 @@ public class PatientNavigationHelper {
                 }
                 break;
             }
-            case NavigationStateConstants.PATIENT_APP_CHECKOUT: {
+            case NavigationStateConstants.PATIENT_APP_CHECKOUT:
+            case NavigationStateConstants.PATIENT_FORM_CHECKOUT:
+            case NavigationStateConstants.PATIENT_PAY_CHECKOUT: {
                 intent = new Intent(context, NextAppointmentActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                info.putString("state", workflowDTO.getState());
                 break;
             }
             default: {
@@ -164,9 +171,8 @@ public class PatientNavigationHelper {
         Bundle bundle = new Bundle();
         bundle.putLong(WorkflowDTO.class.getSimpleName(), workFlowRecord.save());
         intent.putExtras(bundle);
-        if (info != null) {
-            intent.putExtra(NavigationStateConstants.EXTRA_INFO, info);
-        }
+        intent.putExtra(NavigationStateConstants.EXTRA_INFO, info);
+
         if (expectsResult && context instanceof Activity) {
             ((Activity) context).startActivityForResult(intent, requestCode);
         } else {

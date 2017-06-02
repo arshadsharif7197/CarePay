@@ -32,6 +32,8 @@ android {
             buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
 
+            buildConfigField 'String', 'NEW_RELIC_ID', '"AAa1dc91ad54786d7f8f9cce36898810d795f1f75a"'
+
             buildConfigField 'boolean', 'useUnifiedAuth', 'true'
         }
         qa {
@@ -40,6 +42,8 @@ android {
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.qa.carecloud.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"VMGQTfHsuP5PSi3UbyXWh7xGWMflwZtHa55LZyXr"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
+
+            buildConfigField 'String', 'NEW_RELIC_ID', '"AA8bbfbf57d80019455e6c05822d9d5038a718b924"'
 
             buildConfigField 'boolean', 'useUnifiedAuth', 'true'
         }
@@ -50,6 +54,8 @@ android {
             buildConfigField 'String', 'X_API_KEY', '"WQRPwvVVL89qyr9TqzGOo9Qx8jKOYxmO9eRdNFpq"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
 
+            buildConfigField 'String', 'NEW_RELIC_ID', '"AA8bbfbf57d80019455e6c05822d9d5038a718b924"'
+
             buildConfigField 'boolean', 'useUnifiedAuth', 'true'
         }
         production {
@@ -59,6 +65,8 @@ android {
             buildConfigField 'String', 'X_API_KEY', '"Jbr3ZMKbC54bezcc7DWjn7I5I4M8cEHl6Be9cAYT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
 
+            buildConfigField 'String', 'NEW_RELIC_ID', '"AAae417ce2d433e6eb08fb05d2beffd8ac08f5917c"'
+
             buildConfigField 'boolean', 'useUnifiedAuth', 'true'
         }
     }
@@ -67,5 +75,5 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':CarePayPracticeLibrary')
-    compile 'com.newrelic.agent.android:android-agent:5.12.2'
+    compile 'com.newrelic.agent.android:android-agent:5.12.3'
 }

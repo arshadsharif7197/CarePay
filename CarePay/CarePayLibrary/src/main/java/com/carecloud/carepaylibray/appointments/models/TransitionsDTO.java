@@ -50,6 +50,10 @@ public class TransitionsDTO {
     @Expose
     private TransitionDTO continueTransition = new TransitionDTO();
 
+    @SerializedName("update_forms")
+    @Expose
+    private TransitionDTO updateForms = new TransitionDTO();
+
     /**
      * @return The checkingIn
      */
@@ -168,5 +172,13 @@ public class TransitionsDTO {
 
     public void setContinueTransition(TransitionDTO continueTransition) {
         this.continueTransition = continueTransition;
+    }
+
+    public TransitionDTO getUpdateForms() {
+        return updateForms;
+    }
+
+    public void setUpdateForms(TransitionDTO updateForms) {
+        this.updateForms = updateForms;
     }
 }

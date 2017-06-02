@@ -29,6 +29,7 @@ import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
@@ -309,7 +310,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    completePaymentProcess(new UpdatePatientBalancesDTO());
+                    hidePaymentDistributionFragment(new UpdatePatientBalancesDTO());
                 }
             };
             dialogFragment.setOnDismissListener(dismissListener);
@@ -364,7 +365,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void startPartialPayment(double owedAmount) {
+    public void onPartialPaymentClicked(double owedAmount) {
 
     }
 
@@ -426,22 +427,38 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO) {
+    public void completePaymentProcess(WorkflowDTO workflowDTO) {
+        Gson gson = new Gson();
+        PaymentsModel paymentsModel = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
+        PatientBalanceDTO balance = paymentsModel.getPaymentPayload().getPatientBalances().get(0);
+        String patientBalance = gson.toJson(balance);
+        UpdatePatientBalancesDTO updatePatientBalance = gson.fromJson(patientBalance, UpdatePatientBalancesDTO.class);
+
+        hidePaymentDistributionFragment(updatePatientBalance);
+    }
+
+    private void hidePaymentDistributionFragment(UpdatePatientBalancesDTO updatePatientBalance) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
         if (fragment != null) {
             fragment.dismiss();
         }
-        updatePatientBalance(updatePatientBalancesDTO);
+        if (updatePatientBalance != null) {
+            updatePatientBalance(updatePatientBalance);
+        }
     }
 
     @Override
-    public void cancelPaymentProcess(PaymentsModel paymentsModel) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
-        if (fragment != null) {
-            fragment.showDialog();
+    public void onPayLaterClicked(PaymentsModel paymentsModel) {
+
+    }
+
+    @Override
+    public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
+        if(paymentsModel!=null && !paymentsModel.getPaymentPayload().getUserPractices().isEmpty()){
+            return paymentsModel.getPaymentPayload().getUserPractices().get(0);
         }
+        return null;
     }
 
     @Override
@@ -475,4 +492,17 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
 
+    @Override
+    public void onDetailCancelClicked(PaymentsModel paymentsModel) {
+        startPaymentProcess(paymentsModel);
+    }
+
+    @Override
+    public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
+        if (fragment != null) {
+            fragment.showDialog();
+        }
+    }
 }

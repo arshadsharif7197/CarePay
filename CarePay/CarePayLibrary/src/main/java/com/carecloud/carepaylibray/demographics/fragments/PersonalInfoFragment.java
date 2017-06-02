@@ -226,17 +226,21 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         }
 
         //This validation is required regardless of whether fields are required
+        TextInputLayout dateBirthLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
         EditText dateOfBirth = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
-        if(!StringUtil.isNullOrEmpty(dateOfBirth.getText().toString()) && !DateUtil.isValidateStringDateOfBirth(dateOfBirth.getText().toString())) {
-            TextInputLayout dateBirthLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
+        if(dateBirthLayout.getVisibility() == View.VISIBLE &&
+                !StringUtil.isNullOrEmpty(dateOfBirth.getText().toString()) &&
+                !DateUtil.isValidateStringDateOfBirth(dateOfBirth.getText().toString())) {
             dateBirthLayout.setErrorEnabled(true);
             dateBirthLayout.setError(Label.getLabel("demographics_date_validation_msg"));
             return false;
         }
 
+        TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
         EditText phoneNumber = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
-        if(!StringUtil.isNullOrEmpty(phoneNumber.getText().toString()) && !ValidationHelper.isValidString(phoneNumber.getText().toString().trim(), ValidationHelper.PHONE_NUMBER_PATTERN)){
-            TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
+        if(phoneLayout.getVisibility() == View.VISIBLE &&
+                !StringUtil.isNullOrEmpty(phoneNumber.getText().toString()) &&
+                !ValidationHelper.isValidString(phoneNumber.getText().toString().trim(), ValidationHelper.PHONE_NUMBER_PATTERN)){
             phoneLayout.setErrorEnabled(true);
             phoneLayout.setError(Label.getLabel("demographics_phone_number_validation_msg"));
             return false;

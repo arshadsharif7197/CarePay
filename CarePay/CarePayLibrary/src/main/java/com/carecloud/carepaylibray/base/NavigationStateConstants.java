@@ -24,5 +24,7 @@ public class NavigationStateConstants {
     public static final String PATIENT_MODE_SPLASH = "patient_mode_start";
     public static final String PATIENT_APP_SIGNIN = "patient_app_signin";
     public static final String PATIENT_APP_CHECKOUT = "appointments_checkout";
+    public static final String PATIENT_PAY_CHECKOUT = "payments_checkout";
+    public static final String PATIENT_FORM_CHECKOUT = "checkout_forms";
     public static final String EXTRA_INFO = "extra_info";
 }

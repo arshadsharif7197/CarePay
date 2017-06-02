@@ -19,7 +19,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -32,6 +31,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.api.client.util.Base64;
@@ -104,7 +104,7 @@ public class UpdateEmailFragment extends BaseFragment {
 
         setEditTexts(view);
 
-        getPersonalDetails();
+        setPersonalDetails();
         setClickListeners(view);
     }
 
@@ -113,12 +113,12 @@ public class UpdateEmailFragment extends BaseFragment {
         passwordLabelLayout = (TextInputLayout) view.findViewById(R.id.oldPasswordTextInputLayout);
         emailEditText = (EditText) view.findViewById(R.id.signinEmailEditText);
         passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
-        emailLabelLayout.setTag(Label.getLabel("email_label"));
-        emailEditText.setTag(emailLabelLayout);
-        emailEditText.setHint(Label.getLabel("email_label"));
-        passwordLabelLayout.setTag(Label.getLabel("settings_current_password"));
-        passwordEditText.setTag(passwordLabelLayout);
-        passwordEditText.setHint(Label.getLabel("settings_current_password"));
+//        emailLabelLayout.setTag(Label.getLabel("email_label"));
+//        emailEditText.setTag(emailLabelLayout);
+        emailLabelLayout.setHint(Label.getLabel("email_label"));
+//        passwordLabelLayout.setTag(Label.getLabel("settings_current_password"));
+//        passwordEditText.setTag(passwordLabelLayout);
+        passwordLabelLayout.setHint(Label.getLabel("settings_current_password"));
         setChangeFocusListeners();
         passwordEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -143,31 +143,14 @@ public class UpdateEmailFragment extends BaseFragment {
     }
 
     private void setChangeFocusListeners() {
-        emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
-        passwordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
-
+        emailEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(emailLabelLayout, null));
+        passwordEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(passwordLabelLayout, null));
     }
 
-    private void getPersonalDetails() {
-        String userId = getAppAuthorizationHelper().getCurrUser();
-        if (SystemUtil.isNotEmptyString(userId)) {
-            emailEditText.setText(userId);
+    private void setPersonalDetails() {
+        String email = getCurrentEmail();
+        if (SystemUtil.isNotEmptyString(email)) {
+            emailEditText.setText(email);
             emailEditText.requestFocus();
         }
         rootView.requestFocus();
@@ -256,7 +239,12 @@ public class UpdateEmailFragment extends BaseFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             updateEmailButton.setEnabled(true);
-            PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
+            DemographicsSettingsDTO updatedSettings = DtoHelper.getConvertedDTO(DemographicsSettingsDTO.class, workflowDTO);
+            String newEmail = updatedSettings.getPayload().getCurrentEmail();
+            demographicsSettingsDTO.getPayload().setCurrentEmail(newEmail);
+            getApplicationPreferences().setUserId(newEmail);
+//            PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
+            getActivity().onBackPressed();
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
         }
 

@@ -38,6 +38,7 @@ import com.carecloud.carepaylibray.signinsignup.fragments.ResetPasswordFragment;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
+import com.newrelic.agent.android.NewRelic;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -179,6 +180,8 @@ public class SigninFragment extends BaseFragment {
             getWorkflowServiceHelper().execute(signInTransition, unifiedLoginCallback, gson.toJson(signInDTO),
                     queryParams, headers);
             getAppAuthorizationHelper().setUser(userName);
+            getApplicationPreferences().setUserId(userName);
+            NewRelic.setUserId(userName);
         }
     }
 

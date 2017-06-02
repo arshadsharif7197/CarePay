@@ -22,6 +22,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseC
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePartialPaymentDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
@@ -29,19 +30,18 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
-import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
 public class PatientModeCheckinActivity extends BasePracticeActivity implements
-        DemographicsView,
-        PaymentNavigationCallback {
+        DemographicsView, PaymentNavigationCallback, PaymentMethodDialogInterface {
 
     public final static int SUBFLOW_PAYMENTS = 3;
 
@@ -161,27 +161,26 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void startPartialPayment(double owedAmount) {
-        String tag = PracticePartialPaymentDialogFragment.class.getSimpleName();
+    public void onPartialPaymentClicked(double owedAmount) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         PracticePartialPaymentDialogFragment dialog = PracticePartialPaymentDialogFragment
                 .newInstance(paymentDTO, owedAmount);
-        dialog.show(ft, tag);
+        displayDialogFragment(dialog, false);
     }
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         PracticePaymentMethodDialogFragment fragment = PracticePaymentMethodDialogFragment
-                .newInstance(paymentDTO, amount);
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+                .newInstance(paymentsModel, amount);
+        displayDialogFragment(fragment, false);
     }
 
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
-        if (paymentDTO.getPaymentPayload().getPatientCreditCards() != null && !paymentDTO.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel,
                     selectedPaymentMethod.getLabel(), amount);
-            fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+            displayDialogFragment(fragment, false);
         } else {
             showAddCard(amount, paymentsModel);
         }
@@ -191,21 +190,21 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
         Gson gson = new Gson();
         Bundle args = new Bundle();
-        String paymentsDTOString = gson.toJson(paymentDTO);
+        String paymentsDTOString = gson.toJson(paymentsModel);
         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
         DialogFragment fragment = new PracticeAddNewCreditCardFragment();
         fragment.setArguments(args);
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        displayDialogFragment(fragment, false);
     }
 
     @Override
-    public void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO) {
+    public void completePaymentProcess(WorkflowDTO workflowDTO) {
         Intent intent = getIntent();
-        String worflowString = intent.getStringExtra(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
-        if(worflowString != null){
+        String workflowString = intent.getStringExtra(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
+        if(workflowString != null){
             Gson gson = new Gson();
-            PracticeNavigationHelper.navigateToWorkflow(getContext(), gson.fromJson(worflowString, WorkflowDTO.class));
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), gson.fromJson(workflowString, WorkflowDTO.class));
         }else {
             setResult(CarePayConstants.HOME_PRESSED, intent);
             finish();
@@ -213,8 +212,16 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void cancelPaymentProcess(PaymentsModel paymentsModel) {
+    public void onPayLaterClicked(PaymentsModel paymentsModel) {
 
+    }
+
+    @Override
+    public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
+        if(paymentsModel!=null && !paymentsModel.getPaymentPayload().getUserPractices().isEmpty()){
+            return paymentsModel.getPaymentPayload().getUserPractices().get(0);
+        }
+        return null;
     }
 
     @Override
@@ -223,7 +230,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
         Bundle args = new Bundle();
         Gson gson = new Gson();
-        String paymentsDTOString = gson.toJson(paymentDTO);
+        String paymentsDTOString = gson.toJson(paymentsModel);
         args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
         fragment.setArguments(args);
 
@@ -239,7 +246,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
         PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
         confirmationFragment.setArguments(args);
-        confirmationFragment.show(getSupportFragmentManager(), confirmationFragment.getClass().getSimpleName());
+        displayDialogFragment(confirmationFragment, false);
     }
 
     @Override
@@ -307,7 +314,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 if (jsonPayload != null) {
                     Gson gson = new Gson();
                     WorkflowDTO workflowDTO = gson.fromJson(jsonPayload, WorkflowDTO.class);
-//                    PaymentsModel paymentsModel = gson.fromJson(jsonPayload, PaymentsModel.class);
                     showPaymentConfirmation(workflowDTO);
                 }
                 break;
@@ -332,10 +338,19 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 }
             };
             dialogFragment.setOnDismissListener(dismissListener);
-            dialogFragment.show(getSupportFragmentManager(), dialogFragment.getClass().getName());
+            displayDialogFragment(dialogFragment, false);
 
         }
     }
 
 
+    @Override
+    public void onDetailCancelClicked(PaymentsModel paymentsModel) {
+
+    }
+
+    @Override
+    public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
+
+    }
 }

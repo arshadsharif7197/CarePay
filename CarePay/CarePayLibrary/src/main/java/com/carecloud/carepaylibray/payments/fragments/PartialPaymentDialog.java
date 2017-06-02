@@ -19,14 +19,20 @@ import android.widget.Toast;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentInterface;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.ResponsibilityType;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,11 +55,12 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private boolean amountChangeFlag = true;
     private String balanceBeforeTextChange;
 
-    private PaymentNavigationCallback payNowClickListener;
+    private PaymentInterface payNowClickListener;
 
     /**
      * Contructor
-     * @param context context must implement PayNowClickListener
+     *
+     * @param context     context must implement PayNowClickListener
      * @param paymentsDTO payment model
      */
     public PartialPaymentDialog(Context context, PaymentsModel paymentsDTO) {
@@ -62,13 +69,13 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         this.paymentsDTO = paymentsDTO;
 
         try {
-            if(context instanceof PaymentViewHandler){
+            if (context instanceof PaymentViewHandler) {
                 payNowClickListener = ((PaymentViewHandler) context).getPaymentPresenter();
-            }else {
-                payNowClickListener = (PaymentNavigationCallback) context;
+            } else {
+                payNowClickListener = (PaymentInterface) context;
             }
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Dialog Context must implement PayNowClickListener for callback");
+            throw new ClassCastException("Dialog Context must implement PaymentInterface for callback");
         }
 
     }
@@ -79,7 +86,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_partial_payment);
         setCancelable(false);
-        if(getWindow()!=null) {
+        if (getWindow() != null) {
             getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
             WindowManager.LayoutParams params = getWindow().getAttributes();
             params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -115,8 +122,8 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         if (viewId == R.id.closeViewLayout) {
             SystemUtil.hideSoftKeyboard(context, view);
             cancel();
-        }else if (viewId == R.id.payPartialButton) {
-            onPaymentClick(amountText, paymentsDTO);
+        } else if (viewId == R.id.payPartialButton) {
+            onPaymentClick(amountText);
         }
     }
 
@@ -190,7 +197,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         onPendingAmountValidation(amountEditText, payPartialButton, partialPaymentTotalAmountTitle, amountSymbol);
     }
 
-    private void onPendingAmountValidation(String amountEditText, Button payPartialButton, TextView partialPaymentTotalAmountTitle,TextView amountSymbolTextView) {
+    private void onPendingAmountValidation(String amountEditText, Button payPartialButton, TextView partialPaymentTotalAmountTitle, TextView amountSymbolTextView) {
         if (amountEditText != null && amountEditText.length() > 0) {
             if (amountEditText.length() == 1 && amountEditText.equalsIgnoreCase(".")) {
                 amountEditText = "0.";
@@ -209,17 +216,19 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         }
     }
 
-    private void onPaymentClick(EditText enterPartialAmountEditText, PaymentsModel paymentsDTO) {
+    private void onPaymentClick(EditText enterPartialAmountEditText) {
         try {
-            payNowClickListener.onPayButtonClicked(Double.parseDouble(enterPartialAmountEditText.getText().toString()), paymentsDTO);
-            cancel();
-        }catch (NumberFormatException nfe){
+            double amount = Double.parseDouble(enterPartialAmountEditText.getText().toString());
+            createPaymentModel(amount);
+            payNowClickListener.onPayButtonClicked(amount, paymentsDTO);
+            dismiss();
+        } catch (NumberFormatException nfe) {
             nfe.printStackTrace();
             Toast.makeText(context, "Please enter valid amount!", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void calculateFullAmount(TextView partialPaymentTotalAmountTitle){
+    private void calculateFullAmount(TextView partialPaymentTotalAmountTitle) {
         if (paymentsDTO != null && !paymentsDTO.getPaymentPayload().getPatientBalances().isEmpty()) {
             List<PendingBalancePayloadDTO> paymentList = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
 
@@ -236,6 +245,73 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
                 partialPaymentTotalAmountTitle.setText(Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount(fullAmount));
             }
         }
+    }
+
+    private void createPaymentModel(double payAmount){
+        PaymentPostModel postModel = paymentsDTO.getPaymentPayload().getPaymentPostModel();
+        if( postModel == null){
+            postModel = new PaymentPostModel();
+        }
+        postModel.setAmount(payAmount);
+
+        List<PendingBalancePayloadDTO> responsibilityTypes = getPendingResponsibilityTypes();
+        for(PendingBalancePayloadDTO responsibility : responsibilityTypes){
+            if(payAmount > 0D) {
+                double itemAmount;
+                if (payAmount >= responsibility.getAmount()) {
+                    itemAmount = responsibility.getAmount();
+                } else {
+                    itemAmount = payAmount;
+                }
+                payAmount = (double) Math.round((payAmount - itemAmount) * 100) / 100;
+
+                PaymentObject paymentObject = new PaymentObject();
+                paymentObject.setAmount(itemAmount);
+                switch (responsibility.getType()){
+                    case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
+                        paymentObject.setResponsibilityType(ResponsibilityType.co_insurance);
+                        break;
+                    case PendingBalancePayloadDTO.DEDUCTIBLE_TYPE:
+                        paymentObject.setResponsibilityType(ResponsibilityType.deductable);
+                        break;
+                    case PendingBalancePayloadDTO.CO_PAY_TYPE:
+                        default:
+                            paymentObject.setResponsibilityType(ResponsibilityType.co_pay);
+                            break;
+                }
+                postModel.addPaymentMethod(paymentObject);
+            }
+        }
+
+        if(payAmount > 0){//payment is greater than any responsibility types
+            PaymentObject paymentObject = new PaymentObject();
+            paymentObject.setAmount(payAmount);
+            paymentObject.setDescription("Unapplied Amount");
+
+            postModel.addPaymentMethod(paymentObject);
+        }
+
+        paymentsDTO.getPaymentPayload().setPaymentPostModel(postModel);
+    }
+
+    private List<PendingBalancePayloadDTO> getPendingResponsibilityTypes(){
+        List<PendingBalancePayloadDTO> responsibilityTypes = new ArrayList<>();
+        for(PatientBalanceDTO patientBalanceDTO : paymentsDTO.getPaymentPayload().getPatientBalances()){
+            for(PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()){
+                for(PendingBalancePayloadDTO pendingBalancePayloadDTO : pendingBalanceDTO.getPayload()){
+                    switch (pendingBalancePayloadDTO.getType()){
+                        case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
+                        case PendingBalancePayloadDTO.CO_PAY_TYPE:
+                        case PendingBalancePayloadDTO.DEDUCTIBLE_TYPE:
+                            responsibilityTypes.add(pendingBalancePayloadDTO);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+        return responsibilityTypes;
     }
 
 }

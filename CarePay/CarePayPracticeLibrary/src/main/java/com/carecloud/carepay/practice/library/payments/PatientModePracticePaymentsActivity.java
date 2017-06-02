@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -27,17 +25,18 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticePayment
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
-import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
@@ -48,7 +47,7 @@ import java.util.Map;
  * Created by pjohnson on 16/03/17
  */
 public class PatientModePracticePaymentsActivity extends BasePracticeActivity implements PaymentBalancesAdapter.PaymentRecyclerViewCallback,
-        PaymentNavigationCallback, ResponsibilityFragmentDialog.PayResponsibilityCallback {
+        PaymentNavigationCallback, ResponsibilityFragmentDialog.PayResponsibilityCallback, PaymentMethodDialogInterface {
 
     private PaymentsModel paymentResultModel;
 
@@ -126,38 +125,33 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
 
     @Override
     public void startPaymentProcess(PaymentsModel paymentsModel) {
-        String tag = ResponsibilityFragmentDialog.class.getSimpleName();
         ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newClinicHeader(paymentsModel);
         ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
                 .newInstance(paymentsModel, Label.getLabel("payment_partial_payment_text"),
                         Label.getLabel("payment_details_pay_now"), headerModel);
         dialog.setLeftButtonEnabled(true);
-        dialog.show(getSupportFragmentManager(), tag);
-
+        displayDialogFragment(dialog, false);
     }
 
     @Override
-    public void startPartialPayment(double owedAmount) {
-        String tag = PracticePartialPaymentDialogFragment.class.getSimpleName();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+    public void onPartialPaymentClicked(double owedAmount) {
         PracticePartialPaymentDialogFragment dialog = PracticePartialPaymentDialogFragment
                 .newInstance(paymentResultModel, owedAmount);
-        dialog.show(ft, tag);
+        displayDialogFragment(dialog, false);
     }
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         PracticePaymentMethodDialogFragment fragment = PracticePaymentMethodDialogFragment
                 .newInstance(paymentsModel, amount);
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        displayDialogFragment(fragment, false);
     }
 
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
-//        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
         if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             PracticeChooseCreditCardFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel, selectedPaymentMethod.getLabel(), amount);
-            fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+            displayDialogFragment(fragment, false);
         } else {
             showAddCard(amount, paymentsModel);
         }
@@ -170,14 +164,12 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
-//        Gson gson = new Gson();
         Bundle args = new Bundle();
-//        String paymentsDTOString = gson.toJson(paymentsModel);
         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
 
         PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
         confirmationFragment.setArguments(args);
-        confirmationFragment.show(getSupportFragmentManager(), confirmationFragment.getClass().getSimpleName());
+        displayDialogFragment(confirmationFragment, false);
     }
 
     @Override
@@ -189,22 +181,30 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
         DialogFragment fragment = new PracticeAddNewCreditCardFragment();
         fragment.setArguments(args);
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        displayDialogFragment(fragment, false);
     }
 
     @Override
-    public void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO) {
+    public void completePaymentProcess(WorkflowDTO workflowDTO) {
         refreshBalance();
     }
 
     @Override
-    public void cancelPaymentProcess(PaymentsModel paymentsModel) {
+    public void onPayLaterClicked(PaymentsModel paymentsModel) {
 
     }
 
     @Override
+    public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
+        if(paymentsModel!=null && !paymentsModel.getPaymentPayload().getUserPractices().isEmpty()){
+            return paymentsModel.getPaymentPayload().getUserPractices().get(0);
+        }
+        return null;
+    }
+
+    @Override
     public void onLeftActionTapped(PaymentsModel paymentsModel, double owedAmount) {
-        startPartialPayment(owedAmount);
+        onPartialPaymentClicked(owedAmount);
     }
 
     @Override
@@ -214,17 +214,9 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
 
     @Override
     public void onDetailItemClick(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem) {
-        String tag = PaymentDetailsFragmentDialog.class.getSimpleName();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-
         PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
                 .newInstance(paymentsModel, paymentLineItem, false);
-        dialog.show(ft, tag);
+        displayDialogFragment(dialog, true);
     }
 
     private void refreshBalance() {
@@ -302,9 +294,17 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
                 }
             };
             dialogFragment.setOnDismissListener(dismissListener);
-            dialogFragment.show(getSupportFragmentManager(), dialogFragment.getClass().getName());
-
+            displayDialogFragment(dialogFragment, false);
         }
     }
 
+    @Override
+    public void onDetailCancelClicked(PaymentsModel paymentsModel) {
+        startPaymentProcess(paymentsModel);
+    }
+
+    @Override
+    public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
+        startPaymentProcess(paymentsModel);
+    }
 }

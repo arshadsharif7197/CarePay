@@ -103,7 +103,7 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
                         total += payment.getAmount();
                     }
 
-                    fillDetailAdapter(view, paymentList);
+                    fillDetailAdapter(view, getAllPendingBalancePayloads(paymentList));
 
                     try {
                         if (total > 0) {
@@ -139,7 +139,7 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
         payPartialButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionCallback.startPartialPayment(total);
+                actionCallback.onPartialPaymentClicked(total);
             }
         });
 
@@ -147,6 +147,7 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
     }
 
     protected void doPayment() {
+        createPaymentModel(total);
         actionCallback.onPayButtonClicked(total, paymentDTO);
     }
 
