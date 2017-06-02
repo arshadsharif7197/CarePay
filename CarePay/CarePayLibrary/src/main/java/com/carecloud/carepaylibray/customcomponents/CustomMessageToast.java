@@ -121,7 +121,7 @@ public class CustomMessageToast extends Toast {
 
     private View.OnTouchListener hideTouchListener = new View.OnTouchListener() {
         @Override
-        public boolean onTouch(View v, MotionEvent event) {
+        public boolean onTouch(View view, MotionEvent event) {
             cancel();
             return true;
         }
