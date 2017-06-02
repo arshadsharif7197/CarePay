@@ -1,39 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/textview_timeslot"
             style="@style/AppointmentAvailableHoursListRowText"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="start"
             android:gravity="start"
             android:padding="@dimen/apt_available_hours_list_row_padding"
-            app:customAssetFont="proxima_nova_regular"/>
+            app:customAssetFont="proxima_nova_regular"
+            tools:text="12:00 PM" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/textview_location"
             style="@style/AppointmentAvailableLocationsListRowText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_gravity="end"
+            android:layout_toEndOf="@id/textview_timeslot"
+            android:ellipsize="end"
             android:gravity="end"
+            android:lines="1"
+            android:maxLines="1"
             android:padding="@dimen/apt_available_hours_list_row_padding"
-            app:customAssetFont="proxima_nova_regular"/>
+            app:customAssetFont="proxima_nova_regular"
+            tools:text="MAIN MEDICAL BLA BLA BLA" />
 
+    </RelativeLayout>
 
-    </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"

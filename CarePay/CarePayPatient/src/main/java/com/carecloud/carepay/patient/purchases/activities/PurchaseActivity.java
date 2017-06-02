@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
@@ -16,7 +15,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.google.gson.Gson;
 
 /**
- * Created by lmenendez on 2/8/17.
+ * Created by lmenendez on 2/8/17
  */
 
 public class PurchaseActivity extends MenuPatientActivity {
@@ -49,10 +48,6 @@ public class PurchaseActivity extends MenuPatientActivity {
     protected void onResume() {
         super.onResume();
         navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_PURCHASE).setChecked(true);
-
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar!=null){
-            actionBar.setTitle(navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_PURCHASE).getTitle());
-        }
+        displayToolbar(true, navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_PURCHASE).getTitle().toString());
     }
 }

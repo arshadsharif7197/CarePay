@@ -36,7 +36,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         super.onCreate(savedInstanceState);
         setContentView(com.carecloud.carepaylibrary.R.layout.activity_navigation);
         toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.toolbar);
-        displayToolbar(true, null);
 
         drawer = (DrawerLayout) findViewById(com.carecloud.carepaylibrary.R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(com.carecloud.carepaylibrary.R.id.nav_view);
@@ -73,6 +72,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     protected void onResume() {
         super.onResume();
         navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_APPOINTMENTS).setChecked(true);
+        displayToolbar(true, navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_APPOINTMENTS).getTitle().toString());
     }
 
     private void gotoAppointmentFragment() {

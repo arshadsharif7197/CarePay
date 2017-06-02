@@ -64,8 +64,10 @@ public class StringUtil {
      * @return The string with capitalized first letters
      */
     public static String captialize(String source) {
-
-        source = source.toLowerCase();
+        if(source == null){
+            return "";
+        }
+        source = source.replaceAll("( ){2,}", " ").toLowerCase();
         StringBuilder res = new StringBuilder();
 
         String[] strArr = source.split(" ");

@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -96,14 +97,33 @@ public class CustomMessageToast extends Toast {
     @Override
     public void show() {
         super.show();
+        getView().setOnTouchListener(hideTouchListener);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    ((BaseActivity) context).getWindow().setStatusBarColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
-                }
+                clearStatusBar();
             }
         }, getDuration() == LENGTH_SHORT ? 1000 : 4000);//this should correspond to Toast LENGTH_SHORT & LENGTH_LONG
 
     }
+
+    @Override
+    public void cancel(){
+        super.cancel();
+        clearStatusBar();
+    }
+
+    private void clearStatusBar(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ((BaseActivity) context).getWindow().setStatusBarColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
+        }
+    }
+
+    private View.OnTouchListener hideTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent event) {
+            cancel();
+            return true;
+        }
+    };
 }

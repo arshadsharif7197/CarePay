@@ -147,6 +147,7 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
     }
 
     protected void doPayment() {
+        createPaymentModel(total);
         actionCallback.onPayButtonClicked(total, paymentDTO);
     }
 
