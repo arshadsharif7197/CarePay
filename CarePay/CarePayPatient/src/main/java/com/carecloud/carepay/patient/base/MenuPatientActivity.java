@@ -282,7 +282,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
      * @param visibility the visibility
      */
     public void displayToolbar(boolean visibility, String toolBarTitle) {
-        TextView toolbarText = (TextView) findViewById(R.id.balance_history_toolbar_title);
+        TextView toolbarText = (TextView) findViewById(R.id.toolbar_title);
         if (toolBarTitle != null) {
             toolbarText.setText(StringUtil.isNullOrEmpty(toolBarTitle) ? CarePayConstants.NOT_DEFINED : toolBarTitle);
         }

@@ -143,13 +143,18 @@ public class CustomPopupNotification extends PopupWindow {
 
                 @Override
                 public void run() {
+                    if(hasStatusBar)
+                    {
+                        setStatusBarColor(statusBarColor);
+                    }
                     if (isShowing()) {
-                        dismiss();
-                        if(hasStatusBar)
-                        {
-                            setStatusBarColor(statusBarColor);
+                        try {
+                            dismiss();
+                        }catch (IllegalArgumentException iae){
+                            //do nothing
                         }
                     }
+
                 }
 
             }, CarePayConstants.CUSTOM_POPUP_AUTO_DISMISS_DURATION);
