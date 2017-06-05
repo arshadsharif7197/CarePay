@@ -94,10 +94,8 @@ public class NextAppointmentActivity extends BasePatientActivity implements Chec
     public void onVisitTypeSelected(VisitTypeDTO visitTypeDTO, AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
         NextAppointmentFragment fragment = (NextAppointmentFragment) getSupportFragmentManager()
                 .findFragmentByTag(NextAppointmentFragment.class.getCanonicalName());
-        if (fragment != null) {
-            if (fragment.setVisitType(visitTypeDTO)) {
-                fragment.showAvailableHoursFragment();
-            }
+        if ((fragment != null) && fragment.setVisitType(visitTypeDTO)) {
+            fragment.showAvailableHoursFragment();
         }
     }
 
