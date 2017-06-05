@@ -95,8 +95,9 @@ public class NextAppointmentActivity extends BasePatientActivity implements Chec
         NextAppointmentFragment fragment = (NextAppointmentFragment) getSupportFragmentManager()
                 .findFragmentByTag(NextAppointmentFragment.class.getCanonicalName());
         if (fragment != null) {
-            fragment.setVisitType(visitTypeDTO);
-            fragment.showAvailableHoursFragment();
+            if (fragment.setVisitType(visitTypeDTO)) {
+                fragment.showAvailableHoursFragment();
+            }
         }
     }
 
