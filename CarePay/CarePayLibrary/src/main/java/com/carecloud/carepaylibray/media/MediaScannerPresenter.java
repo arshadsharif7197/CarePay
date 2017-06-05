@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -136,12 +134,11 @@ public class MediaScannerPresenter {
      */
     public boolean handleActivityResult(int requestCode, int resultCode, Intent data){
         if (resultCode == Activity.RESULT_OK) {
-            Bitmap bitmap = null;
             switch (requestCode) {
                 case REQUEST_CODE_GALLERY: {
-                    bitmap = ImageCaptureHelper.getBitmapFromGalleryResult(context, data);
-                    if (bitmap != null) {
-                        mediaViewInterface.setCapturedBitmap(bitmap, data.getDataString(), captureView);
+                    String filePath = data.getDataString();
+                    if (filePath != null) {
+                        mediaViewInterface.setCapturedBitmap(filePath, captureView);
                     } else {
                         //// TODO: 6/2/17 show error message
                     }
@@ -153,8 +150,7 @@ public class MediaScannerPresenter {
                         filePath = data.getStringExtra(DATA_CAPTURED_IMAGE_KEY);
                     }
                     if(filePath!=null) {
-                        bitmap = BitmapFactory.decodeFile(filePath);
-                        mediaViewInterface.setCapturedBitmap(bitmap, filePath, captureView);
+                        mediaViewInterface.setCapturedBitmap(filePath, captureView);
                     }
                     return true;
                 }

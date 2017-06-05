@@ -30,6 +30,7 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
+import com.carecloud.carepaylibray.media.MediaResultListener;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
@@ -50,6 +51,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     private PaymentsModel paymentDTO;
 
     private View[] checkInFlowViews;
+
+    private MediaResultListener resultListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +87,20 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     public DemographicsPresenter getPresenter() {
         return presenter;
     }
+
+    @Override
+    public void setMediaResultListener(MediaResultListener resultListener) {
+        this.resultListener = resultListener;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultListener !=null){
+            resultListener.handleActivityResult(requestCode, resultCode, data);
+        }
+    }
+
 
     @Override
     protected void onPause() {

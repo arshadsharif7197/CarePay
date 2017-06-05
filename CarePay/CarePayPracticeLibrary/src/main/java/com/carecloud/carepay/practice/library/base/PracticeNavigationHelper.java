@@ -99,7 +99,7 @@ public class PracticeNavigationHelper {
 
             case NavigationStateConstants.DEMOGRAPHIC_VERIFY: {
                 intent = new Intent(context, PatientModeCheckinActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
             case NavigationStateConstants.MEDICATION_ALLERGIES:{
@@ -108,6 +108,7 @@ public class PracticeNavigationHelper {
                     return;
                 }else{
                     intent = new Intent(context, PatientModeCheckinActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 }
                 break;
             }
@@ -117,6 +118,7 @@ public class PracticeNavigationHelper {
                     return;
                 }else{
                     intent = new Intent(context, PatientModeCheckinActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 }
                 break;
             }
@@ -127,6 +129,7 @@ public class PracticeNavigationHelper {
                     return;
                 }else{
                     intent = new Intent(context, PatientModeCheckinActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 }
                 break;
             }

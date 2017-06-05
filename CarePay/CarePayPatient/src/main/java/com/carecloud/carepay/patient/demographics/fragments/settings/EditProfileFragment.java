@@ -230,14 +230,14 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
     }
 
     @Override
-    public void setCapturedBitmap(Bitmap bitmap, String filePath, View view) {
-        if (bitmap != null) {
+    public void setCapturedBitmap(String filePath, View view) {
+        if (filePath != null) {
             final ImageView imageView = (ImageView) view;
 
-            final int width = imageView.getWidth();
-            final int height = imageView.getHeight();
-            imageView.getLayoutParams().width = width;
-            imageView.getLayoutParams().height = height;
+            imageView.measure(0,0);
+            ViewGroup.LayoutParams lp = imageView.getLayoutParams();
+            final int width = Math.max(imageView.getMeasuredWidth(), lp.width);
+            final int height = Math.max(imageView.getMeasuredHeight(), lp.height);
 
             File file = new File(filePath);
             Uri fileUri;

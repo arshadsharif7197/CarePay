@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.media;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -10,13 +9,11 @@ import android.view.View;
  * Created by lmenendez on 4/24/17
  */
 
-public interface MediaViewInterface {
+public interface MediaViewInterface extends MediaResultListener {
 
     void handleRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults);
 
-    boolean handleActivityResult(int requestCode, int resultCode, Intent data);
-
-    void setCapturedBitmap(Bitmap bitmap, String path, View view);
+    void setCapturedBitmap(String path, View view);
 
     void handleStartActivityForResult(Intent intent, int requestCode);
 
