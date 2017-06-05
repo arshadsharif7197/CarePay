@@ -45,7 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:background="@drawable/bg_blue_overlay"
+                android:background="@drawable/dark_blue_overlay"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -63,8 +63,8 @@
                     style="@style/HomeScreenAlertStyle"
                     android:background="@drawable/queue_counter_background"
                     android:gravity="center"
-                    android:text="0"
-                    app:customAssetFont="gotham_rounded_medium" />
+                    app:customAssetFont="gotham_rounded_medium"
+                    tools:text="0" />
 
             </LinearLayout>
 
@@ -74,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginStart="@dimen/home_alert_margin_start"
-                android:background="@drawable/bg_blue_overlay"
+                android:background="@drawable/dark_blue_overlay"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -93,8 +93,8 @@
                     android:layout_width="wrap_content"
                     android:background="@drawable/alert_counter_background"
                     android:gravity="center"
-                    android:text="0"
-                    app:customAssetFont="gotham_rounded_medium" />
+                    app:customAssetFont="gotham_rounded_medium"
+                    tools:text="0" />
 
             </LinearLayout>
 
