@@ -1,20 +1,31 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
-import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
-import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
@@ -22,22 +33,36 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadD
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
+import com.carecloud.carepaylibray.media.MediaScannerPresenter;
+import com.carecloud.carepaylibray.media.MediaViewInterface;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.io.IOException;
 
 
 /**
  * Created by jorge on 27/02/17
  */
 
-public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
+public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implements MediaViewInterface {
 
     private DemographicDTO demographicDTO;
-    private UpdateProfilePictureListener callback;
     private DemographicDataModel dataModel;
+
+    private Button buttonChangeCurrentPhoto;
+    boolean hasNewImage = false;
+    private MediaScannerPresenter mediaScannerPresenter;
+    private String base64ProfileImage;
 
     @Override
     public void onCreate(Bundle icicle){
@@ -56,13 +81,8 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         initialiseUIFields(view);
         initViews(view);
+        initCameraViews(view);
         checkIfEnableButton(view);
-    }
-
-    @Override
-    public void onStart(){
-        super.onStart();
-        callback.loadPictureFragment();
     }
 
     @Override
@@ -73,20 +93,6 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         checkinFlowCallback.setCurrentStep(1);
     }
 
-    @Override
-    public void attachCallback(Context context) {
-        super.attachCallback(context);
-        try {
-            if (context instanceof DemographicsView) {
-                callback = ((DemographicsView) context).getPresenter();
-            } else {
-                callback = (UpdateProfilePictureListener) context;
-            }
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement UpdateProfilePictureListener");
-        }
-    }
 
     private void initialiseUIFields(View view) {
         setHeaderTitle(
@@ -167,6 +173,32 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
             phoneNumber.addTextChangedListener(getValidateEmptyTextWatcher(phoneNumberLayout));
         }else {
             phoneNumber.addTextChangedListener(clearValidationErrorsOnTextChange(phoneNumberLayout));
+        }
+
+    }
+
+    private void initCameraViews(View view){
+        ImageView profileImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
+        mediaScannerPresenter = new MediaScannerPresenter(getContext(), this, profileImage);
+
+        buttonChangeCurrentPhoto = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
+        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
+        if(isCloverDevice){
+            buttonChangeCurrentPhoto.setVisibility(View.INVISIBLE);
+        }else {
+            buttonChangeCurrentPhoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    boolean isPatientApp = getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT;
+                    mediaScannerPresenter.selectImage(isPatientApp);
+                }
+            });
+        }
+
+
+        if (demographicDTO != null) {
+            String profilePicURL = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
+            displayProfileImage(profilePicURL, profileImage);
         }
 
     }
@@ -261,6 +293,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         updatableDemographicDTO.getPayload().setDemographics(new DemographicPayloadInfoDTO());
         updatableDemographicDTO.getPayload().getDemographics().setPayload(new DemographicPayloadDTO());
 
+        setupImageBase64();
         PatientModel demographicPersDetailsPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
 
         if (demographicPersDetailsPayloadDTO == null) {
@@ -290,9 +323,8 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
             demographicPersDetailsPayloadDTO.setDateOfBirth(DateUtil.getInstance().setDateRaw(dateOfBirth).toStringWithFormatYyyyDashMmDashDd());
         }
 
-        String profileImage = callback.getProfilePicture();
-        if (!StringUtil.isNullOrEmpty(profileImage)) {
-            demographicPersDetailsPayloadDTO.setProfilePhoto(profileImage);
+        if (!StringUtil.isNullOrEmpty(base64ProfileImage)) {
+            demographicPersDetailsPayloadDTO.setProfilePhoto(base64ProfileImage);
         }
 
         updatableDemographicDTO.getPayload().getDemographics().getPayload().setPersonalDetails(demographicPersDetailsPayloadDTO);
@@ -314,9 +346,112 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         return updatableDemographicDTO;
     }
 
-    public interface UpdateProfilePictureListener {
-        String getProfilePicture();
-
-        void loadPictureFragment();
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+        handleRequestPermissionsResult(requestCode, permissions, grantResults);
     }
+
+    @Override
+    public void handleRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if(mediaScannerPresenter!=null){
+            mediaScannerPresenter.handleRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    @Override
+    public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
+        return mediaScannerPresenter!=null && mediaScannerPresenter.handleActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void setCapturedBitmap(final String filePath, View view) {
+        if (filePath != null) {
+            displayProfileImage(filePath, view);
+
+            PatientModel demographicsPersonalDetails = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
+            demographicsPersonalDetails.setProfilePhoto(filePath);
+            hasNewImage = true;
+
+        }
+    }
+
+    void displayProfileImage(final String filePath, View view){
+        final ImageView imageView = (ImageView) view;
+
+        imageView.measure(0,0);
+        ViewGroup.LayoutParams lp = imageView.getLayoutParams();
+        final int width = Math.max(imageView.getMeasuredWidth(), lp.width);
+        final int height = Math.max(imageView.getMeasuredHeight(), lp.height);
+
+        File file = new File(filePath);
+        Uri fileUri;
+        if(file.exists()){
+            fileUri = Uri.fromFile(file);
+        }else{
+            //check if we have a base64 image instead of an URI
+            Bitmap bitmap = SystemUtil.convertStringToBitmap(filePath);
+            if(bitmap!=null) {
+                File temp = ImageCaptureHelper.getBitmapFileUrl(getContext(), bitmap, "temp_"+System.currentTimeMillis());
+                fileUri = Uri.fromFile(temp);
+            }else {
+                fileUri = Uri.parse(filePath);
+            }
+        }
+
+        Picasso.with(getContext()).load(fileUri)
+                .placeholder(R.drawable.icn_placeholder_user_profile_png)
+                .resize(width, height)
+                .centerCrop()
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                .transform(new CircleImageTransform())
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        buttonChangeCurrentPhoto.setText(Label.getLabel("demographics_take_another_picture_button_title"));
+                    }
+
+                    @Override
+                    public void onError() {
+                        imageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                                R.drawable.icn_placeholder_user_profile_png));
+
+                    }
+                });
+    }
+
+    @Override
+    public void handleStartActivityForResult(Intent intent, int requestCode) {
+        getActivity().startActivityForResult(intent, requestCode);
+    }
+
+    @Nullable
+    @Override
+    public Fragment getCallingFragment() {
+        return this;
+    }
+
+    @Override
+    public void setupImageBase64() {
+        PatientModel demographicsPersonalDetails = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
+        if(hasNewImage){
+            String filePath = demographicsPersonalDetails.getProfilePhoto();
+            File file = new File(filePath);
+            Bitmap bitmap = null;
+            if(file.exists()) {
+                bitmap = BitmapFactory.decodeFile(filePath);
+            }else{
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.parse(filePath));
+                }catch (IOException ioe){
+                    //do nothing
+                }
+            }
+
+            if(bitmap != null){
+                base64ProfileImage = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
+                hasNewImage = false;
+            }
+        }
+    }
+
 }
