@@ -205,10 +205,10 @@ public class MediaScannerPresenter {
     private void handleGalleryAction(){
         setPendingAction(ACTION_GALLERY);
         if(mediaViewInterface.getCallingFragment()!=null){
-            if(!PermissionsUtil.checkPermission(mediaViewInterface.getCallingFragment())){
+            if(!PermissionsUtil.checkPermissionStorage(mediaViewInterface.getCallingFragment())){
                 return;
             }
-        }else if(!PermissionsUtil.checkPermission(context)){
+        }else if(!PermissionsUtil.checkPermissionStorage(context)){
             return;
         }
 

@@ -12,6 +12,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 
+import com.carecloud.carepay.service.library.label.Label;
+
 /**
  * Created by kkannan on 9/19/16.
  */
@@ -20,15 +22,20 @@ public final class PermissionsUtil {
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
     public static final int MY_PERMISSIONS_CAMERA                        = 124;
 
-    public static boolean checkPermission(final Context context) {
+    /**
+     * Check if user has granted necessary Permissions for accessing Storage, Prompt if permision not granted, Display Explanation message if permission has been denied
+     * @param context context - This callback should be handled by containing activity
+     * @return true if has permission
+     */
+    public static boolean checkPermissionStorage(final Context context) {
         int currentAPIVersion = Build.VERSION.SDK_INT;
         if (currentAPIVersion >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                     AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
                     alertBuilder.setCancelable(true);
-                    alertBuilder.setTitle("Permission necessary");
-                    alertBuilder.setMessage("External storage permission is necessary");
+                    alertBuilder.setTitle(Label.getLabel("permission_title"));
+                    alertBuilder.setMessage(Label.getLabel("permission_storage"));
                     alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
                         public void onClick(DialogInterface dialog, int which) {
@@ -50,15 +57,20 @@ public final class PermissionsUtil {
         }
     }
 
-    public static boolean checkPermission(final Fragment fragment) {
+    /**
+     * Check if user has granted necessary Permissions for accessing Storage, Prompt if permision not granted, Display Explanation message if permission has been denied
+     * @param fragment fragment - callback should be handled by calling fragment
+     * @return true if has permission
+     */
+    public static boolean checkPermissionStorage(final Fragment fragment) {
         int currentAPIVersion = Build.VERSION.SDK_INT;
         if (currentAPIVersion >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(fragment.getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 if (fragment.shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                     AlertDialog.Builder alertBuilder = new AlertDialog.Builder(fragment.getContext());
                     alertBuilder.setCancelable(true);
-                    alertBuilder.setTitle("Permission necessary");
-                    alertBuilder.setMessage("External storage permission is necessary");
+                    alertBuilder.setTitle(Label.getLabel("permission_title"));
+                    alertBuilder.setMessage(Label.getLabel("permission_storage"));
                     alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
                         public void onClick(DialogInterface dialog, int which) {
@@ -80,7 +92,11 @@ public final class PermissionsUtil {
         }
     }
 
-
+    /**
+     * Check if user has granted necessary Permissions for accessing Camera, Prompt if permision not granted, Display Explanation message if permission has been denied
+     * @param context context - This callback should be handled by containing activity
+     * @return true if has permission
+     */
     public static boolean checkPermissionCamera(final Context context) {
         int currentAPIVersion = Build.VERSION.SDK_INT;
         if (currentAPIVersion >= Build.VERSION_CODES.M) {
@@ -88,8 +104,8 @@ public final class PermissionsUtil {
                 if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.CAMERA)) {
                     AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
                     alertBuilder.setCancelable(true);
-                    alertBuilder.setTitle("Permission necessary");
-                    alertBuilder.setMessage("Camera permission is necessary");
+                    alertBuilder.setTitle(Label.getLabel("permission_title"));
+                    alertBuilder.setMessage(Label.getLabel("permission_camera"));
                     alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
                         public void onClick(DialogInterface dialog, int which) {
@@ -111,6 +127,12 @@ public final class PermissionsUtil {
         }
     }
 
+
+    /**
+     * Check if user has granted necessary Permissions for accessing Camera, Prompt if permision not granted, Display Explanation message if permission has been denied
+     * @param fragment fragment - callback should be handled by calling fragment
+     * @return true if has permission
+     */
     public static boolean checkPermissionCamera(final Fragment fragment) {
         int currentAPIVersion = Build.VERSION.SDK_INT;
         if (currentAPIVersion >= Build.VERSION_CODES.M) {
@@ -118,8 +140,8 @@ public final class PermissionsUtil {
                 if (fragment.shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
                     AlertDialog.Builder alertBuilder = new AlertDialog.Builder(fragment.getContext());
                     alertBuilder.setCancelable(true);
-                    alertBuilder.setTitle("Permission necessary");
-                    alertBuilder.setMessage("Camera permission is necessary");
+                    alertBuilder.setTitle(Label.getLabel("permission_title"));
+                    alertBuilder.setMessage(Label.getLabel("permission_camera"));
                     alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
                         public void onClick(DialogInterface dialog, int which) {
