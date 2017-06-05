@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
@@ -49,13 +50,13 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
-import static com.carecloud.carepaylibray.utils.ImageCaptureHelper.getBitmapFileUrl;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+
+import static com.carecloud.carepaylibray.utils.ImageCaptureHelper.getBitmapFileUrl;
 
 public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCameraCallback {
     private static final int FRONT_PIC = 1;
@@ -144,7 +145,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         attachCallback(context);
     }
 
-    private void attachCallback(Context context){
+    private void attachCallback(Context context) {
         try {
             if (context instanceof DemographicsView) {
                 callback = ((DemographicsView) context).getPresenter();
@@ -168,9 +169,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(callback == null || carePayCameraReady == null){
+        if (callback == null || carePayCameraReady == null) {
             attachCallback(getContext());
         }
     }
@@ -196,8 +197,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         hadInsurance = hasInsurance();
-        if (getDialog()!=null || (hadInsurance && !isPatientMode)) {
-            View view =  inflater.inflate(R.layout.dialog_add_edit_insurance, container, false);
+        if (getDialog() != null || (hadInsurance && !isPatientMode)) {
+            View view = inflater.inflate(R.layout.dialog_add_edit_insurance, container, false);
 
             hideKeyboardOnViewTouch(view.findViewById(R.id.dialog_content_layout));
             hideKeyboardOnViewTouch(view.findViewById(R.id.container_main));
@@ -220,7 +221,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         ((ViewGroup) view.findViewById(R.id.checkinDemographicsContentLayout)).addView(child);
 
         View heading = view.findViewById(R.id.demographicsHeading);
-        if(heading!=null) {
+        if (heading != null) {
             heading.setVisibility(View.GONE);
         }
 
@@ -259,7 +260,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if(hasInsurance()) {
+        if (hasInsurance()) {
             View closeButton = findViewById(R.id.edit_insurance_close_button);
             if (closeButton != null) {
                 closeButton.setOnClickListener(new View.OnClickListener() {
@@ -293,9 +294,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
         initializeScanArea();
 
-        if(getDialog()!=null || (hadInsurance && !isPatientMode)) {
+        if (getDialog() != null || (hadInsurance && !isPatientMode)) {
             saveInsuranceButton = (Button) findViewById(R.id.save_insurance_changes);
-        }else{
+        } else {
             saveInsuranceButton = (Button) findViewById(R.id.checkinDemographicsNextButton);
         }
 
@@ -309,7 +310,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
             selectedTypeTextView.setText(Label.getLabel("demographics_choose"));
 
-            if (hasInsurance() && (getDialog()!=null || !isPatientMode)) {
+            if (hasInsurance() && (getDialog() != null || !isPatientMode)) {
                 disappearViewById(R.id.remove_insurance_entry);
                 ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(
                         Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
@@ -327,18 +328,18 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
             selectedPlan = demographicInsurancePayload.getInsurancePlan();
             selectedPlanTextView.setText(selectedPlan);
             selectedPlanTextView.setVisibility(View.VISIBLE);
-            ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(selectedProvider+(selectedPlan!=null?" "+selectedPlan:""));
+            ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(selectedProvider + (selectedPlan != null ? " " + selectedPlan : ""));
             findViewById(R.id.health_insurance_plans).setVisibility(View.GONE);
 
             selectedType = demographicInsurancePayload.getInsuranceType();
             selectedTypeTextView.setText(selectedType);
 
             cardNumber.setText(demographicInsurancePayload.getInsuranceMemberId());
-            if(!StringUtil.isNullOrEmpty(demographicInsurancePayload.getInsuranceMemberId()) && cardNumber.getOnFocusChangeListener()!=null) {
+            if (!StringUtil.isNullOrEmpty(demographicInsurancePayload.getInsuranceMemberId()) && cardNumber.getOnFocusChangeListener() != null) {
                 cardNumber.getOnFocusChangeListener().onFocusChange(cardNumber, false);
             }
             groupNumber.setText(demographicInsurancePayload.getInsuranceGroupId());
-            if(!StringUtil.isNullOrEmpty(demographicInsurancePayload.getInsuranceGroupId()) && groupNumber.getOnFocusChangeListener()!=null) {
+            if (!StringUtil.isNullOrEmpty(demographicInsurancePayload.getInsuranceGroupId()) && groupNumber.getOnFocusChangeListener() != null) {
                 groupNumber.getOnFocusChangeListener().onFocusChange(groupNumber, false);
             }
 
@@ -401,7 +402,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
                 photos.add(backInsurancePhotoDTO);
             }
 
-            if (hasInsurance && getDialog()!=null) {
+            if (hasInsurance && getDialog() != null
+                    || getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PATIENT)) {
                 closeDialog();
             } else {
                 callback.onInsuranceEdited(demographicDTO, true);
@@ -415,7 +417,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         if (callback != null) {
             callback.onInsuranceEdited(demographicDTO, false);
 
-            if (callback!=null && (!hadInsurance || !isPatientMode)) {
+            if (callback != null && (!hadInsurance || !isPatientMode)) {
                 callback.goOneStepBack();
             }
         }
@@ -429,21 +431,21 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
             String frontPic = null;
             String backPic = null;
             List<DemographicInsurancePhotoDTO> insurancePhotoDTOs = demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex).getInsurancePhotos();
-            if(insurancePhotoDTOs!=null && !insurancePhotoDTOs.isEmpty()){
-                for(DemographicInsurancePhotoDTO photoDTO: insurancePhotoDTOs){
-                    if(photoDTO.getPage() == FRONT_PIC){
+            if (insurancePhotoDTOs != null && !insurancePhotoDTOs.isEmpty()) {
+                for (DemographicInsurancePhotoDTO photoDTO : insurancePhotoDTOs) {
+                    if (photoDTO.getPage() == FRONT_PIC) {
                         frontPic = photoDTO.getInsurancePhoto();
                     }
-                    if(photoDTO.getPage() == BACK_PIC){
+                    if (photoDTO.getPage() == BACK_PIC) {
                         backPic = photoDTO.getInsurancePhoto();
                     }
                 }
             }
 
             if (!StringUtil.isNullOrEmpty(frontPic)) {
-                if(frontPic.startsWith(HTTP)) {
+                if (frontPic.startsWith(HTTP)) {
                     setInsurancePhoto(healthInsuranceFrontPhotoView, frontPic);
-                }else{//must be BASE64
+                } else {//must be BASE64
                     Bitmap bitmap = SystemUtil.convertStringToBitmap(frontPic);
                     File file = ImageCaptureHelper.getBitmapFileUrl(getContext(), bitmap, "idFront");
                     setInsurancePhoto(healthInsuranceFrontPhotoView, file);
@@ -451,9 +453,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
             }
 
             if (!StringUtil.isNullOrEmpty(backPic)) {
-                if(backPic.startsWith(HTTP)) {
+                if (backPic.startsWith(HTTP)) {
                     setInsurancePhoto(healthInsuranceBackPhotoView, backPic);
-                }else{//must be BASE64
+                } else {//must be BASE64
                     Bitmap bitmap = SystemUtil.convertStringToBitmap(backPic);
                     File file = ImageCaptureHelper.getBitmapFileUrl(getContext(), bitmap, "idBack");
                     setInsurancePhoto(healthInsuranceBackPhotoView, file);
@@ -485,7 +487,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         });
     }
 
-    private void setInsurancePhoto(final ImageView imageView, String photoUrl){
+    private void setInsurancePhoto(final ImageView imageView, String photoUrl) {
         imageView.measure(0, 0);
         ViewGroup.LayoutParams lp = imageView.getLayoutParams();
         final int width = Math.max(imageView.getMeasuredWidth(), lp.width);
@@ -515,8 +517,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
                 });
     }
 
-    private void setInsurancePhoto(final ImageView imageView, File file){
-        imageView.measure(0,0);
+    private void setInsurancePhoto(final ImageView imageView, File file) {
+        imageView.measure(0, 0);
         ViewGroup.LayoutParams lp = imageView.getLayoutParams();
         final int width = Math.max(imageView.getMeasuredWidth(), lp.width);
         final int height = Math.max(imageView.getMeasuredHeight(), lp.height);
@@ -784,12 +786,12 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
             String tempFile;
             final int page;
 
-            if(isFrontScan){
+            if (isFrontScan) {
                 scanFrontButton.setText(Label.getLabel("demographics_insurance_retake_front_photo"));
                 imageView = healthInsuranceFrontPhotoView;
                 tempFile = "idFront";
                 page = FRONT_PIC;
-            }else{
+            } else {
                 scanBackButton.setText(Label.getLabel("demographics_insurance_retake_back_photo"));
                 imageView = healthInsuranceBackPhotoView;
                 tempFile = "idBack";
@@ -813,9 +815,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
                     photoDTO.setInsurancePhoto(imageAsBase64); // create the image dto
                     photoDTO.setPage(page);
                     photoDTO.setDelete(false);
-                    if(isFrontScan){
+                    if (isFrontScan) {
                         frontInsurancePhotoDTO = photoDTO;
-                    }else{
+                    } else {
                         backInsurancePhotoDTO = photoDTO;
                     }
                 }
@@ -832,7 +834,15 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     }
 
     private boolean hasInsurance() {
-        return !demographicDTO.getPayload().getDemographics().getPayload().getInsurances().isEmpty();
+        boolean hasInsurance = false;
+        for (DemographicInsurancePayloadDTO insurance : demographicDTO.getPayload().getDemographics()
+                .getPayload().getInsurances()) {
+            if (!insurance.isDeleted()) {
+                hasInsurance = true;
+                break;
+            }
+        }
+        return hasInsurance;
     }
 
     private void validateForm() {
@@ -841,22 +851,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         if (StringUtil.isNullOrEmpty(selectedProvider)) {
             isValid = false;
         }
-
-//        if(StringUtil.isNullOrEmpty(selectedPlan)){
-//            isValid = false;
-//        }
-//
-//        if(StringUtil.isNullOrEmpty(selectedType)){
-//            isValid = false;
-//        }
-//
-//        if(StringUtil.isNullOrEmpty(cardNumber.getText().toString())){
-//            isValid = false;
-//        }
-//
-//        if(StringUtil.isNullOrEmpty(groupNumber.getText().toString())){
-//            isValid = false;
-//        }
 
         saveInsuranceButton.setEnabled(isValid);
     }
