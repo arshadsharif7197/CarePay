@@ -44,6 +44,13 @@ public class DocumentScannerAdapter {
     private ImageView imageBack;
 
 
+    /**
+     * Adapter for managing Document Scanner Views
+     * @param context context
+     * @param view base view
+     * @param mediaScannerPresenter media scanner presenter
+     * @param applicationType application mode
+     */
     public DocumentScannerAdapter(Context context, View view, MediaScannerPresenter mediaScannerPresenter, ApplicationMode.ApplicationType applicationType){
         initViews(view);
         this.context = context;
@@ -76,6 +83,10 @@ public class DocumentScannerAdapter {
 
     }
 
+    /**
+     * Setup Documents from Dto Data
+     * @param docPayloadDTO DemographicIdDocPayloadDTO
+     */
     public void setDocumentsFromData(DemographicIdDocPayloadDTO docPayloadDTO){
         String frontPic = null;
         String backPic = null;
@@ -101,6 +112,12 @@ public class DocumentScannerAdapter {
         }
     }
 
+    /**
+     * Show image from path
+     * @param filePath can be a file path, other URI, or Base64 string
+     * @param view view to add image
+     * @param updateButton should update the corresponding button text
+     */
     public void setImageView(String filePath, final View view, final boolean updateButton){
         final ImageView imageView = (ImageView) view;
 

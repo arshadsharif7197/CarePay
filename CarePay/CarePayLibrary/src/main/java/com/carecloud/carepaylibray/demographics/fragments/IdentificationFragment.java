@@ -129,6 +129,7 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         handleRequestPermissionsResult(requestCode, permissions, grantResults);
     }
+
     @Override
     public void handleRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if(mediaScannerPresenter != null){
