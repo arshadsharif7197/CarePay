@@ -286,20 +286,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         }
     }
 
-//    @Override
-//    public String getProfilePicture() {
-//        ProfilePictureFragment fragment = (ProfilePictureFragment)
-//                getSupportFragmentManager().findFragmentById(R.id.revdemographicsAddressPicCapturer);
-//
-//        if (fragment != null) {
-//            PatientModel demographicPersDetailsPayloadDTO = fragment.getDemographicPersDetailsPayloadDTO();
-//            if (demographicPersDetailsPayloadDTO != null) {
-//                return demographicPersDetailsPayloadDTO.getProfilePhoto();
-//            }
-//        }
-//        return null;
-//    }
-
     @Override
     public void applyChangesAndNavTo(DemographicDTO demographicDTO, Integer step) {
         currentDemographicStep = step;
@@ -318,20 +304,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             currentDemographicStep = step;
         }
     }
-
-//    @Override
-//    public void loadPictureFragment() {
-//        ProfilePictureFragment fragment = new ProfilePictureFragment();
-//
-//        Bundle args = new Bundle();
-//        DtoHelper.bundleDto(args, demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails());
-//        args.putBoolean(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, true);
-//        fragment.setArguments(args);
-//        FragmentManager fm = getSupportFragmentManager();
-//        String tag = ProfilePictureFragment.class.getSimpleName();
-//        fm.beginTransaction().replace(R.id.revdemographicsAddressPicCapturer, fragment, tag)
-//                .commit();
-//    }
 
     /**
      * Navigate to fragment

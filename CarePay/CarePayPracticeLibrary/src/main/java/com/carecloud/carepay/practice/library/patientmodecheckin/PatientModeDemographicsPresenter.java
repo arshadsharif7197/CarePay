@@ -39,15 +39,14 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
         }
 
         patientModeCheckinDTO = demographicsView.getConvertedDTO(PatientModeCheckinDTO.class);
-        if(session.getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE){
+        if(session.getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE && patientModeCheckinDTO != null){
             //need to switch to PatientMode
-            if(patientModeCheckinDTO != null) {
-                session.getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
-                String username = patientModeCheckinDTO.getPayload().getCheckinModeDTO().getMetadata().getUsername();
-                session.getAppAuthorizationHelper().setUser(username);
+            session.getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
+            String username = patientModeCheckinDTO.getPayload().getCheckinModeDTO().getMetadata().getUsername();
+            session.getAppAuthorizationHelper().setUser(username);
 
-                shouldHandleHomeButton = true;
-            }
+            shouldHandleHomeButton = true;
+
         }
 
     }

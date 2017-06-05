@@ -1,7 +1,14 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +17,31 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPhotoDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
-import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
+import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter;
+import com.carecloud.carepaylibray.media.MediaScannerPresenter;
+import com.carecloud.carepaylibray.media.MediaViewInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.SystemUtil;
+
+import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
+import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 
-public class IdentificationFragment extends CheckInDemographicsBaseFragment {
-
+public class IdentificationFragment extends CheckInDemographicsBaseFragment implements MediaViewInterface {
     private DemographicDTO demographicDTO;
+    private MediaScannerPresenter mediaScannerPresenter;
+    private DocumentScannerAdapter documentScannerAdapter;
+
+    private boolean hasFrontImage = false;
+    private boolean hasBackImage = false;
+    private String base64FrontImage;
+    private String base64BackImage;
 
     @Override
     public void onCreate(Bundle icicle){
@@ -38,9 +62,7 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
 
         initNextButton(view);
 
-        DemographicIdDocPayloadDTO idDocument = demographicDTO.getPayload().getDemographics().getPayload().getIdDocument();
-        initialiseChildFragment(idDocument
-                /*, demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments().getProperties().getItems().getIdentityDocument()*/);
+        initImageViews(view);
         return view;
     }
 
@@ -64,35 +86,130 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
 
     @Override
     protected DemographicDTO updateDemographicDTO(View view) {
-        IdDocScannerFragment fragment = (IdDocScannerFragment) getChildFragmentManager().findFragmentById(R.id.revDemographicsIdentificationPicCapturer);
         DemographicDTO updatableDemographicDTO = new DemographicDTO();
-        if (fragment != null) {
-            updatableDemographicDTO.getPayload().getDemographics().getPayload().setIdDocument(fragment.getPostModel());
-        }
+        updatableDemographicDTO.getPayload().getDemographics().getPayload().setIdDocument(getPostModel());
+
         updatableDemographicDTO.getPayload().setAppointmentpayloaddto(demographicDTO.getPayload().getAppointmentpayloaddto());
         updatableDemographicDTO.setMetadata(demographicDTO.getMetadata());
         return updatableDemographicDTO;
     }
 
-    private void initialiseChildFragment(DemographicIdDocPayloadDTO demPayloadIdDocDTO
-                                         /*, DemographicMetadataEntityItemIdDocDTO demographicMetadataEntityItemIdDocDTO*/) {
-
-        FragmentManager fm = getChildFragmentManager();
-        String tag = IdDocScannerFragment.class.getSimpleName();
-        IdDocScannerFragment fragment = (IdDocScannerFragment) fm.findFragmentByTag(tag);
-        if (fragment == null) {
-            fragment = new IdDocScannerFragment();
-            Bundle args = new Bundle();
-            DtoHelper.bundleDto(args, demPayloadIdDocDTO);
-
-//            if (null != demographicMetadataEntityItemIdDocDTO) {
-//                DtoHelper.bundleDto(args, demographicMetadataEntityItemIdDocDTO);
-//            }
-
-            fragment.setArguments(args);
+    private DemographicIdDocPayloadDTO getPostModel(){
+        setupImageBase64();
+        DemographicIdDocPayloadDTO docPayloadDTO = new DemographicIdDocPayloadDTO();
+        if(hasFrontImage && base64FrontImage != null){
+            DemographicIdDocPhotoDTO docPhotoDTO = new DemographicIdDocPhotoDTO();
+            docPhotoDTO.setPage(FRONT_PIC);
+            docPhotoDTO.setIdDocPhoto(base64FrontImage);
+            docPhotoDTO.setDelete(false);
+            docPayloadDTO.getIdDocPhothos().add(docPhotoDTO);
         }
-        fm.beginTransaction()
-                .replace(com.carecloud.carepaylibrary.R.id.revDemographicsIdentificationPicCapturer, fragment, tag)
-                .commit();
+        if(hasBackImage && base64BackImage != null){
+            DemographicIdDocPhotoDTO docPhotoDTO = new DemographicIdDocPhotoDTO();
+            docPhotoDTO.setPage(BACK_PIC);
+            docPhotoDTO.setIdDocPhoto(base64BackImage);
+            docPhotoDTO.setDelete(false);
+            docPayloadDTO.getIdDocPhothos().add(docPhotoDTO);
+        }
+        return docPayloadDTO;
+    }
+
+    private void initImageViews(View view){
+        mediaScannerPresenter = new MediaScannerPresenter(getContext(), this);
+        documentScannerAdapter = new DocumentScannerAdapter(getContext(), view, mediaScannerPresenter, getApplicationMode().getApplicationType());
+        documentScannerAdapter.setDocumentsFromData(demographicDTO.getPayload().getDemographics().getPayload().getIdDocument());
+    }
+
+    @Override
+    public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
+        return mediaScannerPresenter != null && mediaScannerPresenter.handleActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        handleRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+    @Override
+    public void handleRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if(mediaScannerPresenter != null){
+            mediaScannerPresenter.handleRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    @Override
+    public void setCapturedBitmap(String filePath, View view) {
+        if (filePath != null) {
+            documentScannerAdapter.setImageView(filePath, view, true);
+            int page;
+            if(view.getId() == documentScannerAdapter.getFrontImageId()){
+                page = FRONT_PIC;
+                hasFrontImage = true;
+            }else{
+                page = BACK_PIC;
+                hasBackImage = true;
+            }
+
+            DemographicIdDocPayloadDTO docPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getIdDocument();
+            for(DemographicIdDocPhotoDTO docPhotoDTO : docPayloadDTO.getIdDocPhothos()){
+                if(docPhotoDTO.getPage() == page){
+                    docPhotoDTO.setIdDocPhoto(filePath);
+                    return;
+                }
+            }
+
+            //did not find an item to update
+            DemographicIdDocPhotoDTO docPhotoDTO = new DemographicIdDocPhotoDTO();
+            docPhotoDTO.setPage(page);
+            docPhotoDTO.setDelete(false);
+            docPhotoDTO.setIdDocPhoto(filePath);
+            docPayloadDTO.getIdDocPhothos().add(docPhotoDTO);
+        }
+    }
+
+    @Override
+    public void handleStartActivityForResult(Intent intent, int requestCode) {
+        getActivity().startActivityForResult(intent, requestCode);
+    }
+
+    @Nullable
+    @Override
+    public Fragment getCallingFragment() {
+        return this;
+    }
+
+    @Override
+    public void setupImageBase64() {
+        List<DemographicIdDocPhotoDTO> docPhotos = demographicDTO.getPayload().getDemographics().getPayload().getIdDocument().getIdDocPhothos();
+        String filePath;
+        for(DemographicIdDocPhotoDTO docPhotoDTO : docPhotos){
+            if(docPhotoDTO.getPage() == FRONT_PIC && hasFrontImage){
+                filePath = docPhotoDTO.getIdDocPhoto();
+                base64FrontImage = getBase64(filePath);
+            }
+
+            if(docPhotoDTO.getPage() == BACK_PIC && hasBackImage){
+                filePath = docPhotoDTO.getIdDocPhoto();
+                base64BackImage = getBase64(filePath);
+            }
+        }
+    }
+
+    private String getBase64(String filePath){
+        File file = new File(filePath);
+        Bitmap bitmap = null;
+        if(file.exists()) {
+            bitmap = BitmapFactory.decodeFile(filePath);
+        }else{
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.parse(filePath));
+            }catch (IOException ioe){
+                //do nothing
+            }
+        }
+
+        if(bitmap != null){
+            return SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
+        }
+        return null;
     }
 }
