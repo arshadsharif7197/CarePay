@@ -15,7 +15,7 @@ import android.support.v7.app.AlertDialog;
 import com.carecloud.carepay.service.library.label.Label;
 
 /**
- * Created by kkannan on 9/19/16.
+ * Created by kkannan on 9/19/16
  */
 public final class PermissionsUtil {
 
