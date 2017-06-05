@@ -362,6 +362,7 @@ public class NextAppointmentFragment extends BaseFragment {
         }
         appointmentSlot = null;
         visitTimeTextView.setText(Label.getLabel("next_appointment_choose_when_label"));
+        findViewById(R.id.providerMessageHeader).setSelected(false);
         return shouldOpenHoursFragment;
     }
 
