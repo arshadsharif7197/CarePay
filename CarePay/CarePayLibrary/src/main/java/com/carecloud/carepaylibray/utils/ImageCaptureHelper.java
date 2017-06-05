@@ -210,6 +210,28 @@ public class ImageCaptureHelper {
         return null;
     }
 
+
+    /**
+     * Callback method to be used upon returning from Gallery activity
+     *
+     * @param context context
+     * @param data intent data
+     * @return compressed bitmap
+     */
+    public static Bitmap getBitmapFromGalleryResult(Context context, Intent data) {
+        try {
+            Bitmap thumbnail = MediaStore.Images.Media.getBitmap(context.getContentResolver(), data.getData());
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            // compress
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+            thumbnail = rotateImageIfRequired(context, thumbnail, data.getData());
+            return thumbnail;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * Creates an intent to launch the camera
      *
@@ -463,5 +485,6 @@ public class ImageCaptureHelper {
 
         return imageFile;
     }
+
 
 }
