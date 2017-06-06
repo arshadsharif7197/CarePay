@@ -351,10 +351,19 @@ public class NextAppointmentFragment extends BaseFragment {
     /**
      * @param visitTypeDTO the visit type
      */
-    public void setVisitType(VisitTypeDTO visitTypeDTO) {
+    public boolean setVisitType(VisitTypeDTO visitTypeDTO) {
         visitType = visitTypeDTO;
         visitTypeTextView.setText(visitTypeDTO.getName());
         visitTimeTextView.setEnabled(true);
+        scheduleAppointmentButton.setEnabled(false);
+        boolean shouldOpenHoursFragment = false;
+        if (appointmentSlot == null) {
+            shouldOpenHoursFragment = true;
+        }
+        appointmentSlot = null;
+        visitTimeTextView.setText(Label.getLabel("next_appointment_choose_when_label"));
+        findViewById(R.id.providerMessageHeader).setSelected(false);
+        return shouldOpenHoursFragment;
     }
 
     /**
