@@ -138,8 +138,7 @@ public class NextAppointmentActivity extends BasePatientActivity implements Chec
     }
 
     @Override
-    public void onPayLaterClicked(PaymentsModel paymentsModel) {
-        //Does not apply here due to business logic
+    public void onPayLaterClicked(PendingBalanceDTO pendingBalanceDTO) {
     }
 
     @Override
