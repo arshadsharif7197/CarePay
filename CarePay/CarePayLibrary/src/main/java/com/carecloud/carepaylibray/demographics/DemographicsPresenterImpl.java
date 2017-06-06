@@ -84,10 +84,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
     @Override
     public void onStop() {
-        if (insuranceEditDialog != null) {
-            insuranceEditDialog.dismissAllowingStateLoss();
-            insuranceEditDialog = null;
-        }
+
     }
 
     @Override
@@ -238,6 +235,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             }
 
             insuranceEditDialog.show(ft, tag);
+            demographicsView.setMediaResultListener(insuranceEditDialog);
         } else {
             navigateToFragment(insuranceEditDialog, showAsDialog);
         }

@@ -2,7 +2,9 @@ package com.carecloud.carepaylibray.demographics.scanner;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,8 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPhotoDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
 import com.carecloud.carepaylibray.media.MediaScannerPresenter;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -23,6 +27,7 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.IOException;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
@@ -52,10 +57,10 @@ public class DocumentScannerAdapter {
      * @param applicationType application mode
      */
     public DocumentScannerAdapter(Context context, View view, MediaScannerPresenter mediaScannerPresenter, ApplicationMode.ApplicationType applicationType){
-        initViews(view);
         this.context = context;
         this.mediaScannerPresenter = mediaScannerPresenter;
         this.applicationType = applicationType;
+        initViews(view);
     }
 
     private void initViews(View view){
@@ -87,7 +92,7 @@ public class DocumentScannerAdapter {
      * Setup Documents from Dto Data
      * @param docPayloadDTO DemographicIdDocPayloadDTO
      */
-    public void setDocumentsFromData(DemographicIdDocPayloadDTO docPayloadDTO){
+    public void setIdDocumentsFromData(DemographicIdDocPayloadDTO docPayloadDTO){
         String frontPic = null;
         String backPic = null;
         if(docPayloadDTO !=null && !docPayloadDTO.getIdDocPhothos().isEmpty()){
@@ -101,6 +106,35 @@ public class DocumentScannerAdapter {
             }
         }
 
+
+        if (!StringUtil.isNullOrEmpty(frontPic)) {
+            setImageView(frontPic, imageFront, false);
+        }
+
+
+        if (!StringUtil.isNullOrEmpty(backPic)) {
+            setImageView(backPic, imageBack, false);
+        }
+    }
+
+    /**
+     * Setup Insurance Photos from Dto Data
+     * @param insurancePayloadDTO DemographicInsurancePayloadDTO
+     */
+    public void setInsuranceDocumentsFromData(DemographicInsurancePayloadDTO insurancePayloadDTO){
+        String frontPic = null;
+        String backPic = null;
+
+        if(insurancePayloadDTO != null && !insurancePayloadDTO.getInsurancePhotos().isEmpty()){
+            for(DemographicInsurancePhotoDTO photoDTO : insurancePayloadDTO.getInsurancePhotos()){
+                if(photoDTO.getPage() == FRONT_PIC){
+                    frontPic = photoDTO.getInsurancePhoto();
+                }
+                if(photoDTO.getPage() == BACK_PIC){
+                    backPic = photoDTO.getInsurancePhoto();
+                }
+            }
+        }
 
         if (!StringUtil.isNullOrEmpty(frontPic)) {
             setImageView(frontPic, imageFront, false);
@@ -181,6 +215,30 @@ public class DocumentScannerAdapter {
 
     public int getBackImageId(){
         return imageBack.getId();
+    }
+
+    /**
+     * Get Base64 encoded string from File or URI
+     * @param filePath file path or Uri
+     * @return Base64 string if filepath is valid
+     */
+    public String getBase64(String filePath){
+        File file = new File(filePath);
+        Bitmap bitmap = null;
+        if(file.exists()) {
+            bitmap = BitmapFactory.decodeFile(filePath);
+        }else{
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(filePath));
+            }catch (IOException ioe){
+                //do nothing
+            }
+        }
+
+        if(bitmap != null){
+            return SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
+        }
+        return null;
     }
 
 }

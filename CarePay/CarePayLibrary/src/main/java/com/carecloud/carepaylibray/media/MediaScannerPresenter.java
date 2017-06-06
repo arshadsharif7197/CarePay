@@ -40,6 +40,8 @@ public class MediaScannerPresenter {
     private static final String ACTION_GALLERY = "demographics_select_gallery_option";
     private static final String ACTION_CANCEL = "demographics_cancel_label";
 
+    public static int captureViewId;
+
     private Context context;
     private MediaViewInterface mediaViewInterface;
     private View captureView;
@@ -65,6 +67,7 @@ public class MediaScannerPresenter {
     public MediaScannerPresenter(Context context, MediaViewInterface mediaViewInterface, View captureView) {
         this(context, mediaViewInterface);
         this.captureView = captureView;
+        captureViewId = captureView.getId();
     }
 
     /**
@@ -73,6 +76,7 @@ public class MediaScannerPresenter {
      */
     public void setCaptureView(View captureView){
         this.captureView = captureView;
+        captureViewId = captureView.getId();
     }
 
     /**

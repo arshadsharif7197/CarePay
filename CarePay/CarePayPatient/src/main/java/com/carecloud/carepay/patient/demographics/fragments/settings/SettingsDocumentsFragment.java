@@ -122,7 +122,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     private void initDocumentViews(View view){
         mediaScannerPresenter = new MediaScannerPresenter(getContext(), this);
         documentScannerAdapter = new DocumentScannerAdapter(getContext(), view, mediaScannerPresenter, getApplicationMode().getApplicationType());
-        documentScannerAdapter.setDocumentsFromData(demographicDTO.getPayload().getDemographics().getPayload().getIdDocument());
+        documentScannerAdapter.setIdDocumentsFromData(demographicDTO.getPayload().getDemographics().getPayload().getIdDocument());
     }
 
 

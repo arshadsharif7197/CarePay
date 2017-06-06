@@ -198,7 +198,9 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
 
         if (demographicDTO != null) {
             String profilePicURL = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
-            displayProfileImage(profilePicURL, profileImage);
+            if(!StringUtil.isNullOrEmpty(profilePicURL)) {
+                displayProfileImage(profilePicURL, profileImage);
+            }
         }
 
     }
