@@ -36,6 +36,7 @@ import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -229,7 +230,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onPayLaterClicked(PaymentsModel paymentsModel) {
+    public void onPayLaterClicked(PendingBalanceDTO pendingBalanceDTO) {
 
     }
 

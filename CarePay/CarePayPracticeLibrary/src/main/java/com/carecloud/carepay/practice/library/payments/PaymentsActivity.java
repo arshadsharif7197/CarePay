@@ -449,7 +449,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void onPayLaterClicked(PaymentsModel paymentsModel) {
+    public void onPayLaterClicked(PendingBalanceDTO pendingBalanceDTO) {
 
     }
 

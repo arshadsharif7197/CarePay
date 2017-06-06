@@ -35,18 +35,18 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
      * @param payLaterButtonVisibility a boolean that indicates the visibility of the pay later button
      * @return an instance of ResponsibilityFragment
      */
-    public static ResponsibilityFragment newInstance(PaymentsModel paymentsDTO, PendingBalanceDTO selectedBalance, boolean payLaterButtonVisibility) {
+    public static ResponsibilityFragment newInstance(PaymentsModel paymentsDTO, PendingBalanceDTO selectedBalance,
+                                                     boolean payLaterButtonVisibility) {
         return newInstance(paymentsDTO, selectedBalance, payLaterButtonVisibility, null);
     }
-
-
 
     /**
      * @param paymentsDTO              the payments DTO
      * @param payLaterButtonVisibility a boolean that indicates the visibility of the pay later button
      * @return an instance of ResponsibilityFragment
      */
-    public static ResponsibilityFragment newInstance(PaymentsModel paymentsDTO, PendingBalanceDTO selectedBalance, boolean payLaterButtonVisibility, String title) {
+    public static ResponsibilityFragment newInstance(PaymentsModel paymentsDTO, PendingBalanceDTO selectedBalance,
+                                                     boolean payLaterButtonVisibility, String title) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsDTO);
         if (selectedBalance != null) {
@@ -99,13 +99,10 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         payLaterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionCallback.onPayLaterClicked(paymentDTO);
+                actionCallback.onPayLaterClicked(selectedBalance);
             }
         });
 
-//        List<PendingBalanceDTO> paymentList = paymentDTO.getPaymentPayload()
-//                .getPatientBalances().get(0).getBalances();
-//
         total = 0;
         fillDetailAdapter(view, selectedBalance.getPayload());
         for (PendingBalancePayloadDTO payment : selectedBalance.getPayload()) {

@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.checkout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentDateRangeFragment;
@@ -12,6 +13,8 @@ import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.interfaces.AvailableHoursInterface;
@@ -31,22 +34,26 @@ import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragmen
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.google.gson.Gson;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class NextAppointmentActivity extends BasePatientActivity implements CheckOutInterface,
         VisitTypeInterface, AvailableHoursInterface, DateRangeInterface, PaymentNavigationCallback {
 
     private DTO checkOutDto;
     public static final String APPOINTMENT_ID = "appointmentId";
+    private String appointmentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_next_appointment);
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
-        String appointmentId = extra.getString(APPOINTMENT_ID);
+        appointmentId = extra.getString(APPOINTMENT_ID);
         if (savedInstanceState == null) {
             if (NavigationStateConstants.PATIENT_APP_CHECKOUT.equals(extra.getString("state"))) {
                 checkOutDto = getConvertedDTO(AppointmentsResultModel.class);
@@ -71,8 +78,8 @@ public class NextAppointmentActivity extends BasePatientActivity implements Chec
 
     private void showResponsibilityFragment() {
         replaceFragment(ResponsibilityFragment
-                        .newInstance(getConvertedDTO(PaymentsModel.class), null, false, "checkout_responsibility_title"),
-                false);
+                .newInstance(getConvertedDTO(PaymentsModel.class), null, true,
+                        "checkout_responsibility_title"), false);
     }
 
     @Override
@@ -137,8 +144,16 @@ public class NextAppointmentActivity extends BasePatientActivity implements Chec
     }
 
     @Override
-    public void onPayLaterClicked(PaymentsModel paymentsModel) {
-        //Does not apply here due to business logic
+    public void onPayLaterClicked(PendingBalanceDTO pendingBalanceDTO) {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", pendingBalanceDTO.getMetadata().getPracticeMgmt());
+        queryMap.put("practice_id", pendingBalanceDTO.getMetadata().getPracticeId());
+        queryMap.put("appointment_id", appointmentId);
+        queryMap.put("patient_id", pendingBalanceDTO.getMetadata().getPatientId());
+        Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
+        header.put("transition", "true");
+        TransitionDTO transitionDTO = ((PaymentsModel) checkOutDto).getPaymentsMetadata().getPaymentsTransitions().getContinueTransition();
+        getWorkflowServiceHelper().execute(transitionDTO, continueCallback, queryMap, header);
     }
 
     @Override
@@ -225,4 +240,24 @@ public class NextAppointmentActivity extends BasePatientActivity implements Chec
         AllDoneDialogFragment fragment = AllDoneDialogFragment.newInstance(workflowDTO);
         displayDialogFragment(fragment, true);
     }
+
+    WorkflowServiceCallback continueCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+            Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 }

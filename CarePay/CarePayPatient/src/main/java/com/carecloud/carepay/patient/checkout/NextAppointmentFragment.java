@@ -339,6 +339,9 @@ public class NextAppointmentFragment extends BaseFragment {
     }
 
     private AppointmentDTO getAppointmentSelected() {
+        if (appointmentsResultModel.getPayload().getAppointments().size() == 1) {
+            return appointmentsResultModel.getPayload().getAppointments().get(0);
+        }
         String selectedAppointmentId = getArguments().getString(NextAppointmentActivity.APPOINTMENT_ID);
         for (AppointmentDTO appointmentDTO : appointmentsResultModel.getPayload().getAppointments()) {
             if (appointmentDTO.getPayload().getId().equals(selectedAppointmentId)) {
