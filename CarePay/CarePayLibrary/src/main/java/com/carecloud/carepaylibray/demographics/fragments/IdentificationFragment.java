@@ -1,11 +1,7 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,13 +19,10 @@ import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter;
 import com.carecloud.carepaylibray.media.MediaScannerPresenter;
 import com.carecloud.carepaylibray.media.MediaViewInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 
@@ -117,7 +110,7 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
     private void initImageViews(View view){
         mediaScannerPresenter = new MediaScannerPresenter(getContext(), this);
         documentScannerAdapter = new DocumentScannerAdapter(getContext(), view, mediaScannerPresenter, getApplicationMode().getApplicationType());
-        documentScannerAdapter.setDocumentsFromData(demographicDTO.getPayload().getDemographics().getPayload().getIdDocument());
+        documentScannerAdapter.setIdDocumentsFromData(demographicDTO.getPayload().getDemographics().getPayload().getIdDocument());
     }
 
     @Override
@@ -185,32 +178,14 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
         for(DemographicIdDocPhotoDTO docPhotoDTO : docPhotos){
             if(docPhotoDTO.getPage() == FRONT_PIC && hasFrontImage){
                 filePath = docPhotoDTO.getIdDocPhoto();
-                base64FrontImage = getBase64(filePath);
+                base64FrontImage = documentScannerAdapter.getBase64(filePath);
             }
 
             if(docPhotoDTO.getPage() == BACK_PIC && hasBackImage){
                 filePath = docPhotoDTO.getIdDocPhoto();
-                base64BackImage = getBase64(filePath);
+                base64BackImage = documentScannerAdapter.getBase64(filePath);
             }
         }
     }
 
-    private String getBase64(String filePath){
-        File file = new File(filePath);
-        Bitmap bitmap = null;
-        if(file.exists()) {
-            bitmap = BitmapFactory.decodeFile(filePath);
-        }else{
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.parse(filePath));
-            }catch (IOException ioe){
-                //do nothing
-            }
-        }
-
-        if(bitmap != null){
-            return SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
-        }
-        return null;
-    }
 }
