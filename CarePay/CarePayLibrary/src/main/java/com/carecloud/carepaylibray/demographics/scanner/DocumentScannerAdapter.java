@@ -57,10 +57,10 @@ public class DocumentScannerAdapter {
      * @param applicationType application mode
      */
     public DocumentScannerAdapter(Context context, View view, MediaScannerPresenter mediaScannerPresenter, ApplicationMode.ApplicationType applicationType){
-        initViews(view);
         this.context = context;
         this.mediaScannerPresenter = mediaScannerPresenter;
         this.applicationType = applicationType;
+        initViews(view);
     }
 
     private void initViews(View view){
@@ -117,6 +117,10 @@ public class DocumentScannerAdapter {
         }
     }
 
+    /**
+     * Setup Insurance Photos from Dto Data
+     * @param insurancePayloadDTO DemographicInsurancePayloadDTO
+     */
     public void setInsuranceDocumentsFromData(DemographicInsurancePayloadDTO insurancePayloadDTO){
         String frontPic = null;
         String backPic = null;
@@ -213,6 +217,11 @@ public class DocumentScannerAdapter {
         return imageBack.getId();
     }
 
+    /**
+     * Get Base64 encoded string from File or URI
+     * @param filePath file path or Uri
+     * @return Base64 string if filepath is valid
+     */
     public String getBase64(String filePath){
         File file = new File(filePath);
         Bitmap bitmap = null;
