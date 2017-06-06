@@ -27,6 +27,7 @@ import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
+import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
@@ -149,7 +150,7 @@ public class NextAppointmentActivity extends BasePatientActivity implements Chec
 
     @Override
     public void onPartialPaymentClicked(double owedAmount) {
-
+        new PartialPaymentDialog(getContext(), (PaymentsModel) checkOutDto).show();
     }
 
     @Override
