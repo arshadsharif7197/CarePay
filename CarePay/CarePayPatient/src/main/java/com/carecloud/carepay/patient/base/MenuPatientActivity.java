@@ -57,8 +57,13 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         String imageUrl = getApplicationPreferences().getUserPhotoUrl();
         ImageView userImageView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.appointmentDrawerIdImageView);
         if (!StringUtil.isNullOrEmpty(imageUrl)) {
-            Picasso.with(this).load(imageUrl).placeholder(R.drawable.icn_placeholder_user_profile_png)
-                    .transform(new CircleImageTransform()).into(userImageView);
+            Picasso.with(this)
+                    .load(imageUrl)
+                    .placeholder(R.drawable.icn_placeholder_user_profile_png)
+                    .resize(160, 160)
+                    .centerCrop()
+                    .transform(new CircleImageTransform())
+                    .into(userImageView);
         }
     }
 

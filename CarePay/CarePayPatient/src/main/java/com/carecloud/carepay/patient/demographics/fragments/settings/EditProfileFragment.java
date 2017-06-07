@@ -117,11 +117,7 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
         PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
         String imageUrl = demographicsPersonalDetails.getProfilePhoto();
         if (!StringUtil.isNullOrEmpty(imageUrl)) {
-            Picasso.with(getContext())
-                    .load(imageUrl)
-                    .transform(new CircleImageTransform())
-                    .resize(160, 160)
-                    .into(profileImageView);
+            displayImage(imageUrl, profileImageView);
         }
 
         patientNameValue.setText(StringUtil.capitalize(demographicsPersonalDetails.getFullName()));
@@ -232,50 +228,54 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
     @Override
     public void setCapturedBitmap(String filePath, View view) {
         if (filePath != null) {
-            final ImageView imageView = (ImageView) view;
-
-            imageView.measure(0,0);
-            ViewGroup.LayoutParams lp = imageView.getLayoutParams();
-            final int width = Math.max(imageView.getMeasuredWidth(), lp.width);
-            final int height = Math.max(imageView.getMeasuredHeight(), lp.height);
-
-            File file = new File(filePath);
-            Uri fileUri;
-            if(file.exists()){
-                fileUri = Uri.fromFile(file);
-            }else{
-                fileUri = Uri.parse(filePath);
-            }
-
-            Picasso.with(getContext()).load(fileUri)
-                    .placeholder(R.drawable.icn_placeholder_user_profile_png)
-                    .resize(width, height)
-                    .centerCrop()
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .transform(new CircleImageTransform())
-                    .into(imageView, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                            ViewGroup.LayoutParams lp = imageView.getLayoutParams();
-                            lp.width = width;
-                            lp.height = height;
-                            imageView.setLayoutParams(lp);
-                        }
-
-                        @Override
-                        public void onError() {
-                            imageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                                    R.drawable.icn_placeholder_user_profile_png));
-                        }
-                    });
-
+            displayImage(filePath, view);
 
             PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
             demographicsPersonalDetails.setProfilePhoto(filePath);
             hasNewImage = true;
 
         }
+    }
+
+    private void displayImage(String filePath, View view){
+        final ImageView imageView = (ImageView) view;
+
+        imageView.measure(0,0);
+        ViewGroup.LayoutParams lp = imageView.getLayoutParams();
+        final int width = Math.max(imageView.getMeasuredWidth(), lp.width);
+        final int height = Math.max(imageView.getMeasuredHeight(), lp.height);
+
+        File file = new File(filePath);
+        Uri fileUri;
+        if(file.exists()){
+            fileUri = Uri.fromFile(file);
+        }else{
+            fileUri = Uri.parse(filePath);
+        }
+
+        Picasso.with(getContext()).load(fileUri)
+                .placeholder(R.drawable.icn_placeholder_user_profile_png)
+                .resize(width, height)
+                .centerCrop()
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                .transform(new CircleImageTransform())
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                        ViewGroup.LayoutParams lp = imageView.getLayoutParams();
+                        lp.width = width;
+                        lp.height = height;
+                        imageView.setLayoutParams(lp);
+                    }
+
+                    @Override
+                    public void onError() {
+                        imageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                                R.drawable.icn_placeholder_user_profile_png));
+                    }
+                });
+
     }
 
     @Override

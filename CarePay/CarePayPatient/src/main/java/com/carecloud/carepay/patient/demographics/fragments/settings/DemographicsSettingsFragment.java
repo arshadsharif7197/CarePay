@@ -104,8 +104,12 @@ public class DemographicsSettingsFragment extends BaseFragment {
         String imageUrl = demographicsPersonalDetails.getProfilePhoto();
         if (!StringUtil.isNullOrEmpty(imageUrl)) {
             ImageView profileImageview = (ImageView) view.findViewById(R.id.providerPicImageView);
-            Picasso.with(getActivity()).load(imageUrl).transform(
-                    new CircleImageTransform()).resize(160, 160).into(profileImageview);
+            Picasso.with(getContext())
+                    .load(imageUrl)
+                    .resize(160, 160)
+                    .centerCrop()
+                    .transform(new CircleImageTransform())
+                    .into(profileImageview);
 
         }
 

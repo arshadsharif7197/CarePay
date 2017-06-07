@@ -153,7 +153,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/insurance_scan_front"
-            android:src="@drawable/icn_camera"/>
+            android:src="@drawable/icn_placeholder_document"/>
 
         <Button
             android:id="@+id/demogr_insurance_scan_insurance_frontbtn"
@@ -174,7 +174,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/insurance_scan_back"
-            android:src="@drawable/icn_camera"/>
+            android:src="@drawable/icn_placeholder_document"/>
 
         <Button
             android:id="@+id/demogr_insurance_scan_insurance_backbtn"
