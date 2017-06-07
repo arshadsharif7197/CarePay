@@ -30,8 +30,8 @@
                 breeze:textKey="setting_identity"
                 app:customAssetFont="proxima_nova_semi_bold" />
 
-            <FrameLayout
-                android:id="@+id/identityFragmentContainer"
+            <include
+                layout="@layout/fragment_demographics_scan_license"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_20dp"

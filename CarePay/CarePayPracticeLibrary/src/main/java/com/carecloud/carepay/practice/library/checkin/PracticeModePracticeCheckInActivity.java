@@ -468,7 +468,7 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     }
 
     @Override
-    public void onPayLaterClicked(PaymentsModel paymentsModel) {
+    public void onPayLaterClicked(PendingBalanceDTO pendingBalanceDTO) {
 
     }
 

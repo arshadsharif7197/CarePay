@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.demographics.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.TextView;
@@ -12,10 +13,13 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
+import com.carecloud.carepaylibray.media.MediaResultListener;
 
 public class NewDemographicsActivity extends BasePatientActivity implements DemographicsView {
 
     private DemographicsPresenter presenter;
+
+    private MediaResultListener resultListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,4 +92,18 @@ public class NewDemographicsActivity extends BasePatientActivity implements Demo
     public DemographicsPresenter getPresenter() {
         return presenter;
     }
+
+    @Override
+    public void setMediaResultListener(MediaResultListener resultListener) {
+        this.resultListener = resultListener;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultListener!=null){
+            resultListener.handleActivityResult(requestCode, resultCode, data);
+        }
+    }
+
 }

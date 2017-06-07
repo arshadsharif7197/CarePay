@@ -1,20 +1,24 @@
 package com.carecloud.carepaylibray.media;
 
 import android.content.Intent;
-
-import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.View;
 
 /**
- * Created by lmenendez on 4/24/17.
+ * Created by lmenendez on 4/24/17
  */
 
-public interface MediaViewInterface {
+public interface MediaViewInterface extends MediaResultListener {
 
     void handleRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults);
 
-    CarePayCameraCallback getCameraCallback();
+    void setCapturedBitmap(String path, View view);
 
-    void startActivityForResult(Intent intent, int requestCode);
+    void handleStartActivityForResult(Intent intent, int requestCode);
 
-    void onActivityResult(int requestCode, int resultCode, Intent data);
+    @Nullable
+    Fragment getCallingFragment();
+
+    void setupImageBase64();
 }

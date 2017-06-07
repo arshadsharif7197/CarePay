@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
+import com.carecloud.carepaylibray.media.MediaResultListener;
 
 public interface DemographicsView {
     <S> S getConvertedDTO(Class<S> dtoClass);
@@ -35,4 +36,6 @@ public interface DemographicsView {
     DemographicsPresenter getPresenter();
 
     void finish();
+
+    void setMediaResultListener(MediaResultListener resultListener);
 }

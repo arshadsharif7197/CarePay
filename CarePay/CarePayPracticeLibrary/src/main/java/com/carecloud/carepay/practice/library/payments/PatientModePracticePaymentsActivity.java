@@ -190,7 +190,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
     }
 
     @Override
-    public void onPayLaterClicked(PaymentsModel paymentsModel) {
+    public void onPayLaterClicked(PendingBalanceDTO pendingBalanceDTO) {
 
     }
 

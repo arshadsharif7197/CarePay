@@ -31,117 +31,95 @@ public class PaymentsTransitionsDTO {
     @SerializedName("queue_payment")
     @Expose
     private TransitionDTO queuePayment = new TransitionDTO();
+    @SerializedName("continue")
+    @Expose
+    private TransitionDTO continueTransition = new TransitionDTO();
 
     /**
-     *
-     * @return
-     * The makePayment
+     * @return The makePayment
      */
     public TransitionDTO getMakePayment() {
         return makePayment;
     }
 
     /**
-     *
-     * @param makePayment
-     * The make_payment
+     * @param makePayment The make_payment
      */
     public void setMakePayment(TransitionDTO makePayment) {
         this.makePayment = makePayment;
     }
 
     /**
-     *
-     * @return
-     * The addCreditCard
+     * @return The addCreditCard
      */
     public TransitionDTO getAddCreditCard() {
         return addCreditCard;
     }
 
     /**
-     *
-     * @param addCreditCard
-     * The add_credit_card
+     * @param addCreditCard The add_credit_card
      */
     public void setAddCreditCard(TransitionDTO addCreditCard) {
         this.addCreditCard = addCreditCard;
     }
 
     /**
-     *
-     * @return
-     * The deleteCreditCard
+     * @return The deleteCreditCard
      */
     public PaymentsDeleteCreditCardsDTO getDeleteCreditCard() {
         return deleteCreditCard;
     }
 
     /**
-     *
-     * @param deleteCreditCard
-     * The delete_credit_card
+     * @param deleteCreditCard The delete_credit_card
      */
     public void setDeleteCreditCard(PaymentsDeleteCreditCardsDTO deleteCreditCard) {
         this.deleteCreditCard = deleteCreditCard;
     }
 
     /**
-     *
-     * @return
-     * The addPaymentPlan
+     * @return The addPaymentPlan
      */
     public TransitionDTO getAddPaymentPlan() {
         return addPaymentPlan;
     }
 
     /**
-     *
-     * @param addPaymentPlan
-     * The add_payment_plan
+     * @param addPaymentPlan The add_payment_plan
      */
     public void setAddPaymentPlan(TransitionDTO addPaymentPlan) {
         this.addPaymentPlan = addPaymentPlan;
     }
 
     /**
-     *
-     * @return
-     * The deletePaymentPlan
+     * @return The deletePaymentPlan
      */
     public PayementsDeletePaymentPlanDTO getDeletePaymentPlan() {
         return deletePaymentPlan;
     }
 
     /**
-     *
-     * @param deletePaymentPlan
-     * The delete_payment_plan
+     * @param deletePaymentPlan The delete_payment_plan
      */
     public void setDeletePaymentPlan(PayementsDeletePaymentPlanDTO deletePaymentPlan) {
         this.deletePaymentPlan = deletePaymentPlan;
     }
 
     /**
-     *
-     * @return
-     * The modifyPaymentPlan
+     * @return The modifyPaymentPlan
      */
     public PaymentsModifyPaymentPlanDTO getModifyPaymentPlan() {
         return modifyPaymentPlan;
     }
 
     /**
-     *
-     * @param modifyPaymentPlan
-     * The modify_payment_plan
+     * @param modifyPaymentPlan The modify_payment_plan
      */
     public void setModifyPaymentPlan(PaymentsModifyPaymentPlanDTO modifyPaymentPlan) {
         this.modifyPaymentPlan = modifyPaymentPlan;
     }
 
     /**
-     *
      * @return the logout Transition
      */
     public TransitionDTO getLogout() {
@@ -149,7 +127,6 @@ public class PaymentsTransitionsDTO {
     }
 
     /**
-     *
      * @param logout the logout transition
      */
     public void setLogout(TransitionDTO logout) {
@@ -162,5 +139,13 @@ public class PaymentsTransitionsDTO {
 
     public void setQueuePayment(TransitionDTO queuePayment) {
         this.queuePayment = queuePayment;
+    }
+
+    public TransitionDTO getContinueTransition() {
+        return continueTransition;
+    }
+
+    public void setContinueTransition(TransitionDTO continueTransition) {
+        this.continueTransition = continueTransition;
     }
 }
