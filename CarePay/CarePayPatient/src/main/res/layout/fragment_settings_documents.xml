@@ -83,6 +83,7 @@
                 android:layout_gravity="end"
                 android:layout_marginBottom="@dimen/dimen_10dp"
                 android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginEnd="@dimen/dimen_20dp"
                 android:background="@drawable/round_border_button_bg"
                 android:paddingBottom="@dimen/dimen_10dp"
                 android:paddingEnd="@dimen/dimen_24dp"

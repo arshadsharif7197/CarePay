@@ -30,7 +30,6 @@ import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.IntakeFormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
-import com.carecloud.carepaylibray.media.MediaResultListener;
 import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearchFragment;
 import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
@@ -133,7 +132,8 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
         Fragment prev = fm.findFragmentByTag(tag);
         if (prev != null) {
-            fm.popBackStackImmediate(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            fm.popBackStackImmediate(tag, 0);
+            return;
         }
 
         transaction.replace(R.id.root_layout, fragment, tag);
@@ -142,9 +142,9 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         }
         transaction.commitAllowingStateLoss();
 
-        if(fragment instanceof MediaResultListener){
-            demographicsView.setMediaResultListener((MediaResultListener) fragment);
-        }
+//        if(fragment instanceof MediaResultListener){
+//            demographicsView.setMediaResultListener((MediaResultListener) fragment);
+//        }
     }
 
     @Override

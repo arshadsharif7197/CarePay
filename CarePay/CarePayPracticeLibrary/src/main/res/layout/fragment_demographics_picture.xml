@@ -13,8 +13,8 @@
 
     <ImageView
         android:id="@+id/DetailsProfileImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/dialog_profile_pic_size"
+        android:layout_height="@dimen/dialog_profile_pic_size"
         android:src="@drawable/icn_placeholder_user_profile_png"
         android:contentDescription="@string/profile_picture"/>
 

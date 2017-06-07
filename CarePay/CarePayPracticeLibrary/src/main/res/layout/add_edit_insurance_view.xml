@@ -199,7 +199,7 @@
                 android:layout_width="@dimen/dimen_200dp"
                 android:layout_height="120dp"
                 android:adjustViewBounds="true"
-                android:src="@drawable/icn_camera"
+                android:src="@drawable/icn_placeholder_document"
                 tools:ignore="ContentDescription"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
@@ -230,7 +230,7 @@
                 android:layout_width="@dimen/dimen_200dp"
                 android:layout_height="120dp"
                 android:adjustViewBounds="true"
-                android:src="@drawable/icn_camera"
+                android:src="@drawable/icn_placeholder_document"
                 tools:ignore="ContentDescription"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton

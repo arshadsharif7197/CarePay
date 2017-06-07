@@ -287,7 +287,7 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler {
      * @return The base64 string
      */
     public static String getPlaceholderAsBase64(Context context) {
-        Bitmap placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.icn_camera);
+        Bitmap placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.icn_placeholder_document);
         return SystemUtil.convertBitmapToString(placeholder, Bitmap.CompressFormat.JPEG, 90);
     }
 

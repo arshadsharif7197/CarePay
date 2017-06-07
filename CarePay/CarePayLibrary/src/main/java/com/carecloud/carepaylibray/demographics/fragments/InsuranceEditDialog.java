@@ -49,6 +49,10 @@ import com.marcok.stepprogressbar.StepProgressBar;
 
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
+import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_BACK_DTO;
+import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_FRONT_DTO;
+import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_BACK;
+import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_FRONT;
 
 import java.util.Arrays;
 import java.util.List;
@@ -179,7 +183,30 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         editedIndex = arguments.getInt(EDITED_INDEX);
         isPatientMode = arguments.getBoolean(IS_PATIENT_MODE);
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, arguments);
+        if(savedInstanceState != null){
+            String frontString = savedInstanceState.getString(KEY_FRONT_DTO);
+            frontInsurancePhotoDTO = DtoHelper.getConvertedDTO(DemographicInsurancePhotoDTO.class, frontString);
+            String backString = savedInstanceState.getString(KEY_BACK_DTO);
+            backInsurancePhotoDTO = DtoHelper.getConvertedDTO(DemographicInsurancePhotoDTO.class, backString);
 
+            hasFrontImage = savedInstanceState.getBoolean(KEY_HAS_FRONT, false);
+            hasBackImage = savedInstanceState.getBoolean(KEY_HAS_BACK, false);
+        }
+
+        setRetainInstance(true);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle icicle){
+        if(frontInsurancePhotoDTO != null) {
+            icicle.putString(KEY_FRONT_DTO, DtoHelper.getStringDTO(frontInsurancePhotoDTO));
+        }
+        if(backInsurancePhotoDTO != null) {
+            icicle.putString(KEY_BACK_DTO, DtoHelper.getStringDTO(backInsurancePhotoDTO));
+        }
+        icicle.putBoolean(KEY_HAS_FRONT, hasFrontImage);
+        icicle.putBoolean(KEY_HAS_BACK, hasBackImage);
+        super.onSaveInstanceState(icicle);
     }
 
     @Override
@@ -277,7 +304,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         setChangeFocusListeners();
         setActionListeners();
 
-        initializeScanArea(view);
 
         if (getDialog() != null || (hadInsurance && !isPatientMode)) {
             saveInsuranceButton = (Button) findViewById(R.id.save_insurance_changes);
@@ -330,6 +356,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
             findViewById(R.id.remove_insurance_entry).setOnClickListener(removeButtonListener);
         }
+
+        initializeScanArea(view);
 
         saveInsuranceButton.setOnClickListener(saveButtonListener);
         // TO-DO: Need to know what fields are required
@@ -413,13 +441,26 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private void initializeScanArea(View view) {
         mediaScannerPresenter = new MediaScannerPresenter(getContext(), this);
         documentScannerAdapter = new DocumentScannerAdapter(getContext(), view, mediaScannerPresenter, getApplicationMode().getApplicationType());
-        if (editedIndex != NEW_INSURANCE) {
-            documentScannerAdapter.setInsuranceDocumentsFromData(demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex));
-        }
+
 
         View lastCaptureView = view.findViewById(MediaScannerPresenter.captureViewId);
         if (lastCaptureView != null) {
             mediaScannerPresenter.setCaptureView(lastCaptureView);
+        }
+
+        if(hasFrontImage || hasBackImage){
+            DemographicInsurancePayloadDTO payloadDTO = new DemographicInsurancePayloadDTO();
+            if(frontInsurancePhotoDTO != null){
+                payloadDTO.getInsurancePhotos().add(frontInsurancePhotoDTO);
+                documentScannerAdapter.setFrontRescan();
+            }
+            if(backInsurancePhotoDTO != null){
+                payloadDTO.getInsurancePhotos().add(backInsurancePhotoDTO);
+                documentScannerAdapter.setBackRescan();
+            }
+            documentScannerAdapter.setInsuranceDocumentsFromData(payloadDTO);
+        }else if (editedIndex != NEW_INSURANCE) {
+            documentScannerAdapter.setInsuranceDocumentsFromData(demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex));
         }
 
     }
