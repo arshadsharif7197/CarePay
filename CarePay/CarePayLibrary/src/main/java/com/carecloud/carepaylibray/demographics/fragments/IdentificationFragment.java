@@ -223,12 +223,12 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
         for(DemographicIdDocPhotoDTO docPhotoDTO : docPhotos){
             if(docPhotoDTO.getPage() == FRONT_PIC && hasFrontImage){
                 filePath = docPhotoDTO.getIdDocPhoto();
-                base64FrontImage = documentScannerAdapter.getBase64(filePath);
+                base64FrontImage = DocumentScannerAdapter.getBase64(getContext(), filePath);
             }
 
             if(docPhotoDTO.getPage() == BACK_PIC && hasBackImage){
                 filePath = docPhotoDTO.getIdDocPhoto();
-                base64BackImage = documentScannerAdapter.getBase64(filePath);
+                base64BackImage = DocumentScannerAdapter.getBase64(getContext(), filePath);
             }
         }
     }

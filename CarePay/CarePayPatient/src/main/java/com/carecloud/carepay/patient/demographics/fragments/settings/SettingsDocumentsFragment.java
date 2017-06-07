@@ -2,11 +2,7 @@ package com.carecloud.carepay.patient.demographics.fragments.settings;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -33,6 +29,7 @@ import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPhotoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.media.MediaScannerPresenter;
@@ -44,8 +41,6 @@ import com.google.gson.Gson;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -172,6 +167,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     protected DemographicDTO getUpdateModel() {
         DemographicDTO updatableDemographicDTO = new DemographicDTO();
         updatableDemographicDTO.getPayload().getDemographics().getPayload().setIdDocument(getPostModel());
+        inflateNewImages();
         updatableDemographicDTO.getPayload().getDemographics().getPayload().setInsurances(demographicDTO.getPayload().getDemographics().getPayload().getInsurances());
         return updatableDemographicDTO;
     }
@@ -327,32 +323,25 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         for(DemographicIdDocPhotoDTO docPhotoDTO : docPhotos){
             if(docPhotoDTO.getPage() == FRONT_PIC && hasFrontImage){
                 filePath = docPhotoDTO.getIdDocPhoto();
-                base64FrontImage = getBase64(filePath);
+                base64FrontImage = DocumentScannerAdapter.getBase64(getContext(), filePath);
             }
 
             if(docPhotoDTO.getPage() == BACK_PIC && hasBackImage){
                 filePath = docPhotoDTO.getIdDocPhoto();
-                base64BackImage = getBase64(filePath);
+                base64BackImage = DocumentScannerAdapter.getBase64(getContext(), filePath);
             }
         }
     }
 
-    private String getBase64(String filePath){
-        File file = new File(filePath);
-        Bitmap bitmap = null;
-        if(file.exists()) {
-            bitmap = BitmapFactory.decodeFile(filePath);
-        }else{
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.parse(filePath));
-            }catch (IOException ioe){
-                //do nothing
+    private void inflateNewImages() {
+        for (DemographicInsurancePayloadDTO insurancePayloadDTO : demographicDTO.getPayload().getDemographics().getPayload().getInsurances()) {
+            for (DemographicInsurancePhotoDTO photoDTO : insurancePayloadDTO.getInsurancePhotos()) {
+                if (!photoDTO.isDelete() && photoDTO.isNewPhoto()) {
+                    photoDTO.setInsurancePhoto(DocumentScannerAdapter.getBase64(getContext(), photoDTO.getInsurancePhoto()));
+                }
             }
         }
-
-        if(bitmap != null){
-            return SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
-        }
-        return null;
     }
+
+
 }

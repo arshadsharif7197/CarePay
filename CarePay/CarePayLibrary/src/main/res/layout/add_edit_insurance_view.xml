@@ -189,7 +189,7 @@
         <ImageView
             android:id="@+id/demogrDocsFrontScanImage"
             android:layout_width="@dimen/dimen_100dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dimen_60dp"
             android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:src="@drawable/icn_placeholder_document"
@@ -213,7 +213,7 @@
         <ImageView
             android:id="@+id/demogrDocsBackScanImage"
             android:layout_width="@dimen/dimen_100dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dimen_60dp"
             android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:src="@drawable/icn_placeholder_document"

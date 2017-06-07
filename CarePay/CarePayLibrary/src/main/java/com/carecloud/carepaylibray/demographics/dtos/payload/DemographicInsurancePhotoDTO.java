@@ -21,6 +21,8 @@ public class DemographicInsurancePhotoDTO {
     @Expose
     private boolean delete = false;
 
+    private boolean newPhoto = false;
+
 
     /**
      *
@@ -54,5 +56,13 @@ public class DemographicInsurancePhotoDTO {
 
     public void setDelete(boolean delete) {
         this.delete = delete;
+    }
+
+    public boolean isNewPhoto() {
+        return newPhoto;
+    }
+
+    public void setNewPhoto(boolean newPhoto) {
+        this.newPhoto = newPhoto;
     }
 }

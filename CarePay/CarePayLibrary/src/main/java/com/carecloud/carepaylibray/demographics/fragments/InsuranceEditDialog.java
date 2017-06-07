@@ -24,7 +24,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
@@ -417,12 +416,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                 photos.add(backInsurancePhotoDTO);
             }
 
-            if (hasInsurance && getDialog() != null
-                    || getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PATIENT)) {
-                closeDialog();
-            } else {
-                callback.onInsuranceEdited(demographicDTO, true);
-            }
+            closeDialog();
         }
     };
 
@@ -432,9 +426,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         if (callback != null) {
             callback.onInsuranceEdited(demographicDTO, false);
 
-            if (callback != null && (!hadInsurance || !isPatientMode)) {
-                callback.goOneStepBack();
-            }
         }
     }
 
@@ -497,6 +488,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             DemographicInsurancePhotoDTO photoDTO = new DemographicInsurancePhotoDTO();
             photoDTO.setDelete(false);
             photoDTO.setInsurancePhoto(filePath);
+            photoDTO.setNewPhoto(true);
             int page;
             if (view.getId() == documentScannerAdapter.getFrontImageId()) {
                 page = FRONT_PIC;
@@ -525,26 +517,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
     @Override
     public void setupImageBase64() {
-        String filePath;
 
-        if (frontInsurancePhotoDTO != null) {
-            filePath = frontInsurancePhotoDTO.getInsurancePhoto();
-            frontInsurancePhotoDTO.setInsurancePhoto(documentScannerAdapter.getBase64(filePath));
-        }
-        if (backInsurancePhotoDTO != null) {
-            filePath = backInsurancePhotoDTO.getInsurancePhoto();
-            backInsurancePhotoDTO.setInsurancePhoto(documentScannerAdapter.getBase64(filePath));
-        }
-
-        //lets clear the existing insurance pics that will be replaced
-        if (editedIndex != NEW_INSURANCE) {
-            List<DemographicInsurancePhotoDTO> photoDTOList = demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex).getInsurancePhotos();
-            for (DemographicInsurancePhotoDTO photoDTO : photoDTOList) {
-                if ((photoDTO.getPage() == FRONT_PIC && hasFrontImage) || (photoDTO.getPage() == BACK_PIC && hasBackImage)) {
-                    photoDTO.setDelete(true);
-                }
-            }
-        }
     }
 
 
