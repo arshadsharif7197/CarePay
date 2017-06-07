@@ -16,6 +16,7 @@ import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payments.interfaces.ResponsibilityPaymentInterface;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
@@ -183,6 +184,17 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
             }
         }
         return responsibilityTypes;
+    }
+
+    protected boolean isPartialPayAvailable(String practiceId){
+        if(practiceId != null) {
+            for (PaymentsPayloadSettingsDTO payloadSettingsDTO : paymentDTO.getPaymentPayload().getPaymentSettings()) {
+                if (practiceId.equals(payloadSettingsDTO.getMetadata().getPracticeId())) {
+                    return payloadSettingsDTO.getPayload().getRegularPayments().isAllowPartialPayments();
+                }
+            }
+        }
+        return true;
     }
 
 }

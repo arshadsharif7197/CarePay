@@ -143,6 +143,9 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
             }
         });
 
+        PendingBalanceDTO selectedBalance = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
+        payPartialButton.setVisibility(isPartialPayAvailable(selectedBalance.getMetadata().getPracticeId()) ? View.VISIBLE : View.GONE);
+
         return view;
     }
 
