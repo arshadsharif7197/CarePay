@@ -152,7 +152,7 @@
     <dimen name="demo_scorllview_margin_right_left">17dp</dimen>
 
     <!-- Demographics Details -->
-    <dimen name="demogr_details_section_top_margin">40dp</dimen>
+    <dimen name="demogr_details_section_top_margin">10dp</dimen>
     <dimen name="demogr_details_require_hint_left_margin">10dp</dimen>
     <dimen name="demogr_details_add_optional_item_top">22dp</dimen>
     <dimen name="demogr_details_container_top">15dp</dimen>

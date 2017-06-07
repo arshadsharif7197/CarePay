@@ -361,6 +361,13 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(!handleActivityResult(requestCode, resultCode, data)){
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
     public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
         return mediaScannerPresenter!=null && mediaScannerPresenter.handleActivityResult(requestCode, resultCode, data);
     }
@@ -423,7 +430,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
 
     @Override
     public void handleStartActivityForResult(Intent intent, int requestCode) {
-        getActivity().startActivityForResult(intent, requestCode);
+        startActivityForResult(intent, requestCode);
     }
 
     @Nullable

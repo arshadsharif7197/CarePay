@@ -22,17 +22,21 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
+import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_DTO;
+import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_BACK;
+import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_FRONT;
 
 import java.util.List;
 
 
 public class IdentificationFragment extends CheckInDemographicsBaseFragment implements MediaViewInterface {
+
     private DemographicDTO demographicDTO;
     private MediaScannerPresenter mediaScannerPresenter;
     private DocumentScannerAdapter documentScannerAdapter;
 
-    private boolean hasFrontImage = false;
-    private boolean hasBackImage = false;
+    boolean hasFrontImage = false;
+    boolean hasBackImage = false;
     private String base64FrontImage;
     private String base64BackImage;
 
@@ -40,11 +44,32 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
+        if(icicle != null){
+            String demographicDtoString = icicle.getString(KEY_DTO);
+            if(demographicDtoString != null){
+                demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, demographicDtoString);
+            }
+            hasFrontImage = icicle.getBoolean(KEY_HAS_FRONT, false);
+            hasBackImage = icicle.getBoolean(KEY_HAS_BACK, false);
+        }
+        setRetainInstance(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle icicle){
+        icicle.putString(KEY_DTO, DtoHelper.getStringDTO(demographicDTO));
+        icicle.putBoolean(KEY_HAS_FRONT, hasFrontImage);
+        icicle.putBoolean(KEY_HAS_BACK, hasBackImage);
+        super.onSaveInstanceState(icicle);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle icicle){
         checkIfEnableButton(view);
         view.findViewById(R.id.toolbar_layout).setVisibility(View.INVISIBLE);
 
@@ -56,8 +81,8 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
         initNextButton(view);
 
         initImageViews(view);
-        return view;
     }
+
 
     @Override
     public void onResume() {
@@ -111,6 +136,26 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
         mediaScannerPresenter = new MediaScannerPresenter(getContext(), this);
         documentScannerAdapter = new DocumentScannerAdapter(getContext(), view, mediaScannerPresenter, getApplicationMode().getApplicationType());
         documentScannerAdapter.setIdDocumentsFromData(demographicDTO.getPayload().getDemographics().getPayload().getIdDocument());
+
+        View lastCaptureView = view.findViewById(MediaScannerPresenter.captureViewId);
+        if(lastCaptureView != null){
+            mediaScannerPresenter.setCaptureView(lastCaptureView);
+        }
+
+        if(hasFrontImage){
+            documentScannerAdapter.setFrontRescan();
+        }
+
+        if(hasBackImage){
+            documentScannerAdapter.setBackRescan();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(!handleActivityResult(requestCode, resultCode, data)){
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override
@@ -162,7 +207,7 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
 
     @Override
     public void handleStartActivityForResult(Intent intent, int requestCode) {
-        getActivity().startActivityForResult(intent, requestCode);
+        startActivityForResult(intent, requestCode);
     }
 
     @Nullable

@@ -36,6 +36,12 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
  */
 
 public class DocumentScannerAdapter {
+    public static final String KEY_DTO = "key dto";
+    public static final String KEY_FRONT_DTO = "key front dto";
+    public static final String KEY_BACK_DTO = "key back dto";
+    public static final String KEY_HAS_FRONT = "key front";
+    public static final String KEY_HAS_BACK = "key back";
+
     public static final int FRONT_PIC = 1;
     public static final int BACK_PIC = 2;
 
@@ -176,7 +182,7 @@ public class DocumentScannerAdapter {
         }
 
         Picasso.with(context).load(fileUri)
-                .placeholder(R.drawable.icn_camera)
+                .placeholder(R.drawable.icn_placeholder_document)
                 .resize(width, height)
                 .centerInside()
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
@@ -192,11 +198,11 @@ public class DocumentScannerAdapter {
 
                         if(updateButton) {
                             if (view.getId() == getFrontImageId()) {
-                                scanFrontButton.setText(Label.getLabel("demographics_documents_rescan_front"));
+                                setFrontRescan();
                             }
 
                             if (view.getId() == getBackImageId()) {
-                                scanBackButton.setText(Label.getLabel("demographics_documents_rescan_back"));
+                                setBackRescan();
                             }
                         }
                     }
@@ -204,7 +210,7 @@ public class DocumentScannerAdapter {
                     @Override
                     public void onError() {
                         imageView.setImageDrawable(ContextCompat.getDrawable(context,
-                                R.drawable.icn_camera));
+                                R.drawable.icn_placeholder_document));
                     }
                 });
     }
@@ -215,6 +221,14 @@ public class DocumentScannerAdapter {
 
     public int getBackImageId(){
         return imageBack.getId();
+    }
+
+    public void setFrontRescan(){
+        scanFrontButton.setText(Label.getLabel("demographics_documents_rescan_front"));
+    }
+
+    public void setBackRescan(){
+        scanBackButton.setText(Label.getLabel("demographics_documents_rescan_back"));
     }
 
     /**

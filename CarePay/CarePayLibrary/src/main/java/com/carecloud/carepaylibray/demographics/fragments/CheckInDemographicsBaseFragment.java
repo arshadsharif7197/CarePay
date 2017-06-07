@@ -159,6 +159,14 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         }else{
             (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
             titleTextView.setText(title);
+
+            TextView subHeadingTextView = (TextView) view.findViewById(R.id.demographicsSubHeading);
+            if(StringUtil.isNullOrEmpty(subHeading) || subHeading.equalsIgnoreCase(CarePayConstants.NOT_DEFINED)){
+                subHeadingTextView.setVisibility(View.GONE);
+            }else {
+                subHeadingTextView.setVisibility(View.VISIBLE);
+                subHeadingTextView.setText(subHeading);
+            }
         }
     }
 
