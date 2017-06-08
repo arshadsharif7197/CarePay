@@ -21,6 +21,9 @@ public class DtoHelper {
      * @return Dynamic converted class object
      */
     public static <S> S getConvertedDTO(Class<S> dtoClass, Bundle bundle) {
+        if(bundle == null){
+            return null;
+        }
         String jsonString = bundle.getString(dtoClass.getSimpleName());
 
         return getConvertedDTO(dtoClass, jsonString);

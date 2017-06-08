@@ -161,7 +161,7 @@ public class DocumentScannerAdapter {
     public void setImageView(String filePath, final View view, final boolean updateButton){
         final ImageView imageView = (ImageView) view;
 
-        imageView.measure(0,0);
+        imageView.measure(View.MeasureSpec.EXACTLY, View.MeasureSpec.EXACTLY);
         ViewGroup.LayoutParams lp = imageView.getLayoutParams();
         final int width = Math.max(imageView.getMeasuredWidth(), lp.width);
         final int height = Math.max(imageView.getMeasuredHeight(), lp.height);
@@ -236,7 +236,7 @@ public class DocumentScannerAdapter {
      * @param filePath file path or Uri
      * @return Base64 string if filepath is valid
      */
-    public String getBase64(String filePath){
+    public static String getBase64(Context context, String filePath){
         File file = new File(filePath);
         Bitmap bitmap = null;
         if(file.exists()) {

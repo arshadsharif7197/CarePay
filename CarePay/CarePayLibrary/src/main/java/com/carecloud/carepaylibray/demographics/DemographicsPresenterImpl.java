@@ -237,7 +237,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             insuranceEditDialog.show(ft, tag);
             demographicsView.setMediaResultListener(insuranceEditDialog);
         } else {
-            navigateToFragment(insuranceEditDialog, showAsDialog);
+            navigateToFragment(insuranceEditDialog, true);
         }
     }
 
@@ -352,8 +352,17 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         // Update Health Insurance Fragment
         String tag = getHealthInsuranceFragmentTag();
         HealthInsuranceFragment healthInsuranceFragment = (HealthInsuranceFragment) fm.findFragmentByTag(tag);
+        if(healthInsuranceFragment == null){//may need to recreate it if no insurances
+            healthInsuranceFragment = new HealthInsuranceFragment();
+        }
+
+        if(!healthInsuranceFragment.isAdded()){
+            fm.popBackStack();
+            navigateToFragment(healthInsuranceFragment, true);
+        }
 
         if (demographicDTO == null || proceed) {
+            fm.executePendingTransactions();
             healthInsuranceFragment.openNextFragment(this.demographicDTO);
         } else {
             healthInsuranceFragment.updateInsuranceList(demographicDTO);

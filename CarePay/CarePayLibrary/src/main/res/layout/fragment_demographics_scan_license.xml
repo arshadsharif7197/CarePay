@@ -16,10 +16,10 @@
 
         <ImageView
             android:id="@+id/demogrDocsFrontScanImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dimen_100dp"
+            android:layout_height="@dimen/dimen_60dp"
             android:contentDescription="@string/scanned_id_doc"
-            android:adjustViewBounds="true"
+            android:adjustViewBounds="false"
             android:src="@drawable/icn_placeholder_document"/>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
@@ -39,10 +39,10 @@
 
         <ImageView
             android:id="@+id/demogrDocsBackScanImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dimen_100dp"
+            android:layout_height="@dimen/dimen_60dp"
             android:contentDescription="@string/scanned_id_doc"
-            android:adjustViewBounds="true"
+            android:adjustViewBounds="false"
             android:src="@drawable/icn_placeholder_document"/>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
