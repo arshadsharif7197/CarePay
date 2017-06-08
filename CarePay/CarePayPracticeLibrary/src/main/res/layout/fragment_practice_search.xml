@@ -64,6 +64,7 @@
                 android:id="@+id/search_entry_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:theme="@style/SearchViewStyleDark_NoLine"
                 android:background="@drawable/search_rounded_border"
                 app:customAssetFont="proxima_nova_regular"
                 app:iconifiedByDefault="false" />
@@ -104,6 +105,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/green_rounded_button_selector"
                 android:enabled="false"
+                android:textSize="@dimen/text_size_22sp"
                 app:customAssetFont="gotham_rounded_medium" />
 
 

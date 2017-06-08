@@ -7,13 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 
 import java.util.List;
 
 /**
- * Created by lmenendez on 2/16/17.
+ * Created by lmenendez on 2/16/17
  */
 
 public class MedicationAllergiesAdapter extends RecyclerView.Adapter<MedicationAllergiesAdapter.MedicationAllergiesViewHolder> {
@@ -32,13 +33,12 @@ public class MedicationAllergiesAdapter extends RecyclerView.Adapter<MedicationA
      * @param context context for Adapter
      * @param items list of MedicationAlergyObject
      * @param callback calback for removing an item
-     * @param deleteLabel label to show for removing items
      */
-    public MedicationAllergiesAdapter(Context context, List<? extends MedicationsAllergiesObject> items, MedicationAllergiesAdapterCallback callback, String deleteLabel){
+    public MedicationAllergiesAdapter(Context context, List<? extends MedicationsAllergiesObject> items, MedicationAllergiesAdapterCallback callback){
         this.context = context;
         this.items = items;
-        this.deleteLabel = deleteLabel;
         this.callback = callback;
+        this.deleteLabel = Label.getLabel("medication_allergies_delete_button");
     }
 
 
