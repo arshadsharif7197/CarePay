@@ -87,6 +87,7 @@
                 android:padding="20dp">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/appointmentStatusLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/completeCheckInItemMargin"
@@ -103,11 +104,16 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_marginBottom="@dimen/completeCheckInItemMargin"
+                    android:layout_marginStart="@dimen/dimen_10dp"
                     android:layout_marginTop="@dimen/completeCheckInItemMargin"
+                    android:layout_toEndOf="@id/appointmentStatusLabel"
+                    android:ellipsize="end"
+                    android:gravity="end"
+                    android:lines="1"
                     android:textColor="@color/textview_default_textcolor"
                     android:textSize="@dimen/completeCheckInItemValueTextSize"
                     app:customAssetFont="gotham_rounded_medium"
-                    tools:text="Just Checked-in" />
+                    tools:text="Just Caksdjalsjda asldjalksjdas sakldjas asdaasdhecked-in" />
 
                 <View
                     android:id="@+id/separator1"
@@ -117,6 +123,7 @@
                     android:background="@color/divider_color" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/appointmentVisitTypeLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/separator1"
@@ -135,7 +142,12 @@
                     android:layout_alignParentEnd="true"
                     android:layout_below="@id/separator1"
                     android:layout_marginBottom="@dimen/completeCheckInItemMargin"
+                    android:layout_marginStart="@dimen/dimen_10dp"
                     android:layout_marginTop="@dimen/completeCheckInItemMargin"
+                    android:layout_toEndOf="@id/appointmentStatusLabel"
+                    android:ellipsize="end"
+                    android:gravity="end"
+                    android:lines="1"
                     android:textColor="@color/textview_default_textcolor"
                     android:textSize="@dimen/completeCheckInItemValueTextSize"
                     app:customAssetFont="gotham_rounded_medium"
@@ -162,6 +174,7 @@
                     tools:text="PAYMENT DETAILS" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/paymentTypeLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/paymentDetailsLabel"
@@ -180,7 +193,12 @@
                     android:layout_alignParentEnd="true"
                     android:layout_below="@id/paymentDetailsLabel"
                     android:layout_marginBottom="@dimen/completeCheckInItemMargin"
+                    android:layout_marginStart="@dimen/dimen_10dp"
                     android:layout_marginTop="@dimen/completeCheckInItemMargin"
+                    android:layout_toEndOf="@id/paymentTypeLabel"
+                    android:ellipsize="end"
+                    android:gravity="end"
+                    android:lines="1"
                     android:textColor="@color/textview_default_textcolor"
                     android:textSize="@dimen/completeCheckInItemValueTextSize"
                     app:customAssetFont="gotham_rounded_medium"
@@ -200,6 +218,7 @@
                     android:layout_below="@id/separator3">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/paymentMethodLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/completeCheckInItemMargin"
@@ -216,7 +235,12 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_marginBottom="@dimen/completeCheckInItemMargin"
+                        android:layout_marginStart="@dimen/dimen_10dp"
                         android:layout_marginTop="@dimen/completeCheckInItemMargin"
+                        android:layout_toEndOf="@id/paymentMethodLabel"
+                        android:ellipsize="end"
+                        android:gravity="end"
+                        android:lines="1"
                         android:textColor="@color/textview_default_textcolor"
                         android:textSize="@dimen/completeCheckInItemValueTextSize"
                         app:customAssetFont="gotham_rounded_medium"
@@ -230,6 +254,7 @@
                         android:background="@color/divider_color" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/totalPaidLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/separator4"
@@ -248,7 +273,12 @@
                         android:layout_alignParentEnd="true"
                         android:layout_below="@id/separator4"
                         android:layout_marginBottom="@dimen/completeCheckInItemMargin"
+                        android:layout_marginStart="@dimen/dimen_10dp"
                         android:layout_marginTop="@dimen/completeCheckInItemMargin"
+                        android:layout_toEndOf="@id/totalPaidLabel"
+                        android:ellipsize="end"
+                        android:gravity="end"
+                        android:lines="1"
                         android:textColor="@color/textview_default_textcolor"
                         android:textSize="@dimen/completeCheckInItemValueTextSize"
                         app:customAssetFont="gotham_rounded_medium"
@@ -262,6 +292,7 @@
                         android:background="@color/divider_color" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/confirmationNumberLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/separator5"
@@ -280,7 +311,12 @@
                         android:layout_alignParentEnd="true"
                         android:layout_below="@id/separator5"
                         android:layout_marginBottom="@dimen/completeCheckInItemMargin"
+                        android:layout_marginStart="@dimen/dimen_10dp"
                         android:layout_marginTop="@dimen/completeCheckInItemMargin"
+                        android:layout_toEndOf="@id/confirmationNumberLabel"
+                        android:ellipsize="end"
+                        android:gravity="end"
+                        android:lines="1"
                         android:textColor="@color/textview_default_textcolor"
                         android:textSize="@dimen/completeCheckInItemValueTextSize"
                         app:customAssetFont="gotham_rounded_medium"
@@ -309,12 +345,12 @@
 
         <ImageView
             android:id="@+id/homeModeSwitchImageView"
-            android:layout_width="@dimen/home_settings_icon_width"
-            android:layout_height="@dimen/home_settings_icon_height"
+            android:layout_width="@dimen/dimen_50dp"
+            android:layout_height="@dimen/dimen_50dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/dimen_10dp"
-            android:layout_marginTop="@dimen/dimen_10dp"
-            android:background="@drawable/icn_gear_vd" />
+            android:layout_marginEnd="@dimen/dimen_20dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:src="@drawable/icn_lock_patient" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/successMessage"
