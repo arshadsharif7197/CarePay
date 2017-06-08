@@ -147,6 +147,8 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
                 actionCallback.onPartialPaymentClicked(total);
             }
         });
+
+        makePartialPaymentButton.setVisibility(isPartialPayAvailable(selectedBalance.getMetadata().getPracticeId()) ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -179,6 +181,5 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog.newInstance(paymentDTO, paymentLineItem);
         dialog.show(ft, tag);
     }
-
 
 }
