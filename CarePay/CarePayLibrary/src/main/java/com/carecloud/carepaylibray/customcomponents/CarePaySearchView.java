@@ -1,10 +1,14 @@
 package com.carecloud.carepaylibray.customcomponents;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SearchView;
 import android.util.AttributeSet;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
@@ -104,8 +108,9 @@ public class CarePaySearchView extends SearchView {
      * @param attrs styleable attributes
      */
     private void init(AttributeSet attrs) {
+        TypedArray typedArray;
         try {
-            TypedArray typedArray = context.getTheme().obtainStyledAttributes(
+            typedArray = context.getTheme().obtainStyledAttributes(
                     attrs,
                     R.styleable.CarePayCustomAttrs,
                     0, 0);
@@ -115,6 +120,21 @@ public class CarePaySearchView extends SearchView {
             fontAttribute = PROXIMA_NOVA_REGULAR;
         }
         setFont();
+
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            int[] attributesArray = new int[]{android.R.attr.textColor};
+            typedArray = context.obtainStyledAttributes(attrs, attributesArray);
+            int textColor = typedArray.getResourceId(0, R.color.text_color);
+            typedArray.recycle();
+
+            ImageView closeIcon = (ImageView) findViewById(android.support.v7.appcompat.R.id.search_close_btn);
+            ImageView searchIcon = (ImageView) findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
+
+            searchIcon.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(context, textColor)));
+            closeIcon.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(context, textColor)));
+        }
+
     }
 
     private void setFont(){

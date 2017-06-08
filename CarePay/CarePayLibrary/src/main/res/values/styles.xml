@@ -218,12 +218,21 @@
         <item name="android:editTextColor">@color/white</item>
         <item name="android:textColorHint">@color/white</item>
         <item name="android:textColor">@color/white</item>
+        <item name="colorControlNormal">@color/white</item>
+        <item name="colorControlActivated">@color/white</item>
+        <item name="colorControlHighlight">@color/white</item>
     </style>
 
-    <style name="SearchViewStyleDark" parent="Widget.AppCompat.AutoCompleteTextView">
+    <style name="SearchViewStyleDark" parent="Widget.AppCompat.SearchView">
         <item name="android:editTextColor">@color/text_color</item>
         <item name="android:textColorHint">@color/text_color</item>
         <item name="android:textColor">@color/text_color</item>
+    </style>
+
+    <style name="SearchViewStyleDark_NoLine" parent="SearchViewStyleDark">
+        <item name="colorControlNormal">@color/transparent_apt</item>
+        <item name="colorControlActivated">@color/transparent_apt</item>
+        <item name="colorControlHighlight">@color/transparent_apt</item>
     </style>
 
     <!-- Responsibility styles -->
@@ -937,4 +946,10 @@
         <item name="android:paddingStart">@dimen/dimen_30dp</item>
         <item name="android:src">@drawable/icn_home</item>
     </style>
+
+    <style name="MyCheckBox" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+    </style>
+
 </resources>
