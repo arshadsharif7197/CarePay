@@ -95,6 +95,13 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
+    public void completeCheckIn(WorkflowDTO workflowDTO) {
+        Intent intent = new Intent(this, CompleteCheckActivity.class);
+        intent.putExtra("workflow",workflowDTO.toString());
+        startActivity(intent);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultListener !=null){

@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.demographics;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,18 +9,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.base.IApplicationSession;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraFragment;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
-import com.carecloud.carepaylibray.demographics.fragments.CheckinCompletedDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.FormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
@@ -54,18 +49,18 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     private static final String SAVED_STEP_KEY = "save_step";
 
     private boolean startCheckin = false;
-    public String appointmentId ;
+    public String appointmentId;
 
 
     /**
-     * @param demographicsView Demographics View
+     * @param demographicsView   Demographics View
      * @param savedInstanceState Bundle
-     * @param isPatientMode true if Practice App - Patient Mode
+     * @param isPatientMode      true if Practice App - Patient Mode
      */
     public DemographicsPresenterImpl(DemographicsView demographicsView, Bundle savedInstanceState, boolean isPatientMode) {
         this.demographicsView = demographicsView;
         demographicDTO = demographicsView.getConvertedDTO(DemographicDTO.class);
-        appointmentId = demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId() ;
+        appointmentId = demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId();
         this.isPatientMode = isPatientMode;
 
         if (savedInstanceState != null) {
@@ -100,9 +95,9 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         return null;
     }
 
-    private void displayStartFragment(WorkflowDTO workflowDTO){
+    private void displayStartFragment(WorkflowDTO workflowDTO) {
         startCheckin = true;
-        switch (workflowDTO.getState()){
+        switch (workflowDTO.getState()) {
             case NavigationStateConstants.CONSENT_FORMS:
                 navigateToConsentForms(workflowDTO);
                 break;
@@ -199,25 +194,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
     @Override
     public void displayCheckInSuccess(final WorkflowDTO workflowDTO) {
-        if( ((IApplicationSession)demographicsView.getContext()).getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT ) {
-            SystemUtil.showSuccessToast(demographicsView.getContext(), Label.getLabel("confirm_appointment_checkin"));
-            completeDemographics(workflowDTO) ;
-        } else {
-            CheckinCompletedDialogFragment successFragment = new CheckinCompletedDialogFragment();
-            successFragment.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    completeDemographics(workflowDTO);
-                }
-            });
-            successFragment.show(getSupportFragmentManager(), successFragment.getClass().getName());
-        }
-    }
-
-    private void completeDemographics(WorkflowDTO workflowDTO)
-    {
-        demographicsView.finish();
-        demographicsView.navigateToWorkflow(workflowDTO);
+        demographicsView.completeCheckIn(workflowDTO);
     }
 
     @Override
@@ -310,7 +287,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
      */
     private void navigateToDemographicFragment(Integer step) {
         CheckInDemographicsBaseFragment fragment = getDemographicFragment(step);
-        if(fragment!=null) {
+        if (fragment != null) {
             Bundle args = new Bundle();
             DtoHelper.bundleDto(args, demographicDTO);
             args.putBoolean(CheckInDemographicsBaseFragment.PREVENT_NAV_BACK, shouldPreventBackNav());
@@ -352,11 +329,11 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         // Update Health Insurance Fragment
         String tag = getHealthInsuranceFragmentTag();
         HealthInsuranceFragment healthInsuranceFragment = (HealthInsuranceFragment) fm.findFragmentByTag(tag);
-        if(healthInsuranceFragment == null){//may need to recreate it if no insurances
+        if (healthInsuranceFragment == null) {//may need to recreate it if no insurances
             healthInsuranceFragment = new HealthInsuranceFragment();
         }
 
-        if(!healthInsuranceFragment.isAdded()){
+        if (!healthInsuranceFragment.isAdded()) {
             fm.popBackStack();
             navigateToFragment(healthInsuranceFragment, true);
         }
@@ -396,8 +373,8 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         dialog.show(ft, tag);
     }
 
-    protected CheckInDemographicsBaseFragment getDemographicFragment(int step){
-        switch (step){
+    protected CheckInDemographicsBaseFragment getDemographicFragment(int step) {
+        switch (step) {
             case 1:
                 return new PersonalInfoFragment();
             case 2:
@@ -413,7 +390,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         }
     }
 
-    protected boolean shouldPreventBackNav(){
+    protected boolean shouldPreventBackNav() {
         return false;
     }
 }

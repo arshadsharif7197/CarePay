@@ -88,5 +88,6 @@
     <color name="confirm_pin_sub_title">@color/soft_sky</color>
     <color name="screen_gradient">#41949D</color>
 
-    <color name="greenProviderMessageHeader">#5BD064</color>
+    <color name="lemonGreen">#5BD064</color>
+    <color name="greenProviderMessageHeader">@color/lemonGreen</color>
 </resources>
