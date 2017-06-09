@@ -35,166 +35,141 @@ public class AppointmentsMetadataDTO {
     @SerializedName("practice_id")
     @Expose
     private String practiceId;
+    @SerializedName("hash_appointments_id")
+    @Expose
+    private String hashAppointmentsId;
 
     /**
-     * 
-     * @return
-     *     The userId
+     * @return The userId
      */
     public String getUserId() {
         return userId;
     }
 
     /**
-     * 
-     * @param userId
-     *     The user_id
+     * @param userId The user_id
      */
     public void setUserId(String userId) {
         this.userId = userId;
     }
 
     /**
-     * 
-     * @return
-     *     The username
+     * @return The username
      */
     public String getUsername() {
         return username;
     }
 
     /**
-     * 
-     * @param username
-     *     The username
+     * @param username The username
      */
     public void setUsername(String username) {
         this.username = username;
     }
 
     /**
-     * 
-     * @return
-     *     The patientId
+     * @return The patientId
      */
     public String getPatientId() {
         return patientId;
     }
 
     /**
-     * 
-     * @param patientId
-     *     The patient_id
+     * @param patientId The patient_id
      */
     public void setPatientId(String patientId) {
         this.patientId = patientId;
     }
 
     /**
-     * 
-     * @return
-     *     The appointmentId
+     * @return The appointmentId
      */
     public String getAppointmentId() {
         return appointmentId;
     }
 
     /**
-     * 
-     * @param appointmentId
-     *     The appointment_id
+     * @param appointmentId The appointment_id
      */
     public void setAppointmentId(String appointmentId) {
         this.appointmentId = appointmentId;
     }
 
     /**
-     * 
-     * @return
-     *     The createdDt
+     * @return The createdDt
      */
     public String getCreatedDt() {
         return createdDt;
     }
 
     /**
-     * 
-     * @param createdDt
-     *     The created_dt
+     * @param createdDt The created_dt
      */
     public void setCreatedDt(String createdDt) {
         this.createdDt = createdDt;
     }
 
     /**
-     * 
-     * @return
-     *     The updatedDt
+     * @return The updatedDt
      */
     public String getUpdatedDt() {
         return updatedDt;
     }
 
     /**
-     * 
-     * @param updatedDt
-     *     The updated_dt
+     * @param updatedDt The updated_dt
      */
     public void setUpdatedDt(String updatedDt) {
         this.updatedDt = updatedDt;
     }
 
     /**
-     *
-     * @return
-     *     The request
+     * @return The request
      */
     public String getRequest() {
         return request;
     }
 
     /**
-     *
-     * @param request
-     *     The request
+     * @param request The request
      */
     public void setRequest(String request) {
         this.request = request;
     }
 
     /**
-     *
-     * @return
-     *     The practiceMgmt
+     * @return The practiceMgmt
      */
     public String getPracticeMgmt() {
         return practiceMgmt;
     }
 
     /**
-     *
-     * @param practiceMgmt
-     *     The practiceMgmt
+     * @param practiceMgmt The practiceMgmt
      */
     public void setPracticeMgmt(String practiceMgmt) {
         this.practiceMgmt = practiceMgmt;
     }
 
     /**
-     *
-     * @return
-     *     The practiceId
+     * @return The practiceId
      */
     public String getPracticeId() {
         return practiceId;
     }
 
     /**
-     *
-     * @param practiceId
-     *     The practiceId
+     * @param practiceId The practiceId
      */
     public void setPracticeId(String practiceId) {
         this.practiceId = practiceId;
+    }
+
+    public String getHashAppointmentsId() {
+        return hashAppointmentsId;
+    }
+
+    public void setHashAppointmentsId(String hashAppointmentsId) {
+        this.hashAppointmentsId = hashAppointmentsId;
     }
 }
