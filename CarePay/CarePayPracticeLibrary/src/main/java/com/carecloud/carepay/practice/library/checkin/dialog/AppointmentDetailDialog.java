@@ -368,6 +368,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         Map<String, String> queryMap = new HashMap<>();
         if (appointmentPayloadDTO != null) {
             queryMap.put(queryStrings.getPatientId().getName(), appointmentPayloadDTO.getPatient().getPatientId());
+            queryMap.put(queryStrings.getAppointmentId().getName(), appointmentPayloadDTO.getId());
         }
 
         return queryMap;
