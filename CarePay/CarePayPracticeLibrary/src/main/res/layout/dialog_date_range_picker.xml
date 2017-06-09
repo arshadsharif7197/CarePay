@@ -40,7 +40,7 @@
             android:layout_weight="1"
             android:text="@string/sunday_text_view_label"
             android:textAlignment="center"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/white"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size"
             app:customAssetFont="proxima_nova_semi_bold" />
 
@@ -101,7 +101,7 @@
             android:layout_weight="1"
             android:text="@string/saturday_text_view_label"
             android:textAlignment="center"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/white"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size"
             app:customAssetFont="proxima_nova_semi_bold" />
 
@@ -112,12 +112,11 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
-        android:paddingTop="10dp"
         app:tsquare_dayBackground="@drawable/dialog_date_range_picker_bg_selector"
         app:tsquare_dayTextColor="@color/dialog_date_range_picker_text_selector"
         app:tsquare_dividerColor="@color/transparent_apt"
         app:tsquare_headerTextColor="@color/transparent_apt"
-        app:tsquare_titleTextColor="@color/black" />
+        app:tsquare_titleTextColor="@color/textview_default_textcolor" />
 
     <LinearLayout
         android:layout_width="match_parent"

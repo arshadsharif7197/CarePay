@@ -4,7 +4,7 @@
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/payne_gray"
+    android:background="@color/white"
     android:orientation="vertical"
     android:weightSum="5">
 
@@ -13,11 +13,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/payne_gray"
+        android:background="@color/date_range_header"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/add_apt_calendar_day_title_padding_bottom"
-        android:paddingEnd="@dimen/add_apt_calendar_day_title_padding_right"
-        android:paddingStart="@dimen/dimen_1dp"
+        android:paddingBottom="@dimen/add_apt_calendar_day_title_padding_top"
         android:paddingTop="@dimen/add_apt_calendar_day_title_padding_top"
         android:weightSum="7">
 
@@ -27,6 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/sunday_text_view_label"
+            android:textColor="@color/white"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size"
             app:customAssetFont="proxima_nova_semi_bold" />
 
@@ -86,6 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/saturday_text_view_label"
+            android:textColor="@color/white"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size"
             app:customAssetFont="proxima_nova_semi_bold" />
 
@@ -96,11 +96,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="5"
-        android:background="@color/payne_gray"
-        app:tsquare_dayBackground="@drawable/custom_calendar_bg_selector"
+        android:background="@color/white"
+        app:tsquare_dayBackground="@drawable/dialog_date_range_picker_bg_selector"
+        app:tsquare_dayTextColor="@color/dialog_date_range_picker_text_selector"
         app:tsquare_dividerColor="@color/transparent_apt"
         app:tsquare_headerTextColor="@color/transparent_apt"
-        app:tsquare_titleTextColor="@color/white" />
+        app:tsquare_titleTextColor="@color/textview_default_textcolor" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/applyDateRangeButton"

@@ -19,16 +19,13 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentFragment;
 import com.carecloud.carepaylibray.appointments.interfaces.DateRangeInterface;
-import com.carecloud.carepaylibray.appointments.interfaces.VisitTypeInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
-import com.carecloud.carepaylibray.customcomponents.CustomCalendarCellDecorator;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
-import com.squareup.timessquare.CalendarCellDecorator;
 import com.squareup.timessquare.CalendarPickerView;
 
 import java.util.ArrayList;
@@ -119,8 +116,7 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
         /*inflate toolbar*/
         hideDefaultActionBar();
         inflateToolbar(view);
-        /*inflate other UI components like text view, button etc.*/
-        inflateUIComponents(view);
+
         /*inflate and initialize custom calendar view*/
         initCalendarView(view);
 
@@ -147,36 +143,6 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
         todayButton.setOnClickListener(todayButtonClickListener);
 
         toolbar.setNavigationOnClickListener(navigationOnClickListener);
-    }
-
-    /**
-     * Method to inflate UI components
-     *
-     * @param view used as view component
-     */
-    private void inflateUIComponents(View view) {
-        TextView sundayTextView = (TextView) view.findViewById(R.id.sundayTextView);
-        sundayTextView.setTextColor(ContextCompat.getColor(getContext(),
-                R.color.dark_blue));
-
-        TextView mondayTextView = (TextView) view.findViewById(R.id.mondayTextView);
-        mondayTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
-
-        TextView tuesdayTextView = (TextView) view.findViewById(R.id.tuesdayTextView);
-        tuesdayTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
-
-        TextView wednesdayTextView = (TextView) view.findViewById(R.id.wednesdayTextView);
-        wednesdayTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
-
-        TextView thursdayTextView = (TextView) view.findViewById(R.id.thursdayTextView);
-        thursdayTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
-
-        TextView fridayTextView = (TextView) view.findViewById(R.id.fridayTextView);
-        fridayTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
-
-        TextView saturdayTextView = (TextView) view.findViewById(R.id.saturdayTextView);
-        saturdayTextView.setTextColor(ContextCompat.getColor(getContext(),
-                R.color.dark_blue));
     }
 
     /**
@@ -208,10 +174,6 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
         }
 
         calendarPickerView.setOnDateSelectedListener(onDateSelectListener);
-        List<CalendarCellDecorator> decorators = new ArrayList<>();
-        decorators.add(new CustomCalendarCellDecorator(ContextCompat.getColor(getContext(), R.color.white),
-                ContextCompat.getColor(getContext(), R.color.payne_gray)));
-        calendarPickerView.setDecorators(decorators);
 
         applyDateRangeButton = (Button)
                 view.findViewById(R.id.applyDateRangeButton);
@@ -259,18 +221,18 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
                         }
                     }
 
+                    boolean acceptableRange = true;
                     if (newStartDate != null && newEndDate != null) {
                         long diff = newEndDate.getTime() - newStartDate.getTime();
                         long numOfDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
                         if (numOfDays >= 93) {
                             AppointmentLabelDTO label = resourcesToScheduleDTO.getMetadata().getLabel();
                             Toast.makeText(getActivity(), label.getAddAppointmentMaxDateRangeMessage(), Toast.LENGTH_LONG).show();
-                        } else {
-                            applyDateRangeButton.setEnabled(true);
+                            acceptableRange = false;
                         }
-                    } else {
-                        applyDateRangeButton.setEnabled(false);
                     }
+
+                    applyDateRangeButton.setEnabled(newStartDate != null && acceptableRange);
                 }
 
                 @Override
@@ -305,6 +267,9 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
     View.OnClickListener applyButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            if(newEndDate == null){
+                newEndDate = newStartDate;
+            }
             callback.onDateRangeSelected(newStartDate, newEndDate, selectedVisitTypeDTO, selectedResourcesDTO, resourcesToScheduleDTO);
         }
     };
