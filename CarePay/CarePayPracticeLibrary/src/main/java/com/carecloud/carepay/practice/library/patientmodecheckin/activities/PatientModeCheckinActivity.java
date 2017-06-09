@@ -229,16 +229,13 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         Intent intent = getIntent();
         String workflowString = intent.getStringExtra(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
         if (workflowString != null) {
-            Intent intent2 = new Intent(this, CompleteCheckActivity.class);
             Bundle extra = new Bundle();
             extra.putString("workflow", workflowDTO.toString());
             extra.putBoolean("hasPayment", true);
             DtoHelper.bundleDto(extra, presenter.getAppointmentPayload());
+            Intent intent2 = new Intent(this, CompleteCheckActivity.class);
             intent2.putExtra("extra", extra);
             startActivity(intent2);
-
-//            Gson gson = new Gson();
-//            PracticeNavigationHelper.navigateToWorkflow(getContext(), gson.fromJson(workflowString, WorkflowDTO.class));
         } else {
             setResult(CarePayConstants.HOME_PRESSED, intent);
             finish();

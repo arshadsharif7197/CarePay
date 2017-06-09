@@ -136,7 +136,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
         TextView continueTextView = (TextView) view.findViewById(R.id.continueTextView);
         continueTextView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 callback.navigateToWorkflow();
             }
         });
@@ -144,7 +144,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
         ImageView homeModeSwitchImageView = (ImageView) view.findViewById(R.id.homeModeSwitchImageView);
         homeModeSwitchImageView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 callback.showConfirmationPinDialog();
             }
         });
