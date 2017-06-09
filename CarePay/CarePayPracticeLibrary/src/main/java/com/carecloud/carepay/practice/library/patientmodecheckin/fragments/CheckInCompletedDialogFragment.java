@@ -124,7 +124,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
         appointmentHourTextView.setText(DateUtil.getHoursFormatted(selectedAppointment.getPayload()
                 .getStartTime()));
         TextView appointmentProviderTextView = (TextView) view.findViewById(R.id.appointmentProviderTextView);
-        appointmentProviderTextView.setText(String.format("with Dr. %s",
+        appointmentProviderTextView.setText(String.format(Label.getLabel("checkin_complete_provider_label"),
                 selectedAppointment.getPayload().getProvider().getName()));
 
         TextView appointmentStatusTextView = (TextView) view.findViewById(R.id.appointmentStatusTextView);
