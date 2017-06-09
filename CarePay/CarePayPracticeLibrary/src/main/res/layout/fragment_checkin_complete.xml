@@ -1,33 +1,421 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
-    android:orientation="vertical"
-    android:layout_width="@dimen/dialog_width"
-    android:layout_height="wrap_content"
-    android:minHeight="@dimen/dimen_300dp"
-    android:background="@drawable/background_blue_rounded_border"
-    android:gravity="center_horizontal">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lemonGreen"
+    android:baselineAligned="false"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal"
+    android:weightSum="2">
 
-    <ImageView
-        android:layout_width="@dimen/dimen_100dp"
-        android:layout_height="@dimen/dimen_100dp"
-        android:src="@drawable/icn_payment_confirm_check"
-        android:layout_marginStart="@dimen/dimen_40dp"
-        android:layout_marginEnd="@dimen/dimen_40dp"
-        android:layout_marginTop="@dimen/dimen_20dp"/>
-
-    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-        android:id="@+id/success_message"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:gravity="center"
-        android:layout_margin="@dimen/dimen_20dp"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size_24sp"
-        breeze:textKey="confirm_appointment_checkin"
-        app:customAssetFont="gotham_rounded_bold"/>
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="@dimen/dimen_50dp"
+            android:layout_marginEnd="@dimen/dimen_80dp"
+            android:layout_marginStart="@dimen/dimen_80dp"
+            android:layout_marginTop="@dimen/dimen_50dp"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_top_rounded_dark_blue"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/userImage"
+                    android:layout_width="@dimen/dimen_100dp"
+                    android:layout_height="@dimen/dimen_100dp"
+                    android:layout_marginBottom="@dimen/dimen_10dp"
+                    android:layout_marginEnd="@dimen/dimen_20dp"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginTop="@dimen/dimen_10dp" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/userNameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:layout_toEndOf="@id/userImage"
+                    android:textColor="@color/white"
+                    android:textSize="28sp"
+                    app:customAssetFont="proxima_nova_extra_bold"
+                    tools:text="John Eland" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/appointmentHourTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/userNameTextView"
+                    android:layout_marginBottom="5dp"
+                    android:layout_toEndOf="@id/userImage"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="28sp"
+                    app:customAssetFont="gotham_rounded_bold"
+                    tools:text="2:00 AM" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/appointmentProviderTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/appointmentHourTextView"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toEndOf="@id/userImage"
+                    android:textColor="@color/pastel_blue"
+                    android:textSize="@dimen/text_size_18sp"
+                    app:customAssetFont="proxima_nova_regular"
+                    tools:text="with Dr. Anne Rather" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/patient_mode_dialog_body_bg"
+                android:padding="20dp">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/appointmentStatusLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/completeCheckInItemMargin"
+                    android:layout_marginTop="@dimen/completeCheckInItemMargin"
+                    android:textColor="@color/textview_default_textcolor"
+                    android:textSize="@dimen/completeCheckInItemTextSize"
+                    app:customAssetFont="gotham_rounded_light"
+                    breeze:textKey="checkin_complete_status_label"
+                    tools:text="Status" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/appointmentStatusTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginBottom="@dimen/completeCheckInItemMargin"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginTop="@dimen/completeCheckInItemMargin"
+                    android:layout_toEndOf="@id/appointmentStatusLabel"
+                    android:ellipsize="end"
+                    android:gravity="end"
+                    android:lines="1"
+                    android:textColor="@color/textview_default_textcolor"
+                    android:textSize="@dimen/completeCheckInItemValueTextSize"
+                    app:customAssetFont="gotham_rounded_medium"
+                    tools:text="Just Caksdjalsjda asldjalksjdas sakldjas asdaasdhecked-in" />
+
+                <View
+                    android:id="@+id/separator1"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_1dp"
+                    android:layout_below="@id/appointmentStatusTextView"
+                    android:background="@color/divider_color" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/appointmentVisitTypeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/separator1"
+                    android:layout_marginBottom="@dimen/completeCheckInItemMargin"
+                    android:layout_marginTop="@dimen/completeCheckInItemMargin"
+                    android:textColor="@color/textview_default_textcolor"
+                    android:textSize="@dimen/completeCheckInItemTextSize"
+                    app:customAssetFont="gotham_rounded_light"
+                    breeze:textKey="checkin_complete_visit_type_label"
+                    tools:text="Visit Type" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/appointmentVisitTypeTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@id/separator1"
+                    android:layout_marginBottom="@dimen/completeCheckInItemMargin"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginTop="@dimen/completeCheckInItemMargin"
+                    android:layout_toEndOf="@id/appointmentStatusLabel"
+                    android:ellipsize="end"
+                    android:gravity="end"
+                    android:lines="1"
+                    android:textColor="@color/textview_default_textcolor"
+                    android:textSize="@dimen/completeCheckInItemValueTextSize"
+                    app:customAssetFont="gotham_rounded_medium"
+                    tools:text="New Patient" />
+
+                <View
+                    android:id="@+id/separator2"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_1dp"
+                    android:layout_below="@id/appointmentVisitTypeTextView"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/divider_color" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/paymentDetailsLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/separator2"
+                    android:layout_marginBottom="@dimen/dimen_20dp"
+                    android:layout_marginTop="@dimen/dimen_20dp"
+                    android:textSize="@dimen/text_size_18sp"
+                    app:customAssetFont="proxima_nova_extra_bold"
+                    breeze:textKey="payment_details_label"
+                    tools:text="PAYMENT DETAILS" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/paymentTypeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/paymentDetailsLabel"
+                    android:layout_marginBottom="@dimen/completeCheckInItemMargin"
+                    android:layout_marginTop="@dimen/completeCheckInItemMargin"
+                    android:textColor="@color/textview_default_textcolor"
+                    android:textSize="@dimen/completeCheckInItemTextSize"
+                    app:customAssetFont="gotham_rounded_light"
+                    breeze:textKey="payment_confirm_type"
+                    tools:text="Type" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/paymentTypeTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@id/paymentDetailsLabel"
+                    android:layout_marginBottom="@dimen/completeCheckInItemMargin"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginTop="@dimen/completeCheckInItemMargin"
+                    android:layout_toEndOf="@id/paymentTypeLabel"
+                    android:ellipsize="end"
+                    android:gravity="end"
+                    android:lines="1"
+                    android:textColor="@color/textview_default_textcolor"
+                    android:textSize="@dimen/completeCheckInItemValueTextSize"
+                    app:customAssetFont="gotham_rounded_medium"
+                    tools:text="Payment Plan (1 of 4)" />
+
+                <View
+                    android:id="@+id/separator3"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_1dp"
+                    android:layout_below="@id/paymentTypeTextView"
+                    android:background="@color/divider_color" />
+
+                <RelativeLayout
+                    android:id="@+id/paymentInformation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/separator3">
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/paymentMethodLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/completeCheckInItemMargin"
+                        android:layout_marginTop="@dimen/completeCheckInItemMargin"
+                        android:textColor="@color/textview_default_textcolor"
+                        android:textSize="@dimen/completeCheckInItemTextSize"
+                        app:customAssetFont="gotham_rounded_light"
+                        breeze:textKey="payment_confirm_method"
+                        tools:text="Method" />
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/paymentMethodTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginBottom="@dimen/completeCheckInItemMargin"
+                        android:layout_marginStart="@dimen/dimen_10dp"
+                        android:layout_marginTop="@dimen/completeCheckInItemMargin"
+                        android:layout_toEndOf="@id/paymentMethodLabel"
+                        android:ellipsize="end"
+                        android:gravity="end"
+                        android:lines="1"
+                        android:textColor="@color/textview_default_textcolor"
+                        android:textSize="@dimen/completeCheckInItemValueTextSize"
+                        app:customAssetFont="gotham_rounded_medium"
+                        tools:text="Credit Card" />
+
+                    <View
+                        android:id="@+id/separator4"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_1dp"
+                        android:layout_below="@id/paymentMethodTextView"
+                        android:background="@color/divider_color" />
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/totalPaidLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/separator4"
+                        android:layout_marginBottom="@dimen/completeCheckInItemMargin"
+                        android:layout_marginTop="@dimen/completeCheckInItemMargin"
+                        android:textColor="@color/textview_default_textcolor"
+                        android:textSize="@dimen/completeCheckInItemTextSize"
+                        app:customAssetFont="gotham_rounded_light"
+                        breeze:textKey="payment_confirm_total"
+                        tools:text="Total Paid" />
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/totalPaidTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_below="@id/separator4"
+                        android:layout_marginBottom="@dimen/completeCheckInItemMargin"
+                        android:layout_marginStart="@dimen/dimen_10dp"
+                        android:layout_marginTop="@dimen/completeCheckInItemMargin"
+                        android:layout_toEndOf="@id/totalPaidLabel"
+                        android:ellipsize="end"
+                        android:gravity="end"
+                        android:lines="1"
+                        android:textColor="@color/textview_default_textcolor"
+                        android:textSize="@dimen/completeCheckInItemValueTextSize"
+                        app:customAssetFont="gotham_rounded_medium"
+                        tools:text="$27.00 (of $108.00)" />
+
+                    <View
+                        android:id="@+id/separator5"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_1dp"
+                        android:layout_below="@id/totalPaidTextView"
+                        android:background="@color/divider_color" />
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/confirmationNumberLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/separator5"
+                        android:layout_marginBottom="@dimen/completeCheckInItemMargin"
+                        android:layout_marginTop="@dimen/completeCheckInItemMargin"
+                        android:textColor="@color/textview_default_textcolor"
+                        android:textSize="@dimen/completeCheckInItemTextSize"
+                        app:customAssetFont="gotham_rounded_light"
+                        breeze:textKey="payment_confirm_number"
+                        tools:text="Confirmation Number" />
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/confirmationNumberTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_below="@id/separator5"
+                        android:layout_marginBottom="@dimen/completeCheckInItemMargin"
+                        android:layout_marginStart="@dimen/dimen_10dp"
+                        android:layout_marginTop="@dimen/completeCheckInItemMargin"
+                        android:layout_toEndOf="@id/confirmationNumberLabel"
+                        android:ellipsize="end"
+                        android:gravity="end"
+                        android:lines="1"
+                        android:textColor="@color/textview_default_textcolor"
+                        android:textSize="@dimen/completeCheckInItemValueTextSize"
+                        app:customAssetFont="gotham_rounded_medium"
+                        tools:text="45678" />
+
+                    <View
+                        android:id="@+id/separator6"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_1dp"
+                        android:layout_below="@id/confirmationNumberTextView"
+                        android:background="@color/divider_color" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/homeModeSwitchImageView"
+            android:layout_width="@dimen/dimen_50dp"
+            android:layout_height="@dimen/dimen_50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/dimen_20dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:src="@drawable/icn_lock_patient" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/successMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="20dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_26sp"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="confirm_appointment_checkin"
+            tools:text="Congratulations, you have \n checked in to your \n appointment!" />
+
+        <ImageView
+            android:id="@+id/checkImage"
+            android:layout_width="@dimen/dimen_120dp"
+            android:layout_height="@dimen/dimen_120dp"
+            android:layout_above="@id/successMessage"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/dimen_40dp"
+            android:src="@drawable/icn_payment_confirm_check" />
+
+        <View
+            android:id="@+id/divider1"
+            android:layout_width="@dimen/checkin_complete_divider_width"
+            android:layout_height="@dimen/dimen_1dp"
+            android:layout_below="@id/successMessage"
+            android:layout_centerHorizontal="true"
+            android:background="@color/white" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/giveDeviceBackMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/divider1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            app:customAssetFont="gotham_rounded_light"
+            breeze:textKey="checkin_complete_device_back_message"
+            tools:text="Now you can give the device back." />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="@dimen/checkin_complete_divider_width"
+            android:layout_height="@dimen/dimen_1dp"
+            android:layout_below="@id/giveDeviceBackMessage"
+            android:layout_centerHorizontal="true"
+            android:background="@color/white" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/continueTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/divider2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            app:customAssetFont="gotham_rounded_light"
+            breeze:textKey="checkin_complete_continue_app_message"
+            tools:text="Continue using the app? >>" />
+    </RelativeLayout>
 
 </LinearLayout>

@@ -2,6 +2,7 @@
 package com.carecloud.carepaylibray.appointments.models;
 
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -50,6 +51,9 @@ public class AppointmentPayloadModel implements Serializable {
     @SerializedName("demographics")
     @Expose
     private DemographicsSettingsDemographicsDTO demographicDTO = new DemographicsSettingsDemographicsDTO();
+    @SerializedName("patient_balances")
+    @Expose
+    private List<PatientBalanceDTO> patientBalances = new ArrayList<>();
 
     /**
      * @return languages
@@ -215,5 +219,13 @@ public class AppointmentPayloadModel implements Serializable {
 
     public void setDemographicDTO(DemographicsSettingsDemographicsDTO demographicDTO) {
         this.demographicDTO = demographicDTO;
+    }
+
+    public List<PatientBalanceDTO> getPatientBalances() {
+        return patientBalances;
+    }
+
+    public void setPatientBalances(List<PatientBalanceDTO> patientBalances) {
+        this.patientBalances = patientBalances;
     }
 }

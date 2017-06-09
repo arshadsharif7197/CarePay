@@ -38,4 +38,6 @@ public interface DemographicsView {
     void finish();
 
     void setMediaResultListener(MediaResultListener resultListener);
+
+    void completeCheckIn(WorkflowDTO workflowDTO);
 }

@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.dtos.payload;
 
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -21,7 +22,7 @@ public class DemographicPayloadResponseDTO extends DemographicsSettingsPayloadDT
     private DemographicPayloadInfoDTO demographics = new DemographicPayloadInfoDTO();
     @SerializedName("appointments")
     @Expose
-    private List<AppointmentPayloadDTO> appointmentpayloaddto = new ArrayList<>();
+    private List<AppointmentDTO> appointmentpayloaddto = new ArrayList<>();
 
     public DemographicPayloadInfoDTO getDemographics() {
         return demographics;
@@ -31,11 +32,11 @@ public class DemographicPayloadResponseDTO extends DemographicsSettingsPayloadDT
         this.demographics = demographics;
     }
 
-    public List<AppointmentPayloadDTO> getAppointmentpayloaddto() {
+    public List<AppointmentDTO> getAppointmentpayloaddto() {
         return appointmentpayloaddto;
     }
 
-    public void setAppointmentpayloaddto(List<AppointmentPayloadDTO> appointmentpayloaddto) {
+    public void setAppointmentpayloaddto(List<AppointmentDTO> appointmentpayloaddto) {
         this.appointmentpayloaddto = appointmentpayloaddto;
     }
 

@@ -20,6 +20,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class ReviewDemographicsActivity extends BasePatientActivity implements DemographicsView, PaymentViewHandler {
     private static final String KEY_PAYMENT_DTO = "KEY_PAYMENT_DTO";
@@ -123,6 +124,13 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     @Override
     public void setMediaResultListener(MediaResultListener resultListener) {
         this.resultListener = resultListener;
+    }
+
+    @Override
+    public void completeCheckIn(WorkflowDTO workflowDTO) {
+        SystemUtil.showSuccessToast(getContext(), Label.getLabel("confirm_appointment_checkin"));
+        finish();
+        navigateToWorkflow(workflowDTO);
     }
 
     @Override

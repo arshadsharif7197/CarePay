@@ -27,7 +27,6 @@ import com.carecloud.carepay.practice.library.homescreen.dialogs.OfficeNewsDetai
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenAlertsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenAppointmentCountsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenDTO;
-import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenLabelDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenOfficeNewsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PatientHomeScreenTransitionsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenPayloadDTO;
@@ -102,13 +101,10 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void populateWithLabels() {
-        HomeScreenLabelDTO labels = homeScreenDTO.getMetadata().getLabels();
-        if (labels != null) {
-            // load mode switch options
-            modeSwitchOptions.clear();
-            modeSwitchOptions.add(Label.getLabel("patient_mode_button"));
-            modeSwitchOptions.add(Label.getLabel("logout_button"));
-        }
+        // load mode switch options
+        modeSwitchOptions.clear();
+        modeSwitchOptions.add(Label.getLabel("patient_mode_button"));
+        modeSwitchOptions.add(Label.getLabel("logout_button"));
     }
 
     private void changeScreenMode(HomeScreenMode homeScreenMode) {
@@ -265,24 +261,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private void unlockPracticeMode() {
         Gson gson = new Gson();
         PatientModeLinksDTO pinPadObject = gson.fromJson(homeScreenDTO.getMetadata().getLinks(), PatientModeLinksDTO.class);
-        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this, pinPadObject.getPinpad(), homeScreenDTO.getMetadata().getLabels(), false, getConfirmationPinDialogCallBacK());
+        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this, pinPadObject.getPinpad(), false);
         confirmationPinDialog.show();
-    }
-
-    /**
-     * Get confirmation pin dialog call bac k confirmation pin dialog . confirmation pin dialog listener.
-     *
-     * @return the confirmation pin dialog . confirmation pin dialog listener
-     */
-    public ConfirmationPinDialog.ConfirmationPinDialogListener getConfirmationPinDialogCallBacK() {
-        return new ConfirmationPinDialog.ConfirmationPinDialogListener() {
-
-            @Override
-            public void onError(String errorMessage) {
-
-                showErrorNotification(null);
-            }
-        };
     }
 
     private void getNews() {
@@ -492,7 +472,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onPreExecute() {
-//            showProgressDialog();
         }
 
         @Override
@@ -511,7 +490,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                     officeNews, officeNewsClickedListener);
             newsList.setAdapter(adapter);
 
-//            hideProgressDialog();
         }
 
         @Override

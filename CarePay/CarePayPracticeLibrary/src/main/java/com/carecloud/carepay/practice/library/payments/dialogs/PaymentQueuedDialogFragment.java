@@ -21,7 +21,7 @@ public class PaymentQueuedDialogFragment extends BaseDialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
-        return inflater.inflate(R.layout.fragment_checkin_complete, container, false);
+        return inflater.inflate(R.layout.fragment_queued_payment, container, false);
     }
 
     @Override

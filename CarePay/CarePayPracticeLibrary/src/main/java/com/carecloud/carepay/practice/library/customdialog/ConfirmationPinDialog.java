@@ -13,12 +13,12 @@ import android.widget.EditText;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
-import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSwitchPinDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSwitchPinResponseDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -44,27 +44,20 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
     private CarePayTextView subHeaderLabel;
     private Button dialogCancelTextView;
 
-    private PatientModeSwitchPinDTO patientModeSwitchPinDTO;
     private boolean isDynamicLabels;
     private TransitionDTO transitionDTOPinLink;
-    private ConfirmationPinDialogListener callBack;
-
-    public interface ConfirmationPinDialogListener {
-        void onError(String errorMessage);
-    }
 
     /**
      * Constructor calling from  Patient screen for Switching to Practice Mode.
      *
      * @param context context
      */
-    public ConfirmationPinDialog(Context context, TransitionDTO transitionDTOPinLink, PatientModeSwitchPinDTO patientModeSwitchPinDTO, boolean isDynamicLabels, ConfirmationPinDialogListener callBack) {
+    public ConfirmationPinDialog(Context context, TransitionDTO transitionDTOPinLink,
+                                 boolean isDynamicLabels) {
         super(context);
         this.context = context;
         this.transitionDTOPinLink = transitionDTOPinLink;
-        this.patientModeSwitchPinDTO = patientModeSwitchPinDTO;
         this.isDynamicLabels = isDynamicLabels;
-        this.callBack = callBack;
     }
 
     /**
@@ -186,20 +179,20 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
     }
 
     private void onSetPinLabels() {
-        headerLabel.setText(patientModeSwitchPinDTO.getPracticeModeSwitchPinHeader());
-        subHeaderLabel.setText(patientModeSwitchPinDTO.getPracticeModeSwitchPinEnterUnlock());
-        dialogCancelTextView.setText(patientModeSwitchPinDTO.getPracticeModeSwitchPinCancel());
+        headerLabel.setText(Label.getLabel("practice_mode_switch_pin_header"));
+        subHeaderLabel.setText(Label.getLabel("practice_mode_switch_pin_enter_unlock"));
+        dialogCancelTextView.setText(Label.getLabel("practice_mode_switch_pin_cancel"));
         if (this.isDynamicLabels) {
-            onSetpinNumberLabel(R.id.pin_key_one, patientModeSwitchPinDTO.getPracticeModeSwitchPinOne());
-            onSetpinNumberLabel(R.id.pin_key_two, patientModeSwitchPinDTO.getPracticeModeSwitchPinTwo());
-            onSetpinNumberLabel(R.id.pin_key_three, patientModeSwitchPinDTO.getPracticeModeSwitchPinThree());
-            onSetpinNumberLabel(R.id.pin_key_four, patientModeSwitchPinDTO.getPracticeModeSwitchPinFour());
-            onSetpinNumberLabel(R.id.pin_key_five, patientModeSwitchPinDTO.getPracticeModeSwitchPinFive());
-            onSetpinNumberLabel(R.id.pin_key_six, patientModeSwitchPinDTO.getPracticeModeSwitchPinSix());
-            onSetpinNumberLabel(R.id.pin_key_seven, patientModeSwitchPinDTO.getPracticeModeSwitchPinSeven());
-            onSetpinNumberLabel(R.id.pin_key_eighth, patientModeSwitchPinDTO.getPracticeModeSwitchPinEight());
-            onSetpinNumberLabel(R.id.pin_key_nine, patientModeSwitchPinDTO.getPracticeModeSwitchPinNine());
-            onSetpinNumberLabel(R.id.pin_key_zero, patientModeSwitchPinDTO.getPracticeModeSwitchPinZero());
+            onSetpinNumberLabel(R.id.pin_key_one, Label.getLabel("practice_mode_switch_pin_one"));
+            onSetpinNumberLabel(R.id.pin_key_two, Label.getLabel("practice_mode_switch_pin_two"));
+            onSetpinNumberLabel(R.id.pin_key_three, Label.getLabel("practice_mode_switch_pin_three"));
+            onSetpinNumberLabel(R.id.pin_key_four, Label.getLabel("practice_mode_switch_pin_four"));
+            onSetpinNumberLabel(R.id.pin_key_five, Label.getLabel("practice_mode_switch_pin_five"));
+            onSetpinNumberLabel(R.id.pin_key_six, Label.getLabel("practice_mode_switch_pin_six"));
+            onSetpinNumberLabel(R.id.pin_key_seven, Label.getLabel("practice_mode_switch_pin_seven"));
+            onSetpinNumberLabel(R.id.pin_key_eighth, Label.getLabel("practice_mode_switch_pin_eight"));
+            onSetpinNumberLabel(R.id.pin_key_nine, Label.getLabel("practice_mode_switch_pin_nine"));
+            onSetpinNumberLabel(R.id.pin_key_zero, Label.getLabel("practice_mode_switch_pin_zero"));
         }
         findViewById(R.id.mainViewLayout).setVisibility(View.VISIBLE);
     }

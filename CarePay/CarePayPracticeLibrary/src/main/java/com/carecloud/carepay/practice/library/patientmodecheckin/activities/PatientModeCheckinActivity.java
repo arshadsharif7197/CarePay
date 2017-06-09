@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
-import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.patientmodecheckin.PatientModeDemographicsPresenter;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
@@ -31,9 +30,9 @@ import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.media.MediaResultListener;
+import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -95,9 +94,18 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
+    public void completeCheckIn(WorkflowDTO workflowDTO) {
+        Intent intent = new Intent(this, CompleteCheckActivity.class);
+        Bundle extra = new Bundle();
+        extra.putString("workflow", workflowDTO.toString());
+        intent.putExtra("extra", extra);
+        startActivity(intent);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultListener !=null){
+        if (resultListener != null) {
             resultListener.handleActivityResult(requestCode, resultCode, data);
         }
     }
@@ -120,7 +128,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         findViewById(R.id.checkinHomeClickable).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!presenter.handleHomeButtonClick()) {
+                if (!presenter.handleHomeButtonClick()) {
                     setResult(CarePayConstants.HOME_PRESSED);
                     finish();
                 }
@@ -220,10 +228,15 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
         Intent intent = getIntent();
         String workflowString = intent.getStringExtra(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
-        if(workflowString != null){
-            Gson gson = new Gson();
-            PracticeNavigationHelper.navigateToWorkflow(getContext(), gson.fromJson(workflowString, WorkflowDTO.class));
-        }else {
+        if (workflowString != null) {
+            Bundle extra = new Bundle();
+            extra.putString("workflow", workflowDTO.toString());
+            extra.putBoolean("hasPayment", true);
+            DtoHelper.bundleDto(extra, presenter.getAppointmentPayload());
+            Intent intent2 = new Intent(this, CompleteCheckActivity.class);
+            intent2.putExtra("extra", extra);
+            startActivity(intent2);
+        } else {
             setResult(CarePayConstants.HOME_PRESSED, intent);
             finish();
         }
@@ -236,7 +249,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
-        if(paymentsModel!=null && !paymentsModel.getPaymentPayload().getUserPractices().isEmpty()){
+        if (paymentsModel != null && !paymentsModel.getPaymentPayload().getUserPractices().isEmpty()) {
             return paymentsModel.getPaymentPayload().getUserPractices().get(0);
         }
         return null;
@@ -275,7 +288,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             TextView progress = (TextView) flowView.findViewById(R.id.checkin_flow_progress);
 
             if (flowState.ordinal() == i) {
-                if(section.getFontAttribute()==CustomAssetStyleable.GOTHAM_ROUNDED_LIGHT) {
+                if (section.getFontAttribute() == CustomAssetStyleable.GOTHAM_ROUNDED_LIGHT) {
                     section.setFontAttribute(CustomAssetStyleable.GOTHAM_ROUNDED_BOLD);
                 }
                 section.setSelected(true);
@@ -283,10 +296,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 progress.setVisibility(View.VISIBLE);
                 progress.setText(currentPage + " of " + totalPages); //TODO label for "of"
             } else {
-                if(section.getFontAttribute()==CustomAssetStyleable.GOTHAM_ROUNDED_BOLD) {
+                if (section.getFontAttribute() == CustomAssetStyleable.GOTHAM_ROUNDED_BOLD) {
                     section.setFontAttribute(CustomAssetStyleable.GOTHAM_ROUNDED_LIGHT);
                 }
-                if(flowState.ordinal() > i) {
+                if (flowState.ordinal() > i) {
                     section.setEnabled(false);
                 }
                 section.setSelected(false);
@@ -295,7 +308,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         }
     }
 
-     @Override
+    @Override
     public void onBackPressed() {
         try {
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -344,7 +357,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     protected void processExternalPaymentFailure(PaymentExecution paymentExecution, int resultCode) {
-        if(resultCode == CarePayConstants.PAYMENT_RETRY_PENDING_RESULT_CODE){
+        if (resultCode == CarePayConstants.PAYMENT_RETRY_PENDING_RESULT_CODE) {
             //Display a success notification and do some cleanup
             PaymentQueuedDialogFragment dialogFragment = new PaymentQueuedDialogFragment();
             DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
