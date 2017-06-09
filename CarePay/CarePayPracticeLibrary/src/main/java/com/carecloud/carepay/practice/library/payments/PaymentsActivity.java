@@ -528,7 +528,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     private View.OnClickListener selectDateRange = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
             DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
                     Label.getLabel("date_range_picker_dialog_title"),
                     Label.getLabel("date_range_picker_dialog_close"),
