@@ -166,6 +166,9 @@ public class DateRangePickerDialog extends BaseDialogFragment {
             @Override
             public void onClick(View view) {
                 if (null != callback) {
+                    if(endDate == null){
+                        endDate = startDate;
+                    }
                     callback.onRangeSelected(startDate, endDate);
                 }
                 dismiss();
@@ -217,7 +220,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
             }
         }
 
-        applyDateRangeButton.setEnabled(startDate != null && endDate != null);
+        applyDateRangeButton.setEnabled(startDate != null);
     }
 
     /**

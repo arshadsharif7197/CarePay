@@ -275,18 +275,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             @Override
             public void onClick(View view) {
 
-                String tag = DateRangePickerDialog.class.getSimpleName();
-
-                // DialogFragment.show() will take care of adding the fragment
-                // in a transaction.  We also want to remove any currently showing
-                // dialog, so make our own transaction and take care of that here.
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
-                if (prev != null) {
-                    ft.remove(prev);
-                }
-                ft.addToBackStack(null);
-
                 DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
                         Label.getLabel("date_range_picker_dialog_title"),
                         Label.getLabel("date_range_picker_dialog_close"),
@@ -297,7 +285,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                         DateRangePickerDialog.getNextSixMonthCalendar(),
                         PracticeModePracticeAppointmentsActivity.this
                 );
-                dialog.show(ft, tag);
+                displayDialogFragment(dialog, false);
 
                 wasCalledFromThisClass = true;
             }
