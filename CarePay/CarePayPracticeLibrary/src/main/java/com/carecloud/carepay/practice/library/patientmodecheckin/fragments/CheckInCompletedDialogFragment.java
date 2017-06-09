@@ -17,10 +17,15 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.payments.models.PatientPaymentPayload;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
+import java.text.NumberFormat;
 
 /**
  * Created by lmenendez on 4/11/17.
@@ -33,6 +38,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
     private AppointmentDTO selectedAppointment;
     private String userImageUrl;
     private CheckCompleteInterface callback;
+    private PatientPaymentPayload patientPaymentPayload;
 
     @Override
     public void onAttach(Context context) {
@@ -50,9 +56,17 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
         callback = null;
     }
 
-    public static CheckInCompletedDialogFragment newInstance(boolean hasPayment) {
+    /**
+     * @param hasPayment             boolean indicating if there has been a payment in the process
+     * @param appointmentsPayloadDTO the appointment balances
+     * @return an instance of CheckInCompletedDialogFragment
+     */
+    public static CheckInCompletedDialogFragment newInstance(boolean hasPayment, AppointmentDTO appointmentsPayloadDTO) {
         Bundle args = new Bundle();
         args.putBoolean("hasPayment", hasPayment);
+        if (appointmentsPayloadDTO != null) {
+            DtoHelper.bundleDto(args, appointmentsPayloadDTO);
+        }
         CheckInCompletedDialogFragment fragment = new CheckInCompletedDialogFragment();
         fragment.setArguments(args);
         return fragment;
@@ -62,8 +76,13 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         hasPayment = getArguments().getBoolean("hasPayment", false);
-        if (!hasPayment) {
-            dto = callback.getDto();
+        dto = callback.getDto();
+        if (hasPayment) {
+            patientPaymentPayload = ((PaymentsModel) dto).getPaymentPayload().getPatientPayments().getPayload().get(0);
+            selectedAppointment = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
+            userImageUrl = ((PaymentsModel) dto).getPaymentPayload().getPatientBalances().get(0)
+                    .getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
+        } else {
             selectedAppointment = ((AppointmentsResultModel) dto).getPayload().getAppointments().get(0);
             userImageUrl = ((AppointmentsResultModel) dto).getPayload().getPatientBalances().get(0)
                     .getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
@@ -130,8 +149,22 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
             }
         });
 
-        if (!hasPayment) {
-            TextView paymentTypeTextView = (TextView) view.findViewById(R.id.paymentTypeTextView);
+
+        TextView paymentTypeTextView = (TextView) view.findViewById(R.id.paymentTypeTextView);
+        if (hasPayment) {
+            paymentTypeTextView.setText(patientPaymentPayload.getType());
+
+            TextView paymentMethodTextView = (TextView) view.findViewById(R.id.paymentMethodTextView);
+            paymentMethodTextView.setText(patientPaymentPayload.getMethod());
+
+            TextView confirmationNumberTextView = (TextView) view.findViewById(R.id.confirmationNumberTextView);
+            confirmationNumberTextView.setText(patientPaymentPayload.getConfirmation());
+
+            NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+            TextView totalPaidTextView = (TextView) view.findViewById(R.id.totalPaidTextView);
+            totalPaidTextView.setText(currencyFormatter.format(patientPaymentPayload.getTotal()));
+
+        } else {
             paymentTypeTextView.setText(Label.getLabel("payment_confirm_type_no_paid"));
         }
 

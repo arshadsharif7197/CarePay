@@ -11,6 +11,7 @@ import android.util.Log;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraFragment;
@@ -35,6 +36,7 @@ import com.google.gson.Gson;
 
 public class DemographicsPresenterImpl implements DemographicsPresenter {
 
+    private final AppointmentDTO appointmentPayload;
     private DemographicsView demographicsView;
 
     private CarePayCameraCallback carePayCameraCallback;
@@ -61,6 +63,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         this.demographicsView = demographicsView;
         demographicDTO = demographicsView.getConvertedDTO(DemographicDTO.class);
         appointmentId = demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId();
+        appointmentPayload = demographicDTO.getPayload().getAppointmentpayloaddto().get(0);
         this.isPatientMode = isPatientMode;
 
         if (savedInstanceState != null) {
@@ -388,6 +391,10 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             default:
                 return null;
         }
+    }
+
+    public AppointmentDTO getAppointmentPayload() {
+        return appointmentPayload;
     }
 
     protected boolean shouldPreventBackNav() {

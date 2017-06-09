@@ -230,7 +230,7 @@
                         tools:text="Method" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                        android:id="@+id/paymentMethod"
+                        android:id="@+id/paymentMethodTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -250,7 +250,7 @@
                         android:id="@+id/separator4"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dimen_1dp"
-                        android:layout_below="@id/paymentMethod"
+                        android:layout_below="@id/paymentMethodTextView"
                         android:background="@color/divider_color" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -267,7 +267,7 @@
                         tools:text="Total Paid" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                        android:id="@+id/totalPaid"
+                        android:id="@+id/totalPaidTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -288,7 +288,7 @@
                         android:id="@+id/separator5"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dimen_1dp"
-                        android:layout_below="@id/totalPaid"
+                        android:layout_below="@id/totalPaidTextView"
                         android:background="@color/divider_color" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -305,7 +305,7 @@
                         tools:text="Confirmation Number" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                        android:id="@+id/confirmationNumber"
+                        android:id="@+id/confirmationNumberTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -326,7 +326,7 @@
                         android:id="@+id/separator6"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dimen_1dp"
-                        android:layout_below="@id/confirmationNumber"
+                        android:layout_below="@id/confirmationNumberTextView"
                         android:background="@color/divider_color" />
 
                 </RelativeLayout>

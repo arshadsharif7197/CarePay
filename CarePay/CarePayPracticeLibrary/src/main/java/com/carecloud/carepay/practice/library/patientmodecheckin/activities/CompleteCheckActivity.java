@@ -15,8 +15,11 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -35,10 +38,18 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complete_check);
         Gson gson = new Gson();
-        dto = gson.fromJson(getIntent().getStringExtra("workflow"), AppointmentsResultModel.class);
+        Bundle extra = getIntent().getBundleExtra("extra");
+        boolean hasPayment = extra.getBoolean("hasPayment", false);
+        if (hasPayment) {
+            dto = gson.fromJson(extra.getString("workflow"), PaymentsModel.class);
+        } else {
+            dto = gson.fromJson(extra.getString("workflow"), AppointmentsResultModel.class);
+        }
+
+        AppointmentDTO appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, extra);
         if (savedInstanceState == null) {
             replaceFragment(CheckInCompletedDialogFragment
-                    .newInstance(false), false);
+                    .newInstance(hasPayment, appointmentDTO), false);
         }
     }
 
@@ -60,7 +71,8 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
     @Override
     public void navigateToWorkflow() {
         Gson gson = new Gson();
-        navigateToWorkflow(gson.fromJson(getIntent().getStringExtra("workflow"), WorkflowDTO.class));
+        navigateToWorkflow(gson.fromJson(getIntent().getBundleExtra("extra").getString("workflow"),
+                WorkflowDTO.class));
     }
 
     @Override
