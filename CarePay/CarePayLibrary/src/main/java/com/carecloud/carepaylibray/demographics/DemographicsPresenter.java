@@ -10,7 +10,6 @@ import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
-import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearchFragment;
 import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
@@ -19,7 +18,7 @@ public interface DemographicsPresenter extends HealthInsuranceFragment.Insurance
         MedicationsAllergyFragment.MedicationAllergyCallback,
         MedicationAllergySearchFragment.MedicationAllergySearchCallback,
         CheckinFlowCallback,
-        PersonalInfoFragment.UpdateProfilePictureListener,
+//        PersonalInfoFragment.UpdateProfilePictureListener,
         CarePayCameraCallback,
         CarePayCameraReady,
         InsuranceEditDialog.InsuranceEditDialogListener {

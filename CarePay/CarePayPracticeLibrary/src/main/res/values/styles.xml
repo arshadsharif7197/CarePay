@@ -10,7 +10,6 @@
         <item name="colorAccent">@color/colorPrimaryDark</item>
         <item name="android:overScrollMode">never</item>
         <item name="android:textViewStyle">@style/DefaultTextViewStyle</item>
-        <item name="autoCompleteTextViewStyle">@style/SearchViewStyleDark</item>
 
         <!-- Hint color and labelMeta color in FALSE state -->
         <item name="android:textColorHint">@color/payne_gray</item> <!-- hint color when no focus -->

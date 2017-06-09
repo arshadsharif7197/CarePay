@@ -339,6 +339,9 @@ public class NextAppointmentFragment extends BaseFragment {
     }
 
     private AppointmentDTO getAppointmentSelected() {
+        if (appointmentsResultModel.getPayload().getAppointments().size() == 1) {
+            return appointmentsResultModel.getPayload().getAppointments().get(0);
+        }
         String selectedAppointmentId = getArguments().getString(NextAppointmentActivity.APPOINTMENT_ID);
         for (AppointmentDTO appointmentDTO : appointmentsResultModel.getPayload().getAppointments()) {
             if (appointmentDTO.getPayload().getId().equals(selectedAppointmentId)) {
@@ -351,10 +354,19 @@ public class NextAppointmentFragment extends BaseFragment {
     /**
      * @param visitTypeDTO the visit type
      */
-    public void setVisitType(VisitTypeDTO visitTypeDTO) {
+    public boolean setVisitType(VisitTypeDTO visitTypeDTO) {
         visitType = visitTypeDTO;
         visitTypeTextView.setText(visitTypeDTO.getName());
         visitTimeTextView.setEnabled(true);
+        scheduleAppointmentButton.setEnabled(false);
+        boolean shouldOpenHoursFragment = false;
+        if (appointmentSlot == null) {
+            shouldOpenHoursFragment = true;
+        }
+        appointmentSlot = null;
+        visitTimeTextView.setText(Label.getLabel("next_appointment_choose_when_label"));
+        findViewById(R.id.providerMessageHeader).setSelected(false);
+        return shouldOpenHoursFragment;
     }
 
     /**

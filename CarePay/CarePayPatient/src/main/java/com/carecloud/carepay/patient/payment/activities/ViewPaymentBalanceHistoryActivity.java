@@ -237,7 +237,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void onPayLaterClicked(PaymentsModel paymentsModel) {
+    public void onPayLaterClicked(PendingBalanceDTO pendingBalanceDTO) {
 
     }
 

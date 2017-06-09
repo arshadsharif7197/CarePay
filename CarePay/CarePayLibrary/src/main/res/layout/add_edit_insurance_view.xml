@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:breeze="http://schemas.carecloud.com/breeze"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:breeze="http://schemas.carecloud.com/breeze"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -109,39 +109,39 @@
         android:layout_marginBottom="@dimen/dimen_15dp"/>
 
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
-            android:id="@+id/health_insurance_card_number_layout"
-            style="@style/SigninSignupTextInputStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:customAssetFont="proxima_nova_semi_bold"
-            app:hintTextAppearance="@style/FloatingLabelStyle">
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+        android:id="@+id/health_insurance_card_number_layout"
+        style="@style/SigninSignupTextInputStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:customAssetFont="proxima_nova_semi_bold"
+        app:hintTextAppearance="@style/FloatingLabelStyle">
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
-                android:id="@+id/health_insurance_card_number"
-                style="@style/SigninSignupEditStyle"
-                android:inputType="text"
-                android:textAllCaps="true"
-                breeze:hintKey="demographics_insurance_card_number"
-                app:customAssetFont="proxima_nova_regular" />
-        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+        <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+            android:id="@+id/health_insurance_card_number"
+            style="@style/SigninSignupEditStyle"
+            android:inputType="text"
+            android:textAllCaps="true"
+            breeze:hintKey="demographics_insurance_card_number"
+            app:customAssetFont="proxima_nova_regular" />
+    </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
-            android:id="@+id/health_insurance_group_number_layout"
-            style="@style/SigninSignupTextInputStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:customAssetFont="proxima_nova_semi_bold"
-            app:hintTextAppearance="@style/FloatingLabelStyle">
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+        android:id="@+id/health_insurance_group_number_layout"
+        style="@style/SigninSignupTextInputStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:customAssetFont="proxima_nova_semi_bold"
+        app:hintTextAppearance="@style/FloatingLabelStyle">
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
-                android:id="@+id/health_insurance_group_number"
-                style="@style/SigninSignupEditStyle"
-                android:inputType="text"
-                android:textAllCaps="true"
-                breeze:hintKey="demographics_insurance_group_number"
-                app:customAssetFont="proxima_nova_regular" />
-        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+        <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+            android:id="@+id/health_insurance_group_number"
+            style="@style/SigninSignupEditStyle"
+            android:inputType="text"
+            android:textAllCaps="true"
+            breeze:hintKey="demographics_insurance_group_number"
+            app:customAssetFont="proxima_nova_regular" />
+    </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -179,54 +179,52 @@
         android:background="@color/gray_divider" />
 
 
-        <LinearLayout
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_15dp"
+        android:layout_marginBottom="@dimen/dimen_15dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/demogrDocsFrontScanImage"
+            android:layout_width="@dimen/dimen_100dp"
+            android:layout_height="@dimen/dimen_60dp"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:src="@drawable/icn_placeholder_document"
+            tools:ignore="ContentDescription" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/demogrDocsFrontScanButton"
+            style="@style/DemographicsDocsButtonStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_15dp"
-            android:layout_marginBottom="@dimen/dimen_15dp"
-            android:orientation="horizontal">
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="demographics_insurance_retake_front_photo" />
+    </LinearLayout>
 
-            <ImageView
-                android:id="@+id/health_insurance_front_photo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:adjustViewBounds="true"
-                android:src="@drawable/icn_camera"
-                tools:ignore="ContentDescription" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_15dp"
+        android:layout_marginBottom="@dimen/dimen_15dp"
+        android:orientation="horizontal">
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/take_front_photo_button"
-                style="@style/DemographicsDocsButtonStyle"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="demographics_insurance_retake_front_photo" />
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/demogrDocsBackScanImage"
+            android:layout_width="@dimen/dimen_100dp"
+            android:layout_height="@dimen/dimen_60dp"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:src="@drawable/icn_placeholder_document"
+            tools:ignore="ContentDescription" />
 
-        <LinearLayout
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/demogrDocsBackScanButton"
+            style="@style/DemographicsDocsButtonStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_15dp"
-            android:layout_marginBottom="@dimen/dimen_15dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/health_insurance_back_photo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:layout_gravity="center"
-                android:src="@drawable/icn_camera"
-                tools:ignore="ContentDescription" />
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/take_back_photo_button"
-                style="@style/DemographicsDocsButtonStyle"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="demographics_insurance_retake_back_photo" />
-        </LinearLayout>
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="demographics_insurance_retake_back_photo" />
+    </LinearLayout>
 
 </LinearLayout>

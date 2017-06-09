@@ -4,14 +4,10 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by lmenendez on 2/15/17.
+ * Created by lmenendez on 2/15/17
  */
 
 public class MedicationAllergiesMetadata {
-
-    @SerializedName("labels")
-    @Expose
-    private MedicationAllergiesLabelsDTO labels = new MedicationAllergiesLabelsDTO();
 
     @SerializedName("links")
     @Expose
@@ -20,14 +16,6 @@ public class MedicationAllergiesMetadata {
     @SerializedName("transitions")
     @Expose
     private MedicationAllergiesTransitionsDTO transitions = new MedicationAllergiesTransitionsDTO();
-
-    public MedicationAllergiesLabelsDTO getLabels() {
-        return labels;
-    }
-
-    public void setLabels(MedicationAllergiesLabelsDTO labels) {
-        this.labels = labels;
-    }
 
     public MedicationAllergiesLinksDTO getLinks() {
         return links;

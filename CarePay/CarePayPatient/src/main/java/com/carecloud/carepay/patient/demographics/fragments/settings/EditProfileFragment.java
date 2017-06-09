@@ -1,13 +1,16 @@
 package com.carecloud.carepay.patient.demographics.fragments.settings;
 
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,15 +29,13 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.PatientModel;
-import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
-import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
+import com.carecloud.carepaylibray.media.MediaScannerPresenter;
+import com.carecloud.carepaylibray.media.MediaViewInterface;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
-import com.carecloud.carepaylibray.utils.PermissionsUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -43,13 +44,13 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.IOException;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EditProfileFragment extends BaseFragment implements CarePayCameraCallback {
-    private static final String LOG_TAG = DemographicsSettingsFragment.class.getSimpleName();
+public class EditProfileFragment extends BaseFragment implements MediaViewInterface {
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
 
     private ImageView profileImageView;
@@ -57,7 +58,10 @@ public class EditProfileFragment extends BaseFragment implements CarePayCameraCa
     private TextView patientEmailValue;
 
     private DemographicsSettingsFragmentListener callback;
-    protected CarePayCameraReady carePayCameraReady;
+
+    private MediaScannerPresenter mediaScannerPresenter;
+
+    private boolean hasNewImage = false;
 
     /**
      * @return an instance of EditProfileFragment
@@ -74,12 +78,6 @@ public class EditProfileFragment extends BaseFragment implements CarePayCameraCa
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement DemographicsSettingsFragmentListener");
-        }
-        try {
-            carePayCameraReady = (CarePayCameraReady) context;
-
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement CarePayCameraReady");
         }
     }
 
@@ -111,17 +109,15 @@ public class EditProfileFragment extends BaseFragment implements CarePayCameraCa
         getPersonalDetails();
 
         setClickListeners(view);
+
+        mediaScannerPresenter = new MediaScannerPresenter(getContext(), this, profileImageView);
     }
 
     private void getPersonalDetails() {
         PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
         String imageUrl = demographicsPersonalDetails.getProfilePhoto();
         if (!StringUtil.isNullOrEmpty(imageUrl)) {
-            Picasso.with(getContext())
-                    .load(imageUrl)
-                    .transform(new CircleImageTransform())
-                    .resize(160, 160)
-                    .into(profileImageView);
+            displayImage(imageUrl, profileImageView);
         }
 
         patientNameValue.setText(StringUtil.capitalize(demographicsPersonalDetails.getFullName()));
@@ -133,7 +129,7 @@ public class EditProfileFragment extends BaseFragment implements CarePayCameraCa
         changeProfilePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage();
+                mediaScannerPresenter.selectImage(true);
             }
 
         });
@@ -142,6 +138,7 @@ public class EditProfileFragment extends BaseFragment implements CarePayCameraCa
         saveChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                setupImageBase64();
                 TransitionDTO demographicsSettingsUpdateDemographicsDTO = demographicsSettingsDTO.getMetadata().getTransitions().getUpdateDemographics();
                 DemographicPayloadDTO demographicPayload = demographicsSettingsDTO.getPayload().getDemographics()
                         .getPayload();
@@ -204,93 +201,113 @@ public class EditProfileFragment extends BaseFragment implements CarePayCameraCa
     };
 
 
-    private void selectImage() {
-        // create the chooser dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(ImageCaptureHelper.chooseActionDlgTitle);
-        builder.setItems(ImageCaptureHelper.getActionDlOptions(), dialogOnClickListener);
-
-
-        builder.show();
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+        handleRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    private DialogInterface.OnClickListener dialogOnClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int item) {
-            switch (item) {
-                case 0:  // "Take picture" chosen
-                    ImageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.getActionDlOptions(0));
+    @Override
+    public void handleRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if(mediaScannerPresenter!=null){
+            mediaScannerPresenter.handleRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
 
-                    if (PermissionsUtil.checkPermissionCamera(getActivity())) {
-                        // uncomment when camera activity
-                        carePayCameraReady.captureImage(EditProfileFragment.this);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(!handleActivityResult(requestCode, resultCode, data)) {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
+        return mediaScannerPresenter!=null && mediaScannerPresenter.handleActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void setCapturedBitmap(String filePath, View view) {
+        if (filePath != null) {
+            displayImage(filePath, view);
+
+            PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
+            demographicsPersonalDetails.setProfilePhoto(filePath);
+            hasNewImage = true;
+
+        }
+    }
+
+    private void displayImage(String filePath, View view){
+        final ImageView imageView = (ImageView) view;
+
+        imageView.measure(0,0);
+        ViewGroup.LayoutParams lp = imageView.getLayoutParams();
+        final int width = Math.max(imageView.getMeasuredWidth(), lp.width);
+        final int height = Math.max(imageView.getMeasuredHeight(), lp.height);
+
+        File file = new File(filePath);
+        Uri fileUri;
+        if(file.exists()){
+            fileUri = Uri.fromFile(file);
+        }else{
+            fileUri = Uri.parse(filePath);
+        }
+
+        Picasso.with(getContext()).load(fileUri)
+                .placeholder(R.drawable.icn_placeholder_user_profile_png)
+                .resize(width, height)
+                .centerCrop()
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                .transform(new CircleImageTransform())
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                        ViewGroup.LayoutParams lp = imageView.getLayoutParams();
+                        lp.width = width;
+                        lp.height = height;
+                        imageView.setLayoutParams(lp);
                     }
-                    break;
 
-                case 1:   // "Select from Gallery" chosen
-                    ImageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.getActionDlOptions(1));
-
-                    if (PermissionsUtil.checkPermission(getActivity())) {
-                        startActivityForResult(ImageCaptureHelper.galleryIntent(), ImageCaptureHelper.SELECT_FILE);
+                    @Override
+                    public void onError() {
+                        imageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                                R.drawable.icn_placeholder_user_profile_png));
                     }
-                    break;
+                });
 
-                default:  // "Cancel"
-                    dialog.dismiss();
+    }
+
+    @Override
+    public void handleStartActivityForResult(Intent intent, int requestCode) {
+        startActivityForResult(intent, requestCode);
+    }
+
+    @Override
+    public Fragment getCallingFragment() {
+        return this;
+    }
+
+    @Override
+    public void setupImageBase64() {
+        if(hasNewImage){
+            String filePath = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
+            File file = new File(filePath);
+            Bitmap bitmap = null;
+            if(file.exists()) {
+                bitmap = BitmapFactory.decodeFile(filePath);
+            }else{
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.parse(filePath));
+                }catch (IOException ioe){
+                    //do nothing
+                }
+            }
+            if(bitmap != null){
+                String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
+                PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
+                demographicsPersonalDetails.setProfilePhoto(imageAsBase64);
             }
         }
-    };
-
-
-    @Override
-    public void onCapturedSuccess(Bitmap bitmap) {
-        // save the image as base64 in the model
-        if (bitmap != null) {
-            final Bitmap rotateBitmap = ImageCaptureHelper.rotateBitmap(bitmap, ImageCaptureHelper.getOrientation());
-            String tempFile = "profile_pic";
-            final ImageView imageView = profileImageView;
-
-            final int width = imageView.getWidth();
-            final int height = imageView.getHeight();
-            imageView.getLayoutParams().width = width;
-            imageView.getLayoutParams().height = height;
-
-
-            File file = ImageCaptureHelper.getBitmapFileUrl(getContext(), rotateBitmap, tempFile);
-            Picasso.with(getContext()).load(file)
-                    .placeholder(R.drawable.icn_camera)
-                    .resize(width, height)
-                    .centerCrop()
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .transform(new CircleImageTransform())
-                    .into(imageView, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                            ViewGroup.LayoutParams lp = imageView.getLayoutParams();
-                            lp.width = width;
-                            lp.height = height;
-                            imageView.setLayoutParams(lp);
-                        }
-
-                        @Override
-                        public void onError() {
-                            imageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                                    R.drawable.icn_camera));
-                        }
-                    });
-
-
-            String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
-            PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
-            demographicsPersonalDetails.setProfilePhoto(imageAsBase64);
-
-        }
     }
-
-    @Override
-    public void onCaptureFail() {
-
-    }
-
 }

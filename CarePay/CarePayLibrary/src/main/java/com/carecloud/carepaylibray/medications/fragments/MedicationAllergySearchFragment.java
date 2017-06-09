@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.medications.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -17,6 +18,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.ISession;
@@ -35,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by lmenendez on 2/15/17.
+ * Created by lmenendez on 2/15/17
  */
 
 public class MedicationAllergySearchFragment extends BaseDialogFragment implements MedicationAllergySearchAdapter.SearchItemSelectedCallback {
@@ -118,10 +120,8 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.search_toolbar);
         toolbar.setTitle("");
         if (getDialog() == null) {
-            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_nav_back));
+            toolbar.setNavigationIcon(ContextCompat.getDrawable(getContext(), R.drawable.icn_nav_back));
             toolbar.setNavigationOnClickListener(navigationClickListener);
-//            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-
         }
         searchView = (SearchView) view.findViewById(R.id.search_entry_view);
         searchView.setOnQueryTextListener(searchQueryListener);
@@ -130,7 +130,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
 
         TextView title = (TextView) view.findViewById(R.id.toolbar_title);
         if (title != null) {
-            title.setText(medicationsAllergiesDTO.getMetadata().getLabels().getMedicationsTitle());
+            title.setText(Label.getLabel("medications_title"));
             title.setGravity(Gravity.CENTER_HORIZONTAL);
         }
     }
@@ -176,8 +176,9 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
 
     @Override
     public void searchItemSelected(MedicationsAllergiesObject item) {
+        SystemUtil.hideSoftKeyboard(getContext(), getView());
         if (item instanceof MedicationsObject) {
-            callback.addMedicationAllergyItem(item);
+                    callback.addMedicationAllergyItem(item);
             if (getDialog() != null) {
                 dismiss();
             }

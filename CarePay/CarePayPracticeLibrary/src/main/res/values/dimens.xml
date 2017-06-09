@@ -143,7 +143,7 @@
 
     <!-- Home Screen -->
 
-    <dimen name="home_alert_text_padding_start">7dp</dimen>
+    <dimen name="home_alert_text_padding_start">10dp</dimen>
     <dimen name="home_alert_text_padding_end">4dp</dimen>
 
     <dimen name="home_alert_checkin_number_wrapper_height">40dp</dimen>
@@ -160,8 +160,8 @@
 
     <dimen name="home_alert_margin_start">10dp</dimen>
 
-    <dimen name="home_button_width">232dp</dimen>
-    <dimen name="home_button_height">200dp</dimen>
+    <dimen name="home_button_width">282dp</dimen>
+    <dimen name="home_button_height">250dp</dimen>
 
     <dimen name="home_shadow_width">600dp</dimen>
 
@@ -235,4 +235,7 @@
     <dimen name="keypad_height">700dp</dimen>
     <dimen name="calculator_entry_text">90sp</dimen>
     <dimen name="emailFieldTopMargin">0dp</dimen>
+
+    <dimen name="demogr_details_section_top_margin">30dp</dimen>
+
 </resources>

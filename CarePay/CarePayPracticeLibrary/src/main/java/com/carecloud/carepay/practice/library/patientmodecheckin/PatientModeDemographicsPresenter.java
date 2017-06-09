@@ -16,6 +16,7 @@ import com.carecloud.carepaylibray.demographics.DemographicsView;
  */
 
 public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl {
+    public static final String KEY_HANDLE_HOME = "handle_home_button";
 
     private boolean shouldHandleHomeButton = false;
     private PatientModeCheckinDTO patientModeCheckinDTO;
@@ -33,18 +34,27 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
         this.session = session;
         this.demographicsView = demographicsView;
 
-        if(session.getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE){
-            //need to switch to PatientMode
-            patientModeCheckinDTO = demographicsView.getConvertedDTO(PatientModeCheckinDTO.class);
-            if(patientModeCheckinDTO != null) {
-                session.getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
-                String username = patientModeCheckinDTO.getPayload().getCheckinModeDTO().getMetadata().getUsername();
-                session.getAppAuthorizationHelper().setUser(username);
-
-                shouldHandleHomeButton = true;
-            }
+        if(savedInstanceState!=null){
+            shouldHandleHomeButton = savedInstanceState.getBoolean(KEY_HANDLE_HOME, false);
         }
 
+        patientModeCheckinDTO = demographicsView.getConvertedDTO(PatientModeCheckinDTO.class);
+        if(session.getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE && patientModeCheckinDTO != null){
+            //need to switch to PatientMode
+            session.getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
+            String username = patientModeCheckinDTO.getPayload().getCheckinModeDTO().getMetadata().getUsername();
+            session.getAppAuthorizationHelper().setUser(username);
+
+            shouldHandleHomeButton = true;
+
+        }
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle icicle) {
+        super.onSaveInstanceState(icicle);
+        icicle.putBoolean(KEY_HANDLE_HOME, shouldHandleHomeButton);
     }
 
 

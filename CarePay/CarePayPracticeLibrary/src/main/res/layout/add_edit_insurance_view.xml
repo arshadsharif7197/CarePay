@@ -195,15 +195,15 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/health_insurance_front_photo"
+                android:id="@+id/demogrDocsFrontScanImage"
                 android:layout_width="@dimen/dimen_200dp"
                 android:layout_height="120dp"
                 android:adjustViewBounds="true"
-                android:src="@drawable/icn_camera"
+                android:src="@drawable/icn_placeholder_document"
                 tools:ignore="ContentDescription"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/take_front_photo_button"
+                android:id="@+id/demogrDocsFrontScanButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_13dp"
@@ -226,15 +226,15 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/health_insurance_back_photo"
+                android:id="@+id/demogrDocsBackScanImage"
                 android:layout_width="@dimen/dimen_200dp"
                 android:layout_height="120dp"
                 android:adjustViewBounds="true"
-                android:src="@drawable/icn_camera"
+                android:src="@drawable/icn_placeholder_document"
                 tools:ignore="ContentDescription"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/take_back_photo_button"
+                android:id="@+id/demogrDocsBackScanButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_13dp"

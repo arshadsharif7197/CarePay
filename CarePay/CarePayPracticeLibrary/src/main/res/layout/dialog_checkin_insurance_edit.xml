@@ -41,7 +41,7 @@
                 android:background="@drawable/rounded_view_blue"
 
                 android:contentDescription="@string/insurance_scan_front"
-                android:src="@drawable/icn_camera" />
+                android:src="@drawable/icn_placeholder_document" />
 
             <Button
                 android:id="@+id/demogr_insurance_scan_insurance_frontbtn"
@@ -65,7 +65,7 @@
                 android:layout_height="@dimen/dimen_138dp"
                 android:layout_marginLeft="@dimen/dimen_10dp"
                 android:background="@drawable/rounded_view_blue"
-                android:src="@drawable/icn_camera" />
+                android:src="@drawable/icn_placeholder_document" />
 
             <Button
                 android:id="@+id/demogr_insurance_scan_insurance_backbtn"

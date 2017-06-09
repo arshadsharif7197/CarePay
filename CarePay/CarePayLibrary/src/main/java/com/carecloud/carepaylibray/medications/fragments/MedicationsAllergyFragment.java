@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -19,6 +21,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
@@ -26,7 +29,6 @@ import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.medications.adapters.MedicationAllergiesAdapter;
 import com.carecloud.carepaylibray.medications.models.MedicationAllergiesAction;
-import com.carecloud.carepaylibray.medications.models.MedicationAllergiesLabelsDTO;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesQueryStrings;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
@@ -42,7 +44,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by lmenendez on 2/15/17.
+ * Created by lmenendez on 2/15/17
  */
 
 public class MedicationsAllergyFragment extends BaseCheckinFragment implements MedicationAllergiesAdapter.MedicationAllergiesAdapterCallback{
@@ -59,11 +61,13 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements M
 
     private RecyclerView allergyRecycler;
     private RecyclerView medicationRecycler;
+    private CheckBox assertNoMedications;
+    private CheckBox assertNoAllergies;
+    private Button continueButton;
 
     protected DemographicsPresenter callback;
 
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
-    private MedicationAllergiesLabelsDTO labels;
 
     private List<MedicationsObject> currentMedications = new ArrayList<>();
     private List<MedicationsObject> addMedications = new ArrayList<>();
@@ -108,7 +112,6 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements M
         Bundle args = getArguments();
         String jsonExtra = args.getString(CarePayConstants.MEDICATION_ALLERGIES_DTO_EXTRA);
         medicationsAllergiesDTO = gson.fromJson(jsonExtra, MedicationsAllergiesResultsModel.class);
-        labels = medicationsAllergiesDTO.getMetadata().getLabels();
         currentMedications = medicationsAllergiesDTO.getPayload().getMedications().getPayload();
 
     }
@@ -150,50 +153,28 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements M
 
         TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
         if(title!=null) {
-            title.setText(StringUtil.getLabelForView(labels.getMedicationAllergiesTitlebarText()));
+            title.setText(Label.getLabel("medication_allergies_titlebar_text"));
         }
     }
 
     private void initViews(View view){
-        TextView header = (TextView) view.findViewById(R.id.allergy_medication_header);
-        header.setText(StringUtil.getLabelForView(labels.getAllergyMedicationHeader()));
-
-        TextView headerMessage = (TextView) view.findViewById(R.id.allergy_medication_header_message);
-        headerMessage.setText(StringUtil.getLabelForView(labels.getAllergyMedicationHeaderMessage()));
-
-        TextView allergySection = (TextView) view.findViewById(R.id.allergy_section_header);
-        allergySection.setText(StringUtil.getLabelForView(labels.getAllergySectionHeader()));
-
-        TextView allergyTitle = (TextView) view.findViewById(R.id.allergy_title);
-        allergyTitle.setText(StringUtil.getLabelForView(labels.getAllergyTitle()));
-
         TextView allergyChooseButton = (TextView) view.findViewById(R.id.allergy_choose_button);
-        allergyChooseButton.setText(StringUtil.getLabelForView(labels.getAllergyChooseButton()));
         allergyChooseButton.setOnClickListener(chooseAllergyClickListener);
 
-        TextView medicationSection = (TextView) view.findViewById(R.id.medications_section_header);
-        medicationSection.setText(StringUtil.getLabelForView(labels.getMedicationsSectionHeader()));
-
-        TextView medicationTitle = (TextView) view.findViewById(R.id.medications_title);
-        medicationTitle.setText(StringUtil.getLabelForView(labels.getMedicationsTitle()));
-
         TextView medicationChooseButton = (TextView) view.findViewById(R.id.medication_choose_button);
-        medicationChooseButton.setText(StringUtil.getLabelForView(labels.getMedicationChooseButton()));
         medicationChooseButton.setOnClickListener(chooseMedicationClickListener);
 
-
-        Button continueButton = (Button) view.findViewById(R.id.medication_allergies_continue_button);
+        continueButton = (Button) view.findViewById(R.id.medication_allergies_continue_button);
         continueButton.setOnClickListener(continueClickListener);
+        continueButton.setEnabled(false);
 
         EditText unlistedAllergies = (EditText) view.findViewById(R.id.allergy_none_placeholder_text);
-        unlistedAllergies.setHint(StringUtil.getLabelForView(labels.getAllergyNonePlaceholderText()));
-        unlistedAllergies.setOnFocusChangeListener(getOnFocusChangeListener(StringUtil.getLabelForView(labels.getAllergyNonePlaceholderText())));
+        unlistedAllergies.setOnFocusChangeListener(getOnFocusChangeListener(Label.getLabel("allergy_none_placeholder_text")));
         unlistedAllergies.setEnabled(false);
 
         EditText unlistedMedication = (EditText) view.findViewById(R.id.medication_none_placeholder_text);
         unlistedMedication.setOnEditorActionListener(addUnlistedMedicationListener);
-        unlistedMedication.setHint(StringUtil.getLabelForView(labels.getMedicationNonePlaceholderText()));
-        unlistedMedication.setOnFocusChangeListener(getOnFocusChangeListener(StringUtil.getLabelForView(labels.getMedicationNonePlaceholderText())));
+        unlistedMedication.setOnFocusChangeListener(getOnFocusChangeListener(Label.getLabel("medication_none_placeholder_text")));
 
         RecyclerView.LayoutManager allergyManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
         allergyRecycler = (RecyclerView) view.findViewById(R.id.alergy_recycler);
@@ -203,11 +184,20 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements M
         medicationRecycler = (RecyclerView) view.findViewById(R.id.medication_recycler);
         medicationRecycler.setLayoutManager(medicationManager);
 
+        assertNoMedications = (CheckBox) view.findViewById(R.id.assert_no_meds);
+        assertNoMedications.setEnabled(false);
+        assertNoMedications.setChecked(false);
+        assertNoMedications.setOnCheckedChangeListener(assertCheckListener);
+
+        assertNoAllergies = (CheckBox) view.findViewById(R.id.assert_no_allergies);
+        assertNoAllergies.setEnabled(false);
+        assertNoAllergies.setChecked(false);
+        assertNoAllergies.setOnCheckedChangeListener(assertCheckListener);
     }
 
     private void setAdapters(){
         if(medicationRecycler.getAdapter()==null) {
-            MedicationAllergiesAdapter medicationAdapter = new MedicationAllergiesAdapter(getContext(), currentMedications, this, StringUtil.getLabelForView(labels.getMedicationAllergiesDeleteButton()));
+            MedicationAllergiesAdapter medicationAdapter = new MedicationAllergiesAdapter(getContext(), currentMedications, this);
             medicationRecycler.setAdapter(medicationAdapter);
         }else{
             MedicationAllergiesAdapter adapter =((MedicationAllergiesAdapter)medicationRecycler.getAdapter());
@@ -220,12 +210,26 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements M
     private void setAdapterVisibility(){
         if(currentMedications.isEmpty()){
             medicationRecycler.setVisibility(View.GONE);
+            assertNoMedications.setVisibility(View.VISIBLE);
+            assertNoMedications.setEnabled(true);
         }else{
             medicationRecycler.setVisibility(View.VISIBLE);
             medicationRecycler.getLayoutManager().setMeasuredDimension(View.MeasureSpec.AT_MOST, View.MeasureSpec.AT_MOST);
+            assertNoMedications.setChecked(false);
+            assertNoMedications.setEnabled(false);
+            assertNoMedications.setVisibility(View.GONE);
         }
 
         allergyRecycler.setVisibility(View.GONE);
+
+        validateForm();
+    }
+
+    private void validateForm(){
+        boolean valid = (allergyRecycler.getVisibility() == View.VISIBLE || !assertNoAllergies.isEnabled() || assertNoAllergies.isChecked()) &&
+                (!currentMedications.isEmpty() || !assertNoMedications.isEnabled() || assertNoMedications.isChecked());
+
+        continueButton.setEnabled(valid);
     }
 
     @Override
@@ -282,6 +286,13 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements M
         @Override
         public void onClick(View view) {
             callback.showMedicationSearch();
+        }
+    };
+
+    private CompoundButton.OnCheckedChangeListener assertCheckListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            validateForm();
         }
     };
 

@@ -115,7 +115,7 @@ public abstract class DocumentScannerFragment extends BaseCheckinFragment implem
                 case 1:   // "Select from Gallery" chosen
                     ImageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.getActionDlOptions(1));
 
-                    if (PermissionsUtil.checkPermission(getActivity())) {
+                    if (PermissionsUtil.checkPermissionStorage(getActivity())) {
                         startActivityForResult(ImageCaptureHelper.galleryIntent(), ImageCaptureHelper.SELECT_FILE);
                     }
                     break;

@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:contentDescription="@string/scanned_id_doc"
-            android:src="@drawable/icn_camera"/>
+            android:src="@drawable/icn_placeholder_document"/>
 
         <Button
             android:id="@+id/demogrDocsFrontScanButton"
@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/scanned_id_doc"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/icn_camera"/>
+            android:src="@drawable/icn_placeholder_document"/>
 
         <Button
             android:id="@+id/demogrDocsBackScanButton"

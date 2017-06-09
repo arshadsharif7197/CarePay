@@ -19,7 +19,9 @@ import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.adapters.InsuranceLineItemsListAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
+import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -66,8 +68,6 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         super.onCreate(icicle);
         if (demographicDTO == null) {
             demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
-        } else if (!hasInsurance()) {
-            demographicDTO = null;
         }
     }
 
@@ -102,11 +102,13 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
     private List<DemographicInsurancePayloadDTO> getInsurances(DemographicDTO demographicDTO) {
         List<DemographicInsurancePayloadDTO> insuranceList = new ArrayList<>();
-        for (DemographicInsurancePayloadDTO insurance : demographicDTO.getPayload().getDemographics().getPayload().getInsurances()) {
-            if (!insurance.isDeleted()) {
-                insuranceList.add(insurance);
-                if (insurance.getInsurancePhotos().size() == 0) {
-                    showAlert = true;
+        if (demographicDTO != null) {
+            for (DemographicInsurancePayloadDTO insurance : demographicDTO.getPayload().getDemographics().getPayload().getInsurances()) {
+                if (!insurance.isDeleted()) {
+                    insuranceList.add(insurance);
+                    if (insurance.getInsurancePhotos().size() == 0) {
+                        showAlert = true;
+                    }
                 }
             }
         }
@@ -124,17 +126,18 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     }
 
     private void initializeViews() {
-        if (demographicDTO == null) {
-            getActivity().getSupportFragmentManager().popBackStack();
-        } else if (hasInsurance()) {
-            insurancePhotoAlert.setVisibility(View.GONE);
-            adapter.setInsurancesList(getInsurances(demographicDTO));
-            if (showAlert) {
-                showAlert();
-                showAlert = false;
+        if(demographicDTO != null) {
+            if (hasInsurance()) {
+                insurancePhotoAlert.setVisibility(View.GONE);
+                adapter.setInsurancesList(getInsurances(demographicDTO));
+                if (showAlert) {
+                    showAlert();
+                    showAlert = false;
+                }
+            } else {
+                getFragmentManager().popBackStack(); //remove the health insurance fragment from the stack
+                editInsurance(null, false);
             }
-        } else {
-            editInsurance(null, false);
         }
     }
 
@@ -161,6 +164,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
     @Override
     protected DemographicDTO updateDemographicDTO(View view) {
+        inflateNewImages();
         return demographicDTO;
     }
 
@@ -178,6 +182,9 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
                 editInsurance(null, true);
             }
         });
+        if(demographicDTO == null){
+            addAnotherButton.setVisibility(View.GONE);
+        }
 
         setHeaderTitle(Label.getLabel("demographics_insurance_label"),
                 Label.getLabel("demographics_health_insurance_heading"),
@@ -204,7 +211,9 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
      */
     public void updateInsuranceList(DemographicDTO demographicDTO) {
         this.demographicDTO = demographicDTO;
-        initializeViews();
+        if (insurancePhotoAlert != null) {
+            initializeViews();
+        }
     }
 
     public void openNextFragment(DemographicDTO demographicDTO) {
@@ -213,6 +222,25 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     }
 
     private boolean hasInsurance() {
-        return !this.demographicDTO.getPayload().getDemographics().getPayload().getInsurances().isEmpty();
+        boolean hasInsurance = false;
+        for (DemographicInsurancePayloadDTO insurance : demographicDTO.getPayload().getDemographics()
+                .getPayload().getInsurances()) {
+            if (!insurance.isDeleted()) {
+                hasInsurance = true;
+                break;
+            }
+
+        }
+        return hasInsurance;
+    }
+
+    private void inflateNewImages() {
+        for (DemographicInsurancePayloadDTO insurancePayloadDTO : demographicDTO.getPayload().getDemographics().getPayload().getInsurances()) {
+            for (DemographicInsurancePhotoDTO photoDTO : insurancePayloadDTO.getInsurancePhotos()) {
+                if (!photoDTO.isDelete() && photoDTO.isNewPhoto()) {
+                    photoDTO.setInsurancePhoto(DocumentScannerAdapter.getBase64(getContext(), photoDTO.getInsurancePhoto()));
+                }
+            }
+        }
     }
 }

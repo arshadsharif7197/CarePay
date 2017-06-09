@@ -342,7 +342,7 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
                         Log.v(LOG_TAG, "load as the placeholder");
                         // if no, (re)-load the placeholder
                         imageBack.setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                                R.drawable.icn_camera));
+                                R.drawable.icn_placeholder_document));
                     }
                 }
 
@@ -366,7 +366,7 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
                             Log.v(LOG_TAG, "load as the placeholder");
                             // if no, (re)-load the placeholder
                             imageBack.setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                                    R.drawable.icn_camera));
+                                    R.drawable.icn_placeholder_document));
                         }
                     }
                 }
