@@ -28,13 +28,12 @@ import com.squareup.picasso.Picasso;
 import java.text.NumberFormat;
 
 /**
- * Created by lmenendez on 4/11/17.
+ * Created by lmenendez on 4/11/17
  */
 
 public class CheckInCompletedDialogFragment extends BaseDialogFragment {
 
     private boolean hasPayment;
-    private DTO dto;
     private AppointmentDTO selectedAppointment;
     private String userImageUrl;
     private CheckCompleteInterface callback;
@@ -76,7 +75,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         hasPayment = getArguments().getBoolean("hasPayment", false);
-        dto = callback.getDto();
+        DTO dto = callback.getDto();
         if (hasPayment) {
             patientPaymentPayload = ((PaymentsModel) dto).getPaymentPayload().getPatientPayments().getPayload().get(0);
             selectedAppointment = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
@@ -131,7 +130,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
         appointmentStatusTextView.setText(selectedAppointment.getPayload().getAppointmentStatus().getName());
 
         TextView appointmentVisitTypeTextView = (TextView) view.findViewById(R.id.appointmentVisitTypeTextView);
-        appointmentVisitTypeTextView.setText(selectedAppointment.getPayload().getVisitType().getDescription());
+        appointmentVisitTypeTextView.setText(selectedAppointment.getPayload().getVisitType().getName());
 
         TextView continueTextView = (TextView) view.findViewById(R.id.continueTextView);
         continueTextView.setOnClickListener(new View.OnClickListener() {
