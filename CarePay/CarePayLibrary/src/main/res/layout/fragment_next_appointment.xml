@@ -19,7 +19,7 @@
         android:layout_marginStart="@dimen/dimen_10dp"
         app:customAssetFont="gotham_rounded_bold"
         breeze:textKey="schedule_appointment_later_button_label"
-        tools:text="SCHEDULE LATER" />
+        tools:text="Schedule Later" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/scheduleAppointmentButton"
@@ -34,7 +34,7 @@
         android:textColor="@color/white"
         app:customAssetFont="gotham_rounded_bold"
         breeze:textKey="schedule_appointment_button_label"
-        tools:text="SCHEDULE APPOINMENT" />
+        tools:text="Schedule Appointment" />
 
     <RelativeLayout
         android:id="@+id/providerContainer"
