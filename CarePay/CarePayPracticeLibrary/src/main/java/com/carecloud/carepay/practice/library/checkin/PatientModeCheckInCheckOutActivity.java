@@ -185,7 +185,7 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
         }
     }
 
-    private List<AppointmentDTO> getAppointmentItems (){
+    private List<AppointmentDTO> getAppointmentItems(){
         if(appointmentsResultModel != null){
             if(appointmentNavigationType == Defs.NAVIGATE_CHECKOUT){
                 //need to get just those appointments that are ready for checkout
