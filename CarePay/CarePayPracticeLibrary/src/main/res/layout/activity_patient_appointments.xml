@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/screen_background"
     android:paddingBottom="@dimen/dimen_25dp"
-    tools:context=".checkin.PatientModePracticeCheckInActivity"
+    tools:context=".checkin.PatientModeCheckInCheckOutActivity"
     tools:ignore="MissingPrefix">
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView

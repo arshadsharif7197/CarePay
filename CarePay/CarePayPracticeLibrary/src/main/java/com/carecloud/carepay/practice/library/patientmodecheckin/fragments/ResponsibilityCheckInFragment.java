@@ -46,7 +46,8 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
                 flowCallback = (CheckinFlowCallback) context;
             }
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached context must implement CheckinFlowCallback");
+            cce.printStackTrace();
+            //this callback can be optional so lets swallow the exception
         }
     }
 
@@ -160,7 +161,9 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
         if(flowCallback == null){
             attachCallback(getContext());
         }
-        flowCallback.setCheckinFlow(CheckinFlowState.PAYMENT, 1, 1);
+        if(flowCallback != null) {
+            flowCallback.setCheckinFlow(CheckinFlowState.PAYMENT, 1, 1);
+        }
     }
 
     @Override

@@ -27,6 +27,9 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
+import com.carecloud.carepaylibray.checkout.CheckOutFormFragment;
+import com.carecloud.carepaylibray.checkout.CheckOutInterface;
+import com.carecloud.carepaylibray.checkout.NextAppointmentFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
@@ -42,11 +45,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NextAppointmentActivity extends BasePatientActivity implements CheckOutInterface,
+public class AppointmentCheckoutActivity extends BasePatientActivity implements CheckOutInterface,
         VisitTypeInterface, AvailableHoursInterface, DateRangeInterface, PaymentNavigationCallback {
 
     private DTO checkOutDto;
-    public static final String APPOINTMENT_ID = "appointmentId";
     private String appointmentId;
 
     @Override
@@ -54,7 +56,7 @@ public class NextAppointmentActivity extends BasePatientActivity implements Chec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_next_appointment);
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
-        appointmentId = extra.getString(APPOINTMENT_ID);
+        appointmentId = extra.getString(CarePayConstants.APPOINTMENT_ID);
         if (savedInstanceState == null) {
             if (NavigationStateConstants.PATIENT_APP_CHECKOUT.equals(extra.getString("state"))) {
                 checkOutDto = getConvertedDTO(AppointmentsResultModel.class);
@@ -103,7 +105,7 @@ public class NextAppointmentActivity extends BasePatientActivity implements Chec
         NextAppointmentFragment fragment = (NextAppointmentFragment) getSupportFragmentManager()
                 .findFragmentByTag(NextAppointmentFragment.class.getCanonicalName());
         if ((fragment != null) && fragment.setVisitType(visitTypeDTO)) {
-            fragment.showAvailableHoursFragment();
+            showAvailableHoursFragment(null, null, appointmentsResultModel, appointmentResourcesDTO.getResource(), visitTypeDTO);
         }
     }
 
@@ -237,7 +239,14 @@ public class NextAppointmentActivity extends BasePatientActivity implements Chec
     public void startPaymentProcess(PaymentsModel paymentsModel) {
     }
 
-    public void showAllDoneFragment(WorkflowDTO workflowDTO) {
+    @Override
+    public void showAvailableHoursFragment(Date startDate, Date endDate, AppointmentsResultModel appointmentsResultModel, AppointmentResourcesItemDTO resourcesItemDTO, VisitTypeDTO visitTypeDTO) {
+        AvailableHoursFragment availableHoursFragment = AvailableHoursFragment.newInstance(appointmentsResultModel, resourcesItemDTO, startDate, endDate, visitTypeDTO);
+        addFragment(availableHoursFragment, true);
+
+    }
+
+    public void showAllDone(WorkflowDTO workflowDTO) {
         AllDoneDialogFragment fragment = AllDoneDialogFragment.newInstance(workflowDTO);
         displayDialogFragment(fragment, true);
     }
