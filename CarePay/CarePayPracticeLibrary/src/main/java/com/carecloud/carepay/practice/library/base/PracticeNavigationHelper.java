@@ -195,9 +195,13 @@ public class PracticeNavigationHelper {
             case NavigationStateConstants.PATIENT_APP_CHECKOUT:
             case NavigationStateConstants.PATIENT_FORM_CHECKOUT:
             case NavigationStateConstants.PATIENT_PAY_CHECKOUT: {
+                if(context instanceof PatientModeCheckoutActivity){
+                    ((PatientModeCheckoutActivity) context).initDto(workflowDTO);
+                    return;
+                }
+
                 intent = new Intent(context, PatientModeCheckoutActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                info.putString("state", workflowDTO.getState());
                 break;
             }
 

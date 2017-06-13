@@ -19,4 +19,6 @@ public interface CheckOutInterface extends FragmentActivityInterface {
     void showAllDone(WorkflowDTO workflowDTO);
 
     void navigateToWorkflow(WorkflowDTO workflowDTO);
+
+    boolean shouldAllowNavigateBack();
 }

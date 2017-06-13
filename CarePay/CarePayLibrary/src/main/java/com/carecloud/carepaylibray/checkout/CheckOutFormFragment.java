@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.checkout;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
@@ -76,6 +77,12 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHeader(Label.getLabel("checkout_rating_form_title"));
+
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        if(toolbar!=null && !callback.shouldAllowNavigateBack()){
+            toolbar.setNavigationIcon(null);
+            toolbar.setNavigationOnClickListener(null);
+        }
     }
 
     @Override

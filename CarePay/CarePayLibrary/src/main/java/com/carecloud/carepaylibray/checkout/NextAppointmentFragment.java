@@ -118,6 +118,11 @@ public class NextAppointmentFragment extends BaseFragment {
         callback.setToolbar(toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(Label.getLabel("next_appointment_toolbar_title"));
+
+        if(!callback.shouldAllowNavigateBack()){
+            toolbar.setNavigationIcon(null);
+            toolbar.setNavigationOnClickListener(null);
+        }
     }
 
     private void setUpUi(View view) {

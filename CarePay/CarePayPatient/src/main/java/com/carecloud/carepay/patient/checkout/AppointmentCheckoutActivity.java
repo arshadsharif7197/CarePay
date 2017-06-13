@@ -251,6 +251,11 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         displayDialogFragment(fragment, true);
     }
 
+    @Override
+    public boolean shouldAllowNavigateBack() {
+        return true;
+    }
+
     WorkflowServiceCallback continueCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {

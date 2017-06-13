@@ -11,7 +11,7 @@ import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAvail
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
-import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
+import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckOutFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePartialPaymentDialogFragment;
@@ -58,14 +58,16 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         AvailableHoursInterface, DateRangeInterface, PaymentNavigationCallback,
         PaymentMethodDialogInterface, DateRangePickerDialog.DateRangePickerDialogListener {
 
-    private DTO checkOutDto;
+    private AppointmentsResultModel appointmentsResultModel;
+    private PaymentsModel paymentsModel;
     private String appointmentId;
 
     private Date startDate;
     private Date endDate;
     private AppointmentResourcesDTO appointmentResourcesDTO;
-    private AppointmentsResultModel appointmentsResultModel;
     private VisitTypeDTO visitTypeDTO;
+
+    private boolean shouldAddBackStack = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,42 +78,57 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
         appointmentId = extra.getString(CarePayConstants.APPOINTMENT_ID);
         if (savedInstanceState == null) {
-            if (NavigationStateConstants.PATIENT_APP_CHECKOUT.equals(extra.getString("state"))) {
-                checkOutDto = getConvertedDTO(AppointmentsResultModel.class);
-                showNextAppointmentFragment(appointmentId);
-            } else if (NavigationStateConstants.PATIENT_PAY_CHECKOUT.equals(extra.getString("state"))) {
-                checkOutDto = getConvertedDTO(PaymentsModel.class);
-                showResponsibilityFragment();
-            } else if (NavigationStateConstants.PATIENT_FORM_CHECKOUT.equals(extra.getString("state"))) {
-                checkOutDto = getConvertedDTO(AppointmentsResultModel.class);
-                showCheckOutFormFragment();
-            }
+            WorkflowDTO workflowDTO = getConvertedDTO(WorkflowDTO.class);
+            initDto(workflowDTO);
         }
+
+        shouldAddBackStack = true;
+    }
+
+    public void initDto(WorkflowDTO workflowDTO){
+        if (NavigationStateConstants.PATIENT_APP_CHECKOUT.equals(workflowDTO.getState())) {
+            appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+            showNextAppointmentFragment(appointmentId);
+        } else if (NavigationStateConstants.PATIENT_PAY_CHECKOUT.equals(workflowDTO.getState())) {
+            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            showResponsibilityFragment();
+        } else if (NavigationStateConstants.PATIENT_FORM_CHECKOUT.equals(workflowDTO.getState())) {
+            appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+            showCheckOutFormFragment();
+        }
+
     }
 
     private void initViews(){
         View logout = findViewById(R.id.logoutTextview);
         logout.setOnClickListener(homeClick);
 
-        View home = findViewById(R.id.checkinHomeClickable);
+        View home = findViewById(R.id.btnHome);
         home.setOnClickListener(homeClick);
     }
 
     private void showCheckOutFormFragment() {
-        replaceFragment(CheckOutFormFragment.newInstance((AppointmentsResultModel) checkOutDto), false);
+        replaceFragment(CheckOutFormFragment.newInstance(appointmentsResultModel), shouldAddBackStack);
     }
 
     private void showNextAppointmentFragment(String appointmentId) {
-        replaceFragment(NextAppointmentFragment.newInstance(appointmentId), false);
+        replaceFragment(NextAppointmentFragment.newInstance(appointmentId), shouldAddBackStack);
     }
 
     private void showResponsibilityFragment() {
-        ResponsibilityCheckInFragment responsibilityFragment = new ResponsibilityCheckInFragment();
+        ResponsibilityCheckOutFragment responsibilityFragment = new ResponsibilityCheckOutFragment();
         Bundle bundle = new Bundle();
-        DtoHelper.bundleDto(bundle, checkOutDto);
+        DtoHelper.bundleDto(bundle, paymentsModel);
         responsibilityFragment.setArguments(bundle);
 
-        replaceFragment(responsibilityFragment, false);
+        replaceFragment(responsibilityFragment, shouldAddBackStack);
+    }
+
+    @Override
+    public void onBackPressed(){
+        if(shouldAllowNavigateBack()){
+            super.onBackPressed();
+        }
     }
 
 
@@ -207,14 +224,14 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         queryMap.put("patient_id", pendingBalanceDTO.getMetadata().getPatientId());
         Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
         header.put("transition", "true");
-        TransitionDTO transitionDTO = ((PaymentsModel) checkOutDto).getPaymentsMetadata().getPaymentsTransitions().getContinueTransition();
+        TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getContinueTransition();
         getWorkflowServiceHelper().execute(transitionDTO, continueCallback, queryMap, header);
     }
 
     @Override
     public void onPartialPaymentClicked(double owedAmount) {
         PracticePartialPaymentDialogFragment dialog = PracticePartialPaymentDialogFragment
-                .newInstance((PaymentsModel) checkOutDto, owedAmount);
+                .newInstance(paymentsModel, owedAmount);
         displayDialogFragment(dialog, false);
     }
 
@@ -260,7 +277,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     @Override
     public DTO getDto() {
-        return checkOutDto;
+        return appointmentsResultModel != null ? appointmentsResultModel : paymentsModel;
     }
 
     @Override
@@ -282,6 +299,11 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     @Override
     public void showAllDone(WorkflowDTO workflowDTO) {
 
+    }
+
+    @Override
+    public boolean shouldAllowNavigateBack() {
+        return getSupportFragmentManager().getBackStackEntryCount() > 0;
     }
 
     @Override
