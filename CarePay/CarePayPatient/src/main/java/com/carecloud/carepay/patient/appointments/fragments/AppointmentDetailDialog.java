@@ -213,9 +213,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     if(appointmentDTO.getPayload().isAppointmentToday() || !appointmentDTO.getPayload().isAppointmentOver()) {
                         callback.getQueueStatus(appointmentDTO, queueStatusCallback);
                         actionsLayout.setVisibility(View.VISIBLE);
-//                        leftButton.setVisibility(View.VISIBLE); todo reenable this when ready
-//                        leftButton.setText(Label.getLabel("appointment_request_checkout_now"));
-//                        leftButton.setOnClickListener(checkOutClick);
+                        leftButton.setVisibility(View.VISIBLE);
+                        leftButton.setText(Label.getLabel("appointment_request_checkout_now"));
+                        leftButton.setOnClickListener(checkOutClick);
                     }
                     break;
                 }
@@ -429,6 +429,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         @Override
         public void onClick(View view) {
             callback.onCheckOutStarted(appointmentDTO);
+            dismiss();
         }
     };
 
