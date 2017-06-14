@@ -319,6 +319,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         }
 
         appointmentsResultModel.getMetadata().getLinks().setPinpad(practiceAppointmentDTO.getMetadata().getLinks().getPinpad());
+        appointmentsResultModel.getMetadata().getTransitions().setPracticeMode(practiceAppointmentDTO.getMetadata().getTransitions().getPracticeMode());
         extra.putString(CarePayConstants.EXTRA_APPOINTMENT_TRANSITIONS, DtoHelper.getStringDTO(appointmentsResultModel));
         DtoHelper.bundleDto(extra, practiceAppointmentDTO.getPayload().getPracticeAppointments());
         Intent intent = new Intent(this, CompleteCheckActivity.class);
