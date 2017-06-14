@@ -241,7 +241,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     @Override
     public void onHoursAndLocationSelected(AppointmentsSlotsDTO appointmentsSlot, AppointmentAvailabilityDTO availabilityDTO) {
-        getSupportFragmentManager().popBackStack();
         NextAppointmentFragment fragment = (NextAppointmentFragment) getSupportFragmentManager()
                 .findFragmentByTag(NextAppointmentFragment.class.getCanonicalName());
         if (fragment != null) {
