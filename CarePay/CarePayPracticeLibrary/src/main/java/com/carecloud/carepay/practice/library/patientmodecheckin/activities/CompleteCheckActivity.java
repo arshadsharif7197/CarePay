@@ -40,13 +40,17 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complete_check);
         Gson gson = new Gson();
-        Bundle extra = getIntent().getBundleExtra("extra");
-        boolean hasPayment = extra.getBoolean("hasPayment", false);
-        workflowString = extra.getString("workflow");
+        Bundle extra = getIntent().getBundleExtra(CarePayConstants.EXTRA_BUNDLE);
+        boolean hasPayment = extra.getBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, false);
+        workflowString = extra.getString(CarePayConstants.EXTRA_WORKFLOW);
         if (hasPayment) {
             dto = gson.fromJson(workflowString, PaymentsModel.class);
         } else {
             dto = gson.fromJson(workflowString, AppointmentsResultModel.class);
+        }
+        String appointmentTransitionsWorkflow = extra.getString(CarePayConstants.EXTRA_APPOINTMENT_TRANSITIONS);
+        if(appointmentTransitionsWorkflow != null){
+            appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, appointmentTransitionsWorkflow);
         }
 
         AppointmentDTO appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, extra);
@@ -72,16 +76,20 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
     }
 
     @Override
-    public void navigateToWorkflow() {
+    public void logout() {
         Gson gson = new Gson();
-        navigateToWorkflow(gson.fromJson(getIntent().getBundleExtra("extra").getString("workflow"),
-                WorkflowDTO.class));
+        if(appointmentsResultModel == null) {
+            appointmentsResultModel = gson.fromJson(workflowString, AppointmentsResultModel.class);
+        }
+        goToHome(appointmentsResultModel.getMetadata().getTransitions().getLogout());
     }
 
     @Override
     public void showConfirmationPinDialog() {
         Gson gson = new Gson();
-        appointmentsResultModel = gson.fromJson(workflowString, AppointmentsResultModel.class);
+        if(appointmentsResultModel == null) {
+            appointmentsResultModel = gson.fromJson(workflowString, AppointmentsResultModel.class);
+        }
         ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this,
                 appointmentsResultModel.getMetadata().getLinks().getPinpad(), false);
         confirmationPinDialog.show();

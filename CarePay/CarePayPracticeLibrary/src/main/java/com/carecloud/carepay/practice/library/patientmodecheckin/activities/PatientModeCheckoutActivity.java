@@ -30,7 +30,6 @@ import com.carecloud.carepaylibray.appointments.interfaces.AvailableHoursInterfa
 import com.carecloud.carepaylibray.appointments.interfaces.DateRangeInterface;
 import com.carecloud.carepaylibray.appointments.interfaces.VisitTypeInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
@@ -308,19 +307,22 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     @Override
     public void showAllDone(WorkflowDTO workflowDTO) {
-        AppointmentDTO appointmentDTO = getCheckedOutAppointment(workflowDTO);
-        if(appointmentDTO == null){
+        PracticeAppointmentDTO practiceAppointmentDTO = DtoHelper.getConvertedDTO(PracticeAppointmentDTO.class, workflowDTO);
+        if(practiceAppointmentDTO == null){
             showErrorNotification("Error Checking-out Appointment");
             return;
         }
         Bundle extra = new Bundle();
         if(paymentConfirmationWorkflow!=null) {
-            extra.putString("workflow", paymentConfirmationWorkflow.toString());
-            extra.putBoolean("hasPayment", true);
+            extra.putString(CarePayConstants.EXTRA_WORKFLOW, paymentConfirmationWorkflow.toString());
+            extra.putBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, true);
         }
-        DtoHelper.bundleDto(extra, appointmentDTO);
+
+        appointmentsResultModel.getMetadata().getLinks().setPinpad(practiceAppointmentDTO.getMetadata().getLinks().getPinpad());
+        extra.putString(CarePayConstants.EXTRA_APPOINTMENT_TRANSITIONS, DtoHelper.getStringDTO(appointmentsResultModel));
+        DtoHelper.bundleDto(extra, practiceAppointmentDTO.getPayload().getPracticeAppointments());
         Intent intent = new Intent(this, CompleteCheckActivity.class);
-        intent.putExtra("extra", extra);
+        intent.putExtra(CarePayConstants.EXTRA_BUNDLE, extra);
         startActivity(intent);
     }
 
@@ -403,12 +405,5 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         }
     }
 
-    private AppointmentDTO getCheckedOutAppointment(WorkflowDTO workflowDTO){
-        PracticeAppointmentDTO practiceAppointmentDTO = DtoHelper.getConvertedDTO(PracticeAppointmentDTO.class, workflowDTO);
-        if(practiceAppointmentDTO != null){
-            return practiceAppointmentDTO.getPayload().getPracticeAppointments();
-        }
-        return null;
-    }
 
 }

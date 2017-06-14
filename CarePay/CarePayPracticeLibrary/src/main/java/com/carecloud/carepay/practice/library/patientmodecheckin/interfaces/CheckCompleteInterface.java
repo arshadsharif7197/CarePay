@@ -7,7 +7,7 @@ import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
  */
 
 public interface CheckCompleteInterface extends FragmentActivityInterface {
-    void navigateToWorkflow();
+    void logout();
 
     void showConfirmationPinDialog();
 }
