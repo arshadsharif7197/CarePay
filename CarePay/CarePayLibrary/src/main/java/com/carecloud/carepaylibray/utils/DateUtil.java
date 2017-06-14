@@ -25,7 +25,7 @@ public class DateUtil {
     private static final String FORMAT_YYYY_DASH_MM_DASH_DD = "yyyy-MM-dd";
     private static final String FORMAT_MM_DASH_DD_DASH_YYYY = "MM-dd-yyyy";
     private static final String FORMAT_MM_SLASH_DD_SLASH_YYYY = "MM/dd/yyyy";
-    private static final String FORMAT_HOURS_AM_PM = "HH:mm a";
+    private static final String FORMAT_HOURS_AM_PM = "h:mm a";
 
     private static DateUtil instance;
     private String[] formats;

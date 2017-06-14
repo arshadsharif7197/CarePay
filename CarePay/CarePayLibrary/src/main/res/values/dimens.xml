@@ -447,7 +447,7 @@
     <dimen name="list_dialog_min_height_small">200dp</dimen>
     <dimen name="checkin_complete_divider_width">350dp</dimen>
     <dimen name="completeCheckInItemTextSize">22sp</dimen>
-    <dimen name="completeCheckInItemValueTextSize">20sp</dimen>
+    <dimen name="completeCheckInItemValueTextSize">16sp</dimen>
     <dimen name="completeCheckInItemMargin">10dp</dimen>
     <dimen name="dimen_50dp">50dp</dimen>
 

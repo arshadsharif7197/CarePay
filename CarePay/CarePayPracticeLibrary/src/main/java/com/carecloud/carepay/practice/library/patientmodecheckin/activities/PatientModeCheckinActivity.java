@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -30,7 +29,6 @@ import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.media.MediaResultListener;
-import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
@@ -188,7 +186,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void onPartialPaymentClicked(double owedAmount) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         PracticePartialPaymentDialogFragment dialog = PracticePartialPaymentDialogFragment
                 .newInstance(paymentDTO, owedAmount);
         displayDialogFragment(dialog, false);
@@ -271,13 +268,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         getIntent().putExtra(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
-
-        Bundle args = new Bundle();
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
-
-        PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
-        confirmationFragment.setArguments(args);
-        displayDialogFragment(confirmationFragment, false);
+        completePaymentProcess(workflowDTO);
     }
 
     @Override

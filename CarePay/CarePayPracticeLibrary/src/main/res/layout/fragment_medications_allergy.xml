@@ -26,6 +26,7 @@
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_30sp"
             android:gravity="center"
+            breeze:textKey="medication_allergies_titlebar_text"
             app:customAssetFont="gotham_rounded_medium"/>
 
 

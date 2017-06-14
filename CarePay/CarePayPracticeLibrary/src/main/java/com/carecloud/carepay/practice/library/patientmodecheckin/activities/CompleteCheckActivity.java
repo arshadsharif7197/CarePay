@@ -32,6 +32,8 @@ import java.util.Map;
 public class CompleteCheckActivity extends BasePracticeActivity implements CheckCompleteInterface {
 
     private DTO dto;
+    private String workflowString;
+    private AppointmentsResultModel appointmentsResultModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,10 +42,11 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
         Gson gson = new Gson();
         Bundle extra = getIntent().getBundleExtra("extra");
         boolean hasPayment = extra.getBoolean("hasPayment", false);
+        workflowString = extra.getString("workflow");
         if (hasPayment) {
-            dto = gson.fromJson(extra.getString("workflow"), PaymentsModel.class);
+            dto = gson.fromJson(workflowString, PaymentsModel.class);
         } else {
-            dto = gson.fromJson(extra.getString("workflow"), AppointmentsResultModel.class);
+            dto = gson.fromJson(workflowString, AppointmentsResultModel.class);
         }
 
         AppointmentDTO appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, extra);
@@ -77,14 +80,16 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
 
     @Override
     public void showConfirmationPinDialog() {
+        Gson gson = new Gson();
+        appointmentsResultModel = gson.fromJson(workflowString, AppointmentsResultModel.class);
         ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this,
-                ((AppointmentsResultModel) dto).getMetadata().getLinks().getPinpad(), false);
+                appointmentsResultModel.getMetadata().getLinks().getPinpad(), false);
         confirmationPinDialog.show();
     }
 
     @Override
     public void onPinConfirmationCheck(boolean isCorrectPin, String pin) {
-        TransitionDTO transitionDTO = ((AppointmentsResultModel) dto).getMetadata().getTransitions().getPracticeMode();
+        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getPracticeMode();
         Map<String, String> query = new HashMap<>();
         query.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
         query.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
