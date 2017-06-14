@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAvailableHoursDialogFragment;
+import com.carecloud.carepay.practice.library.appointments.dtos.PracticeAppointmentDTO;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
@@ -29,6 +30,7 @@ import com.carecloud.carepaylibray.appointments.interfaces.AvailableHoursInterfa
 import com.carecloud.carepaylibray.appointments.interfaces.DateRangeInterface;
 import com.carecloud.carepaylibray.appointments.interfaces.VisitTypeInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
@@ -72,6 +74,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     private VisitTypeDTO visitTypeDTO;
 
     private boolean shouldAddBackStack = false;
+
+    private WorkflowDTO paymentConfirmationWorkflow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,6 +213,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
+        paymentConfirmationWorkflow = workflowDTO;
         Bundle args = new Bundle();
         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
 
@@ -303,7 +308,20 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     @Override
     public void showAllDone(WorkflowDTO workflowDTO) {
-
+        AppointmentDTO appointmentDTO = getCheckedOutAppointment(workflowDTO);
+        if(appointmentDTO == null){
+            showErrorNotification("Error Checking-out Appointment");
+            return;
+        }
+        Bundle extra = new Bundle();
+        if(paymentConfirmationWorkflow!=null) {
+            extra.putString("workflow", paymentConfirmationWorkflow.toString());
+            extra.putBoolean("hasPayment", true);
+        }
+        DtoHelper.bundleDto(extra, appointmentDTO);
+        Intent intent = new Intent(this, CompleteCheckActivity.class);
+        intent.putExtra("extra", extra);
+        startActivity(intent);
     }
 
     @Override
@@ -385,5 +403,12 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         }
     }
 
+    private AppointmentDTO getCheckedOutAppointment(WorkflowDTO workflowDTO){
+        PracticeAppointmentDTO practiceAppointmentDTO = DtoHelper.getConvertedDTO(PracticeAppointmentDTO.class, workflowDTO);
+        if(practiceAppointmentDTO != null){
+            return practiceAppointmentDTO.getPayload().getPracticeAppointments();
+        }
+        return null;
+    }
 
 }

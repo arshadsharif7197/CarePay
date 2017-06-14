@@ -9,14 +9,14 @@ import android.view.ViewGroup;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.CardViewPatient;
 import com.carecloud.carepay.practice.library.checkin.PracticeModePracticeCheckInActivity;
-import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.customcomponent.AppointmentStatusCardView;
 import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.practice.library.models.MapFilterModel;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 
@@ -229,7 +229,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
 
         @Override
         public void onClick(View view) {
-            ((PracticeModePracticeCheckInActivity)context).onCheckInItemClick((AppointmentPayloadDTO)view.getTag(), isWaitingRoom);
+            ((PracticeModePracticeCheckInActivity)context).onCheckInItemClick((AppointmentsPayloadDTO)view.getTag(), isWaitingRoom);
         }
     }
 }
