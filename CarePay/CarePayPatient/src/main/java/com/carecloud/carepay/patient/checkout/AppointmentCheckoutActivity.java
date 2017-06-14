@@ -39,6 +39,7 @@ import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
 import java.util.Date;
@@ -48,46 +49,63 @@ import java.util.Map;
 public class AppointmentCheckoutActivity extends BasePatientActivity implements CheckOutInterface,
         VisitTypeInterface, AvailableHoursInterface, DateRangeInterface, PaymentNavigationCallback {
 
-    private DTO checkOutDto;
     private String appointmentId;
+
+    private AppointmentsResultModel appointmentsResultModel;
+    private PaymentsModel paymentsModel;
+
+    private boolean shouldAddBackStack = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_next_appointment);
+
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
         appointmentId = extra.getString(CarePayConstants.APPOINTMENT_ID);
+
         if (savedInstanceState == null) {
-            if (NavigationStateConstants.PATIENT_APP_CHECKOUT.equals(extra.getString("state"))) {
-                checkOutDto = getConvertedDTO(AppointmentsResultModel.class);
-                showNextAppointmentFragment(appointmentId);
-            } else if (NavigationStateConstants.PATIENT_PAY_CHECKOUT.equals(extra.getString("state"))) {
-                checkOutDto = getConvertedDTO(PaymentsModel.class);
-                showResponsibilityFragment();
-            } else if (NavigationStateConstants.PATIENT_FORM_CHECKOUT.equals(extra.getString("state"))) {
-                checkOutDto = getConvertedDTO(AppointmentsResultModel.class);
-                showCheckOutFormFragment();
-            }
+            initDto(getConvertedDTO(WorkflowDTO.class));
+        }
+
+        shouldAddBackStack = true;
+    }
+
+    /**
+     * Init current fragment based on the received workflow
+     * @param workflowDTO workflow dto
+     */
+    public void initDto(WorkflowDTO workflowDTO){
+        if (NavigationStateConstants.PATIENT_APP_CHECKOUT.equals(workflowDTO.getState())) {
+            appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+            showNextAppointmentFragment(appointmentId);
+        } else if (NavigationStateConstants.PATIENT_PAY_CHECKOUT.equals(workflowDTO.getState())) {
+            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            showResponsibilityFragment();
+        } else if (NavigationStateConstants.PATIENT_FORM_CHECKOUT.equals(workflowDTO.getState())) {
+            appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+            showCheckOutFormFragment();
         }
     }
 
     private void showCheckOutFormFragment() {
-        replaceFragment(CheckOutFormFragment.newInstance((AppointmentsResultModel) checkOutDto), false);
+        replaceFragment(CheckOutFormFragment.newInstance(appointmentsResultModel), shouldAddBackStack);
     }
 
     private void showNextAppointmentFragment(String appointmentId) {
-        replaceFragment(NextAppointmentFragment.newInstance(appointmentId), false);
+        replaceFragment(NextAppointmentFragment.newInstance(appointmentId), shouldAddBackStack);
     }
 
     private void showResponsibilityFragment() {
         replaceFragment(ResponsibilityFragment
                 .newInstance(getConvertedDTO(PaymentsModel.class), null, true,
-                        "checkout_responsibility_title"), false);
+                        "checkout_responsibility_title"), shouldAddBackStack);
     }
 
     @Override
     public DTO getDto() {
-        return checkOutDto;
+        return appointmentsResultModel != null ? appointmentsResultModel : paymentsModel;
     }
 
     @Override
@@ -155,7 +173,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         queryMap.put("patient_id", pendingBalanceDTO.getMetadata().getPatientId());
         Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
         header.put("transition", "true");
-        TransitionDTO transitionDTO = ((PaymentsModel) checkOutDto).getPaymentsMetadata().getPaymentsTransitions().getContinueTransition();
+        TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getContinueTransition();
         getWorkflowServiceHelper().execute(transitionDTO, continueCallback, queryMap, header);
     }
 
@@ -166,7 +184,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     @Override
     public void onPartialPaymentClicked(double owedAmount) {
-        new PartialPaymentDialog(getContext(), (PaymentsModel) checkOutDto).show();
+        new PartialPaymentDialog(getContext(), paymentsModel).show();
     }
 
     @Override
@@ -181,10 +199,9 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
-        PaymentsModel paymentsDTO = (PaymentsModel) checkOutDto;
-        if (paymentsDTO.getPaymentPayload().getPatientCreditCards() != null &&
-                !paymentsDTO.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsDTO, selectedPaymentMethod.getLabel(), amount);
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null &&
+                !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel, selectedPaymentMethod.getLabel(), amount);
             replaceFragment(fragment, true);
         } else {
             showAddCard(amount, paymentsModel);
