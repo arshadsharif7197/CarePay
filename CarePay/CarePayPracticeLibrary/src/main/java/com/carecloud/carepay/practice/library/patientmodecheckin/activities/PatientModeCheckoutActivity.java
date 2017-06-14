@@ -1,5 +1,7 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.activities;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -12,6 +14,7 @@ import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckOutFragment;
+import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePartialPaymentDialogFragment;
@@ -42,6 +45,7 @@ import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
@@ -222,8 +226,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     @Override
     public void onPayLaterClicked(PendingBalanceDTO pendingBalanceDTO) {
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("practice_mgmt", pendingBalanceDTO.getMetadata().getPracticeMgmt());
-        queryMap.put("practice_id", pendingBalanceDTO.getMetadata().getPracticeId());
         queryMap.put("appointment_id", appointmentId);
         queryMap.put("patient_id", pendingBalanceDTO.getMetadata().getPatientId());
         Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
@@ -346,4 +348,42 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
 
     }
+
+    @Override
+    protected void processExternalPayment(PaymentExecution execution, Intent data) {
+        switch (execution) {
+            case clover: {
+                String jsonPayload = data.getStringExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA);
+                if (jsonPayload != null) {
+                    Gson gson = new Gson();
+                    WorkflowDTO workflowDTO = gson.fromJson(jsonPayload, WorkflowDTO.class);
+                    showPaymentConfirmation(workflowDTO);
+                }
+                break;
+            }
+            default:
+                //nothing
+                return;
+        }
+    }
+
+
+    @Override
+    protected void processExternalPaymentFailure(PaymentExecution paymentExecution, int resultCode) {
+        if (resultCode == CarePayConstants.PAYMENT_RETRY_PENDING_RESULT_CODE) {
+            //Display a success notification and do some cleanup
+            PaymentQueuedDialogFragment dialogFragment = new PaymentQueuedDialogFragment();
+            DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    onPayLaterClicked(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0));
+                }
+            };
+            dialogFragment.setOnDismissListener(dismissListener);
+            displayDialogFragment(dialogFragment, false);
+
+        }
+    }
+
+
 }
