@@ -73,19 +73,19 @@
                 android:textSize="@dimen/text_size_22sp"
                 app:customAssetFont="proxima_nova_regular" />
 
-            <ProgressBar
-                android:id="@+id/appointmentProgressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="-8dp"
-                android:indeterminate="true"
-                android:visibility="gone" />
-
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1">
+
+                <ProgressBar
+                    android:id="@+id/appointmentProgressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:indeterminateDrawable="@drawable/progress_indeterminate_custom"
+                    android:indeterminate="true"
+                    android:visibility="visible" />
 
 
                 <android.support.v7.widget.RecyclerView

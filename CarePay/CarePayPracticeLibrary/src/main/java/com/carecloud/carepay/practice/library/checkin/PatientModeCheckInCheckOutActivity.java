@@ -44,6 +44,7 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
 
     private TextView header;
     private TextView subHeader;
+    private ProgressBar appointmentProgressBar;
 
     private @Defs.AppointmentNavigationTypeDef int appointmentNavigationType;
 
@@ -64,8 +65,7 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
         appointmentsRecyclerView = (RecyclerView) findViewById(R.id.appointments_recycler_view);
         appointmentsRecyclerView.setHasFixedSize(true);
 
-        ProgressBar appointmentProgressBar = (ProgressBar) findViewById(R.id.appointmentProgressBar);
-        appointmentProgressBar.setVisibility(View.GONE);
+        appointmentProgressBar = (ProgressBar) findViewById(R.id.appointmentProgressBar);
         findViewById(R.id.logoutTextview).setOnClickListener(this);
         findViewById(R.id.btnHome).setOnClickListener(this);
 
@@ -167,7 +167,10 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
             RecyclerView.LayoutManager appointmentsLayoutManager = new LinearLayoutManager(
                     PatientModeCheckInCheckOutActivity.this, LinearLayoutManager.HORIZONTAL, false);
             appointmentsRecyclerView.setLayoutManager(appointmentsLayoutManager);
+            appointmentProgressBar.setVisibility(View.GONE);
+
         } else {
+            appointmentProgressBar.setVisibility(View.GONE);
             header.setVisibility(View.INVISIBLE);
             subHeader.setVisibility(View.INVISIBLE);
             findViewById(R.id.no_appointment_layout).setVisibility(View.VISIBLE);
