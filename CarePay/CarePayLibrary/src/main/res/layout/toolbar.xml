@@ -12,6 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary"
-        app:popupTheme="@style/AppTheme.PopupOverlay" />
+        app:popupTheme="@style/AppTheme.PopupOverlay">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/toolbar_title"
+            style="@style/ResponsibilityToolbarTextStyle"
+            app:customAssetFont="gotham_rounded_medium" />
+        </android.support.v7.widget.Toolbar>
 
 </android.support.design.widget.AppBarLayout>

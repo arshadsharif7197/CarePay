@@ -22,6 +22,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -153,9 +154,10 @@ public class ResetPasswordFragment extends BaseFragment {
 
         signInEmailTextInputLayout = (TextInputLayout) view.findViewById(R.id.signInEmailTextInputLayout);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        CarePayTextView titleView = (CarePayTextView) view.findViewById(R.id.toolbar_title);
         if (toolbar != null) {
             listener.setToolbar(toolbar);
-            listener.setActionBarTitle(Label.getLabel("forgot_password_screen_title"));
+            titleView.setText(Label.getLabel("forgot_password_screen_title"));
         }
 
     }
