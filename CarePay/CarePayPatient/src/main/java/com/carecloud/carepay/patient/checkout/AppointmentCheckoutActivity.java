@@ -17,6 +17,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.interfaces.AvailableHoursInterface;
 import com.carecloud.carepaylibray.appointments.interfaces.DateRangeInterface;
 import com.carecloud.carepaylibray.appointments.interfaces.VisitTypeInterface;
@@ -100,7 +101,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     private void showResponsibilityFragment() {
         replaceFragment(ResponsibilityFragment
                 .newInstance(getConvertedDTO(PaymentsModel.class), null, true,
-                        "checkout_responsibility_title"), shouldAddBackStack);
+                        Label.getLabel("checkout_responsibility_title")), shouldAddBackStack);
     }
 
     @Override
