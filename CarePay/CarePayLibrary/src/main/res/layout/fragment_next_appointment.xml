@@ -70,7 +70,7 @@
                 android:layout_marginEnd="@dimen/dimen_10dp"
                 android:layout_marginStart="@dimen/dimen_10dp"
                 android:textColor="@color/white"
-                android:visibility="invisible"
+                android:visibility="visible"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="next_appointment_default_provider_message" />
 

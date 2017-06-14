@@ -53,6 +53,7 @@ public class NextAppointmentFragment extends BaseFragment {
     private AppointmentDTO selectedAppointment;
     private TextView visitTypeTextView;
     private TextView visitTimeTextView;
+    private TextView providerMessage;
     private VisitTypeDTO visitType;
     private AppointmentResourcesDTO appointmentResourceDTO;
     private Button scheduleAppointmentButton;
@@ -146,6 +147,9 @@ public class NextAppointmentFragment extends BaseFragment {
                         providerInitials.setVisibility(View.VISIBLE);
                     }
                 });
+
+        providerMessage = (TextView) findViewById(R.id.providerMessage);
+        setDefaultMessage();
 
         visitTypeTextView = (TextView) view.findViewById(R.id.visitTypeTextView);
         visitTypeTextView.setOnClickListener(new View.OnClickListener() {
@@ -365,6 +369,7 @@ public class NextAppointmentFragment extends BaseFragment {
             shouldOpenHoursFragment = true;
         }
         appointmentSlot = null;
+        setDefaultMessage();
         visitTimeTextView.setText(Label.getLabel("next_appointment_choose_when_label"));
         findViewById(R.id.providerMessageHeader).setSelected(false);
         return shouldOpenHoursFragment;
@@ -380,7 +385,6 @@ public class NextAppointmentFragment extends BaseFragment {
         visitTypeTextView.setText(visitType.getName());
 
         findViewById(R.id.providerMessageHeader).setSelected(true);
-        TextView providerMessage = (TextView) findViewById(R.id.providerMessage);
         providerMessage.setText(String.format(Label.getLabel("next_appointment_provider_message"),
                 nextAppointmentDate));
         scheduleAppointmentButton.setEnabled(true);
@@ -389,5 +393,13 @@ public class NextAppointmentFragment extends BaseFragment {
     private String getNextAppointmentDate(String time) {
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(time);
         return dateUtil.getDateAsDayMonthDayOrdinal();
+    }
+
+    private void setDefaultMessage(){
+        String label = Label.getLabel("next_appointment_default_provider_message");
+        if(label.contains("%s")){//check if its "format-able"
+            label = String.format(label, selectedAppointment.getPayload().getProvider().getName());
+        }
+        providerMessage.setText(label);
     }
 }
