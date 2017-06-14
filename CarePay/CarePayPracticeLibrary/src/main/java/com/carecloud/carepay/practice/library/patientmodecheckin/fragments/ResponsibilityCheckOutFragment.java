@@ -26,7 +26,7 @@ public class ResponsibilityCheckOutFragment extends ResponsibilityCheckInFragmen
         }
     }
 
-
+    @Override
     public void onViewCreated(View view, Bundle icicle){
         super.onViewCreated(view, icicle);
         Toolbar toolbar = (Toolbar) view.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);

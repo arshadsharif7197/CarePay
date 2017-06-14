@@ -85,6 +85,10 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         shouldAddBackStack = true;
     }
 
+    /**
+     * Init current fragment based on the received workflow
+     * @param workflowDTO workflow dto
+     */
     public void initDto(WorkflowDTO workflowDTO){
         if (NavigationStateConstants.PATIENT_APP_CHECKOUT.equals(workflowDTO.getState())) {
             appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
