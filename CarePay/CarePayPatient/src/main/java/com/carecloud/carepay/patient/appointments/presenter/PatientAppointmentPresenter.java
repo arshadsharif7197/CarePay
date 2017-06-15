@@ -329,6 +329,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     }
 
     @Override
+    public AppointmentsResultModel getAppointmentModel() {
+        return appointmentsResultModel;
+    }
+
+    @Override
     public void displayAppointmentDetails(AppointmentDTO appointmentDTO) {
         AppointmentDetailDialog detailDialog = AppointmentDetailDialog.newInstance(appointmentDTO);
         viewHandler.displayDialogFragment(detailDialog, false);

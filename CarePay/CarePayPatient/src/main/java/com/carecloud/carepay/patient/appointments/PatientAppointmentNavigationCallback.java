@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.appointments;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 
 /**
  * Created by lmenendez on 5/9/17.
@@ -25,4 +26,5 @@ public interface PatientAppointmentNavigationCallback extends AppointmentNavigat
 
     void getQueueStatus(AppointmentDTO appointmentDTO, WorkflowServiceCallback callback);
 
+    AppointmentsResultModel getAppointmentModel();
 }
