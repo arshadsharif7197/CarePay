@@ -169,7 +169,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
 
                         appointmentStatusMissed.setVisibility(View.VISIBLE);
 
-                    } else if (payloadDTO.canCheckInNow(appointmentsResultModel)) {
+                    } else if (payloadDTO.canCheckInNow(appointmentsResultModel.getPayload().getAppointmentsSettings().get(0))) {
 
                         headerBackground.setColor(context.getResources().getColor(R.color.colorPrimary));
                         startCheckIn.setVisibility(View.VISIBLE);
