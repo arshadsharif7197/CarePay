@@ -35,6 +35,7 @@ import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLinksD
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -238,12 +239,10 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void disableUnavailableItems() {
-//        if(homeScreenMode == HomeScreenMode.PATIENT_HOME){
-//            setViewsDisabled((ViewGroup) findViewById(R.id.homePaymentsClickable));
-//        }
-        setViewsDisabled((ViewGroup) findViewById(R.id.homeCheckoutClickable));
+        if(homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
+            setViewsDisabled((ViewGroup) findViewById(R.id.homeCheckoutClickable));
+        }
         setViewsDisabled((ViewGroup) findViewById(R.id.homeShopClickable));
-//        setViewsDisabled((ViewGroup) findViewById(R.id.homeNewsClickable));
     }
 
     private void setViewsDisabled(ViewGroup viewGroup) {
@@ -304,13 +303,14 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
             transitionDTO = transitionsDTO.getPracticeCheckout();
         } else {
+            getApplicationPreferences().setAppointmentNavigationOption(Defs.NAVIGATE_CHECKOUT);
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
             transitionDTO = transitionsDTO.getPatientCheckout();
         }
-
         getWorkflowServiceHelper().interrupt();
         getWorkflowServiceHelper().execute(transitionDTO, commonTransitionCallback);
     }
+
 
     private void navigateToAppointments() {
         JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
@@ -326,7 +326,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             getWorkflowServiceHelper().execute(transitionDTO, checkInCallback, queryMap);
 
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-            getApplicationPreferences().setNavigateToAppointments(true);
+            getApplicationPreferences().setAppointmentNavigationOption(Defs.NAVIGATE_APPOINTMENT);
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
             queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
@@ -362,7 +362,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
             transitionDTO = transitionsDTO.getPracticeCheckin();
         } else {
-            getApplicationPreferences().setNavigateToAppointments(false);
+            getApplicationPreferences().setAppointmentNavigationOption(Defs.NAVIGATE_CHECKIN);
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
             transitionDTO = transitionsDTO.getPatientCheckin();
         }

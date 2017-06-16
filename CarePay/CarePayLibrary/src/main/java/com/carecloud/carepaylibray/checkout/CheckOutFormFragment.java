@@ -1,16 +1,17 @@
-package com.carecloud.carepay.patient.checkout;
+package com.carecloud.carepaylibray.checkout;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
-import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
@@ -76,6 +77,12 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHeader(Label.getLabel("checkout_rating_form_title"));
+
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        if(toolbar!=null && !callback.shouldAllowNavigateBack()){
+            toolbar.setNavigationIcon(null);
+            toolbar.setNavigationOnClickListener(null);
+        }
     }
 
     @Override
@@ -141,7 +148,7 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            callback.showAllDoneFragment(workflowDTO);
+            callback.showAllDone(workflowDTO);
         }
 
         @Override
