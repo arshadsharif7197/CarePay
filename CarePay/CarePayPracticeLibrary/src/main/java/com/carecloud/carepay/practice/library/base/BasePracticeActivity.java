@@ -130,7 +130,10 @@ public abstract class BasePracticeActivity extends BaseActivity
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            findViewById(R.id.btnHome).setEnabled(true);
+            View home = findViewById(R.id.btnHome);
+            if(home!=null){
+                home.setEnabled(true);
+            }
             finish();
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
@@ -138,7 +141,10 @@ public abstract class BasePracticeActivity extends BaseActivity
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            findViewById(R.id.btnHome).setEnabled(false);
+            View home = findViewById(R.id.btnHome);
+            if(home!=null){
+                home.setEnabled(true);
+            }
             showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

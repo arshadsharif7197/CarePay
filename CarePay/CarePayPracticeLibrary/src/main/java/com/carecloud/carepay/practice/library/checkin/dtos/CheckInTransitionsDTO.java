@@ -35,6 +35,10 @@ public class CheckInTransitionsDTO {
     @Expose
     private TransitionDTO checkinPatientMode = new TransitionDTO();
 
+    @SerializedName("practice_mode")
+    @Expose
+    private TransitionDTO practiceMode = new TransitionDTO();
+
     /**
      * Gets dismiss appointment.
      *
@@ -121,5 +125,13 @@ public class CheckInTransitionsDTO {
 
     public void setCheckinPatientMode(TransitionDTO checkinPatientMode) {
         this.checkinPatientMode = checkinPatientMode;
+    }
+
+    public TransitionDTO getPracticeMode() {
+        return practiceMode;
+    }
+
+    public void setPracticeMode(TransitionDTO practiceMode) {
+        this.practiceMode = practiceMode;
     }
 }

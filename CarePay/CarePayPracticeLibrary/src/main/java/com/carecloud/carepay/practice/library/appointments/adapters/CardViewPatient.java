@@ -1,7 +1,7 @@
 package com.carecloud.carepay.practice.library.appointments.adapters;
 
-import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
@@ -12,7 +12,7 @@ import java.text.NumberFormat;
 import java.util.Date;
 
 /**
- * Created by cocampo on 3/17/17.
+ * Created by cocampo on 3/17/17
  */
 public class CardViewPatient {
     public Object raw;
@@ -53,7 +53,7 @@ public class CardViewPatient {
      * @param dto Appointment Payload DTO
      * @param balance owed
      */
-    public CardViewPatient(AppointmentPayloadDTO dto, Double balance) {
+    public CardViewPatient(AppointmentsPayloadDTO dto, Double balance) {
         this(dto, dto, balance);
     }
 
@@ -62,7 +62,7 @@ public class CardViewPatient {
      * @param dto Appointment Payload DTO
      * @param balance owed
      */
-    public CardViewPatient(Object raw, AppointmentPayloadDTO dto, Double balance) {
+    public CardViewPatient(Object raw, AppointmentsPayloadDTO dto, Double balance) {
         this.raw = raw;
         PatientModel patientModel = dto.getPatient();
         this.id = patientModel.getPatientId();

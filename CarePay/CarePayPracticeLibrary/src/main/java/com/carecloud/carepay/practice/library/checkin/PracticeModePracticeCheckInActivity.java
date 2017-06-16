@@ -18,8 +18,6 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.checkin.adapters.CheckedInAppointmentAdapter;
 import com.carecloud.carepay.practice.library.checkin.dialog.AppointmentDetailDialog;
-import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
@@ -40,6 +38,8 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
@@ -170,7 +170,7 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
 
         List<AppointmentDTO> appointments = payload.getAppointments();
         for (AppointmentDTO appointmentDTO : appointments) {
-            AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
+            AppointmentsPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
             addProviderOnProviderFilterList(providers, appointmentPayloadDTO, providersSavedFilteredIds);
             addLocationOnFilterList(locations, appointmentPayloadDTO, locationsSavedFilteredIds);
             addPatientOnFilterList(patients, appointmentPayloadDTO, photoMap);
@@ -192,7 +192,7 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     }
 
     private void addLocationOnFilterList(ArrayList<FilterDataDTO> locationsList,
-                                         AppointmentPayloadDTO appointmentPayloadDTO,
+                                         AppointmentsPayloadDTO appointmentPayloadDTO,
                                          Set<String> locationsSavedFilteredIds) {
         FilterDataDTO filterDataDTO;
         LocationDTO locationDTO = appointmentPayloadDTO.getLocation();
@@ -205,7 +205,7 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
         }
     }
 
-    private void addPatientOnFilterList(ArrayList<FilterDataDTO> patients, AppointmentPayloadDTO appointmentPayloadDTO, Map<String, String> photoMap) {
+    private void addPatientOnFilterList(ArrayList<FilterDataDTO> patients, AppointmentsPayloadDTO appointmentPayloadDTO, Map<String, String> photoMap) {
         PatientModel patientDTO = appointmentPayloadDTO.getPatient();
         FilterDataDTO filterDataDTO = new FilterDataDTO(patientDTO.getPatientId(), patientDTO.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
         if (patients.indexOf(filterDataDTO) < 0) {
@@ -220,7 +220,7 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     }
 
     private void addProviderOnProviderFilterList(ArrayList<FilterDataDTO> doctors,
-                                                 AppointmentPayloadDTO appointmentPayloadDTO,
+                                                 AppointmentsPayloadDTO appointmentPayloadDTO,
                                                  Set<String> selectedProvidersIds) {
         ProviderDTO providerDTO = appointmentPayloadDTO.getProvider();
         FilterDataDTO filterDataDTO = new FilterDataDTO(providerDTO.getId(), providerDTO.getName(), FilterDataDTO.FilterDataType.PROVIDER);
@@ -372,7 +372,7 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
      *
      * @param appointmentPayloadDTO the appointment payload dto
      */
-    public void onCheckInItemClick(AppointmentPayloadDTO appointmentPayloadDTO, boolean isWaitingRoom) {
+    public void onCheckInItemClick(AppointmentsPayloadDTO appointmentPayloadDTO, boolean isWaitingRoom) {
         AppointmentDetailDialog dialog = new AppointmentDetailDialog(getContext(),
                 checkInDTO, getPatientBalanceDTOs(appointmentPayloadDTO.getPatient().getPatientId()),
                 appointmentPayloadDTO, isWaitingRoom, this);
