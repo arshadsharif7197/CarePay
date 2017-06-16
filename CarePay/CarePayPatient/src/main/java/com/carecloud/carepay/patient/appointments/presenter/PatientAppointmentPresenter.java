@@ -22,6 +22,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
@@ -41,6 +42,7 @@ import com.google.gson.JsonObject;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -325,6 +327,19 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
 
         TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getLinks().getQueueStatus();
         viewHandler.getWorkflowServiceHelper().execute(transitionDTO, callback, queryMap);
+    }
+
+    @Override
+    public AppointmentsSettingDTO getPracticeSettings() {
+        List<AppointmentsSettingDTO> appointmentsSettingsList = appointmentsResultModel.getPayload().getAppointmentsSettings();
+        if(practiceId != null){
+            for(AppointmentsSettingDTO appointmentsSettingDTO : appointmentsSettingsList){
+                if(appointmentsSettingDTO.getPracticeId().equals(practiceId)){
+                    return appointmentsSettingDTO;
+                }
+            }
+        }
+        return appointmentsSettingsList.get(0);
     }
 
     @Override
