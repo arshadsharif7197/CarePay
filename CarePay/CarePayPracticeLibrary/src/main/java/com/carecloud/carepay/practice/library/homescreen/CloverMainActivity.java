@@ -27,7 +27,6 @@ import com.carecloud.carepay.practice.library.homescreen.dialogs.OfficeNewsDetai
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenAlertsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenAppointmentCountsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenDTO;
-import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenLabelDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenOfficeNewsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PatientHomeScreenTransitionsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenPayloadDTO;
@@ -36,6 +35,7 @@ import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLinksD
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -102,13 +102,10 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void populateWithLabels() {
-        HomeScreenLabelDTO labels = homeScreenDTO.getMetadata().getLabels();
-        if (labels != null) {
-            // load mode switch options
-            modeSwitchOptions.clear();
-            modeSwitchOptions.add(Label.getLabel("patient_mode_button"));
-            modeSwitchOptions.add(Label.getLabel("logout_button"));
-        }
+        // load mode switch options
+        modeSwitchOptions.clear();
+        modeSwitchOptions.add(Label.getLabel("patient_mode_button"));
+        modeSwitchOptions.add(Label.getLabel("logout_button"));
     }
 
     private void changeScreenMode(HomeScreenMode homeScreenMode) {
@@ -242,12 +239,10 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void disableUnavailableItems() {
-//        if(homeScreenMode == HomeScreenMode.PATIENT_HOME){
-//            setViewsDisabled((ViewGroup) findViewById(R.id.homePaymentsClickable));
-//        }
-        setViewsDisabled((ViewGroup) findViewById(R.id.homeCheckoutClickable));
+        if(homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
+            setViewsDisabled((ViewGroup) findViewById(R.id.homeCheckoutClickable));
+        }
         setViewsDisabled((ViewGroup) findViewById(R.id.homeShopClickable));
-//        setViewsDisabled((ViewGroup) findViewById(R.id.homeNewsClickable));
     }
 
     private void setViewsDisabled(ViewGroup viewGroup) {
@@ -265,24 +260,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private void unlockPracticeMode() {
         Gson gson = new Gson();
         PatientModeLinksDTO pinPadObject = gson.fromJson(homeScreenDTO.getMetadata().getLinks(), PatientModeLinksDTO.class);
-        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this, pinPadObject.getPinpad(), homeScreenDTO.getMetadata().getLabels(), false, getConfirmationPinDialogCallBacK());
+        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this, pinPadObject.getPinpad(), false);
         confirmationPinDialog.show();
-    }
-
-    /**
-     * Get confirmation pin dialog call bac k confirmation pin dialog . confirmation pin dialog listener.
-     *
-     * @return the confirmation pin dialog . confirmation pin dialog listener
-     */
-    public ConfirmationPinDialog.ConfirmationPinDialogListener getConfirmationPinDialogCallBacK() {
-        return new ConfirmationPinDialog.ConfirmationPinDialogListener() {
-
-            @Override
-            public void onError(String errorMessage) {
-
-                showErrorNotification(null);
-            }
-        };
     }
 
     private void getNews() {
@@ -324,13 +303,14 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
             transitionDTO = transitionsDTO.getPracticeCheckout();
         } else {
+            getApplicationPreferences().setAppointmentNavigationOption(Defs.NAVIGATE_CHECKOUT);
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
             transitionDTO = transitionsDTO.getPatientCheckout();
         }
-
         getWorkflowServiceHelper().interrupt();
         getWorkflowServiceHelper().execute(transitionDTO, commonTransitionCallback);
     }
+
 
     private void navigateToAppointments() {
         JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
@@ -346,7 +326,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             getWorkflowServiceHelper().execute(transitionDTO, checkInCallback, queryMap);
 
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-            getApplicationPreferences().setNavigateToAppointments(true);
+            getApplicationPreferences().setAppointmentNavigationOption(Defs.NAVIGATE_APPOINTMENT);
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
             queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
@@ -382,7 +362,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
             transitionDTO = transitionsDTO.getPracticeCheckin();
         } else {
-            getApplicationPreferences().setNavigateToAppointments(false);
+            getApplicationPreferences().setAppointmentNavigationOption(Defs.NAVIGATE_CHECKIN);
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
             transitionDTO = transitionsDTO.getPatientCheckin();
         }
@@ -492,7 +472,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onPreExecute() {
-//            showProgressDialog();
         }
 
         @Override
@@ -511,7 +490,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                     officeNews, officeNewsClickedListener);
             newsList.setAdapter(adapter);
 
-//            hideProgressDialog();
         }
 
         @Override

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
@@ -28,7 +29,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 /**
- * Created by harshal_patil on 10/19/2016.
+ * Created by harshal_patil on 10/19/2016
  */
 public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsListAdapter.AppointmentsListViewHolder> {
 
@@ -36,6 +37,8 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
     private List<AppointmentDTO> appointmentsArrayList;
     private AppointmentsResultModel appointmentsResultModel;
     private AppointmentsAdapterStartCheckInListener listener;
+    private @Defs.AppointmentNavigationTypeDef int appointmentNavigationType;
+
 
     /**
      * This will create a list of appointments
@@ -44,10 +47,11 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
      * @param appointmentsArrayList appointmentsArrayList
      */
     public AppointmentsListAdapter(Context context, List<AppointmentDTO> appointmentsArrayList,
-                                   AppointmentsResultModel appointmentInfo) {
+                                   AppointmentsResultModel appointmentInfo, @Defs.AppointmentNavigationTypeDef int appointmentNavigationType) {
         this.context = context;
         this.appointmentsArrayList = appointmentsArrayList;
         this.appointmentsResultModel = appointmentInfo;
+        this.appointmentNavigationType = appointmentNavigationType;
     }
 
     @Override
@@ -121,6 +125,10 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         void setStatus(AppointmentsPayloadDTO payloadDTO, boolean isToday) {
 
             startCheckIn.setVisibility(View.GONE);
+            if(appointmentNavigationType == Defs.NAVIGATE_CHECKOUT){
+                startCheckIn.setText(Label.getLabel("practice_app_check_out_text"));
+            }
+
             appointmentLocationView.setVisibility(View.GONE);
             appointmentStatusMissed.setVisibility(View.GONE);
             appointmentStatusCheckedIn.setVisibility(View.GONE);
@@ -135,9 +143,15 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
                 case CarePayConstants.IN_PROGRESS_IN_ROOM:
                 case CarePayConstants.IN_PROGRESS_OUT_ROOM:
                 case CarePayConstants.CHECKED_IN:
-                    headerBackground.setColor(context.getResources().getColor(R.color.yellowGreen));
-                    appointmentStatusCheckedIn.setVisibility(View.VISIBLE);
-
+                    if(appointmentNavigationType == Defs.NAVIGATE_CHECKOUT){
+                        headerBackground.setColor(context.getResources().getColor(R.color.colorPrimary));
+                        startCheckIn.setVisibility(View.VISIBLE);
+                        startCheckIn.setClickable(true);
+                        startCheckIn.setEnabled(true);
+                    }else {
+                        headerBackground.setColor(context.getResources().getColor(R.color.yellowGreen));
+                        appointmentStatusCheckedIn.setVisibility(View.VISIBLE);
+                    }
                     break;
 
                 case CarePayConstants.CANCELLED:
@@ -169,7 +183,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
 
                         appointmentStatusMissed.setVisibility(View.VISIBLE);
 
-                    } else if (payloadDTO.canCheckInNow(appointmentsResultModel)) {
+                    } else if (payloadDTO.canCheckInNow(appointmentsResultModel.getPayload().getAppointmentsSettings().get(0))) {
 
                         headerBackground.setColor(context.getResources().getColor(R.color.colorPrimary));
                         startCheckIn.setVisibility(View.VISIBLE);
@@ -228,7 +242,11 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
                     int position = (int) view.getTag();
                     AppointmentDTO appointmentDTO = appointmentsArrayList.get(position);
                     if (listener != null) {
-                        listener.onStartCheckIn(appointmentDTO);
+                        if(appointmentNavigationType == Defs.NAVIGATE_CHECKOUT){
+                            listener.onStartCheckOut(appointmentDTO);
+                        }else {
+                            listener.onStartCheckIn(appointmentDTO);
+                        }
                     }
                 }
             });
@@ -247,6 +265,8 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
 
     public interface AppointmentsAdapterStartCheckInListener {
         void onStartCheckIn(AppointmentDTO appointmentDTO);
+
+        void onStartCheckOut(AppointmentDTO appointmentDTO);
     }
 
     public void setListener(AppointmentsAdapterStartCheckInListener listener) {

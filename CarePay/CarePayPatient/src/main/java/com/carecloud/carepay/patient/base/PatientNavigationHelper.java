@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepay.patient.checkout.NextAppointmentActivity;
+import com.carecloud.carepay.patient.checkout.AppointmentCheckoutActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.patient.demographics.activities.NewDemographicsActivity;
 import com.carecloud.carepay.patient.demographics.activities.ReviewDemographicsActivity;
@@ -153,7 +153,12 @@ public class PatientNavigationHelper {
             case NavigationStateConstants.PATIENT_APP_CHECKOUT:
             case NavigationStateConstants.PATIENT_FORM_CHECKOUT:
             case NavigationStateConstants.PATIENT_PAY_CHECKOUT: {
-                intent = new Intent(context, NextAppointmentActivity.class);
+                if(context instanceof  AppointmentCheckoutActivity){
+                    ((AppointmentCheckoutActivity) context).initDto(workflowDTO);
+                    return;
+                }
+
+                intent = new Intent(context, AppointmentCheckoutActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 info.putString("state", workflowDTO.getState());
                 break;

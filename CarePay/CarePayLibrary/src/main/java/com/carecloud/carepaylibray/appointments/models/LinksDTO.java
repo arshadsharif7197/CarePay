@@ -52,6 +52,9 @@ public class LinksDTO {
     @SerializedName("notifications")
     @Expose
     private TransitionDTO notifications = new TransitionDTO();
+    @SerializedName("pinpad")
+    @Expose
+    private TransitionDTO pinpad = new TransitionDTO();
 
 
     /**
@@ -207,4 +210,11 @@ public class LinksDTO {
         this.notifications = notifications;
     }
 
+    public TransitionDTO getPinpad() {
+        return pinpad;
+    }
+
+    public void setPinpad(TransitionDTO pinpad) {
+        this.pinpad = pinpad;
+    }
 }

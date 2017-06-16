@@ -14,6 +14,7 @@ import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.media.MediaResultListener;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class NewDemographicsActivity extends BasePatientActivity implements DemographicsView {
 
@@ -96,6 +97,13 @@ public class NewDemographicsActivity extends BasePatientActivity implements Demo
     @Override
     public void setMediaResultListener(MediaResultListener resultListener) {
         this.resultListener = resultListener;
+    }
+
+    @Override
+    public void completeCheckIn(WorkflowDTO workflowDTO) {
+        SystemUtil.showSuccessToast(getContext(), Label.getLabel("confirm_appointment_checkin"));
+        finish();
+        navigateToWorkflow(workflowDTO);
     }
 
     @Override

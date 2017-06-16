@@ -29,7 +29,9 @@ import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPaymentSettingsDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.JsonObject;
@@ -242,10 +244,15 @@ public class DemographicsSettingsFragment extends BaseFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("success_notifications_settings_update_message"));
-            demographicsSettingsDTO.getPayload().getDemographicSettingsNotificationDTO()
-                    .getPayload().setPush(pushNotificationCheckBox.isChecked());
-            demographicsSettingsDTO.getPayload().getDemographicSettingsNotificationDTO()
-                    .getPayload().setEmail(emailNotificationCheckBox.isChecked());
+            DemographicsSettingsPaymentSettingsDTO settingsPayloadDTO = DtoHelper.getConvertedDTO(DemographicsSettingsPaymentSettingsDTO.class, workflowDTO);
+
+            boolean hasPush = settingsPayloadDTO.getPayload().getDemographicSettingsNotificationDTO().getPayload().isPush();
+            demographicsSettingsDTO.getPayload().getDemographicSettingsNotificationDTO().getPayload().setPush(hasPush);
+            pushNotificationCheckBox.setChecked(hasPush);
+
+            boolean hasEmail = settingsPayloadDTO.getPayload().getDemographicSettingsNotificationDTO().getPayload().isEmail();
+            demographicsSettingsDTO.getPayload().getDemographicSettingsNotificationDTO().getPayload().setEmail(hasEmail);
+            emailNotificationCheckBox.setChecked(hasEmail);
         }
 
         @Override

@@ -104,6 +104,8 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                     cityEditText.setText(smartyStreetsResponse.getCity());
                     String stateAbbr = smartyStreetsResponse.getStateAbbreviation();
                     stateEditText.setText(stateAbbr);
+                    selectedState.setLabel(stateAbbr);
+                    selectedState.setName(stateAbbr);
                     if (getView() != null) {
                         checkIfEnableButton(getView());
                     }

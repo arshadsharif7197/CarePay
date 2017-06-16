@@ -13,6 +13,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.customcomponent.TwoColumnPatientListView;
+import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
 import com.carecloud.carepay.practice.library.customdialog.FilterDialog;
 import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog;
@@ -44,11 +45,13 @@ import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -56,7 +59,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-public class PaymentsActivity extends BasePracticeActivity implements FilterDialog.FilterDialogListener, PracticePaymentNavigationCallback {
+public class PaymentsActivity extends BasePracticeActivity implements FilterDialog.FilterDialogListener, PracticePaymentNavigationCallback, DateRangePickerDialog.DateRangePickerDialogListener {
 
     private PaymentsModel paymentsModel;
     private FilterModel filter;
@@ -64,6 +67,9 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     private String practicePaymentsFilter;
     private String practicePaymentsFilterFindPatientByName;
     private String practicePaymentsFilterClearFilters;
+
+    private Date startDate;
+    private Date endDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +93,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     private void populateList() {
-        if (paymentsModel != null && paymentsModel.getPaymentPayload().getPatientBalances() != null
-                && paymentsModel.getPaymentPayload().getPatientBalances().size() > 0) {
+        if (paymentsModel != null && paymentsModel.getPaymentPayload().getPatientBalances() != null) {
 
             List<PatientBalanceDTO> patientBalancesList = paymentsModel.getPaymentPayload().getPatientBalances();
 
@@ -114,6 +119,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 onBackPressed();
             }
         });
+        findViewById(R.id.change_date_range).setOnClickListener(selectDateRange);
     }
 
     private void initializePatientListView() {
@@ -129,6 +135,20 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             }
         });
         applyFilter();
+    }
+
+    private void updateDateLabel(){
+        if (null != startDate && null != endDate) {
+            String practiceCountLabel = DateUtil.getFormattedDate(
+                    startDate,
+                    endDate,
+                    Label.getLabel("today_label"),
+                    Label.getLabel("tomorrow_label"),
+                    Label.getLabel("this_month_label"),
+                    Label.getLabel("next_days_label")
+            ).toUpperCase(Locale.getDefault());
+            setTextViewById(R.id.practice_payment_in_office_label, practiceCountLabel);
+        }
     }
 
     private ArrayList<FilterDataDTO> addProviderOnProviderFilterList(PaymentsModel paymentsModel,
@@ -505,4 +525,76 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             fragment.showDialog();
         }
     }
+
+    private View.OnClickListener selectDateRange = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
+                    Label.getLabel("date_range_picker_dialog_title"),
+                    Label.getLabel("date_range_picker_dialog_close"),
+                    true,
+                    startDate,
+                    endDate,
+                    DateRangePickerDialog.getPreviousSixMonthCalendar(),
+                    DateRangePickerDialog.getNextSixMonthCalendar(),
+                    PaymentsActivity.this
+            );
+            displayDialogFragment(dialog, false);
+        }
+    };
+
+    @Override
+    public void onRangeSelected(Date start, Date end) {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("start_date", getFormattedDate(start));
+        queryMap.put("end_date", getFormattedDate(end));
+
+        TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getPracticePayments();
+        getWorkflowServiceHelper().execute(transitionDTO, getChangeDateCallback(start, end), queryMap);
+        updateDateLabel();
+    }
+
+    @Override
+    public void onDateRangeCancelled() {
+
+    }
+
+    private String getFormattedDate(Date date) {
+        DateUtil dateUtil = DateUtil.getInstance();
+
+        if (date == null) {
+            dateUtil = dateUtil.setToCurrent();
+        } else {
+            dateUtil = dateUtil.setDate(date);
+        }
+
+        return dateUtil.toStringWithFormatYyyyDashMmDashDd();
+    }
+
+    private WorkflowServiceCallback getChangeDateCallback(final Date start, final Date end) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                startDate = start;
+                endDate = end;
+
+                paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+                updateDateLabel();
+                populateList();
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+            }
+        };
+    }
+
 }

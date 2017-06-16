@@ -86,7 +86,7 @@ public class AppointmentsPayloadDTO {
     private Integer visitReasonId;
     @SerializedName("visit_reason")
     @Expose
-    private VisitTypeDTO visitType;
+    private VisitTypeDTO visitType = new VisitTypeDTO();
     @SerializedName("resource_id")
     @Expose
     private Integer resourceId;
@@ -691,6 +691,23 @@ public class AppointmentsPayloadDTO {
         this.displayStyle = displayStyle;
     }
 
+
+    @Override
+    public boolean equals(Object payloadObj) {
+        if (this == payloadObj) {return true;}
+        if (!(payloadObj instanceof AppointmentsPayloadDTO)) {return false;}
+
+        AppointmentsPayloadDTO appointmentPayloadDTO = (AppointmentsPayloadDTO) payloadObj;
+
+        return getId().equals(appointmentPayloadDTO.getId());
+
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
+    }
+
     /**
      * @return true if appointment time is over
      */
@@ -749,7 +766,7 @@ public class AppointmentsPayloadDTO {
     /**
      * @return true if appointment can check in now
      */
-    public boolean canCheckInNow(AppointmentsResultModel appointmentInfo) {
+    public boolean canCheckInNow(AppointmentsSettingDTO settingsInfo) {
         if(!canCheckIn()) {
             return false;
         }
@@ -758,7 +775,7 @@ public class AppointmentsPayloadDTO {
             return true;
         }
 
-        AppointmentsCheckinDTO checkin = appointmentInfo.getPayload().getAppointmentsSettings().get(0).getCheckin();
+        AppointmentsCheckinDTO checkin = settingsInfo.getCheckin();
         if (!checkin.getAllowEarlyCheckin()) {
             return false;
         }

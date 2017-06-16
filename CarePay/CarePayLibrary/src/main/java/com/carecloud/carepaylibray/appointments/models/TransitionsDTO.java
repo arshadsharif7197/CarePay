@@ -54,6 +54,10 @@ public class TransitionsDTO {
     @Expose
     private TransitionDTO updateForms = new TransitionDTO();
 
+    @SerializedName("practice_mode")
+    @Expose
+    private TransitionDTO practiceMode = new TransitionDTO();
+
     /**
      * @return The checkingIn
      */
@@ -180,5 +184,13 @@ public class TransitionsDTO {
 
     public void setUpdateForms(TransitionDTO updateForms) {
         this.updateForms = updateForms;
+    }
+
+    public TransitionDTO getPracticeMode() {
+        return practiceMode;
+    }
+
+    public void setPracticeMode(TransitionDTO practiceMode) {
+        this.practiceMode = practiceMode;
     }
 }

@@ -213,9 +213,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     if(appointmentDTO.getPayload().isAppointmentToday() || !appointmentDTO.getPayload().isAppointmentOver()) {
                         callback.getQueueStatus(appointmentDTO, queueStatusCallback);
                         actionsLayout.setVisibility(View.VISIBLE);
-//                        leftButton.setVisibility(View.VISIBLE); todo reenable this when ready
-//                        leftButton.setText(Label.getLabel("appointment_request_checkout_now"));
-//                        leftButton.setOnClickListener(checkOutClick);
+                        leftButton.setVisibility(View.VISIBLE);
+                        leftButton.setText(Label.getLabel("appointment_request_checkout_now"));
+                        leftButton.setOnClickListener(checkOutClick);
                     }
                     break;
                 }
@@ -230,7 +230,11 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                         leftButton.setText(Label.getLabel("appointments_check_in_at_office"));
                         leftButton.setOnClickListener(scanClick);
                         rightButton.setVisibility(View.VISIBLE);
-                        rightButton.setText(Label.getLabel("appointments_check_in_now"));
+                        if(appointmentDTO.getPayload().canCheckInNow(callback.getPracticeSettings())) {
+                            rightButton.setText(Label.getLabel("appointments_check_in_now"));
+                        }else{
+                            rightButton.setText(Label.getLabel("appointments_check_in_early"));
+                        }
                         rightButton.setOnClickListener(checkInClick);
                     }
                     break;
@@ -429,6 +433,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         @Override
         public void onClick(View view) {
             callback.onCheckOutStarted(appointmentDTO);
+            dismiss();
         }
     };
 

@@ -16,20 +16,20 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.adapters.PagePickerAdapter;
-import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInLabelDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusDataPayloadValueDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueryStrings;
-import com.carecloud.carepaylibray.appointments.models.QueueDTO;
-import com.carecloud.carepaylibray.appointments.models.QueueStatusPayloadDTO;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerWindow;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
+import com.carecloud.carepaylibray.appointments.models.QueueDTO;
+import com.carecloud.carepaylibray.appointments.models.QueueStatusPayloadDTO;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -54,7 +54,7 @@ import java.util.Map;
 import java.util.Vector;
 
 /**
- * Created by sudhir_pingale on 10/26/2016.
+ * Created by sudhir_pingale on 10/26/2016
  */
 public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter.PagePickerCallback {
 
@@ -68,7 +68,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
     private Context context;
     private CheckInDTO checkInDTO;
-    private AppointmentPayloadDTO appointmentPayloadDTO;
+    private AppointmentsPayloadDTO appointmentPayloadDTO;
     private PendingBalanceDTO pendingBalanceDTO;
     private CheckInLabelDTO checkInLabelDTO;
 
@@ -110,7 +110,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
      * @param context context
      */
     public AppointmentDetailDialog(Context context, CheckInDTO checkInDTO, PendingBalanceDTO pendingBalanceDTO,
-                                   AppointmentPayloadDTO payloadDTO, boolean isWaitingRoom, AppointmentDialogCallback callback) {
+                                   AppointmentsPayloadDTO payloadDTO, boolean isWaitingRoom, AppointmentDialogCallback callback) {
         super(context);
         this.context = context;
         this.checkInDTO = checkInDTO;
@@ -368,6 +368,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         Map<String, String> queryMap = new HashMap<>();
         if (appointmentPayloadDTO != null) {
             queryMap.put(queryStrings.getPatientId().getName(), appointmentPayloadDTO.getPatient().getPatientId());
+            queryMap.put(queryStrings.getAppointmentId().getName(), appointmentPayloadDTO.getId());
         }
 
         return queryMap;

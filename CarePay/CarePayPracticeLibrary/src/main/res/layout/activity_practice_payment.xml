@@ -130,7 +130,7 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_22sp"
                     app:customAssetFont="gotham_rounded_medium"
-                    breeze:textKey="practice_payments_inoffice"/>
+                    breeze:textKey="today_label"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/practice_payment_in_office_count"
@@ -143,6 +143,29 @@
                     android:textSize="@dimen/text_size_16sp"
                     android:textStyle="bold"
                     app:customAssetFont="gotham_rounded_bold" />
+
+                <View android:layout_height="match_parent"
+                      android:layout_width="0dp"
+                      android:layout_weight="1"/>
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/change_date_range"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_toStartOf="@+id/activity_practice_appointments_add"
+                    android:background="@drawable/bg_blue_overlay"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="10dp"
+                    android:paddingEnd="20dp"
+                    android:paddingStart="20dp"
+                    android:paddingTop="10dp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_16sp"
+                    breeze:textKey="date_range_picker_dialog_title"/>
+
+
             </LinearLayout>
 
             <com.carecloud.carepay.practice.library.customcomponent.TwoColumnPatientListView

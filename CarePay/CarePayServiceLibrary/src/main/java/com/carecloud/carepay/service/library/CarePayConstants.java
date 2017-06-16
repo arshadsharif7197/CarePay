@@ -1,7 +1,7 @@
 package com.carecloud.carepay.service.library;
 
 /**
- * Created by Jahirul Bhuiyan on 8/24/2016.
+ * Created by Jahirul Bhuiyan on 8/24/2016
  */
 public class CarePayConstants {
 
@@ -132,5 +132,12 @@ public class CarePayConstants {
     //FCM
     public static final String FCM_TOKEN = "fcmToken";
     public static final String PUSH_NOTIFICATION_ENABLED = "pushNotificationEnabled";
+
+    //Checkout & Check-in
+    public static final String APPOINTMENT_ID = "appointmentId";
+    public static final String EXTRA_WORKFLOW = "workflow";
+    public static final String EXTRA_HAS_PAYMENT = "hasPayment";
+    public static final String EXTRA_APPOINTMENT_TRANSITIONS = "appointmentWorkflow";
+    public static final String EXTRA_BUNDLE = "extra";
 
 }

@@ -5,14 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
-import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.patientmodecheckin.PatientModeDemographicsPresenter;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
@@ -23,8 +21,10 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticePartial
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
@@ -33,7 +33,6 @@ import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.media.MediaResultListener;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -74,8 +73,9 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void onSaveInstanceState(Bundle icicle) {
-        presenter.onSaveInstanceState(icicle);
-        super.onSaveInstanceState(icicle);
+        Bundle newBundle = new Bundle();
+        presenter.onSaveInstanceState(newBundle);
+        super.onSaveInstanceState(newBundle);
     }
 
     @Override
@@ -95,9 +95,22 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
+    public void completeCheckIn(WorkflowDTO workflowDTO) {
+        Intent intent = new Intent(this, CompleteCheckActivity.class);
+        WorkFlowRecord workFlowRecord = new WorkFlowRecord(workflowDTO);
+        workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
+
+        Bundle extra = new Bundle();
+        extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
+//        extra.putString(CarePayConstants.EXTRA_WORKFLOW, workflowDTO.toString());
+        intent.putExtra(CarePayConstants.EXTRA_BUNDLE, extra);
+        startActivity(intent);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultListener !=null){
+        if (resultListener != null) {
             resultListener.handleActivityResult(requestCode, resultCode, data);
         }
     }
@@ -120,7 +133,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         findViewById(R.id.checkinHomeClickable).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!presenter.handleHomeButtonClick()) {
+                if (!presenter.handleHomeButtonClick()) {
                     setResult(CarePayConstants.HOME_PRESSED);
                     finish();
                 }
@@ -180,7 +193,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void onPartialPaymentClicked(double owedAmount) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         PracticePartialPaymentDialogFragment dialog = PracticePartialPaymentDialogFragment
                 .newInstance(paymentDTO, owedAmount);
         displayDialogFragment(dialog, false);
@@ -220,10 +232,19 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
         Intent intent = getIntent();
         String workflowString = intent.getStringExtra(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
-        if(workflowString != null){
-            Gson gson = new Gson();
-            PracticeNavigationHelper.navigateToWorkflow(getContext(), gson.fromJson(workflowString, WorkflowDTO.class));
-        }else {
+        if (workflowString != null) {
+            WorkFlowRecord workFlowRecord = new WorkFlowRecord(workflowDTO);
+            workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
+
+            Bundle extra = new Bundle();
+            extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
+//            extra.putString(CarePayConstants.EXTRA_WORKFLOW, workflowDTO.toString());
+            extra.putBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, true);
+            DtoHelper.bundleDto(extra, presenter.getAppointmentPayload());
+            Intent completeIntent = new Intent(this, CompleteCheckActivity.class);
+            completeIntent.putExtra(CarePayConstants.EXTRA_BUNDLE, extra);
+            startActivity(completeIntent);
+        } else {
             setResult(CarePayConstants.HOME_PRESSED, intent);
             finish();
         }
@@ -236,7 +257,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
-        if(paymentsModel!=null && !paymentsModel.getPaymentPayload().getUserPractices().isEmpty()){
+        if (paymentsModel != null && !paymentsModel.getPaymentPayload().getUserPractices().isEmpty()) {
             return paymentsModel.getPaymentPayload().getUserPractices().get(0);
         }
         return null;
@@ -258,13 +279,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         getIntent().putExtra(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
-
-        Bundle args = new Bundle();
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
-
-        PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
-        confirmationFragment.setArguments(args);
-        displayDialogFragment(confirmationFragment, false);
+        completePaymentProcess(workflowDTO);
     }
 
     @Override
@@ -275,7 +290,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             TextView progress = (TextView) flowView.findViewById(R.id.checkin_flow_progress);
 
             if (flowState.ordinal() == i) {
-                if(section.getFontAttribute()==CustomAssetStyleable.GOTHAM_ROUNDED_LIGHT) {
+                if (section.getFontAttribute() == CustomAssetStyleable.GOTHAM_ROUNDED_LIGHT) {
                     section.setFontAttribute(CustomAssetStyleable.GOTHAM_ROUNDED_BOLD);
                 }
                 section.setSelected(true);
@@ -283,10 +298,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 progress.setVisibility(View.VISIBLE);
                 progress.setText(currentPage + " of " + totalPages); //TODO label for "of"
             } else {
-                if(section.getFontAttribute()==CustomAssetStyleable.GOTHAM_ROUNDED_BOLD) {
+                if (section.getFontAttribute() == CustomAssetStyleable.GOTHAM_ROUNDED_BOLD) {
                     section.setFontAttribute(CustomAssetStyleable.GOTHAM_ROUNDED_LIGHT);
                 }
-                if(flowState.ordinal() > i) {
+                if (flowState.ordinal() > i) {
                     section.setEnabled(false);
                 }
                 section.setSelected(false);
@@ -295,7 +310,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         }
     }
 
-     @Override
+    @Override
     public void onBackPressed() {
         try {
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -344,7 +359,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     protected void processExternalPaymentFailure(PaymentExecution paymentExecution, int resultCode) {
-        if(resultCode == CarePayConstants.PAYMENT_RETRY_PENDING_RESULT_CODE){
+        if (resultCode == CarePayConstants.PAYMENT_RETRY_PENDING_RESULT_CODE) {
             //Display a success notification and do some cleanup
             PaymentQueuedDialogFragment dialogFragment = new PaymentQueuedDialogFragment();
             DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {

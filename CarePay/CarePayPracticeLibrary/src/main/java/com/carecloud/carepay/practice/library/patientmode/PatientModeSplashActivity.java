@@ -33,13 +33,13 @@ import java.util.Map;
 
 public class PatientModeSplashActivity extends BasePracticeActivity {
 
-    private TextView  getStartedButton;
-    private TextView  praticewelcomeText;
+    private TextView getStartedButton;
+    private TextView praticewelcomeText;
     private ImageView practicelogo;
     private ImageView lockIcnImageView;
     private List<String> languages = new ArrayList<>();
 
-    PatientModeSplashDTO  patientModeSplashDTO;
+    PatientModeSplashDTO patientModeSplashDTO;
     PatientModePayloadDTO patientModePayloadDTO;
     private Spinner langSpinner;
     private Context context;
@@ -124,7 +124,7 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // save selected in preferences
-                if(languages != null && languages.size() > position) {
+                if (languages != null && languages.size() > position) {
                     getApplicationPreferences().setUserLanguage(languages.get(position).toLowerCase());
                 }
             }
@@ -137,30 +137,15 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         lockIcnImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(context,patientModeSplashDTO.getMetadata().getLinks().getPinpad(),patientModeSplashDTO.getMetadata().getLabels(), false, getConfirmationPinDialogCallBacK());
+                ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(context, patientModeSplashDTO
+                        .getMetadata().getLinks().getPinpad(), false);
                 confirmationPinDialog.show();
             }
         });
     }
 
-    /**
-     * Get confirmation pin dialog call bac k confirmation pin dialog . confirmation pin dialog listener.
-     *
-     * @return the confirmation pin dialog . confirmation pin dialog listener
-     */
-    public ConfirmationPinDialog.ConfirmationPinDialogListener getConfirmationPinDialogCallBacK(){
-        return new ConfirmationPinDialog.ConfirmationPinDialogListener() {
-
-            @Override
-            public void onError(String errorMessage) {
-
-                showErrorNotification(null);
-            }
-        };
-    }
-
     @Override
-    public void onPinConfirmationCheck(boolean isCorrectPin,  String pin) {
+    public void onPinConfirmationCheck(boolean isCorrectPin, String pin) {
         TransitionDTO transitionDTO = patientModeSplashDTO.getMetadata().getTransitions().getPracticeMode();
         Map<String, String> query = new HashMap<>();
         query.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
@@ -196,7 +181,7 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         super.onBackPressed();
         // log out previous user from Cognito
         Log.v(this.getClass().getSimpleName(), "sign out Cognito");
-        if(!HttpConstants.isUseUnifiedAuth()) {
+        if (!HttpConstants.isUseUnifiedAuth()) {
             getAppAuthorizationHelper().getPool().getUser().signOut();
             getAppAuthorizationHelper().setUser(null);
         }

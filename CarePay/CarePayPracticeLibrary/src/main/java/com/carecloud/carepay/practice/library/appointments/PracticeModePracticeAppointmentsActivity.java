@@ -12,8 +12,6 @@ import com.carecloud.carepay.practice.library.appointments.dialogs.CancelAppoint
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAppointmentDialog;
 import com.carecloud.carepay.practice.library.appointments.dtos.PracticeAppointmentDTO;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
@@ -32,6 +30,8 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
@@ -52,7 +52,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by cocampo on 2/10/17.
+ * Created by cocampo on 2/10/17
  */
 public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppointmentsActivity
         implements FilterDialog.FilterDialogListener,
@@ -213,7 +213,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
         List<AppointmentDTO> appointments = payload.getAppointments();
         for (AppointmentDTO appointmentDTO : appointments) {
-            AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
+            AppointmentsPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
             addProviderOnProviderFilterList(providers, appointmentPayloadDTO, providersSavedFilteredIds);
             addLocationOnFilterList(locations, appointmentPayloadDTO, locationsSavedFilteredIds);
             addPatientOnFilterList(patients, appointmentPayloadDTO, photoMap);
@@ -225,7 +225,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     private void addProviderOnProviderFilterList(ArrayList<FilterDataDTO> doctors,
-                                                 AppointmentPayloadDTO appointmentPayloadDTO,
+                                                 AppointmentsPayloadDTO appointmentPayloadDTO,
                                                  Set<String> selectedProvidersIds) {
         ProviderDTO providerDTO = appointmentPayloadDTO.getProvider();
         FilterDataDTO filterDataDTO = new FilterDataDTO(providerDTO.getId(), providerDTO.getName(), FilterDataDTO.FilterDataType.PROVIDER);
@@ -238,7 +238,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     private void addLocationOnFilterList(ArrayList<FilterDataDTO> locations,
-                                         AppointmentPayloadDTO appointmentPayloadDTO,
+                                         AppointmentsPayloadDTO appointmentPayloadDTO,
                                          Set<String> selectedLocationsIds) {
         LocationDTO locationDTO = appointmentPayloadDTO.getLocation();
         FilterDataDTO filterDataDTO = new FilterDataDTO(locationDTO.getId(), locationDTO.getName(), FilterDataDTO.FilterDataType.LOCATION);
@@ -250,7 +250,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         }
     }
 
-    private void addPatientOnFilterList(ArrayList<FilterDataDTO> patients, AppointmentPayloadDTO appointmentPayloadDTO, Map<String, String> photoMap) {
+    private void addPatientOnFilterList(ArrayList<FilterDataDTO> patients, AppointmentsPayloadDTO appointmentPayloadDTO, Map<String, String> photoMap) {
         PatientModel patientDTO = appointmentPayloadDTO.getPatient();
         FilterDataDTO filterDataDTO = new FilterDataDTO(patientDTO.getPatientId(), patientDTO.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
         if (patients.indexOf(filterDataDTO) < 0) {
@@ -275,18 +275,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             @Override
             public void onClick(View view) {
 
-                String tag = DateRangePickerDialog.class.getSimpleName();
-
-                // DialogFragment.show() will take care of adding the fragment
-                // in a transaction.  We also want to remove any currently showing
-                // dialog, so make our own transaction and take care of that here.
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
-                if (prev != null) {
-                    ft.remove(prev);
-                }
-                ft.addToBackStack(null);
-
                 DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
                         Label.getLabel("date_range_picker_dialog_title"),
                         Label.getLabel("date_range_picker_dialog_close"),
@@ -297,7 +285,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                         DateRangePickerDialog.getNextSixMonthCalendar(),
                         PracticeModePracticeAppointmentsActivity.this
                 );
-                dialog.show(ft, tag);
+                displayDialogFragment(dialog, false);
 
                 wasCalledFromThisClass = true;
             }
@@ -414,7 +402,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     @Override
     public void showPracticeAppointmentDialog(AppointmentDTO appointmentDTO) {
         AppointmentDisplayStyle dialogStyle = AppointmentDisplayStyle.DEFAULT;
-        AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
+        AppointmentsPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
         if (appointmentPayloadDTO.getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
             dialogStyle = AppointmentDisplayStyle.REQUESTED;
 
@@ -560,7 +548,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void onLeftActionTapped(AppointmentDTO appointmentDTO) {
-        AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
+        AppointmentsPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
 
         if (appointmentPayloadDTO.getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
             rejectAppointment(appointmentDTO);

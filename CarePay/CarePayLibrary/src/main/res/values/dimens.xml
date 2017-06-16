@@ -34,10 +34,13 @@
     <dimen name="dimen_80dp">80dp</dimen>
     <dimen name="dimen_88dp">88dp</dimen>
     <dimen name="dimen_100dp">100dp</dimen>
+    <dimen name="dimen_110dp">110dp</dimen>
     <dimen name="dimen_114dp">114dp</dimen>
+    <dimen name="dimen_120dp">120dp</dimen>
     <dimen name="dimen_130dp">130dp</dimen>
     <dimen name="dimen_138dp">138dp</dimen>
     <dimen name="dimen_150dp">150dp</dimen>
+    <dimen name="dimen_160dp">160dp</dimen>
     <dimen name="dimen_164dp">164dp</dimen>
     <dimen name="dimen_200dp">200dp</dimen>
     <dimen name="dimen_220dp">220dp</dimen>
@@ -57,16 +60,17 @@
     <dimen name="text_size_15">15sp</dimen>
     <dimen name="text_size_16">16sp</dimen>
     <dimen name="text_size_17">17sp</dimen>
+    <dimen name="text_size_18sp">18sp</dimen>
     <dimen name="text_size_19sp">19sp</dimen>
-    <dimen name="text_size_22sp">22sp</dimen>
-    <dimen name="text_size_24sp">24sp</dimen>
     <dimen name="text_size_20">20sp</dimen>
     <dimen name="text_size_21">21sp</dimen>
-    <dimen name="text_size_38">38sp</dimen>
     <dimen name="text_size_22">22sp</dimen>
+    <dimen name="text_size_22sp">22sp</dimen>
+    <dimen name="text_size_24sp">24sp</dimen>
+    <dimen name="text_size_26sp">26sp</dimen>
     <dimen name="text_size_30">30sp</dimen>
     <dimen name="text_size_34sp">34sp</dimen>
-    <dimen name="text_size_18sp">18sp</dimen>
+    <dimen name="text_size_38">38sp</dimen>
 
     <dimen name="textview_default_textsize">17sp</dimen>
     <dimen name="button_textsize_medium">15sp</dimen>
@@ -441,5 +445,10 @@
 
     <dimen name="list_dialog_min_height">400dp</dimen>
     <dimen name="list_dialog_min_height_small">200dp</dimen>
+    <dimen name="checkin_complete_divider_width">350dp</dimen>
+    <dimen name="completeCheckInItemTextSize">22sp</dimen>
+    <dimen name="completeCheckInItemValueTextSize">16sp</dimen>
+    <dimen name="completeCheckInItemMargin">10dp</dimen>
+    <dimen name="dimen_50dp">50dp</dimen>
 
 </resources>
