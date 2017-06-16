@@ -100,7 +100,6 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         view.findViewById(R.id.paymentInformation).setVisibility(hasPayment ? View.VISIBLE : View.GONE);
 
         final ImageView userImage = (ImageView) view.findViewById(R.id.userImage);

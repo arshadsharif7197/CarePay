@@ -14,6 +14,7 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.Chec
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
@@ -42,7 +43,10 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
         Gson gson = new Gson();
         Bundle extra = getIntent().getBundleExtra(CarePayConstants.EXTRA_BUNDLE);
         boolean hasPayment = extra.getBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, false);
-        workflowString = extra.getString(CarePayConstants.EXTRA_WORKFLOW);
+        long id = extra.getLong(CarePayConstants.EXTRA_WORKFLOW);
+        WorkflowDTO workflowDTO = retrieveStoredWorkflow(id);
+        workflowString = workflowDTO.toString();
+//        workflowString = extra.getString(CarePayConstants.EXTRA_WORKFLOW);
         if (hasPayment) {
             dto = gson.fromJson(workflowString, PaymentsModel.class);
         } else {
@@ -58,6 +62,12 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
             replaceFragment(CheckInCompletedDialogFragment
                     .newInstance(hasPayment, appointmentDTO), false);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle icicle){
+        workflowString = null;
+        super.onSaveInstanceState(icicle);
     }
 
     @Override
@@ -123,4 +133,8 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+    private WorkflowDTO retrieveStoredWorkflow(long id){
+        return new WorkflowDTO(WorkFlowRecord.findById(WorkFlowRecord.class, id));
+    }
 }
