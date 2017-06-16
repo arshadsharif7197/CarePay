@@ -766,7 +766,7 @@ public class AppointmentsPayloadDTO {
     /**
      * @return true if appointment can check in now
      */
-    public boolean canCheckInNow(AppointmentsResultModel appointmentInfo) {
+    public boolean canCheckInNow(AppointmentsSettingDTO settingsInfo) {
         if(!canCheckIn()) {
             return false;
         }
@@ -775,7 +775,7 @@ public class AppointmentsPayloadDTO {
             return true;
         }
 
-        AppointmentsCheckinDTO checkin = appointmentInfo.getPayload().getAppointmentsSettings().get(0).getCheckin();
+        AppointmentsCheckinDTO checkin = settingsInfo.getCheckin();
         if (!checkin.getAllowEarlyCheckin()) {
             return false;
         }
