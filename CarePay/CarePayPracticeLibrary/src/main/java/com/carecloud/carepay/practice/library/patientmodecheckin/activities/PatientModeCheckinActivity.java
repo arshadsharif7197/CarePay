@@ -21,8 +21,10 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticePartial
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
@@ -94,8 +96,12 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     @Override
     public void completeCheckIn(WorkflowDTO workflowDTO) {
         Intent intent = new Intent(this, CompleteCheckActivity.class);
+        WorkFlowRecord workFlowRecord = new WorkFlowRecord(workflowDTO);
+        workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
+
         Bundle extra = new Bundle();
-        extra.putString(CarePayConstants.EXTRA_WORKFLOW, workflowDTO.toString());
+        extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
+//        extra.putString(CarePayConstants.EXTRA_WORKFLOW, workflowDTO.toString());
         intent.putExtra(CarePayConstants.EXTRA_BUNDLE, extra);
         startActivity(intent);
     }
@@ -226,13 +232,17 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         Intent intent = getIntent();
         String workflowString = intent.getStringExtra(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
         if (workflowString != null) {
+            WorkFlowRecord workFlowRecord = new WorkFlowRecord(workflowDTO);
+            workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
+
             Bundle extra = new Bundle();
-            extra.putString(CarePayConstants.EXTRA_WORKFLOW, workflowDTO.toString());
+            extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
+//            extra.putString(CarePayConstants.EXTRA_WORKFLOW, workflowDTO.toString());
             extra.putBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, true);
             DtoHelper.bundleDto(extra, presenter.getAppointmentPayload());
-            Intent intent2 = new Intent(this, CompleteCheckActivity.class);
-            intent2.putExtra(CarePayConstants.EXTRA_BUNDLE, extra);
-            startActivity(intent2);
+            Intent completeIntent = new Intent(this, CompleteCheckActivity.class);
+            completeIntent.putExtra(CarePayConstants.EXTRA_BUNDLE, extra);
+            startActivity(completeIntent);
         } else {
             setResult(CarePayConstants.HOME_PRESSED, intent);
             finish();

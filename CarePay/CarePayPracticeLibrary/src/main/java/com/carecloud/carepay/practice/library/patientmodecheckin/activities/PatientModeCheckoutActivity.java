@@ -24,6 +24,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.interfaces.AvailableHoursInterface;
@@ -36,6 +37,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
+import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.checkout.CheckOutFormFragment;
 import com.carecloud.carepaylibray.checkout.CheckOutInterface;
 import com.carecloud.carepaylibray.checkout.NextAppointmentFragment;
@@ -314,7 +316,11 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         }
         Bundle extra = new Bundle();
         if(paymentConfirmationWorkflow!=null) {
-            extra.putString(CarePayConstants.EXTRA_WORKFLOW, paymentConfirmationWorkflow.toString());
+            WorkFlowRecord workFlowRecord = new WorkFlowRecord(workflowDTO);
+            workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
+
+            extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
+//            extra.putString(CarePayConstants.EXTRA_WORKFLOW, paymentConfirmationWorkflow.toString());
             extra.putBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, true);
         }
 
