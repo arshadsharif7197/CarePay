@@ -95,8 +95,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     public void completeCheckIn(WorkflowDTO workflowDTO) {
         Intent intent = new Intent(this, CompleteCheckActivity.class);
         Bundle extra = new Bundle();
-        extra.putString("workflow", workflowDTO.toString());
-        intent.putExtra("extra", extra);
+        extra.putString(CarePayConstants.EXTRA_WORKFLOW, workflowDTO.toString());
+        intent.putExtra(CarePayConstants.EXTRA_BUNDLE, extra);
         startActivity(intent);
     }
 
@@ -227,11 +227,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         String workflowString = intent.getStringExtra(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
         if (workflowString != null) {
             Bundle extra = new Bundle();
-            extra.putString("workflow", workflowDTO.toString());
-            extra.putBoolean("hasPayment", true);
+            extra.putString(CarePayConstants.EXTRA_WORKFLOW, workflowDTO.toString());
+            extra.putBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, true);
             DtoHelper.bundleDto(extra, presenter.getAppointmentPayload());
             Intent intent2 = new Intent(this, CompleteCheckActivity.class);
-            intent2.putExtra("extra", extra);
+            intent2.putExtra(CarePayConstants.EXTRA_BUNDLE, extra);
             startActivity(intent2);
         } else {
             setResult(CarePayConstants.HOME_PRESSED, intent);

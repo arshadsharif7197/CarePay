@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAvailableHoursDialogFragment;
+import com.carecloud.carepay.practice.library.appointments.dtos.PracticeAppointmentDTO;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
@@ -72,6 +73,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     private VisitTypeDTO visitTypeDTO;
 
     private boolean shouldAddBackStack = false;
+
+    private WorkflowDTO paymentConfirmationWorkflow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,6 +212,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
+        paymentConfirmationWorkflow = workflowDTO;
         Bundle args = new Bundle();
         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
 
@@ -303,7 +307,24 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     @Override
     public void showAllDone(WorkflowDTO workflowDTO) {
+        PracticeAppointmentDTO practiceAppointmentDTO = DtoHelper.getConvertedDTO(PracticeAppointmentDTO.class, workflowDTO);
+        if(practiceAppointmentDTO == null){
+            showErrorNotification("Error Checking-out Appointment");
+            return;
+        }
+        Bundle extra = new Bundle();
+        if(paymentConfirmationWorkflow!=null) {
+            extra.putString(CarePayConstants.EXTRA_WORKFLOW, paymentConfirmationWorkflow.toString());
+            extra.putBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, true);
+        }
 
+        appointmentsResultModel.getMetadata().getLinks().setPinpad(practiceAppointmentDTO.getMetadata().getLinks().getPinpad());
+        appointmentsResultModel.getMetadata().getTransitions().setPracticeMode(practiceAppointmentDTO.getMetadata().getTransitions().getPracticeMode());
+        extra.putString(CarePayConstants.EXTRA_APPOINTMENT_TRANSITIONS, DtoHelper.getStringDTO(appointmentsResultModel));
+        DtoHelper.bundleDto(extra, practiceAppointmentDTO.getPayload().getPracticeAppointments());
+        Intent intent = new Intent(this, CompleteCheckActivity.class);
+        intent.putExtra(CarePayConstants.EXTRA_BUNDLE, extra);
+        startActivity(intent);
     }
 
     @Override

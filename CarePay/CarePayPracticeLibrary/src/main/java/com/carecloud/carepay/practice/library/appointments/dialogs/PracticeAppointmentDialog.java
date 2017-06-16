@@ -14,10 +14,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customdialogs.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
@@ -71,7 +71,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
      * @param style dialog style to determine buttons and colors
      * @param appointmentDTO appointment information
      * @param callback listener
-     * @return new instance of PracticeAppointmentDialog 
+     * @return instance of PracticeAppointmentDialog 
      */
     public static PracticeAppointmentDialog newInstance(AppointmentDisplayStyle style,
                                                         AppointmentDTO appointmentDTO,
@@ -111,7 +111,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
         headerView = view.findViewById(R.id.appointment_card_header);
 
-        AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
+        AppointmentsPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
 
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentPayloadDTO.getStartTime());
 
@@ -144,7 +144,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
         setTextViewById(R.id.appointment_short_name, patientDTO.getShortName());
 
-        setTextViewById(R.id.appointment_visit_type, StringUtil.captialize(appointmentPayloadDTO.getVisitReason().getName()));
+        setTextViewById(R.id.appointment_visit_type, StringUtil.captialize(appointmentPayloadDTO.getVisitType().getName()));
         setTextViewById(R.id.appointment_visit_type_label, Label.getLabel("visit_type_heading"));
 
         initializeButtons();
@@ -172,7 +172,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                 imageView.setVisibility(View.VISIBLE);
 
                 if (isAdded()) {
-                    int trueHeaderColor = getResources().getColor(headerColor);
+                    int trueHeaderColor = ContextCompat.getColor(getContext(), headerColor);
                     headerView.setBackgroundColor(Color.argb(
                             230,
                             Color.red(trueHeaderColor),
