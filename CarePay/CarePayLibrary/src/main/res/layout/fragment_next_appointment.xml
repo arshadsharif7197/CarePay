@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.carecloud.carepay.patient.checkout.NextAppointmentFragment">
+    tools:context="com.carecloud.carepaylibray.checkout.NextAppointmentFragment">
 
     <include
         android:id="@+id/toolbar_layout"
@@ -19,7 +19,7 @@
         android:layout_marginStart="@dimen/dimen_10dp"
         app:customAssetFont="gotham_rounded_bold"
         breeze:textKey="schedule_appointment_later_button_label"
-        tools:text="SCHEDULE LATER" />
+        tools:text="Schedule Later" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/scheduleAppointmentButton"
@@ -34,7 +34,7 @@
         android:textColor="@color/white"
         app:customAssetFont="gotham_rounded_bold"
         breeze:textKey="schedule_appointment_button_label"
-        tools:text="SCHEDULE APPOINMENT" />
+        tools:text="Schedule Appointment" />
 
     <RelativeLayout
         android:id="@+id/providerContainer"
@@ -70,7 +70,7 @@
                 android:layout_marginEnd="@dimen/dimen_10dp"
                 android:layout_marginStart="@dimen/dimen_10dp"
                 android:textColor="@color/white"
-                android:visibility="invisible"
+                android:visibility="visible"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="next_appointment_default_provider_message" />
 

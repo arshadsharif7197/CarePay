@@ -133,4 +133,7 @@ public class CarePayConstants {
     public static final String FCM_TOKEN = "fcmToken";
     public static final String PUSH_NOTIFICATION_ENABLED = "pushNotificationEnabled";
 
+    //Checkout
+    public static final String APPOINTMENT_ID = "appointmentId";
+
 }

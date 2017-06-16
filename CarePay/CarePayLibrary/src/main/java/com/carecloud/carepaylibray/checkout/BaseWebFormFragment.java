@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.checkout;
+package com.carecloud.carepaylibray.checkout;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

@@ -110,7 +110,7 @@
             android:name=".tutorial.tutorial.TutorialActivity"
             android:screenOrientation="sensorPortrait" />
         <activity
-            android:name=".checkout.NextAppointmentActivity"
+            android:name=".checkout.AppointmentCheckoutActivity"
             android:screenOrientation="sensorPortrait" />
     </application>
 
