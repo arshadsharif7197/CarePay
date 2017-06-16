@@ -65,6 +65,12 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
     }
 
     @Override
+    public void onSaveInstanceState(Bundle icicle){
+        workflowString = null;
+        super.onSaveInstanceState(icicle);
+    }
+
+    @Override
     public DTO getDto() {
         return dto;
     }

@@ -73,8 +73,9 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void onSaveInstanceState(Bundle icicle) {
-        presenter.onSaveInstanceState(icicle);
-        super.onSaveInstanceState(icicle);
+        Bundle newBundle = new Bundle();
+        presenter.onSaveInstanceState(newBundle);
+        super.onSaveInstanceState(newBundle);
     }
 
     @Override
