@@ -54,6 +54,22 @@ public class Label {
     }
 
     /**
+     * static method to save a label
+     * @param key   label key
+     * @param value label value
+     */
+    public static void putLabelAsync(String key, String value) {
+        getLabelProvider().putValueAsync(key, value);
+    }
+
+    /**
+     * Apply pending labels
+     */
+    public static void applyAsyncLabels(){
+        getLabelProvider().applyAll();
+    }
+
+    /**
      * Returns label for view.
      *
      * @param label string received from endpoint

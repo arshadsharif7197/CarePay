@@ -323,17 +323,20 @@ public class WorkflowServiceHelper {
             private void saveLabels(WorkflowDTO workflowDTO) {
                 //TODO: this should change after the creation of the Label service
                 JsonObject labels = workflowDTO.getMetadata().getAsJsonObject("labels");
-                String state = workflowDTO.getState();
+                final String state = workflowDTO.getState();
                 boolean contains = ((AndroidPlatform) Platform.get()).openSharedPreferences(AndroidPlatform.LABELS_FILE_NAME).contains("labelFor" + state);
                 if (labels != null && !contains) {
                     Set<Map.Entry<String, JsonElement>> set = labels.entrySet();
-                    for (Map.Entry<String, JsonElement> entry : set) {
-                        Label.putLabel(entry.getKey(), entry.getValue().getAsString());
+                    for (final Map.Entry<String, JsonElement> entry : set) {
+                        Log.d(state, "Saving Label "+entry.getKey());
+                        Label.putLabelAsync(entry.getKey(), entry.getValue().getAsString());
                     }
-                    SharedPreferences.Editor editor = ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences().edit();
-                    editor.putBoolean("labelFor" + state, true).apply();
+                    Label.applyAsyncLabels();
                 }
+                SharedPreferences.Editor editor = ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences().edit();
+                editor.putBoolean("labelFor" + state, true).apply();
             }
+
 
             private void onResponseUnauthorized(Response<WorkflowDTO> response) throws IOException {
                 String message = response.message().toLowerCase();
