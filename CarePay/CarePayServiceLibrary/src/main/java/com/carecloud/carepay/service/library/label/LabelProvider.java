@@ -30,4 +30,16 @@ public interface LabelProvider {
      * @param value the value to store related to the key
      */
     void putValue(String key, String value);
+
+    /**
+     * Schedules Label for saving by adding to shared pref editor. This call required that you call applyAll() to save the labels when you're done
+     * @param key the key related to the value
+     * @param value the value to store related to the key
+     */
+    void putValueAsync(String key, String value);
+
+    /**
+     * Apply all pending label to Shared Pref Storage
+     */
+    void applyAll();
 }
