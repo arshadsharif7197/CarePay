@@ -59,9 +59,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     public static final String EDITED_INDEX = "EditedIndex";
     public static final String IS_PATIENT_MODE = "IsPatientMode";
     public static final int NEW_INSURANCE = -1;
-//    private static final int PROVIDERS = 0;
-//    private static final int PLANS = 1;
-//    private static final int TYPES = 2;
 
     private DemographicDTO demographicDTO;
     private MediaScannerPresenter mediaScannerPresenter;
@@ -82,9 +79,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private TextView selectedPlanTextView;
     private TextView selectedTypeTextView;
     private TextView selectedRelationshipTextView;
+    private EditText otherProviderEditText;
 
-    private boolean isCardNumberEmpty;
-    private boolean isGroupNumberEmpty;
     private boolean hadInsurance;
     private boolean isPatientMode;
 
@@ -95,15 +91,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private CarePayCameraReady carePayCameraReady;
     private int editedIndex;
 
-//    private String selectedProvider;
-//    private String selectedPlan;
-//    private String selectedType;
-
-    private EditText otherProviderEditText;
-
-//    private List<MetadataInsuranceOptionDTO> providerList;
-//    private List<MetadataOptionDTO> typeList;
-//
 
     private String defaultType;
 
@@ -346,28 +333,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             }
         } else {
             DemographicInsurancePayloadDTO demographicInsurancePayload = demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex);
-//            selectedProvider = demographicInsurancePayload.getInsuranceProvider();
-//            selectedProviderTextView.setText(selectedProvider);
-//            getInsurancePlans(findInsuranceProvider(selectedProvider));
-//
-//            selectedPlan = demographicInsurancePayload.getInsurancePlan();
-//            selectedPlanTextView.setText(selectedPlan);
-//            selectedPlanTextView.setVisibility(View.VISIBLE);
-//            ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(selectedProvider + (selectedPlan != null ? " " + selectedPlan : ""));
-//            findViewById(R.id.health_insurance_plans).setVisibility(View.GONE);
-//
-//            selectedType = demographicInsurancePayload.getInsuranceType();
-//            selectedTypeTextView.setText(selectedType);
-//
-//            cardNumber.setText(demographicInsurancePayload.getInsuranceMemberId());
-//            if (!StringUtil.isNullOrEmpty(demographicInsurancePayload.getInsuranceMemberId()) && cardNumber.getOnFocusChangeListener() != null) {
-//                cardNumber.getOnFocusChangeListener().onFocusChange(cardNumber, false);
-//            }
-//            groupNumber.setText(demographicInsurancePayload.getInsuranceGroupId());
-//            if (!StringUtil.isNullOrEmpty(demographicInsurancePayload.getInsuranceGroupId()) && groupNumber.getOnFocusChangeListener() != null) {
-//                groupNumber.getOnFocusChangeListener().onFocusChange(groupNumber, false);
-//            }
-
             initInsuranceData(demographicInsurancePayload);
 
             findViewById(R.id.remove_insurance_entry).setOnClickListener(removeButtonListener);
@@ -376,7 +341,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         initializeScanArea(view);
 
         saveInsuranceButton.setOnClickListener(saveButtonListener);
-        // TO-DO: Need to know what fields are required
         validateForm();
     }
 
@@ -400,6 +364,11 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         selectedTypeOption.setName(selectedType);
         selectedTypeOption.setLabel(selectedType);
 
+        String selectedRelationship = demographicInsurancePayload.getRelationship();
+        selectedRelationshipTextView.setText(selectedRelationship);
+        selectedRelationshipOption.setName(selectedRelationship);
+        selectedRelationshipOption.setName(selectedRelationship);
+
         cardNumber.setText(demographicInsurancePayload.getInsuranceMemberId());
         if (!StringUtil.isNullOrEmpty(demographicInsurancePayload.getInsuranceMemberId()) && cardNumber.getOnFocusChangeListener() != null) {
             cardNumber.getOnFocusChangeListener().onFocusChange(cardNumber, false);
@@ -409,7 +378,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             groupNumber.getOnFocusChangeListener().onFocusChange(groupNumber, false);
         }
 
-        //// TODO: 6/15/17 init policyholder & relationship data
+        policyHolder.setText(demographicInsurancePayload.getPolicyHolder());
+        if(!StringUtil.isNullOrEmpty(demographicInsurancePayload.getPolicyHolder()) && policyHolder.getOnFocusChangeListener() != null){
+            policyHolder.getOnFocusChangeListener().onFocusChange(policyHolder, false);
+        }
 
         String title = selectedProvider + (selectedPlan != null ? " " + selectedPlan : "");
         ((TextView) findViewById(R.id.toolbar_title)).setText(title);
@@ -450,8 +422,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     View.OnClickListener saveButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View saveChanges) {
-            final boolean hasInsurance = hasInsurance();
-
             DemographicInsurancePayloadDTO demographicInsurancePayloadDTO;
             if (editedIndex == NEW_INSURANCE) {
                 demographicInsurancePayloadDTO = new DemographicInsurancePayloadDTO();
@@ -467,7 +437,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             demographicInsurancePayloadDTO.setInsuranceMemberId(cardNumber.getText().toString());
             demographicInsurancePayloadDTO.setInsuranceGroupId(groupNumber.getText().toString());
 
-            //// TODO: 6/15/17 save policy holder & relationship
+            demographicInsurancePayloadDTO.setRelationship(selectedRelationshipOption.getName());
+            demographicInsurancePayloadDTO.setPolicyHolder(policyHolder.getText().toString());
 
             setupImageBase64();
 
@@ -597,6 +568,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                     //reset the plan dropdown
                     selectedPlanOption = new DemographicsOption();
                     selectedPlanTextView.setText(Label.getLabel("demographics_choose"));
+                    selectedPlanTextView.setOnClickListener(
+                            getSelectOptionsListener( ((DemographicsInsuranceOption)demographicsOption).getPayerPlans(),
+                                    getDefaultOnOptionsSelectedListener(selectedPlanTextView, selectedPlanOption, null),
+                                    Label.getLabel("demographics_documents_title_select_plan")));
                 }
 
                 if (demographicsOption.getName().toLowerCase().equals("other")) {
@@ -636,183 +611,14 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                         getDefaultOnOptionsSelectedListener(selectedRelationshipTextView, selectedRelationshipOption, null),
                         Label.getLabel("demographics_insurance_relationship_label")));
 
-
-
-
-
-//        DemographicMetadataEntityInsurancesDTO insurancesMetaDTO = demographicDTO.getMetadata().getNewDataModel().getDemographic().getInsurances();
-//        if (insurancesMetaDTO != null) {
-//            DemographicMetadataPropertiesInsuranceDTO properties = insurancesMetaDTO.getProperties()
-//                    .getItems().getInsurance().getProperties();
-//
-//            // Providers
-//            providerList = properties.getInsuranceProvider().getOptions();
-//            final String[] providers = new String[providerList.size()];
-//            for (int i = 0; i < providerList.size(); i++) {
-//                providers[i] = providerList.get(i).getLabel();
-//            }
-//            selectedProviderTextView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View providerView) {
-//                    showAlertDialogWithListView(providers, "Choose Provider", "Cancel", PROVIDERS);
-//                }
-//            });
-//
-//            // Types
-//            typeList = properties.getInsuranceType().getOptions();
-//            final String[] types = new String[typeList.size()];
-//            for (int i = 0; i < typeList.size(); i++) {
-//                types[i] = typeList.get(i).getLabel();
-//            }
-//            selectedTypeTextView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View providerView) {
-//                    showAlertDialogWithListView(types, "Choose Type", "Cancel", TYPES);
-//                }
-//            });
-//        }
     }
 
-//    private void getInsurancePlans(MetadataInsuranceOptionDTO selectedInsurance) {
-//        if (selectedInsurance == null) {
-//            return;
-//        }
-//
-//        // Plans
-//        List<MetadataOptionDTO> planList = selectedInsurance.getPayerPlans();
-//        final String[] plans = new String[planList.size()];
-//        for (int i = 0; i < planList.size(); i++) {
-//            plans[i] = planList.get(i).getLabel();
-//        }
-//        selectedPlanTextView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View providerView) {
-//                showAlertDialogWithListView(plans, "Choose Plan", "Cancel", PLANS);
-//            }
-//        });
-//
-//    }
-
-//    private MetadataInsuranceOptionDTO findInsuranceProvider(String name) {
-//        if (name == null) {
-//            return null;
-//        }
-//        for (MetadataInsuranceOptionDTO provider : providerList) {
-//            if (provider.getLabel().toLowerCase().equals(name.toLowerCase()) ||
-//                    provider.getName().toLowerCase().equals(name.toLowerCase())) {
-//                return provider;
-//            }
-//        }
-//        return null;
-//    }
-
-//    @SuppressLint("InflateParams")
-//    private void showAlertDialogWithListView(final String[] dataArray, String title,
-//                                             String cancelLabel, final int index) {
-//
-//        final AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
-//        dialog.setTitle(title);
-//
-//        dialog.setNegativeButton(cancelLabel, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int listener) {
-//                dialogInterface.dismiss();
-//            }
-//        });
-//
-//        View customView = LayoutInflater.from(getContext()).inflate(R.layout.alert_list_layout, null, false);
-//        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
-//        CustomAlertAdapter alertAdapter = new CustomAlertAdapter(getActivity(), Arrays.asList(dataArray));
-//        listView.setAdapter(alertAdapter);
-//        dialog.setView(customView);
-//
-//        final AlertDialog alert = dialog.create();
-//        alert.show();
-//
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @SuppressWarnings("deprecation")
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long listener) {
-//                switch (index) {
-//                    case PROVIDERS:
-//                        findViewById(R.id.health_insurance_plans).setVisibility(View.GONE);
-//
-//                        if (!dataArray[position].equals(selectedProvider)) {
-//                            selectedPlan = null;
-//                            selectedPlanTextView.setText(Label.getLabel("demographics_choose"));
-//                        }
-//
-//                        if ("other".equals(dataArray[position].toLowerCase())) {
-//                            otherProviderEditText.setVisibility(View.VISIBLE);
-//                            otherProviderEditText.requestFocus();
-//                            selectedProvider = null;
-//                        } else {
-//                            otherProviderEditText.setVisibility(View.GONE);
-//                            selectedProvider = dataArray[position];
-//                        }
-//                        selectedProviderTextView.setText(dataArray[position]);
-//                        getInsurancePlans(providerList.get(position));
-//                        selectedPlanTextView.setVisibility(View.VISIBLE);
-//                        break;
-//
-//                    case PLANS:
-//                        selectedPlan = dataArray[position];
-//                        selectedPlanTextView.setText(selectedPlan);
-//                        break;
-//
-//                    case TYPES:
-//                        selectedType = dataArray[position];
-//                        selectedTypeTextView.setText(selectedType);
-//                        break;
-//                    default:
-//                        break;
-//                }
-//                alert.dismiss();
-//                validateForm();
-//            }
-//        });
-//    }
 
     private void setTextListeners() {
-        cardNumber.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                isCardNumberEmpty = StringUtil.isNullOrEmpty(cardNumber.getText().toString());
-                if (!isCardNumberEmpty) { // clear the error
-                    cardNumberInput.setError(null);
-                    cardNumberInput.setErrorEnabled(false);
-                }
-                validateForm();
-            }
-        });
-
-        groupNumber.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                isGroupNumberEmpty = StringUtil.isNullOrEmpty(groupNumber.getText().toString());
-                if (!isGroupNumberEmpty) { // clear the error
-                    groupNumberInput.setError(null);
-                    groupNumberInput.setErrorEnabled(false);
-                }
-                validateForm();
-            }
-        });
+        String defaultError = Label.getLabel("demographics_required_field_msg");
+        cardNumber.addTextChangedListener(getValidInputTextWatcher(cardNumberInput, false, defaultError));
+        groupNumber.addTextChangedListener(getValidInputTextWatcher(groupNumberInput, false, defaultError));
+        policyHolder.addTextChangedListener(getValidInputTextWatcher(policyHolderInput, false, defaultError));
 
         otherProviderEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -840,31 +646,56 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private void setChangeFocusListeners() {
         cardNumber.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(cardNumberInput, null));
         groupNumber.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(groupNumberInput, null));
+        policyHolder.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(policyHolderInput, null));
     }
 
     private void setActionListeners() {
-        cardNumber.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                    groupNumber.requestFocus();
-                    return true;
-                }
-                return false;
-            }
-        });
+        cardNumber.setOnEditorActionListener(getEditorActionListener(groupNumber));
+        groupNumber.setOnEditorActionListener(getEditorActionListener(policyHolder));
+        policyHolder.setOnEditorActionListener(getEditorActionListener(null));
+    }
 
-        groupNumber.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+    private TextWatcher getValidInputTextWatcher(final TextInputLayout inputLayout, final boolean requiredField, final String errorMessage){
+        return new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    groupNumber.clearFocus();
-                    SystemUtil.hideSoftKeyboard(getActivity());
+            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(StringUtil.isNullOrEmpty(editable.toString()) && requiredField){
+                    inputLayout.setErrorEnabled(true);
+                    inputLayout.setError(errorMessage);
+
+                }else{
+                    inputLayout.setError(null);
+                    inputLayout.setErrorEnabled(false);
+                }
+                validateForm();
+            }
+        };
+    }
+
+    private TextView.OnEditorActionListener getEditorActionListener(final TextView nextFocus){
+        return new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT && nextFocus!=null) {
+                    nextFocus.requestFocus();
                     return true;
+                }else if(actionId == EditorInfo.IME_ACTION_DONE || nextFocus == null){
+                    textView.clearFocus();
+                    SystemUtil.hideSoftKeyboard(getContext(), textView);
                 }
                 return false;
             }
-        });
+        };
     }
 
 
