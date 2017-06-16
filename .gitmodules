@@ -1,9 +1,3 @@
-[submodule "CarePay/CarePayLibrary/src/main/assets/intake-forms-webview"]
-	path = CarePay/CarePayLibrary/src/main/assets/intake-forms-webview
-	url = git@github.com:CareCloud/quippe-intake-forms.git
-[submodule "CarePay/CarePayLibrary/src/main/assets/carecloud-forms"]
-	path = CarePay/CarePayLibrary/src/main/assets/carecloud-forms
-	url = git@github.com:CareCloud/carecloud-forms.git
 [submodule "CarePay/CarePayLibrary/src/main/assets/breeze-practice-forms"]
 	path = CarePay/CarePayLibrary/src/main/assets/breeze-practice-forms
 	url = git@github.com:CareCloud/breeze-practice-forms.git
