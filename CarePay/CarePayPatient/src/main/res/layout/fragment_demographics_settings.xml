@@ -207,7 +207,7 @@
                 android:layout_marginTop="@dimen/dimen_36dp"
                 android:gravity="start|center_vertical"
                 android:textColor="@color/textview_default_textcolor"
-                android:textSize="@dimen/dimen_19sp"
+                android:textSize="@dimen/text_size_19sp"
                 android:textStyle="bold"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="notifications_heading" />

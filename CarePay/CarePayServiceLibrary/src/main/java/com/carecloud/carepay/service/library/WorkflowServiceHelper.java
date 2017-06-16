@@ -328,12 +328,15 @@ public class WorkflowServiceHelper {
                 if (labels != null && !contains) {
                     Set<Map.Entry<String, JsonElement>> set = labels.entrySet();
                     for (Map.Entry<String, JsonElement> entry : set) {
-                        Label.putLabel(entry.getKey(), entry.getValue().getAsString());
+                        Log.d(state, "Saving Label "+entry.getKey());
+                        Label.putLabelAsync(entry.getKey(), entry.getValue().getAsString());
                     }
+                    Label.applyAsyncLabels();
                     SharedPreferences.Editor editor = ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences().edit();
                     editor.putBoolean("labelFor" + state, true).apply();
                 }
             }
+
 
             private void onResponseUnauthorized(Response<WorkflowDTO> response) throws IOException {
                 String message = response.message().toLowerCase();

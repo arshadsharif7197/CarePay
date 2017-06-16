@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckCompleteInterface;
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
@@ -39,6 +41,8 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
     private CheckCompleteInterface callback;
     private PatientPaymentPayload patientPaymentPayload;
 
+    private @Defs.AppointmentNavigationTypeDef int appointmentNavigationType;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -62,7 +66,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
      */
     public static CheckInCompletedDialogFragment newInstance(boolean hasPayment, AppointmentDTO appointmentsPayloadDTO) {
         Bundle args = new Bundle();
-        args.putBoolean("hasPayment", hasPayment);
+        args.putBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, hasPayment);
         if (appointmentsPayloadDTO != null) {
             DtoHelper.bundleDto(args, appointmentsPayloadDTO);
         }
@@ -74,7 +78,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        hasPayment = getArguments().getBoolean("hasPayment", false);
+        hasPayment = getArguments().getBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, false);
         DTO dto = callback.getDto();
         if (hasPayment) {
             patientPaymentPayload = ((PaymentsModel) dto).getPaymentPayload().getPatientPayments().getPayload().get(0);
@@ -86,6 +90,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
             userImageUrl = ((AppointmentsResultModel) dto).getPayload().getPatientBalances().get(0)
                     .getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
         }
+        appointmentNavigationType = getApplicationPreferences().getAppointmentNavigationOption();
     }
 
     @Override
@@ -95,7 +100,6 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         view.findViewById(R.id.paymentInformation).setVisibility(hasPayment ? View.VISIBLE : View.GONE);
 
         final ImageView userImage = (ImageView) view.findViewById(R.id.userImage);
@@ -136,7 +140,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
         continueTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.navigateToWorkflow();
+                callback.logout();
             }
         });
 
@@ -165,6 +169,11 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
 
         } else {
             paymentTypeTextView.setText(Label.getLabel("payment_confirm_type_no_paid"));
+        }
+
+        if(appointmentNavigationType == Defs.NAVIGATE_CHECKOUT){
+            TextView successMessage = (TextView) view.findViewById(R.id.successMessage);
+            successMessage.setText(Label.getLabel("confirm_appointment_checkout"));
         }
 
     }

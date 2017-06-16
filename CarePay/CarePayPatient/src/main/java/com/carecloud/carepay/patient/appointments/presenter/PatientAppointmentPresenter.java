@@ -10,7 +10,6 @@ import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDia
 import com.carecloud.carepay.patient.appointments.fragments.AvailableHoursFragment;
 import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragment;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.checkout.NextAppointmentActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.appointment.DataDTO;
@@ -23,6 +22,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
@@ -42,6 +42,7 @@ import com.google.gson.JsonObject;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -278,7 +279,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
         header.put("transition", "true");
         TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getCheckingOut();
         final Bundle bundle = new Bundle();
-        bundle.putString(NextAppointmentActivity.APPOINTMENT_ID, appointmentDTO.getPayload().getId());
+        bundle.putString(CarePayConstants.APPOINTMENT_ID, appointmentDTO.getPayload().getId());
         viewHandler.getWorkflowServiceHelper().execute(transitionDTO, new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
@@ -326,6 +327,19 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
 
         TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getLinks().getQueueStatus();
         viewHandler.getWorkflowServiceHelper().execute(transitionDTO, callback, queryMap);
+    }
+
+    @Override
+    public AppointmentsSettingDTO getPracticeSettings() {
+        List<AppointmentsSettingDTO> appointmentsSettingsList = appointmentsResultModel.getPayload().getAppointmentsSettings();
+        if(practiceId != null){
+            for(AppointmentsSettingDTO appointmentsSettingDTO : appointmentsSettingsList){
+                if(appointmentsSettingDTO.getPracticeId().equals(practiceId)){
+                    return appointmentsSettingDTO;
+                }
+            }
+        }
+        return appointmentsSettingsList.get(0);
     }
 
     @Override

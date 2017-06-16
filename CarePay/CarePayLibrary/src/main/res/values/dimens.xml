@@ -34,11 +34,13 @@
     <dimen name="dimen_80dp">80dp</dimen>
     <dimen name="dimen_88dp">88dp</dimen>
     <dimen name="dimen_100dp">100dp</dimen>
+    <dimen name="dimen_110dp">110dp</dimen>
     <dimen name="dimen_114dp">114dp</dimen>
     <dimen name="dimen_120dp">120dp</dimen>
     <dimen name="dimen_130dp">130dp</dimen>
     <dimen name="dimen_138dp">138dp</dimen>
     <dimen name="dimen_150dp">150dp</dimen>
+    <dimen name="dimen_160dp">160dp</dimen>
     <dimen name="dimen_164dp">164dp</dimen>
     <dimen name="dimen_200dp">200dp</dimen>
     <dimen name="dimen_220dp">220dp</dimen>

@@ -68,7 +68,7 @@
             android:name="com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity"
             android:screenOrientation="sensorLandscape" />
         <activity
-            android:name="com.carecloud.carepay.practice.library.checkin.PatientModePracticeCheckInActivity"
+            android:name="com.carecloud.carepay.practice.library.checkin.PatientModeCheckInCheckOutActivity"
             android:screenOrientation="sensorLandscape" />
         <activity
             android:name="com.carecloud.carepay.practice.library.appointments.PatientModePracticeAppointmentActivity"
@@ -82,12 +82,12 @@
             android:launchMode="singleTop"
             android:screenOrientation="sensorLandscape" />
         <activity
-            android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PracticeAppSignatureActivity"
-            android:screenOrientation="sensorLandscape"
-            android:theme="@style/Theme.MyDialog" />
-        <activity
             android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckoutActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="sensorLandscape"/>
         <activity
             android:name="com.carecloud.carepaylibray.qrcodescanner.ScannerActivity"
             android:screenOrientation="sensorLandscape" />

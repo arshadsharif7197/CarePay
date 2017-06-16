@@ -14,12 +14,24 @@ public class SharedPreferenceLabelProvider implements LabelProvider {
 
 
     private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
     private SharedPreferences getSharedPreferences() {
         if (sharedPreferences == null) {
             sharedPreferences = ((AndroidPlatform) Platform.get()).openSharedPreferences(AndroidPlatform.LABELS_FILE_NAME);
         }
         return sharedPreferences;
+    }
+
+    private SharedPreferences.Editor getEditor(){
+        if(editor == null){
+            editor = getSharedPreferences().edit();
+        }
+        return editor;
+    }
+
+    private void resetEditor(){
+        editor = null;
     }
 
     /**
@@ -63,5 +75,18 @@ public class SharedPreferenceLabelProvider implements LabelProvider {
     public void putValue(String key, String value) {
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putString(key, value).apply();
+    }
+
+    @Override
+    public void putValueAsync(String key, String value) {
+        SharedPreferences.Editor editor = getEditor();
+        editor.putString(key, value);
+    }
+
+    @Override
+    public void applyAll() {
+        SharedPreferences.Editor editor = getEditor();
+        editor.apply();
+        resetEditor();
     }
 }

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/screen_background"
-    tools:context=".checkin.PatientModePracticeCheckInActivity">
+    tools:context=".checkin.PatientModeCheckInCheckOutActivity">
 
     <TextView
         android:id="@+id/logoutTextview"

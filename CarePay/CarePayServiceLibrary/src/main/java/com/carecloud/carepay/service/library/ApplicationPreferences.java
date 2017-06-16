@@ -3,13 +3,14 @@ package com.carecloud.carepay.service.library;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.carecloud.carepay.service.library.constants.Defs;
 import com.google.gson.Gson;
 
 import java.util.Set;
 
 
 /**
- * Created by Jahirul Bhuiyan on 9/6/2016.
+ * Created by Jahirul Bhuiyan on 9/6/2016
  */
 public class ApplicationPreferences {
 
@@ -41,6 +42,8 @@ public class ApplicationPreferences {
 
     public static final String PREFERENCE_FILTERED_LOCATIONS = "filteredLocations";
 
+    private static final String PREFERENCE_APPOINTMENT_NAVIGATION_OPTION = "appointment_navigation_option";
+
     private Context context;
 
     private String patientId;
@@ -53,6 +56,7 @@ public class ApplicationPreferences {
     private Boolean navigateToAppointments;
     private Boolean isTutorialShown;
     private String photoUrl;
+    private @Defs.AppointmentNavigationTypeDef Integer navigationOption;
 
     public ApplicationPreferences(Context context) {
         this.context = context;
@@ -72,6 +76,27 @@ public class ApplicationPreferences {
         }
 
         return readBooleanFromSharedPref(PREFERENCE_IS_PATIENT_MODE_APPOINTMENTS);
+    }
+
+    /**
+     * Set the selected Appointment Navigation Option & Store in Shared Pref
+     * @param navigationOption valid navigationOption
+     */
+    public void setAppointmentNavigationOption(@Defs.AppointmentNavigationTypeDef int navigationOption){
+        this.navigationOption = navigationOption;
+        writeIntegerToSharedPref(PREFERENCE_APPOINTMENT_NAVIGATION_OPTION, navigationOption);
+    }
+
+    /**
+     * Get the last selected Appointment Navigation Option
+     * @return selected navigation option
+     */
+    public @Defs.AppointmentNavigationTypeDef int getAppointmentNavigationOption(){
+        if(navigationOption == null){
+            @Defs.AppointmentNavigationTypeDef int savedNavigationOption = readIntFromSharedPref(PREFERENCE_APPOINTMENT_NAVIGATION_OPTION);
+            this.navigationOption = savedNavigationOption;
+        }
+        return navigationOption;
     }
 
     public void setUserLanguage(String newValue) {
@@ -243,6 +268,12 @@ public class ApplicationPreferences {
         editor.apply();
     }
 
+    private void writeIntegerToSharedPref(String key, int value) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putInt(key, value);
+        editor.apply();
+    }
+
     /**
      * Save object to Shared Preferences. Object will be stored as a JSON String
      *
@@ -288,6 +319,14 @@ public class ApplicationPreferences {
 
     private Set<String> readStringSetFromSharedPref(String key) {
         return getSharedPreferences().getStringSet(key, null);
+    }
+
+    private int readIntFromSharedPref(String key){
+        return readIntFromSharedPref(key, -1);
+    }
+
+    private int readIntFromSharedPref(String key, int defaultValue){
+        return getSharedPreferences().getInt(key, defaultValue);
     }
 
     private SharedPreferences getSharedPreferences() {

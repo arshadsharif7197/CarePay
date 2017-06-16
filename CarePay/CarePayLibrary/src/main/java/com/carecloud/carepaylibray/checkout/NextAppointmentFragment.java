@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.checkout;
+package com.carecloud.carepaylibray.checkout;
 
 
 import android.content.Context;
@@ -14,13 +14,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.appointments.fragments.AvailableHoursFragment;
-import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
@@ -38,6 +37,7 @@ import com.google.gson.JsonObject;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,6 +53,7 @@ public class NextAppointmentFragment extends BaseFragment {
     private AppointmentDTO selectedAppointment;
     private TextView visitTypeTextView;
     private TextView visitTimeTextView;
+    private TextView providerMessage;
     private VisitTypeDTO visitType;
     private AppointmentResourcesDTO appointmentResourceDTO;
     private Button scheduleAppointmentButton;
@@ -72,7 +73,7 @@ public class NextAppointmentFragment extends BaseFragment {
     public static NextAppointmentFragment newInstance(String appointmentId) {
         NextAppointmentFragment fragment = new NextAppointmentFragment();
         Bundle args = new Bundle();
-        args.putSerializable(NextAppointmentActivity.APPOINTMENT_ID, appointmentId);
+        args.putSerializable(CarePayConstants.APPOINTMENT_ID, appointmentId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -116,8 +117,13 @@ public class NextAppointmentFragment extends BaseFragment {
     private void setUpToolbar(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         callback.setToolbar(toolbar);
-        TextView title = (TextView) toolbar.findViewById(com.carecloud.carepaylibrary.R.id.respons_toolbar_title);
+        TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(Label.getLabel("next_appointment_toolbar_title"));
+
+        if(!callback.shouldAllowNavigateBack()){
+            toolbar.setNavigationIcon(null);
+            toolbar.setNavigationOnClickListener(null);
+        }
     }
 
     private void setUpUi(View view) {
@@ -142,6 +148,9 @@ public class NextAppointmentFragment extends BaseFragment {
                     }
                 });
 
+        providerMessage = (TextView) findViewById(R.id.providerMessage);
+        setDefaultMessage();
+
         visitTypeTextView = (TextView) view.findViewById(R.id.visitTypeTextView);
         visitTypeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,7 +163,13 @@ public class NextAppointmentFragment extends BaseFragment {
         visitTimeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showAvailableHoursFragment();
+                Date start = null;
+                Date end = null;
+                if(appointmentSlot!=null){
+                    start = DateUtil.getInstance().setDateRaw(appointmentSlot.getStartTime()).getDate();
+                    end = DateUtil.getInstance().setDateRaw(appointmentSlot.getEndTime()).getDate();
+                }
+                callback.showAvailableHoursFragment(start, end, appointmentsResultModel, appointmentResourceDTO.getResource(), visitType);
             }
         });
 
@@ -230,16 +245,6 @@ public class NextAppointmentFragment extends BaseFragment {
                 makeAppointmentJSONObj.toString(), queryMap, header);
     }
 
-    /**
-     * show available hours fragment
-     */
-    public void showAvailableHoursFragment() {
-        AvailableHoursFragment availableHoursFragment = AvailableHoursFragment
-                .newInstance(appointmentsResultModel, appointmentResourceDTO.getResource(),
-                        null, null, visitType);
-        callback.addFragment(availableHoursFragment, true);
-    }
-
     private WorkflowServiceCallback makeAppointmentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -250,10 +255,11 @@ public class NextAppointmentFragment extends BaseFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             onAppointmentRequestSuccess();
-            if (NavigationStateConstants.APPOINTMENTS.equals(workflowDTO.getState())) {
-                callback.showAllDoneFragment(workflowDTO);
+            String state = workflowDTO.getState();
+            if (NavigationStateConstants.APPOINTMENTS.equals(state) || NavigationStateConstants.PATIENT_HOME.equals(state)) {
+                callback.showAllDone(workflowDTO);
             } else {
-                PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+                callback.navigateToWorkflow(workflowDTO);
             }
         }
 
@@ -283,9 +289,9 @@ public class NextAppointmentFragment extends BaseFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             if (NavigationStateConstants.APPOINTMENTS.equals(workflowDTO.getState())) {
-                callback.showAllDoneFragment(workflowDTO);
+                callback.showAllDone(workflowDTO);
             } else {
-                PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+                callback.navigateToWorkflow(workflowDTO);
             }
         }
 
@@ -298,7 +304,7 @@ public class NextAppointmentFragment extends BaseFragment {
     private void onFailureCallback(String exceptionMessage) {
         hideProgressDialog();
         showErrorNotification(exceptionMessage);
-        Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
     }
 
     WorkflowServiceCallback resourcesToScheduleCallback = new WorkflowServiceCallback() {
@@ -342,7 +348,7 @@ public class NextAppointmentFragment extends BaseFragment {
         if (appointmentsResultModel.getPayload().getAppointments().size() == 1) {
             return appointmentsResultModel.getPayload().getAppointments().get(0);
         }
-        String selectedAppointmentId = getArguments().getString(NextAppointmentActivity.APPOINTMENT_ID);
+        String selectedAppointmentId = getArguments().getString(CarePayConstants.APPOINTMENT_ID);
         for (AppointmentDTO appointmentDTO : appointmentsResultModel.getPayload().getAppointments()) {
             if (appointmentDTO.getPayload().getId().equals(selectedAppointmentId)) {
                 return appointmentDTO;
@@ -364,6 +370,7 @@ public class NextAppointmentFragment extends BaseFragment {
             shouldOpenHoursFragment = true;
         }
         appointmentSlot = null;
+        setDefaultMessage();
         visitTimeTextView.setText(Label.getLabel("next_appointment_choose_when_label"));
         findViewById(R.id.providerMessageHeader).setSelected(false);
         return shouldOpenHoursFragment;
@@ -379,7 +386,6 @@ public class NextAppointmentFragment extends BaseFragment {
         visitTypeTextView.setText(visitType.getName());
 
         findViewById(R.id.providerMessageHeader).setSelected(true);
-        TextView providerMessage = (TextView) findViewById(R.id.providerMessage);
         providerMessage.setText(String.format(Label.getLabel("next_appointment_provider_message"),
                 nextAppointmentDate));
         scheduleAppointmentButton.setEnabled(true);
@@ -388,5 +394,13 @@ public class NextAppointmentFragment extends BaseFragment {
     private String getNextAppointmentDate(String time) {
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(time);
         return dateUtil.getDateAsDayMonthDayOrdinal();
+    }
+
+    private void setDefaultMessage(){
+        String label = Label.getLabel("next_appointment_default_provider_message");
+        if(label.contains("%s")){//check if its "format-able"
+            label = String.format(label, selectedAppointment.getPayload().getProvider().getName());
+        }
+        providerMessage.setText(label);
     }
 }

@@ -14,6 +14,7 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.Chec
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
@@ -40,13 +41,20 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complete_check);
         Gson gson = new Gson();
-        Bundle extra = getIntent().getBundleExtra("extra");
-        boolean hasPayment = extra.getBoolean("hasPayment", false);
-        workflowString = extra.getString("workflow");
+        Bundle extra = getIntent().getBundleExtra(CarePayConstants.EXTRA_BUNDLE);
+        boolean hasPayment = extra.getBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, false);
+        long id = extra.getLong(CarePayConstants.EXTRA_WORKFLOW);
+        WorkflowDTO workflowDTO = retrieveStoredWorkflow(id);
+        workflowString = workflowDTO.toString();
+//        workflowString = extra.getString(CarePayConstants.EXTRA_WORKFLOW);
         if (hasPayment) {
             dto = gson.fromJson(workflowString, PaymentsModel.class);
         } else {
             dto = gson.fromJson(workflowString, AppointmentsResultModel.class);
+        }
+        String appointmentTransitionsWorkflow = extra.getString(CarePayConstants.EXTRA_APPOINTMENT_TRANSITIONS);
+        if(appointmentTransitionsWorkflow != null){
+            appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, appointmentTransitionsWorkflow);
         }
 
         AppointmentDTO appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, extra);
@@ -54,6 +62,12 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
             replaceFragment(CheckInCompletedDialogFragment
                     .newInstance(hasPayment, appointmentDTO), false);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle icicle){
+        workflowString = null;
+        super.onSaveInstanceState(icicle);
     }
 
     @Override
@@ -72,16 +86,20 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
     }
 
     @Override
-    public void navigateToWorkflow() {
+    public void logout() {
         Gson gson = new Gson();
-        navigateToWorkflow(gson.fromJson(getIntent().getBundleExtra("extra").getString("workflow"),
-                WorkflowDTO.class));
+        if(appointmentsResultModel == null) {
+            appointmentsResultModel = gson.fromJson(workflowString, AppointmentsResultModel.class);
+        }
+        goToHome(appointmentsResultModel.getMetadata().getTransitions().getLogout());
     }
 
     @Override
     public void showConfirmationPinDialog() {
         Gson gson = new Gson();
-        appointmentsResultModel = gson.fromJson(workflowString, AppointmentsResultModel.class);
+        if(appointmentsResultModel == null) {
+            appointmentsResultModel = gson.fromJson(workflowString, AppointmentsResultModel.class);
+        }
         ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this,
                 appointmentsResultModel.getMetadata().getLinks().getPinpad(), false);
         confirmationPinDialog.show();
@@ -115,4 +133,8 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+    private WorkflowDTO retrieveStoredWorkflow(long id){
+        return new WorkflowDTO(WorkFlowRecord.findById(WorkFlowRecord.class, id));
+    }
 }
