@@ -417,6 +417,9 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         }
     }
 
+    /**
+     * change the camera back/front
+     */
     public void changeCamera() {
         camera.stopPreview();
         camera.release();
@@ -439,6 +442,9 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         cameraSurfaceHolder.addCallback(this);
     }
 
+    /**
+     * turns on the flash of the selected camera
+     */
     public void turnOnFlash() {
         Camera.Parameters params = camera.getParameters();
         params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
@@ -446,6 +452,9 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         camera.startPreview();
     }
 
+    /**
+     * turns off the flash of the current camera
+     */
     public void turnOffFlash() {
         Camera.Parameters params = camera.getParameters();
         params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
@@ -453,6 +462,9 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         camera.startPreview();
     }
 
+    /**
+     * @return a boolean indicating if the selected camera has flash
+     */
     public boolean hasFlash() {
         if (camera == null) {
             return false;
