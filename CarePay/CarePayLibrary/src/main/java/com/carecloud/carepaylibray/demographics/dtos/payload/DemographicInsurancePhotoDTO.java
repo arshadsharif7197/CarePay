@@ -21,6 +21,7 @@ public class DemographicInsurancePhotoDTO {
     @Expose
     private boolean delete = false;
 
+    @Expose(serialize = false, deserialize = false)
     private boolean newPhoto = false;
 
 
