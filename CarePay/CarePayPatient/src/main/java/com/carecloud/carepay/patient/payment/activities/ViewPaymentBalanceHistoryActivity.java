@@ -263,9 +263,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
-//        Gson gson = new Gson();
         Bundle args = new Bundle();
-//        String paymentsDTOString = gson.toJson(paymentsModel);
         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
 
         PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
@@ -295,12 +293,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void loadPaymentAmountScreen(PaymentsBalancesItem selectedBalancesItem, PaymentsModel paymentDTO) {
-//        ResponsibilityFragment responsibilityFragment = ResponsibilityFragment.newInstance(paymentDTO, false);
-//        replaceFragment(responsibilityFragment, true);
         setPendingBalance(selectedBalancesItem);
         selectedUserPractice = DtoHelper.getConvertedDTO(UserPracticeDTO.class, DtoHelper.getStringDTO(selectedBalancesItem.getMetadata()));
         startPaymentProcess(paymentDTO);
-        displayToolbar(false, null);
     }
 
     @Override

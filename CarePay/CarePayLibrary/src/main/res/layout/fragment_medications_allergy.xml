@@ -13,10 +13,11 @@
     <include layout="@layout/toolbar_title_only" />
 
     <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
         android:id="@+id/scroll_medications_allergy"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="@color/white"
         android:fillViewport="true">
 
         <LinearLayout
