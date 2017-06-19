@@ -17,4 +17,25 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="10dp"
         android:background="@drawable/camere_sutter_button_background" />
+
+    <Button
+        android:id="@+id/button_flash"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_above="@id/button_capture"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="@dimen/dimen_40dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/camera_flash_selector"
+        android:enabled="false" />
+
+    <Button
+        android:id="@+id/button_change_camera"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/button_capture"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="@dimen/dimen_40dp"
+        android:background="@drawable/ic_switch_camera" />
 </RelativeLayout>

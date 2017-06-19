@@ -35,6 +35,8 @@ import java.util.List;
  */
 
 public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.Callback {
+    private int currentCameraId;
+
     public enum CameraType {
         CAPTURE_PHOTO, SCAN_DOC
     }
@@ -48,6 +50,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     Rect shadowRect = null;
     boolean surfaceCreated;
     private int displayOrientation;
+    private Handler autoFocusHandler;
 
     public CameraType cameraType = CameraType.SCAN_DOC;
 
@@ -81,11 +84,38 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     }
 
     /**
+     * A safe way to get an instance of the Camera object.
+     */
+    private Camera getCameraInstance() {
+        if (!checkCameraHardware()) {
+            return null;
+        }
+
+        try {
+            int cameraId = cameraType == CameraType.SCAN_DOC ? getFrontFaceCamera() : getBackFaceCamera();
+            displayOrientation = DisplayUtils.getDisplayOrientation(context, cameraId);
+
+            if (HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)) {
+                displayOrientation = 180;
+            }
+
+            Camera camera = Camera.open(cameraId);
+            camera.setDisplayOrientation(displayOrientation);
+
+            return camera;
+        } catch (Exception e) {
+            // Camera is not available (in use or does not exist)
+        }
+
+        return null;
+    }
+
+    /**
      * Get front camera if available otherwisw defaulft camera
      *
      * @return
      */
-    public static int getFrontFaceCamera() {
+    private int getFrontFaceCamera() {
         int numberOfCameras = Camera.getNumberOfCameras();
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
         int defaultCameraId = -1;
@@ -93,6 +123,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
             defaultCameraId = i;
             Camera.getCameraInfo(i, cameraInfo);
             if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                currentCameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
                 return i;
             }
         }
@@ -104,7 +135,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
      *
      * @return
      */
-    public static int getBackFaceCamera() {
+    private int getBackFaceCamera() {
         int numberOfCameras = Camera.getNumberOfCameras();
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
         int defaultCameraId = -1;
@@ -112,6 +143,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
             defaultCameraId = i;
             Camera.getCameraInfo(i, cameraInfo);
             if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+                currentCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
                 return i;
             }
         }
@@ -125,7 +157,6 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
      * @param context sender context
      * @param attrs   styleable attributes
      */
-
     public CarePayCameraPreview(Context context, AttributeSet attrs) {
         super(context, attrs);
         initialize(context);
@@ -141,7 +172,6 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
      * @param attrs        styleable attributes
      * @param defStyleAttr styleable default attributes
      */
-
     public CarePayCameraPreview(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
@@ -209,8 +239,6 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
             scheduleAutoFocus(); // wait 1 sec and then do check again
         }
     }
-
-    private Handler autoFocusHandler;
 
     /**
      * Schedule focus
@@ -310,44 +338,18 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
-    /**
-     * A safe way to get an instance of the Camera object.
-     */
-    private Camera getCameraInstance() {
-        if (!checkCameraHardware()) {
-            return null;
-        }
-
-        try {
-            int cameraId = cameraType == CameraType.CAPTURE_PHOTO ? getFrontFaceCamera() : getBackFaceCamera();
-            displayOrientation = DisplayUtils.getDisplayOrientation(context, cameraId);
-
-            if (HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)) {
-                displayOrientation = 180;
-            }
-
-            Camera camera = Camera.open(cameraId);
-            camera.setDisplayOrientation(displayOrientation);
-
-            return camera;
-        } catch (Exception e) {
-            // Camera is not available (in use or does not exist)
-        }
-
-        return null;
-    }
-
     CarePayCameraCallback carePayCameraCallback;
 
     /**
      * Capture Picture with selected Camera
+     *
      * @param callback callback for captured bitmap
      */
     public void takePicture(CarePayCameraCallback callback) {
         this.carePayCameraCallback = callback;
-        if(camera!=null) {
+        if (camera != null) {
             camera.takePicture(null, null, pictureCallback);
-        }else{
+        } else {
             callback.onCaptureFail();
         }
     }
@@ -413,5 +415,60 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
             camera.release();        // release the camera for other applications
             camera = null;
         }
+    }
+
+    public void changeCamera() {
+        camera.stopPreview();
+        camera.release();
+        if (currentCameraId == Camera.CameraInfo.CAMERA_FACING_BACK) {
+            currentCameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
+        } else {
+            currentCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
+        }
+        camera = Camera.open(currentCameraId);
+        camera.setDisplayOrientation(displayOrientation);
+
+        try {
+            camera.setPreviewDisplay(getHolder());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        camera.startPreview();
+
+        cameraSurfaceHolder = getHolder();
+        cameraSurfaceHolder.addCallback(this);
+    }
+
+    public void turnOnFlash() {
+        Camera.Parameters params = camera.getParameters();
+        params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+        camera.setParameters(params);
+        camera.startPreview();
+    }
+
+    public void turnOffFlash() {
+        Camera.Parameters params = camera.getParameters();
+        params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+        camera.setParameters(params);
+        camera.startPreview();
+    }
+
+    public boolean hasFlash() {
+        if (camera == null) {
+            return false;
+        }
+
+        Camera.Parameters parameters = camera.getParameters();
+
+        if (parameters.getFlashMode() == null) {
+            return false;
+        }
+
+        List<String> supportedFlashModes = parameters.getSupportedFlashModes();
+        if (supportedFlashModes == null || supportedFlashModes.isEmpty() || supportedFlashModes.size() == 1 && supportedFlashModes.get(0).equals(Camera.Parameters.FLASH_MODE_OFF)) {
+            return false;
+        }
+
+        return true;
     }
 }
