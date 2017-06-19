@@ -55,7 +55,7 @@
                 tools:text="How much will you be paying today?"
                 android:textColor="@color/glitter"
                 app:customAssetFont="gotham_rounded_book"
-                breeze:textKey="payment_partial_amount_title" />
+                breeze:textKey="payment_how_much_text" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
