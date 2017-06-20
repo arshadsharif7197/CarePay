@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
+import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 
 /**
  * Created by cocampo on 3/28/17.
@@ -24,6 +25,22 @@ import com.carecloud.carepaylibray.demographics.DemographicsView;
 public class CarePayCameraFragment extends BaseDialogFragment implements CarePayCameraCallback {
 
     private CarePayCameraCallback callback;
+
+    public CarePayCameraFragment() {
+    }
+
+    /**
+     *
+     * @param cameraType the camera type
+     * @return a new instance of CarePayCameraFragment
+     */
+    public static CarePayCameraFragment newInstance(CarePayCameraPreview.CameraType cameraType) {
+        Bundle args = new Bundle();
+        args.putSerializable("cameraType", cameraType);
+        CarePayCameraFragment fragment = new CarePayCameraFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -38,9 +55,9 @@ public class CarePayCameraFragment extends BaseDialogFragment implements CarePay
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(callback == null){
+        if (callback == null) {
             attachCallback(getContext());
         }
     }
@@ -55,9 +72,10 @@ public class CarePayCameraFragment extends BaseDialogFragment implements CarePay
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        CarePayCameraPreview.CameraType cameraType = (CarePayCameraPreview.CameraType) getArguments()
+                .getSerializable("cameraType");
         // Set content
-        CarePayCameraView carePayCameraView = new CarePayCameraView(this, getContext());
+        CarePayCameraView carePayCameraView = new CarePayCameraView(this, getContext(), cameraType);
         ((FrameLayout) view.findViewById(R.id.camera_preview)).addView(carePayCameraView);
     }
 
@@ -89,7 +107,7 @@ public class CarePayCameraFragment extends BaseDialogFragment implements CarePay
         }
     }
 
-    private void attachCallback(Context context){
+    private void attachCallback(Context context) {
         try {
             if (context instanceof DemographicsView) {
                 callback = ((DemographicsView) context).getPresenter();

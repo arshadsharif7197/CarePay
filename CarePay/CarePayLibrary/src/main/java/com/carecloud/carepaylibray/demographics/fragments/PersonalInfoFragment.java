@@ -26,6 +26,7 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
@@ -179,7 +180,8 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
 
     private void initCameraViews(View view){
         ImageView profileImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
-        mediaScannerPresenter = new MediaScannerPresenter(getContext(), this, profileImage);
+        mediaScannerPresenter = new MediaScannerPresenter(getContext(), this, profileImage,
+                CarePayCameraPreview.CameraType.CAPTURE_PHOTO);
 
         buttonChangeCurrentPhoto = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);

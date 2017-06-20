@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
@@ -56,9 +57,9 @@ public abstract class DocumentScannerFragment extends BaseCheckinFragment implem
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(carePayCameraReady == null){
+        if (carePayCameraReady == null) {
             attachCallback(getContext());
         }
     }
@@ -68,7 +69,8 @@ public abstract class DocumentScannerFragment extends BaseCheckinFragment implem
      *
      * @param isFrontScan The camera helper used with a particular imageview
      */
-    public void selectImage(ImageView targetImageView, boolean isFrontScan, ImageCaptureHelper.CameraType cameraType) {
+    public void selectImage(ImageView targetImageView, boolean isFrontScan,
+                            ImageCaptureHelper.CameraType cameraType) {
         this.targetImageView = targetImageView;
         this.isFrontScan = isFrontScan;
         this.cameraType = cameraType;
@@ -91,7 +93,7 @@ public abstract class DocumentScannerFragment extends BaseCheckinFragment implem
                 ImageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.getActionDlOptions(0));
                 boolean result = PermissionsUtil.checkPermissionCamera(getActivity());
                 if (result) {
-                    carePayCameraReady.captureImage(DocumentScannerFragment.this);
+                    carePayCameraReady.captureImage(DocumentScannerFragment.this, CarePayCameraPreview.CameraType.SCAN_DOC);
                 }
             } else if (item == 1) { // "Cancel"
                 dialog.dismiss();
@@ -108,7 +110,7 @@ public abstract class DocumentScannerFragment extends BaseCheckinFragment implem
 
                     if (PermissionsUtil.checkPermissionCamera(getActivity())) {
                         // uncomment when camera activity
-                        carePayCameraReady.captureImage(DocumentScannerFragment.this);
+                        carePayCameraReady.captureImage(DocumentScannerFragment.this, CarePayCameraPreview.CameraType.SCAN_DOC);
                     }
                     break;
 
@@ -205,11 +207,11 @@ public abstract class DocumentScannerFragment extends BaseCheckinFragment implem
     protected void loadFrontPlaceHolder() {
         // if no image to load, simply load the placeholder
         Drawable drawable = null;
-        if(getContext()!=null) {
+        if (getContext() != null) {
             drawable = ContextCompat.getDrawable(getContext(), R.drawable.icn_placeholder_user_profile_png);
         }
 
-        if (imageFront != null && drawable!=null) {
+        if (imageFront != null && drawable != null) {
             imageFront.setImageDrawable(drawable);
         }
     }
@@ -245,7 +247,7 @@ public abstract class DocumentScannerFragment extends BaseCheckinFragment implem
     protected abstract void enablePlanClickable(boolean enabled);
 
     /**
-     *set focus change listeners
+     * set focus change listeners
      */
     protected abstract void setChangeFocusListeners();
 

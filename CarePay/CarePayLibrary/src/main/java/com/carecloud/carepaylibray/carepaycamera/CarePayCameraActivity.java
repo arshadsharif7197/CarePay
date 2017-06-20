@@ -24,7 +24,8 @@ public class CarePayCameraActivity extends BaseActivity implements CarePayCamera
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_care_pay_camera);
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
-        CarePayCameraView carePayCameraView = new CarePayCameraView(this);
+        CarePayCameraView carePayCameraView = new CarePayCameraView(this,
+                (CarePayCameraPreview.CameraType) getIntent().getSerializableExtra("cameraType"));
         preview.addView(carePayCameraView);
 
         OrientationEventListener orientationListener = new OrientationEventListener(this,

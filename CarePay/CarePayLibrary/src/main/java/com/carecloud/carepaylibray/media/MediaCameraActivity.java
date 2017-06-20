@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 
 import org.apache.commons.lang3.NotImplementedException;
 
@@ -17,12 +18,15 @@ import java.io.File;
 
 public class MediaCameraActivity extends BaseActivity implements MediaCameraFragment.MediaCameraCallback {
 
+    private CarePayCameraPreview.CameraType cameraType;
+
     @Override
-    protected void onCreate(Bundle icicle){
+    protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.activity_scanner);
-
-        displayCameraFragment("img_"+System.currentTimeMillis());
+        cameraType = (CarePayCameraPreview.CameraType) getIntent()
+                .getSerializableExtra("cameraType");
+        displayCameraFragment("img_" + System.currentTimeMillis());
     }
 
     @Override
@@ -40,7 +44,7 @@ public class MediaCameraActivity extends BaseActivity implements MediaCameraFrag
 
     @Override
     public void displayCameraFragment(String tempFile) {
-        MediaCameraFragment cameraFragment = MediaCameraFragment.newInstance(tempFile);
+        MediaCameraFragment cameraFragment = MediaCameraFragment.newInstance(tempFile, cameraType);
         replaceFragment(R.id.content_frame, cameraFragment, false);
     }
 }

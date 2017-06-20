@@ -24,6 +24,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 import com.carecloud.carepaylibray.demographics.adapters.InsuranceLineItemsListAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
@@ -38,11 +39,11 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
-import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
+import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
 
 /**
  * Created by lmenendez on 5/24/17
@@ -65,7 +66,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     private DemographicsSettingsFragmentListener callback;
 
 
-    public static SettingsDocumentsFragment newInstance(){
+    public static SettingsDocumentsFragment newInstance() {
         return new SettingsDocumentsFragment();
     }
 
@@ -88,12 +89,12 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_settings_documents, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
         title.setText(Label.getLabel("demographics_label"));
@@ -114,19 +115,19 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     }
 
 
-    private void initDocumentViews(View view){
-        mediaScannerPresenter = new MediaScannerPresenter(getContext(), this);
+    private void initDocumentViews(View view) {
+        mediaScannerPresenter = new MediaScannerPresenter(getContext(), this, CarePayCameraPreview.CameraType.SCAN_DOC);
         documentScannerAdapter = new DocumentScannerAdapter(getContext(), view, mediaScannerPresenter, getApplicationMode().getApplicationType());
         documentScannerAdapter.setIdDocumentsFromData(demographicDTO.getPayload().getDemographics().getPayload().getIdDocument());
     }
 
 
-    private void initHealthInsuranceList(View view){
+    private void initHealthInsuranceList(View view) {
         RecyclerView recyclerView = ((RecyclerView) view.findViewById(R.id.available_health_insurance_list));
         List<DemographicInsurancePayloadDTO> insuranceList = getInsurances(demographicDTO);
         if (adapter == null) {
             adapter = new InsuranceLineItemsListAdapter(getContext(), insuranceList, this, getApplicationMode().getApplicationType());
-        }else{
+        } else {
             adapter.setInsurancesList(insuranceList);
         }
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -142,11 +143,11 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
 
         View noInsurance = view.findViewById(R.id.no_insurance_view);
 
-        if(insuranceList.size()==0){
+        if (insuranceList.size() == 0) {
             noInsurance.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
             addAnotherButton.setText(Label.getLabel("demographics_add_insurance_link"));
-        }else{
+        } else {
             noInsurance.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
             addAnotherButton.setText(Label.getLabel("demographics_add_another_insurance_link"));
@@ -172,7 +173,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         return updatableDemographicDTO;
     }
 
-    private void updateDemographics(){
+    private void updateDemographics() {
         DemographicDTO updateModel = getUpdateModel();
         Gson gson = new Gson();
         String jsonPayload = gson.toJson(updateModel.getPayload().getDemographics().getPayload());
@@ -181,17 +182,17 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         getWorkflowServiceHelper().execute(updateDemographics, updateDemographicsCallback, jsonPayload);
     }
 
-    private DemographicIdDocPayloadDTO getPostModel(){
+    private DemographicIdDocPayloadDTO getPostModel() {
         setupImageBase64();
         DemographicIdDocPayloadDTO docPayloadDTO = new DemographicIdDocPayloadDTO();
-        if(hasFrontImage && base64FrontImage != null){
+        if (hasFrontImage && base64FrontImage != null) {
             DemographicIdDocPhotoDTO docPhotoDTO = new DemographicIdDocPhotoDTO();
             docPhotoDTO.setPage(FRONT_PIC);
             docPhotoDTO.setIdDocPhoto(base64FrontImage);
             docPhotoDTO.setDelete(false);
             docPayloadDTO.getIdDocPhothos().add(docPhotoDTO);
         }
-        if(hasBackImage && base64BackImage != null){
+        if (hasBackImage && base64BackImage != null) {
             DemographicIdDocPhotoDTO docPhotoDTO = new DemographicIdDocPhotoDTO();
             docPhotoDTO.setPage(BACK_PIC);
             docPhotoDTO.setIdDocPhoto(base64BackImage);
@@ -242,25 +243,26 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
 
     /**
      * Refresh this fragments list of insurances
+     *
      * @param demographicDTO updated demographic dto payload
      */
     public void updateInsuranceList(DemographicDTO demographicDTO) {
         this.demographicDTO = demographicDTO;
-        if(getView()!=null) {
+        if (getView() != null) {
             initHealthInsuranceList(getView());
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(!handleActivityResult(requestCode, resultCode, data)){
+        if (!handleActivityResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
     @Override
     public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
-        return mediaScannerPresenter!=null && mediaScannerPresenter.handleActivityResult(requestCode, resultCode, data);
+        return mediaScannerPresenter != null && mediaScannerPresenter.handleActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -270,7 +272,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
 
     @Override
     public void handleRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if(mediaScannerPresenter!=null){
+        if (mediaScannerPresenter != null) {
             mediaScannerPresenter.handleRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
@@ -280,17 +282,17 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         if (filePath != null) {
             documentScannerAdapter.setImageView(filePath, view, true);
             int page;
-            if(view.getId() == documentScannerAdapter.getFrontImageId()){
+            if (view.getId() == documentScannerAdapter.getFrontImageId()) {
                 page = FRONT_PIC;
                 hasFrontImage = true;
-            }else{
+            } else {
                 page = BACK_PIC;
                 hasBackImage = true;
             }
 
             DemographicIdDocPayloadDTO docPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getIdDocument();
-            for(DemographicIdDocPhotoDTO docPhotoDTO : docPayloadDTO.getIdDocPhothos()){
-                if(docPhotoDTO.getPage() == page){
+            for (DemographicIdDocPhotoDTO docPhotoDTO : docPayloadDTO.getIdDocPhothos()) {
+                if (docPhotoDTO.getPage() == page) {
                     docPhotoDTO.setIdDocPhoto(filePath);
                     return;
                 }
@@ -320,13 +322,13 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     public void setupImageBase64() {
         List<DemographicIdDocPhotoDTO> docPhotos = demographicDTO.getPayload().getDemographics().getPayload().getIdDocument().getIdDocPhothos();
         String filePath;
-        for(DemographicIdDocPhotoDTO docPhotoDTO : docPhotos){
-            if(docPhotoDTO.getPage() == FRONT_PIC && hasFrontImage){
+        for (DemographicIdDocPhotoDTO docPhotoDTO : docPhotos) {
+            if (docPhotoDTO.getPage() == FRONT_PIC && hasFrontImage) {
                 filePath = docPhotoDTO.getIdDocPhoto();
                 base64FrontImage = DocumentScannerAdapter.getBase64(getContext(), filePath);
             }
 
-            if(docPhotoDTO.getPage() == BACK_PIC && hasBackImage){
+            if (docPhotoDTO.getPage() == BACK_PIC && hasBackImage) {
                 filePath = docPhotoDTO.getIdDocPhoto();
                 base64BackImage = DocumentScannerAdapter.getBase64(getContext(), filePath);
             }

@@ -27,6 +27,7 @@ import com.carecloud.carepaylibray.qrcodescanner.DisplayUtils;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -35,7 +36,8 @@ import java.util.List;
  */
 
 public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.Callback {
-    public enum CameraType {
+
+    public enum CameraType implements Serializable{
         CAPTURE_PHOTO, SCAN_DOC
     }
 
@@ -48,7 +50,8 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     Rect shadowRect = null;
     boolean surfaceCreated;
     private int displayOrientation;
-
+    private Handler autoFocusHandler;
+    private int currentCameraId;
     public CameraType cameraType = CameraType.SCAN_DOC;
 
     /**
@@ -59,63 +62,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     public CarePayCameraPreview(Context context) {
         super(context);
         this.context = context;
-        initialize(context);
-    }
-
-    /**
-     * Camera initialization
-     *
-     * @param context caller context
-     */
-    private void initialize(Context context) {
-        this.context = context;
-        camera = getCameraInstance();
-        setBackgroundColor(Color.parseColor("#aa575555"));
-        cameraSurfaceHolder = getHolder();
-        cameraSurfaceHolder.addCallback(this);
-        autoFocusHandler = new Handler();
-        setFocusable(true);
-        setFocusableInTouchMode(true);
-
-        cameraSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-    }
-
-    /**
-     * Get front camera if available otherwisw defaulft camera
-     *
-     * @return
-     */
-    public static int getFrontFaceCamera() {
-        int numberOfCameras = Camera.getNumberOfCameras();
-        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
-        int defaultCameraId = -1;
-        for (int i = 0; i < numberOfCameras; i++) {
-            defaultCameraId = i;
-            Camera.getCameraInfo(i, cameraInfo);
-            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                return i;
-            }
-        }
-        return defaultCameraId;
-    }
-
-    /**
-     * Get back camera if available otherwise default camera
-     *
-     * @return
-     */
-    public static int getBackFaceCamera() {
-        int numberOfCameras = Camera.getNumberOfCameras();
-        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
-        int defaultCameraId = -1;
-        for (int i = 0; i < numberOfCameras; i++) {
-            defaultCameraId = i;
-            Camera.getCameraInfo(i, cameraInfo);
-            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
-                return i;
-            }
-        }
-        return defaultCameraId;
+//        initialize();
     }
 
     /**
@@ -125,11 +72,10 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
      * @param context sender context
      * @param attrs   styleable attributes
      */
-
     public CarePayCameraPreview(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initialize(context);
         this.context = context;
+//        initialize();
     }
 
     /**
@@ -141,11 +87,92 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
      * @param attrs        styleable attributes
      * @param defStyleAttr styleable default attributes
      */
-
     public CarePayCameraPreview(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
-        initialize(context);
+//        initialize();
+    }
+
+    /**
+     * Camera initialization
+     *
+     */
+    public void initialize() {
+        camera = getCameraInstance();
+        setBackgroundColor(Color.parseColor("#aa575555"));
+        cameraSurfaceHolder = getHolder();
+        cameraSurfaceHolder.addCallback(this);
+        autoFocusHandler = new Handler();
+        setFocusable(true);
+        setFocusableInTouchMode(true);
+        cameraSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+    }
+
+    /**
+     * A safe way to get an instance of the Camera object.
+     */
+    private Camera getCameraInstance() {
+        if (!checkCameraHardware()) {
+            return null;
+        }
+
+        try {
+            int cameraId = cameraType == CameraType.SCAN_DOC ? getBackFaceCamera() : getFrontFaceCamera();
+            displayOrientation = DisplayUtils.getDisplayOrientation(context, cameraId);
+
+            if (HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)) {
+                displayOrientation = 180;
+            }
+
+            Camera camera = Camera.open(cameraId);
+            camera.setDisplayOrientation(displayOrientation);
+
+            return camera;
+        } catch (Exception e) {
+            // Camera is not available (in use or does not exist)
+        }
+
+        return null;
+    }
+
+    /**
+     * Get front camera if available otherwisw defaulft camera
+     *
+     * @return
+     */
+    private int getFrontFaceCamera() {
+        int numberOfCameras = Camera.getNumberOfCameras();
+        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+        int defaultCameraId = -1;
+        for (int i = 0; i < numberOfCameras; i++) {
+            defaultCameraId = i;
+            Camera.getCameraInfo(i, cameraInfo);
+            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                currentCameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
+                return i;
+            }
+        }
+        return defaultCameraId;
+    }
+
+    /**
+     * Get back camera if available otherwise default camera
+     *
+     * @return
+     */
+    private int getBackFaceCamera() {
+        int numberOfCameras = Camera.getNumberOfCameras();
+        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+        int defaultCameraId = -1;
+        for (int i = 0; i < numberOfCameras; i++) {
+            defaultCameraId = i;
+            Camera.getCameraInfo(i, cameraInfo);
+            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+                currentCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
+                return i;
+            }
+        }
+        return defaultCameraId;
     }
 
     /**
@@ -209,8 +236,6 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
             scheduleAutoFocus(); // wait 1 sec and then do check again
         }
     }
-
-    private Handler autoFocusHandler;
 
     /**
      * Schedule focus
@@ -310,44 +335,18 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
-    /**
-     * A safe way to get an instance of the Camera object.
-     */
-    private Camera getCameraInstance() {
-        if (!checkCameraHardware()) {
-            return null;
-        }
-
-        try {
-            int cameraId = cameraType == CameraType.CAPTURE_PHOTO ? getFrontFaceCamera() : getBackFaceCamera();
-            displayOrientation = DisplayUtils.getDisplayOrientation(context, cameraId);
-
-            if (HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)) {
-                displayOrientation = 180;
-            }
-
-            Camera camera = Camera.open(cameraId);
-            camera.setDisplayOrientation(displayOrientation);
-
-            return camera;
-        } catch (Exception e) {
-            // Camera is not available (in use or does not exist)
-        }
-
-        return null;
-    }
-
     CarePayCameraCallback carePayCameraCallback;
 
     /**
      * Capture Picture with selected Camera
+     *
      * @param callback callback for captured bitmap
      */
     public void takePicture(CarePayCameraCallback callback) {
         this.carePayCameraCallback = callback;
-        if(camera!=null) {
+        if (camera != null) {
             camera.takePicture(null, null, pictureCallback);
-        }else{
+        } else {
             callback.onCaptureFail();
         }
     }
@@ -414,4 +413,87 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
             camera = null;
         }
     }
+
+    /**
+     * change the camera back/front
+     */
+    public void changeCamera() {
+        camera.stopPreview();
+        camera.release();
+        if (currentCameraId == Camera.CameraInfo.CAMERA_FACING_BACK) {
+            currentCameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
+        } else {
+            currentCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
+        }
+        camera = Camera.open(currentCameraId);
+        camera.setDisplayOrientation(displayOrientation);
+
+        try {
+            camera.setPreviewDisplay(getHolder());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        camera.startPreview();
+
+        cameraSurfaceHolder = getHolder();
+        cameraSurfaceHolder.addCallback(this);
+    }
+
+    /**
+     * turns on the flash of the selected camera
+     */
+    public void turnOnFlash() {
+        Camera.Parameters params = camera.getParameters();
+        params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+        camera.setParameters(params);
+        camera.startPreview();
+    }
+
+    /**
+     * turns off the flash of the current camera
+     */
+    public void turnOffFlash() {
+        Camera.Parameters params = camera.getParameters();
+        params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+        camera.setParameters(params);
+        camera.startPreview();
+    }
+
+    /**
+     * @return a boolean indicating if the selected camera has flash
+     */
+    public boolean hasFlash() {
+        if (camera == null) {
+            return false;
+        }
+
+        Camera.Parameters parameters = camera.getParameters();
+
+        if (parameters.getFlashMode() == null) {
+            return false;
+        }
+
+        List<String> supportedFlashModes = parameters.getSupportedFlashModes();
+        if (supportedFlashModes == null || supportedFlashModes.isEmpty() || supportedFlashModes.size() == 1 && supportedFlashModes.get(0).equals(Camera.Parameters.FLASH_MODE_OFF)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return a boolean indicating if device has more than one camera
+     */
+    public boolean canChangeCamera() {
+        return Camera.getNumberOfCameras() > 1;
+    }
+
+    /**
+     *
+     * @param cameraType the camera type
+     */
+    public void setCameraType(CameraType cameraType) {
+        this.cameraType = cameraType;
+    }
+
 }

@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraView;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 
@@ -26,7 +27,9 @@ import java.io.File;
 
 public class MediaCameraFragment extends BaseDialogFragment implements CarePayCameraCallback {
 
-    public interface MediaCameraCallback{
+    private CarePayCameraPreview.CameraType cameraType;
+
+    public interface MediaCameraCallback {
         void onMediaFileCreated(File file);
 
         void displayCameraFragment(String tempFile);
@@ -39,33 +42,47 @@ public class MediaCameraFragment extends BaseDialogFragment implements CarePayCa
 
     /**
      * Create a new instance of media fragment
+     *
      * @param tempFile name of temporary file for storing captured image
      * @return new MediaCameraFragment
      */
-    public static MediaCameraFragment newInstance(String tempFile){
+    public static MediaCameraFragment newInstance(String tempFile) {
+        return newInstance(tempFile, CarePayCameraPreview.CameraType.SCAN_DOC);
+    }
+
+    /**
+     * Create a new instance of media fragment
+     *
+     * @param tempFile   name of temporary file for storing captured image
+     * @param cameraType the camera type
+     * @return new MediaCameraFragment
+     */
+    public static MediaCameraFragment newInstance(String tempFile, CarePayCameraPreview.CameraType cameraType) {
         Bundle args = new Bundle();
         args.putString(BUNDLE_KEY_FILE, tempFile);
+        args.putSerializable("cameraType", cameraType);
         MediaCameraFragment mediaCameraFragment = new MediaCameraFragment();
         mediaCameraFragment.setArguments(args);
         return mediaCameraFragment;
     }
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
-        try{
+        try {
             callback = (MediaCameraCallback) context;
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context does not implement MediaCameraCallback");
         }
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
-        if(args!=null){
+        if (args != null) {
             tempFile = args.getString(BUNDLE_KEY_FILE);
+            cameraType = (CarePayCameraPreview.CameraType) args.getSerializable("cameraType");
         }
     }
 
@@ -81,7 +98,7 @@ public class MediaCameraFragment extends BaseDialogFragment implements CarePayCa
         super.onViewCreated(view, savedInstanceState);
 
         // Set content
-        CarePayCameraView carePayCameraView = new CarePayCameraView(this, getContext());
+        CarePayCameraView carePayCameraView = new CarePayCameraView(this, getContext(), cameraType);
         ((FrameLayout) view.findViewById(R.id.camera_preview)).addView(carePayCameraView);
     }
 
@@ -101,10 +118,10 @@ public class MediaCameraFragment extends BaseDialogFragment implements CarePayCa
     @Override
     public void onCapturedSuccess(Bitmap bitmap) {
         Bitmap rotateBitmap = ImageCaptureHelper.rotateBitmap(bitmap, ImageCaptureHelper.getOrientation());
-        if(tempFile != null) {
+        if (tempFile != null) {
             File file = ImageCaptureHelper.getBitmapFileUrl(getContext(), rotateBitmap, tempFile);
             callback.onMediaFileCreated(file);
-        }else{
+        } else {
             showErrorNotification("no temp file specified");
         }
     }

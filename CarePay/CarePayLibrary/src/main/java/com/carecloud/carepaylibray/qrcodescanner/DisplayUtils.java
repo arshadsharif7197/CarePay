@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.hardware.Camera;
+import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
 import android.view.WindowManager;
@@ -51,6 +52,7 @@ public class DisplayUtils {
         } else {  // back-facing
             result = (info.orientation - degrees + 360) % 360;
         }
+        Log.e("Pablo", "orientation" + result);
 
         return result;
     }
@@ -74,10 +76,11 @@ public class DisplayUtils {
 
     /**
      * Get the size of the display
+     *
      * @param context context
      * @return dislplay size
      */
-    public static Point getDisplaySize(Context context){
+    public static Point getDisplaySize(Context context) {
         WindowManager systemService = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = systemService.getDefaultDisplay();
 

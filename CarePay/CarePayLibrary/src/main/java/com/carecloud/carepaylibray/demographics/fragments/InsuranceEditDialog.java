@@ -28,6 +28,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
@@ -45,13 +46,15 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.marcok.stepprogressbar.StepProgressBar;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_BACK_DTO;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_FRONT_DTO;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_BACK;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_FRONT;
-
 import java.util.List;
 
 public class InsuranceEditDialog extends BaseDialogFragment implements MediaViewInterface {
@@ -178,7 +181,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         editedIndex = arguments.getInt(EDITED_INDEX);
         isPatientMode = arguments.getBoolean(IS_PATIENT_MODE);
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, arguments);
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             String frontString = savedInstanceState.getString(KEY_FRONT_DTO);
             frontInsurancePhotoDTO = DtoHelper.getConvertedDTO(DemographicInsurancePhotoDTO.class, frontString);
             String backString = savedInstanceState.getString(KEY_BACK_DTO);
@@ -192,11 +195,11 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     }
 
     @Override
-    public void onSaveInstanceState(Bundle icicle){
-        if(frontInsurancePhotoDTO != null) {
+    public void onSaveInstanceState(Bundle icicle) {
+        if (frontInsurancePhotoDTO != null) {
             icicle.putString(KEY_FRONT_DTO, DtoHelper.getStringDTO(frontInsurancePhotoDTO));
         }
-        if(backInsurancePhotoDTO != null) {
+        if (backInsurancePhotoDTO != null) {
             icicle.putString(KEY_BACK_DTO, DtoHelper.getStringDTO(backInsurancePhotoDTO));
         }
         icicle.putBoolean(KEY_HAS_FRONT, hasFrontImage);
@@ -465,7 +468,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     }
 
     private void initializeScanArea(View view) {
-        mediaScannerPresenter = new MediaScannerPresenter(getContext(), this);
+        mediaScannerPresenter = new MediaScannerPresenter(getContext(), this,
+                CarePayCameraPreview.CameraType.SCAN_DOC);
         documentScannerAdapter = new DocumentScannerAdapter(getContext(), view, mediaScannerPresenter, getApplicationMode().getApplicationType());
 
 
@@ -474,18 +478,18 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             mediaScannerPresenter.setCaptureView(lastCaptureView);
         }
 
-        if(hasFrontImage || hasBackImage){
+        if (hasFrontImage || hasBackImage) {
             DemographicInsurancePayloadDTO payloadDTO = new DemographicInsurancePayloadDTO();
-            if(frontInsurancePhotoDTO != null){
+            if (frontInsurancePhotoDTO != null) {
                 payloadDTO.getInsurancePhotos().add(frontInsurancePhotoDTO);
                 documentScannerAdapter.setFrontRescan();
             }
-            if(backInsurancePhotoDTO != null){
+            if (backInsurancePhotoDTO != null) {
                 payloadDTO.getInsurancePhotos().add(backInsurancePhotoDTO);
                 documentScannerAdapter.setBackRescan();
             }
             documentScannerAdapter.setInsuranceDocumentsFromData(payloadDTO);
-        }else if (editedIndex != NEW_INSURANCE) {
+        } else if (editedIndex != NEW_INSURANCE) {
             documentScannerAdapter.setInsuranceDocumentsFromData(demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex));
         }
 
