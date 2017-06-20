@@ -225,7 +225,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     appointmentTime.setTextColor(ContextCompat.getColor(getContext(), R.color.slateGray));
                     actionsLayout.setVisibility(View.VISIBLE);
                     if(!appointmentDTO.getPayload().isAppointmentOver() && appointmentDTO.getPayload().isAppointmentToday()) {
-                        cancelAppointment.setVisibility(View.VISIBLE);
+                        if(appointmentDTO.getPayload().isAppointmentCancellable(callback.getPracticeSettings())) {
+                            cancelAppointment.setVisibility(View.VISIBLE);
+                        }
                         leftButton.setVisibility(View.VISIBLE);
                         leftButton.setText(Label.getLabel("appointments_check_in_at_office"));
                         leftButton.setOnClickListener(scanClick);
@@ -277,7 +279,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     appointmentDate.setTextColor(ContextCompat.getColor(getContext(), R.color.textview_default_textcolor));
                     appointmentTime.setTextColor(ContextCompat.getColor(getContext(), R.color.slateGray));
                     if(!appointmentDTO.getPayload().isAppointmentOver()) {
-                        cancelAppointment.setVisibility(View.VISIBLE);
+                        if(appointmentDTO.getPayload().isAppointmentCancellable(callback.getPracticeSettings())) {
+                            cancelAppointment.setVisibility(View.VISIBLE);
+                        }
                         actionsLayout.setVisibility(View.VISIBLE);
                         rightButton.setVisibility(View.VISIBLE);
                         rightButton.setText(Label.getLabel("appointments_check_in_early"));
