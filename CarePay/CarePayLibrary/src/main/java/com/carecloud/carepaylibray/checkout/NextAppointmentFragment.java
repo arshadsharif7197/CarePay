@@ -288,7 +288,8 @@ public class NextAppointmentFragment extends BaseFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            if (NavigationStateConstants.APPOINTMENTS.equals(workflowDTO.getState())) {
+            String state = workflowDTO.getState();
+            if (NavigationStateConstants.APPOINTMENTS.equals(state) || NavigationStateConstants.PATIENT_HOME.equals(state)) {
                 callback.showAllDone(workflowDTO);
             } else {
                 callback.navigateToWorkflow(workflowDTO);

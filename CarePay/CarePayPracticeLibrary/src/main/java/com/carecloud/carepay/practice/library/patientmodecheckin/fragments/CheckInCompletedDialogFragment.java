@@ -80,13 +80,15 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
         super.onCreate(icicle);
         hasPayment = getArguments().getBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, false);
         DTO dto = callback.getDto();
+        selectedAppointment = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
         if (hasPayment) {
             patientPaymentPayload = ((PaymentsModel) dto).getPaymentPayload().getPatientPayments().getPayload().get(0);
-            selectedAppointment = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
             userImageUrl = ((PaymentsModel) dto).getPaymentPayload().getPatientBalances().get(0)
                     .getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
         } else {
-            selectedAppointment = ((AppointmentsResultModel) dto).getPayload().getAppointments().get(0);
+            if(selectedAppointment == null) {
+                selectedAppointment = ((AppointmentsResultModel) dto).getPayload().getAppointments().get(0);
+            }
             if(!((AppointmentsResultModel) dto).getPayload().getPatientBalances().isEmpty()) {
                 userImageUrl = ((AppointmentsResultModel) dto).getPayload().getPatientBalances().get(0)
                         .getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
