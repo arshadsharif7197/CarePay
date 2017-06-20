@@ -403,6 +403,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     public void showPracticeAppointmentDialog(AppointmentDTO appointmentDTO) {
         AppointmentDisplayStyle dialogStyle = AppointmentDisplayStyle.DEFAULT;
         AppointmentsPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
+
         if (appointmentPayloadDTO.getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
             dialogStyle = AppointmentDisplayStyle.REQUESTED;
 
@@ -571,6 +572,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             confirmAppointment(appointmentDTO);
         } else if (appointmentDTO.getPayload().canCheckIn()) {
             launchPatientModeCheckin(appointmentDTO);
+        } else if (appointmentDTO.getPayload().canCheckOut()){
+            launchPatientModeCheckout(appointmentDTO);
         }
     }
 
@@ -596,28 +599,42 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
         TransitionDTO checkinPatientTransition = checkInDTO.getMetadata().getTransitions().getCheckinPatientMode();
 
-        getWorkflowServiceHelper().execute(checkinPatientTransition, patientModeCallback, queryMap);
+        getWorkflowServiceHelper().execute(checkinPatientTransition, getPatientModeCallback(appointmentDTO), queryMap);
     }
 
-    private WorkflowServiceCallback patientModeCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
+    private void launchPatientModeCheckout(AppointmentDTO appointmentDTO) {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("appointment_id", appointmentDTO.getPayload().getId());
 
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
-            finish();
-        }
+        TransitionDTO checkoutPatientTransition = checkInDTO.getMetadata().getTransitions().getCheckoutPatientMode();
 
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            showErrorNotification(exceptionMessage);
-        }
-    };
+        getWorkflowServiceHelper().execute(checkoutPatientTransition, getPatientModeCallback(appointmentDTO), queryMap);
+    }
+
+
+    private WorkflowServiceCallback getPatientModeCallback(final AppointmentDTO appointmentDTO) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                Bundle appointmentInfo = new Bundle();
+                appointmentInfo.putString(CarePayConstants.APPOINTMENT_ID, appointmentDTO.getPayload().getId());
+                PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, appointmentInfo);
+                finish();
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+            }
+        };
+    }
 
     @Override
     public void cancelAppointment(AppointmentDTO appointmentDTO) {

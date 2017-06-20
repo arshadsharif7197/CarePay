@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
+import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
@@ -29,6 +31,7 @@ import java.text.NumberFormat;
 public class ResponsibilityFragment extends ResponsibilityBaseFragment {
 
     private PendingBalanceDTO selectedBalance;
+    private PaymentFragmentActivityInterface toolbarCallback;
 
     /**
      * @param paymentsDTO              the payments DTO
@@ -62,6 +65,17 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
     }
 
     @Override
+    public void attachCallback(Context context) {
+        super.attachCallback(context);
+        try {
+            toolbarCallback = (PaymentFragmentActivityInterface) context;
+        } catch (ClassCastException cce) {
+            //this calback is optional
+        }
+    }
+
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getPaymentInformation();
@@ -90,6 +104,10 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
             paymentsTitleString = getArguments().getString("title");
         }
         title.setText(paymentsTitleString);
+
+        if(toolbarCallback != null){
+            toolbarCallback.displayToolbar(false, null);
+        }
 
 
         Button payTotalAmountButton = (Button) view.findViewById(R.id.pay_total_amount_button);

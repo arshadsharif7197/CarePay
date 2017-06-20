@@ -10,7 +10,7 @@ import java.util.List;
  * Created by lmenendez on 5/16/17
  */
 
-public class DemographicsField {
+public class DemographicsInsuranceField {
 
     @SerializedName("display")
     @Expose
@@ -22,7 +22,7 @@ public class DemographicsField {
 
     @SerializedName("options")
     @Expose
-    private List<DemographicsOption> options = new ArrayList<>();
+    private List<DemographicsInsuranceOption> options = new ArrayList<>();
 
     public boolean isDisplayed() {
         return displayed;
@@ -40,11 +40,11 @@ public class DemographicsField {
         this.required = required;
     }
 
-    public List<DemographicsOption> getOptions() {
+    public List<DemographicsInsuranceOption> getOptions() {
         return options;
     }
 
-    public void setOptions(List<DemographicsOption> options) {
+    public void setOptions(List<DemographicsInsuranceOption> options) {
         this.options = options;
     }
 }
