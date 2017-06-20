@@ -14,18 +14,18 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.PermissionsUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+
 /**
  * Created by lmenendez on 4/24/17.
- *
  */
 
 public class MediaScannerPresenter {
@@ -47,22 +47,25 @@ public class MediaScannerPresenter {
     private View captureView;
 
     private String pendingAction;
+    private CarePayCameraPreview.CameraType cameraType;
 
     /**
      * Presenter for handling any views that require use of the Camera or Gallery
-     * @param context context
-     * @param mediaViewInterface  view interface
+     *
+     * @param context            context
+     * @param mediaViewInterface view interface
      */
-    public MediaScannerPresenter(Context context, MediaViewInterface mediaViewInterface){
+    public MediaScannerPresenter(Context context, MediaViewInterface mediaViewInterface) {
         this.context = context;
         this.mediaViewInterface = mediaViewInterface;
     }
 
     /**
      * Presenter for handling any views that require use of the Camera or Gallery
-     * @param context context
-     * @param mediaViewInterface  view interface
-     * @param captureView view for setting captured image
+     *
+     * @param context            context
+     * @param mediaViewInterface view interface
+     * @param captureView        view for setting captured image
      */
     public MediaScannerPresenter(Context context, MediaViewInterface mediaViewInterface, View captureView) {
         this(context, mediaViewInterface);
@@ -72,18 +75,29 @@ public class MediaScannerPresenter {
 
     /**
      * Change the capture view for this presenter
+     *
      * @param captureView new view for setting captured image
      */
-    public void setCaptureView(View captureView){
+    public void setCaptureView(View captureView) {
         this.captureView = captureView;
         captureViewId = captureView.getId();
     }
 
     /**
      * Start Image Selection by presenting a set of choices
-     * @param includeGalleryOption should include select from Gallery choice
+     *
+     * @param includeGalleryOption
      */
     public void selectImage(boolean includeGalleryOption) {
+        selectImage(includeGalleryOption, CarePayCameraPreview.CameraType.SCAN_DOC);
+    }
+
+    /**
+     * Start Image Selection by presenting a set of choices
+     *
+     * @param includeGalleryOption should include select from Gallery choice
+     */
+    public void selectImage(boolean includeGalleryOption, CarePayCameraPreview.CameraType cameraType) {
         // create the chooser dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         String title = StringUtil.captialize(Label.getLabel("demographics_select_capture_option_title"));
@@ -91,7 +105,7 @@ public class MediaScannerPresenter {
 
         List<String> mediaOptions = getMediaOptions(includeGalleryOption);
         MediaActionAdapter mediaActionAdapter = new MediaActionAdapter(context, mediaOptions);
-        builder.setAdapter(mediaActionAdapter, getActionItemClickListener(mediaOptions));
+        builder.setAdapter(mediaActionAdapter, getActionItemClickListener(mediaOptions, cameraType));
 
         builder.setCancelable(false);
         builder.show();
@@ -99,11 +113,12 @@ public class MediaScannerPresenter {
 
     /**
      * Forward permission result handling to presenter
-     * @param requestCode requestCode
-     * @param permissions permissions
+     *
+     * @param requestCode  requestCode
+     * @param permissions  permissions
      * @param grantResults grantResults
      */
-    public void handleRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
+    public void handleRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case PermissionsUtil.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && pendingAction.equals(ACTION_GALLERY)) {
@@ -116,7 +131,7 @@ public class MediaScannerPresenter {
 
             case PermissionsUtil.MY_PERMISSIONS_CAMERA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && pendingAction.equals(ACTION_PICTURE)) {
-                    handlePictureAction();
+                    handlePictureAction(cameraType);
                 } else {
                     //code for deny
                     Log.v(LOG_TAG, "camera denied");
@@ -131,12 +146,13 @@ public class MediaScannerPresenter {
 
     /**
      * Forward Activity Result handling
+     *
      * @param requestCode request Code
-     * @param resultCode result Code
-     * @param data intent data
+     * @param resultCode  result Code
+     * @param data        intent data
      * @return true if handled
      */
-    public boolean handleActivityResult(int requestCode, int resultCode, Intent data){
+    public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_CODE_GALLERY: {
@@ -150,10 +166,10 @@ public class MediaScannerPresenter {
                 }
                 case REQUEST_CODE_CAPTURE: {
                     String filePath = null;
-                    if(data!=null){
+                    if (data != null) {
                         filePath = data.getStringExtra(DATA_CAPTURED_IMAGE_KEY);
                     }
-                    if(filePath!=null) {
+                    if (filePath != null) {
                         mediaViewInterface.setCapturedBitmap(filePath, captureView);
                     }
                     return true;
@@ -165,15 +181,16 @@ public class MediaScannerPresenter {
         return false;
     }
 
-    private DialogInterface.OnClickListener getActionItemClickListener(final List<String> mediaOptions) {
+    private DialogInterface.OnClickListener getActionItemClickListener(final List<String> mediaOptions,
+                                                                       final CarePayCameraPreview.CameraType cameraType) {
         return new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String option = mediaOptions.get(which);
-                switch(option){
+                switch (option) {
                     case ACTION_PICTURE:
-                        handlePictureAction();
-                        break ;
+                        handlePictureAction(cameraType);
+                        break;
                     case ACTION_GALLERY:
                         handleGalleryAction();
                         break;
@@ -185,30 +202,31 @@ public class MediaScannerPresenter {
         };
     }
 
-    private void setPendingAction(String action){
+    private void setPendingAction(String action) {
         this.pendingAction = action;
     }
 
-    private void handlePictureAction(){
+    private void handlePictureAction(CarePayCameraPreview.CameraType cameraType) {
         setPendingAction(ACTION_PICTURE);
-        if(mediaViewInterface.getCallingFragment()!=null){
-            if(!PermissionsUtil.checkPermissionCamera(mediaViewInterface.getCallingFragment())){
+        this.cameraType = cameraType;
+        if (mediaViewInterface.getCallingFragment() != null) {
+            if (!PermissionsUtil.checkPermissionCamera(mediaViewInterface.getCallingFragment())) {
                 return;
             }
-        }else if(!PermissionsUtil.checkPermissionCamera(context)){
+        } else if (!PermissionsUtil.checkPermissionCamera(context)) {
             return;
         }
 
-        captureImage();
+        captureImage(cameraType);
     }
 
-    private void handleGalleryAction(){
+    private void handleGalleryAction() {
         setPendingAction(ACTION_GALLERY);
-        if(mediaViewInterface.getCallingFragment()!=null){
-            if(!PermissionsUtil.checkPermissionStorage(mediaViewInterface.getCallingFragment())){
+        if (mediaViewInterface.getCallingFragment() != null) {
+            if (!PermissionsUtil.checkPermissionStorage(mediaViewInterface.getCallingFragment())) {
                 return;
             }
-        }else if(!PermissionsUtil.checkPermissionStorage(context)){
+        } else if (!PermissionsUtil.checkPermissionStorage(context)) {
             return;
         }
 
@@ -216,11 +234,11 @@ public class MediaScannerPresenter {
 
     }
 
-    private List<String> getMediaOptions(boolean includeGallery){
+    private List<String> getMediaOptions(boolean includeGallery) {
         List<String> mediaOptions = new ArrayList<>();
 
         mediaOptions.add(ACTION_PICTURE);
-        if(includeGallery){
+        if (includeGallery) {
             mediaOptions.add(ACTION_GALLERY);
         }
         mediaOptions.add(ACTION_CANCEL);
@@ -228,8 +246,9 @@ public class MediaScannerPresenter {
         return mediaOptions;
     }
 
-    private void captureImage() {
+    private void captureImage(CarePayCameraPreview.CameraType cameraType) {
         Intent intent = new Intent(context, MediaCameraActivity.class);
+        intent.putExtra("cameraType", cameraType);
         mediaViewInterface.handleStartActivityForResult(intent, REQUEST_CODE_CAPTURE);
     }
 
@@ -237,7 +256,7 @@ public class MediaScannerPresenter {
         private Context context;
         private List<String> items = new ArrayList<>();
 
-        MediaActionAdapter(Context context, List<String> items){
+        MediaActionAdapter(Context context, List<String> items) {
             this.context = context;
             this.items = items;
         }
@@ -260,7 +279,7 @@ public class MediaScannerPresenter {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View itemView = convertView;
-            if(itemView == null){
+            if (itemView == null) {
                 itemView = LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1, parent, false);
             }
 

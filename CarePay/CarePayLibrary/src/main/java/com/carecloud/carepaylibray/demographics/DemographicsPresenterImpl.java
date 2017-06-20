@@ -15,6 +15,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraFragment;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
@@ -361,7 +362,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     @Override
-    public void captureImage(CarePayCameraCallback callback) {
+    public void captureImage(CarePayCameraCallback callback, CarePayCameraPreview.CameraType cameraType) {
         this.carePayCameraCallback = callback;
 
         String tag = CarePayCameraFragment.class.getName();
@@ -372,7 +373,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             ft.remove(prev);
         }
 
-        CarePayCameraFragment dialog = new CarePayCameraFragment();
+        CarePayCameraFragment dialog = CarePayCameraFragment.newInstance(cameraType);
         dialog.show(ft, tag);
     }
 

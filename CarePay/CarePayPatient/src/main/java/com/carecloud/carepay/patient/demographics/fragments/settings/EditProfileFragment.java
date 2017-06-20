@@ -29,6 +29,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
@@ -129,7 +130,7 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
         changeProfilePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mediaScannerPresenter.selectImage(true);
+                mediaScannerPresenter.selectImage(true, CarePayCameraPreview.CameraType.CAPTURE_PHOTO);
             }
 
         });
@@ -202,27 +203,27 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
 
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         handleRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
     public void handleRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if(mediaScannerPresenter!=null){
+        if (mediaScannerPresenter != null) {
             mediaScannerPresenter.handleRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(!handleActivityResult(requestCode, resultCode, data)) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (!handleActivityResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
     @Override
     public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
-        return mediaScannerPresenter!=null && mediaScannerPresenter.handleActivityResult(requestCode, resultCode, data);
+        return mediaScannerPresenter != null && mediaScannerPresenter.handleActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -237,19 +238,19 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
         }
     }
 
-    private void displayImage(String filePath, View view){
+    private void displayImage(String filePath, View view) {
         final ImageView imageView = (ImageView) view;
 
-        imageView.measure(0,0);
+        imageView.measure(0, 0);
         ViewGroup.LayoutParams lp = imageView.getLayoutParams();
         final int width = Math.max(imageView.getMeasuredWidth(), lp.width);
         final int height = Math.max(imageView.getMeasuredHeight(), lp.height);
 
         File file = new File(filePath);
         Uri fileUri;
-        if(file.exists()){
+        if (file.exists()) {
             fileUri = Uri.fromFile(file);
-        }else{
+        } else {
             fileUri = Uri.parse(filePath);
         }
 
@@ -290,20 +291,20 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
 
     @Override
     public void setupImageBase64() {
-        if(hasNewImage){
+        if (hasNewImage) {
             String filePath = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
             File file = new File(filePath);
             Bitmap bitmap = null;
-            if(file.exists()) {
+            if (file.exists()) {
                 bitmap = BitmapFactory.decodeFile(filePath);
-            }else{
+            } else {
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.parse(filePath));
-                }catch (IOException ioe){
+                } catch (IOException ioe) {
                     //do nothing
                 }
             }
-            if(bitmap != null){
+            if (bitmap != null) {
                 String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
                 demographicsPersonalDetails.setProfilePhoto(imageAsBase64);

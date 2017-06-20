@@ -26,13 +26,13 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraActivity;
 
-import static com.carecloud.carepaylibray.utils.ImageCaptureHelper.ImageShape.RECTANGULAR;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import static com.carecloud.carepaylibray.utils.ImageCaptureHelper.ImageShape.RECTANGULAR;
 
 
 /**
@@ -215,7 +215,7 @@ public class ImageCaptureHelper {
      * Callback method to be used upon returning from Gallery activity
      *
      * @param context context
-     * @param data intent data
+     * @param data    intent data
      * @return compressed bitmap
      */
     public static Bitmap getBitmapFromGalleryResult(Context context, Intent data) {
@@ -253,8 +253,10 @@ public class ImageCaptureHelper {
         return new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     }
 
-    private static Intent cameraIntent(Context context) {
-        return new Intent(context, CarePayCameraActivity.class);
+    private static Intent cameraIntent(Context context, CameraType cameraType) {
+        Intent intent = new Intent(context, CarePayCameraActivity.class);
+        intent.putExtra("cameraType", cameraType);
+        return intent;
     }
 
     /**
@@ -265,7 +267,7 @@ public class ImageCaptureHelper {
     public static void requestCamera(Activity context, CameraType cameraType) {
         Intent intent;
         if (cameraType == CameraType.CUSTOM_CAMERA) {
-            intent = cameraIntent(context);
+            intent = cameraIntent(context, cameraType);
         } else {
             intent = cameraIntent(); // launch default
         }
@@ -456,18 +458,19 @@ public class ImageCaptureHelper {
 
     /**
      * Convenience method for caching a bitmap to cache storage file
-     * @param context context
-     * @param bitmap bitmap
+     *
+     * @param context  context
+     * @param bitmap   bitmap
      * @param fileName file
      * @return file of saved bitmap or null if i/o error
      */
-    public static File getBitmapFileUrl(Context context, Bitmap bitmap, String fileName){
+    public static File getBitmapFileUrl(Context context, Bitmap bitmap, String fileName) {
         File fileDirectory = context.getCacheDir();
-        File imageFile = new File(fileDirectory, fileName+ JPF_EXT);
+        File imageFile = new File(fileDirectory, fileName + JPF_EXT);
 
         OutputStream outputStream;
-        try{
-            if(imageFile.exists()){
+        try {
+            if (imageFile.exists()) {
                 imageFile.delete();
                 imageFile.createNewFile();
             }
@@ -477,7 +480,7 @@ public class ImageCaptureHelper {
             outputStream.flush();
             outputStream.close();
 
-        }catch (IOException ioe){
+        } catch (IOException ioe) {
             ioe.printStackTrace();
             return null;
         }

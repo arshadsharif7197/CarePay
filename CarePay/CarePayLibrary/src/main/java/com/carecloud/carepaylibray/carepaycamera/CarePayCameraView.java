@@ -14,21 +14,24 @@ import com.carecloud.carepaylibrary.R;
  */
 
 public class CarePayCameraView extends RelativeLayout {
+    private CarePayCameraPreview.CameraType cameraType;
     private CarePayCameraCallback callback;
-    Context context;
-    Button buttonCapture;
+    private Context context;
+    private Button buttonCapture;
     private CarePayCameraPreview carePayCameraPreview;
 
     /**
      * Public constructor with context
-     *
-     * @param callback after photo taken
+     *  @param callback after photo taken
      * @param context  sender context
+     * @param cameraType
      */
-    public CarePayCameraView(CarePayCameraCallback callback, Context context) {
+    public CarePayCameraView(CarePayCameraCallback callback, Context context,
+                             CarePayCameraPreview.CameraType cameraType) {
         super(context);
         this.callback = callback;
         this.context = context;
+        this.cameraType = cameraType;
         init(null);
     }
 
@@ -37,8 +40,8 @@ public class CarePayCameraView extends RelativeLayout {
      *
      * @param context sender context
      */
-    public CarePayCameraView(Context context) {
-        this((CarePayCameraCallback) context, context);
+    public CarePayCameraView(Context context, CarePayCameraPreview.CameraType cameraType) {
+        this((CarePayCameraCallback) context, context, cameraType);
     }
 
     /**
@@ -79,6 +82,8 @@ public class CarePayCameraView extends RelativeLayout {
         inflate(context, R.layout.view_carepay_camera, this);
         buttonCapture = (Button) findViewById(R.id.button_capture);
         carePayCameraPreview = (CarePayCameraPreview) findViewById(R.id.camera_preview);
+        carePayCameraPreview.setCameraType(cameraType);
+        carePayCameraPreview.initialize();
         buttonCapture.setOnClickListener(onCaptureClick);
 
         final Button flashButton = (Button) findViewById(R.id.button_flash);

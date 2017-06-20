@@ -26,6 +26,7 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
@@ -190,7 +191,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
                 @Override
                 public void onClick(View view) {
                     boolean isPatientApp = getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT;
-                    mediaScannerPresenter.selectImage(isPatientApp);
+                    mediaScannerPresenter.selectImage(isPatientApp, CarePayCameraPreview.CameraType.CAPTURE_PHOTO);
                 }
             });
         }

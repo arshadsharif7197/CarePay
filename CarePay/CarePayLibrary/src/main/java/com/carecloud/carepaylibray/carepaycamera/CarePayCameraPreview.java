@@ -27,6 +27,7 @@ import com.carecloud.carepaylibray.qrcodescanner.DisplayUtils;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -35,9 +36,8 @@ import java.util.List;
  */
 
 public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.Callback {
-    private int currentCameraId;
 
-    public enum CameraType {
+    public enum CameraType implements Serializable{
         CAPTURE_PHOTO, SCAN_DOC
     }
 
@@ -51,7 +51,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     boolean surfaceCreated;
     private int displayOrientation;
     private Handler autoFocusHandler;
-
+    private int currentCameraId;
     public CameraType cameraType = CameraType.SCAN_DOC;
 
     /**
@@ -62,7 +62,35 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     public CarePayCameraPreview(Context context) {
         super(context);
         this.context = context;
-        initialize(context);
+//        initialize();
+    }
+
+    /**
+     * Public constructor with context and Attribute.
+     * All the custom styleable declare are apply here also.
+     *
+     * @param context sender context
+     * @param attrs   styleable attributes
+     */
+    public CarePayCameraPreview(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.context = context;
+//        initialize();
+    }
+
+    /**
+     * Public constructor with context, Attributes and default attributes.
+     * All the custom styleable declare are apply here also.
+     * Default attributes also apply here
+     *
+     * @param context      sender context
+     * @param attrs        styleable attributes
+     * @param defStyleAttr styleable default attributes
+     */
+    public CarePayCameraPreview(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        this.context = context;
+//        initialize();
     }
 
     /**
@@ -70,8 +98,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
      *
      * @param context caller context
      */
-    private void initialize(Context context) {
-        this.context = context;
+    public void initialize() {
         camera = getCameraInstance();
         setBackgroundColor(Color.parseColor("#aa575555"));
         cameraSurfaceHolder = getHolder();
@@ -79,7 +106,6 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         autoFocusHandler = new Handler();
         setFocusable(true);
         setFocusableInTouchMode(true);
-
         cameraSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
     }
 
@@ -92,7 +118,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         }
 
         try {
-            int cameraId = cameraType == CameraType.SCAN_DOC ? getFrontFaceCamera() : getBackFaceCamera();
+            int cameraId = cameraType == CameraType.SCAN_DOC ? getBackFaceCamera() : getFrontFaceCamera();
             displayOrientation = DisplayUtils.getDisplayOrientation(context, cameraId);
 
             if (HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)) {
@@ -148,34 +174,6 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
             }
         }
         return defaultCameraId;
-    }
-
-    /**
-     * Public constructor with context and Attribute.
-     * All the custom styleable declare are apply here also.
-     *
-     * @param context sender context
-     * @param attrs   styleable attributes
-     */
-    public CarePayCameraPreview(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        initialize(context);
-        this.context = context;
-    }
-
-    /**
-     * Public constructor with context, Attributes and default attributes.
-     * All the custom styleable declare are apply here also.
-     * Default attributes also apply here
-     *
-     * @param context      sender context
-     * @param attrs        styleable attributes
-     * @param defStyleAttr styleable default attributes
-     */
-    public CarePayCameraPreview(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        this.context = context;
-        initialize(context);
     }
 
     /**
@@ -491,5 +489,12 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         return Camera.getNumberOfCameras() > 1;
     }
 
+    /**
+     *
+     * @param cameraType the camera type
+     */
+    public void setCameraType(CameraType cameraType) {
+        this.cameraType = cameraType;
+    }
 
 }
