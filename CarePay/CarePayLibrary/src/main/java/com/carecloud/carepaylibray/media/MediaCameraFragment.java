@@ -32,7 +32,7 @@ public class MediaCameraFragment extends BaseDialogFragment implements CarePayCa
     public interface MediaCameraCallback {
         void onMediaFileCreated(File file);
 
-        void displayCameraFragment(String tempFile, CarePayCameraPreview.CameraType cameraType);
+        void displayCameraFragment(String tempFile);
     }
 
     public static final String BUNDLE_KEY_FILE = "bundleKeyFile";
@@ -43,8 +43,18 @@ public class MediaCameraFragment extends BaseDialogFragment implements CarePayCa
     /**
      * Create a new instance of media fragment
      *
+     * @param tempFile name of temporary file for storing captured image
+     * @return new MediaCameraFragment
+     */
+    public static MediaCameraFragment newInstance(String tempFile) {
+        return newInstance(tempFile, CarePayCameraPreview.CameraType.SCAN_DOC);
+    }
+
+    /**
+     * Create a new instance of media fragment
+     *
      * @param tempFile   name of temporary file for storing captured image
-     * @param cameraType
+     * @param cameraType the camera type
      * @return new MediaCameraFragment
      */
     public static MediaCameraFragment newInstance(String tempFile, CarePayCameraPreview.CameraType cameraType) {

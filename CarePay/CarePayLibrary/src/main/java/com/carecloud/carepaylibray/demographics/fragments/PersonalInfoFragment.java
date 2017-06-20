@@ -180,7 +180,8 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
 
     private void initCameraViews(View view){
         ImageView profileImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
-        mediaScannerPresenter = new MediaScannerPresenter(getContext(), this, profileImage);
+        mediaScannerPresenter = new MediaScannerPresenter(getContext(), this, profileImage,
+                CarePayCameraPreview.CameraType.CAPTURE_PHOTO);
 
         buttonChangeCurrentPhoto = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
@@ -191,7 +192,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
                 @Override
                 public void onClick(View view) {
                     boolean isPatientApp = getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT;
-                    mediaScannerPresenter.selectImage(isPatientApp, CarePayCameraPreview.CameraType.CAPTURE_PHOTO);
+                    mediaScannerPresenter.selectImage(isPatientApp);
                 }
             });
         }

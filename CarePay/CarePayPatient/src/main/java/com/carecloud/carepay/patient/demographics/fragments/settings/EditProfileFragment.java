@@ -111,11 +111,13 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
 
         setClickListeners(view);
 
-        mediaScannerPresenter = new MediaScannerPresenter(getContext(), this, profileImageView);
+        mediaScannerPresenter = new MediaScannerPresenter(getContext(), this, profileImageView,
+                CarePayCameraPreview.CameraType.CAPTURE_PHOTO);
     }
 
     private void getPersonalDetails() {
-        PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
+        PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload()
+                .getDemographics().getPayload().getPersonalDetails();
         String imageUrl = demographicsPersonalDetails.getProfilePhoto();
         if (!StringUtil.isNullOrEmpty(imageUrl)) {
             displayImage(imageUrl, profileImageView);
@@ -130,7 +132,7 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
         changeProfilePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mediaScannerPresenter.selectImage(true, CarePayCameraPreview.CameraType.CAPTURE_PHOTO);
+                mediaScannerPresenter.selectImage(true);
             }
 
         });

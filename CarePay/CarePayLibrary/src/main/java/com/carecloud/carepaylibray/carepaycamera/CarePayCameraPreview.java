@@ -96,7 +96,6 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     /**
      * Camera initialization
      *
-     * @param context caller context
      */
     public void initialize() {
         camera = getCameraInstance();

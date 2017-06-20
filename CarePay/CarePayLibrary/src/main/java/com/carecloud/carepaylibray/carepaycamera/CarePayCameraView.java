@@ -14,7 +14,8 @@ import com.carecloud.carepaylibrary.R;
  */
 
 public class CarePayCameraView extends RelativeLayout {
-    private CarePayCameraPreview.CameraType cameraType;
+
+    private CarePayCameraPreview.CameraType cameraType = CarePayCameraPreview.CameraType.SCAN_DOC;
     private CarePayCameraCallback callback;
     private Context context;
     private Button buttonCapture;
@@ -22,9 +23,23 @@ public class CarePayCameraView extends RelativeLayout {
 
     /**
      * Public constructor with context
-     *  @param callback after photo taken
-     * @param context  sender context
-     * @param cameraType
+     *
+     * @param callback   after photo taken
+     * @param context    sender context
+     */
+    public CarePayCameraView(CarePayCameraCallback callback, Context context) {
+        super(context);
+        this.callback = callback;
+        this.context = context;
+        init(null);
+    }
+
+    /**
+     * Public constructor with context
+     *
+     * @param callback   after photo taken
+     * @param context    sender context
+     * @param cameraType the camera type
      */
     public CarePayCameraView(CarePayCameraCallback callback, Context context,
                              CarePayCameraPreview.CameraType cameraType) {
@@ -39,6 +54,7 @@ public class CarePayCameraView extends RelativeLayout {
      * Public constructor with context
      *
      * @param context sender context
+     * @param cameraType the camera type
      */
     public CarePayCameraView(Context context, CarePayCameraPreview.CameraType cameraType) {
         this((CarePayCameraCallback) context, context, cameraType);

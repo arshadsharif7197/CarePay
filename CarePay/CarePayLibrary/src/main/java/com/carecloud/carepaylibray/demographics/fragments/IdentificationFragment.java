@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPhotoDTO;
@@ -20,13 +21,13 @@ import com.carecloud.carepaylibray.media.MediaScannerPresenter;
 import com.carecloud.carepaylibray.media.MediaViewInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
+import java.util.List;
+
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_DTO;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_BACK;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_FRONT;
-
-import java.util.List;
 
 
 public class IdentificationFragment extends CheckInDemographicsBaseFragment implements MediaViewInterface {
@@ -41,12 +42,12 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
     private String base64BackImage;
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
-        if(icicle != null){
+        if (icicle != null) {
             String demographicDtoString = icicle.getString(KEY_DTO);
-            if(demographicDtoString != null){
+            if (demographicDtoString != null) {
                 demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, demographicDtoString);
             }
             hasFrontImage = icicle.getBoolean(KEY_HAS_FRONT, false);
@@ -61,7 +62,7 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
     }
 
     @Override
-    public void onSaveInstanceState(Bundle icicle){
+    public void onSaveInstanceState(Bundle icicle) {
         icicle.putString(KEY_DTO, DtoHelper.getStringDTO(demographicDTO));
         icicle.putBoolean(KEY_HAS_FRONT, hasFrontImage);
         icicle.putBoolean(KEY_HAS_BACK, hasBackImage);
@@ -69,7 +70,7 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         checkIfEnableButton(view);
         view.findViewById(R.id.toolbar_layout).setVisibility(View.INVISIBLE);
 
@@ -112,17 +113,17 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
         return updatableDemographicDTO;
     }
 
-    private DemographicIdDocPayloadDTO getPostModel(){
+    private DemographicIdDocPayloadDTO getPostModel() {
         setupImageBase64();
         DemographicIdDocPayloadDTO docPayloadDTO = new DemographicIdDocPayloadDTO();
-        if(hasFrontImage && base64FrontImage != null){
+        if (hasFrontImage && base64FrontImage != null) {
             DemographicIdDocPhotoDTO docPhotoDTO = new DemographicIdDocPhotoDTO();
             docPhotoDTO.setPage(FRONT_PIC);
             docPhotoDTO.setIdDocPhoto(base64FrontImage);
             docPhotoDTO.setDelete(false);
             docPayloadDTO.getIdDocPhothos().add(docPhotoDTO);
         }
-        if(hasBackImage && base64BackImage != null){
+        if (hasBackImage && base64BackImage != null) {
             DemographicIdDocPhotoDTO docPhotoDTO = new DemographicIdDocPhotoDTO();
             docPhotoDTO.setPage(BACK_PIC);
             docPhotoDTO.setIdDocPhoto(base64BackImage);
@@ -132,28 +133,29 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
         return docPayloadDTO;
     }
 
-    private void initImageViews(View view){
-        mediaScannerPresenter = new MediaScannerPresenter(getContext(), this);
+    private void initImageViews(View view) {
+        mediaScannerPresenter = new MediaScannerPresenter(getContext(), this,
+                CarePayCameraPreview.CameraType.SCAN_DOC);
         documentScannerAdapter = new DocumentScannerAdapter(getContext(), view, mediaScannerPresenter, getApplicationMode().getApplicationType());
         documentScannerAdapter.setIdDocumentsFromData(demographicDTO.getPayload().getDemographics().getPayload().getIdDocument());
 
         View lastCaptureView = view.findViewById(MediaScannerPresenter.captureViewId);
-        if(lastCaptureView != null){
+        if (lastCaptureView != null) {
             mediaScannerPresenter.setCaptureView(lastCaptureView);
         }
 
-        if(hasFrontImage){
+        if (hasFrontImage) {
             documentScannerAdapter.setFrontRescan();
         }
 
-        if(hasBackImage){
+        if (hasBackImage) {
             documentScannerAdapter.setBackRescan();
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(!handleActivityResult(requestCode, resultCode, data)){
+        if (!handleActivityResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -170,7 +172,7 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
 
     @Override
     public void handleRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if(mediaScannerPresenter != null){
+        if (mediaScannerPresenter != null) {
             mediaScannerPresenter.handleRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
@@ -180,17 +182,17 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
         if (filePath != null) {
             documentScannerAdapter.setImageView(filePath, view, true);
             int page;
-            if(view.getId() == documentScannerAdapter.getFrontImageId()){
+            if (view.getId() == documentScannerAdapter.getFrontImageId()) {
                 page = FRONT_PIC;
                 hasFrontImage = true;
-            }else{
+            } else {
                 page = BACK_PIC;
                 hasBackImage = true;
             }
 
             DemographicIdDocPayloadDTO docPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getIdDocument();
-            for(DemographicIdDocPhotoDTO docPhotoDTO : docPayloadDTO.getIdDocPhothos()){
-                if(docPhotoDTO.getPage() == page){
+            for (DemographicIdDocPhotoDTO docPhotoDTO : docPayloadDTO.getIdDocPhothos()) {
+                if (docPhotoDTO.getPage() == page) {
                     docPhotoDTO.setIdDocPhoto(filePath);
                     return;
                 }
@@ -220,13 +222,13 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
     public void setupImageBase64() {
         List<DemographicIdDocPhotoDTO> docPhotos = demographicDTO.getPayload().getDemographics().getPayload().getIdDocument().getIdDocPhothos();
         String filePath;
-        for(DemographicIdDocPhotoDTO docPhotoDTO : docPhotos){
-            if(docPhotoDTO.getPage() == FRONT_PIC && hasFrontImage){
+        for (DemographicIdDocPhotoDTO docPhotoDTO : docPhotos) {
+            if (docPhotoDTO.getPage() == FRONT_PIC && hasFrontImage) {
                 filePath = docPhotoDTO.getIdDocPhoto();
                 base64FrontImage = DocumentScannerAdapter.getBase64(getContext(), filePath);
             }
 
-            if(docPhotoDTO.getPage() == BACK_PIC && hasBackImage){
+            if (docPhotoDTO.getPage() == BACK_PIC && hasBackImage) {
                 filePath = docPhotoDTO.getIdDocPhoto();
                 base64BackImage = DocumentScannerAdapter.getBase64(getContext(), filePath);
             }

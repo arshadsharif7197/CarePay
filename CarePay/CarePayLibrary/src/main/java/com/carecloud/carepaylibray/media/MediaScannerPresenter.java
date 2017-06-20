@@ -54,10 +54,13 @@ public class MediaScannerPresenter {
      *
      * @param context            context
      * @param mediaViewInterface view interface
+     * @param cameraType the camera type
      */
-    public MediaScannerPresenter(Context context, MediaViewInterface mediaViewInterface) {
+    public MediaScannerPresenter(Context context, MediaViewInterface mediaViewInterface,
+                                 CarePayCameraPreview.CameraType cameraType) {
         this.context = context;
         this.mediaViewInterface = mediaViewInterface;
+        this.cameraType = cameraType;
     }
 
     /**
@@ -66,9 +69,11 @@ public class MediaScannerPresenter {
      * @param context            context
      * @param mediaViewInterface view interface
      * @param captureView        view for setting captured image
+     * @param cameraType the camera type
      */
-    public MediaScannerPresenter(Context context, MediaViewInterface mediaViewInterface, View captureView) {
-        this(context, mediaViewInterface);
+    public MediaScannerPresenter(Context context, MediaViewInterface mediaViewInterface, View captureView,
+                                 CarePayCameraPreview.CameraType cameraType) {
+        this(context, mediaViewInterface, cameraType);
         this.captureView = captureView;
         captureViewId = captureView.getId();
     }
@@ -86,18 +91,9 @@ public class MediaScannerPresenter {
     /**
      * Start Image Selection by presenting a set of choices
      *
-     * @param includeGalleryOption
-     */
-    public void selectImage(boolean includeGalleryOption) {
-        selectImage(includeGalleryOption, CarePayCameraPreview.CameraType.SCAN_DOC);
-    }
-
-    /**
-     * Start Image Selection by presenting a set of choices
-     *
      * @param includeGalleryOption should include select from Gallery choice
      */
-    public void selectImage(boolean includeGalleryOption, CarePayCameraPreview.CameraType cameraType) {
+    public void selectImage(boolean includeGalleryOption) {
         // create the chooser dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         String title = StringUtil.captialize(Label.getLabel("demographics_select_capture_option_title"));
@@ -105,7 +101,7 @@ public class MediaScannerPresenter {
 
         List<String> mediaOptions = getMediaOptions(includeGalleryOption);
         MediaActionAdapter mediaActionAdapter = new MediaActionAdapter(context, mediaOptions);
-        builder.setAdapter(mediaActionAdapter, getActionItemClickListener(mediaOptions, cameraType));
+        builder.setAdapter(mediaActionAdapter, getActionItemClickListener(mediaOptions));
 
         builder.setCancelable(false);
         builder.show();
@@ -131,7 +127,7 @@ public class MediaScannerPresenter {
 
             case PermissionsUtil.MY_PERMISSIONS_CAMERA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && pendingAction.equals(ACTION_PICTURE)) {
-                    handlePictureAction(cameraType);
+                    handlePictureAction();
                 } else {
                     //code for deny
                     Log.v(LOG_TAG, "camera denied");
@@ -181,15 +177,14 @@ public class MediaScannerPresenter {
         return false;
     }
 
-    private DialogInterface.OnClickListener getActionItemClickListener(final List<String> mediaOptions,
-                                                                       final CarePayCameraPreview.CameraType cameraType) {
+    private DialogInterface.OnClickListener getActionItemClickListener(final List<String> mediaOptions) {
         return new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String option = mediaOptions.get(which);
                 switch (option) {
                     case ACTION_PICTURE:
-                        handlePictureAction(cameraType);
+                        handlePictureAction();
                         break;
                     case ACTION_GALLERY:
                         handleGalleryAction();
@@ -206,9 +201,8 @@ public class MediaScannerPresenter {
         this.pendingAction = action;
     }
 
-    private void handlePictureAction(CarePayCameraPreview.CameraType cameraType) {
+    private void handlePictureAction() {
         setPendingAction(ACTION_PICTURE);
-        this.cameraType = cameraType;
         if (mediaViewInterface.getCallingFragment() != null) {
             if (!PermissionsUtil.checkPermissionCamera(mediaViewInterface.getCallingFragment())) {
                 return;
@@ -217,7 +211,7 @@ public class MediaScannerPresenter {
             return;
         }
 
-        captureImage(cameraType);
+        captureImage();
     }
 
     private void handleGalleryAction() {
@@ -246,7 +240,7 @@ public class MediaScannerPresenter {
         return mediaOptions;
     }
 
-    private void captureImage(CarePayCameraPreview.CameraType cameraType) {
+    private void captureImage() {
         Intent intent = new Intent(context, MediaCameraActivity.class);
         intent.putExtra("cameraType", cameraType);
         mediaViewInterface.handleStartActivityForResult(intent, REQUEST_CODE_CAPTURE);

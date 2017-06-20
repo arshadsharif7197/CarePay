@@ -29,6 +29,11 @@ public class CarePayCameraFragment extends BaseDialogFragment implements CarePay
     public CarePayCameraFragment() {
     }
 
+    /**
+     *
+     * @param cameraType the camera type
+     * @return a new instance of CarePayCameraFragment
+     */
     public static CarePayCameraFragment newInstance(CarePayCameraPreview.CameraType cameraType) {
         Bundle args = new Bundle();
         args.putSerializable("cameraType", cameraType);

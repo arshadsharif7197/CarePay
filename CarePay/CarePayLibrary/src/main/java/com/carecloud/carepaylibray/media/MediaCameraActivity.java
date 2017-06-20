@@ -18,13 +18,15 @@ import java.io.File;
 
 public class MediaCameraActivity extends BaseActivity implements MediaCameraFragment.MediaCameraCallback {
 
+    private CarePayCameraPreview.CameraType cameraType;
+
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.activity_scanner);
-        CarePayCameraPreview.CameraType cameraType = (CarePayCameraPreview.CameraType) getIntent()
+        cameraType = (CarePayCameraPreview.CameraType) getIntent()
                 .getSerializableExtra("cameraType");
-        displayCameraFragment("img_" + System.currentTimeMillis(), cameraType);
+        displayCameraFragment("img_" + System.currentTimeMillis());
     }
 
     @Override
@@ -41,7 +43,7 @@ public class MediaCameraActivity extends BaseActivity implements MediaCameraFrag
     }
 
     @Override
-    public void displayCameraFragment(String tempFile, CarePayCameraPreview.CameraType cameraType) {
+    public void displayCameraFragment(String tempFile) {
         MediaCameraFragment cameraFragment = MediaCameraFragment.newInstance(tempFile, cameraType);
         replaceFragment(R.id.content_frame, cameraFragment, false);
     }
