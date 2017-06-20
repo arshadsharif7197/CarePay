@@ -811,12 +811,12 @@ public class AppointmentsPayloadDTO {
     /**
      * @return true if appointment can be canceled
      */
-    public boolean isAppointmentCancellable(AppointmentsResultModel appointmentInfo) {
+    public boolean isAppointmentCancellable(AppointmentsSettingDTO settingsInfo) {
         if (hasAppointmentStarted()) {
             return false;
         }
 
-        AppointmentsCheckinDTO checkin = appointmentInfo.getPayload().getAppointmentsSettings().get(0).getCheckin();
+        AppointmentsCheckinDTO checkin = settingsInfo.getCheckin();
 
         String cancellationNoticePeriodStr = checkin.getCancellationNoticePeriod();
         if (cancellationNoticePeriodStr.equalsIgnoreCase(NEVER_PERIOD)) {
@@ -831,7 +831,7 @@ public class AppointmentsPayloadDTO {
         DateUtil startDate = DateUtil.getInstance().setDateRaw(startTime);
         long differenceInMinutes = DateUtil.getMinutesElapsed(startDate.getDate(), new Date());
 
-        return differenceInMinutes < cancellationNoticePeriod;
+        return differenceInMinutes > cancellationNoticePeriod;
     }
 
 
