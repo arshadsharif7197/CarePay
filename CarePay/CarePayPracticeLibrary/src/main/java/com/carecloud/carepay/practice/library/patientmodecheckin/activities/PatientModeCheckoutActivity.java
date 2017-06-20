@@ -31,6 +31,7 @@ import com.carecloud.carepaylibray.appointments.interfaces.AvailableHoursInterfa
 import com.carecloud.carepaylibray.appointments.interfaces.DateRangeInterface;
 import com.carecloud.carepaylibray.appointments.interfaces.VisitTypeInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
@@ -316,12 +317,16 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         }
         Bundle extra = new Bundle();
         if(paymentConfirmationWorkflow!=null) {
-            WorkFlowRecord workFlowRecord = new WorkFlowRecord(workflowDTO);
-            workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
-
-            extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
-//            extra.putString(CarePayConstants.EXTRA_WORKFLOW, paymentConfirmationWorkflow.toString());
             extra.putBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, true);
+
+            WorkFlowRecord workFlowRecord = new WorkFlowRecord(paymentConfirmationWorkflow);
+            workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
+            extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
+        }else{
+            WorkflowDTO appointmentWorkflowDTO =  getAppointmentWorkflowDto(workflowDTO);
+            WorkFlowRecord workFlowRecord = new WorkFlowRecord(appointmentWorkflowDTO);
+            workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
+            extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
         }
 
         appointmentsResultModel.getMetadata().getLinks().setPinpad(practiceAppointmentDTO.getMetadata().getLinks().getPinpad());
@@ -412,5 +417,21 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         }
     }
 
+    private WorkflowDTO getAppointmentWorkflowDto(WorkflowDTO workflowDTO){
+        PracticeAppointmentDTO practiceAppointmentDTO = DtoHelper.getConvertedDTO(PracticeAppointmentDTO.class, workflowDTO);
+        String id = practiceAppointmentDTO.getPayload().getPracticeAppointments().getPayload().getId();
+        for(AppointmentDTO appointmentDTO : appointmentsResultModel.getPayload().getAppointments()){
+            if(appointmentDTO.getPayload().getId().equals(id)){
+                appointmentDTO.setPayload(practiceAppointmentDTO.getPayload().getPracticeAppointments().getPayload());
+                break;
+            }
+        }
+        String appointmentWorkflowString = DtoHelper.getStringDTO(appointmentsResultModel);
+        WorkflowDTO appointmentWorkflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class, appointmentWorkflowString);
+        if(appointmentWorkflowDTO != null) {
+            appointmentWorkflowDTO.setState(workflowDTO.getState());
+        }
+        return appointmentWorkflowDTO;
+    }
 
 }
