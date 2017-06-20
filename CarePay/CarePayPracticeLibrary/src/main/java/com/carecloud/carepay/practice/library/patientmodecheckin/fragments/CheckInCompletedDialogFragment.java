@@ -87,8 +87,10 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
                     .getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
         } else {
             selectedAppointment = ((AppointmentsResultModel) dto).getPayload().getAppointments().get(0);
-            userImageUrl = ((AppointmentsResultModel) dto).getPayload().getPatientBalances().get(0)
-                    .getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
+            if(!((AppointmentsResultModel) dto).getPayload().getPatientBalances().isEmpty()) {
+                userImageUrl = ((AppointmentsResultModel) dto).getPayload().getPatientBalances().get(0)
+                        .getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
+            }
         }
         appointmentNavigationType = getApplicationPreferences().getAppointmentNavigationOption();
     }

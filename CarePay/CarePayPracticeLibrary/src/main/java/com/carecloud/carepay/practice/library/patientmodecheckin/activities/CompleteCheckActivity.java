@@ -45,22 +45,24 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
         boolean hasPayment = extra.getBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, false);
         long id = extra.getLong(CarePayConstants.EXTRA_WORKFLOW);
         WorkflowDTO workflowDTO = retrieveStoredWorkflow(id);
-        workflowString = workflowDTO.toString();
-//        workflowString = extra.getString(CarePayConstants.EXTRA_WORKFLOW);
-        if (hasPayment) {
-            dto = gson.fromJson(workflowString, PaymentsModel.class);
-        } else {
-            dto = gson.fromJson(workflowString, AppointmentsResultModel.class);
-        }
-        String appointmentTransitionsWorkflow = extra.getString(CarePayConstants.EXTRA_APPOINTMENT_TRANSITIONS);
-        if(appointmentTransitionsWorkflow != null){
-            appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, appointmentTransitionsWorkflow);
-        }
+        if(workflowDTO != null) {
+            workflowString = workflowDTO.toString();
 
-        AppointmentDTO appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, extra);
-        if (savedInstanceState == null) {
-            replaceFragment(CheckInCompletedDialogFragment
-                    .newInstance(hasPayment, appointmentDTO), false);
+            if (hasPayment) {
+                dto = gson.fromJson(workflowString, PaymentsModel.class);
+            } else {
+                dto = gson.fromJson(workflowString, AppointmentsResultModel.class);
+            }
+            String appointmentTransitionsWorkflow = extra.getString(CarePayConstants.EXTRA_APPOINTMENT_TRANSITIONS);
+            if (appointmentTransitionsWorkflow != null) {
+                appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, appointmentTransitionsWorkflow);
+            }
+
+            AppointmentDTO appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, extra);
+            if (savedInstanceState == null) {
+                replaceFragment(CheckInCompletedDialogFragment
+                        .newInstance(hasPayment, appointmentDTO), false);
+            }
         }
     }
 
@@ -135,6 +137,10 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
     };
 
     private WorkflowDTO retrieveStoredWorkflow(long id){
-        return new WorkflowDTO(WorkFlowRecord.findById(WorkFlowRecord.class, id));
+        WorkFlowRecord workFlowRecord = WorkFlowRecord.findById(WorkFlowRecord.class, id);
+        if(workFlowRecord != null) {
+            return new WorkflowDTO(workFlowRecord);
+        }
+        return null;
     }
 }
