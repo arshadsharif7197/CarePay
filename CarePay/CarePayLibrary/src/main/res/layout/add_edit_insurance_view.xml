@@ -57,6 +57,13 @@
         android:layout_height="@dimen/dimen_1dp"
         android:background="@color/gray_divider" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:background="@color/gray_divider"
+        android:layout_marginBottom="@dimen/dimen_15dp"/>
+
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -74,7 +81,7 @@
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/text_size_17"
             app:customAssetFont="proxima_nova_regular"
-            breeze:textKey="demographics_documents_title_select_plan" />
+            breeze:textKey="demographics_documents_title_select_plan"/>
 
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -86,7 +93,7 @@
             android:textColor="@color/light_gray"
             android:textSize="@dimen/text_size_14"
             app:customAssetFont="proxima_nova_semi_bold"
-            breeze:textKey="demographics_documents_choose_plan" />
+            breeze:textKey="demographics_documents_choose_plan"/>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/health_insurance_choose_plans"
@@ -98,16 +105,9 @@
             android:textSize="@dimen/text_size_16"
             android:visibility="gone"
             app:customAssetFont="proxima_nova_semi_bold"
-            breeze:textKey="demographics_choose" />
+            breeze:textKey="demographics_choose"/>
 
     </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_1dp"
-        android:background="@color/gray_divider"
-        android:layout_marginBottom="@dimen/dimen_15dp"/>
-
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
         android:id="@+id/health_insurance_card_number_layout"
@@ -170,6 +170,7 @@
             android:gravity="end"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_16"
+            breeze:textKey="demographics_choose"
             app:customAssetFont="proxima_nova_semi_bold" />
     </LinearLayout>
 
@@ -178,6 +179,58 @@
         android:layout_height="@dimen/dimen_1dp"
         android:background="@color/gray_divider" />
 
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+        android:id="@+id/health_insurance_policy_holder_layout"
+        style="@style/SigninSignupTextInputStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:customAssetFont="proxima_nova_semi_bold"
+        app:hintTextAppearance="@style/FloatingLabelStyle">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+            android:id="@+id/health_insurance_policy_holder"
+            style="@style/SigninSignupEditStyle"
+            android:inputType="text"
+            android:textAllCaps="true"
+            breeze:hintKey="demographics_insurance_policy_holder"
+            app:customAssetFont="proxima_nova_regular" />
+    </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dimen_15dp"
+        android:paddingTop="@dimen/dimen_15dp">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/health_insurance_relationship_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.7"
+            android:layout_marginStart="@dimen/dimen_14dp"
+            android:gravity="start"
+            android:textColor="@color/textview_default_textcolor"
+            android:textSize="@dimen/text_size_17"
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="demographics_insurance_relationship_label" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/health_insurance_relationship"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.6"
+            android:gravity="end"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_16"
+            breeze:textKey="demographics_choose"
+            app:customAssetFont="proxima_nova_semi_bold" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:background="@color/gray_divider" />
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -37,6 +37,14 @@ public class DemographicInsurancePayloadDTO extends PatientModel {
     @Expose
     private String insuranceType;
 
+    @SerializedName("relationship")
+    @Expose
+    private String relationship;
+
+    @SerializedName("policy_holder")
+    @Expose
+    private String policyHolder;
+
     @SerializedName("delete")
     @Expose
     private boolean deleted = false;
@@ -113,5 +121,21 @@ public class DemographicInsurancePayloadDTO extends PatientModel {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public String getRelationship() {
+        return relationship;
+    }
+
+    public void setRelationship(String relationship) {
+        this.relationship = relationship;
+    }
+
+    public String getPolicyHolder() {
+        return policyHolder;
+    }
+
+    public void setPolicyHolder(String policyHolder) {
+        this.policyHolder = policyHolder;
     }
 }

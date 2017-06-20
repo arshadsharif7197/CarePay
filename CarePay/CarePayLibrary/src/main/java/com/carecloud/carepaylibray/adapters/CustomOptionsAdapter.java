@@ -16,13 +16,13 @@ import java.util.List;
 public class CustomOptionsAdapter extends BaseAdapter {
 
     Context context = null;
-    List<DemographicsOption> optionsList = new ArrayList<>();
+    List<? extends DemographicsOption> optionsList = new ArrayList<>();
 
     /**
      * @param context context
      * @param list list
      */
-    public CustomOptionsAdapter(Context context, List<DemographicsOption> list) {
+    public CustomOptionsAdapter(Context context, List<? extends DemographicsOption> list) {
         this.context = context;
         this.optionsList = list;
     }

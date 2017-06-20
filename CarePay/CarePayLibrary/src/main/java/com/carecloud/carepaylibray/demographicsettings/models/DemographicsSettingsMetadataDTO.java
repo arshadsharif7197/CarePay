@@ -12,9 +12,6 @@ public class DemographicsSettingsMetadataDTO {
     @SerializedName("transitions")
     @Expose
     private DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = new DemographicsSettingsTransitionsDTO();
-    @SerializedName("data_models")
-    @Expose
-    private DemographicsSettingsDataModelsDTO dataModels = new DemographicsSettingsDataModelsDTO();
 
     public DemographicsSettingsLinksDTO getLinks() {
         return demographicsSettingsLinksDTO;
@@ -32,12 +29,5 @@ public class DemographicsSettingsMetadataDTO {
         this.demographicsSettingsTransitionsDTO = demographicsSettingsTransitionsDTO;
     }
 
-    public DemographicsSettingsDataModelsDTO getDataModels() {
-        return dataModels;
-    }
-
-    public void setDataModels(DemographicsSettingsDataModelsDTO dataModels) {
-        this.dataModels = dataModels;
-    }
 
 }
