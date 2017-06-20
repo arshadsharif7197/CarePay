@@ -204,19 +204,18 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                 timeColor = R.color.colorPrimary;
                 leftAction = Label.getLabel("cancel_appointment_short_label");
                 rightAction = Label.getLabel("start_checkin_label");
-
                 break;
             case REQUESTED:
                 headerColor = R.color.lightning_yellow;
                 timeColor = R.color.transparent_70;
                 leftAction = Label.getLabel("reject_label");
                 rightAction = Label.getLabel("accept_label");
-
                 break;
             case CHECKED_IN:
                 headerColor = R.color.dark_blue;
                 timeColor = R.color.colorPrimary;
-                leftAction = Label.getLabel("cancel_appointment_label");
+                leftAction = Label.getLabel("cancel_appointment_short_label");
+                rightAction = Label.getLabel("start_checkout_label");
                 break;
             default:
                 headerColor = R.color.colorPrimary;
