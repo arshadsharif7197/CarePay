@@ -86,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void geAuthToken() {
-        Map<String, String> queryMap = new HashMap<>();
         Map<String, String> header = new HashMap<>();
         header.put("transition", "true");
         header.put("x-api-key", HttpConstants.getApiStartKey());
@@ -94,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
         ServiceRequestDTO serviceRequestDTO = new ServiceRequestDTO();
         serviceRequestDTO.setUrl(BuildConfig.API_START_URL);
         serviceRequestDTO.setMethod("GET");
+
+        Map<String, String> queryMap = new HashMap<>();
         serviceHelper.execute(serviceRequestDTO, signInCallback, queryMap, header);
     }
 
