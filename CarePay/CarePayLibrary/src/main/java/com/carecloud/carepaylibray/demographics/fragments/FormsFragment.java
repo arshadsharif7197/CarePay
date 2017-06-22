@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 
 /**
- * Created by lmenendez on 3/23/17.
+ * Created by lmenendez on 3/23/17
  */
 
 public class FormsFragment extends BaseWebFormFragment {
@@ -60,7 +60,7 @@ public class FormsFragment extends BaseWebFormFragment {
             JsonObject form = new JsonObject();
             form.add("formData", payload);
             form.add("userData", userResponse);
-            String formString = form.toString().replaceAll("\'", Matcher.quoteReplacement("\\\'"));
+            String formString = form.toString().replaceAll("\\\\", Matcher.quoteReplacement("\\\\")).replaceAll("\'", Matcher.quoteReplacement("\\\'"));
 
             loadFormUrl(formString, "load_form");
 

@@ -98,7 +98,7 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
             JsonObject form = new JsonObject();
             form.add("formData", payload);
             form.add("userData", userResponse);
-            String formString = form.toString().replaceAll("\'", Matcher.quoteReplacement("\\\'"));
+            String formString = form.toString().replaceAll("\\\\", Matcher.quoteReplacement("\\\\")).replaceAll("\'", Matcher.quoteReplacement("\\\'"));
 
             loadFormUrl(formString, "load_form");
 
