@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -104,6 +105,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
 
+    private Handler handler;
     /**
      * Constructor.
      *
@@ -118,7 +120,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         this.appointmentPayloadDTO = payloadDTO;
         this.isWaitingRoom = isWaitingRoom;
         this.callback = callback;
-
+        this.handler = new Handler();
         setHandlersAndListeners();
     }
 
@@ -394,7 +396,8 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            updateUI(workflowDTO);
+            updatePageOptions(workflowDTO);
+            updateCheckinStatus(workflowDTO);
         }
 
         @Override
@@ -411,6 +414,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            updatePageOptions(workflowDTO);
             updateQueueStatus(workflowDTO);
         }
 
@@ -528,7 +532,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
     /**
      * @param workflowDTO workflow model returned by server.
      */
-    private void updateUI(WorkflowDTO workflowDTO) {
+    private void updateCheckinStatus(WorkflowDTO workflowDTO) {
         try {
             CheckInStatusPayloadDTO checkInStatusPayloadDTO = workflowDTO.getPayload(CheckInStatusPayloadDTO.class);
 
@@ -577,6 +581,15 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         return patientQueueDTO;
     }
 
+    private void updatePageOptions(final WorkflowDTO workflowDTO){
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+                pageButton.setEnabled(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getNotificationOptions().hasPushNotification());
+            }
+        });
+    }
 
     private String ordinal(int number, String[] sufixes) {
         switch (number % 100) {
