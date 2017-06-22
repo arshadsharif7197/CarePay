@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 
 /**
- * Created by lmenendez on 3/23/17.
+ * Created by lmenendez on 3/23/17
  */
 
 public class IntakeFormsFragment extends BaseWebFormFragment {
