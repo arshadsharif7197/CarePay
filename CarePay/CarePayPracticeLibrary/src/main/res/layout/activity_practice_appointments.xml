@@ -211,16 +211,19 @@
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/practice_patient_count"
-                    android:layout_width="@dimen/dimen_34dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="@dimen/dimen_34dp"
+                    android:minWidth="@dimen/dimen_34dp"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/dimen_8dp"
                     android:layout_toEndOf="@+id/practice_patient_count_label"
                     android:background="@drawable/queue_counter_noborder_background"
                     android:gravity="center"
+                    android:padding="@dimen/dimen_3dp"
                     android:textColor="@color/practice_mode_counter_text"
                     android:textSize="@dimen/text_size_16sp"
                     android:textStyle="bold"
+                    tools:text="1000"
                     app:customAssetFont="gotham_rounded_bold" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView

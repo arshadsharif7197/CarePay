@@ -26,6 +26,7 @@ import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFra
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -594,6 +595,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
 
     private void launchPatientModeCheckin(AppointmentDTO appointmentDTO) {
+        getApplicationPreferences().setAppointmentNavigationOption(Defs.NAVIGATE_CHECKIN);
+
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("appointment_id", appointmentDTO.getPayload().getId());
 
@@ -603,6 +606,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     private void launchPatientModeCheckout(AppointmentDTO appointmentDTO) {
+        getApplicationPreferences().setAppointmentNavigationOption(Defs.NAVIGATE_CHECKOUT);
+
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("appointment_id", appointmentDTO.getPayload().getId());
 
