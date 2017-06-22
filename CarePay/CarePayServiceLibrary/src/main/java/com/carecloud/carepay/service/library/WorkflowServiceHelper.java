@@ -46,7 +46,6 @@ import retrofit2.Response;
 
 public class WorkflowServiceHelper {
 
-    private static final String TOKEN_HAS_EXPIRED = "Identity token has expired";
     private static final String TOKEN = "token";
     private static final String REVOKED = "revoked";
     private static final String EXPIRED = "expired";
@@ -212,7 +211,7 @@ public class WorkflowServiceHelper {
         callback.onPreExecute();
         queryMap = updateQueryMapWithDefault(queryMap);
         WorkflowService workflowService = ServiceGenerator.getInstance().createService(WorkflowService.class, headers); //, String token, String searchString
-        Call<WorkflowDTO> call = null;
+        Call<WorkflowDTO> call;
 
         if (transitionDTO.isGet()) {
             if (jsonBody != null && queryMap == null) {
@@ -309,31 +308,10 @@ public class WorkflowServiceHelper {
 
             private void onResponseOk(Response<WorkflowDTO> response) throws IOException {
                 WorkflowDTO workflowDTO = response.body();
-                // This is temporary. We should use an exclusive service for labels
-                // in order to retrieve them and save them only once.
-                // TODO: erase this code when that service exists
-                saveLabels(workflowDTO);
                 if (workflowDTO != null && !isNullOrEmpty(workflowDTO.getState())) {
                     callback.onPostExecute(response.body());
                 } else {
                     onFailure(response);
-                }
-            }
-
-            private void saveLabels(WorkflowDTO workflowDTO) {
-                //TODO: this should change after the creation of the Label service
-                JsonObject labels = workflowDTO.getMetadata().getAsJsonObject("labels");
-                String state = workflowDTO.getState();
-                boolean contains = ((AndroidPlatform) Platform.get()).openSharedPreferences(AndroidPlatform.LABELS_FILE_NAME).contains("labelFor" + state);
-                if (labels != null && !contains) {
-                    Set<Map.Entry<String, JsonElement>> set = labels.entrySet();
-                    for (Map.Entry<String, JsonElement> entry : set) {
-                        Log.d(state, "Saving Label "+entry.getKey());
-                        Label.putLabelAsync(entry.getKey(), entry.getValue().getAsString());
-                    }
-                    Label.applyAsyncLabels();
-                    SharedPreferences.Editor editor = ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences().edit();
-                    editor.putBoolean("labelFor" + state, true).apply();
                 }
             }
 
@@ -409,7 +387,7 @@ public class WorkflowServiceHelper {
              * @param <S>      Dynamic class to convert
              * @return Dynamic converted class object
              */
-            public <S> S getConvertedDTO(Class<S> dtoClass, String jsonString) {
+            private  <S> S getConvertedDTO(Class<S> dtoClass, String jsonString) {
 
                 Gson gson = new Gson();
                 return gson.fromJson(jsonString, dtoClass);
@@ -538,6 +516,22 @@ public class WorkflowServiceHelper {
         Context context = applicationPreferences.getContext();
         Toast.makeText(context, "Login Authorization has Expired!\nPlease Login to Application again", Toast.LENGTH_LONG).show();
         context.startActivity(intent);
+    }
+
+    public void saveLabels(WorkflowDTO workflowDTO) {
+        JsonObject labels = workflowDTO.getMetadata().getAsJsonObject("labels");
+        String state = workflowDTO.getState();
+        boolean contains = ((AndroidPlatform) Platform.get()).openSharedPreferences(AndroidPlatform.LABELS_FILE_NAME).contains("labelFor" + state);
+        if (labels != null && !contains) {
+            Set<Map.Entry<String, JsonElement>> set = labels.entrySet();
+            for (Map.Entry<String, JsonElement> entry : set) {
+                Log.d(state, "Saving Label "+entry.getKey());
+                Label.putLabelAsync(entry.getKey(), entry.getValue().getAsString());
+            }
+            Label.applyAsyncLabels();
+            SharedPreferences.Editor editor = ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences().edit();
+            editor.putBoolean("labelFor" + state, true).apply();
+        }
     }
 
 }
