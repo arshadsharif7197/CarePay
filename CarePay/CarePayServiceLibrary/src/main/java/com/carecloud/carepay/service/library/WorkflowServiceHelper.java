@@ -518,6 +518,10 @@ public class WorkflowServiceHelper {
         context.startActivity(intent);
     }
 
+    /**
+     * Persist all Labels contained in Workflow DTO
+     * @param workflowDTO workflow dto
+     */
     public void saveLabels(WorkflowDTO workflowDTO) {
         JsonObject labels = workflowDTO.getMetadata().getAsJsonObject("labels");
         String state = workflowDTO.getState();
