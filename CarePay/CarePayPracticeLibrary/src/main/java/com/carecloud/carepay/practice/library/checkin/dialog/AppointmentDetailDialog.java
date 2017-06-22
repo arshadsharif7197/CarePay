@@ -106,6 +106,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
     private SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
 
     private Handler handler;
+
     /**
      * Constructor.
      *
