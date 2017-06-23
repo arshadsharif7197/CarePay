@@ -117,9 +117,8 @@ public class MediaCameraFragment extends BaseDialogFragment implements CarePayCa
 
     @Override
     public void onCapturedSuccess(Bitmap bitmap) {
-        Bitmap rotateBitmap = ImageCaptureHelper.rotateBitmap(bitmap, ImageCaptureHelper.getOrientation());
         if (tempFile != null) {
-            File file = ImageCaptureHelper.getBitmapFileUrl(getContext(), rotateBitmap, tempFile);
+            File file = ImageCaptureHelper.getBitmapFileUrl(getContext(), bitmap, tempFile);
             callback.onMediaFileCreated(file);
         } else {
             showErrorNotification("no temp file specified");

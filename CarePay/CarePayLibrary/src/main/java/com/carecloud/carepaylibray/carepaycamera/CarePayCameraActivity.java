@@ -38,10 +38,10 @@ public class CarePayCameraActivity extends BaseActivity implements CarePayCamera
         };
 
         if (orientationListener.canDetectOrientation()) {
-            Log.v(LOG_TAG,"Can detect orientation");
+            Log.v(LOG_TAG, "Can detect orientation");
             orientationListener.enable();
         } else {
-            Log.v(LOG_TAG,"Cannot detect orientation");
+            Log.v(LOG_TAG, "Cannot detect orientation");
             orientationListener.disable();
         }
     }
@@ -54,7 +54,6 @@ public class CarePayCameraActivity extends BaseActivity implements CarePayCamera
     @Override
     public void onCapturedSuccess(Bitmap bitmap) {
         setResult(RESULT_OK, null);
-        ImageCaptureHelper.setOrientation(orientation);
         ImageCaptureHelper.setImageBitmap(bitmap);
         finish();
     }
