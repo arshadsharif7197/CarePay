@@ -29,18 +29,24 @@ public class FontEditText extends EditText {
     }
 
     private void setCustomFont(Context ctx, AttributeSet attrs) {
-        TypedArray a = ctx.obtainStyledAttributes(attrs, R.styleable.FontTextView);
-        String customFont = a.getString(R.styleable.FontTextView_customFont);
+        TypedArray ta = ctx.obtainStyledAttributes(attrs, R.styleable.FontTextView);
+        String customFont = ta.getString(R.styleable.FontTextView_customFont);
         setCustomFont(ctx, customFont);
-        a.recycle();
+        ta.recycle();
     }
 
+    /**
+     * Set a custom font for this view
+     * @param ctx context
+     * @param asset font file name in root if app assets directory
+     * @return true if font is set
+     */
     public boolean setCustomFont(Context ctx, String asset) {
         Typeface tf = null;
         try {
             tf = Typeface.createFromAsset(ctx.getAssets(), asset);
-        } catch (Exception e) {
-            Log.e(this.getClass().getSimpleName(), "Could not get typeface: " + e.getMessage());
+        } catch (Exception ex) {
+            Log.e(this.getClass().getSimpleName(), "Could not get typeface: " + ex.getMessage());
             return false;
         }
 
