@@ -29,6 +29,12 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.View
 
     private View lastIndicator;
 
+    /**
+     * Constructor
+     * @param context Context
+     * @param locations list of locations
+     * @param listener location selection listener
+     */
     public LocationsAdapter(Context context, List<LocationsDTO> locations, SelectLocationListener listener){
         this.context = context;
         this.locations = locations;

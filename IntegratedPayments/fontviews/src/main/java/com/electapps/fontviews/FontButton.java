@@ -51,4 +51,5 @@ public class FontButton extends Button {
 
         setTypeface(tf);
         return true;
-    }}
+    }
+}

@@ -215,8 +215,8 @@ public class ServiceHelper {
             }
 
             @Override
-            public void onFailure(Call<ServiceResponseDTO> call, Throwable t) {
-                callback.onFailure(t.getMessage());
+            public void onFailure(Call<ServiceResponseDTO> call, Throwable throwable) {
+                callback.onFailure(throwable.getMessage());
             }
         });
     }

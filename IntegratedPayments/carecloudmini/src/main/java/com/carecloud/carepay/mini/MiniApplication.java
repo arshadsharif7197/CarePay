@@ -36,6 +36,7 @@ public class MiniApplication extends MultiDexApplication implements ApplicationH
     }
 
 
+    @Override
     public ServiceHelper getServiceHelper(){
         if(serviceHelper == null){
             if(applicationPreferences == null){

@@ -35,6 +35,7 @@ public class ImageSelectFragment extends RegistrationFragment {
         return inflater.inflate(R.layout.fragment_registration_image, container, false);
     }
 
+    @Override
     public void onViewCreated(View view, Bundle icicle){
         initProgressToolbar(view, getString(R.string.registration_image_title), 5);
 
@@ -54,7 +55,7 @@ public class ImageSelectFragment extends RegistrationFragment {
         nextButton.setVisibility(View.INVISIBLE);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 setSelectedImageStyle();
             }
         });
@@ -103,7 +104,7 @@ public class ImageSelectFragment extends RegistrationFragment {
     private View.OnClickListener getChoiceClickListener(@Defs.ImageStyles final int imageStyle, final View selectionIcon){
         return new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 if(lastSelectionIcon != null){
                     lastSelectionIcon.setVisibility(View.GONE);
                 }

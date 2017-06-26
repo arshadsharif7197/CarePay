@@ -29,6 +29,12 @@ public class PracticesAdapter extends RecyclerView.Adapter<PracticesAdapter.View
 
     private View lastIndicator;
 
+    /**
+     * Constructor
+     * @param context Context
+     * @param practices list of practices
+     * @param listener practice selection listener
+     */
     public PracticesAdapter(Context context, List<UserPracticeDTO> practices, SelectPracticeListener listener){
         this.context = context;
         this.practices = practices;
