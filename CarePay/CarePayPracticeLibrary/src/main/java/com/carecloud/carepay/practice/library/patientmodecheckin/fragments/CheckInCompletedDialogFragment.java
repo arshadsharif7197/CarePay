@@ -137,8 +137,11 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
                 selectedAppointment.getPayload().getProvider().getName()));
 
         TextView appointmentStatusTextView = (TextView) view.findViewById(R.id.appointmentStatusTextView);
-        appointmentStatusTextView.setText(String.format(Label.getLabel("confirm_appointment_checkout_status"),
-                selectedAppointment.getPayload().getAppointmentStatus().getName()));
+        String status = selectedAppointment.getPayload().getAppointmentStatus().getName();
+        if ("checked-in".equals(status.toLowerCase()) || "checked-out".equals(status.toLowerCase())) {
+            status = String.format(Label.getLabel("confirm_appointment_checkout_status"), status);
+        }
+        appointmentStatusTextView.setText(status);
 
         TextView appointmentVisitTypeTextView = (TextView) view.findViewById(R.id.appointmentVisitTypeTextView);
         appointmentVisitTypeTextView.setText(selectedAppointment.getPayload().getVisitType().getName());
