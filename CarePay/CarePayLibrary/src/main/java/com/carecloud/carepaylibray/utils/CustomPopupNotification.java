@@ -131,6 +131,15 @@ public class CustomPopupNotification extends PopupWindow {
      * Show pop window.
      */
     public void showPopWindow() {
+        if(parentView == null && window == null){
+            return;
+        }
+        if(parentView == null){
+            parentView = window.getDecorView();
+            if(parentView == null){
+                return;
+            }
+        }
         showAtLocation(parentView, Gravity.TOP, 0, 0);
 
         if(notificationType == TYPE_ERROR_NOTIFICATION) {

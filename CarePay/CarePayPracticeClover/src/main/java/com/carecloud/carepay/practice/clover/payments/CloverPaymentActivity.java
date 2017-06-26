@@ -226,6 +226,14 @@ public class CloverPaymentActivity extends BaseActivity {
                 if (authResult != null && authResult.authToken != null && authResult.baseUrl != null) {
                     connect();
                     new OrderAsyncTask().execute();
+                }else {
+                    showErrorNotification("Clover not Authorized");
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();
+                        }
+                    }, 3000);
                 }
             }
         }.execute();
