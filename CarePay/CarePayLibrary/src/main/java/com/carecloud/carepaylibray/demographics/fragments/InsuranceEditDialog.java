@@ -29,7 +29,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
-import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
@@ -46,7 +45,6 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.marcok.stepprogressbar.StepProgressBar;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
@@ -55,7 +53,6 @@ import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAd
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_FRONT_DTO;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_BACK;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_FRONT;
-import java.util.List;
 
 public class InsuranceEditDialog extends BaseDialogFragment implements MediaViewInterface {
 
@@ -91,7 +88,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private DemographicInsurancePhotoDTO backInsurancePhotoDTO;
 
     private InsuranceEditDialogListener callback;
-    private CarePayCameraReady carePayCameraReady;
     private int editedIndex;
 
 
@@ -146,23 +142,12 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement InsuranceEditDialogListener");
         }
-
-        try {
-            if (context instanceof DemographicsView) {
-                carePayCameraReady = ((DemographicsView) context).getPresenter();
-            } else {
-                carePayCameraReady = (CarePayCameraReady) context;
-            }
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement CarePayCameraReady");
-        }
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (callback == null || carePayCameraReady == null) {
+        if (callback == null) {
             attachCallback(getContext());
         }
     }
@@ -348,7 +333,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     }
 
 
-    private void initInsuranceData(DemographicInsurancePayloadDTO demographicInsurancePayload){
+    private void initInsuranceData(DemographicInsurancePayloadDTO demographicInsurancePayload) {
         String selectedProvider = demographicInsurancePayload.getInsuranceProvider();
         selectedProviderTextView.setText(selectedProvider);
         selectedProviderOption.setName(selectedProvider);
@@ -382,7 +367,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         }
 
         policyHolder.setText(demographicInsurancePayload.getPolicyHolder());
-        if(!StringUtil.isNullOrEmpty(demographicInsurancePayload.getPolicyHolder()) && policyHolder.getOnFocusChangeListener() != null){
+        if (!StringUtil.isNullOrEmpty(demographicInsurancePayload.getPolicyHolder()) && policyHolder.getOnFocusChangeListener() != null) {
             policyHolder.getOnFocusChangeListener().onFocusChange(policyHolder, false);
         }
 
@@ -391,10 +376,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
     }
 
-    private void setProviderOptionsPlans(){
+    private void setProviderOptionsPlans() {
         InsuranceModelProperties insuranceModelProperties = demographicDTO.getMetadata().getNewDataModel().getDemographic().getInsurances().getProperties().getItems().getInsuranceModel().getInsuranceModelProperties();
-        for(DemographicsInsuranceOption insuranceOption : insuranceModelProperties.getInsuranceProvider().getOptions()){
-            if(insuranceOption.getName().equals(selectedProviderOption.getName())){
+        for (DemographicsInsuranceOption insuranceOption : insuranceModelProperties.getInsuranceProvider().getOptions()) {
+            if (insuranceOption.getName().equals(selectedProviderOption.getName())) {
                 selectedProviderOption.setPayerPlans(insuranceOption.getPayerPlans());
             }
         }
@@ -573,7 +558,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                     selectedPlanOption = new DemographicsOption();
                     selectedPlanTextView.setText(Label.getLabel("demographics_choose"));
                     selectedPlanTextView.setOnClickListener(
-                            getSelectOptionsListener( ((DemographicsInsuranceOption)demographicsOption).getPayerPlans(),
+                            getSelectOptionsListener(((DemographicsInsuranceOption) demographicsOption).getPayerPlans(),
                                     getDefaultOnOptionsSelectedListener(selectedPlanTextView, selectedPlanOption, null),
                                     Label.getLabel("demographics_documents_title_select_plan")));
                 }
@@ -600,7 +585,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                         Label.getLabel("demographics_documents_title_select_provider")));
 
         selectedPlanTextView.setOnClickListener(
-                getSelectOptionsListener( selectedProviderOption.getPayerPlans(),
+                getSelectOptionsListener(selectedProviderOption.getPayerPlans(),
                         getDefaultOnOptionsSelectedListener(selectedPlanTextView, selectedPlanOption, null),
                         Label.getLabel("demographics_documents_title_select_plan")));
 
@@ -659,7 +644,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         policyHolder.setOnEditorActionListener(getEditorActionListener(null));
     }
 
-    private TextWatcher getValidInputTextWatcher(final TextInputLayout inputLayout, final boolean requiredField, final String errorMessage){
+    private TextWatcher getValidInputTextWatcher(final TextInputLayout inputLayout, final boolean requiredField, final String errorMessage) {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
@@ -673,11 +658,11 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if(StringUtil.isNullOrEmpty(editable.toString()) && requiredField){
+                if (StringUtil.isNullOrEmpty(editable.toString()) && requiredField) {
                     inputLayout.setErrorEnabled(true);
                     inputLayout.setError(errorMessage);
 
-                }else{
+                } else {
                     inputLayout.setError(null);
                     inputLayout.setErrorEnabled(false);
                 }
@@ -686,14 +671,14 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         };
     }
 
-    private TextView.OnEditorActionListener getEditorActionListener(final TextView nextFocus){
+    private TextView.OnEditorActionListener getEditorActionListener(final TextView nextFocus) {
         return new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_NEXT && nextFocus!=null) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT && nextFocus != null) {
                     nextFocus.requestFocus();
                     return true;
-                }else if(actionId == EditorInfo.IME_ACTION_DONE || nextFocus == null){
+                } else if (actionId == EditorInfo.IME_ACTION_DONE || nextFocus == null) {
                     textView.clearFocus();
                     SystemUtil.hideSoftKeyboard(getContext(), textView);
                 }
@@ -721,23 +706,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         if (StringUtil.isNullOrEmpty(selectedProviderOption.getName())) {
             isValid = false;
         }
-
-//        if(StringUtil.isNullOrEmpty(selectedPlan)){
-//            isValid = false;
-//        }
-//
-//        if(StringUtil.isNullOrEmpty(selectedType)){
-//            isValid = false;
-//        }
-//
-//        if(StringUtil.isNullOrEmpty(cardNumber.getText().toString())){
-//            isValid = false;
-//        }
-//
-//        if(StringUtil.isNullOrEmpty(groupNumber.getText().toString())){
-//            isValid = false;
-//        }
-
         saveInsuranceButton.setEnabled(isValid);
     }
 
@@ -751,23 +719,23 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         };
     }
 
-    private OnOptionSelectedListener getDefaultOnOptionsSelectedListener(final TextView textView, final DemographicsOption storeOption, final OnSelectionChangeCallback callback){
+    private OnOptionSelectedListener getDefaultOnOptionsSelectedListener(final TextView textView, final DemographicsOption storeOption, final OnSelectionChangeCallback callback) {
         return new OnOptionSelectedListener() {
             @Override
             public void onOptionSelected(DemographicsOption option) {
-                if(callback != null){
+                if (callback != null) {
                     callback.onSelectionChange(option);
                 }
 
 
-                if(textView!=null){
+                if (textView != null) {
                     textView.setText(option.getLabel());
                 }
 
                 storeOption.setLabel(option.getLabel());
                 storeOption.setName(option.getName());
 
-                if(getView()!=null) {
+                if (getView() != null) {
                     validateForm();
                 }
             }
@@ -821,11 +789,11 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     }
 
 
-    private interface OnOptionSelectedListener{
-        void  onOptionSelected(DemographicsOption option);
+    private interface OnOptionSelectedListener {
+        void onOptionSelected(DemographicsOption option);
     }
 
-    private interface OnSelectionChangeCallback{
+    private interface OnSelectionChangeCallback {
         void onSelectionChange(DemographicsOption demographicsOption);
     }
 

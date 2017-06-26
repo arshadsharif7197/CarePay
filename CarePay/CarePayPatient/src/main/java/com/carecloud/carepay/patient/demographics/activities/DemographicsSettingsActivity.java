@@ -25,15 +25,11 @@ import com.carecloud.carepay.patient.payment.fragments.CreditCardListFragment;
 import com.carecloud.carepay.patient.payment.fragments.SettingAddCreditCardFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
-import com.carecloud.carepaylibray.carepaycamera.CarePayCameraFragment;
-import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
-import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
-import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
@@ -41,7 +37,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
  */
 public class DemographicsSettingsActivity extends BasePatientActivity implements
         DemographicsSettingsFragmentListener, InsuranceEditDialog.InsuranceEditDialogListener,
-        CarePayCameraReady, CarePayCameraCallback {
+        CarePayCameraCallback {
 
     DemographicsSettingsDTO demographicsSettingsDTO;
     private CarePayCameraCallback carePayCameraCallback;
@@ -163,13 +159,6 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     public void displayCreditCardDetailsFragment(DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO) {
         CreditCardDetailsFragment creditCardDetailsFragment = CreditCardDetailsFragment.newInstance(creditCardsPayloadDTO);
         replaceFragment(creditCardDetailsFragment, true);
-    }
-
-    @Override
-    public void captureImage(CarePayCameraCallback callback, CarePayCameraPreview.CameraType cameraType) {
-        this.carePayCameraCallback = callback;
-        CarePayCameraFragment carePayCameraFragment = CarePayCameraFragment.newInstance(cameraType);
-        displayDialogFragment(carePayCameraFragment, false);
     }
 
     @Override

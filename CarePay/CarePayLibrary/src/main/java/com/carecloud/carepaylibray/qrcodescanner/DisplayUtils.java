@@ -52,7 +52,6 @@ public class DisplayUtils {
         } else {  // back-facing
             result = (info.orientation - degrees + 360) % 360;
         }
-        Log.e("Pablo", "orientation" + result);
 
         return result;
     }

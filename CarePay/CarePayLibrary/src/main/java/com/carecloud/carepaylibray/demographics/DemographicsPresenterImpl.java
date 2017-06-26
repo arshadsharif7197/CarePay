@@ -14,8 +14,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
-import com.carecloud.carepaylibray.carepaycamera.CarePayCameraFragment;
-import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
@@ -359,22 +357,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         if (demographicsView != null) {
             demographicsView.onBackPressed();
         }
-    }
-
-    @Override
-    public void captureImage(CarePayCameraCallback callback, CarePayCameraPreview.CameraType cameraType) {
-        this.carePayCameraCallback = callback;
-
-        String tag = CarePayCameraFragment.class.getName();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        Fragment prev = fragmentManager.findFragmentByTag(tag);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-
-        CarePayCameraFragment dialog = CarePayCameraFragment.newInstance(cameraType);
-        dialog.show(ft, tag);
     }
 
     protected CheckInDemographicsBaseFragment getDemographicFragment(int step) {
