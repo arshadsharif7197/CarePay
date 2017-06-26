@@ -19,9 +19,6 @@
             android:screenOrientation="sensorPortrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="com.carecloud.carepaylibray.carepaycamera.CarePayCameraActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="com.carecloud.carepaylibray.qrcodescanner.ScannerQRActivity"
             android:screenOrientation="landscape" />
         <activity android:name="com.carecloud.carepaylibray.media.MediaCameraActivity"
