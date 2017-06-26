@@ -75,6 +75,10 @@ public class ApplicationPreferences {
         sharedPreferences.edit().putInt(KEY_IMAGE_STYLE, imageStyle).apply();
     }
 
+    /**
+     * Get Saved practice Info
+     * @return saved practice info
+     */
     public UserPracticeDTO getUserPracticeDTO(){
         String practiceString = sharedPreferences.getString(KEY_PRACTICE_INFO, null);
         if(practiceString == null){
@@ -83,6 +87,10 @@ public class ApplicationPreferences {
         return DtoHelper.getConvertedDTO(UserPracticeDTO.class, practiceString);
     }
 
+    /**
+     * Save practice info
+     * @param userPracticeDTO practice info
+     */
     public void setUserPracticeDTO(UserPracticeDTO userPracticeDTO){
         String practiceString = DtoHelper.getStringDTO(userPracticeDTO);
         sharedPreferences.edit().putString(KEY_PRACTICE_INFO, practiceString).apply();
