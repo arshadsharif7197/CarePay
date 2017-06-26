@@ -19,6 +19,7 @@ public class CarePayCameraView extends RelativeLayout {
     private CarePayCameraCallback callback;
     private Context context;
     private Button buttonCapture;
+
     private CarePayCameraPreview carePayCameraPreview;
 
     /**
@@ -139,4 +140,10 @@ public class CarePayCameraView extends RelativeLayout {
             }
         }
     };
+
+    public CarePayCameraPreview getCarePayCameraPreview() {
+        return carePayCameraPreview;
+    }
+
+
 }

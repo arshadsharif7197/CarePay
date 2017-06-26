@@ -487,6 +487,13 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         return true;
     }
 
+    public void stop(){
+        if (camera != null) {
+            camera.stopPreview();
+            camera.release();
+        }
+    }
+
     /**
      * @return a boolean indicating if device has more than one camera
      */
