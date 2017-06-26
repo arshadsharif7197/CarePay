@@ -13,9 +13,6 @@
         <activity
             android:name=".signin.ResetPasswordActivity"
             android:screenOrientation="sensorLandscape" />
-        <activity
-            android:name=".patientmodecheckin.activities.CompleteCheckActivity"
-            android:screenOrientation="sensorLandscape" />
     </application>
 
 </manifest>
