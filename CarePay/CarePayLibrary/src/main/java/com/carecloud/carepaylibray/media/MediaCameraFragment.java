@@ -28,6 +28,7 @@ import java.io.File;
 public class MediaCameraFragment extends BaseDialogFragment implements CarePayCameraCallback {
 
     private CarePayCameraPreview.CameraType cameraType;
+    private CarePayCameraView carePayCameraView;
 
     public interface MediaCameraCallback {
         void onMediaFileCreated(File file);
@@ -98,7 +99,7 @@ public class MediaCameraFragment extends BaseDialogFragment implements CarePayCa
         super.onViewCreated(view, savedInstanceState);
 
         // Set content
-        CarePayCameraView carePayCameraView = new CarePayCameraView(this, getContext(), cameraType);
+        carePayCameraView = new CarePayCameraView(this, getContext(), cameraType);
         ((FrameLayout) view.findViewById(R.id.camera_preview)).addView(carePayCameraView);
     }
 
@@ -113,6 +114,12 @@ public class MediaCameraFragment extends BaseDialogFragment implements CarePayCa
                 window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             }
         }
+    }
+
+    @Override
+    public void onStop(){
+        carePayCameraView.getCarePayCameraPreview().stop();
+        super.onStop();
     }
 
     @Override
