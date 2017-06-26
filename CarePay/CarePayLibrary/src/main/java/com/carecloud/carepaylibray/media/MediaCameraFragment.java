@@ -90,7 +90,7 @@ public class MediaCameraFragment extends BaseDialogFragment implements CarePayCa
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setCancelable(true);
-        return inflater.inflate(R.layout.activity_care_pay_camera, container, false);
+        return inflater.inflate(R.layout.fragment_media_camera, container, false);
     }
 
     @Override
