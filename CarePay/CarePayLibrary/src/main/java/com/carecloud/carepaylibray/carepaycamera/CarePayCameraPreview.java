@@ -415,8 +415,10 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
      * change the camera back/front
      */
     public void changeCamera() {
-        camera.stopPreview();
-        camera.release();
+        if (camera != null) {
+            camera.stopPreview();
+            camera.release();
+        }
         if (currentCameraId == Camera.CameraInfo.CAMERA_FACING_BACK) {
             currentCameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
         } else {
