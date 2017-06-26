@@ -23,6 +23,7 @@ import android.view.SurfaceView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.qrcodescanner.DisplayUtils;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 
@@ -93,7 +94,9 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
      */
     public void initialize() {
         camera = getCameraInstance();
-        setBackgroundColor(Color.parseColor("#aa575555"));
+        if (cameraType == CameraType.SCAN_DOC) {
+            setBackgroundColor(getContext().getResources().getColor(R.color.cameraBackground));
+        }
         cameraSurfaceHolder = getHolder();
         cameraSurfaceHolder.addCallback(this);
         autoFocusHandler = new Handler();
@@ -252,9 +255,11 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
      */
     public void surfaceCreated(SurfaceHolder holder) {
         // The Surface has been created, now tell the camera where to draw the preview.
-        surfaceCreated = true;
         try {
             surfaceCreated = true;
+            if (camera == null) {
+                camera = getCameraInstance();
+            }
             camera.setPreviewDisplay(holder);
             camera.startPreview();
             if (surfaceCreated) { // check if surface created before using autofocus
@@ -406,6 +411,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
     private void releaseCamera() {
         if (camera != null) {
+            cameraSurfaceHolder.removeCallback(this);
             camera.release();        // release the camera for other applications
             camera = null;
         }
@@ -494,5 +500,6 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     public void setCameraType(CameraType cameraType) {
         this.cameraType = cameraType;
     }
+
 
 }
