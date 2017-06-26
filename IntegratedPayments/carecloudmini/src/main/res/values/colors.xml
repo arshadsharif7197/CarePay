@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#22A5DF</color>
+    <color name="colorPrimaryDark">#2270B3</color>
+
+    <color name="colorAccent">#acacac</color>
+
+    <!--Generic Color definitions-->
+    <color name="lightBlue">#9BE0FF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="darkBlue">#083E71</color>
+    <color name="lightGray">#CFD8DC</color>
+    <color name="brightBlue">#17A1DF</color>
+
+    <!--Specific Color Implementations referencing a generic color -->
+    <color name="blueText">@color/lightBlue</color>
+    <color name="buttonText">@color/white</color>
+    <color name="whiteText">@color/white</color>
+    <color name="toolbarText">@color/white</color>
+    <color name="appBackground">@color/colorPrimaryDark</color>
+    <color name="progress_background">@color/darkBlue</color>
+    <color name="progress_filled">@color/lightBlue</color>
+    <color name="inputHint">@color/lightGray</color>
+    <color name="inputText">@color/colorPrimary</color>
+    <color name="errorText">@color/white</color>
+    <color name="radio_selected_background">@color/brightBlue</color>
+    <color name="radio_selected_foreground">@color/white</color>
+    <color name="radio_unselected_background">@color/darkBlue</color>
+    <color name="listItemText">@color/white</color>
+    <color name="practiceNoImageBackground">@color/darkBlue</color>
+    <color name="practiceInitialsBackground">@color/colorPrimary</color>
+    <color name="carecloudLogoBackground">@color/white</color>
+    <color name="practiceInitialsText">@color/white</color>
+    <color name="imageSelectIcon">@color/darkBlue</color>
+
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <solid android:color="@color/imageSelectIcon" />
+    <size android:height="@dimen/image_select_icon" android:width="@dimen/image_select_icon" />
+</shape>
