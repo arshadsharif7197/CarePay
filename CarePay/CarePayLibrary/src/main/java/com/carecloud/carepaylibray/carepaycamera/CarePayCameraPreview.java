@@ -380,7 +380,6 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
             capturedBitmap = Bitmap.createBitmap(capturedBitmap, left, top, cropedWidth, cropedHeight);
 
-        } else {
         }
         int offset = 0;
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT
