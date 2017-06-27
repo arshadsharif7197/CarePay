@@ -68,7 +68,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             DemographicDTO demographicDTO = new Gson().fromJson(workflowDTO.toString(), DemographicDTO.class);
 
             if (checkinFlowCallback.getCurrentStep() >= 5) {
-                checkinFlowCallback.setCurrentStep(checkinFlowCallback.getCurrentStep()+1);
+                checkinFlowCallback.setCurrentStep(checkinFlowCallback.getCurrentStep() + 1);
                 checkinFlowCallback.navigateToWorkflow(workflowDTO);
             } else {
                 checkinFlowCallback.applyChangesAndNavTo(demographicDTO, checkinFlowCallback.getCurrentStep() + 1);
@@ -101,9 +101,9 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(checkinFlowCallback == null){
+        if (checkinFlowCallback == null) {
             attachCallback(getContext());
         }
     }
@@ -114,7 +114,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             return;
         }
         toolbar.setTitle("");
-        if(!preventNavBack) {
+        if (!preventNavBack) {
             toolbar.setNavigationIcon(R.drawable.icn_nav_back);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -136,9 +136,9 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         ((FrameLayout) view.findViewById(R.id.checkinDemographicsContentLayout)).addView(childview);
     }
 
-    protected void setHeaderTitle(String title, String heading, String subHeading, View view){
+    protected void setHeaderTitle(String title, String heading, String subHeading, View view) {
         TextView titleTextView = (TextView) view.findViewById(R.id.toolbar_title);
-        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT ) {
+        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT) {
             TextView mainHeadingTextView = (TextView) view.findViewById(R.id.demographicsMainHeading);
             TextView subHeadingTextView = (TextView) view.findViewById(R.id.demographicsSubHeading);
             (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
@@ -150,20 +150,20 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                 mainHeadingTextView.setText(heading);
             }
 
-            if(StringUtil.isNullOrEmpty(subHeading) || subHeading.equalsIgnoreCase(CarePayConstants.NOT_DEFINED)){
+            if (StringUtil.isNullOrEmpty(subHeading) || subHeading.equalsIgnoreCase(CarePayConstants.NOT_DEFINED)) {
                 subHeadingTextView.setVisibility(View.GONE);
-            }else {
+            } else {
                 subHeadingTextView.setVisibility(View.VISIBLE);
                 subHeadingTextView.setText(subHeading);
             }
-        }else{
+        } else {
             (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
             titleTextView.setText(title);
 
             TextView subHeadingTextView = (TextView) view.findViewById(R.id.demographicsSubHeading);
-            if(StringUtil.isNullOrEmpty(subHeading) || subHeading.equalsIgnoreCase(CarePayConstants.NOT_DEFINED)){
+            if (StringUtil.isNullOrEmpty(subHeading) || subHeading.equalsIgnoreCase(CarePayConstants.NOT_DEFINED)) {
                 subHeadingTextView.setVisibility(View.GONE);
-            }else {
+            } else {
                 subHeadingTextView.setVisibility(View.VISIBLE);
                 subHeadingTextView.setText(subHeading);
             }
@@ -185,23 +185,23 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     }
 
     protected void checkIfEnableButton(View view) {
-        if(view!=null) {
+        if (view != null) {
             Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
             boolean isEnabled = passConstraints(view);
-            if(nextButton!=null) {
+            if (nextButton != null) {
                 nextButton.setEnabled(isEnabled);
                 nextButton.setClickable(isEnabled);
             }
         }
     }
 
-    protected void initSelectableInput(TextView textView, DemographicsOption storeOption, String value, View optional){
+    protected void initSelectableInput(TextView textView, DemographicsOption storeOption, String value, View optional) {
         storeOption.setName(value);
         storeOption.setLabel(value);
 
-        if(StringUtil.isNullOrEmpty(value)){
+        if (StringUtil.isNullOrEmpty(value)) {
             value = Label.getLabel("demographics_choose");
-            if(optional!=null) {
+            if (optional != null) {
                 optional.setVisibility(View.VISIBLE);
             }
         }
@@ -217,9 +217,11 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     protected void openNextFragment(DemographicDTO demographicDTO, boolean transition) {
         Map<String, String> queries = new HashMap<>();
-        queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
-        queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
-        queries.put("appointment_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
+        if (demographicDTO.getPayload().getAppointmentpayloaddto().size() > 0) {
+            queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
+            queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
+            queries.put("appointment_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
+        }
 
         Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
         header.put("transition", Boolean.valueOf(transition).toString());
@@ -233,22 +235,22 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     }
 
 
-    protected void setVisibility(View view, boolean isDisplayed){
-        if(isDisplayed){
+    protected void setVisibility(View view, boolean isDisplayed) {
+        if (isDisplayed) {
             view.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             view.setVisibility(View.GONE);
         }
     }
 
 
     @Override
-    public  boolean navigateBack(){
+    public boolean navigateBack() {
         return preventNavBack;
     }
 
     @Override
-    public void attachCallback(Context context){
+    public void attachCallback(Context context) {
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
@@ -262,7 +264,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         }
     }
 
-    protected TextWatcher getValidateEmptyTextWatcher(final TextInputLayout inputLayout){
+    protected TextWatcher getValidateEmptyTextWatcher(final TextInputLayout inputLayout) {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
@@ -275,10 +277,10 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if(StringUtil.isNullOrEmpty(editable.toString())){
+                if (StringUtil.isNullOrEmpty(editable.toString())) {
                     inputLayout.setErrorEnabled(true);
                     inputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
-                }else{
+                } else {
                     inputLayout.setError(null);
                 }
                 checkIfEnableButton(getView());
@@ -286,7 +288,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         };
     }
 
-    protected TextWatcher clearValidationErrorsOnTextChange(final TextInputLayout inputLayout){
+    protected TextWatcher clearValidationErrorsOnTextChange(final TextInputLayout inputLayout) {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
@@ -300,7 +302,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if(!StringUtil.isNullOrEmpty(editable.toString())) {
+                if (!StringUtil.isNullOrEmpty(editable.toString())) {
                     inputLayout.setError(null);
                     inputLayout.setErrorEnabled(false);
                 }
@@ -327,19 +329,19 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         }
     };
 
-    protected OnOptionSelectedListener getDefaultOnOptionsSelectedListener(final TextView textView, final DemographicsOption storeOption, final View optional){
+    protected OnOptionSelectedListener getDefaultOnOptionsSelectedListener(final TextView textView, final DemographicsOption storeOption, final View optional) {
         return new OnOptionSelectedListener() {
             @Override
             public void onOptionSelected(DemographicsOption option) {
-                if(textView!=null){
+                if (textView != null) {
                     textView.setText(option.getLabel());
                 }
-                if(optional != null){
+                if (optional != null) {
                     optional.setVisibility(View.GONE);
                 }
                 storeOption.setLabel(option.getLabel());
                 storeOption.setName(option.getName());
-                if(getView()!=null) {
+                if (getView() != null) {
                     checkIfEnableButton(getView());
                 }
             }
@@ -357,9 +359,9 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
 
     private void showChooseDialog(Context context,
-                                        List<DemographicsOption> options,
-                                        String title,
-                                        final OnOptionSelectedListener listener) {
+                                  List<DemographicsOption> options,
+                                  String title,
+                                  final OnOptionSelectedListener listener) {
 
         final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
         // add cancel button
@@ -402,10 +404,9 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         listView.setOnItemClickListener(clickListener);
     }
 
-    public interface OnOptionSelectedListener{
-        void  onOptionSelected(DemographicsOption option);
+    public interface OnOptionSelectedListener {
+        void onOptionSelected(DemographicsOption option);
     }
-
 
 
 }

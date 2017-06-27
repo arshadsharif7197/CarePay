@@ -35,7 +35,7 @@ import com.google.gson.Gson;
 
 public class DemographicsPresenterImpl implements DemographicsPresenter {
 
-    private final AppointmentDTO appointmentPayload;
+    private AppointmentDTO appointmentPayload;
     private DemographicsView demographicsView;
 
     private CarePayCameraCallback carePayCameraCallback;
@@ -61,8 +61,11 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     public DemographicsPresenterImpl(DemographicsView demographicsView, Bundle savedInstanceState, boolean isPatientMode) {
         this.demographicsView = demographicsView;
         demographicDTO = demographicsView.getConvertedDTO(DemographicDTO.class);
-        appointmentId = demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId();
-        appointmentPayload = demographicDTO.getPayload().getAppointmentpayloaddto().get(0);
+        if (demographicDTO.getPayload().getAppointmentpayloaddto().size() > 0) {
+            appointmentPayload = demographicDTO.getPayload().getAppointmentpayloaddto().get(0);
+            appointmentId = appointmentPayload.getMetadata().getAppointmentId();
+        }
+
         this.isPatientMode = isPatientMode;
 
         if (savedInstanceState != null) {
