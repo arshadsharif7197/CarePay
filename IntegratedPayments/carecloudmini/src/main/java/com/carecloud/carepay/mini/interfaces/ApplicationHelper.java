@@ -1,5 +1,6 @@
 package com.carecloud.carepay.mini.interfaces;
 
+import com.carecloud.carepay.mini.models.response.SignInAuth;
 import com.carecloud.carepay.mini.services.ServiceHelper;
 import com.carecloud.carepay.mini.utils.ApplicationPreferences;
 
@@ -11,5 +12,7 @@ public interface ApplicationHelper {
     ServiceHelper getServiceHelper();
 
     ApplicationPreferences getApplicationPreferences();
+
+    void setAuthentication(SignInAuth.Cognito.Authentication authentication);
 
 }
