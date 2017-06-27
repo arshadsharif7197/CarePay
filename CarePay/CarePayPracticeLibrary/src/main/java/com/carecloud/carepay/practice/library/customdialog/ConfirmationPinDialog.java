@@ -213,9 +213,13 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
             Gson gson = new Gson();
             PatientModeSwitchPinResponseDTO patientModeSwitchPinResponseDTO = gson.fromJson(workflowDTO.toString(), PatientModeSwitchPinResponseDTO.class);
             if (patientModeSwitchPinResponseDTO.getPayload().getPinpad().getPayload()) {
-                ((ISession) context).getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
-                ((BasePracticeActivity) context).onPinConfirmationCheck(true, pinEditText.getText().toString());
-                dismiss();
+                ISession iSession = (ISession) context;
+                if(iSession.getApplicationMode().getUserPracticeDTO() != null) {
+                    iSession.getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
+                    iSession.getAppAuthorizationHelper().setUser(iSession.getApplicationMode().getUserPracticeDTO().getUserName());
+                    ((BasePracticeActivity) context).onPinConfirmationCheck(true, pinEditText.getText().toString());
+                    dismiss();
+                }
             }
         }
 

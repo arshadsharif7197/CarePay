@@ -15,6 +15,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.WebViewDatabase;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -123,6 +124,9 @@ public abstract class BaseWebFormFragment extends BaseFragment {
         settings.setAllowFileAccessFromFileURLs(true);
         settings.setAllowUniversalAccessFromFileURLs(true);
         settings.setJavaScriptEnabled(true);
+        settings.setSaveFormData(false);
+
+        WebViewDatabase.getInstance(getContext()).clearFormData();
 
         //speed webview loading
         if (Build.VERSION.SDK_INT >= 19) {
