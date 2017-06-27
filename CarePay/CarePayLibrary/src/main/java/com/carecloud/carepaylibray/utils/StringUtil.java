@@ -194,6 +194,10 @@ public class StringUtil {
             if (lengthBefore != 5 && lastChar == '-') { // discard separator except for position 5
                 zipcode.replace(currentLength - 1, currentLength, "");
             }
+
+            if (currentLength == 9 && !zipcode.toString().contains("-")){
+                zipcode.insert(5, "-");
+            }
         }
     }
 
