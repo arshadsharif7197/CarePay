@@ -87,6 +87,10 @@
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="sensorLandscape"/>
         <activity
+            android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.CompleteCheckActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
             android:name="com.carecloud.carepaylibray.qrcodescanner.ScannerActivity"
             android:screenOrientation="sensorLandscape"/>
     </application>

@@ -80,6 +80,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        setRetainInstance(true);
         hasPayment = getArguments().getBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, false);
         DTO dto = callback.getDto();
         selectedAppointment = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
