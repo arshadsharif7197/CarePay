@@ -129,8 +129,17 @@ public class AppAuthorizationHelper {
         if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             patientUser = newUser;
         } else {
+            patientUser = null;
             practiceUser = newUser;
         }
+    }
+
+    /**
+     * Get Patient user
+     * @return patient user
+     */
+    public String getPatientUser(){
+        return patientUser;
     }
 
     public TransitionDTO getRefreshTransition() {

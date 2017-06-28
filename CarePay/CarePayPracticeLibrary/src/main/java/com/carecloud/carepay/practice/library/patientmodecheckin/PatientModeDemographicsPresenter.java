@@ -38,16 +38,29 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
             shouldHandleHomeButton = savedInstanceState.getBoolean(KEY_HANDLE_HOME, false);
         }
 
-        patientModeCheckinDTO = demographicsView.getConvertedDTO(PatientModeCheckinDTO.class);
-        if(session.getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE && patientModeCheckinDTO != null){
+        String username = null;
+        if(session.getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE){
             //need to switch to PatientMode
             session.getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
-            String username = patientModeCheckinDTO.getPayload().getCheckinModeDTO().getMetadata().getUsername();
-            session.getAppAuthorizationHelper().setUser(username);
-
             shouldHandleHomeButton = true;
-
+        }else{
+            username = session.getAppAuthorizationHelper().getPatientUser();
         }
+
+        patientModeCheckinDTO = demographicsView.getConvertedDTO(PatientModeCheckinDTO.class);
+        if(patientModeCheckinDTO != null) {
+            if(patientModeCheckinDTO.getPayload().getCheckinModeDTO().getMetadata().getUsername() != null) {
+                username = patientModeCheckinDTO.getPayload().getCheckinModeDTO().getMetadata().getUsername();
+                session.getAppAuthorizationHelper().setUser(username);
+            }
+        }
+
+        if(username == null){
+            //bail out of this
+            demographicsView.showErrorNotification("Error creating patient log-in");
+            exitToPatientHome();
+        }
+
 
     }
 
