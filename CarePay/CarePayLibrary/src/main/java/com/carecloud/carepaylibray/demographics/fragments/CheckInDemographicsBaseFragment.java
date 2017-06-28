@@ -217,7 +217,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     protected void openNextFragment(DemographicDTO demographicDTO, boolean transition) {
         Map<String, String> queries = new HashMap<>();
-        if (demographicDTO.getPayload().getAppointmentpayloaddto().size() > 0) {
+        if (!demographicDTO.getPayload().getAppointmentpayloaddto().isEmpty()) {
             queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
             queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
             queries.put("appointment_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());

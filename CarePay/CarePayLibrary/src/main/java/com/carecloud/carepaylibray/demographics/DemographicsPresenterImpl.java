@@ -61,7 +61,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     public DemographicsPresenterImpl(DemographicsView demographicsView, Bundle savedInstanceState, boolean isPatientMode) {
         this.demographicsView = demographicsView;
         demographicDTO = demographicsView.getConvertedDTO(DemographicDTO.class);
-        if (demographicDTO.getPayload().getAppointmentpayloaddto().size() > 0) {
+        if (!demographicDTO.getPayload().getAppointmentpayloaddto().isEmpty()) {
             appointmentPayload = demographicDTO.getPayload().getAppointmentpayloaddto().get(0);
             appointmentId = appointmentPayload.getMetadata().getAppointmentId();
         }
