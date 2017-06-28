@@ -311,14 +311,16 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void onBackPressed() {
-        try {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            BaseCheckinFragment fragment = (BaseCheckinFragment) fragmentManager.findFragmentById(R.id.root_layout);
-            if (fragment == null || !fragment.navigateBack()) {
-                super.onBackPressed();
-            }
-        } catch (ClassCastException cce) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        BaseCheckinFragment fragment;
+        try{
+            fragment = (BaseCheckinFragment) fragmentManager.findFragmentById(R.id.root_layout);
+        }catch (ClassCastException cce){
             cce.printStackTrace();
+            super.onBackPressed();
+            return;
+        }
+        if (fragment == null || !fragment.navigateBack()) {
             super.onBackPressed();
         }
     }

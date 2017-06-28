@@ -21,12 +21,13 @@ public class CarePayCameraView extends RelativeLayout {
     private Button buttonCapture;
 
     private CarePayCameraPreview carePayCameraPreview;
+    private int currentCameraId = CarePayCameraPreview.NO_DEFINED_CAMERA;
 
     /**
      * Public constructor with context
      *
-     * @param callback   after photo taken
-     * @param context    sender context
+     * @param callback after photo taken
+     * @param context  sender context
      */
     public CarePayCameraView(CarePayCameraCallback callback, Context context) {
         super(context);
@@ -54,7 +55,7 @@ public class CarePayCameraView extends RelativeLayout {
     /**
      * Public constructor with context
      *
-     * @param context sender context
+     * @param context    sender context
      * @param cameraType the camera type
      */
     public CarePayCameraView(Context context, CarePayCameraPreview.CameraType cameraType) {
@@ -100,7 +101,7 @@ public class CarePayCameraView extends RelativeLayout {
         buttonCapture = (Button) findViewById(R.id.button_capture);
         carePayCameraPreview = (CarePayCameraPreview) findViewById(R.id.camera_preview);
         carePayCameraPreview.setCameraType(cameraType);
-        carePayCameraPreview.initialize();
+//        carePayCameraPreview.initialize();
         buttonCapture.setOnClickListener(onCaptureClick);
 
         final Button flashButton = (Button) findViewById(R.id.button_flash);
@@ -123,7 +124,7 @@ public class CarePayCameraView extends RelativeLayout {
         changeCameraButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                carePayCameraPreview.changeCamera();
+                currentCameraId = carePayCameraPreview.changeCamera();
                 flashButton.setSelected(false);
                 flashButton.setEnabled(carePayCameraPreview.hasFlash());
             }
@@ -141,9 +142,11 @@ public class CarePayCameraView extends RelativeLayout {
         }
     };
 
-    public CarePayCameraPreview getCarePayCameraPreview() {
-        return carePayCameraPreview;
+    public void start() {
+        carePayCameraPreview.start(currentCameraId);
     }
 
-
+    public void stop() {
+        carePayCameraPreview.stop();
+    }
 }

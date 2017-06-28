@@ -36,6 +36,7 @@ import java.util.List;
  * Capture Image Camera view
  */
 
+@SuppressWarnings("deprecation")
 public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 
     public enum CameraType implements Serializable {
@@ -52,6 +53,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     private int currentCameraId;
     private Handler autoFocusHandler;
     public CameraType cameraType = CameraType.SCAN_DOC;
+    public static final int NO_DEFINED_CAMERA = -999;
 
     /**
      * Constructor
@@ -114,7 +116,9 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         }
 
         try {
-            currentCameraId = cameraType == CameraType.SCAN_DOC ? getBackFaceCamera() : getFrontFaceCamera();
+            if (currentCameraId == NO_DEFINED_CAMERA) {
+                currentCameraId = cameraType == CameraType.SCAN_DOC ? getBackFaceCamera() : getFrontFaceCamera();
+            }
             displayOrientation = DisplayUtils.getDisplayOrientation(context, currentCameraId);
 
             if (HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)) {
@@ -135,7 +139,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     /**
      * Get front camera if available otherwisw defaulft camera
      *
-     * @return
+     * @return an int indicating the camera id
      */
     private int getFrontFaceCamera() {
         int numberOfCameras = Camera.getNumberOfCameras();
@@ -420,7 +424,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     /**
      * change the camera back/front
      */
-    public void changeCamera() {
+    public int changeCamera() {
         if (camera != null) {
             camera.stopPreview();
             camera.release();
@@ -443,6 +447,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
         cameraSurfaceHolder = getHolder();
         cameraSurfaceHolder.addCallback(this);
+        return currentCameraId;
     }
 
     /**
@@ -480,18 +485,21 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         }
 
         List<String> supportedFlashModes = parameters.getSupportedFlashModes();
-        if (supportedFlashModes == null || supportedFlashModes.isEmpty() || supportedFlashModes.size() == 1 && supportedFlashModes.get(0).equals(Camera.Parameters.FLASH_MODE_OFF)) {
-            return false;
-        }
-
-        return true;
+        return !(supportedFlashModes == null || supportedFlashModes.isEmpty()
+                || supportedFlashModes.size() == 1
+                && supportedFlashModes.get(0).equals(Camera.Parameters.FLASH_MODE_OFF));
     }
 
-    public void stop(){
+    public void stop() {
         if (camera != null) {
             camera.stopPreview();
             camera.release();
         }
+    }
+
+    public void start(int currentCameraId) {
+        this.currentCameraId = currentCameraId;
+        initialize();
     }
 
     /**
