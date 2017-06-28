@@ -48,9 +48,9 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
         }
 
         patientModeCheckinDTO = demographicsView.getConvertedDTO(PatientModeCheckinDTO.class);
-        if(patientModeCheckinDTO != null && username == null) {
-            username = patientModeCheckinDTO.getPayload().getCheckinModeDTO().getMetadata().getUsername();
-            if(username != null) {
+        if(patientModeCheckinDTO != null) {
+            if(patientModeCheckinDTO.getPayload().getCheckinModeDTO().getMetadata().getUsername() != null) {
+                username = patientModeCheckinDTO.getPayload().getCheckinModeDTO().getMetadata().getUsername();
                 session.getAppAuthorizationHelper().setUser(username);
             }
         }
