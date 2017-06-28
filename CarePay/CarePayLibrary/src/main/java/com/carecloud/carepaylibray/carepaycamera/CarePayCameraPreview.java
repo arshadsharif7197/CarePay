@@ -36,6 +36,7 @@ import java.util.List;
  * Capture Image Camera view
  */
 
+@SuppressWarnings("deprecation")
 public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 
     public enum CameraType implements Serializable {
@@ -52,7 +53,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     private int currentCameraId;
     private Handler autoFocusHandler;
     public CameraType cameraType = CameraType.SCAN_DOC;
-    public final static int NO_DEFINED_CAMERA = -999;
+    public static final int NO_DEFINED_CAMERA = -999;
 
     /**
      * Constructor
@@ -138,7 +139,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     /**
      * Get front camera if available otherwisw defaulft camera
      *
-     * @return
+     * @return an int indicating the camera id
      */
     private int getFrontFaceCamera() {
         int numberOfCameras = Camera.getNumberOfCameras();
@@ -484,11 +485,9 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         }
 
         List<String> supportedFlashModes = parameters.getSupportedFlashModes();
-        if (supportedFlashModes == null || supportedFlashModes.isEmpty() || supportedFlashModes.size() == 1 && supportedFlashModes.get(0).equals(Camera.Parameters.FLASH_MODE_OFF)) {
-            return false;
-        }
-
-        return true;
+        return !(supportedFlashModes == null || supportedFlashModes.isEmpty()
+                || supportedFlashModes.size() == 1
+                && supportedFlashModes.get(0).equals(Camera.Parameters.FLASH_MODE_OFF));
     }
 
     public void stop() {
