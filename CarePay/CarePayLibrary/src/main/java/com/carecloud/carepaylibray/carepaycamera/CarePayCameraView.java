@@ -100,7 +100,7 @@ public class CarePayCameraView extends RelativeLayout {
         buttonCapture = (Button) findViewById(R.id.button_capture);
         carePayCameraPreview = (CarePayCameraPreview) findViewById(R.id.camera_preview);
         carePayCameraPreview.setCameraType(cameraType);
-        carePayCameraPreview.initialize();
+//        carePayCameraPreview.initialize();
         buttonCapture.setOnClickListener(onCaptureClick);
 
         final Button flashButton = (Button) findViewById(R.id.button_flash);

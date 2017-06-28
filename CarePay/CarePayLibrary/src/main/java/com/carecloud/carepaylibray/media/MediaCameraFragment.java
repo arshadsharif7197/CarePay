@@ -114,6 +114,7 @@ public class MediaCameraFragment extends BaseDialogFragment implements CarePayCa
                 window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             }
         }
+        carePayCameraView.getCarePayCameraPreview().start();
     }
 
     @Override

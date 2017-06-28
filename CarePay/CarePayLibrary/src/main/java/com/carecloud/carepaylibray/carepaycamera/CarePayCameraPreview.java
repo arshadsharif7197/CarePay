@@ -38,6 +38,7 @@ import java.util.List;
 
 public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 
+
     public enum CameraType implements Serializable {
         CAPTURE_PHOTO, SCAN_DOC
     }
@@ -492,6 +493,10 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
             camera.stopPreview();
             camera.release();
         }
+    }
+
+    public void start() {
+        initialize();
     }
 
     /**
