@@ -38,7 +38,6 @@ import java.util.List;
 
 public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 
-
     public enum CameraType implements Serializable {
         CAPTURE_PHOTO, SCAN_DOC
     }
@@ -53,6 +52,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     private int currentCameraId;
     private Handler autoFocusHandler;
     public CameraType cameraType = CameraType.SCAN_DOC;
+    public final static int NO_DEFINED_CAMERA = -999;
 
     /**
      * Constructor
@@ -115,7 +115,9 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         }
 
         try {
-            currentCameraId = cameraType == CameraType.SCAN_DOC ? getBackFaceCamera() : getFrontFaceCamera();
+            if (currentCameraId == NO_DEFINED_CAMERA) {
+                currentCameraId = cameraType == CameraType.SCAN_DOC ? getBackFaceCamera() : getFrontFaceCamera();
+            }
             displayOrientation = DisplayUtils.getDisplayOrientation(context, currentCameraId);
 
             if (HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)) {
@@ -421,7 +423,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     /**
      * change the camera back/front
      */
-    public void changeCamera() {
+    public int changeCamera() {
         if (camera != null) {
             camera.stopPreview();
             camera.release();
@@ -444,6 +446,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
         cameraSurfaceHolder = getHolder();
         cameraSurfaceHolder.addCallback(this);
+        return currentCameraId;
     }
 
     /**
@@ -488,14 +491,15 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         return true;
     }
 
-    public void stop(){
+    public void stop() {
         if (camera != null) {
             camera.stopPreview();
             camera.release();
         }
     }
 
-    public void start() {
+    public void start(int currentCameraId) {
+        this.currentCameraId = currentCameraId;
         initialize();
     }
 
