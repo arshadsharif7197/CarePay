@@ -26,7 +26,6 @@ public class NewDemographicsActivity extends BasePatientActivity implements Demo
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demographic_review);
-
         presenter = new NewDemographicsPresenterImpl(this, savedInstanceState, false);
     }
 
