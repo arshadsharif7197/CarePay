@@ -107,7 +107,7 @@
             android:name="com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity"
             android:label="@string/clover_payment_activity"
             android:theme="@style/Theme.AppCompat.Translucent"
-            android:configChanges="orientation">
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity" />
                 <category android:name="android.intent.category.DEFAULT" />

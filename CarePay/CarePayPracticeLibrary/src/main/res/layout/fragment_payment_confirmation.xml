@@ -5,7 +5,8 @@
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:orientation="vertical"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
 
     <LinearLayout
         android:layout_width="@dimen/dialog_width"
