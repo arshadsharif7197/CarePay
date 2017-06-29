@@ -132,15 +132,15 @@ public class CloverPaymentActivity extends BaseActivity {
 
         if (account == null) {
             account = CloverAccount.getAccount(this);
-            authenticateCloverAccount();
+            if(account!=null) {
+                authenticateCloverAccount();
+            }else{
+                SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.no_account));
+                logPaymentFail(getString(R.string.no_account), false);
+                finish();
+            }
         }
 
-        // If an account can't be acquired, exit the app
-        if (account == null) {
-            SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.no_account));
-            logPaymentFail(getString(R.string.no_account), false);
-            finish();
-        }
     }
 
     @Override
@@ -179,6 +179,14 @@ public class CloverPaymentActivity extends BaseActivity {
 
     }
 
+    private void onCloverAuthenticated(){
+        connect();
+        if (orderConnector != null) {
+            List<LineItem> lineItems = getLineItems();
+            new OrderAsyncTask(orderConnector).execute(lineItems.toArray(new LineItem[lineItems.size()]));
+        }
+    }
+
     private void authenticateCloverAccount() {
         new AsyncTask<Void, String, CloverAuth.AuthResult>() {
 
@@ -204,14 +212,10 @@ public class CloverPaymentActivity extends BaseActivity {
             @Override
             protected void onPostExecute(CloverAuth.AuthResult authResult) {
                 if (authResult != null && authResult.authToken != null && authResult.baseUrl != null) {
-                    connect();
-                    if (orderConnector != null) {
-                        List<LineItem> lineItems = getLineItems();
-                        new OrderAsyncTask(orderConnector).execute(lineItems.toArray(new LineItem[lineItems.size()]));
-                    }
-
+                    onCloverAuthenticated();
                 }else {
-                    showErrorNotification("Clover not Authorized");
+                    SystemUtil.showErrorToast(getContext(), Label.getLabel("clover_account_not_authorized"));
+                    logPaymentFail("account not authorized", false);
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
