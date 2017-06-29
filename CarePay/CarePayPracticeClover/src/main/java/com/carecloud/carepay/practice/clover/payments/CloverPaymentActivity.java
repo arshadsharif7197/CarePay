@@ -73,7 +73,6 @@ public class CloverPaymentActivity extends BaseActivity {
     private double amountDouble;
     private String paymentTransitionString;
     private String queueTransitionString;
-    private CloverAuth.AuthResult authResult = null;
     private PaymentPostModel postModel;
     private PatientBalanceDTO patientBalance;
 
