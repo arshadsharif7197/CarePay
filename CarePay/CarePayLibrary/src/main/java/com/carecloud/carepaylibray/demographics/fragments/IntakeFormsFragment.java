@@ -58,17 +58,6 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
             JsonObject userResponse = null;
             if (!jsonFormSaveResponseArray.isEmpty() && jsonFormSaveResponseArray.size() > displayedFormsIndex) {
                 userResponse = jsonFormSaveResponseArray.get(displayedFormsIndex);
-            } else {
-                String uuid = payload.get("uuid").toString().replace("\"", "");
-                for (ConsentFormUserResponseDTO response : intakeResponseModel.getPayload().getResponses()) {
-                    if (uuid.equals(response.getFormId())) {
-                        JsonObject json = new JsonObject();
-                        json.addProperty("uuid", response.getFormId());
-                        json.add("response", response.getResponse());
-                        userResponse = json;
-                        break;
-                    }
-                }
             }
 
             JsonObject form = new JsonObject();

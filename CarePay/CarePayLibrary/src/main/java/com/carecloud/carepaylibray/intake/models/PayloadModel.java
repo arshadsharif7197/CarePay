@@ -21,9 +21,6 @@ public class PayloadModel {
     @SerializedName("findings")
     @Expose
     private IntakeFindings findings = new IntakeFindings();
-    @Expose
-    @SerializedName("checkout_forms_user_response")
-    private List<ConsentFormUserResponseDTO> responses = new ArrayList<>();
 
     /**
      * @return The payments
@@ -79,13 +76,5 @@ public class PayloadModel {
      */
     public void setFindings(IntakeFindings findings) {
         this.findings = findings;
-    }
-
-    public List<ConsentFormUserResponseDTO> getResponses() {
-        return responses;
-    }
-
-    public void setResponses(List<ConsentFormUserResponseDTO> responses) {
-        this.responses = responses;
     }
 }
