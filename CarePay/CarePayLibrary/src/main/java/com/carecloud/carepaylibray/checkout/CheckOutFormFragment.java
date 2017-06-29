@@ -15,6 +15,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
+import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
@@ -79,7 +80,7 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
         setHeader(Label.getLabel("checkout_rating_form_title"));
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
-        if(toolbar!=null && !callback.shouldAllowNavigateBack()){
+        if (toolbar != null && !callback.shouldAllowNavigateBack()) {
             toolbar.setNavigationIcon(null);
             toolbar.setNavigationOnClickListener(null);
         }
@@ -94,6 +95,17 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
             JsonObject userResponse = null;
             if (!jsonFormSaveResponseArray.isEmpty() && jsonFormSaveResponseArray.size() > displayedFormsIndex) {
                 userResponse = jsonFormSaveResponseArray.get(displayedFormsIndex);
+            } else {
+                String uuid = payload.get("uuid").toString().replace("\"", "");
+                for (ConsentFormUserResponseDTO response : appointmentsResultModel.getPayload().getResponses()) {
+                    if (uuid.equals(response.getFormId())) {
+                        JsonObject json = new JsonObject();
+                        json.addProperty("uuid", response.getFormId());
+                        json.add("response", response.getResponse());
+                        userResponse = json;
+                        break;
+                    }
+                }
             }
             JsonObject form = new JsonObject();
             form.add("formData", payload);

@@ -8,6 +8,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
+import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -56,6 +57,17 @@ public class FormsFragment extends BaseWebFormFragment {
             JsonObject userResponse = null;
             if (!jsonFormSaveResponseArray.isEmpty() && jsonFormSaveResponseArray.size() > displayedFormsIndex) {
                 userResponse = jsonFormSaveResponseArray.get(displayedFormsIndex);
+            } else {
+                String uuid = payload.get("uuid").toString().replace("\"", "");
+                for (ConsentFormUserResponseDTO response : consentFormDTO.getConsentFormPayloadDTO().getResponses()) {
+                    if (uuid.equals(response.getFormId())) {
+                        JsonObject json = new JsonObject();
+                        json.addProperty("uuid", response.getFormId());
+                        json.add("response", response.getResponse());
+                        userResponse = json;
+                        break;
+                    }
+                }
             }
             JsonObject form = new JsonObject();
             form.add("formData", payload);
