@@ -29,6 +29,7 @@ public class MiniApplication extends MultiDexApplication implements ApplicationH
         super.onCreate();
 
         setHttpConstants();
+        Picasso.setSingletonInstance(PicassoHelper.getPicassoInstance(this));
     }
 
     private void setHttpConstants() {
@@ -42,10 +43,10 @@ public class MiniApplication extends MultiDexApplication implements ApplicationH
         HttpConstants.setApiBaseUrl(BuildConfig.API_BASE_URL);
     }
 
-    private void initPicassoHelper(){
+    private void updatePicassoHelper(){
         Map<String, String> headers = new HashMap<>();
-        headers.put("AccessToken", authentication.getAccessToken());
-        Picasso.setSingletonInstance(PicassoHelper.getPicassoInstance(this, headers));
+        headers.put("Authorization", authentication.getAccessToken());
+        PicassoHelper.setHeaders(headers);
     }
 
     @Override
@@ -68,7 +69,7 @@ public class MiniApplication extends MultiDexApplication implements ApplicationH
     @Override
     public void setAuthentication(SignInAuth.Cognito.Authentication authentication) {
         this.authentication = authentication;
-        initPicassoHelper();
+        updatePicassoHelper();
     }
 
     private void initApplicationPreferences(){

@@ -32,4 +32,6 @@
 
     <string name="error_email">Please provide a valid email address.</string>
     <string name="error_login">Sorry, an error occurred while logging in, please try again!</string>
+
+    <string name="image_unavailable">Unavailable</string>
 </resources>
