@@ -6,6 +6,7 @@ import android.view.View;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.intake.models.IntakeFindings;
 import com.carecloud.carepaylibray.intake.models.IntakeForm;
@@ -43,7 +44,7 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         setHeader(Label.getLabel("practice_chekin_section_intake_forms"));
     }
@@ -61,9 +62,9 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
 
             JsonObject form = new JsonObject();
             form.add("formData", payload);
-            if(userResponse == null && displayedFormsIndex == 0){//only send this the first time
+            if (userResponse == null && displayedFormsIndex == 0) {//only send this the first time
                 form.add("userData", intakeFindings.getPayload());
-            }else {
+            } else {
                 form.add("userData", userResponse);
             }
             String formString = form.toString()
@@ -83,9 +84,9 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
     @Override
     protected void saveForm(JsonObject jsonResponse) {
         int displayedFormsIndex = getDisplayedFormsIndex();
-        if(jsonFormSaveResponseArray.size()>displayedFormsIndex){
+        if (jsonFormSaveResponseArray.size() > displayedFormsIndex) {
             jsonFormSaveResponseArray.set(displayedFormsIndex, jsonResponse);
-        }else {
+        } else {
             jsonFormSaveResponseArray.add(jsonResponse);
         }
     }
