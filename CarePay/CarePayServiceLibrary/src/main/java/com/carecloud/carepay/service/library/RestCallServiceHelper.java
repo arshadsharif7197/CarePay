@@ -45,6 +45,16 @@ public class RestCallServiceHelper {
         this.applicationMode = applicationMode;
     }
 
+    /**
+     * Make Rest service call
+     * @param method REST method
+     * @param baseUrl base url
+     * @param callback callback method
+     * @param queryMap optional query params
+     * @param headerMap optional headers
+     * @param jsonBody optional request body
+     * @param pathParams optional path params, must be passed in order
+     */
     public void executeRequest(@RestDef.RestMethod String method,
                                @NonNull String baseUrl,
                                @NonNull RestCallServiceCallback callback,
@@ -56,10 +66,21 @@ public class RestCallServiceHelper {
         executeRequest(method, baseUrl, callback, false, queryMap, headerMap, jsonBody, pathParams);
     }
 
+    /**
+     * Make Rest service call with option to set authorization headers as query params
+     * @param method REST method
+     * @param baseUrl base url
+     * @param callback callback method
+     * @param authQueryParams optionally pass header auths as query params
+     * @param queryMap optional query params
+     * @param headerMap optional headers
+     * @param jsonBody optional request body
+     * @param pathParams optional path params, must be passed in order
+     */
     public void executeRequest(@RestDef.RestMethod String method,
                                @NonNull String baseUrl,
                                @NonNull final RestCallServiceCallback callback,
-                               boolean authorizationParams,
+                               boolean authQueryParams,
                                Map<String, String> queryMap,
                                Map<String, String> headerMap,
                                String jsonBody,
@@ -67,7 +88,7 @@ public class RestCallServiceHelper {
 
         callback.onPreExecute();
         String fullUrl = getFullUrl(baseUrl, pathParams);
-        if(authorizationParams){
+        if(authQueryParams){
             queryMap = getAuthQueryParams(queryMap);
         }
         Call<JsonElement> requestCall = getServiceCall(method, fullUrl, headerMap, queryMap, jsonBody);
@@ -173,6 +194,7 @@ public class RestCallServiceHelper {
         return restCallService.executePost(fullUrl);
 
     }
+
     private Call<JsonElement> getDeleteCall(RestCallService restCallService,
                                String fullUrl,
                                Map<String, String> queryMap,
@@ -192,6 +214,7 @@ public class RestCallServiceHelper {
         return restCallService.executeDelete(fullUrl);
 
     }
+
     private Call<JsonElement> getPutCall(RestCallService restCallService,
                                String fullUrl,
                                Map<String, String> queryMap,
