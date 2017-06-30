@@ -17,6 +17,8 @@ public class RegistrationPayloadDTO {
     @SerializedName("locations")
     private List<LocationsDTO> locations = new ArrayList<>();
 
+    @SerializedName("practice_mode_signin")
+    private SignInAuth signInAuth = new SignInAuth();
 
     public List<UserPracticeDTO> getUserPractices() {
         return userPractices;
@@ -32,5 +34,13 @@ public class RegistrationPayloadDTO {
 
     public void setLocations(List<LocationsDTO> locations) {
         this.locations = locations;
+    }
+
+    public SignInAuth getSignInAuth() {
+        return signInAuth;
+    }
+
+    public void setSignInAuth(SignInAuth signInAuth) {
+        this.signInAuth = signInAuth;
     }
 }

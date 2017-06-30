@@ -69,7 +69,8 @@ public class ImageSelectFragment extends RegistrationFragment {
         final TextView practiceInitials = (TextView) view.findViewById(R.id.practice_initials_name);
         practiceInitials.setText(StringUtil.getShortName(selectedPractice.getPracticeName()));
 
-        final View practiceLogoLayout = view.findViewById(R.id.practice_logo_layout);
+        View practiceLogoLayout = view.findViewById(R.id.practice_logo_layout);
+        final View practiceLogoUnavailable = view.findViewById(R.id.practice_logo_unavailable);
         String imageUrl = selectedPractice.getPracticePhoto();
         if(StringUtil.isNullOrEmpty(imageUrl)){
             practiceLogoLayout.setVisibility(View.GONE);
@@ -83,13 +84,14 @@ public class ImageSelectFragment extends RegistrationFragment {
                     .into(practiceLogo, new Callback() {
                         @Override
                         public void onSuccess() {
-                            // nothing here
+                            practiceLogo.setClickable(true);
+                            practiceLogoUnavailable.setVisibility(View.GONE);
                         }
 
                         @Override
                         public void onError() {
-                            practiceLogoLayout.setEnabled(false);
-                            practiceInitials.setEnabled(false);
+                            practiceLogo.setClickable(false);
+                            practiceLogoUnavailable.setVisibility(View.VISIBLE);
                             //// TODO: 6/25/17 go to summary screen
                         }
                     });

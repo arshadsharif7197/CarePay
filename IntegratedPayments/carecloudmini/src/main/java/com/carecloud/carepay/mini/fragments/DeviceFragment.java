@@ -19,7 +19,7 @@ public class DeviceFragment extends RegistrationFragment {
 
     private View nextButton;
     private EditText nameInput;
-    private EditText welcomeInput;
+//    private EditText welcomeInput;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
@@ -42,19 +42,18 @@ public class DeviceFragment extends RegistrationFragment {
         nameInput = (EditText) view.findViewById(R.id.input_device_name);
         nameInput.addTextChangedListener(emptyTextWatcher);
 
-        welcomeInput = (EditText) view.findViewById(R.id.input_welcome);
-        welcomeInput.addTextChangedListener(emptyTextWatcher);
+//        welcomeInput = (EditText) view.findViewById(R.id.input_welcome);
+//        welcomeInput.addTextChangedListener(emptyTextWatcher);
 
     }
 
     private boolean validateForm(){
-        return !StringUtil.isNullOrEmpty(nameInput.getText().toString()) &&
-                !StringUtil.isNullOrEmpty(welcomeInput.getText().toString());
+        return !StringUtil.isNullOrEmpty(nameInput.getText().toString());
     }
 
     private void setDeviceDetails(){
         getApplicationHelper().getApplicationPreferences().setDeviceName(nameInput.getText().toString());
-        getApplicationHelper().getApplicationPreferences().setWelcomeMessage(welcomeInput.getText().toString());
+//        getApplicationHelper().getApplicationPreferences().setWelcomeMessage(welcomeInput.getText().toString());
 
         callback.replaceFragment(new ImageSelectFragment(), true);
     }

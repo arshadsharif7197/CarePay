@@ -13,14 +13,14 @@
     <LinearLayout
         android:layout_width="@dimen/content_width_login"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/dp_40"
         android:gravity="center_horizontal"
-        android:layout_marginBottom="@dimen/dp_40">
+        android:orientation="vertical">
 
         <ImageView
             style="@style/HeaderIcon"
-            android:src="@drawable/login_key"
-            android:contentDescription="@string/content_icon_header"/>
+            android:contentDescription="@string/content_icon_header"
+            android:src="@drawable/login_key"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,35 +29,36 @@
             android:orientation="vertical">
 
             <com.carecloud.carepay.mini.views.CarePayTextView
+                style="@style/InputLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/InputLabel"
                 android:text="@string/registration_login_email_label"
                 app:customFont="proximanova_regular.otf"/>
 
             <com.carecloud.carepay.mini.views.CarePayEditText
                 android:id="@+id/input_email"
+                style="@style/InputField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/InputField"
                 android:hint="@string/registration_login_email_hint"
+                android:inputType="textEmailAddress"
                 app:customFont="gotham_rounded_light.otf"/>
 
             <com.carecloud.carepay.mini.views.CarePayTextView
+                style="@style/InputLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_30"
-                style="@style/InputLabel"
                 android:text="@string/registration_login_password_label"
                 app:customFont="proximanova_regular.otf"/>
 
             <com.carecloud.carepay.mini.views.CarePayEditText
                 android:id="@+id/input_password"
+                style="@style/InputField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/InputField"
-                android:inputType="textPassword"
                 android:hint="@string/registration_login_password_hint"
+                android:inputType="textPassword"
                 app:customFont="gotham_rounded_light.otf"/>
 
         </LinearLayout>
@@ -68,8 +69,8 @@
 
             <com.carecloud.carepay.mini.views.CarePayButton
                 android:id="@+id/button_login"
-                android:layout_height="wrap_content"
                 style="@style/ButtonRounded"
+                android:layout_height="wrap_content"
                 android:text="@string/registration_login_button"
                 app:customFont="gotham_rounded_medium.otf"/>
 

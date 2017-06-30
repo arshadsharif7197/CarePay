@@ -24,6 +24,7 @@
     <dimen name="dp_592">592dp</dimen>
     <dimen name="dp_744">744dp</dimen>
 
+    <dimen name="sp_14">14sp</dimen>
     <dimen name="sp_18">18sp</dimen>
     <dimen name="sp_24">24sp</dimen>
     <dimen name="sp_30">30sp</dimen>
@@ -53,4 +54,5 @@
     <dimen name="image_select_text">@dimen/sp_18</dimen>
     <dimen name="practice_initials">@dimen/sp_48</dimen>
     <dimen name="error_text">@dimen/sp_18</dimen>
+    <dimen name="no_image_text">@dimen/sp_14</dimen>
 </resources>

@@ -43,21 +43,21 @@
                 android:hint="@string/registration_device_hint"
                 app:customFont="gotham_rounded_light.otf"/>
 
-            <com.carecloud.carepay.mini.views.CarePayTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_30"
-                style="@style/InputLabel"
-                android:text="@string/registration_welcome_msg_label"
-                app:customFont="proximanova_regular.otf"/>
+            <!--<com.carecloud.carepay.mini.views.CarePayTextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="@dimen/dp_30"-->
+                <!--style="@style/InputLabel"-->
+                <!--android:text="@string/registration_welcome_msg_label"-->
+                <!--app:customFont="proximanova_regular.otf"/>-->
 
-            <com.carecloud.carepay.mini.views.CarePayEditText
-                android:id="@+id/input_welcome"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/InputField"
-                android:hint="@string/registration_welcome_msg_hint"
-                app:customFont="gotham_rounded_light.otf"/>
+            <!--<com.carecloud.carepay.mini.views.CarePayEditText-->
+                <!--android:id="@+id/input_welcome"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--style="@style/InputField"-->
+                <!--android:hint="@string/registration_welcome_msg_hint"-->
+                <!--app:customFont="gotham_rounded_light.otf"/>-->
 
 
         </LinearLayout>
