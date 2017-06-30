@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
@@ -19,6 +20,7 @@ import com.carecloud.carepaylibray.media.MediaResultListener;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
+import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -158,4 +160,19 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         }
         finish();
     }
+
+    @Override
+    public void onBackPressed() {
+        try {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            BaseCheckinFragment fragment = (BaseCheckinFragment) fragmentManager.findFragmentById(R.id.root_layout);
+            if (fragment == null || !fragment.navigateBack()) {
+                super.onBackPressed();
+            }
+        } catch (ClassCastException cce) {
+            cce.printStackTrace();
+            super.onBackPressed();
+        }
+    }
+
 }

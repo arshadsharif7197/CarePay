@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:id="@+id/reviewdemographicsPersonalContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+            android:id="@+id/reviewdemogrDOBTextInput"
+            style="@style/SigninSignupTextInputStyle"
+            app:hintTextAppearance="@style/FloatingLabelStyle"
+            app:customAssetFont="proxima_nova_semi_bold">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                android:id="@+id/revewidemogrDOBEdit"
+                style="@style/DemographicsReviewEditTextStyle"
+                android:digits="0123456789/"
+                android:imeOptions="actionNext"
+                android:inputType="date"
+                android:maxLength="10"
+                android:nextFocusForward="@+id/reviewgrdemoPhoneNumberEdit"
+                breeze:hintKey="demographics_review_date_of_birth"
+                app:customAssetFont="gotham_rounded_book"/>
+        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/dobformatlabel"
+            style="@style/SignupRequireHintStyle"
+            android:textColor="@color/cadet_gray"
+            breeze:textKey="demographics_details_dob_hint"
+            app:customAssetFont="proxima_nova_regular"/>
+    </FrameLayout>
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+        android:id="@+id/reviewdemogrPhoneNumberTextInput"
+        style="@style/SigninSignupTextInputStyle"
+        app:hintTextAppearance="@style/FloatingLabelStyle"
+        app:customAssetFont="proxima_nova_semi_bold">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+            android:id="@+id/reviewgrdemoPhoneNumberEdit"
+            style="@style/DemographicsReviewEditTextStyle"
+            android:digits="0123456789-"
+            android:imeOptions="actionDone"
+            android:inputType="phone"
+            android:maxLength="12"
+            breeze:hintKey="demographics_phone_number"
+            app:customAssetFont="gotham_rounded_book"/>
+    </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+</LinearLayout>

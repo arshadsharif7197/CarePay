@@ -19,6 +19,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
@@ -94,7 +95,7 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
         if (paymentDTO != null) {
             getPaymentLabels();
             try {
-                ((TextView) view.findViewById(R.id.respons_title)).setText(paymentsTitleString);
+                ((TextView) view.findViewById(R.id.respons_title)).setText(Label.getLabel("payment_title"));
 
                 List<PendingBalanceDTO> paymentList = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances();
 

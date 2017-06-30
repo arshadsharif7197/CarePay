@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
@@ -87,8 +89,10 @@
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/demographicsSubHeading"
                     style="@style/DemographicsDocsHeaderSubtitleStyle"
-                    android:textSize="@dimen/text_size_17sp"
+                    android:textSize="@dimen/text_size_20sp"
+                    android:textColor="@color/textview_default_textcolor"
                     android:layout_margin="@dimen/dimen_20dp"
+                    tools:text="This is what some header text might look like"
                     app:customAssetFont="gotham_rounded_medium"/>
 
                 <FrameLayout

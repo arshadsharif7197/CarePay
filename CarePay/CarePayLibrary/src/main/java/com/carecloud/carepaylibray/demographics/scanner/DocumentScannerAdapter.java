@@ -237,6 +237,10 @@ public class DocumentScannerAdapter {
      * @return Base64 string if filepath is valid
      */
     public static String getBase64(Context context, String filePath){
+        if(filePath == null){
+            return null;
+        }
+
         File file = new File(filePath);
         Bitmap bitmap = null;
         if(file.exists()) {

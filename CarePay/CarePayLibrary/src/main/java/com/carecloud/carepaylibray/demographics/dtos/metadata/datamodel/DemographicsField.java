@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by lmenendez on 5/16/17.
+ * Created by lmenendez on 5/16/17
  */
 
 public class DemographicsField {

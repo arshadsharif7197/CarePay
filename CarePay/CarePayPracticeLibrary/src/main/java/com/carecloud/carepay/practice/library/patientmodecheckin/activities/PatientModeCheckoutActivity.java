@@ -22,6 +22,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticePartial
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
@@ -92,6 +93,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             initDto(workflowDTO);
         }
 
+        initAppMode();
+
         shouldAddBackStack = true;
     }
 
@@ -119,6 +122,28 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
         View home = findViewById(R.id.btnHome);
         home.setOnClickListener(homeClick);
+    }
+
+    private void initAppMode(){
+        if(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE){
+            //need to switch to PatientMode
+            getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
+            String username = null;
+            if(appointmentsResultModel != null){
+                for(AppointmentDTO appointmentDTO : appointmentsResultModel.getPayload().getAppointments()){
+                    if(appointmentDTO.getPayload().getId().equals(appointmentId)){
+                        username = appointmentDTO.getMetadata().getUsername();
+                        break;
+                    }
+                }
+            }else if(paymentsModel != null){
+                username = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getUsername();
+            }
+
+            if(username != null) {
+                getAppAuthorizationHelper().setUser(username);
+            }
+        }
     }
 
     private void showCheckOutFormFragment() {

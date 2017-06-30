@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
@@ -26,6 +24,9 @@ import com.google.android.gms.wallet.WalletConstants;
 public class PaymentActivity extends BasePatientActivity implements PaymentViewHandler {
     PaymentsModel paymentsDTO;
     PatientPaymentPresenter presenter;
+
+    private boolean isFirstFragment = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,13 +151,16 @@ public class PaymentActivity extends BasePatientActivity implements PaymentViewH
      * @param addToBackStack Whether to add the transaction to back-stack
      */
     public void navigateToFragment(final Fragment fragment, final boolean addToBackStack) {
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.payment_frag_holder, fragment, fragment.getClass().getSimpleName());
-        if (addToBackStack) {
-            transaction.addToBackStack(fragment.getClass().getName());
-        }
-        transaction.commitAllowingStateLoss();
+//        FragmentManager fm = getSupportFragmentManager();
+//        FragmentTransaction transaction = fm.beginTransaction();
+//        transaction.replace(R.id.payment_frag_holder, fragment, fragment.getClass().getSimpleName());
+//        if (addToBackStack) {
+//            transaction.addToBackStack(fragment.getClass().getName());
+//        }
+//        transaction.commitAllowingStateLoss();
+//
+        replaceFragment(R.id.payment_frag_holder, fragment, addToBackStack && !isFirstFragment);
+        isFirstFragment = false;
     }
 
     @Override

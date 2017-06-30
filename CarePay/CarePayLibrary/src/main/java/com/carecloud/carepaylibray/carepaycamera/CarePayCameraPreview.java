@@ -23,10 +23,12 @@ import android.view.SurfaceView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.qrcodescanner.DisplayUtils;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -34,22 +36,24 @@ import java.util.List;
  * Capture Image Camera view
  */
 
+@SuppressWarnings("deprecation")
 public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.Callback {
-    public enum CameraType {
+
+    public enum CameraType implements Serializable {
         CAPTURE_PHOTO, SCAN_DOC
     }
 
     private SurfaceHolder cameraSurfaceHolder;
     private Camera camera;
     int borderWidth = 2;
-    int shadowWidth = 100;
-    float borderCornerRadius = 15;
     Context context;
     Rect shadowRect = null;
     boolean surfaceCreated;
     private int displayOrientation;
-
+    private int currentCameraId;
+    private Handler autoFocusHandler;
     public CameraType cameraType = CameraType.SCAN_DOC;
+    public static final int NO_DEFINED_CAMERA = -999;
 
     /**
      * Constructor
@@ -59,33 +63,85 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     public CarePayCameraPreview(Context context) {
         super(context);
         this.context = context;
-        initialize(context);
+    }
+
+    /**
+     * Public constructor with context and Attribute.
+     * All the custom styleable declare are apply here also.
+     *
+     * @param context sender context
+     * @param attrs   styleable attributes
+     */
+    public CarePayCameraPreview(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.context = context;
+    }
+
+    /**
+     * Public constructor with context, Attributes and default attributes.
+     * All the custom styleable declare are apply here also.
+     * Default attributes also apply here
+     *
+     * @param context      sender context
+     * @param attrs        styleable attributes
+     * @param defStyleAttr styleable default attributes
+     */
+    public CarePayCameraPreview(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        this.context = context;
     }
 
     /**
      * Camera initialization
-     *
-     * @param context caller context
      */
-    private void initialize(Context context) {
-        this.context = context;
+    public void initialize() {
         camera = getCameraInstance();
-        setBackgroundColor(Color.parseColor("#aa575555"));
+        if (cameraType == CameraType.SCAN_DOC) {
+            setBackgroundColor(getContext().getResources().getColor(R.color.cameraBackground));
+        }
         cameraSurfaceHolder = getHolder();
         cameraSurfaceHolder.addCallback(this);
         autoFocusHandler = new Handler();
         setFocusable(true);
         setFocusableInTouchMode(true);
-
         cameraSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+    }
+
+    /**
+     * A safe way to get an instance of the Camera object.
+     */
+    private Camera getCameraInstance() {
+        if (!checkCameraHardware()) {
+            return null;
+        }
+
+        try {
+            if (currentCameraId == NO_DEFINED_CAMERA) {
+                currentCameraId = cameraType == CameraType.SCAN_DOC ? getBackFaceCamera() : getFrontFaceCamera();
+            }
+            displayOrientation = DisplayUtils.getDisplayOrientation(context, currentCameraId);
+
+            if (HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)) {
+                displayOrientation = 180;
+            }
+
+            Camera camera = Camera.open(currentCameraId);
+            camera.setDisplayOrientation(displayOrientation);
+
+            return camera;
+        } catch (Exception e) {
+            // Camera is not available (in use or does not exist)
+        }
+
+        return null;
     }
 
     /**
      * Get front camera if available otherwisw defaulft camera
      *
-     * @return
+     * @return an int indicating the camera id
      */
-    public static int getFrontFaceCamera() {
+    private int getFrontFaceCamera() {
         int numberOfCameras = Camera.getNumberOfCameras();
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
         int defaultCameraId = -1;
@@ -104,7 +160,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
      *
      * @return
      */
-    public static int getBackFaceCamera() {
+    private int getBackFaceCamera() {
         int numberOfCameras = Camera.getNumberOfCameras();
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
         int defaultCameraId = -1;
@@ -116,36 +172,6 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
             }
         }
         return defaultCameraId;
-    }
-
-    /**
-     * Public constructor with context and Attribute.
-     * All the custom styleable declare are apply here also.
-     *
-     * @param context sender context
-     * @param attrs   styleable attributes
-     */
-
-    public CarePayCameraPreview(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        initialize(context);
-        this.context = context;
-    }
-
-    /**
-     * Public constructor with context, Attributes and default attributes.
-     * All the custom styleable declare are apply here also.
-     * Default attributes also apply here
-     *
-     * @param context      sender context
-     * @param attrs        styleable attributes
-     * @param defStyleAttr styleable default attributes
-     */
-
-    public CarePayCameraPreview(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        this.context = context;
-        initialize(context);
     }
 
     /**
@@ -166,20 +192,21 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
             Point size = DisplayUtils.getDisplaySize(getContext());
             if (DisplayUtils.getScreenOrientation(getContext()) == Configuration.ORIENTATION_PORTRAIT) {
-                shadowWidth = (int) (size.y * .05);
+                int shadowWidth = (int) (size.y * .05);
                 rect = new Rect(getLeft() + shadowWidth,
                         getTop() + shadowWidth * 2,
                         getRight() - shadowWidth,
                         getBottom() - shadowWidth * 2);
                 shadowRect = rect;
             } else {
-                shadowWidth = (int) (size.x * .05);
+                int shadowWidth = (int) (size.x * .05);
                 rect = new Rect(getLeft() + shadowWidth * 2,
                         getTop() + shadowWidth,
                         getRight() - shadowWidth * 2,
                         getBottom() - shadowWidth);
                 shadowRect = rect;
             }
+            float borderCornerRadius = 15;
             RectF shadowRectF = new RectF(shadowRect);
             canvas.drawRoundRect(shadowRectF, borderCornerRadius, borderCornerRadius, transparentPaint);
             Paint borderPaint = new Paint();
@@ -210,8 +237,6 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         }
     }
 
-    private Handler autoFocusHandler;
-
     /**
      * Schedule focus
      */
@@ -234,9 +259,11 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
      */
     public void surfaceCreated(SurfaceHolder holder) {
         // The Surface has been created, now tell the camera where to draw the preview.
-        surfaceCreated = true;
         try {
             surfaceCreated = true;
+            if (camera == null) {
+                camera = getCameraInstance();
+            }
             camera.setPreviewDisplay(holder);
             camera.startPreview();
             if (surfaceCreated) { // check if surface created before using autofocus
@@ -310,44 +337,18 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
-    /**
-     * A safe way to get an instance of the Camera object.
-     */
-    private Camera getCameraInstance() {
-        if (!checkCameraHardware()) {
-            return null;
-        }
-
-        try {
-            int cameraId = cameraType == CameraType.CAPTURE_PHOTO ? getFrontFaceCamera() : getBackFaceCamera();
-            displayOrientation = DisplayUtils.getDisplayOrientation(context, cameraId);
-
-            if (HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)) {
-                displayOrientation = 180;
-            }
-
-            Camera camera = Camera.open(cameraId);
-            camera.setDisplayOrientation(displayOrientation);
-
-            return camera;
-        } catch (Exception e) {
-            // Camera is not available (in use or does not exist)
-        }
-
-        return null;
-    }
-
     CarePayCameraCallback carePayCameraCallback;
 
     /**
      * Capture Picture with selected Camera
+     *
      * @param callback callback for captured bitmap
      */
     public void takePicture(CarePayCameraCallback callback) {
         this.carePayCameraCallback = callback;
-        if(camera!=null) {
+        if (camera != null) {
             camera.takePicture(null, null, pictureCallback);
-        }else{
+        } else {
             callback.onCaptureFail();
         }
     }
@@ -366,6 +367,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     private void generateCroppedBitmap(byte[] data) {
 
         Bitmap capturedBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+
         if (cameraType == CameraType.SCAN_DOC) {
 
             if (HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)) {
@@ -387,10 +389,13 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
             capturedBitmap = Bitmap.createBitmap(capturedBitmap, left, top, cropedWidth, cropedHeight);
 
-        } else {
-            ImageCaptureHelper.setOrientation(90);
-            capturedBitmap = rotateBitmap(capturedBitmap, 90);
         }
+        int offset = 0;
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT
+                && currentCameraId == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            offset = 180;
+        }
+        capturedBitmap = rotateBitmap(capturedBitmap, DisplayUtils.getDisplayOrientation(context, currentCameraId) + offset);
 
         this.carePayCameraCallback.onCapturedSuccess(capturedBitmap);
     }
@@ -410,8 +415,106 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
     private void releaseCamera() {
         if (camera != null) {
+            cameraSurfaceHolder.removeCallback(this);
             camera.release();        // release the camera for other applications
             camera = null;
         }
     }
+
+    /**
+     * change the camera back/front
+     */
+    public int changeCamera() {
+        if (camera != null) {
+            camera.stopPreview();
+            camera.release();
+        }
+        if (currentCameraId == Camera.CameraInfo.CAMERA_FACING_BACK) {
+            currentCameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
+        } else {
+            currentCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
+        }
+        camera = Camera.open(currentCameraId);
+        displayOrientation = DisplayUtils.getDisplayOrientation(context, currentCameraId);
+        camera.setDisplayOrientation(displayOrientation);
+
+        try {
+            camera.setPreviewDisplay(getHolder());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        camera.startPreview();
+
+        cameraSurfaceHolder = getHolder();
+        cameraSurfaceHolder.addCallback(this);
+        return currentCameraId;
+    }
+
+    /**
+     * turns on the flash of the selected camera
+     */
+    public void turnOnFlash() {
+        Camera.Parameters params = camera.getParameters();
+        params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+        camera.setParameters(params);
+        camera.startPreview();
+    }
+
+    /**
+     * turns off the flash of the current camera
+     */
+    public void turnOffFlash() {
+        Camera.Parameters params = camera.getParameters();
+        params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+        camera.setParameters(params);
+        camera.startPreview();
+    }
+
+    /**
+     * @return a boolean indicating if the selected camera has flash
+     */
+    public boolean hasFlash() {
+        if (camera == null) {
+            return false;
+        }
+
+        Camera.Parameters parameters = camera.getParameters();
+
+        if (parameters.getFlashMode() == null) {
+            return false;
+        }
+
+        List<String> supportedFlashModes = parameters.getSupportedFlashModes();
+        return !(supportedFlashModes == null || supportedFlashModes.isEmpty()
+                || supportedFlashModes.size() == 1
+                && supportedFlashModes.get(0).equals(Camera.Parameters.FLASH_MODE_OFF));
+    }
+
+    public void stop() {
+        if (camera != null) {
+            camera.stopPreview();
+            camera.release();
+        }
+    }
+
+    public void start(int currentCameraId) {
+        this.currentCameraId = currentCameraId;
+        initialize();
+    }
+
+    /**
+     * @return a boolean indicating if device has more than one camera
+     */
+    public boolean canChangeCamera() {
+        return Camera.getNumberOfCameras() > 1;
+    }
+
+    /**
+     * @param cameraType the camera type
+     */
+    public void setCameraType(CameraType cameraType) {
+        this.cameraType = cameraType;
+    }
+
+
 }

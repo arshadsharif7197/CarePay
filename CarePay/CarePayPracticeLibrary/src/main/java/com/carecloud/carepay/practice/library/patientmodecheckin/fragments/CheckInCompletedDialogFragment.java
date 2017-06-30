@@ -41,7 +41,9 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
     private CheckCompleteInterface callback;
     private PatientPaymentPayload patientPaymentPayload;
 
-    private @Defs.AppointmentNavigationTypeDef int appointmentNavigationType;
+    private
+    @Defs.AppointmentNavigationTypeDef
+    int appointmentNavigationType;
 
     @Override
     public void onAttach(Context context) {
@@ -87,10 +89,10 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
             userImageUrl = ((PaymentsModel) dto).getPaymentPayload().getPatientBalances().get(0)
                     .getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
         } else {
-            if(selectedAppointment == null) {
+            if (selectedAppointment == null) {
                 selectedAppointment = ((AppointmentsResultModel) dto).getPayload().getAppointments().get(0);
             }
-            if(!((AppointmentsResultModel) dto).getPayload().getPatientBalances().isEmpty()) {
+            if (!((AppointmentsResultModel) dto).getPayload().getPatientBalances().isEmpty()) {
                 userImageUrl = ((AppointmentsResultModel) dto).getPayload().getPatientBalances().get(0)
                         .getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
             }
@@ -136,7 +138,11 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
                 selectedAppointment.getPayload().getProvider().getName()));
 
         TextView appointmentStatusTextView = (TextView) view.findViewById(R.id.appointmentStatusTextView);
-        appointmentStatusTextView.setText(selectedAppointment.getPayload().getAppointmentStatus().getName());
+        String status = selectedAppointment.getPayload().getAppointmentStatus().getName();
+        if ("checked-in".equals(status.toLowerCase()) || "checked-out".equals(status.toLowerCase())) {
+            status = String.format(Label.getLabel("confirm_appointment_checkout_status"), status);
+        }
+        appointmentStatusTextView.setText(status);
 
         TextView appointmentVisitTypeTextView = (TextView) view.findViewById(R.id.appointmentVisitTypeTextView);
         appointmentVisitTypeTextView.setText(selectedAppointment.getPayload().getVisitType().getName());
@@ -176,7 +182,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
             paymentTypeTextView.setText(Label.getLabel("payment_confirm_type_no_paid"));
         }
 
-        if(appointmentNavigationType == Defs.NAVIGATE_CHECKOUT){
+        if (appointmentNavigationType == Defs.NAVIGATE_CHECKOUT) {
             TextView successMessage = (TextView) view.findViewById(R.id.successMessage);
             successMessage.setText(Label.getLabel("confirm_appointment_checkout"));
         }

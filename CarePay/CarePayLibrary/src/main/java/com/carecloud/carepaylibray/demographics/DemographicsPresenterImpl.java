@@ -14,7 +14,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
-import com.carecloud.carepaylibray.carepaycamera.CarePayCameraFragment;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
@@ -36,7 +35,7 @@ import com.google.gson.Gson;
 
 public class DemographicsPresenterImpl implements DemographicsPresenter {
 
-    private final AppointmentDTO appointmentPayload;
+    private AppointmentDTO appointmentPayload;
     private DemographicsView demographicsView;
 
     private CarePayCameraCallback carePayCameraCallback;
@@ -62,8 +61,11 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     public DemographicsPresenterImpl(DemographicsView demographicsView, Bundle savedInstanceState, boolean isPatientMode) {
         this.demographicsView = demographicsView;
         demographicDTO = demographicsView.getConvertedDTO(DemographicDTO.class);
-        appointmentId = demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId();
-        appointmentPayload = demographicDTO.getPayload().getAppointmentpayloaddto().get(0);
+        if (!demographicDTO.getPayload().getAppointmentpayloaddto().isEmpty()) {
+            appointmentPayload = demographicDTO.getPayload().getAppointmentpayloaddto().get(0);
+            appointmentId = appointmentPayload.getMetadata().getAppointmentId();
+        }
+
         this.isPatientMode = isPatientMode;
 
         if (savedInstanceState != null) {
@@ -358,22 +360,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         if (demographicsView != null) {
             demographicsView.onBackPressed();
         }
-    }
-
-    @Override
-    public void captureImage(CarePayCameraCallback callback) {
-        this.carePayCameraCallback = callback;
-
-        String tag = CarePayCameraFragment.class.getName();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        Fragment prev = fragmentManager.findFragmentByTag(tag);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-
-        CarePayCameraFragment dialog = new CarePayCameraFragment();
-        dialog.show(ft, tag);
     }
 
     protected CheckInDemographicsBaseFragment getDemographicFragment(int step) {

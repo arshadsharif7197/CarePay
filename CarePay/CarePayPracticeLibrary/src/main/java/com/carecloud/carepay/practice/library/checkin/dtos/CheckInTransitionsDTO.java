@@ -35,6 +35,10 @@ public class CheckInTransitionsDTO {
     @Expose
     private TransitionDTO checkinPatientMode = new TransitionDTO();
 
+    @SerializedName("checkout_patient_mode")
+    @Expose
+    private TransitionDTO checkoutPatientMode = new TransitionDTO();
+
     @SerializedName("practice_mode")
     @Expose
     private TransitionDTO practiceMode = new TransitionDTO();
@@ -133,5 +137,13 @@ public class CheckInTransitionsDTO {
 
     public void setPracticeMode(TransitionDTO practiceMode) {
         this.practiceMode = practiceMode;
+    }
+
+    public TransitionDTO getCheckoutPatientMode() {
+        return checkoutPatientMode;
+    }
+
+    public void setCheckoutPatientMode(TransitionDTO checkoutPatientMode) {
+        this.checkoutPatientMode = checkoutPatientMode;
     }
 }

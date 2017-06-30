@@ -67,12 +67,14 @@ public abstract class BaseWebFormFragment extends BaseFragment {
             }
         });
         nextButton.setEnabled(false);
-        nextButton.setText(Label.getLabel("checkout_rating_form_button_label"));
+        nextButton.setText(Label.getLabel("checkout_forms_done"));
 
         progressIndicator = (StepProgressBar) view.findViewById(R.id.progress_indicator);
         if (totalForms > 1) {
             progressIndicator.setVisibility(View.VISIBLE);
             progressIndicator.setNumDots(totalForms);
+
+            nextButton.setText(Label.getLabel("next_form_button_text"));
         } else {
             progressIndicator.setVisibility(View.GONE);
         }
@@ -181,6 +183,10 @@ public abstract class BaseWebFormFragment extends BaseFragment {
         webView.loadUrl("javascript:window." + function + "('" + formString + "')");
         nextButton.setEnabled(true);
         progressIndicator.setCurrentProgressDot(displayedFormsIndex);
+        if(getDisplayedFormsIndex() == getTotalForms()-1){
+            //last form
+            nextButton.setText(Label.getLabel("checkout_forms_done"));
+        }
     }
 
     public void setTotalForms(int totalForms) {

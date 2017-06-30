@@ -39,6 +39,7 @@ public class SplashActivity extends BasePatientActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            getWorkflowServiceHelper().saveLabels(workflowDTO);
             navigateToWorkflow(workflowDTO);
             // end-splash activity and transition
             SplashActivity.this.finish();

@@ -25,6 +25,8 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepay.service.library.platform.AndroidPlatform;
+import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -196,6 +198,9 @@ public class DemographicsSettingsFragment extends BaseFragment {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("push", pushNotificationCheckBox.isChecked());
         jsonObject.addProperty("email", emailNotificationCheckBox.isChecked());
+        jsonObject.addProperty("device_token", ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences()
+                .getString(CarePayConstants.FCM_TOKEN, null));
+        jsonObject.addProperty("device_type", "android");
         TransitionDTO transitionDTO = demographicsSettingsDTO.getMetadata()
                 .getTransitions().getUpdateNotifications();
         getWorkflowServiceHelper().execute(transitionDTO, updateNotificationPreferencesCallback, jsonObject.toString());

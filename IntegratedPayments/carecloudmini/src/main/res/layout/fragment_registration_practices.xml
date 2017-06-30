@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal">
+
+    <include layout="@layout/toolbar_registration_progress"
+             android:id="@+id/registration_toolbar"/>
+
+    <LinearLayout
+        android:layout_width="@dimen/content_width_login"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/dp_40">
+
+        <ImageView
+            style="@style/HeaderIcon"
+            android:src="@drawable/practice_group"
+            android:contentDescription="@string/content_icon_header"/>
+
+        <com.carecloud.carepay.mini.views.CarePayTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_20"
+            android:paddingEnd="@dimen/dp_20"
+            android:gravity="center"
+            android:textColor="@color/blueText"
+            android:textSize="@dimen/instructons_text"
+            android:text="@string/registration_select_practice_text"
+            app:customFont="proximanova_semibold.otf"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/practice_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"/>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_20">
+
+            <com.carecloud.carepay.mini.views.CarePayButton
+                android:id="@+id/button_next"
+                android:layout_height="wrap_content"
+                style="@style/ButtonRounded"
+                android:text="@string/registration_next_button"
+                app:customFont="gotham_rounded_medium.otf"/>
+
+            <include layout="@layout/progress_loader"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

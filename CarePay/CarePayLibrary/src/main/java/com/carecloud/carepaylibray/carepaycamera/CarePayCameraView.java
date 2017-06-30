@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.carepaycamera;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -9,21 +8,26 @@ import android.widget.RelativeLayout;
 
 import com.carecloud.carepaylibrary.R;
 
+
 /**
  * Created by Jahirul Bhuiyan on 11/10/2016.
  */
 
 public class CarePayCameraView extends RelativeLayout {
+
+    private CarePayCameraPreview.CameraType cameraType = CarePayCameraPreview.CameraType.SCAN_DOC;
     private CarePayCameraCallback callback;
-    Context context;
-    Button buttonCapture;
+    private Context context;
+    private Button buttonCapture;
+
     private CarePayCameraPreview carePayCameraPreview;
+    private int currentCameraId = CarePayCameraPreview.NO_DEFINED_CAMERA;
 
     /**
      * Public constructor with context
      *
      * @param callback after photo taken
-     * @param context sender context
+     * @param context  sender context
      */
     public CarePayCameraView(CarePayCameraCallback callback, Context context) {
         super(context);
@@ -35,10 +39,27 @@ public class CarePayCameraView extends RelativeLayout {
     /**
      * Public constructor with context
      *
-     * @param context sender context
+     * @param callback   after photo taken
+     * @param context    sender context
+     * @param cameraType the camera type
      */
-    public CarePayCameraView(Context context) {
-        this((CarePayCameraCallback) context, context);
+    public CarePayCameraView(CarePayCameraCallback callback, Context context,
+                             CarePayCameraPreview.CameraType cameraType) {
+        super(context);
+        this.callback = callback;
+        this.context = context;
+        this.cameraType = cameraType;
+        init(null);
+    }
+
+    /**
+     * Public constructor with context
+     *
+     * @param context    sender context
+     * @param cameraType the camera type
+     */
+    public CarePayCameraView(Context context, CarePayCameraPreview.CameraType cameraType) {
+        this((CarePayCameraCallback) context, context, cameraType);
     }
 
     /**
@@ -79,7 +100,36 @@ public class CarePayCameraView extends RelativeLayout {
         inflate(context, R.layout.view_carepay_camera, this);
         buttonCapture = (Button) findViewById(R.id.button_capture);
         carePayCameraPreview = (CarePayCameraPreview) findViewById(R.id.camera_preview);
+        carePayCameraPreview.setCameraType(cameraType);
+//        carePayCameraPreview.initialize();
         buttonCapture.setOnClickListener(onCaptureClick);
+
+        final Button flashButton = (Button) findViewById(R.id.button_flash);
+        flashButton.setEnabled(carePayCameraPreview.hasFlash());
+        flashButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (view.isSelected()) {
+                    carePayCameraPreview.turnOffFlash();
+                } else {
+                    carePayCameraPreview.turnOnFlash();
+                }
+                view.setSelected(!view.isSelected());
+
+            }
+        });
+
+        Button changeCameraButton = (Button) findViewById(R.id.button_change_camera);
+        changeCameraButton.setEnabled(carePayCameraPreview.canChangeCamera());
+        changeCameraButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currentCameraId = carePayCameraPreview.changeCamera();
+                flashButton.setSelected(false);
+                flashButton.setEnabled(carePayCameraPreview.hasFlash());
+            }
+        });
+
     }
 
     OnClickListener onCaptureClick = new OnClickListener() {
@@ -91,4 +141,12 @@ public class CarePayCameraView extends RelativeLayout {
             }
         }
     };
+
+    public void start() {
+        carePayCameraPreview.start(currentCameraId);
+    }
+
+    public void stop() {
+        carePayCameraPreview.stop();
+    }
 }

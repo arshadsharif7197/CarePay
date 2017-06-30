@@ -134,14 +134,16 @@
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/practice_payment_in_office_count"
-                    android:layout_width="@dimen/dimen_34dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="@dimen/dimen_34dp"
+                    android:minWidth="@dimen/dimen_34dp"
                     android:layout_marginStart="@dimen/dimen_8dp"
                     android:background="@drawable/queue_counter_noborder_background"
                     android:gravity="center"
                     android:textColor="@color/practice_mode_counter_text"
                     android:textSize="@dimen/text_size_16sp"
                     android:textStyle="bold"
+                    tools:text="10"
                     app:customAssetFont="gotham_rounded_bold" />
 
                 <View android:layout_height="match_parent"

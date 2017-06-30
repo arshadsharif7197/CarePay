@@ -1,0 +1,15 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_splash"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/appBackground">
+
+    <ImageView
+        android:id="@+id/carecloud_logo"
+        android:layout_height="wrap_content"
+        style="@style/LogoLarge"
+        android:layout_centerInParent="true"
+        android:contentDescription="@string/content_logo"/>
+
+
+</RelativeLayout>

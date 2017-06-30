@@ -1,6 +1,7 @@
 
 package com.carecloud.carepaylibray.appointments.models;
 
+import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.google.gson.annotations.Expose;
@@ -54,6 +55,9 @@ public class AppointmentPayloadModel implements Serializable {
     @SerializedName("patient_balances")
     @Expose
     private List<PatientBalanceDTO> patientBalances = new ArrayList<>();
+    @Expose
+    @SerializedName("checkout_forms_user_response")
+    private List<ConsentFormUserResponseDTO> responses = new ArrayList<>();
 
     /**
      * @return languages
@@ -227,5 +231,13 @@ public class AppointmentPayloadModel implements Serializable {
 
     public void setPatientBalances(List<PatientBalanceDTO> patientBalances) {
         this.patientBalances = patientBalances;
+    }
+
+    public List<ConsentFormUserResponseDTO> getResponses() {
+        return responses;
+    }
+
+    public void setResponses(List<ConsentFormUserResponseDTO> responses) {
+        this.responses = responses;
     }
 }

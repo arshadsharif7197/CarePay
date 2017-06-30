@@ -17,6 +17,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
@@ -40,7 +41,6 @@ import com.clover.sdk.v3.order.LineItem;
 import com.clover.sdk.v3.order.Order;
 import com.clover.sdk.v3.order.OrderConnector;
 import com.clover.sdk.v3.payments.Payment;
-import com.clover.sdk.v3.payments.Result;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
@@ -52,6 +52,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -68,12 +69,10 @@ public class CloverPaymentActivity extends BaseActivity {
     private static final String TAG = CloverPaymentActivity.class.getName();
     private Account account;
     private OrderConnector orderConnector;
-    private Order order;
     private Long amountLong = 0L;
     private double amountDouble;
     private String paymentTransitionString;
     private String queueTransitionString;
-    private CloverAuth.AuthResult authResult = null;
     private PaymentPostModel postModel;
     private PatientBalanceDTO patientBalance;
 
@@ -86,60 +85,45 @@ public class CloverPaymentActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         handler = new Handler();
         setContentView(R.layout.dialog_progress);
-        try {
 
-            Intent intent = getIntent();
-            if (intent.hasExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT)) {
-                amountDouble = intent.getDoubleExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, 0.00);
-                amountLong = (long) (amountDouble * 100);
-            }
-
-            if (intent.hasExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION)) {
-                paymentTransitionString = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION);
-
-            }
-
-            if (intent.hasExtra(CarePayConstants.CLOVER_QUEUE_PAYMENT_TRANSITION)) {
-                queueTransitionString = intent.getStringExtra(CarePayConstants.CLOVER_QUEUE_PAYMENT_TRANSITION);
-
-            }
-
-            if (intent.hasExtra(CarePayConstants.CLOVER_PAYMENT_METADATA)) {
-                Gson gson = new Gson();
-                String patientPaymentMetaDataString = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_METADATA);
-                patientBalance = gson.fromJson(patientPaymentMetaDataString, PatientBalanceDTO.class);
-
-            }
-            Gson gson = new Gson();
-            if (intent.hasExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS)) {
-                String lineItemString = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS);
-                paymentLineItems = gson.fromJson(lineItemString, PaymentLineItem[].class);
-
-            }
-            if (intent.hasExtra(CarePayConstants.CLOVER_PAYMENT_POST_MODEL)) {
-                String paymentPostModelString = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_POST_MODEL);
-                postModel = gson.fromJson(paymentPostModelString, PaymentPostModel.class);
-            }
-
-            if (account == null) {
-                {
-                    account = CloverAccount.getAccount(this);
-                    authenticateCloverAccount();
-                }
-
-
-                // If an account can't be acquired, exit the app
-                if (account == null) {
-                    SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.no_account));
-                    logPaymentFail(getString(R.string.no_account), false);
-                    finish();
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        Intent intent = getIntent();
+        if (intent.hasExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT)) {
+            amountDouble = intent.getDoubleExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, 0.00);
+            amountLong = (long) (amountDouble * 100);
         }
 
+        if (intent.hasExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION)) {
+            paymentTransitionString = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION);
+
+        }
+
+        if (intent.hasExtra(CarePayConstants.CLOVER_QUEUE_PAYMENT_TRANSITION)) {
+            queueTransitionString = intent.getStringExtra(CarePayConstants.CLOVER_QUEUE_PAYMENT_TRANSITION);
+
+        }
+
+        if (intent.hasExtra(CarePayConstants.CLOVER_PAYMENT_METADATA)) {
+            Gson gson = new Gson();
+            String patientPaymentMetaDataString = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_METADATA);
+            patientBalance = gson.fromJson(patientPaymentMetaDataString, PatientBalanceDTO.class);
+
+        }
+
+        Gson gson = new Gson();
+        if (intent.hasExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS)) {
+            String lineItemString = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS);
+            paymentLineItems = gson.fromJson(lineItemString, PaymentLineItem[].class);
+
+        }
+        if (intent.hasExtra(CarePayConstants.CLOVER_PAYMENT_POST_MODEL)) {
+            String paymentPostModelString = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_POST_MODEL);
+            postModel = gson.fromJson(paymentPostModelString, PaymentPostModel.class);
+        }
+
+        account = CloverAccount.getAccount(this);
+        if(account != null) {
+            authenticateCloverAccount();
+        }
     }
 
     @Override
@@ -147,18 +131,13 @@ public class CloverPaymentActivity extends BaseActivity {
         super.onResume();
 
         if (account == null) {
-            {
-                account = CloverAccount.getAccount(this);
+            account = CloverAccount.getAccount(this);
+            if(account!=null) {
                 authenticateCloverAccount();
-            }
-
-
-            // If an account can't be acquired, exit the app
-            if (account == null) {
+            }else{
                 SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.no_account));
                 logPaymentFail(getString(R.string.no_account), false);
                 finish();
-                return;
             }
         }
 
@@ -166,7 +145,7 @@ public class CloverPaymentActivity extends BaseActivity {
 
     @Override
     public void navigateToWorkflow(WorkflowDTO workflowDTO) {
-
+        // not implemented for Clover Payment App... no workflow here
     }
 
     @Override
@@ -194,14 +173,22 @@ public class CloverPaymentActivity extends BaseActivity {
     }
 
     @Override
-    protected void onPause() {
+    protected void onDestroy() {
         disconnect();
-        super.onPause();
+        super.onDestroy();
 
     }
 
+    private void onCloverAuthenticated(){
+        connect();
+        if (orderConnector != null) {
+            List<LineItem> lineItems = getLineItems();
+            new OrderAsyncTask(orderConnector).execute(lineItems.toArray(new LineItem[lineItems.size()]));
+        }
+    }
+
     private void authenticateCloverAccount() {
-        new AsyncTask<Void, String, Void>() {
+        new AsyncTask<Void, String, CloverAuth.AuthResult>() {
 
             @Override
             protected void onProgressUpdate(String... values) {
@@ -210,7 +197,8 @@ public class CloverPaymentActivity extends BaseActivity {
             }
 
             @Override
-            protected Void doInBackground(Void... params) {
+            protected CloverAuth.AuthResult doInBackground(Void... params) {
+                CloverAuth.AuthResult authResult = null;
                 try {
                     publishProgress("Requesting auth token");
                     authResult = CloverAuth.authenticate(CloverPaymentActivity.this, account);
@@ -218,32 +206,44 @@ public class CloverPaymentActivity extends BaseActivity {
                 } catch (Exception e) {
                     publishProgress("Error retrieving merchant info from server" + e);
                 }
-                return null;
+                return authResult;
             }
 
             @Override
-            protected void onPostExecute(Void param) {
+            protected void onPostExecute(CloverAuth.AuthResult authResult) {
                 if (authResult != null && authResult.authToken != null && authResult.baseUrl != null) {
-                    connect();
-                    new OrderAsyncTask().execute();
+                    onCloverAuthenticated();
+                }else {
+                    SystemUtil.showErrorToast(getContext(), Label.getLabel("clover_account_not_authorized"));
+                    logPaymentFail("account not authorized", false);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();
+                        }
+                    }, 3000);
                 }
             }
         }.execute();
     }
 
-    private class OrderAsyncTask extends AsyncTask<Void, Void, Order> {
+
+    private class OrderAsyncTask extends AsyncTask<LineItem, Void, Order> {
+        private OrderConnector orderConnector;
+
+        OrderAsyncTask(OrderConnector orderConnector){
+            this.orderConnector = orderConnector;
+        }
 
         @Override
-        protected final Order doInBackground(Void... params) {
+        protected final Order doInBackground(LineItem... lineItems) {
             Order order = null;
 
             try {
-
                 if (amountLong != null) {
                     // Create a new order
                     order = orderConnector.createOrder(new Order());
-                    if (paymentLineItems != null && paymentLineItems.length > 0) {
-                        List<LineItem> lineItems = getLineItems();
+                    if (lineItems != null && lineItems.length > 0) {
                         for (LineItem lineItem : lineItems) {
                             orderConnector.addCustomLineItem(order.getId(), lineItem, false);
                         }
@@ -253,19 +253,11 @@ public class CloverPaymentActivity extends BaseActivity {
                     // Update local representation of the order
                     order = orderConnector.getOrder(order.getId());
                 }
-
-
-                return order;
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            } catch (ClientException e) {
-                e.printStackTrace();
-            } catch (ServiceException e) {
-                e.printStackTrace();
-            } catch (BindingException e) {
+            } catch (RemoteException | ClientException | ServiceException | BindingException e) {
                 e.printStackTrace();
             }
-            return null;
+
+            return order;
         }
 
         @Override
@@ -273,65 +265,55 @@ public class CloverPaymentActivity extends BaseActivity {
             if (order == null) {
                 setResult(RESULT_CANCELED);
                 SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.payment_cancelled));
-                finish();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                    }
+                }, 3000);
+                return;
             }
 
             // Enables the pay buttons if the order is valid
-            if (!isFinishing()) {
-                CloverPaymentActivity.this.order = order;
-                startSecurePaymentIntent();
+            startSecurePaymentIntent(order);
 
-            }
         }
     }
 
-    private void startSecurePaymentIntent() {
-
-        new AsyncTask<Void, Void, Result>() {
-            @Override
-            protected Result doInBackground(Void... params) {
-
-
-                final Intent intent = new Intent(Intents.ACTION_SECURE_PAY);
-                try {
-                    if (amountLong != null) {
-                        intent.putExtra(Intents.EXTRA_AMOUNT, amountLong);
-                    } else {
-                        SystemUtil.showErrorToast(getApplicationContext(), getString(R.string.amount_required));
-                        throw new IllegalArgumentException("amount must not be null");
-                    }
-
-
-                    String orderId = order.getId();
-
-                    if (orderId != null) {
-                        intent.putExtra(Intents.EXTRA_ORDER_ID, orderId);
-                        //If no order id were passed to EXTRA_ORDER_ID a new empty order would be generated for the payment
-                    }
-
-                    intent.putExtra(Intents.EXTRA_CARD_ENTRY_METHODS, Intents.CARD_ENTRY_METHOD_ALL);
-                    intent.putExtra(Intents.EXTRA_CARD_DATA_MESSAGE, "Please swipe your card to complete check in");
-
-                    dumpIntent(intent);
-
-                    if (intent.resolveActivity(getPackageManager()) != null) {
-                        startActivityForResult(intent, creditCardIntentID);
-                    } else {
-                        SystemUtil.showErrorToast(CloverPaymentActivity.this, "Unable to find StationPay Application on this Clover device");
-                        throw new IllegalArgumentException("No Activity found to respont to intent: " + Intents.ACTION_SECURE_PAY);
-                    }
-
-                } catch (IllegalArgumentException iae) {
-                    iae.printStackTrace();
-                } catch (Exception e) {
-
-                    e.printStackTrace();
-                    SystemUtil.showErrorToast(CloverPaymentActivity.this, "An unknown error has occurred while launching the Payment Intent");
-                }
-
-                return null;
+    private void startSecurePaymentIntent(Order order) {
+        Intent intent = new Intent(Intents.ACTION_SECURE_PAY);
+        try {
+            if (amountLong != null) {
+                intent.putExtra(Intents.EXTRA_AMOUNT, amountLong);
+            } else {
+                SystemUtil.showErrorToast(getApplicationContext(), Label.getLabel("clover_payment_amount_error"));
+                throw new IllegalArgumentException("amount must not be null");
             }
-        }.execute();
+
+            String orderId = order.getId();
+            if (orderId != null) {
+                intent.putExtra(Intents.EXTRA_ORDER_ID, orderId);
+                //If no order id were passed to EXTRA_ORDER_ID a new empty order would be generated for the payment
+            }
+
+            intent.putExtra(Intents.EXTRA_CARD_ENTRY_METHODS, Intents.CARD_ENTRY_METHOD_ALL);
+            intent.putExtra(Intents.EXTRA_CARD_DATA_MESSAGE, Label.getLabel("clover_payment_screen_message"));
+
+            dumpIntentLog(intent);
+
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(intent, creditCardIntentID);
+            } else {
+                SystemUtil.showErrorToast(CloverPaymentActivity.this, Label.getLabel("clover_payment_app_missing_error"));
+                throw new IllegalArgumentException("No Activity found to respond to intent: " + Intents.ACTION_SECURE_PAY);
+            }
+
+        } catch (IllegalArgumentException iae) {
+            iae.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+            SystemUtil.showErrorToast(getContext(), Label.getLabel("clover_payment_unknown_error"));
+        }
     }
 
     @Override
@@ -350,12 +332,12 @@ public class CloverPaymentActivity extends BaseActivity {
                     logPaymentFail("Payment object is null, unable to obtain payment results but received a Success Result for payment intent", true);
                 }
             } else if (resultCode == RESULT_CANCELED) {
-                SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.payment_cancelled));
+                SystemUtil.showErrorToast(getContext(), Label.getLabel("clover_payment_canceled"));
                 setResult(resultCode);
                 finish();
 
             } else {
-                SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.payment_failed));
+                SystemUtil.showErrorToast(getContext(), Label.getLabel("clover_payment_failed"));
                 logPaymentFail("Clover payment was not successfully processed", false);
                 setResult(resultCode);
                 finish();
@@ -433,7 +415,7 @@ public class CloverPaymentActivity extends BaseActivity {
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, 1);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMyy", Locale.US);
         if (transactionInfo.getVaultedCard() != null) {
             creditCardModel.setExpiryDate(transactionInfo.getVaultedCard().getExpirationDate(dateFormat.format(calendar.getTime())));
             creditCardModel.setNameOnCard(transactionInfo.getVaultedCard().getCardholderName(patientBalance.getDemographics().getPayload().getPersonalDetails().getFullName()));
@@ -493,7 +475,7 @@ public class CloverPaymentActivity extends BaseActivity {
      *
      * @param intent the intent
      */
-    public static void dumpIntent(Intent intent) {
+    public static void dumpIntentLog(Intent intent) {
 
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
