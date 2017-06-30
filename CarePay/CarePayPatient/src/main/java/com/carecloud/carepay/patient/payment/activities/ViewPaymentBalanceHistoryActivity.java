@@ -59,16 +59,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_view_balance_history);
-//
-//        drawer = (DrawerLayout) findViewById(com.carecloud.carepaylibrary.R.id.drawer_layout_hist);
-//        navigationView = (NavigationView) findViewById(com.carecloud.carepaylibrary.R.id.nav_view_hist);
-//        appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0)
-//                .findViewById(com.carecloud.carepaylibrary.R.id.appointmentsDrawerIdTextView);
-
         paymentsDTO = getConvertedDTO(PaymentsModel.class);
 
-//        toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.balance_history_toolbar);
         toolBarTitle = Label.getLabel("payment_patient_balance_toolbar");
         displayToolbar(true, toolBarTitle);
         inflateDrawer();
@@ -96,7 +88,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     protected void onResume() {
         super.onResume();
-        navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_PAYMENTS).setChecked(true);
+        navigationView.getMenu().findItem(R.id.nav_payments).setChecked(true);
     }
 
     /**

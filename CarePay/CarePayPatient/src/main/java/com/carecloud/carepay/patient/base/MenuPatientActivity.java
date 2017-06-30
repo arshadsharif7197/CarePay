@@ -17,7 +17,6 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
@@ -31,7 +30,7 @@ import java.util.Map;
  * Created by jorge on 10/01/17
  */
 
-public class MenuPatientActivity extends BasePatientActivity implements NavigationView.OnNavigationItemSelectedListener {
+public abstract class MenuPatientActivity extends BasePatientActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     //transitions
     private static TransitionDTO transitionBalance;
@@ -301,7 +300,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
     }
 
     private void displayMessagesScreen(){
-        WorkflowDTO workflowDTO = new WorkflowDTO(new WorkFlowRecord());
+        WorkflowDTO workflowDTO = new WorkflowDTO();
         workflowDTO.setState(NavigationStateConstants.MESSAGES);
         PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
     }
