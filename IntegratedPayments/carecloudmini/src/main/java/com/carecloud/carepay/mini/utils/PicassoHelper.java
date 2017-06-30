@@ -39,6 +39,10 @@ public class PicassoHelper {
         return picasso;
     }
 
+    /**
+     * Update the headers to use for network calls
+     * @param headers header map
+     */
     public static void setHeaders(Map<String, String> headers) {
         if(headers != null) {
             PicassoHelper.headers = headers;
@@ -47,7 +51,7 @@ public class PicassoHelper {
 
     private static class CustomOkHttpDownloader extends UrlConnectionDownloader {
 
-        public CustomOkHttpDownloader(Context context) {
+        CustomOkHttpDownloader(Context context) {
             super(context);
         }
 
