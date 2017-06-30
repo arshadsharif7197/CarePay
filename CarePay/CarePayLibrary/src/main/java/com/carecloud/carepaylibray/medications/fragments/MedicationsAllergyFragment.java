@@ -369,7 +369,7 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements M
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ((ISession) getContext()).hideProgressDialog();
-            callback.medicationSubmitSuccess(workflowDTO);
+            onUpdate(callback, workflowDTO);
 
         }
 

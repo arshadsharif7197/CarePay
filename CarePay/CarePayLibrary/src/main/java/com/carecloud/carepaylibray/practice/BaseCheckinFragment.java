@@ -28,12 +28,12 @@ public abstract class BaseCheckinFragment extends BaseFragment {
         this.flowStateInfo = flowStateInfo;
     }
 
-    public boolean navigateBack(){
+    public boolean navigateBack() {
         return false;
     }
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
         attachCallback(context);
     }
@@ -48,15 +48,17 @@ public abstract class BaseCheckinFragment extends BaseFragment {
      */
     public void onUpdate(CheckinFlowCallback callback, WorkflowDTO workflowDTO) {
         try {
-            CheckInWorkFlowDTO checkInWorkflowDTO = DtoHelper.getConvertedDTO(CheckInWorkFlowDTO.class, workflowDTO ) ;
-            AppointmentDTO appointmentDTO = getAppointmentById(checkInWorkflowDTO.getPayload().getAppointments(), callback.getAppointmentId());
-            if(appointmentDTO != null && appointmentDTO.getPayload().getAppointmentStatus().getCode().equalsIgnoreCase(CarePayConstants.CHECKED_IN) ){
+            CheckInWorkFlowDTO checkInWorkflowDTO = DtoHelper
+                    .getConvertedDTO(CheckInWorkFlowDTO.class, workflowDTO);
+            AppointmentDTO appointmentDTO = getAppointmentById(checkInWorkflowDTO.getPayload()
+                    .getAppointments(), callback.getAppointmentId());
+            if ((appointmentDTO != null && appointmentDTO.getPayload().getAppointmentStatus().getCode()
+                    .equalsIgnoreCase(CarePayConstants.CHECKED_IN)) || "patient_home".equals(workflowDTO.getState())) {
                 callback.displayCheckInSuccess(workflowDTO);
             } else {
                 callback.navigateToWorkflow(workflowDTO);
             }
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e("WorkflowUpdate", e.getMessage());
         }
     }
@@ -68,14 +70,13 @@ public abstract class BaseCheckinFragment extends BaseFragment {
      * @param appointmentId    the appointment id
      * @return the appointment by id
      */
-    private AppointmentDTO getAppointmentById(List<AppointmentDTO> appointmentsList, String appointmentId)
-    {
-        for (AppointmentDTO  appointment : appointmentsList) {
-            if(appointment.getMetadata().getAppointmentId().equalsIgnoreCase(appointmentId)){
+    private AppointmentDTO getAppointmentById(List<AppointmentDTO> appointmentsList, String appointmentId) {
+        for (AppointmentDTO appointment : appointmentsList) {
+            if (appointment.getMetadata().getAppointmentId().equalsIgnoreCase(appointmentId)) {
                 return appointment;
             }
         }
-        return  null;
+        return null;
     }
 
 }
