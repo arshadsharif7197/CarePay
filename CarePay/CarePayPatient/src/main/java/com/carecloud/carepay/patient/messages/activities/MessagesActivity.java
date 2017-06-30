@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.messages.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
@@ -19,8 +20,15 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
     @Override
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
-        setContentView(R.layout.activity_navigation);
         replaceFragment(new MessagesListFragment(), false);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_messages);
+        menuItem.setChecked(true);
+        displayToolbar(true, menuItem.getTitle().toString());
     }
 
 

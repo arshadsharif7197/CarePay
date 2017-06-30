@@ -16,7 +16,6 @@ import com.carecloud.carepaylibray.base.BaseFragment;
 
 public class MessagesListFragment extends BaseFragment {
 
-    View listContainer;
     View noMessagesLayout;
     View actionButton;
 
@@ -45,7 +44,6 @@ public class MessagesListFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, Bundle icicle){
-        listContainer = view.findViewById(R.id.container_main);
         noMessagesLayout = view.findViewById(R.id.no_messages_layout);
         actionButton = view.findViewById(R.id.fab);
 
