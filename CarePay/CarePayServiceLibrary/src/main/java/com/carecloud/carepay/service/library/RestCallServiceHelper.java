@@ -84,14 +84,39 @@ public class RestCallServiceHelper {
                                Map<String, String> queryMap,
                                Map<String, String> headerMap,
                                String jsonBody,
+                               String... pathParams) {
+
+        executeRequest(method, baseUrl, callback, authQueryParams, null, queryMap, headerMap, jsonBody, pathParams);
+    }
+
+    /**
+     * Make Rest service call with option to set authorization headers as query params
+     * @param method REST method
+     * @param baseUrl base url
+     * @param callback callback method
+     * @param authQueryParams optionally pass header auths as query params
+     * @param authTokenName optional name to pass for the auth token in query param
+     * @param queryMap optional query params
+     * @param headerMap optional headers
+     * @param jsonBody optional request body
+     * @param pathParams optional path params, must be passed in order
+     */
+    public void executeRequest(@RestDef.RestMethod String method,
+                               @NonNull String baseUrl,
+                               @NonNull final RestCallServiceCallback callback,
+                               boolean authQueryParams,
+                               String authTokenName,
+                               Map<String, String> queryMap,
+                               Map<String, String> headerMap,
+                               String jsonBody,
                                String... pathParams){
 
         callback.onPreExecute();
-        String fullUrl = getFullUrl(baseUrl, pathParams);
+        String urlPath = geturlPath(pathParams);
         if(authQueryParams){
-            queryMap = getAuthQueryParams(queryMap);
+            queryMap = getAuthQueryParams(queryMap, authTokenName);
         }
-        Call<JsonElement> requestCall = getServiceCall(method, fullUrl, headerMap, queryMap, jsonBody);
+        Call<JsonElement> requestCall = getServiceCall(method, baseUrl, urlPath, headerMap, queryMap, jsonBody);
         requestCall.enqueue(new Callback<JsonElement>() {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
@@ -128,8 +153,14 @@ public class RestCallServiceHelper {
         return fullHeaders;
     }
 
-    private Map<String, String> getAuthQueryParams(Map<String, String> queryParams){
+    private Map<String, String> getAuthQueryParams(Map<String, String> queryParams, String authTokenKey){
         Map<String, String> authQueryParams = getAuthHeaders();
+        if(authTokenKey != null && authTokenKey.trim().length() > 0){
+            String token = authQueryParams.get(HEADER_KEY_AUTHORIZATION);
+            authQueryParams.remove(HEADER_KEY_AUTHORIZATION);
+            authQueryParams.put(authTokenKey, token);
+        }
+
         if(queryParams != null){
             queryParams.putAll(authQueryParams);
             return queryParams;
@@ -138,111 +169,110 @@ public class RestCallServiceHelper {
     }
 
     private Call<JsonElement> getServiceCall(@RestDef.RestMethod String method,
-                                   String fullUrl,
-                                   Map<String, String> headerMap,
-                                   Map<String, String> queryMap,
-                                   String jsonBody){
-        RestCallService restCallService = ServiceGenerator.getInstance().createService(RestCallService.class, getFullHeaders(headerMap));
+                                             String baseUrl,
+                                             String urlPath,
+                                             Map<String, String> headerMap,
+                                             Map<String, String> queryMap,
+                                             String jsonBody){
+        RestCallService restCallService = RestServiceGenerator.getInstance().createService(RestCallService.class, getFullHeaders(headerMap), baseUrl);
         switch (method){
             default:
             case RestDef.GET:
-                return getGetCall(restCallService, fullUrl, queryMap, jsonBody);
+                return getGetCall(restCallService, urlPath, queryMap, jsonBody);
             case RestDef.POST:
-                return getPostCall(restCallService, fullUrl, queryMap, jsonBody);
+                return getPostCall(restCallService, urlPath, queryMap, jsonBody);
             case RestDef.DELETE:
-                return getDeleteCall(restCallService, fullUrl, queryMap, jsonBody);
+                return getDeleteCall(restCallService, urlPath, queryMap, jsonBody);
             case RestDef.PUT:
-                return getPutCall(restCallService, fullUrl, queryMap, jsonBody);
+                return getPutCall(restCallService, urlPath, queryMap, jsonBody);
         }
     }
 
     private Call<JsonElement> getGetCall(RestCallService restCallService,
-                               String fullUrl,
-                               Map<String, String> queryMap,
-                               String jsonBody){
+                                         String urlPath,
+                                         Map<String, String> queryMap,
+                                         String jsonBody){
         if(jsonBody != null && queryMap != null && !queryMap.isEmpty()){
-            return restCallService.executeGet(fullUrl, jsonBody, queryMap);
+            return restCallService.executeGet(urlPath, jsonBody, queryMap);
         }
 
         if(queryMap != null && !queryMap.isEmpty()){
-            return restCallService.executeGet(fullUrl, queryMap);
+            return restCallService.executeGet(urlPath, queryMap);
         }
 
         if(jsonBody != null){
-            return restCallService.executeGet(fullUrl, jsonBody);
+            return restCallService.executeGet(urlPath, jsonBody);
         }
 
-        return restCallService.executeGet(fullUrl);
+        return restCallService.executeGet(urlPath);
     }
 
     private Call<JsonElement> getPostCall(RestCallService restCallService,
-                               String fullUrl,
-                               Map<String, String> queryMap,
-                               String jsonBody){
+                                          String urlPath,
+                                          Map<String, String> queryMap,
+                                          String jsonBody){
         if(jsonBody != null && queryMap != null && !queryMap.isEmpty()){
-            return restCallService.executePost(fullUrl, jsonBody, queryMap);
+            return restCallService.executePost(urlPath, jsonBody, queryMap);
         }
 
         if(queryMap != null && !queryMap.isEmpty()){
-            return restCallService.executePost(fullUrl, queryMap);
+            return restCallService.executePost(urlPath, queryMap);
         }
 
         if(jsonBody != null){
-            return restCallService.executePost(fullUrl, jsonBody);
+            return restCallService.executePost(urlPath, jsonBody);
         }
 
-        return restCallService.executePost(fullUrl);
+        return restCallService.executePost(urlPath);
 
     }
 
     private Call<JsonElement> getDeleteCall(RestCallService restCallService,
-                               String fullUrl,
-                               Map<String, String> queryMap,
-                               String jsonBody){
+                                            String urlPath,
+                                            Map<String, String> queryMap,
+                                            String jsonBody){
         if(jsonBody != null && queryMap != null && !queryMap.isEmpty()){
-            return restCallService.executeDelete(fullUrl, jsonBody, queryMap);
+            return restCallService.executeDelete(urlPath, jsonBody, queryMap);
         }
 
         if(queryMap != null && !queryMap.isEmpty()){
-            return restCallService.executeDelete(fullUrl, queryMap);
+            return restCallService.executeDelete(urlPath, queryMap);
         }
 
         if(jsonBody != null){
-            return restCallService.executeDelete(fullUrl, jsonBody);
+            return restCallService.executeDelete(urlPath, jsonBody);
         }
 
-        return restCallService.executeDelete(fullUrl);
+        return restCallService.executeDelete(urlPath);
 
     }
 
     private Call<JsonElement> getPutCall(RestCallService restCallService,
-                               String fullUrl,
-                               Map<String, String> queryMap,
-                               String jsonBody){
+                                         String urlPath,
+                                         Map<String, String> queryMap,
+                                         String jsonBody){
         if(jsonBody != null && queryMap != null && !queryMap.isEmpty()){
-            return restCallService.executePut(fullUrl, jsonBody, queryMap);
+            return restCallService.executePut(urlPath, jsonBody, queryMap);
         }
 
         if(queryMap != null && !queryMap.isEmpty()){
-            return restCallService.executePut(fullUrl, queryMap);
+            return restCallService.executePut(urlPath, queryMap);
         }
 
         if(jsonBody != null){
-            return restCallService.executePut(fullUrl, jsonBody);
+            return restCallService.executePut(urlPath, jsonBody);
         }
 
-        return restCallService.executePut(fullUrl);
+        return restCallService.executePut(urlPath);
 
     }
 
-    private static String getFullUrl(String baseUrl, String... pathParams){
-        StringBuilder urlBuilder = new StringBuilder(baseUrl.replace("?", ""));
+    private static String geturlPath(String... pathParams){
+        StringBuilder urlBuilder = new StringBuilder();
         if(pathParams != null){
             for (int i=0; i<pathParams.length; i++){
+                urlBuilder.append("/");
                 urlBuilder.append(pathParams[i]);
-                if(i<pathParams.length-1){
-                    urlBuilder.append("/");
-                }
             }
         }
         return urlBuilder.toString();
