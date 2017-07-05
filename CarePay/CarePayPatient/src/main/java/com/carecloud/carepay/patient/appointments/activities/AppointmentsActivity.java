@@ -1,14 +1,12 @@
 package com.carecloud.carepay.patient.appointments.activities;
 
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.widget.TextView;
+import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
@@ -33,16 +31,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(com.carecloud.carepaylibrary.R.layout.activity_navigation);
-        toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.toolbar);
-
-        drawer = (DrawerLayout) findViewById(com.carecloud.carepaylibrary.R.id.drawer_layout);
-        navigationView = (NavigationView) findViewById(com.carecloud.carepaylibrary.R.id.nav_view);
-        // get handler to navigation drawer's user id text view
-        appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0)
-                .findViewById(com.carecloud.carepaylibrary.R.id.appointmentsDrawerIdTextView);
-
         appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
         if (appointmentsResultModel.getPayload() != null) {
             List<PracticePatientIdsDTO> practicePatientIds = appointmentsResultModel.getPayload().getPracticePatientIds();
@@ -63,7 +51,9 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             getApplicationPreferences().setUserPhotoUrl(userImageUrl);
         }
 
-        inflateDrawer();
+        //hold off on calling super until imageURL can be stored to shared pref
+        super.onCreate(savedInstanceState);
+
         initPresenter();
         gotoAppointmentFragment();
     }
@@ -71,8 +61,9 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     @Override
     protected void onResume() {
         super.onResume();
-        navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_APPOINTMENTS).setChecked(true);
-        displayToolbar(true, navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_APPOINTMENTS).getTitle().toString());
+        MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_appointments);
+        menuItem.setChecked(true);
+        displayToolbar(true, menuItem.getTitle().toString());
     }
 
     private void gotoAppointmentFragment() {

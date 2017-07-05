@@ -3,12 +3,8 @@ package com.carecloud.carepay.patient.payment.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.Toolbar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.patient.R;
@@ -63,16 +59,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_balance_history);
-
-        drawer = (DrawerLayout) findViewById(com.carecloud.carepaylibrary.R.id.drawer_layout_hist);
-        navigationView = (NavigationView) findViewById(com.carecloud.carepaylibrary.R.id.nav_view_hist);
-        appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0)
-                .findViewById(com.carecloud.carepaylibrary.R.id.appointmentsDrawerIdTextView);
-
         paymentsDTO = getConvertedDTO(PaymentsModel.class);
 
-        toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.balance_history_toolbar);
         toolBarTitle = Label.getLabel("payment_patient_balance_toolbar");
         displayToolbar(true, toolBarTitle);
         inflateDrawer();
@@ -100,7 +88,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     protected void onResume() {
         super.onResume();
-        navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_PAYMENTS).setChecked(true);
+        navigationView.getMenu().findItem(R.id.nav_payments).setChecked(true);
     }
 
     /**
@@ -279,12 +267,12 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void replaceFragment(Fragment fragment, boolean addToBackStack) {
-        replaceFragment(R.id.add_balance_history_frag_holder, fragment, addToBackStack);
+        replaceFragment(R.id.container_main, fragment, addToBackStack);
     }
 
     @Override
     public void addFragment(Fragment fragment, boolean addToBackStack) {
-        addFragment(R.id.add_balance_history_frag_holder, fragment, addToBackStack);
+        addFragment(R.id.container_main, fragment, addToBackStack);
     }
 
     public void showNoPaymentsLayout() {

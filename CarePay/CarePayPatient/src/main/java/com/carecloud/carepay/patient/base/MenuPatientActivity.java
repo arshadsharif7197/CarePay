@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.base;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -29,7 +30,7 @@ import java.util.Map;
  * Created by jorge on 10/01/17
  */
 
-public class MenuPatientActivity extends BasePatientActivity implements NavigationView.OnNavigationItemSelectedListener {
+public abstract class MenuPatientActivity extends BasePatientActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     //transitions
     private static TransitionDTO transitionBalance;
@@ -45,6 +46,18 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
     protected Toolbar toolbar;
     protected boolean toolbarVisibility = false;
 
+    @Override
+    protected void onCreate(Bundle icicle){
+        super.onCreate(icicle);
+        setContentView(R.layout.activity_navigation);
+        toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.toolbar);
+        drawer = (DrawerLayout) findViewById(com.carecloud.carepaylibrary.R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(com.carecloud.carepaylibrary.R.id.nav_view);
+        appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0)
+                .findViewById(com.carecloud.carepaylibrary.R.id.appointmentsDrawerIdTextView);
+
+        inflateDrawer();
+    }
 
     protected void inflateDrawer() {
         setSupportActionBar(toolbar);
@@ -97,6 +110,11 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
         int id = item.getItemId();
         switch (id){
+            case R.id.nav_messages:
+                displayMessagesScreen();
+                transition = null;
+                callback = null;
+                break;
             case R.id.nav_appointments:
                 callback = appointmentsWorkflowCallback;
                 transition = transitionAppointments;
@@ -279,6 +297,12 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
     public static TransitionDTO getTransitionAppointments(){
         return transitionAppointments;
+    }
+
+    private void displayMessagesScreen(){
+        WorkflowDTO workflowDTO = new WorkflowDTO();
+        workflowDTO.setState(NavigationStateConstants.MESSAGES);
+        PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
     }
 
     /**
