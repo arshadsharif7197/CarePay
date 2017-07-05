@@ -510,6 +510,7 @@ public class DateUtil {
         return endsThisMonth(date);
     }
 
+
     /**
      * Check whether the provided date corresponds to the last day of the current month
      *
@@ -837,4 +838,17 @@ public class DateUtil {
         Date date = getInstance().setDateRaw(rawDate).getDate();
         return DateFormat.format(FORMAT_HOURS_AM_PM, date).toString();
     }
+
+    /**
+     * Get contextual date for messaging
+     * @return contextual date string
+     */
+    public String toContextualMessageDate(){
+        if(isToday()){
+            return toStringWithFormat(FORMAT_HOURS_AM_PM);
+        }else{
+            return toStringWithFormat(FORMAT_MM_SLASH_DD_SLASH_YYYY);
+        }
+    }
+
 }

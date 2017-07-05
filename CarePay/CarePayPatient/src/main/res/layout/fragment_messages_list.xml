@@ -22,7 +22,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/messages_recycler"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"/>
 
 
             <LinearLayout
@@ -37,7 +37,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/icn_empty_state_appointments"/>
+                    android:src="@drawable/icn_empty_state_messages"/>
 
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
