@@ -73,7 +73,6 @@ public class RestServiceGenerator {
     }
 
     /**
-     *
      * Create dynamic service
      * @param serviceClass class
      * @param headers header map

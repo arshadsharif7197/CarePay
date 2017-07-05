@@ -121,6 +121,10 @@ public class MessagesConversationFragment extends BaseFragment {
 
     }
 
+    /**
+     * update messages
+     * @param thread new message thread
+     */
     public void updateThreadMessages(Messages.Reply thread){
         if(messages.isEmpty() || refreshing){
             messages = getMessagesList(thread);
