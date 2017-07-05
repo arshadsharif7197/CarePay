@@ -36,6 +36,11 @@ public class MessagesConversationFragment extends BaseFragment {
 
     private boolean refreshing = true;
 
+    /**
+     * Get new instance of MessagesConversationFragment
+     * @param thread base thread
+     * @return new MessagesConversationFragment
+     */
     public static MessagesConversationFragment newInstance(Messages.Reply thread) {
 
         Bundle args = new Bundle();

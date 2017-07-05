@@ -511,6 +511,10 @@ public class DateUtil {
     }
 
 
+    /**
+     * Get contextual date for messaging
+     * @return contextual date string
+     */
     public String toContextualMessageDate(){
         if(isToday()){
             return toStringWithFormat(FORMAT_HOURS_AM_PM);

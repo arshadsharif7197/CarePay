@@ -41,6 +41,10 @@ public class RestServiceGenerator {
     private RestServiceGenerator() {
     }
 
+    /**
+     * Get instance of RestServiceGenerator
+     * @return RestServiceGenerator
+     */
     public static RestServiceGenerator getInstance() {
         if (instance == null) {
             instance = new RestServiceGenerator();
@@ -57,10 +61,26 @@ public class RestServiceGenerator {
         return createService(serviceClass, null);
     }
 
+    /**
+     * Create dynamic service
+     * @param serviceClass class
+     * @param headers header map
+     * @param <S> type of service class implementation
+     * @return service type class
+     */
     public <S> S createService(Class<S> serviceClass, Map<String, String> headers) {
         return createService(serviceClass, null, null);
     }
 
+    /**
+     *
+     * Create dynamic service
+     * @param serviceClass class
+     * @param headers header map
+     * @param baseUrl optional base url
+     * @param <S> type of service class implementation
+     * @return service type class
+     */
     public <S> S createService(Class<S> serviceClass, Map<String, String> headers, String baseUrl) {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.readTimeout(HttpConstants.READ_TIMEOUT_MS, TimeUnit.MILLISECONDS);

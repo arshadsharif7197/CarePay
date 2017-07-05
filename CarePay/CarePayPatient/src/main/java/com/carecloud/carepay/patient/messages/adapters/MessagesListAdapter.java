@@ -29,6 +29,12 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
     private List<Messages.Reply> threads = new ArrayList<>();
     private SelectMessageThreadCallback callback;
 
+    /**
+     * Constructor
+     * @param context context
+     * @param threads list of threads
+     * @param callback callback
+     */
     public MessagesListAdapter(Context context, List<Messages.Reply> threads, SelectMessageThreadCallback callback){
         this.context = context;
         this.threads = threads;
@@ -63,11 +69,19 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
         return threads.size();
     }
 
+    /**
+     * set threads and reset recycler
+     * @param threads new threads list
+     */
     public void setThreads(List<Messages.Reply> threads){
         this.threads = threads;
         notifyDataSetChanged();
     }
 
+    /**
+     * add threads to recycler
+     * @param threads add threads
+     */
     public void appendThreads(List<Messages.Reply> threads){
         this.threads.addAll(threads);
         notifyDataSetChanged();

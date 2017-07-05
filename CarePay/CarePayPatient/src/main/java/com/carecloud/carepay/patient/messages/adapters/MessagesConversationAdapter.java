@@ -29,6 +29,12 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
     private List<Messages.Reply> messages = new ArrayList<>();
     private String userId;
 
+    /**
+     * constuctor
+     * @param context context
+     * @param messages messages list
+     * @param userId current user id
+     */
     public MessagesConversationAdapter(Context context, List<Messages.Reply> messages, String userId){
         this.context = context;
         this.messages = messages;
@@ -75,6 +81,10 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
         return messages.size();
     }
 
+    /**
+     * set new messages list
+     * @param messages new messages list
+     */
     public void setMessages(List<Messages.Reply> messages){
         this.messages = messages;
         notifyDataSetChanged();

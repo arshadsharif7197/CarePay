@@ -106,6 +106,10 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         callback.getMessageThreads(0, 0);
     }
 
+    /**
+     * Update or set the display model
+     * @param messagingDataModel updated model
+     */
     public void updateDisplayDataModel(MessagingDataModel messagingDataModel){
         if(this.messagingDataModel == null || refreshing) {
             this.messagingDataModel = messagingDataModel;
