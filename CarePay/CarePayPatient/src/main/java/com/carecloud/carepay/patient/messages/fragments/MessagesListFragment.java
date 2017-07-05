@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.messages.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,15 +11,20 @@ import android.view.ViewGroup;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.MessageNavigationCallback;
+import com.carecloud.carepay.patient.messages.adapters.MessagesListAdapter;
+import com.carecloud.carepay.patient.messages.models.Messages;
 import com.carecloud.carepay.patient.messages.models.MessagingDataModel;
 import com.carecloud.carepaylibray.base.BaseFragment;
+
+import java.util.List;
 
 /**
  * Created by lmenendez on 6/30/17
  */
 
-public class MessagesListFragment extends BaseFragment {
+public class MessagesListFragment extends BaseFragment implements MessagesListAdapter.SelectMessageThreadCallback {
 
+    private SwipeRefreshLayout refreshLayoutView;
     private View noMessagesLayout;
     private View actionButton;
     private RecyclerView recyclerView;
@@ -26,6 +32,8 @@ public class MessagesListFragment extends BaseFragment {
 
     private MessageNavigationCallback callback;
     private MessagingDataModel messagingDataModel;
+
+    private boolean refreshing = true;
 
     @Override
     public void onAttach(Context context){
@@ -40,6 +48,7 @@ public class MessagesListFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
+
     }
 
 
@@ -50,6 +59,9 @@ public class MessagesListFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, Bundle icicle){
+        refreshLayoutView = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        refreshLayoutView.setOnRefreshListener(onRefreshListener);
+
         noMessagesLayout = view.findViewById(R.id.no_messages_layout);
         actionButton = view.findViewById(R.id.fab);
 
@@ -58,12 +70,66 @@ public class MessagesListFragment extends BaseFragment {
 
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        refreshing = true;
+        refreshList();
+    }
+
     private void setAdapters(){
+        List<Messages.Reply> threads = messagingDataModel.getMessages().getData();
+        MessagesListAdapter adapter = (MessagesListAdapter) recyclerView.getAdapter();
+        if(adapter != null){
+            if(refreshing){
+                adapter.setThreads(threads);
+            }else {
+                adapter.appendThreads(threads);
+            }
+        }else{
+            adapter = new MessagesListAdapter(getContext(), threads, this);
+            recyclerView.setAdapter(adapter);
+        }
 
+        if(threads.isEmpty()){
+            noMessagesLayout.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+            refreshLayoutView.setEnabled(false);
+        }else{
+            noMessagesLayout.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            refreshLayoutView.setEnabled(true);
+        }
     }
 
-    public void setDisplayDataModel(MessagingDataModel messagingDataModel){
-        this.messagingDataModel = messagingDataModel;
+    private void refreshList(){
+        callback.getMessageThreads(0, 0);
     }
 
+    public void updateDisplayDataModel(MessagingDataModel messagingDataModel){
+        if(this.messagingDataModel == null || refreshing) {
+            this.messagingDataModel = messagingDataModel;
+        }else{
+            this.messagingDataModel.getMessages().setPaging(messagingDataModel.getMessages().getPaging());
+            this.messagingDataModel.getMessages().getData().addAll(messagingDataModel.getMessages().getData());
+        }
+
+        setAdapters();
+        refreshing = false;
+        refreshLayoutView.setRefreshing(refreshing);
+    }
+
+    private SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            refreshing = true;
+            refreshLayoutView.setRefreshing(refreshing);
+            refreshList();
+        }
+    };
+
+    @Override
+    public void onMessageSelected(Messages.Reply thread) {
+        callback.displayThreadMessages(thread);
+    }
 }

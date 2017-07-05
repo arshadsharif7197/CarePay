@@ -12,18 +12,11 @@ import java.util.List;
 public class Messages {
 
     @SerializedName("data")
-    private Reply data;
+    private List<Reply> data = new ArrayList<>();
 
     @SerializedName("paging")
     private Paging paging;
 
-    public Reply getData() {
-        return data;
-    }
-
-    public void setData(Reply data) {
-        this.data = data;
-    }
 
     public Paging getPaging() {
         return paging;
@@ -33,8 +26,16 @@ public class Messages {
         this.paging = paging;
     }
 
+    public List<Reply> getData() {
+        return data;
+    }
 
-    private class Reply {
+    public void setData(List<Reply> data) {
+        this.data = data;
+    }
+
+
+    public class Reply {
 
         @SerializedName("id")
         private String id;
@@ -125,7 +126,7 @@ public class Messages {
         }
     }
 
-    private class Participant {
+    public class Participant {
 
         @SerializedName("name")
         private String name;

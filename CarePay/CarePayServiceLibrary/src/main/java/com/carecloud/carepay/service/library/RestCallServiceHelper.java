@@ -10,7 +10,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -290,8 +289,8 @@ public class RestCallServiceHelper {
                     break;
                 }
             }
-        }catch (IOException ioe){
-            ioe.printStackTrace();
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return message;
     }

@@ -8,4 +8,7 @@
 
     <string name="msg_auth_token_key">token</string>
     <string name="msg_path_start">inbox</string>
+    <string name="msg_path_message">messages</string>
+    <string name="msg_query_page">offset</string>
+    <string name="msg_query_size">limit</string>
 </resources>

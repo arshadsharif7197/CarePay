@@ -510,6 +510,16 @@ public class DateUtil {
         return endsThisMonth(date);
     }
 
+
+    public String toContextualMessageDate(){
+        if(isToday()){
+            return toStringWithFormat(FORMAT_HOURS_AM_PM);
+        }else{
+            return toStringWithFormat(FORMAT_MM_SLASH_DD_SLASH_YYYY);
+        }
+    }
+
+
     /**
      * Check whether the provided date corresponds to the last day of the current month
      *

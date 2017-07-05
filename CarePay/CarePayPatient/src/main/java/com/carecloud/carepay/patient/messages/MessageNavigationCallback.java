@@ -2,6 +2,8 @@ package com.carecloud.carepay.patient.messages;
 
 import android.support.v4.app.Fragment;
 
+import com.carecloud.carepay.patient.messages.models.Messages;
+
 /**
  * Created by lmenendez on 6/30/17
  */
@@ -9,4 +11,10 @@ import android.support.v4.app.Fragment;
 public interface MessageNavigationCallback {
 
     void replaceFragment(Fragment fragment, boolean addToBackStack);
+
+    void displayThreadMessages(Messages.Reply thread);
+
+    void getMessageThreads(int page, int size);
+
+    void getThreadMessages(Messages.Reply thread);
 }
