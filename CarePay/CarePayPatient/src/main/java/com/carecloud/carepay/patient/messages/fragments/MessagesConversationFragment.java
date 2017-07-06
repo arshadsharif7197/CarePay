@@ -91,7 +91,7 @@ public class MessagesConversationFragment extends BaseFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+            public void onLayoutChange(View view, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 if(recyclerView.getAdapter() != null) {
                     recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
                 }
