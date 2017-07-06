@@ -1,7 +1,9 @@
 package com.carecloud.carepay.patient.messages.adapters;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,6 +31,7 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
     private Context context;
     private List<Messages.Reply> messages = new ArrayList<>();
     private String userId;
+
 
     /**
      * constuctor
@@ -56,14 +60,46 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Messages.Reply message = messages.get(position);
+        Messages.Reply lastMessage = null;
+        if(position > 0){
+            lastMessage = messages.get(position-1);
+        }
 
-        holder.participantInitials.setText(StringUtil.getShortName(message.getAuthor().getName()));
-        holder.participantName.setText(message.getAuthor().getName());
+        Date date = DateUtil.getInstance().setDateRaw(message.getCreatedDate()).getDate();
+        holder.timeHeader.setText(DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal());
+        holder.timeHeader.setVisibility(View.VISIBLE);
 
-        String time = DateUtil.getInstance().setDateRaw(message.getLastUpdate()).getTime12Hour();
-        holder.timeStamp.setText(time);
 
-        holder.messageText.setText(message.getBody());
+
+        if(holder.metaView != null) {
+            holder.participantInitials.setText(StringUtil.getShortName(message.getAuthor().getName()));
+            holder.participantInitials.setVisibility(View.VISIBLE);
+
+            String time = DateUtil.getInstance().getTime12Hour();
+            holder.timeStamp.setText(time);
+            holder.participantName.setText(message.getAuthor().getName());
+
+            holder.metaView.setVisibility(View.VISIBLE);
+        }
+
+        if(Build.VERSION.SDK_INT<Build.VERSION_CODES.N){
+            holder.messageText.setText(Html.fromHtml(message.getBody()));
+        }else {
+            holder.messageText.setText(Html.fromHtml(message.getBody(), Html.FROM_HTML_SEPARATOR_LINE_BREAK_PARAGRAPH));
+        }
+
+        if(lastMessage != null) {
+            Date lastDate = DateUtil.getInstance().setDateRaw(lastMessage.getCreatedDate()).getDate();
+            if (DateUtil.isSameDay(date, lastDate)) {
+                holder.timeHeader.setVisibility(View.GONE);
+            }
+            if(lastMessage.getAuthor().getUserId().equals(message.getAuthor().getUserId()) && holder.metaView != null){
+                holder.participantImage.setVisibility(View.INVISIBLE);
+                holder.participantInitials.setVisibility(View.INVISIBLE);
+
+                holder.metaView.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override

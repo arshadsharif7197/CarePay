@@ -15,7 +15,7 @@ public class Messages {
     private List<Reply> data = new ArrayList<>();
 
     @SerializedName("paging")
-    private Paging paging;
+    private Paging paging = new Paging();
 
 
     public Paging getPaging() {
@@ -48,6 +48,9 @@ public class Messages {
 
         @SerializedName("updated_at")
         private String lastUpdate;
+
+        @SerializedName("created_at")
+        private String createdDate;
 
         @SerializedName("subject")
         private String subject;
@@ -123,6 +126,14 @@ public class Messages {
 
         public void setReplies(List<Reply> replies) {
             this.replies = replies;
+        }
+
+        public String getCreatedDate() {
+            return createdDate;
+        }
+
+        public void setCreatedDate(String createdDate) {
+            this.createdDate = createdDate;
         }
     }
 
