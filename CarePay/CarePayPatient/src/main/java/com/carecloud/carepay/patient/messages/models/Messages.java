@@ -145,6 +145,9 @@ public class Messages {
         @SerializedName("user_id")
         private String userId;
 
+        @SerializedName("type")
+        private String type;
+
         public String getName() {
             return name;
         }
@@ -159,6 +162,14 @@ public class Messages {
 
         public void setUserId(String userId) {
             this.userId = userId;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
         }
     }
 }

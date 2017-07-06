@@ -3,6 +3,8 @@ package com.carecloud.carepaylibray.utils;
 import android.text.format.DateFormat;
 import android.util.Log;
 
+import com.carecloud.carepay.service.library.label.Label;
+
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -616,6 +618,39 @@ public class DateUtil {
     }
 
     /**
+     * Get the number of hours elapsed between two Dates
+     * @param start start date
+     * @param end end date
+     * @return hours elapsed
+     */
+    public static int getHoursElapsed(Date start, Date end){
+        Calendar startCal = Calendar.getInstance();
+        Calendar endCal = Calendar.getInstance();
+
+        startCal.setTime(start);
+        endCal.setTime(end);
+
+        return getHoursElapsed(startCal, endCal);
+    }
+
+    /**
+     * Get the number of hours elapsed between two Calendar instances
+     * @param start start calendar date
+     * @param end end calendar date
+     * @return hours elapsed
+     */
+    public static int getHoursElapsed(Calendar start, Calendar end){
+        if (end.compareTo(start) < 0) {//parameters in wrong order
+            Log.w(TAG, "calendar parameters out of order");
+            Calendar temp = start;
+            start = end;
+            end = temp;
+        }
+
+        return end.get(Calendar.HOUR_OF_DAY) - start.get(Calendar.HOUR_OF_DAY);
+    }
+
+    /**
      * Check whether the provided days are in the same year
      *
      * @param start starting day
@@ -845,8 +880,12 @@ public class DateUtil {
      */
     public String toContextualMessageDate(){
         if(isToday()){
-            return toStringWithFormat(FORMAT_HOURS_AM_PM);
-        }else{
+            return getHoursElapsed(getDate(), new Date()) + Label.getLabel("label_hours_ago");
+        }else {
+            int daysElapsed = getDaysElapsed(getDate(), new Date());
+            if(daysElapsed < 10){
+                return daysElapsed + Label.getLabel("label_days_ago");
+            }
             return toStringWithFormat(FORMAT_MM_SLASH_DD_SLASH_YYYY);
         }
     }
