@@ -87,7 +87,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
                 adapter.appendThreads(threads);
             }
         }else{
-            adapter = new MessagesListAdapter(getContext(), threads, this);
+            adapter = new MessagesListAdapter(getContext(), threads, this, callback.getUserId());
             recyclerView.setAdapter(adapter);
         }
 

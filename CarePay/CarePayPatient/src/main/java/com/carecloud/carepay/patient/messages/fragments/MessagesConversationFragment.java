@@ -124,6 +124,9 @@ public class MessagesConversationFragment extends BaseFragment {
         TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
         title.setText(thread.getSubject());
 
+        TextView subTitle = (TextView) toolbar.findViewById(R.id.toolbar_subtitle);
+        subTitle.setText(digProvider(thread));
+
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -199,5 +202,26 @@ public class MessagesConversationFragment extends BaseFragment {
             sendButton.setClickable(enabled);
         }
     };
+
+    private String digProvider(Messages.Reply thread){
+        List<Messages.Reply> replies = thread.getReplies();
+        if(!replies.isEmpty()){
+            for(Messages.Reply reply : replies){
+                for(Messages.Participant participant : reply.getParticipants()){
+                    if(participant.getType() != null && participant.getType().equals("provider")){
+                        return participant.getName();
+                    }
+                }
+            }
+        }else{
+            for(Messages.Participant participant : thread.getParticipants()){
+                if(!participant.getUserId().equals(callback.getUserId())){
+                    return participant.getName();
+                }
+            }
+        }
+        return null;
+    }
+
 
 }

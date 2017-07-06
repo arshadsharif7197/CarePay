@@ -9,7 +9,7 @@
     android:orientation="vertical"
     android:background="@color/white">
 
-    <include layout="@layout/toolbar_title_only"
+    <include layout="@layout/toolbar_messaging"
              android:id="@+id/toolbar"/>
 
 

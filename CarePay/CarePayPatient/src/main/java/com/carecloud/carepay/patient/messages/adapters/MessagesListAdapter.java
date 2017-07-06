@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.models.Messages;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,7 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
     private Context context;
     private List<Messages.Reply> threads = new ArrayList<>();
     private SelectMessageThreadCallback callback;
+    private String userId;
 
     /**
      * Constructor
@@ -35,10 +37,11 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
      * @param threads list of threads
      * @param callback callback
      */
-    public MessagesListAdapter(Context context, List<Messages.Reply> threads, SelectMessageThreadCallback callback){
+    public MessagesListAdapter(Context context, List<Messages.Reply> threads, SelectMessageThreadCallback callback, String userId){
         this.context = context;
         this.threads = threads;
         this.callback = callback;
+        this.userId = userId;
     }
 
     @Override
@@ -51,7 +54,10 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Messages.Reply thread = threads.get(position);
 
-        holder.providerName.setText(thread.getSubject());
+        String providerName = digProvider(thread);
+        holder.providerName.setText(providerName);
+        holder.providerInitials.setText(StringUtil.getShortName(providerName));
+        holder.providerTitle.setText(thread.getSubject());
 
         String date = DateUtil.getInstance().setDateRaw(thread.getLastUpdate()).toContextualMessageDate();
         holder.timeStamp.setText(date);
@@ -87,6 +93,25 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
         notifyDataSetChanged();
     }
 
+    private String digProvider(Messages.Reply thread){
+        List<Messages.Reply> replies = thread.getReplies();
+        if(!replies.isEmpty()){
+            for(Messages.Reply reply : replies){
+                for(Messages.Participant participant : reply.getParticipants()){
+                    if(participant.getType() != null && participant.getType().equals("provider")){
+                        return participant.getName();
+                    }
+                }
+            }
+        }else{
+            for(Messages.Participant participant : thread.getParticipants()){
+                if(!participant.getUserId().equals(userId)){
+                    return participant.getName();
+                }
+            }
+        }
+        return null;
+    }
 
     class ViewHolder extends RecyclerView.ViewHolder{
 
