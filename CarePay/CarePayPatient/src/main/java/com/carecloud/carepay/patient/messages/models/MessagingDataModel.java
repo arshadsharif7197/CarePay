@@ -9,7 +9,10 @@ import com.google.gson.annotations.SerializedName;
 public class MessagingDataModel {
 
     @SerializedName("messages")
-    private Messages messages;
+    private Messages messages = new Messages();
+
+    @SerializedName("inbox")
+    private Inbox inbox = new Inbox();
 
     public Messages getMessages() {
         return messages;
@@ -17,5 +20,13 @@ public class MessagingDataModel {
 
     public void setMessages(Messages messages) {
         this.messages = messages;
+    }
+
+    public Inbox getInbox() {
+        return inbox;
+    }
+
+    public void setInbox(Inbox inbox) {
+        this.inbox = inbox;
     }
 }

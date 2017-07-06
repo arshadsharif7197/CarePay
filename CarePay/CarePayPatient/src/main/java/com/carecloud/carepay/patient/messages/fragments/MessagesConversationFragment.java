@@ -2,13 +2,15 @@ package com.carecloud.carepay.patient.messages.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
@@ -17,6 +19,7 @@ import com.carecloud.carepay.patient.messages.adapters.MessagesConversationAdapt
 import com.carecloud.carepay.patient.messages.models.Messages;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +34,10 @@ public class MessagesConversationFragment extends BaseFragment {
     private Messages.Reply thread;
     private List<Messages.Reply> messages = new ArrayList<>();
 
-    private SwipeRefreshLayout refreshLayoutView;
     private RecyclerView recyclerView;
+    private EditText messageTextInput;
+    private View sendButton;
+
 
     private boolean refreshing = true;
 
@@ -82,11 +87,29 @@ public class MessagesConversationFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle icicle){
         initToolbar(view);
 
-        refreshLayoutView = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
-        refreshLayoutView.setOnRefreshListener(onRefreshListener);
-
         recyclerView = (RecyclerView) view.findViewById(R.id.messages_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if(recyclerView.getAdapter() != null) {
+                    recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
+                }
+            }
+        });
+
+        sendButton = view.findViewById(R.id.button_send);
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                postNewMessage();
+            }
+        });
+        sendButton.setEnabled(false);
+        sendButton.setClickable(false);
+
+        messageTextInput = (EditText) view.findViewById(R.id.message_input);
+        messageTextInput.addTextChangedListener(messageInputListener);
     }
 
     @Override
@@ -115,10 +138,20 @@ public class MessagesConversationFragment extends BaseFragment {
         if(adapter != null){
             adapter.setMessages(messages);
         }else{
-            adapter = new MessagesConversationAdapter(getContext(), messages, thread.getAuthor().getUserId());
+            adapter = new MessagesConversationAdapter(getContext(), messages, callback.getUserId());
             recyclerView.setAdapter(adapter);
         }
 
+        recyclerView.scrollToPosition(messages.size()-1);
+    }
+
+    private void postNewMessage(){
+        String message = messageTextInput.getText().toString();
+        if(!StringUtil.isNullOrEmpty(message)){
+            callback.postMessage(thread, message);
+            refreshing = true;
+        }
+        messageTextInput.setText(null);
     }
 
     /**
@@ -135,7 +168,6 @@ public class MessagesConversationFragment extends BaseFragment {
         setAdapter();
 
         refreshing = false;
-        refreshLayoutView.setRefreshing(refreshing);
     }
 
     private List<Messages.Reply> getMessagesList(Messages.Reply thread){
@@ -148,12 +180,23 @@ public class MessagesConversationFragment extends BaseFragment {
         callback.getThreadMessages(thread);
     }
 
-    private SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+
+    private TextWatcher messageInputListener = new TextWatcher() {
         @Override
-        public void onRefresh() {
-            refreshing = true;
-            refreshLayoutView.setRefreshing(refreshing);
-            refreshThreadMessages();
+        public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            boolean enabled = !StringUtil.isNullOrEmpty(editable.toString());
+            sendButton.setEnabled(enabled);
+            sendButton.setClickable(enabled);
         }
     };
 

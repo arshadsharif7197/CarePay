@@ -17,4 +17,8 @@ public interface MessageNavigationCallback {
     void getMessageThreads(int page, int size);
 
     void getThreadMessages(Messages.Reply thread);
+
+    String getUserId();
+
+    void postMessage(Messages.Reply thread, String message);
 }
