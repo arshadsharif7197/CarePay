@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.checkout;
+package com.carecloud.carepay.practice.library.adhocforms;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,10 +14,10 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.checkout.BaseWebFormFragment;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
-import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -31,32 +31,27 @@ import java.util.regex.Matcher;
  * @author pjohnson on 30/05/17.
  */
 
-public class CheckOutFormFragment extends BaseWebFormFragment {
+public class AdHocFormFragment extends BaseWebFormFragment {
 
     private AppointmentsResultModel appointmentsResultModel;
     private List<JsonObject> jsonFormSaveResponseArray = new ArrayList<>();
     private List<PracticeForm> formsList;
-    private CheckOutInterface callback;
+    private AdHocFormsInterface callback;
 
     /**
-     * @param appointmentsResultModel the appointments dto
-     * @return a new instance of CheckOutFormFragment
+     * @return a new instance of AdHocFormFragment
      */
-    public static CheckOutFormFragment newInstance(AppointmentsResultModel appointmentsResultModel) {
-        Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, appointmentsResultModel);
-        CheckOutFormFragment fragment = new CheckOutFormFragment();
-        fragment.setArguments(args);
-        return fragment;
+    public static AdHocFormFragment newInstance() {
+        return new AdHocFormFragment();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (CheckOutInterface) context;
+            callback = (AdHocFormsInterface) context;
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached Context must implement ResponsibilityActionCallback");
+            throw new ClassCastException("Attached Context must implement FragmentActivityInterface");
         }
     }
 
@@ -69,21 +64,23 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, getArguments());
-        formsList = appointmentsResultModel.getMetadata().getDataModels().getPracticeForms();
+        appointmentsResultModel = (AppointmentsResultModel) callback.getDto();
+        formsList = callback.getFormsList();
         setTotalForms(formsList.size());
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setHeader(Label.getLabel("checkout_rating_form_title"));
-        lastFormButtonLabel = Label.getLabel("checkout_forms_done");
+        setHeader(Label.getLabel("adhoc_form_title"));
+        lastFormButtonLabel = Label.getLabel("adhoc_sign_form_button_label");
+        nextButton.setText(Label.getLabel("adhoc_sign_form_button_label"));
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
-        if (toolbar != null && !callback.shouldAllowNavigateBack()) {
+        if (toolbar != null) {
             toolbar.setNavigationIcon(null);
             toolbar.setNavigationOnClickListener(null);
         }
+        callback.highlightFormName(getDisplayedFormsIndex());
     }
 
     @Override

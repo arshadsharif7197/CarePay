@@ -43,12 +43,13 @@ public abstract class BaseWebFormFragment extends BaseFragment {
 
     private WebView webView;
     private ProgressBar progressBar;
-    private Button nextButton;
+    protected Button nextButton;
     private TextView header;
     private StepProgressBar progressIndicator;
 
     private int totalForms;
     private int displayedFormsIndex;
+    protected String lastFormButtonLabel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -173,19 +174,16 @@ public abstract class BaseWebFormFragment extends BaseFragment {
     protected abstract void validateForm();
 
     protected void validateForm(String function) {
-
         webView.loadUrl("javascript:window." + function + "()");
-
-
     }
 
     protected void loadFormUrl(String formString, String function) {
         webView.loadUrl("javascript:window." + function + "('" + formString + "')");
         nextButton.setEnabled(true);
         progressIndicator.setCurrentProgressDot(displayedFormsIndex);
-        if(getDisplayedFormsIndex() == getTotalForms()-1){
+        if (getDisplayedFormsIndex() == getTotalForms() - 1) {
             //last form
-            nextButton.setText(Label.getLabel("checkout_forms_done"));
+            nextButton.setText(lastFormButtonLabel);
         }
     }
 

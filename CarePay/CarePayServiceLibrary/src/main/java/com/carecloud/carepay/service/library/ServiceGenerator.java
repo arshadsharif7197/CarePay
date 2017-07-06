@@ -88,7 +88,7 @@ public class ServiceGenerator {
         if (headers != null) {
             httpClient.addInterceptor(new HeaderInterceptor(headers));
         }
-        httpClient.addInterceptor(new JSONFormattedLoggingInterceptor());
+//        httpClient.addInterceptor(new JSONFormattedLoggingInterceptor());
         OkHttpClient client = httpClient.build();
         Retrofit retrofit = builder.client(client).build();
 

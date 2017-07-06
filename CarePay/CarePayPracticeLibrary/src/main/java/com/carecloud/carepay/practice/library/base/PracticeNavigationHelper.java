@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.carecloud.carepay.practice.library.adhocforms.AdHocFormsActivity;
 import com.carecloud.carepay.practice.library.appointments.PatientModePracticeAppointmentActivity;
 import com.carecloud.carepay.practice.library.appointments.PracticeModePracticeAppointmentsActivity;
 import com.carecloud.carepay.practice.library.checkin.PatientModeCheckInCheckOutActivity;
@@ -70,7 +71,8 @@ public class PracticeNavigationHelper {
      * @param workflowDTO   WorkflowDTO
      * @param info          extra Bundle info
      */
-    public static void navigateToWorkflow(Context context, WorkflowDTO workflowDTO, boolean expectsResult, int requestCode, Bundle info) {
+    public static void navigateToWorkflow(Context context, WorkflowDTO workflowDTO, boolean expectsResult,
+                                          int requestCode, Bundle info) {
         Intent intent = null;
         if (workflowDTO == null || StringUtil.isNullOrEmpty(workflowDTO.getState())) {
             return;
@@ -93,6 +95,12 @@ public class PracticeNavigationHelper {
 
             case NavigationStateConstants.PATIENT_HOME: {
                 intent = new Intent(context, CloverMainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                break;
+            }
+
+            case NavigationStateConstants.PRACTICE_ADHOC_FORMS: {
+                intent = new Intent(context, AdHocFormsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 break;
             }

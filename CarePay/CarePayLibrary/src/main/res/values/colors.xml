@@ -91,4 +91,5 @@
     <color name="lemonGreen">#5BD064</color>
     <color name="greenProviderMessageHeader">@color/lemonGreen</color>
     <color name="cameraBackground">#aa575555</color>
+    <color name="sky">#60C5CF</color>
 </resources>

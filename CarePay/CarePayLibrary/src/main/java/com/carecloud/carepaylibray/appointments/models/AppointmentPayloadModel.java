@@ -58,6 +58,18 @@ public class AppointmentPayloadModel implements Serializable {
     @Expose
     @SerializedName("checkout_forms_user_response")
     private List<ConsentFormUserResponseDTO> responses = new ArrayList<>();
+    @Expose
+    @SerializedName("patient_forms_response")
+    private List<ConsentFormUserResponseDTO> patientFormsResponse = new ArrayList<>();
+    @Expose
+    @SerializedName("patient_forms_filled")
+    private List<ConsentFormUserResponseDTO> patientFormsFilled = new ArrayList<>();
+    @Expose
+    @SerializedName("user_practices")
+    private List<ResourcesPracticeDTO> userPractices = new ArrayList<>();
+    @Expose
+    @SerializedName("filled_forms")
+    private List<String> filledForms = new ArrayList<>();
 
     /**
      * @return languages
@@ -239,5 +251,37 @@ public class AppointmentPayloadModel implements Serializable {
 
     public void setResponses(List<ConsentFormUserResponseDTO> responses) {
         this.responses = responses;
+    }
+
+    public List<ConsentFormUserResponseDTO> getPatientFormsResponse() {
+        return patientFormsResponse;
+    }
+
+    public void setPatientFormsResponse(List<ConsentFormUserResponseDTO> patientFormsResponse) {
+        this.patientFormsResponse = patientFormsResponse;
+    }
+
+    public List<ConsentFormUserResponseDTO> getPatientFormsFilled() {
+        return patientFormsFilled;
+    }
+
+    public void setPatientFormsFilled(List<ConsentFormUserResponseDTO> patientFormsFilled) {
+        this.patientFormsFilled = patientFormsFilled;
+    }
+
+    public List<ResourcesPracticeDTO> getUserPractices() {
+        return userPractices;
+    }
+
+    public void setUserPractices(List<ResourcesPracticeDTO> userPractices) {
+        this.userPractices = userPractices;
+    }
+
+    public List<String> getFilledForms() {
+        return filledForms;
+    }
+
+    public void setFilledForms(List<String> filledForms) {
+        this.filledForms = filledForms;
     }
 }

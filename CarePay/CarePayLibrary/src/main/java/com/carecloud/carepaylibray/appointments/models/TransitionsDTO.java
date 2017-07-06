@@ -58,6 +58,10 @@ public class TransitionsDTO {
     @Expose
     private TransitionDTO practiceMode = new TransitionDTO();
 
+    @SerializedName("adhoc_forms_patient_mode")
+    @Expose
+    private TransitionDTO adHocFormsPatientMode = new TransitionDTO();
+
     /**
      * @return The checkingIn
      */
@@ -192,5 +196,13 @@ public class TransitionsDTO {
 
     public void setPracticeMode(TransitionDTO practiceMode) {
         this.practiceMode = practiceMode;
+    }
+
+    public TransitionDTO getAdHocFormsPatientMode() {
+        return adHocFormsPatientMode;
+    }
+
+    public void setAdHocFormsPatientMode(TransitionDTO adHocFormsPatientMode) {
+        this.adHocFormsPatientMode = adHocFormsPatientMode;
     }
 }

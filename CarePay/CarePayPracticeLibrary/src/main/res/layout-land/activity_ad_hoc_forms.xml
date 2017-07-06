@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_patient_mode_checkin"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight=".4">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/left_panel_color"
+            android:orientation="vertical"
+            android:paddingEnd="@dimen/dimen_5dp"
+            android:paddingStart="@dimen/checkin_main_panel_start_padding">
+
+            <View
+                android:id="@+id/separator"
+                android:layout_width="@dimen/checkin_separator_width"
+                android:layout_height="@dimen/dimen_1dp"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:background="@color/gray_white" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/separator"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dimen_30dp"
+                app:customAssetFont="gotham_rounded_bold"
+                breeze:textKey="adhoc_form_left_message"
+                tools:text="Read and sign the \nfollowing forms" />
+
+            <LinearLayout
+                android:id="@+id/formsNamesContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/separator"
+                android:orientation="vertical">
+
+                <!--<include-->
+                <!--android:id="@+id/checkin_flow_demographics"-->
+                <!--layout="@layout/item_checkin_flow" />-->
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="-25dp"
+            android:src="@drawable/side_shadow" />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/formLayout"
+        style="@style/CheckinContainerStyle"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight=".6">
+
+    </FrameLayout>
+
+</LinearLayout>

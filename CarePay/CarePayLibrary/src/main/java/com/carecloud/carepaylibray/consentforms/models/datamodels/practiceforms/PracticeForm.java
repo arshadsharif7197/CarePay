@@ -5,20 +5,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PracticeForm {
+import java.io.Serializable;
+
+public class PracticeForm implements Serializable{
 
     @SerializedName("payload")
     @Expose
-//    private Payload payload = new Payload();
-//
-//    public Payload getPayload() {
-//        return payload;
-//    }
-//
-//    public void setPayload(Payload payload) {
-//        this.payload = payload;
-//    }
     private JsonObject payload;
+
+    private transient String lastModifiedDate;
 
     public JsonObject getPayload() {
         return payload;
@@ -26,5 +21,13 @@ public class PracticeForm {
 
     public void setPayload(JsonObject payload) {
         this.payload = payload;
+    }
+
+    public String getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(String lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

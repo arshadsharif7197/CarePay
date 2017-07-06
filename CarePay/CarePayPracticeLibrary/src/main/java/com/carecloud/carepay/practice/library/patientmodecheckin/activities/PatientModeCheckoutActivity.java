@@ -100,9 +100,10 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     /**
      * Init current fragment based on the received workflow
+     *
      * @param workflowDTO workflow dto
      */
-    public void initDto(WorkflowDTO workflowDTO){
+    public void initDto(WorkflowDTO workflowDTO) {
         if (NavigationStateConstants.PATIENT_APP_CHECKOUT.equals(workflowDTO.getState())) {
             appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
             showNextAppointmentFragment(appointmentId);
@@ -116,7 +117,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     }
 
-    private void initViews(){
+    private void initViews() {
         View logout = findViewById(R.id.logoutTextview);
         logout.setOnClickListener(homeClick);
 
@@ -124,23 +125,23 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         home.setOnClickListener(homeClick);
     }
 
-    private void initAppMode(){
-        if(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE){
+    private void initAppMode() {
+        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
             //need to switch to PatientMode
             getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
             String username = null;
-            if(appointmentsResultModel != null){
-                for(AppointmentDTO appointmentDTO : appointmentsResultModel.getPayload().getAppointments()){
-                    if(appointmentDTO.getPayload().getId().equals(appointmentId)){
+            if (appointmentsResultModel != null) {
+                for (AppointmentDTO appointmentDTO : appointmentsResultModel.getPayload().getAppointments()) {
+                    if (appointmentDTO.getPayload().getId().equals(appointmentId)) {
                         username = appointmentDTO.getMetadata().getUsername();
                         break;
                     }
                 }
-            }else if(paymentsModel != null){
+            } else if (paymentsModel != null) {
                 username = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getUsername();
             }
 
-            if(username != null) {
+            if (username != null) {
                 getAppAuthorizationHelper().setUser(username);
             }
         }
@@ -164,8 +165,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onBackPressed(){
-        if(shouldAllowNavigateBack()){
+    public void onBackPressed() {
+        if (shouldAllowNavigateBack()) {
             super.onBackPressed();
         }
     }
@@ -336,19 +337,19 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     @Override
     public void showAllDone(WorkflowDTO workflowDTO) {
         PracticeAppointmentDTO practiceAppointmentDTO = DtoHelper.getConvertedDTO(PracticeAppointmentDTO.class, workflowDTO);
-        if(practiceAppointmentDTO == null){
+        if (practiceAppointmentDTO == null) {
             showErrorNotification("Error Checking-out Appointment");
             return;
         }
         Bundle extra = new Bundle();
-        if(paymentConfirmationWorkflow!=null) {
+        if (paymentConfirmationWorkflow != null) {
             extra.putBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, true);
 
             WorkFlowRecord workFlowRecord = new WorkFlowRecord(paymentConfirmationWorkflow);
             workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
             extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
-        }else{
-            WorkflowDTO appointmentWorkflowDTO =  getAppointmentWorkflowDto(workflowDTO);
+        } else {
+            WorkflowDTO appointmentWorkflowDTO = getAppointmentWorkflowDto(workflowDTO);
             WorkFlowRecord workFlowRecord = new WorkFlowRecord(appointmentWorkflowDTO);
             workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
             extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
@@ -442,18 +443,18 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         }
     }
 
-    private WorkflowDTO getAppointmentWorkflowDto(WorkflowDTO workflowDTO){
+    private WorkflowDTO getAppointmentWorkflowDto(WorkflowDTO workflowDTO) {
         PracticeAppointmentDTO practiceAppointmentDTO = DtoHelper.getConvertedDTO(PracticeAppointmentDTO.class, workflowDTO);
         String id = practiceAppointmentDTO.getPayload().getPracticeAppointments().getPayload().getId();
-        for(AppointmentDTO appointmentDTO : appointmentsResultModel.getPayload().getAppointments()){
-            if(appointmentDTO.getPayload().getId().equals(id)){
+        for (AppointmentDTO appointmentDTO : appointmentsResultModel.getPayload().getAppointments()) {
+            if (appointmentDTO.getPayload().getId().equals(id)) {
                 appointmentDTO.setPayload(practiceAppointmentDTO.getPayload().getPracticeAppointments().getPayload());
                 break;
             }
         }
         String appointmentWorkflowString = DtoHelper.getStringDTO(appointmentsResultModel);
         WorkflowDTO appointmentWorkflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class, appointmentWorkflowString);
-        if(appointmentWorkflowDTO != null) {
+        if (appointmentWorkflowDTO != null) {
             appointmentWorkflowDTO.setState(workflowDTO.getState());
         }
         return appointmentWorkflowDTO;
