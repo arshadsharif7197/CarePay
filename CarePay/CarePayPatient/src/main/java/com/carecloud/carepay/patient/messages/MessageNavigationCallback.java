@@ -21,4 +21,7 @@ public interface MessageNavigationCallback {
     String getUserId();
 
     void postMessage(Messages.Reply thread, String message);
+
+    void displayToolbar(boolean display, String title);
+
 }

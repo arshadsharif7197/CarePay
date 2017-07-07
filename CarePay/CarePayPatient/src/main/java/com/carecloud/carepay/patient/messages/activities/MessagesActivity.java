@@ -58,7 +58,6 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
 
     @Override
     public void displayThreadMessages(Messages.Reply thread) {
-        displayToolbar(false, null);
         replaceFragment(MessagesConversationFragment.newInstance(thread), true);
     }
 
