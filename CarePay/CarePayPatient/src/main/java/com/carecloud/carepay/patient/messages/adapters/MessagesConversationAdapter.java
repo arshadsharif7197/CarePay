@@ -81,7 +81,7 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
 
             String time = DateUtil.getInstance().getTime12Hour();
             holder.timeStamp.setText(time);
-            holder.participantName.setText(StringUtil.captialize(message.getAuthor().getName()));
+            holder.participantName.setText(StringUtil.captialize(message.getAuthor().getName()).trim());
             holder.participantPosition.setText(getPosition(message.getAuthor()));
 
             holder.metaView.setVisibility(View.VISIBLE);
