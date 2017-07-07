@@ -104,6 +104,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimen_10dp"
                 android:layout_weight="2"
+                android:enabled="false"
                 android:background="@drawable/bg_green_overlay"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="adhoc_fill_now_button_label" />

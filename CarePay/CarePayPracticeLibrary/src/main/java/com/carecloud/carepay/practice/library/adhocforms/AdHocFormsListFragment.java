@@ -148,7 +148,6 @@ public class AdHocFormsListFragment extends BaseDialogFragment implements AdHocF
 
     @Override
     public void onFormSelected(PracticeForm practiceForm, boolean selected) {
-        fillNowFormButton.setEnabled(!selectedForms.getForms().isEmpty());
         if (selected) {
             selectedForms.getForms()
                     .add(practiceForm.getPayload().get("uuid").toString().replace("\"", ""));
@@ -156,5 +155,6 @@ public class AdHocFormsListFragment extends BaseDialogFragment implements AdHocF
             selectedForms.getForms()
                     .remove(practiceForm.getPayload().get("uuid").toString().replace("\"", ""));
         }
+        fillNowFormButton.setEnabled(!selectedForms.getForms().isEmpty());
     }
 }
