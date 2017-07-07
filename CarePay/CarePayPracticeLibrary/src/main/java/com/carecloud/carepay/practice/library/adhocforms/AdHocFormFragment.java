@@ -77,8 +77,12 @@ public class AdHocFormFragment extends BaseWebFormFragment {
         nextButton.setText(Label.getLabel("adhoc_sign_form_button_label"));
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         if (toolbar != null) {
-            toolbar.setNavigationIcon(null);
-            toolbar.setNavigationOnClickListener(null);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().onBackPressed();
+                }
+            });
         }
         callback.highlightFormName(getDisplayedFormsIndex());
     }
@@ -110,7 +114,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
             String formString = form.toString().replaceAll("\\\\", Matcher.quoteReplacement("\\\\")).replaceAll("\'", Matcher.quoteReplacement("\\\'"));
 
             loadFormUrl(formString, "load_form");
-
+            callback.highlightFormName(getDisplayedFormsIndex());
         }
     }
 
@@ -145,10 +149,10 @@ public class AdHocFormFragment extends BaseWebFormFragment {
         Gson gson = new Gson();
         String body = gson.toJson(jsonFormSaveResponseArray);
         TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getUpdateForms();
-        getWorkflowServiceHelper().execute(transitionDTO, updateformCallBack, body, queries, header);
+        getWorkflowServiceHelper().execute(transitionDTO, updateFormCallBack, body, queries, header);
     }
 
-    WorkflowServiceCallback updateformCallBack = new WorkflowServiceCallback() {
+    WorkflowServiceCallback updateFormCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();
@@ -176,5 +180,14 @@ public class AdHocFormFragment extends BaseWebFormFragment {
     @Override
     protected void validateForm() {
         validateForm("save_form");
+    }
+
+    public boolean navigateBack() {
+        if (getTotalForms() > 1 && getDisplayedFormsIndex() > 0) {
+            setDisplayedFormsIndex(getDisplayedFormsIndex() - 1);
+            displayNextForm();
+            return true;
+        }
+        return false;
     }
 }

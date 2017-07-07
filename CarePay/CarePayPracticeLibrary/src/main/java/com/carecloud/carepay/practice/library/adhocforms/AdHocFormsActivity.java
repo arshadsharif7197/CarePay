@@ -114,4 +114,11 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         intent.putExtra(CarePayConstants.EXTRA_BUNDLE, bundle);
         startActivity(intent);
     }
+
+    @Override
+    public void onBackPressed() {
+        AdHocFormFragment adHocFormFragment = (AdHocFormFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.formLayout);
+        adHocFormFragment.navigateBack();
+    }
 }

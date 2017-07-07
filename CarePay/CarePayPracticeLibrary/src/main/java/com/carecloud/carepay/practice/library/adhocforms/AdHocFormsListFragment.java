@@ -1,7 +1,6 @@
 package com.carecloud.carepay.practice.library.adhocforms;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,11 +17,9 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
-import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -126,13 +123,6 @@ public class AdHocFormsListFragment extends BaseDialogFragment implements AdHocF
             Bundle bundle = new Bundle();
             bundle.putSerializable("selectedForms", selectedForms);
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, bundle);
-
-//            WorkFlowRecord workFlowRecord = new WorkFlowRecord(workflowDTO);
-//            workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
-//
-//            Intent intent = new Intent(getActivity(), AdHocFormsActivity.class);
-//            intent.putExtras(bundle);
-//            startActivity(intent);
         }
 
         @Override
