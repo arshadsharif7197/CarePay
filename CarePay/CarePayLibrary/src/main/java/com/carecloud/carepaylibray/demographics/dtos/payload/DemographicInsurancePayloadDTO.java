@@ -19,7 +19,7 @@ public class DemographicInsurancePayloadDTO extends PatientModel {
 
     @SerializedName("insurance_provider")
     @Expose
-    private  String insuranceProvider;
+    private String insuranceProvider;
 
     @SerializedName("insurance_plan")
     @Expose
@@ -41,9 +41,13 @@ public class DemographicInsurancePayloadDTO extends PatientModel {
     @Expose
     private String relationship;
 
-    @SerializedName("policy_holder")
+    @SerializedName("policy_holder_first_name")
     @Expose
-    private String policyHolder;
+    private String policyFirstNameHolder;
+
+    @SerializedName("policy_holder_last_name")
+    @Expose
+    private String policyLastNameHolder;
 
     @SerializedName("delete")
     @Expose
@@ -131,11 +135,19 @@ public class DemographicInsurancePayloadDTO extends PatientModel {
         this.relationship = relationship;
     }
 
-    public String getPolicyHolder() {
-        return policyHolder;
+    public String getPolicyFirstNameHolder() {
+        return policyFirstNameHolder;
     }
 
-    public void setPolicyHolder(String policyHolder) {
-        this.policyHolder = policyHolder;
+    public void setPolicyFirstNameHolder(String policyFirstNameHolder) {
+        this.policyFirstNameHolder = policyFirstNameHolder;
+    }
+
+    public String getPolicyLastNameHolder() {
+        return policyLastNameHolder;
+    }
+
+    public void setPolicyLastNameHolder(String policyLastNameHolder) {
+        this.policyLastNameHolder = policyLastNameHolder;
     }
 }
