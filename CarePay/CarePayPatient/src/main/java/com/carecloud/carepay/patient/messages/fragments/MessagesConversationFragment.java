@@ -117,6 +117,7 @@ public class MessagesConversationFragment extends BaseFragment {
         super.onResume();
         refreshing = true;
         refreshThreadMessages();
+        callback.displayToolbar(false, null);
     }
 
     private void initToolbar(View view){
