@@ -71,7 +71,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
     /**
      * @param appointmentsPayloadDTO the appointment balances
      * @param hasPayment             boolean indicating if there has been a payment in the process
-     * @param isAdHocForms
+     * @param isAdHocForms          indicates if its in the adhoc flow
      * @return an instance of CheckInCompletedDialogFragment
      */
     public static CheckInCompletedDialogFragment newInstance(AppointmentDTO appointmentsPayloadDTO,

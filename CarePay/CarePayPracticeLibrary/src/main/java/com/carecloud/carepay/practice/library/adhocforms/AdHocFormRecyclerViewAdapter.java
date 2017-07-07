@@ -49,10 +49,10 @@ public class AdHocFormRecyclerViewAdapter extends RecyclerView
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 callback.onFormSelected(practiceForm, isChecked);
-                if(isChecked){
+                if (isChecked) {
                     holder.formNameTextView.setTextColor(holder.formLastEditDateTextView
                             .getContext().getResources().getColor(R.color.colorPrimary));
-                }else{
+                } else {
                     holder.formNameTextView.setTextColor(holder.formLastEditDateTextView
                             .getContext().getResources().getColor(R.color.slateGray));
                 }
@@ -72,7 +72,7 @@ public class AdHocFormRecyclerViewAdapter extends RecyclerView
         CheckBox formCheckBox;
         TextView formLastEditDateTextView;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             formNameTextView = (TextView) itemView.findViewById(R.id.formNameTextView);
             formLastEditDateTextView = (TextView) itemView.findViewById(R.id.formLastEditDateTextView);

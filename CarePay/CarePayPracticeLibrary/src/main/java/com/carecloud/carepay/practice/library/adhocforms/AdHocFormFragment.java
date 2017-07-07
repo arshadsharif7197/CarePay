@@ -79,7 +79,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
         if (toolbar != null) {
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View view) {
                     getActivity().onBackPressed();
                 }
             });
@@ -182,6 +182,10 @@ public class AdHocFormFragment extends BaseWebFormFragment {
         validateForm("save_form");
     }
 
+    /**
+     *
+     * @return a boolean indicating if it intercepts the event
+     */
     public boolean navigateBack() {
         if (getTotalForms() > 1 && getDisplayedFormsIndex() > 0) {
             setDisplayedFormsIndex(getDisplayedFormsIndex() - 1);

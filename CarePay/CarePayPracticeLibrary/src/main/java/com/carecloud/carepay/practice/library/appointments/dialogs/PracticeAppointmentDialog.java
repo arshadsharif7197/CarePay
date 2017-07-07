@@ -219,12 +219,12 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                 timeColor = R.color.colorPrimary;
                 leftActionLabel = Label.getLabel("cancel_appointment_short_label");
                 rightActionLabel = Label.getLabel("start_checkout_label");
+                middleActionLabel = Label.getLabel("adhoc_show_forms_button_label");
                 break;
             default:
                 headerColor = R.color.colorPrimary;
                 timeColor = R.color.white;
         }
-        middleActionLabel = Label.getLabel("adhoc_show_forms_button_label");
     }
 
     private void initializeButtons() {

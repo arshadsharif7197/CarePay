@@ -46,6 +46,12 @@ public class AdHocFormsListFragment extends BaseDialogFragment implements AdHocF
         // Required empty public constructor
     }
 
+    /**
+     *
+     * @param appointmentsResultModel the appoinment model
+     * @param appointmentId the appointment id
+     * @return a new instance of AdHocFormsListFragment
+     */
     public static AdHocFormsListFragment newInstance(AppointmentsResultModel appointmentsResultModel,
                                                      String appointmentId) {
         AdHocFormsListFragment fragment = new AdHocFormsListFragment();
@@ -85,7 +91,7 @@ public class AdHocFormsListFragment extends BaseDialogFragment implements AdHocF
         ImageView cancelImageView = (ImageView) view.findViewById(R.id.cancel_img);
         cancelImageView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 dismiss();
             }
         });
@@ -93,7 +99,7 @@ public class AdHocFormsListFragment extends BaseDialogFragment implements AdHocF
         fillNowFormButton = (Button) view.findViewById(R.id.fillNowFormButton);
         fillNowFormButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 Map<String, String> queryMap = new HashMap<>();
                 queryMap.put("appointment_id", appointmentId);
                 TransitionDTO adHocForms = dto.getMetadata().getTransitions().getAdHocFormsPatientMode();
