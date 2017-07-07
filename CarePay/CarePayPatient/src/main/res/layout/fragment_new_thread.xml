@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/toolbar_title_only"
+             android:id="@+id/toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/dimen_15dp">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                android:id="@+id/subjectInputLayout"
+                style="@style/SigninSignupTextInputStyle"
+                app:hintTextAppearance="@style/FloatingLabelStyle"
+                app:customAssetFont="proxima_nova_regular">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                    android:id="@+id/subjectEditText"
+                    style="@style/SigninSignupEditStyle"
+                    android:imeOptions="actionNext"
+                    android:inputType="date"
+                    android:nextFocusForward="@+id/messageEditText"
+                    tools:hint="Type a Subject"
+                    breeze:hintKey="messaging_subject_hint"
+                    app:customAssetFont="proxima_nova_regular"/>
+            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:textColor="@color/optional_gray"
+                android:textSize="@dimen/text_size_13"
+                tools:text="Choose a descriptive title for your message, so we know immediately what you want to talk about."
+                breeze:textKey="messaging_subject_description"
+                app:customAssetFont="proxima_nova_regular"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                android:id="@+id/messageInputLayout"
+                style="@style/SigninSignupTextInputStyle"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                app:hintTextAppearance="@style/FloatingLabelStyle"
+                app:customAssetFont="proxima_nova_regular">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                    android:id="@+id/messageEditText"
+                    style="@style/SigninSignupEditStyle"
+                    android:imeOptions="actionDone"
+                    android:inputType="date"
+                    android:maxLines="10"
+                    android:nextFocusForward="@+id/messageEditText"
+                    tools:hint="Type your Message"
+                    breeze:hintKey="messaging_message_hint"
+                    app:customAssetFont="proxima_nova_regular"/>
+            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/new_message_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginStart="0dp"
+                style="@style/ResponsButtonStyle"
+                android:enabled="true"
+                android:textSize="@dimen/text_size_13"
+                tools:text="Create Message"
+                breeze:textKey="messaging_create_message_button"
+                app:customAssetFont="gotham_rounded_medium" />
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

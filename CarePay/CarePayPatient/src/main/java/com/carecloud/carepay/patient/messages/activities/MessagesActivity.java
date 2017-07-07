@@ -16,6 +16,7 @@ import com.carecloud.carepay.service.library.RestCallServiceCallback;
 import com.carecloud.carepay.service.library.RestCallServiceHelper;
 import com.carecloud.carepay.service.library.RestDef;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
@@ -117,6 +118,16 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
                 null,
                 fieldMap,
                 getString(R.string.msg_path_message), thread.getId());
+    }
+
+    @Override
+    public void postNewMessage(ProviderDTO providerDTO, String subject, String message) {
+
+    }
+
+    @Override
+    public void getProvidersList() {
+
     }
 
     @Override
