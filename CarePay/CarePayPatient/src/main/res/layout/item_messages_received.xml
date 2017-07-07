@@ -72,7 +72,16 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_size_12sp"
                     android:textColor="@color/lightSlateGray"
-                    tools:text="John, front desk"
+                    tools:text="John"
+                    app:customAssetFont="proxima_nova_semi_bold"/>
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/participant_position"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_12sp"
+                    android:textColor="@color/lightSlateGray"
+                    tools:text=", front desk"
                     app:customAssetFont="proxima_nova_semi_bold"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
