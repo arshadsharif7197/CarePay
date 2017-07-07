@@ -184,6 +184,8 @@ public abstract class BaseWebFormFragment extends BaseFragment {
         if (getDisplayedFormsIndex() == getTotalForms() - 1) {
             //last form
             nextButton.setText(lastFormButtonLabel);
+        } else {
+            nextButton.setText(Label.getLabel("next_form_button_text"));
         }
     }
 
