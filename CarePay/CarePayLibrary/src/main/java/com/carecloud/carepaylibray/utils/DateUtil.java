@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -888,6 +889,20 @@ public class DateUtil {
             }
             return toStringWithFormat(FORMAT_MM_SLASH_DD_SLASH_YYYY);
         }
+    }
+
+    public DateUtil shiftDateToGMT(){
+        if(date == null){
+            date = new Date();
+        }
+        Calendar calLocal = Calendar.getInstance();
+        Calendar calGMT = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+
+        calLocal.setTime(getDate());
+        calGMT.set(calLocal.get(Calendar.YEAR), calLocal.get(Calendar.MONTH), calLocal.get(Calendar.DATE), calLocal.get(Calendar.HOUR_OF_DAY), calLocal.get(Calendar.MINUTE));
+
+        setDate(calGMT);
+        return this;
     }
 
 }

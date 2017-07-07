@@ -69,7 +69,7 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
             lastMessage = messages.get(position-1);
         }
 
-        Date date = DateUtil.getInstance().setDateRaw(message.getCreatedDate()).getDate();
+        Date date = DateUtil.getInstance().setDateRaw(message.getCreatedDate()).shiftDateToGMT().getDate();
         holder.timeHeader.setText(DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal());
         holder.timeHeader.setVisibility(View.VISIBLE);
 
