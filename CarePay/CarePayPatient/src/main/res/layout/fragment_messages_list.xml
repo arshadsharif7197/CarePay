@@ -71,6 +71,7 @@
                     android:layout_height="@dimen/dimen_60dp"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                    android:id="@+id/new_message_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/ResponsButtonStyle"

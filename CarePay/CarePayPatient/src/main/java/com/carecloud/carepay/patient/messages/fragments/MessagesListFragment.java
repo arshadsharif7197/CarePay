@@ -64,10 +64,13 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
 
         noMessagesLayout = view.findViewById(R.id.no_messages_layout);
         actionButton = view.findViewById(R.id.fab);
+        actionButton.setOnClickListener(newMessageAction);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.messages_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
+        View butonNewMessage = view.findViewById(R.id.new_message_button);
+        butonNewMessage.setOnClickListener(newMessageAction);
     }
 
     @Override
@@ -94,10 +97,12 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         if(threads.isEmpty()){
             noMessagesLayout.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
+            actionButton.setVisibility(View.GONE);
             refreshLayoutView.setEnabled(false);
         }else{
             noMessagesLayout.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
+            actionButton.setVisibility(View.VISIBLE);
             refreshLayoutView.setEnabled(true);
         }
     }
@@ -136,4 +141,11 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
     public void onMessageSelected(Messages.Reply thread) {
         callback.displayThreadMessages(thread);
     }
+
+    private View.OnClickListener newMessageAction = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            callback.startNewThread();
+        }
+    };
 }
