@@ -134,6 +134,16 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         refreshLayoutView.setRefreshing(refreshing);
     }
 
+    private boolean hasMorePages(){
+        Paging paging = messagingDataModel.getMessages().getPaging();
+        return paging.getCurrentPage() != paging.getTotalPages();
+    }
+
+    @Override
+    public void onMessageSelected(Messages.Reply thread) {
+        callback.displayThreadMessages(thread);
+    }
+
     private SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
@@ -164,10 +174,6 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         }
     };
 
-    @Override
-    public void onMessageSelected(Messages.Reply thread) {
-        callback.displayThreadMessages(thread);
-    }
 
     private View.OnClickListener newMessageAction = new View.OnClickListener() {
         @Override
@@ -176,8 +182,4 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         }
     };
 
-    private boolean hasMorePages(){
-        Paging paging = messagingDataModel.getMessages().getPaging();
-        return paging.getCurrentPage() != paging.getTotalPages();
-    }
 }
