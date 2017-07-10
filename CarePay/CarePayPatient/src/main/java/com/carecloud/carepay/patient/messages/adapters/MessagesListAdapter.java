@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.models.Messages;
+import com.carecloud.carepaylibray.customcomponents.SwipeViewHolder;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
@@ -24,12 +25,15 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
 
     public interface SelectMessageThreadCallback{
         void onMessageSelected(Messages.Reply thread);
+
+        void undoDeleteMessage(Messages.Reply thread);
     }
 
     private Context context;
     private List<Messages.Reply> threads = new ArrayList<>();
     private SelectMessageThreadCallback callback;
     private String userId;
+    private List<Messages.Reply> removeThreads = new ArrayList<>();
 
     /**
      * Constructor
@@ -54,6 +58,11 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Messages.Reply thread = threads.get(position);
 
+        //reset
+        holder.deleteLayout.setVisibility(View.VISIBLE);
+        holder.undoButton.setVisibility(View.GONE);
+        holder.swipeLayout.setVisibility(View.VISIBLE);
+
         String providerName = digProvider(thread);
         holder.providerName.setText(providerName);
         holder.providerInitials.setText(StringUtil.getShortName(providerName));
@@ -63,10 +72,22 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
 
         holder.timeStamp.setText(dateString);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        if(removeThreads.contains(thread)) {
+            holder.swipeLayout.setVisibility(View.INVISIBLE);
+            holder.displayUndoOption();
+        }
+
+        holder.swipeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 callback.onMessageSelected(thread);
+            }
+        });
+
+        holder.undoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.undoDeleteMessage(thread);
             }
         });
     }
@@ -74,6 +95,18 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
     @Override
     public int getItemCount() {
         return threads.size();
+    }
+
+    /**
+     * Get a thread by position
+     * @param position position
+     * @return Thread
+     */
+    public Messages.Reply getThread(int position){
+        if(threads.size() > position && position > 0){
+            return threads.get(position);
+        }
+        return null;
     }
 
     /**
@@ -93,6 +126,36 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
         this.threads.addAll(threads);
         notifyDataSetChanged();
     }
+
+    /**
+     * Mark thread as scheduled for Delete
+     * @param thread Thread to delete
+     */
+    public void scheduleMessageRemoval(Messages.Reply thread){
+        removeThreads.add(thread);
+    }
+
+    /**
+     * Remove Thread from delete queue
+     * @param thread Thread to remove from delete queue
+     */
+    public void clearMessageRemoval(Messages.Reply thread){
+        removeThreads.remove(thread);
+        int position = threads.indexOf(thread);
+        notifyItemChanged(position);
+    }
+
+    /**
+     * Finalize removing a thread
+     * @param thread thread
+     */
+    public void finalizeMessageRemoval(Messages.Reply thread){
+        int position = threads.indexOf(thread);
+        threads.remove(thread);
+        notifyItemRemoved(position);
+        removeThreads.remove(thread);
+    }
+
 
     private String digProvider(Messages.Reply thread){
         List<Messages.Reply> replies = thread.getReplies();
@@ -114,7 +177,7 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
         return null;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends SwipeViewHolder{
 
         TextView unreadCount;
         ImageView providerImage;
@@ -122,6 +185,9 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
         TextView providerName;
         TextView providerTitle;
         TextView timeStamp;
+        View swipeLayout;
+        View undoButton;
+        View deleteLayout;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -131,6 +197,25 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
             providerName = (TextView) itemView.findViewById(R.id.provider_name);
             providerTitle = (TextView) itemView.findViewById(R.id.provider_title);
             timeStamp = (TextView) itemView.findViewById(R.id.time_stamp);
+            swipeLayout = itemView.findViewById(R.id.swipe_layout);
+            undoButton = itemView.findViewById(R.id.undo_button);
+            deleteLayout = itemView.findViewById(R.id.delete_message);
+        }
+
+        @Override
+        public int getSwipeWidth() {
+            return swipeLayout.getMeasuredWidth();
+        }
+
+        @Override
+        public View getSwipeableView() {
+            return swipeLayout;
+        }
+
+        @Override
+        public void displayUndoOption() {
+            deleteLayout.setVisibility(View.GONE);
+            undoButton.setVisibility(View.VISIBLE);
         }
     }
 }
