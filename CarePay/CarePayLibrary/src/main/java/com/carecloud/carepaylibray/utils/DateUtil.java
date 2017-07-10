@@ -891,6 +891,12 @@ public class DateUtil {
         }
     }
 
+    /**
+     * Shift current date to GMT by copying current date & time fields to new GMT time zone calendar.
+     * This will cause a new date to be set shifted to the GMT time zone but maintaining the current time values
+     * 1/1/2001 13:00:00 EST will become 1/1/2001 13:00:00 GMT
+     * @return DateUtil instance with updated Date value
+     */
     public DateUtil shiftDateToGMT(){
         if(date == null){
             date = new Date();
