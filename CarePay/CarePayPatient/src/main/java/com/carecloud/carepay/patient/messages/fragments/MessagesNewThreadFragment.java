@@ -34,6 +34,11 @@ public class MessagesNewThreadFragment extends BaseFragment {
     private ProviderDTO provider;
     private MessageNavigationCallback callback;
 
+    /**
+     * Get a new instance of MessagesNewThreadFragment
+     * @param provider provider to use for sending message
+     * @return MessagesNewThreadFragment
+     */
     public static MessagesNewThreadFragment newInstance(ProviderDTO provider){
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, provider);
