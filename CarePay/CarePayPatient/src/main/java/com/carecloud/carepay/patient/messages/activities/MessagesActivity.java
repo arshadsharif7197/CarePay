@@ -64,7 +64,7 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
     }
 
     @Override
-    public void getMessageThreads(int page, int size) {
+    public void getMessageThreads(long page, long size) {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put(getString(R.string.msg_query_page), String.valueOf(page < 1 ? 1 : page));//first page is 1
         queryMap.put(getString(R.string.msg_query_size), String.valueOf(size < 15 ? 15 : size));//default size if 15, should not be less than that

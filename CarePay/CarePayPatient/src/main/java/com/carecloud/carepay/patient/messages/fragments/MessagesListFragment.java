@@ -14,6 +14,7 @@ import com.carecloud.carepay.patient.messages.MessageNavigationCallback;
 import com.carecloud.carepay.patient.messages.adapters.MessagesListAdapter;
 import com.carecloud.carepay.patient.messages.models.Messages;
 import com.carecloud.carepay.patient.messages.models.MessagingDataModel;
+import com.carecloud.carepay.patient.messages.models.Paging;
 import com.carecloud.carepaylibray.base.BaseFragment;
 
 import java.util.List;
@@ -23,6 +24,8 @@ import java.util.List;
  */
 
 public class MessagesListFragment extends BaseFragment implements MessagesListAdapter.SelectMessageThreadCallback {
+
+    private static int BOTTOM_ROW_OFFSET = 2;
 
     private SwipeRefreshLayout refreshLayoutView;
     private View noMessagesLayout;
@@ -34,6 +37,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
     private MessagingDataModel messagingDataModel;
 
     private boolean refreshing = true;
+    private boolean isPaging = false;
 
     @Override
     public void onAttach(Context context){
@@ -68,6 +72,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
 
         recyclerView = (RecyclerView) view.findViewById(R.id.messages_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerView.addOnScrollListener(scrollListener);
 
         View butonNewMessage = view.findViewById(R.id.new_message_button);
         butonNewMessage.setOnClickListener(newMessageAction);
@@ -124,8 +129,19 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         }
 
         setAdapters();
+        isPaging = false;
         refreshing = false;
         refreshLayoutView.setRefreshing(refreshing);
+    }
+
+    private boolean hasMorePages(){
+        Paging paging = messagingDataModel.getMessages().getPaging();
+        return paging.getCurrentPage() != paging.getTotalPages();
+    }
+
+    @Override
+    public void onMessageSelected(Messages.Reply thread) {
+        callback.displayThreadMessages(thread);
     }
 
     private SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
@@ -137,10 +153,27 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         }
     };
 
-    @Override
-    public void onMessageSelected(Messages.Reply thread) {
-        callback.displayThreadMessages(thread);
-    }
+    private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            if(hasMorePages()) {
+                int last = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+                if (last > recyclerView.getAdapter().getItemCount() - BOTTOM_ROW_OFFSET && !isPaging){
+                    Paging paging = messagingDataModel.getMessages().getPaging();
+                    callback.getMessageThreads(paging.getCurrentPage()+1, paging.getResultsPerPage());
+                    isPaging = true;
+                }
+            }
+
+        }
+    };
+
 
     private View.OnClickListener newMessageAction = new View.OnClickListener() {
         @Override
@@ -148,4 +181,5 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
             callback.startNewThread();
         }
     };
+
 }
