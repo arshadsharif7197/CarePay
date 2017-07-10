@@ -59,8 +59,9 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
         holder.providerInitials.setText(StringUtil.getShortName(providerName));
         holder.providerTitle.setText(thread.getSubject());
 
-        String date = DateUtil.getInstance().setDateRaw(thread.getLastUpdate()).toContextualMessageDate();
-        holder.timeStamp.setText(date);
+        String dateString = DateUtil.getInstance().setDateRaw(thread.getLastUpdate()).shiftDateToGMT().toContextualMessageDate();
+
+        holder.timeStamp.setText(dateString);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

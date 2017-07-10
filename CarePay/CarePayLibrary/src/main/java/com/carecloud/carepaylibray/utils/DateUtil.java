@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -888,6 +889,26 @@ public class DateUtil {
             }
             return toStringWithFormat(FORMAT_MM_SLASH_DD_SLASH_YYYY);
         }
+    }
+
+    /**
+     * Shift current date to GMT by copying current date & time fields to new GMT time zone calendar.
+     * This will cause a new date to be set shifted to the GMT time zone but maintaining the current time values
+     * 1/1/2001 13:00:00 EST will become 1/1/2001 13:00:00 GMT
+     * @return DateUtil instance with updated Date value
+     */
+    public DateUtil shiftDateToGMT(){
+        if(date == null){
+            date = new Date();
+        }
+        Calendar calLocal = Calendar.getInstance();
+        Calendar calGMT = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+
+        calLocal.setTime(getDate());
+        calGMT.set(calLocal.get(Calendar.YEAR), calLocal.get(Calendar.MONTH), calLocal.get(Calendar.DATE), calLocal.get(Calendar.HOUR_OF_DAY), calLocal.get(Calendar.MINUTE));
+
+        setDate(calGMT);
+        return this;
     }
 
 }
