@@ -25,6 +25,8 @@ public interface MessageNavigationCallback {
 
     void postNewMessage(ProviderDTO providerDTO, String subject, String message);
 
+    void startNewThread();
+
     void getProvidersList();
 
     void displayToolbar(boolean display, String title);

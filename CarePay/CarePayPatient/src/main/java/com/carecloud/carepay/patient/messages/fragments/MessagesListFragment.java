@@ -145,7 +145,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
     private View.OnClickListener newMessageAction = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            callback.replaceFragment(new MessagesProvidersFragment(), true);
+            callback.startNewThread();
         }
     };
 }

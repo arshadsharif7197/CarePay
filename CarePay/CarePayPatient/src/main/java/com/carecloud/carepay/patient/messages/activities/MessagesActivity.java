@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
@@ -123,6 +124,12 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
     @Override
     public void postNewMessage(ProviderDTO providerDTO, String subject, String message) {
 
+    }
+
+    @Override
+    public void startNewThread() {
+        Toast.makeText(getContext(), "No endpoint ready for providers list", Toast.LENGTH_LONG).show();
+        //replaceFragment(new MessagesProvidersFragment(), true);
     }
 
     @Override
