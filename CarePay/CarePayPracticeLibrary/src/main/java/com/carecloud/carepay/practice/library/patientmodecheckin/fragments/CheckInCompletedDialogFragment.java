@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.adhocforms.AdHocRecyclerViewAdapter;
 import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckCompleteInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.Defs;
@@ -28,6 +31,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
+import java.util.List;
 
 /**
  * Created by lmenendez on 4/11/17
@@ -36,10 +40,12 @@ import java.text.NumberFormat;
 public class CheckInCompletedDialogFragment extends BaseDialogFragment {
 
     private boolean hasPayment;
+    private boolean isAdHocForms;
     private AppointmentDTO selectedAppointment;
     private String userImageUrl;
     private CheckCompleteInterface callback;
     private PatientPaymentPayload patientPaymentPayload;
+    private List<String> filledForms;
 
     private
     @Defs.AppointmentNavigationTypeDef
@@ -62,13 +68,16 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
     }
 
     /**
-     * @param hasPayment             boolean indicating if there has been a payment in the process
      * @param appointmentsPayloadDTO the appointment balances
+     * @param hasPayment             boolean indicating if there has been a payment in the process
+     * @param isAdHocForms           indicates if its in the adhoc flow
      * @return an instance of CheckInCompletedDialogFragment
      */
-    public static CheckInCompletedDialogFragment newInstance(boolean hasPayment, AppointmentDTO appointmentsPayloadDTO) {
+    public static CheckInCompletedDialogFragment newInstance(AppointmentDTO appointmentsPayloadDTO,
+                                                             boolean hasPayment, boolean isAdHocForms) {
         Bundle args = new Bundle();
         args.putBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, hasPayment);
+        args.putBoolean(CarePayConstants.ADHOC_FORMS, isAdHocForms);
         if (appointmentsPayloadDTO != null) {
             DtoHelper.bundleDto(args, appointmentsPayloadDTO);
         }
@@ -82,12 +91,16 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
         super.onCreate(icicle);
         setRetainInstance(true);
         hasPayment = getArguments().getBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, false);
+        isAdHocForms = getArguments().getBoolean(CarePayConstants.ADHOC_FORMS, false);
         DTO dto = callback.getDto();
         selectedAppointment = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
         if (hasPayment) {
             patientPaymentPayload = ((PaymentsModel) dto).getPaymentPayload().getPatientPayments().getPayload().get(0);
             userImageUrl = ((PaymentsModel) dto).getPaymentPayload().getPatientBalances().get(0)
                     .getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
+        } else if (isAdHocForms) {
+            selectedAppointment = ((AppointmentsResultModel) dto).getPayload().getAppointments().get(0);
+            filledForms = ((AppointmentsResultModel) dto).getPayload().getFilledForms();
         } else {
             if (selectedAppointment == null) {
                 selectedAppointment = ((AppointmentsResultModel) dto).getPayload().getAppointments().get(0);
@@ -178,6 +191,8 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
             TextView totalPaidTextView = (TextView) view.findViewById(R.id.totalPaidTextView);
             totalPaidTextView.setText(currencyFormatter.format(patientPaymentPayload.getTotal()));
 
+        } else if (isAdHocForms) {
+            setUpForAdHocForms(view);
         } else {
             paymentTypeTextView.setText(Label.getLabel("payment_confirm_type_no_paid"));
         }
@@ -187,5 +202,20 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
             successMessage.setText(Label.getLabel("confirm_appointment_checkout"));
         }
 
+    }
+
+    private void setUpForAdHocForms(View view) {
+        ((TextView) view.findViewById(R.id.paymentDetailsLabel))
+                .setText(Label.getLabel("adhoc_final_step_signed_forms_label"));
+        ((TextView) view.findViewById(R.id.successMessage))
+                .setText(Label.getLabel("adhoc_final_step_message"));
+        view.findViewById(R.id.paymentTypeLayout).setVisibility(View.GONE);
+        view.findViewById(R.id.continueTextView).setVisibility(View.GONE);
+        view.findViewById(R.id.separator3).setVisibility(View.GONE);
+        RecyclerView signedFormsRecyclerView = (RecyclerView) view.findViewById(R.id.signedFormsRecyclerView);
+        signedFormsRecyclerView.setVisibility(View.VISIBLE);
+        signedFormsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        AdHocRecyclerViewAdapter adapter = new AdHocRecyclerViewAdapter(filledForms);
+        signedFormsRecyclerView.setAdapter(adapter);
     }
 }

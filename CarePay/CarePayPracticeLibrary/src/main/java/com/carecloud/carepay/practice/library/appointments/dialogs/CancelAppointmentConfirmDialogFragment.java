@@ -18,7 +18,6 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 /**
  * Created by lmenendez on 4/26/17
  */
-
 public class CancelAppointmentConfirmDialogFragment extends BaseDialogFragment {
 
     private AppointmentDTO appointmentDTO;
@@ -30,7 +29,7 @@ public class CancelAppointmentConfirmDialogFragment extends BaseDialogFragment {
         void showPracticeAppointmentDialog(AppointmentDTO appointmentDTO);
     }
 
-    public static CancelAppointmentConfirmDialogFragment newInstance(AppointmentDTO appointmentDTO){
+    public static CancelAppointmentConfirmDialogFragment newInstance(AppointmentDTO appointmentDTO) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, appointmentDTO);
 
@@ -40,31 +39,29 @@ public class CancelAppointmentConfirmDialogFragment extends BaseDialogFragment {
     }
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
-
-        try{
+        try {
             callback = (CancelAppointmentCallback) context;
-        }catch(ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement CancelAppointmentCallback");
         }
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-
         appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_cancel_appointment_confirm, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
-        if(appointmentDTO!=null) {
+    public void onViewCreated(View view, Bundle icicle) {
+        if (appointmentDTO != null) {
             String confirmMessageTemplate = Label.getLabel("appointment_confirm_cancel_message", null);
             TextView messageView = (TextView) view.findViewById(R.id.cancel_confirm_message);
             if (confirmMessageTemplate != null && confirmMessageTemplate.contains("%s")) {

@@ -43,6 +43,10 @@ public class CheckInTransitionsDTO {
     @Expose
     private TransitionDTO practiceMode = new TransitionDTO();
 
+    @SerializedName("adhoc_forms_patient_mode")
+    @Expose
+    private TransitionDTO adhocForms = new TransitionDTO();
+
     /**
      * Gets dismiss appointment.
      *
@@ -62,54 +66,42 @@ public class CheckInTransitionsDTO {
     }
 
     /**
-     *
-     * @return
-     * The practiceAppointments
+     * @return The practiceAppointments
      */
     public TransitionDTO getPracticeAppointments() {
         return practiceAppointments;
     }
 
     /**
-     *
-     * @param practiceAppointments
-     * The practice_appointments
+     * @param practiceAppointments The practice_appointments
      */
     public void setPracticeAppointments(TransitionDTO practiceAppointments) {
         this.practiceAppointments = practiceAppointments;
     }
 
     /**
-     *
-     * @return
-     * The cancelAppointment
+     * @return The cancelAppointment
      */
     public TransitionDTO getCancelAppointment() {
         return cancelAppointment;
     }
 
     /**
-     *
-     * @param cancelAppointment
-     * The cancel_appointment
+     * @param cancelAppointment The cancel_appointment
      */
     public void setCancelAppointment(TransitionDTO cancelAppointment) {
         this.cancelAppointment = cancelAppointment;
     }
 
     /**
-     *
-     * @return
-     * The checkinAppointment
+     * @return The checkinAppointment
      */
     public TransitionDTO getCheckinAppointment() {
         return checkinAppointment;
     }
 
     /**
-     *
-     * @param checkinAppointment
-     * The checkin_appointment
+     * @param checkinAppointment The checkin_appointment
      */
     public void setCheckinAppointment(TransitionDTO checkinAppointment) {
         this.checkinAppointment = checkinAppointment;
@@ -145,5 +137,13 @@ public class CheckInTransitionsDTO {
 
     public void setCheckoutPatientMode(TransitionDTO checkoutPatientMode) {
         this.checkoutPatientMode = checkoutPatientMode;
+    }
+
+    public TransitionDTO getAdhocForms() {
+        return adhocForms;
+    }
+
+    public void setAdhocForms(TransitionDTO adhocForms) {
+        this.adhocForms = adhocForms;
     }
 }

@@ -5,6 +5,7 @@ package com.carecloud.carepay.service.library;
  */
 public class CarePayConstants {
 
+
     private CarePayConstants() {
     }
 
@@ -139,5 +140,8 @@ public class CarePayConstants {
     public static final String EXTRA_HAS_PAYMENT = "hasPayment";
     public static final String EXTRA_APPOINTMENT_TRANSITIONS = "appointmentWorkflow";
     public static final String EXTRA_BUNDLE = "extra";
+
+    //AdHoc
+    public static final String ADHOC_FORMS = "adhocForms";
 
 }

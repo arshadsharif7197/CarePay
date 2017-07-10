@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.adhocforms.AdHocFormsListFragment;
 import com.carecloud.carepay.practice.library.appointments.dialogs.CancelAppointmentConfirmDialogFragment;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAppointmentDialog;
 import com.carecloud.carepay.practice.library.appointments.dtos.PracticeAppointmentDTO;
@@ -33,6 +34,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
@@ -43,6 +45,7 @@ import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -125,7 +128,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         patientListView.setCallback(new TwoColumnPatientListView.TwoColumnPatientListViewListener() {
             @Override
             public void onPatientTapped(Object dto) {
-
                 showPracticeAppointmentDialog((AppointmentDTO) dto);
             }
         });
@@ -501,6 +503,15 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         }
     };
 
+    private void showAdHocFragment(WorkflowDTO workflowDTO, AppointmentDTO appointmentDTO) {
+        Gson gson = new Gson();
+        AppointmentsResultModel appointmentsResultModel = gson
+                .fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
+        AdHocFormsListFragment fragment = AdHocFormsListFragment
+                .newInstance(appointmentsResultModel, appointmentDTO.getPayload().getId());
+        fragment.show(getSupportFragmentManager(), "forms");
+    }
+
     private void showResponsibilityFragment(PaymentsModel paymentsModel) {
         String tag = ResponsibilityFragmentDialog.class.getSimpleName();
         ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(paymentsModel);
@@ -573,9 +584,39 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             confirmAppointment(appointmentDTO);
         } else if (appointmentDTO.getPayload().canCheckIn()) {
             launchPatientModeCheckin(appointmentDTO);
-        } else if (appointmentDTO.getPayload().canCheckOut()){
+        } else if (appointmentDTO.getPayload().canCheckOut()) {
             launchPatientModeCheckout(appointmentDTO);
         }
+    }
+
+    @Override
+    public void onMiddleActionTapped(AppointmentDTO appointmentDTO) {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("patient_id", appointmentDTO.getPayload().getPatient().getPatientId());
+        TransitionDTO adHocForms = checkInDTO.getMetadata().getLinks().getAllPracticeForms();
+        getWorkflowServiceHelper().execute(adHocForms, getAdHocServiceCallback(appointmentDTO), queryMap);
+    }
+
+    WorkflowServiceCallback getAdHocServiceCallback(final AppointmentDTO appointmentDTO) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                showAdHocFragment(workflowDTO, appointmentDTO);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+                Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            }
+        };
     }
 
     @Override
