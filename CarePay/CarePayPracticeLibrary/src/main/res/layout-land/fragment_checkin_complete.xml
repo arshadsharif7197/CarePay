@@ -182,16 +182,15 @@
                     breeze:textKey="payment_details_label"
                     tools:text="PAYMENT DETAILS" />
 
-                <LinearLayout
-                    android:id="@+id/signedFormsLayout"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/signedFormsRecyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:orientation="vertical"
                     android:visibility="gone">
 
 
-                </LinearLayout>
+                </android.support.v7.widget.RecyclerView>
 
                 <LinearLayout
                     android:id="@+id/paymentTypeLayout"

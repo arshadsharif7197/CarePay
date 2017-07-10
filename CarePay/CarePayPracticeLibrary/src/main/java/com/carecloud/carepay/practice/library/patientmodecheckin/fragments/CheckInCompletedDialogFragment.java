@@ -4,15 +4,16 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.util.TypedValue;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.adhocforms.AdHocRecyclerViewAdapter;
 import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckCompleteInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.Defs;
@@ -20,8 +21,6 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
-import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.models.PatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -71,7 +70,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
     /**
      * @param appointmentsPayloadDTO the appointment balances
      * @param hasPayment             boolean indicating if there has been a payment in the process
-     * @param isAdHocForms          indicates if its in the adhoc flow
+     * @param isAdHocForms           indicates if its in the adhoc flow
      * @return an instance of CheckInCompletedDialogFragment
      */
     public static CheckInCompletedDialogFragment newInstance(AppointmentDTO appointmentsPayloadDTO,
@@ -213,34 +212,10 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
         view.findViewById(R.id.paymentTypeLayout).setVisibility(View.GONE);
         view.findViewById(R.id.continueTextView).setVisibility(View.GONE);
         view.findViewById(R.id.separator3).setVisibility(View.GONE);
-        ViewGroup viewGroup = (ViewGroup) view.findViewById(R.id.signedFormsLayout);
-        viewGroup.setVisibility(View.VISIBLE);
-        for (String filledForm : filledForms) {
-            createDynamicViewsForAdHocForms(viewGroup, filledForm);
-        }
-    }
-
-    private void createDynamicViewsForAdHocForms(ViewGroup viewGroup, String filledForm) {
-        int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                10, getResources().getDisplayMetrics());
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        CarePayTextView label = new CarePayTextView(getContext());
-        label.setLayoutParams(lp);
-        label.setPadding(0, padding, 0, padding);
-        label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        label.setText(filledForm);
-        label.setFontAttribute(CustomAssetStyleable.GOTHAM_ROUNDED_LIGHT);
-        label.setTextColor(getResources().getColor(R.color.textview_default_textcolor));
-
-        viewGroup.addView(label);
-        View separator = new View(getContext());
-        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                1, getResources().getDisplayMetrics());
-        LinearLayout.LayoutParams separatorLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                height);
-        separator.setLayoutParams(separatorLp);
-        separator.setBackgroundColor(getResources().getColor(R.color.divider_color));
-        viewGroup.addView(separator);
+        RecyclerView signedFormsRecyclerView = (RecyclerView) view.findViewById(R.id.signedFormsRecyclerView);
+        signedFormsRecyclerView.setVisibility(View.VISIBLE);
+        signedFormsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        AdHocRecyclerViewAdapter adapter = new AdHocRecyclerViewAdapter(filledForms);
+        signedFormsRecyclerView.setAdapter(adapter);
     }
 }
