@@ -99,16 +99,6 @@
                 app:customAssetFont="proxima_nova_regular"/>
         </LinearLayout>
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/time_stamp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dimen_5dp"
-            android:gravity="bottom|end"
-            android:textSize="@dimen/apt_list_missing_txt_size"
-            android:visibility="visible"
-            tools:text="9:23 PM"
-            app:customAssetFont="proxima_nova_semi_bold"/>
 
     </LinearLayout>
 

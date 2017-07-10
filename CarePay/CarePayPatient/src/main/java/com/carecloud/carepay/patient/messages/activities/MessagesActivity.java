@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
@@ -16,6 +17,7 @@ import com.carecloud.carepay.service.library.RestCallServiceCallback;
 import com.carecloud.carepay.service.library.RestCallServiceHelper;
 import com.carecloud.carepay.service.library.RestDef;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
@@ -117,6 +119,22 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
                 null,
                 fieldMap,
                 getString(R.string.msg_path_message), thread.getId());
+    }
+
+    @Override
+    public void postNewMessage(ProviderDTO providerDTO, String subject, String message) {
+
+    }
+
+    @Override
+    public void startNewThread() {
+        Toast.makeText(getContext(), "No endpoint ready for providers list", Toast.LENGTH_LONG).show();
+        //replaceFragment(new MessagesProvidersFragment(), true);
+    }
+
+    @Override
+    public void getProvidersList() {
+
     }
 
     @Override
