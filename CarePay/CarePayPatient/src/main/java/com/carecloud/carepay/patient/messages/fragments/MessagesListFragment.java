@@ -100,11 +100,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         List<Messages.Reply> threads = messagingDataModel.getMessages().getData();
         MessagesListAdapter adapter = (MessagesListAdapter) recyclerView.getAdapter();
         if(adapter != null){
-            if(refreshing){
-                adapter.setThreads(threads);
-            }else {
-                adapter.appendThreads(threads);
-            }
+            adapter.setThreads(threads);
         }else{
             adapter = new MessagesListAdapter(getContext(), threads, this, callback.getUserId());
             recyclerView.setAdapter(adapter);
