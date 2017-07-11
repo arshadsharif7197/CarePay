@@ -13,26 +13,13 @@ import java.util.List;
 
 public class ConsentFormPayloadDTO {
 
-
-    @SerializedName("demographics")
-    @Expose
-    private ConseFormDemoagraphicsPayloadDTO demographics = new ConseFormDemoagraphicsPayloadDTO();
-
     @SerializedName("appointments")
     @Expose
     private List<ConsentFormAppointmentsPayloadDTO> consentFormAppointmentPayload = new ArrayList<>();
 
     @Expose
-    @SerializedName("consent_forms_user_response")
+    @SerializedName("patient_forms_response")
     private List<ConsentFormUserResponseDTO> responses = new ArrayList<>();
-
-    public ConseFormDemoagraphicsPayloadDTO getDemographics() {
-        return demographics;
-    }
-
-    public void setDemographics(ConseFormDemoagraphicsPayloadDTO demographics) {
-        this.demographics = demographics;
-    }
 
     public List<ConsentFormAppointmentsPayloadDTO> getConsentFormAppointmentPayload() {
         return consentFormAppointmentPayload;
