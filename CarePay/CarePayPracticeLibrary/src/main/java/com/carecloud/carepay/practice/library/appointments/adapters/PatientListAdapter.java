@@ -136,6 +136,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         holder.initials.setText(patient.initials);
         holder.bind(patient, tapListener);
         holder.setTimeView(patient);
+        holder.itemView.setContentDescription(patient.name);
 
         if (!TextUtils.isEmpty(patient.photoUrl)) {
             Picasso.with(context).load(patient.photoUrl)
