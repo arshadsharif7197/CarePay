@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.messages.activities;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -138,6 +139,21 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
     }
 
     @Override
+    public void deleteMessageThread(Messages.Reply thread) {
+        String body = null;
+
+        restCallServiceHelper.executeRequest(RestDef.PUT,
+                HttpConstants.getMessagingBaseUrl(),
+                deleteThreadCallback,
+                true,
+                getString(R.string.msg_auth_token_key),
+                null,
+                null,
+                body,
+                getString(R.string.msg_path_message), thread.getId(), getString(R.string.msg_path_action_delete));
+    }
+
+    @Override
     public void onBackPressed(){
         if(getSupportFragmentManager().getBackStackEntryCount() == 1){
             setupToolbar();
@@ -208,6 +224,23 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
         public void onFailure(String errorMessage) {
             hideProgressDialog();
             showErrorNotification(errorMessage);
+        }
+    };
+
+    private RestCallServiceCallback deleteThreadCallback = new RestCallServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(JsonElement jsonElement) {
+            Log.d(MessagesActivity.class.getName(), "Thread Deleted Successfully");
+        }
+
+        @Override
+        public void onFailure(String errorMessage) {
+            Log.d(MessagesActivity.class.getName(), "Thread Delete Failed");
         }
     };
 

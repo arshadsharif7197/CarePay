@@ -29,6 +29,8 @@ public interface MessageNavigationCallback {
 
     void getProvidersList();
 
+    void deleteMessageThread(Messages.Reply thread);
+
     void displayToolbar(boolean display, String title);
 
 }

@@ -49,7 +49,7 @@
             android:padding="@dimen/dimen_20dp"
             tools:text="Undo"
             breeze:textKey="notification_undo"
-            app:customAssetFont="gotham_rounded_medium"
+            app:customAssetFont="proxima_nova_semi_bold"
             android:visibility="gone"/>
 
         <FrameLayout
