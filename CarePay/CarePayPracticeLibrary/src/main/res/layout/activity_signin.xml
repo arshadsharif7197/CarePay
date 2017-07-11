@@ -90,7 +90,8 @@
                     android:imeOptions="actionNext"
                     android:inputType="textEmailAddress"
                     app:customAssetFont="proxima_nova_semi_bold"
-                    breeze:hintKey="email_label" />
+                    breeze:hintKey="email_label"
+                    android:contentDescription="@string/content_description_email"/>
 
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -114,7 +115,8 @@
                         android:inputType="textPassword"
                         android:paddingEnd="@dimen/dimen_30dp"
                         app:customAssetFont="proxima_nova_semi_bold"
-                        breeze:hintKey="password_label" />
+                        breeze:hintKey="password_label"
+                        android:contentDescription="@string/content_description_password"/>
 
                 </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -142,7 +144,8 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22sp"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="signin_button" />
+                breeze:textKey="signin_button"
+                android:contentDescription="@string/content_description_sign_in"/>
 
         </RelativeLayout>
 

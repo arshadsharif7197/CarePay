@@ -49,6 +49,7 @@ public class ProviderSearchAdapter extends RecyclerView.Adapter<ProviderSearchAd
     public void onBindViewHolder(PracticeViewHolder holder, int position) {
         final AppointmentResourcesDTO practice = practiceList.get(position);
 
+        holder.item.setContentDescription(practice.getResource().getProvider().getName());
         holder.getPracticeName().setText(practice.getResource().getProvider().getName());
 
         holder.getPracticeCheck().setSelected(practice == selectedPractice);

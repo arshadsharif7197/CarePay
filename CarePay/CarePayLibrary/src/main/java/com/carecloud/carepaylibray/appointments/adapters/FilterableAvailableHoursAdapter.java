@@ -112,7 +112,8 @@ public class FilterableAvailableHoursAdapter extends RecyclerView.Adapter<Recycl
             DateUtil.getInstance().setDateRaw(upcomingStartTime);
             String time12Hour = DateUtil.getInstance().getTime12Hour();
             vhTimeSlot.getTextView().setText(time12Hour);
-
+            viewHolder.itemView.setContentDescription(time12Hour);
+            
             if (selectedLocations.size() == 1 || mode == LocationMode.SINGLE) {
                 //Single location selected no need to show Location in each Slot
                 vhTimeSlot.getTextViewLocation().setVisibility(View.GONE);

@@ -106,7 +106,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/list_dialog_min_height"
                 android:paddingLeft="@dimen/apt_available_hours_list_padding"
-                android:paddingRight="@dimen/apt_available_hours_list_padding" />
+                android:paddingRight="@dimen/apt_available_hours_list_padding"
+                android:contentDescription="@string/content_description_available_hours"/>
 
             <FrameLayout
                 android:id="@+id/progressview"
