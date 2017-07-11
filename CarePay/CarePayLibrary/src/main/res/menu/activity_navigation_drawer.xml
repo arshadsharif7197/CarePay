@@ -12,6 +12,11 @@
             android:icon="@drawable/ic_icn_drawer_payments_default"
             android:title="Payments" />
         <item
+            android:id="@+id/nav_messages"
+            android:icon="@drawable/icn_messages"
+            android:title="Messages" />            <!--android:icon=""-->
+
+        <item
             android:id="@+id/nav_purchase"
             android:icon="@drawable/icn_drawer_purchase_default"
             android:title="Shop" />

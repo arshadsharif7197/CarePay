@@ -17,6 +17,10 @@ public class ConsentFormDataModelDTO {
     @Expose
     private List<PracticeForm> practiceForms = new ArrayList<>();
 
+    @SerializedName("all_practice_forms")
+    @Expose
+    private List<PracticeForm> allPracticeForms = new ArrayList<>();
+
     public List<PracticeForm> getPracticeForms() {
         return practiceForms;
     }
@@ -25,5 +29,11 @@ public class ConsentFormDataModelDTO {
         this.practiceForms = practiceForms;
     }
 
+    public List<PracticeForm> getAllPracticeForms() {
+        return allPracticeForms;
+    }
 
+    public void setAllPracticeForms(List<PracticeForm> allPracticeForms) {
+        this.allPracticeForms = allPracticeForms;
+    }
 }

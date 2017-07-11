@@ -112,6 +112,10 @@
         <activity
             android:name=".checkout.AppointmentCheckoutActivity"
             android:screenOrientation="sensorPortrait" />
+        <activity
+            android:name=".messages.activities.MessagesActivity"
+            android:screenOrientation="sensorPortrait" />
+
     </application>
 
 </manifest>

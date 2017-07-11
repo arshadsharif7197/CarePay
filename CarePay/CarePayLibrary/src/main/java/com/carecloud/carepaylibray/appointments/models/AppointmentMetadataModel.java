@@ -73,4 +73,5 @@ public class AppointmentMetadataModel implements Serializable {
     public void setDataModels(ConsentFormDataModelDTO dataModels) {
         this.dataModels = dataModels;
     }
+
 }

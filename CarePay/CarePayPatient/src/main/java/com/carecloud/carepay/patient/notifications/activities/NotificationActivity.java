@@ -1,12 +1,9 @@
 package com.carecloud.carepay.patient.notifications.activities;
 
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.widget.TextView;
+import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
@@ -15,7 +12,6 @@ import com.carecloud.carepay.patient.notifications.fragments.NotificationFragmen
 import com.carecloud.carepay.patient.notifications.models.NotificationItem;
 import com.carecloud.carepay.patient.notifications.models.NotificationStatus;
 import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -42,28 +38,19 @@ public class NotificationActivity extends MenuPatientActivity implements Notific
     @Override
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
-        setContentView(R.layout.activity_navigation);
-        toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.toolbar);
-        drawer = (DrawerLayout) findViewById(com.carecloud.carepaylibrary.R.id.drawer_layout);
-        navigationView = (NavigationView) findViewById(com.carecloud.carepaylibrary.R.id.nav_view);
-        appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0)
-                .findViewById(com.carecloud.carepaylibrary.R.id.appointmentsDrawerIdTextView);
-
         notificationsDTO = getConvertedDTO(NotificationsDTO.class);
         NotificationFragment notificationFragment = NotificationFragment.newInstance(notificationsDTO);
         navigateToFragment(notificationFragment, false);
 
         initPresenter(null);
-
-        inflateDrawer();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_NOTIFICATION).setChecked(true);
-
-        displayToolbar(true, navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_NOTIFICATION).getTitle().toString());
+        MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_notification);
+        menuItem.setChecked(true);
+        displayToolbar(true, menuItem.getTitle().toString());
     }
 
     @Override

@@ -3,12 +3,15 @@ package com.carecloud.carepaylibray.utils;
 import android.text.format.DateFormat;
 import android.util.Log;
 
+import com.carecloud.carepay.service.library.label.Label;
+
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -510,6 +513,7 @@ public class DateUtil {
         return endsThisMonth(date);
     }
 
+
     /**
      * Check whether the provided date corresponds to the last day of the current month
      *
@@ -612,6 +616,39 @@ public class DateUtil {
      */
     public static int getDaysElapsedInclusive(Calendar start, Calendar end) {
         return getDaysElapsed(start, end) + 1;
+    }
+
+    /**
+     * Get the number of hours elapsed between two Dates
+     * @param start start date
+     * @param end end date
+     * @return hours elapsed
+     */
+    public static int getHoursElapsed(Date start, Date end){
+        Calendar startCal = Calendar.getInstance();
+        Calendar endCal = Calendar.getInstance();
+
+        startCal.setTime(start);
+        endCal.setTime(end);
+
+        return getHoursElapsed(startCal, endCal);
+    }
+
+    /**
+     * Get the number of hours elapsed between two Calendar instances
+     * @param start start calendar date
+     * @param end end calendar date
+     * @return hours elapsed
+     */
+    public static int getHoursElapsed(Calendar start, Calendar end){
+        if (end.compareTo(start) < 0) {//parameters in wrong order
+            Log.w(TAG, "calendar parameters out of order");
+            Calendar temp = start;
+            start = end;
+            end = temp;
+        }
+
+        return end.get(Calendar.HOUR_OF_DAY) - start.get(Calendar.HOUR_OF_DAY);
     }
 
     /**
@@ -837,4 +874,41 @@ public class DateUtil {
         Date date = getInstance().setDateRaw(rawDate).getDate();
         return DateFormat.format(FORMAT_HOURS_AM_PM, date).toString();
     }
+
+    /**
+     * Get contextual date for messaging
+     * @return contextual date string
+     */
+    public String toContextualMessageDate(){
+        if(isToday()){
+            return getHoursElapsed(getDate(), new Date()) + Label.getLabel("label_hours_ago");
+        }else {
+            int daysElapsed = getDaysElapsed(getDate(), new Date());
+            if(daysElapsed < 10){
+                return daysElapsed + Label.getLabel("label_days_ago");
+            }
+            return toStringWithFormat(FORMAT_MM_SLASH_DD_SLASH_YYYY);
+        }
+    }
+
+    /**
+     * Shift current date to GMT by copying current date & time fields to new GMT time zone calendar.
+     * This will cause a new date to be set shifted to the GMT time zone but maintaining the current time values
+     * 1/1/2001 13:00:00 EST will become 1/1/2001 13:00:00 GMT
+     * @return DateUtil instance with updated Date value
+     */
+    public DateUtil shiftDateToGMT(){
+        if(date == null){
+            date = new Date();
+        }
+        Calendar calLocal = Calendar.getInstance();
+        Calendar calGMT = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+
+        calLocal.setTime(getDate());
+        calGMT.set(calLocal.get(Calendar.YEAR), calLocal.get(Calendar.MONTH), calLocal.get(Calendar.DATE), calLocal.get(Calendar.HOUR_OF_DAY), calLocal.get(Calendar.MINUTE));
+
+        setDate(calGMT);
+        return this;
+    }
+
 }

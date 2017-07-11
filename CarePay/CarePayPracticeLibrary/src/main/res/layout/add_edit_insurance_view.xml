@@ -200,25 +200,37 @@
         android:background="@color/gray_divider" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
-        android:id="@+id/health_insurance_policy_holder_layout"
+        android:id="@+id/health_insurance_policy_first_name_holder_layout"
         style="@style/SigninSignupTextInputStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_10dp"
-        app:customAssetFont="gotham_rounded_medium"
+        app:customAssetFont="proxima_nova_semi_bold"
         app:hintTextAppearance="@style/FloatingLabelStyle">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
-            android:id="@+id/health_insurance_policy_holder"
+            android:id="@+id/health_insurance_policy_first_name_holder"
             style="@style/SigninSignupEditStyle"
             android:inputType="text"
             android:textAllCaps="true"
-            android:textSize="@dimen/text_size_24sp"
-            android:paddingStart="0dp"
-            android:paddingEnd="0dp"
-            tools:hint="Policy Holder"
             breeze:hintKey="demographics_insurance_policy_holder"
-            app:customAssetFont="gotham_rounded_book" />
+            app:customAssetFont="proxima_nova_regular" />
+    </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+        android:id="@+id/health_insurance_policy_last_name_holder_layout"
+        style="@style/SigninSignupTextInputStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:customAssetFont="proxima_nova_semi_bold"
+        app:hintTextAppearance="@style/FloatingLabelStyle">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+            android:id="@+id/health_insurance_policy_last_name_holder"
+            style="@style/SigninSignupEditStyle"
+            android:inputType="text"
+            android:textAllCaps="true"
+            breeze:hintKey="demographics_insurance_policy_holder_last_name"
+            app:customAssetFont="proxima_nova_regular" />
     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
     <LinearLayout

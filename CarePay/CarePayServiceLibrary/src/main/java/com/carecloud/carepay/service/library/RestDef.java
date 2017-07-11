@@ -16,7 +16,7 @@ public class RestDef {
     public static final String DELETE = "DELETE";
     public static final String PUT = "PUT";
 
-    @Retention(RetentionPolicy.CLASS)
+    @Retention(RetentionPolicy.SOURCE)
     @StringDef({GET, POST, DELETE, PUT})
     @interface RestMethod{}
 }

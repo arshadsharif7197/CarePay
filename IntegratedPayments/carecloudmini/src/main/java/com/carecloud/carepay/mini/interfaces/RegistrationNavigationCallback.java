@@ -3,6 +3,7 @@ package com.carecloud.carepay.mini.interfaces;
 import android.support.v4.app.Fragment;
 
 import com.carecloud.carepay.mini.models.response.RegistrationDataModel;
+import com.carecloud.carepay.mini.models.response.SignInAuth;
 import com.carecloud.carepay.mini.services.ServiceResponseDTO;
 
 /**
@@ -18,4 +19,6 @@ public interface RegistrationNavigationCallback {
     void setRegistrationDataModel(ServiceResponseDTO serviceResponseDTO);
 
     RegistrationDataModel getRegistrationDataModel();
+
+    void setAuthentication(SignInAuth.Cognito.Authentication authentication);
 }

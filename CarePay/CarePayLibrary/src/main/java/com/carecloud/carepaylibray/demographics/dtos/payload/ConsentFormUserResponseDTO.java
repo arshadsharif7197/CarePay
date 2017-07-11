@@ -17,6 +17,9 @@ public class ConsentFormUserResponseDTO {
     @Expose
     private JsonObject response;
 
+    @Expose
+    private JsonObject metadata;
+
     public String getFormId() {
         return formId;
     }
@@ -31,5 +34,13 @@ public class ConsentFormUserResponseDTO {
 
     public void setResponse(JsonObject response) {
         this.response = response;
+    }
+
+    public JsonObject getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(JsonObject metadata) {
+        this.metadata = metadata;
     }
 }

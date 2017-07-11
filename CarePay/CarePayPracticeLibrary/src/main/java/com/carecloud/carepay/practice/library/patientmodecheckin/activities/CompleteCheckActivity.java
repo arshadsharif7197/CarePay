@@ -45,11 +45,11 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
         Gson gson = new Gson();
         Bundle extra = getIntent().getBundleExtra(CarePayConstants.EXTRA_BUNDLE);
         boolean hasPayment = extra.getBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, false);
+        boolean isAdHocForms = extra.getBoolean(CarePayConstants.ADHOC_FORMS, false);
         long id = extra.getLong(CarePayConstants.EXTRA_WORKFLOW);
         workflowDTO = retrieveStoredWorkflow(id);
         if (workflowDTO != null) {
             workflowString = workflowDTO.toString();
-
             if (hasPayment) {
                 dto = gson.fromJson(workflowString, PaymentsModel.class);
             } else {
@@ -57,13 +57,14 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
             }
             String appointmentTransitionsWorkflow = extra.getString(CarePayConstants.EXTRA_APPOINTMENT_TRANSITIONS);
             if (appointmentTransitionsWorkflow != null) {
-                appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, appointmentTransitionsWorkflow);
+                appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class,
+                        appointmentTransitionsWorkflow);
             }
 
             AppointmentDTO appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, extra);
             if (savedInstanceState == null) {
-                replaceFragment(CheckInCompletedDialogFragment
-                        .newInstance(hasPayment, appointmentDTO), false);
+                replaceFragment(CheckInCompletedDialogFragment.newInstance(appointmentDTO,
+                        hasPayment, isAdHocForms), false);
             }
         }
     }

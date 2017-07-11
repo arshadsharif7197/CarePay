@@ -13,6 +13,7 @@ import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.models.data.SignInDTO;
 import com.carecloud.carepay.mini.models.data.UserDTO;
 import com.carecloud.carepay.mini.models.response.RegistrationDataModel;
+import com.carecloud.carepay.mini.models.response.SignInAuth;
 import com.carecloud.carepay.mini.services.ServiceCallback;
 import com.carecloud.carepay.mini.services.ServiceRequestDTO;
 import com.carecloud.carepay.mini.services.ServiceResponseDTO;
@@ -83,6 +84,11 @@ public class LoginFragment extends RegistrationFragment {
     }
 
     private void authenticateUser(){
+        SignInAuth.Cognito.Authentication authentication = callback.getRegistrationDataModel().getPayloadDTO().getSignInAuth().getCognito().getAuthentication();
+        if(authentication != null && authentication.getAccessToken() != null) {
+            callback.setAuthentication(authentication);
+        }
+
         ServiceRequestDTO authRequest = callback.getRegistrationDataModel().getMetadata().getTransitions().getAuthenticate();
         getServiceHelper().execute(authRequest, authenticateCallback);
     }
