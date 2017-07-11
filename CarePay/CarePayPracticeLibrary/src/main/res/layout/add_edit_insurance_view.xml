@@ -22,9 +22,9 @@
             android:gravity="start"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/text_size_24sp"
-            tools:text="Provider"
             app:customAssetFont="gotham_rounded_book"
-            breeze:textKey="demographics_documents_title_select_provider" />
+            breeze:textKey="demographics_documents_title_select_provider"
+            tools:text="Provider" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/health_insurance_providers"
@@ -35,9 +35,9 @@
             android:gravity="end"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_17sp"
-            tools:text="Blue Cross Blue Shield"
             app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="demographics_choose" />
+            breeze:textKey="demographics_choose"
+            tools:text="Blue Cross Blue Shield" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
             android:id="@+id/otherProviderEditText"
@@ -73,9 +73,9 @@
             android:gravity="start"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/text_size_24sp"
-            tools:text="Plan"
             app:customAssetFont="gotham_rounded_book"
-            breeze:textKey="demographics_documents_title_select_plan" />
+            breeze:textKey="demographics_documents_title_select_plan"
+            tools:text="Plan" />
 
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -86,9 +86,9 @@
             android:layout_centerVertical="true"
             android:textColor="@color/light_gray"
             android:textSize="@dimen/text_size_17sp"
-            tools:text="Choose Provider First"
             app:customAssetFont="gotham_rounded_book"
-            breeze:textKey="demographics_documents_choose_plan" />
+            breeze:textKey="demographics_documents_choose_plan"
+            tools:text="Choose Provider First" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/health_insurance_choose_plans"
@@ -112,8 +112,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/dimen_10dp"
-        android:baselineAligned="false">
+        android:baselineAligned="false"
+        android:paddingTop="@dimen/dimen_10dp">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/health_insurance_card_number_layout"
@@ -129,13 +129,13 @@
                 android:id="@+id/health_insurance_card_number"
                 style="@style/SigninSignupEditStyle"
                 android:inputType="text"
+                android:paddingEnd="0dp"
+                android:paddingStart="0dp"
                 android:textAllCaps="true"
                 android:textSize="@dimen/text_size_24sp"
-                android:paddingStart="0dp"
-                android:paddingEnd="0dp"
-                tools:hint="Insurance Card Number"
                 app:customAssetFont="gotham_rounded_book"
-                breeze:hintKey="demographics_insurance_card_number"/>
+                breeze:hintKey="demographics_insurance_card_number"
+                tools:hint="Insurance Card Number" />
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
@@ -152,13 +152,13 @@
                 android:id="@+id/health_insurance_group_number"
                 style="@style/SigninSignupEditStyle"
                 android:inputType="text"
+                android:paddingEnd="0dp"
+                android:paddingStart="0dp"
                 android:textAllCaps="true"
                 android:textSize="@dimen/text_size_24sp"
-                android:paddingStart="0dp"
-                android:paddingEnd="0dp"
-                tools:hint="Group Number"
                 app:customAssetFont="gotham_rounded_book"
-                breeze:hintKey="demographics_insurance_group_number"/>
+                breeze:hintKey="demographics_insurance_group_number"
+                tools:hint="Group Number" />
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
     </LinearLayout>
 
@@ -177,9 +177,9 @@
             android:gravity="start"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/text_size_24sp"
-            tools:text="Type"
             app:customAssetFont="gotham_rounded_book"
-            breeze:textKey="demographics_insurance_type_label"/>
+            breeze:textKey="demographics_insurance_type_label"
+            tools:text="Type" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/health_insurance_types"
@@ -189,9 +189,9 @@
             android:gravity="end"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_17sp"
-            tools:text="Primary"
+            app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="demographics_choose"
-            app:customAssetFont="gotham_rounded_medium" />
+            tools:text="Primary" />
     </LinearLayout>
 
     <View
@@ -204,16 +204,19 @@
         style="@style/SigninSignupTextInputStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_1dp"
         app:customAssetFont="proxima_nova_semi_bold"
         app:hintTextAppearance="@style/FloatingLabelStyle">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
             android:id="@+id/health_insurance_policy_first_name_holder"
             style="@style/SigninSignupEditStyle"
-            android:inputType="text"
+            android:digits="aábcdeéfghiíjklmnñoópqrstuúvwxyzAÁBCDEÉFGHIÍJKLMNÑOÓPQRSTUÚVWXYZ .'-"
+            android:inputType="textPersonName"
+            android:maxLength="100"
             android:textAllCaps="true"
-            breeze:hintKey="demographics_insurance_policy_holder"
-            app:customAssetFont="proxima_nova_regular" />
+            app:customAssetFont="proxima_nova_regular"
+            breeze:hintKey="demographics_insurance_policy_holder" />
     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
@@ -227,10 +230,12 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
             android:id="@+id/health_insurance_policy_last_name_holder"
             style="@style/SigninSignupEditStyle"
-            android:inputType="text"
+            android:digits="aábcdeéfghiíjklmnñoópqrstuúvwxyzAÁBCDEÉFGHIÍJKLMNÑOÓPQRSTUÚVWXYZ .'-"
+            android:inputType="textPersonName"
+            android:maxLength="100"
             android:textAllCaps="true"
-            breeze:hintKey="demographics_insurance_policy_holder_last_name"
-            app:customAssetFont="proxima_nova_regular" />
+            app:customAssetFont="proxima_nova_regular"
+            breeze:hintKey="demographics_insurance_policy_holder_last_name" />
     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
     <LinearLayout
@@ -248,9 +253,9 @@
             android:gravity="start"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/text_size_24sp"
-            tools:text="Relationship"
             app:customAssetFont="gotham_rounded_book"
-            breeze:textKey="demographics_insurance_relationship_label" />
+            breeze:textKey="demographics_insurance_relationship_label"
+            tools:text="Relationship" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/health_insurance_relationship"
@@ -260,9 +265,9 @@
             android:gravity="end"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_17sp"
-            tools:text="Spouse"
+            app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="demographics_choose"
-            app:customAssetFont="gotham_rounded_medium" />
+            tools:text="Spouse" />
     </LinearLayout>
 
     <View
@@ -274,8 +279,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/dimen_15dp">
+        android:layout_marginTop="@dimen/dimen_15dp"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -291,7 +296,7 @@
                 android:layout_height="120dp"
                 android:adjustViewBounds="true"
                 android:src="@drawable/icn_placeholder_document"
-                tools:ignore="ContentDescription"/>
+                tools:ignore="ContentDescription" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/demogrDocsFrontScanButton"
@@ -305,7 +310,7 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_13"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="demographics_insurance_retake_front_photo"/>
+                breeze:textKey="demographics_insurance_retake_front_photo" />
         </LinearLayout>
 
         <LinearLayout
@@ -322,7 +327,7 @@
                 android:layout_height="120dp"
                 android:adjustViewBounds="true"
                 android:src="@drawable/icn_placeholder_document"
-                tools:ignore="ContentDescription"/>
+                tools:ignore="ContentDescription" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/demogrDocsBackScanButton"
@@ -336,7 +341,7 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_13"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="demographics_insurance_retake_back_photo"/>
+                breeze:textKey="demographics_insurance_retake_back_photo" />
         </LinearLayout>
     </LinearLayout>
 
