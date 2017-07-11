@@ -211,7 +211,7 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
             android:id="@+id/health_insurance_policy_first_name_holder"
             style="@style/SigninSignupEditStyle"
-            android:digits="aábcdeéfghiíjklmnñoópqrstuúvwxyzAÁBCDEÉFGHIÍJKLMNÑOÓPQRSTUÚVWXYZ .'-"
+            android:digits="abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ "
             android:inputType="textPersonName"
             android:maxLength="100"
             android:textAllCaps="true"
@@ -230,7 +230,7 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
             android:id="@+id/health_insurance_policy_last_name_holder"
             style="@style/SigninSignupEditStyle"
-            android:digits="aábcdeéfghiíjklmnñoópqrstuúvwxyzAÁBCDEÉFGHIÍJKLMNÑOÓPQRSTUÚVWXYZ .'-"
+            android:digits="abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ "
             android:inputType="textPersonName"
             android:maxLength="100"
             android:textAllCaps="true"
