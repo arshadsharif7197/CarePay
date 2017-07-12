@@ -40,148 +40,181 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="horizontal"
-            android:layout_marginTop="@dimen/dp_10"
-            android:paddingBottom="@dimen/dp_60">
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/dp_10">
 
-            <RelativeLayout
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/practice_initials"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:adjustViewBounds="true"
-                    android:layout_above="@+id/practice_initials_text"
-                    android:src="@drawable/practice_initials_bkg"/>
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/practice_initials"
+                        android:layout_width="@dimen/image_select_image"
+                        android:layout_height="@dimen/image_select_image"
+                        android:layout_centerHorizontal="true"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/practice_initials_bkg"
+                        android:contentDescription="@string/content_logo"/>
+
+                    <com.carecloud.carepay.mini.views.CarePayTextView
+                        android:id="@+id/practice_initials_name"
+                        android:layout_width="@dimen/image_select_image"
+                        android:layout_height="@dimen/image_select_image"
+                        android:layout_alignTop="@id/practice_initials"
+                        android:layout_alignBottom="@id/practice_initials"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:maxLength="3"
+                        android:textColor="@color/practiceInitialsText"
+                        android:textSize="@dimen/practice_initials"
+                        android:textAllCaps="true"
+                        tools:text="PNdd"
+                        app:customFont="gotham_rounded_bold.otf"/>
+
+                    <com.carecloud.carepay.mini.views.CarePayTextView
+                        android:id="@+id/practice_initials_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_below="@id/practice_initials"
+                        android:gravity="center"
+                        android:textColor="@color/whiteText"
+                        android:textSize="@dimen/image_select_text"
+                        android:text="@string/registration_image_practice_initials"
+                        app:customFont="proximanova_semibold.otf"/>
+
+                    <ImageView
+                        android:id="@+id/practice_initials_select"
+                        android:layout_width="@dimen/image_select_icon"
+                        android:layout_height="@dimen/image_select_icon"
+                        android:src="@drawable/selected_badge"
+                        android:layout_alignStart="@id/practice_initials"
+                        android:contentDescription="@string/content_selected_icon"
+                        android:visibility="gone"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/carecloud_logo"
+                        android:layout_width="@dimen/image_select_image"
+                        android:layout_height="@dimen/image_select_image"
+                        android:layout_centerHorizontal="true"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/carecloud_logo_bkg"
+                        android:contentDescription="@string/content_logo"/>
+
+                    <com.carecloud.carepay.mini.views.CarePayTextView
+                        android:id="@+id/carecloud_logo_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_below="@id/carecloud_logo"
+                        android:gravity="center"
+                        android:textColor="@color/whiteText"
+                        android:textSize="@dimen/image_select_text"
+                        android:text="@string/registration_image_carecloud_logo"
+                        app:customFont="proximanova_semibold.otf"/>
+
+                    <ImageView
+                        android:id="@+id/carecloud_logo_select"
+                        android:layout_width="@dimen/image_select_icon"
+                        android:layout_height="@dimen/image_select_icon"
+                        android:src="@drawable/selected_badge"
+                        android:layout_alignStart="@id/carecloud_logo"
+                        android:contentDescription="@string/content_selected_icon"
+                        android:visibility="gone"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/practice_logo_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/practice_logo"
+                        android:layout_width="@dimen/image_select_image"
+                        android:layout_height="@dimen/image_select_image"
+                        android:layout_centerHorizontal="true"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/practice_no_image_bkg"
+                        android:contentDescription="@string/content_logo"/>
+
+                    <com.carecloud.carepay.mini.views.CarePayTextView
+                        android:id="@+id/practice_logo_unavailable"
+                        android:layout_width="@dimen/image_select_image"
+                        android:layout_height="@dimen/image_select_image"
+                        android:layout_alignTop="@id/practice_logo"
+                        android:layout_alignBottom="@id/practice_logo"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:textColor="@color/noImageText"
+                        android:textSize="@dimen/no_image_text"
+                        android:text="@string/image_unavailable"
+                        android:textAllCaps="true"
+                        android:visibility="gone"
+                        app:customFont="gotham_rounded_bold.otf"/>
+
+                    <com.carecloud.carepay.mini.views.CarePayTextView
+                        android:id="@+id/practice_logo_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_below="@+id/practice_logo"
+                        android:gravity="center"
+                        android:textColor="@color/whiteText"
+                        android:textSize="@dimen/image_select_text"
+                        android:text="@string/registration_image_practice_logo"
+                        app:customFont="proximanova_semibold.otf"/>
+
+                    <ImageView
+                        android:id="@+id/practice_logo_select"
+                        android:layout_width="@dimen/image_select_icon"
+                        android:layout_height="@dimen/image_select_icon"
+                        android:src="@drawable/selected_badge"
+                        android:layout_alignStart="@id/practice_logo"
+                        android:contentDescription="@string/content_selected_icon"
+                        android:visibility="gone"/>
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <com.carecloud.carepay.mini.views.CarePayTextView
-                    android:id="@+id/practice_initials_name"
-                    android:layout_width="match_parent"
+                    android:id="@+id/edit_initials"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/practice_initials"
-                    android:layout_alignBottom="@id/practice_initials"
+                    android:layout_weight="1"
                     android:gravity="center"
-                    android:textColor="@color/practiceInitialsText"
-                    android:textSize="@dimen/practice_initials"
+                    android:textColor="@color/blueText"
+                    android:textSize="@dimen/edit_initials_text"
                     android:textAllCaps="true"
-                    tools:text="PN"
+                    android:text="@string/registration_image_edit_initials"
                     app:customFont="gotham_rounded_bold.otf"/>
 
-                <com.carecloud.carepay.mini.views.CarePayTextView
-                    android:id="@+id/practice_initials_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:layout_alignParentBottom="true"
-                    android:gravity="center"
-                    android:textColor="@color/whiteText"
-                    android:textSize="@dimen/image_select_text"
-                    android:text="@string/registration_image_practice_initials"
-                    app:customFont="proximanova_semibold.otf"/>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
 
-                <ImageView
-                    android:id="@+id/practice_initials_select"
-                    android:layout_width="@dimen/image_select_icon"
-                    android:layout_height="@dimen/image_select_icon"
-                    android:src="@drawable/selected_badge"
-                    android:layout_alignLeft="@id/practice_initials"
-                    android:visibility="gone"/>
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:id="@+id/carecloud_logo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:adjustViewBounds="true"
-                    android:layout_above="@+id/carecloud_logo_text"
-                    android:src="@drawable/carecloud_logo_bkg"/>
-
-                <com.carecloud.carepay.mini.views.CarePayTextView
-                    android:id="@+id/carecloud_logo_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:layout_alignParentBottom="true"
-                    android:gravity="center"
-                    android:textColor="@color/whiteText"
-                    android:textSize="@dimen/image_select_text"
-                    android:text="@string/registration_image_carecloud_logo"
-                    app:customFont="proximanova_semibold.otf"/>
-
-                <ImageView
-                    android:id="@+id/carecloud_logo_select"
-                    android:layout_width="@dimen/image_select_icon"
-                    android:layout_height="@dimen/image_select_icon"
-                    android:src="@drawable/selected_badge"
-                    android:layout_alignLeft="@id/carecloud_logo"
-                    android:visibility="gone"/>
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/practice_logo_layout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:visibility="visible">
-
-                <ImageView
-                    android:id="@+id/practice_logo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/practice_logo_text"
-                    android:layout_centerHorizontal="true"
-                    android:adjustViewBounds="true"
-                    android:src="@drawable/practice_no_image_bkg"/>
-
-                <com.carecloud.carepay.mini.views.CarePayTextView
-                    android:id="@+id/practice_logo_unavailable"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/practice_logo"
-                    android:layout_alignBottom="@id/practice_logo"
-                    android:layout_alignStart="@id/practice_logo"
-                    android:layout_alignEnd="@id/practice_logo"
-                    android:gravity="center"
-                    android:textColor="@color/noImageText"
-                    android:textSize="@dimen/no_image_text"
-                    android:text="@string/image_unavailable"
-                    android:textAllCaps="true"
-                    android:visibility="gone"
-                    app:customFont="gotham_rounded_bold.otf"/>
-
-                <com.carecloud.carepay.mini.views.CarePayTextView
-                    android:id="@+id/practice_logo_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:layout_alignParentBottom="true"
-                    android:gravity="center"
-                    android:textColor="@color/whiteText"
-                    android:textSize="@dimen/image_select_text"
-                    android:text="@string/registration_image_practice_logo"
-                    app:customFont="proximanova_semibold.otf"/>
-
-                <ImageView
-                    android:id="@+id/practice_logo_select"
-                    android:layout_width="@dimen/image_select_icon"
-                    android:layout_height="@dimen/image_select_icon"
-                    android:src="@drawable/selected_badge"
-                    android:layout_alignLeft="@id/practice_logo"
-                    android:visibility="gone"/>
-
-            </RelativeLayout>
+            </LinearLayout>
 
         </LinearLayout>
 

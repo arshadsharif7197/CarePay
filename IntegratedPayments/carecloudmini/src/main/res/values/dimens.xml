@@ -17,6 +17,7 @@
     <dimen name="dp_60">60dp</dimen>
     <dimen name="dp_72">72dp</dimen>
     <dimen name="dp_100">100dp</dimen>
+    <dimen name="dp_130">130dp</dimen>
     <dimen name="dp_150">150dp</dimen>
     <dimen name="dp_380">380dp</dimen>
     <dimen name="dp_440">440dp</dimen>
@@ -24,6 +25,7 @@
     <dimen name="dp_592">592dp</dimen>
     <dimen name="dp_744">744dp</dimen>
 
+    <dimen name="sp_12">12sp</dimen>
     <dimen name="sp_14">14sp</dimen>
     <dimen name="sp_18">18sp</dimen>
     <dimen name="sp_24">24sp</dimen>
@@ -44,6 +46,7 @@
     <dimen name="input_padding_top">@dimen/dp_20</dimen>
     <dimen name="toolbar_height">@dimen/dp_60</dimen>
     <dimen name="image_select_icon">@dimen/dp_40</dimen>
+    <dimen name="image_select_image">@dimen/dp_130</dimen>
 
     <dimen name="instructons_text">@dimen/sp_24</dimen>
     <dimen name="button_text">@dimen/sp_24</dimen>
@@ -55,4 +58,5 @@
     <dimen name="practice_initials">@dimen/sp_48</dimen>
     <dimen name="error_text">@dimen/sp_18</dimen>
     <dimen name="no_image_text">@dimen/sp_14</dimen>
+    <dimen name="edit_initials_text">@dimen/sp_12</dimen>
 </resources>
