@@ -198,7 +198,8 @@
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22sp"
-                app:customAssetFont="gotham_rounded_medium" />
+                app:customAssetFont="gotham_rounded_medium"
+                android:contentDescription="@string/content_description_request_appointment"/>
 
         </LinearLayout>
     </LinearLayout>

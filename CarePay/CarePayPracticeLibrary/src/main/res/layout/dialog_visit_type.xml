@@ -75,7 +75,8 @@
             android:elevation="17dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:scrollbars="none" />
+            android:scrollbars="none"
+            android:contentDescription="@string/content_description_visit_type"/>
     </LinearLayout>
 
     <FrameLayout

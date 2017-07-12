@@ -80,7 +80,8 @@
                 android:id="@+id/search_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="@dimen/padding_xlarge" />
+                android:padding="@dimen/padding_xlarge"
+                android:contentDescription="@string/content_description_provider_list"/>
 
         </FrameLayout>
 
@@ -106,7 +107,8 @@
                 android:background="@drawable/green_rounded_button_selector"
                 android:enabled="false"
                 android:textSize="@dimen/text_size_22sp"
-                app:customAssetFont="gotham_rounded_medium" />
+                app:customAssetFont="gotham_rounded_medium"
+                android:contentDescription="@string/content_description_continue"/>
 
 
         </LinearLayout>
