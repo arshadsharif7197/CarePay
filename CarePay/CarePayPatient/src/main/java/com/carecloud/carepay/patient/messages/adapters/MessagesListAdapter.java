@@ -23,7 +23,7 @@ import java.util.List;
 
 public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapter.ViewHolder> {
 
-    public interface SelectMessageThreadCallback{
+    public interface SelectMessageThreadCallback {
         void onMessageSelected(Messages.Reply thread);
 
         void undoDeleteMessage(Messages.Reply thread);
@@ -37,11 +37,12 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
 
     /**
      * Constructor
-     * @param context context
-     * @param threads list of threads
+     *
+     * @param context  context
+     * @param threads  list of threads
      * @param callback callback
      */
-    public MessagesListAdapter(Context context, List<Messages.Reply> threads, SelectMessageThreadCallback callback, String userId){
+    public MessagesListAdapter(Context context, List<Messages.Reply> threads, SelectMessageThreadCallback callback, String userId) {
         this.context = context;
         this.threads = threads;
         this.callback = callback;
@@ -72,7 +73,7 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
 
         holder.timeStamp.setText(dateString);
 
-        if(removeThreads.contains(thread)) {
+        if (removeThreads.contains(thread)) {
             holder.swipeLayout.setVisibility(View.INVISIBLE);
             holder.displayUndoOption();
         }
@@ -90,6 +91,9 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
                 callback.undoDeleteMessage(thread);
             }
         });
+        if (!thread.isRead()) {
+            holder.unreadCount.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -99,11 +103,12 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
 
     /**
      * Get a thread by position
+     *
      * @param position position
      * @return Thread
      */
-    public Messages.Reply getThread(int position){
-        if(threads.size() > position && position > 0){
+    public Messages.Reply getThread(int position) {
+        if (threads.size() > position && position > 0) {
             return threads.get(position);
         }
         return null;
@@ -111,35 +116,39 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
 
     /**
      * set threads and reset recycler
+     *
      * @param threads new threads list
      */
-    public void setThreads(List<Messages.Reply> threads){
+    public void setThreads(List<Messages.Reply> threads) {
         this.threads = threads;
         notifyDataSetChanged();
     }
 
     /**
      * add threads to recycler
+     *
      * @param threads add threads
      */
-    public void appendThreads(List<Messages.Reply> threads){
+    public void appendThreads(List<Messages.Reply> threads) {
         this.threads.addAll(threads);
         notifyDataSetChanged();
     }
 
     /**
      * Mark thread as scheduled for Delete
+     *
      * @param thread Thread to delete
      */
-    public void scheduleMessageRemoval(Messages.Reply thread){
+    public void scheduleMessageRemoval(Messages.Reply thread) {
         removeThreads.add(thread);
     }
 
     /**
      * Remove Thread from delete queue
+     *
      * @param thread Thread to remove from delete queue
      */
-    public void clearMessageRemoval(Messages.Reply thread){
+    public void clearMessageRemoval(Messages.Reply thread) {
         removeThreads.remove(thread);
         int position = threads.indexOf(thread);
         notifyItemChanged(position);
@@ -147,9 +156,10 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
 
     /**
      * Finalize removing a thread
+     *
      * @param thread thread
      */
-    public void finalizeMessageRemoval(Messages.Reply thread){
+    public void finalizeMessageRemoval(Messages.Reply thread) {
         int position = threads.indexOf(thread);
         threads.remove(thread);
         notifyItemRemoved(position);
@@ -157,19 +167,19 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
     }
 
 
-    private String digProvider(Messages.Reply thread){
+    private String digProvider(Messages.Reply thread) {
         List<Messages.Reply> replies = thread.getReplies();
-        if(!replies.isEmpty()){
-            for(Messages.Reply reply : replies){
-                for(Messages.Participant participant : reply.getParticipants()){
-                    if(participant.getType() != null && participant.getType().equals("provider")){
+        if (!replies.isEmpty()) {
+            for (Messages.Reply reply : replies) {
+                for (Messages.Participant participant : reply.getParticipants()) {
+                    if (participant.getType() != null && participant.getType().equals("provider")) {
                         return participant.getName();
                     }
                 }
             }
-        }else{
-            for(Messages.Participant participant : thread.getParticipants()){
-                if(!participant.getUserId().equals(userId)){
+        } else {
+            for (Messages.Participant participant : thread.getParticipants()) {
+                if (!participant.getUserId().equals(userId)) {
                     return participant.getName();
                 }
             }
@@ -177,7 +187,7 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
         return null;
     }
 
-    class ViewHolder extends SwipeViewHolder{
+    class ViewHolder extends SwipeViewHolder {
 
         TextView unreadCount;
         ImageView providerImage;

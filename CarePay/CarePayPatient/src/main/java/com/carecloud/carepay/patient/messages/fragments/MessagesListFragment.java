@@ -47,29 +47,29 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
     private Handler handler;
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
-        try{
+        try {
             callback = (MessageNavigationCallback) context;
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement MessageNavigationCallback");
         }
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         handler = new Handler();
     }
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_messages_list, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         refreshLayoutView = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         refreshLayoutView.setOnRefreshListener(onRefreshListener);
 
@@ -90,28 +90,28 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         refreshing = true;
         refreshList();
     }
 
-    private void setAdapters(){
+    private void setAdapters() {
         List<Messages.Reply> threads = messagingDataModel.getMessages().getData();
         MessagesListAdapter adapter = (MessagesListAdapter) recyclerView.getAdapter();
-        if(adapter != null){
+        if (adapter != null) {
             adapter.setThreads(threads);
-        }else{
+        } else {
             adapter = new MessagesListAdapter(getContext(), threads, this, callback.getUserId());
             recyclerView.setAdapter(adapter);
         }
 
-        if(threads.isEmpty()){
+        if (threads.isEmpty()) {
             noMessagesLayout.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
             actionButton.setVisibility(View.GONE);
             refreshLayoutView.setEnabled(false);
-        }else{
+        } else {
             noMessagesLayout.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
             actionButton.setVisibility(View.VISIBLE);
@@ -119,18 +119,19 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         }
     }
 
-    private void refreshList(){
+    private void refreshList() {
         callback.getMessageThreads(0, 0);
     }
 
     /**
      * Update or set the display model
+     *
      * @param messagingDataModel updated model
      */
-    public void updateDisplayDataModel(MessagingDataModel messagingDataModel){
-        if(this.messagingDataModel == null || refreshing) {
+    public void updateDisplayDataModel(MessagingDataModel messagingDataModel) {
+        if (this.messagingDataModel == null || refreshing) {
             this.messagingDataModel = messagingDataModel;
-        }else{
+        } else {
             this.messagingDataModel.getMessages().setPaging(messagingDataModel.getMessages().getPaging());
             this.messagingDataModel.getMessages().getData().addAll(messagingDataModel.getMessages().getData());
         }
@@ -141,7 +142,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         refreshLayoutView.setRefreshing(refreshing);
     }
 
-    private boolean hasMorePages(){
+    private boolean hasMorePages() {
         Paging paging = messagingDataModel.getMessages().getPaging();
         return paging.getCurrentPage() != paging.getTotalPages();
     }
@@ -195,11 +196,11 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
-            if(hasMorePages()) {
+            if (hasMorePages()) {
                 int last = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-                if (last > recyclerView.getAdapter().getItemCount() - BOTTOM_ROW_OFFSET && !isPaging){
+                if (last > recyclerView.getAdapter().getItemCount() - BOTTOM_ROW_OFFSET && !isPaging) {
                     Paging paging = messagingDataModel.getMessages().getPaging();
-                    callback.getMessageThreads(paging.getCurrentPage()+1, paging.getResultsPerPage());
+                    callback.getMessageThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage());
                     isPaging = true;
                 }
             }
@@ -220,13 +221,13 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
     private class DeleteMessageRunnable implements Runnable {
         private Messages.Reply deleteThread;
 
-        void setDeleteThread(Messages.Reply deleteThread){
+        void setDeleteThread(Messages.Reply deleteThread) {
             this.deleteThread = deleteThread;
         }
 
         @Override
         public void run() {
-            if(deleteThread != null){
+            if (deleteThread != null) {
                 MessagesListAdapter messagesListAdapter = (MessagesListAdapter) recyclerView.getAdapter();
                 messagesListAdapter.finalizeMessageRemoval(deleteThread);
                 callback.deleteMessageThread(deleteThread);
