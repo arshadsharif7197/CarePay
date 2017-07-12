@@ -233,6 +233,9 @@ public class ServiceHelper {
         }catch (IOException ioe){
             ioe.printStackTrace();
         }
+        if(message == null){
+            message = "An unknown error has occurred, Please try again!";
+        }
         return message;
     }
 

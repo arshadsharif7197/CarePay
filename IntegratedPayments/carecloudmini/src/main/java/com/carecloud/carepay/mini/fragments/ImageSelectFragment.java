@@ -60,6 +60,14 @@ public class ImageSelectFragment extends RegistrationFragment {
             }
         });
 
+        View editInitials = view.findViewById(R.id.edit_initials);
+        editInitials.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.replaceFragment(new EditInitialsFragment(), false);
+            }
+        });
+
         initPracticeInfo(view);
     }
 
@@ -67,7 +75,11 @@ public class ImageSelectFragment extends RegistrationFragment {
         selectedPractice = callback.getRegistrationDataModel().getPayloadDTO().getUserPractices().get(0);
 
         final TextView practiceInitials = (TextView) view.findViewById(R.id.practice_initials_name);
-        practiceInitials.setText(StringUtil.getShortName(selectedPractice.getPracticeName()));
+        if(selectedPractice.getPracticeInitials()!=null){
+            practiceInitials.setText(selectedPractice.getPracticeInitials());
+        }else {
+            practiceInitials.setText(StringUtil.getShortName(selectedPractice.getPracticeName()));
+        }
 
         View practiceLogoLayout = view.findViewById(R.id.practice_logo_layout);
         final View practiceLogoUnavailable = view.findViewById(R.id.practice_logo_unavailable);
@@ -92,7 +104,6 @@ public class ImageSelectFragment extends RegistrationFragment {
                         public void onError() {
                             practiceLogo.setClickable(false);
                             practiceLogoUnavailable.setVisibility(View.VISIBLE);
-                            //// TODO: 6/25/17 go to summary screen
                         }
                     });
         }
@@ -100,7 +111,7 @@ public class ImageSelectFragment extends RegistrationFragment {
 
     private void setSelectedImageStyle(){
         getApplicationHelper().getApplicationPreferences().setImageStyle(selectedImageStyle);
-
+        callback.replaceFragment(new ReviewInfoFragment(), true);
     }
 
     private View.OnClickListener getChoiceClickListener(@Defs.ImageStyles final int imageStyle, final View selectionIcon){

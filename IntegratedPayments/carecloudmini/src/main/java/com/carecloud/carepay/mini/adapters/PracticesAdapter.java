@@ -20,7 +20,7 @@ import java.util.List;
 public class PracticesAdapter extends RecyclerView.Adapter<PracticesAdapter.ViewHolder> {
 
     public interface SelectPracticeListener{
-        void onPracticeSelected(String practiceID);
+        void onPracticeSelected(UserPracticeDTO selectedPractice);
     }
 
     private Context context;
@@ -56,7 +56,7 @@ public class PracticesAdapter extends RecyclerView.Adapter<PracticesAdapter.View
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onPracticeSelected(userPracticeDTO.getPracticeId());
+                listener.onPracticeSelected(userPracticeDTO);
                 if(lastIndicator != null){
                     lastIndicator.setSelected(false);
                 }
