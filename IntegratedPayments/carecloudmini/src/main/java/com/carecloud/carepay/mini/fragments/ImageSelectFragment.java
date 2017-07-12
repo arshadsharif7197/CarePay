@@ -98,7 +98,6 @@ public class ImageSelectFragment extends RegistrationFragment {
                         public void onSuccess() {
                             practiceLogo.setClickable(true);
                             practiceLogoUnavailable.setVisibility(View.GONE);
-                            //// TODO: 6/25/17 go to summary screen
                         }
 
                         @Override
