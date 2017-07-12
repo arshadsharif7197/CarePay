@@ -27,6 +27,10 @@
             android:name=".activities.RegistrationActivity"
             android:screenOrientation="sensorLandscape" />
 
+        <activity
+            android:name=".activities.WelcomeActivity"
+            android:screenOrientation="sensorLandscape" />
+
     </application>
 
 </manifest>

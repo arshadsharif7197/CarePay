@@ -25,8 +25,6 @@ public class ImageSelectFragment extends RegistrationFragment {
     private View nextButton;
     private ImageView practiceLogo;
 
-    private UserPracticeDTO selectedPractice;
-
     private @Defs.ImageStyles int selectedImageStyle;
     private View lastSelectionIcon;
 
@@ -72,7 +70,7 @@ public class ImageSelectFragment extends RegistrationFragment {
     }
 
     private void initPracticeInfo(View view){
-        selectedPractice = callback.getRegistrationDataModel().getPayloadDTO().getUserPractices().get(0);
+        UserPracticeDTO selectedPractice = callback.getRegistrationDataModel().getPayloadDTO().getUserPractices().get(0);
 
         final TextView practiceInitials = (TextView) view.findViewById(R.id.practice_initials_name);
         if(selectedPractice.getPracticeInitials()!=null){

@@ -41,6 +41,7 @@
     <dimen name="content_width_login">@dimen/dp_380</dimen>
     <dimen name="content_width_image">@dimen/dp_592</dimen>
     <dimen name="content_width_error">@dimen/dp_380</dimen>
+    <dimen name="content_width_welcome">@dimen/dp_380</dimen>
     <dimen name="button_padding_vertical">@dimen/dp_20</dimen>
     <dimen name="input_padding">@dimen/dp_15</dimen>
     <dimen name="input_padding_top">@dimen/dp_20</dimen>
