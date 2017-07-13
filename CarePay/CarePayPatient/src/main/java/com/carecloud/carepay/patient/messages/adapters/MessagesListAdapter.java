@@ -108,7 +108,7 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
      * @return Thread
      */
     public Messages.Reply getThread(int position) {
-        if (threads.size() > position && position > 0) {
+        if (threads.size() > position && position > -1) {
             return threads.get(position);
         }
         return null;
