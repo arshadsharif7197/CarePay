@@ -22,11 +22,27 @@
             android:paddingEnd="@dimen/dimen_5dp"
             android:paddingStart="@dimen/checkin_main_panel_start_padding">
 
+            <ImageView
+                android:id="@+id/goBackImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:src="@drawable/icon_adhoc_back" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/formsNamesRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="@dimen/dimen_10dp" />
+
             <View
                 android:id="@+id/separator"
                 android:layout_width="@dimen/checkin_separator_width"
                 android:layout_height="@dimen/dimen_1dp"
-                android:layout_centerVertical="true"
+                android:layout_above="@id/formsNamesRecyclerView"
                 android:layout_marginBottom="@dimen/dimen_20dp"
                 android:layout_marginTop="@dimen/dimen_20dp"
                 android:background="@color/gray_white" />
@@ -40,24 +56,6 @@
                 app:customAssetFont="gotham_rounded_bold"
                 breeze:textKey="adhoc_form_left_message"
                 tools:text="Read and sign the \nfollowing forms" />
-
-            <LinearLayout
-                android:id="@+id/formsNamesContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/separator"
-                android:orientation="vertical">
-
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/goBackImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginBottom="@dimen/dimen_20dp"
-                android:src="@drawable/icon_adhoc_back" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/goBackTextView"
