@@ -24,6 +24,11 @@ public class WorkflowDTO{
     @Expose
     private String state;
 
+    @Deprecated
+    public WorkflowDTO(){
+
+    }
+
     /**
      * @param workFlowRecord WorkFlow Record
      */

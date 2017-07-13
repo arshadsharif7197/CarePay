@@ -21,14 +21,24 @@
     <string name="registration_welcome_msg_hint">Welcome to Dr. Smith\'s office</string>
     <string name="registration_image_text">Please select the image you want to display</string>
     <string name="registration_image_title">Profile image</string>
-    <string name="registration_image_practice_logo">Practice Logo</string>
+    <string name="registration_image_practice_logo">Your Logo</string>
     <string name="registration_image_practice_initials">Practice Initials</string>
     <string name="registration_image_carecloud_logo">CareCloud Logo</string>
+    <string name="registration_image_edit_initials">Edit Initials</string>
+    <string name="registration_review_edit_image">Edit Image</string>
+    <string name="registration_review_title">Review Information</string>
+    <string name="registration_review_register_device">Register device</string>
+
+    <string name="welcome_waiting">Waiting for payment</string>
+    <string name="welcome_connecting">Connecting&#8230;</string>
 
     <string name="content_logo">logo</string>
     <string name="content_icon_header">header icon</string>
     <string name="content_radio_button">radio button</string>
     <string name="content_error_icon">error icon</string>
+    <string name="content_selected_icon">selected icon</string>
+    <string name="content_edit_button">edit button</string>
+    <string name="content_settings_button">settings button</string>
 
     <string name="error_email">Please provide a valid email address.</string>
     <string name="error_login">Sorry, an error occurred while logging in, please try again!</string>

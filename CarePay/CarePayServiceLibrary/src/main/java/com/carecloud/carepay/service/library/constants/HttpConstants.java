@@ -21,6 +21,8 @@ public class HttpConstants {
 
     private static  String apiStartKey;
 
+    private static String messagingBaseUrl;
+
     private static  String pushNotificationWebclientUrl;
 
     private static boolean useUnifiedAuth = false;
@@ -85,5 +87,13 @@ public class HttpConstants {
 
     public static void setMixpanelAPI(MixpanelAPI mixpanelAPI) {
         HttpConstants.mixpanelAPI = mixpanelAPI;
+    }
+
+    public static String getMessagingBaseUrl() {
+        return messagingBaseUrl;
+    }
+
+    public static void setMessagingBaseUrl(String messagingBaseUrl) {
+        HttpConstants.messagingBaseUrl = messagingBaseUrl;
     }
 }

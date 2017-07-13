@@ -10,6 +10,7 @@ import com.carecloud.carepay.patient.checkout.AppointmentCheckoutActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.patient.demographics.activities.NewDemographicsActivity;
 import com.carecloud.carepay.patient.demographics.activities.ReviewDemographicsActivity;
+import com.carecloud.carepay.patient.messages.activities.MessagesActivity;
 import com.carecloud.carepay.patient.notifications.activities.NotificationActivity;
 import com.carecloud.carepay.patient.payment.activities.PaymentActivity;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
@@ -163,6 +164,12 @@ public class PatientNavigationHelper {
                 info.putString("state", workflowDTO.getState());
                 break;
             }
+            case NavigationStateConstants.MESSAGES:
+                intent = new Intent(context, MessagesActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                context.startActivity(intent);
+                return;
+
             default: {
                 intent = new Intent(context, AppointmentsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

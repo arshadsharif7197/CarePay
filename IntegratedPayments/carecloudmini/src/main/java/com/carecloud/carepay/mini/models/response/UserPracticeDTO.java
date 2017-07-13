@@ -1,5 +1,6 @@
 package com.carecloud.carepay.mini.models.response;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -25,6 +26,9 @@ public class UserPracticeDTO {
 
     @SerializedName("practice_phone")
     private String practicePhone;
+
+    @Expose(deserialize = false, serialize = false)
+    private String practiceInitials;
 
     public String getUserId() {
         return userId;
@@ -74,4 +78,11 @@ public class UserPracticeDTO {
         this.practicePhone = practicePhone;
     }
 
+    public String getPracticeInitials() {
+        return practiceInitials;
+    }
+
+    public void setPracticeInitials(String practiceInitials) {
+        this.practiceInitials = practiceInitials;
+    }
 }

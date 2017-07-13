@@ -56,7 +56,8 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_22"
                 app:customAssetFont="proxima_nova_regular"
-                breeze:hintKey="practice_filter_search_patient" />
+                breeze:hintKey="practice_filter_search_patient"
+                android:contentDescription="@string/content_description_patient_search"/>
 
         </FrameLayout>
 
@@ -85,7 +86,8 @@
             android:background="@drawable/layout_white_background"
             android:paddingLeft="@dimen/dimen_11dp"
             android:paddingRight="@dimen/dimen_11dp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:contentDescription="@string/content_description_patient_list"/>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/patient_not_found_text"

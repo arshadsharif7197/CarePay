@@ -37,8 +37,9 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     private AppointmentDTO appointmentDTO;
     private int headerColor;
     private int timeColor;
-    private String leftAction;
-    private String rightAction;
+    private String leftActionLabel;
+    private String rightActionLabel;
+    private String middleActionLabel;
     private String photoUrl;
     private AppointmentDisplayStyle style;
 
@@ -49,6 +50,8 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         void onLeftActionTapped(AppointmentDTO appointmentDTO);
 
         void onRightActionTapped(AppointmentDTO appointmentDTO);
+
+        void onMiddleActionTapped(AppointmentDTO appointmentDTO);
     }
 
     @Override
@@ -68,10 +71,10 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     }
 
     /**
-     * @param style dialog style to determine buttons and colors
+     * @param style          dialog style to determine buttons and colors
      * @param appointmentDTO appointment information
-     * @param callback listener
-     * @return instance of PracticeAppointmentDialog 
+     * @param callback       listener
+     * @return instance of PracticeAppointmentDialog
      */
     public static PracticeAppointmentDialog newInstance(AppointmentDisplayStyle style,
                                                         AppointmentDTO appointmentDTO,
@@ -129,7 +132,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
         PatientModel patientDTO = appointmentDTO.getPayload().getPatient();
         photoUrl = patientDTO.getProfilePhoto();
-        if(photoUrl!=null){
+        if (photoUrl != null) {
             initializeProfilePhotoView();
         }
 
@@ -197,25 +200,26 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         profileImage.setVisibility(View.VISIBLE);
     }
 
-    private void setupDialogStyle(){
-        switch (this.style){
+    private void setupDialogStyle() {
+        switch (this.style) {
             case PENDING:
                 headerColor = R.color.dark_blue;
                 timeColor = R.color.colorPrimary;
-                leftAction = Label.getLabel("cancel_appointment_short_label");
-                rightAction = Label.getLabel("start_checkin_label");
+                leftActionLabel = Label.getLabel("cancel_appointment_short_label");
+                rightActionLabel = Label.getLabel("start_checkin_label");
                 break;
             case REQUESTED:
                 headerColor = R.color.lightning_yellow;
                 timeColor = R.color.transparent_70;
-                leftAction = Label.getLabel("reject_label");
-                rightAction = Label.getLabel("accept_label");
+                leftActionLabel = Label.getLabel("reject_label");
+                rightActionLabel = Label.getLabel("accept_label");
                 break;
             case CHECKED_IN:
                 headerColor = R.color.dark_blue;
                 timeColor = R.color.colorPrimary;
-                leftAction = Label.getLabel("cancel_appointment_short_label");
-                rightAction = Label.getLabel("start_checkout_label");
+                leftActionLabel = Label.getLabel("cancel_appointment_short_label");
+                rightActionLabel = Label.getLabel("start_checkout_label");
+                middleActionLabel = Label.getLabel("adhoc_show_forms_button_label");
                 break;
             default:
                 headerColor = R.color.colorPrimary;
@@ -224,24 +228,32 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     }
 
     private void initializeButtons() {
-        initializeButton(R.id.button_left_action, leftAction, new View.OnClickListener() {
+        initializeButton(R.id.button_left_action, leftActionLabel, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (null != callback) {
                     callback.onLeftActionTapped(appointmentDTO);
                 }
-
                 dismiss();
             }
         });
 
-        initializeButton(R.id.button_right_action, rightAction, new View.OnClickListener() {
+        initializeButton(R.id.button_right_action, rightActionLabel, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (null != callback) {
                     callback.onRightActionTapped(appointmentDTO);
                 }
+                dismiss();
+            }
+        });
 
+        initializeButton(R.id.button_middle_action, middleActionLabel, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (null != callback) {
+                    callback.onMiddleActionTapped(appointmentDTO);
+                }
                 dismiss();
             }
         });

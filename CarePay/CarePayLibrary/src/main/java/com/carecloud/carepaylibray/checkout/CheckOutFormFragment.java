@@ -78,7 +78,7 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHeader(Label.getLabel("checkout_rating_form_title"));
-
+        lastFormButtonLabel = Label.getLabel("checkout_forms_done");
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         if (toolbar != null && !callback.shouldAllowNavigateBack()) {
             toolbar.setNavigationIcon(null);
@@ -97,7 +97,7 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
                 userResponse = jsonFormSaveResponseArray.get(displayedFormsIndex);
             } else {
                 String uuid = payload.get("uuid").toString().replace("\"", "");
-                for (ConsentFormUserResponseDTO response : appointmentsResultModel.getPayload().getResponses()) {
+                for (ConsentFormUserResponseDTO response : appointmentsResultModel.getPayload().getPatientFormsResponse()) {
                     if (uuid.equals(response.getFormId())) {
                         JsonObject json = new JsonObject();
                         json.addProperty("uuid", response.getFormId());

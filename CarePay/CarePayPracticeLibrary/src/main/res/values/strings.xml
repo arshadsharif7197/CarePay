@@ -39,5 +39,16 @@
     <string name="entry_8">8</string>
     <string name="entry_9">9</string>
     <string name="entry_decimal">.</string>
+    <string name="content_description_sign_in">Sign In</string>
+    <string name="content_description_email">Email</string>
+    <string name="content_description_password">Password</string>
+    <string name="content_description_add_appointment">Add Appointment</string>
+    <string name="content_description_patient_search">Patient Search</string>
+    <string name="content_description_patient_list">Patients</string>
+    <string name="content_description_provider_list">Providers</string>
+    <string name="content_description_continue">Continue</string>
+    <string name="content_description_available_hours">Available Hours</string>
+    <string name="content_description_visit_type">Visit Type</string>
+    <string name="content_description_request_appointment">Request Appointment</string>
 
 </resources>

@@ -18,6 +18,8 @@ public class ApplicationPreferences {
     private static final String KEY_WELCOME_MSG = "key_welcome_msg";
     private static final String KEY_IMAGE_STYLE = "key_icon_style";
     private static final String KEY_PRACTICE_INFO = "key_practice_info";
+    private static final String KEY_DEVICE_TOKEN = "key_device_token";
+    private static final String KEY_DEVICE_ID = "key_device_id";
 
     private SharedPreferences sharedPreferences;
 
@@ -25,6 +27,21 @@ public class ApplicationPreferences {
         sharedPreferences = context.getSharedPreferences(APP_PREF, Context.MODE_PRIVATE);
     }
 
+    public String getDeviceToken(){
+        return sharedPreferences.getString(KEY_DEVICE_TOKEN, "");
+    }
+
+    public void setDeviceToken(String deviceToken){
+        sharedPreferences.edit().putString(KEY_DEVICE_TOKEN, deviceToken);
+    }
+
+    public String getDeviceId(){
+        return sharedPreferences.getString(KEY_DEVICE_ID, "");
+    }
+
+    public void setDeviceId(String deviceId){
+        sharedPreferences.edit().putString(KEY_DEVICE_ID, deviceId);
+    }
 
     public String getUsername(){
         return sharedPreferences.getString(KEY_USERNAME, "");
@@ -94,5 +111,14 @@ public class ApplicationPreferences {
     public void setUserPracticeDTO(UserPracticeDTO userPracticeDTO){
         String practiceString = DtoHelper.getStringDTO(userPracticeDTO);
         sharedPreferences.edit().putString(KEY_PRACTICE_INFO, practiceString).apply();
+    }
+
+    /**
+     * Convinience method for checking if device is registered
+     * @return true if registered
+     */
+    public boolean isDeviceRegistered(){
+        return !StringUtil.isNullOrEmpty(getDeviceToken()) &&
+                !StringUtil.isNullOrEmpty(getDeviceId());
     }
 }

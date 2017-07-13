@@ -12,12 +12,14 @@ public class NavigationStateConstants {
     public static final String PURCHASE = "purchase";
     public static final String NOTIFICATION = "notifications";
     public static final String MEDICATION_ALLERGIES = "medications_allergies";
+    public static final String MESSAGES = "messages";
 
     public static final String PRACTICE_HOME = "practice_home";
     public static final String PRACTICE_MODE_SIGNIN = "practice_mode_signin";
     public static final String PRACTICE_CHECKIN = "practice_checkin";
     public static final String PRACTICE_APPOINTMENTS = "practice_appointments";
     public static final String PRACTICE_PAYMENT = "practice_payments";
+    public static final String PRACTICE_ADHOC_FORMS = "adhoc_forms";
 
     public static final String PATIENT_HOME = "patient_home";
     public static final String PATIENT_MODE_SIGNIN = "patient_mode_signin";

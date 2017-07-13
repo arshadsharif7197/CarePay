@@ -69,10 +69,12 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
     private TextInputLayout cardNumberInput;
     private TextInputLayout groupNumberInput;
-    private TextInputLayout policyHolderInput;
+    private TextInputLayout policyFirstNameHolderInput;
+    private TextInputLayout policyLastNameHolderInput;
+    private EditText policyFirstNameHolder;
+    private EditText policyLastNameHolder;
     private EditText cardNumber;
     private EditText groupNumber;
-    private EditText policyHolder;
     private Button saveInsuranceButton;
 
     private TextView selectedProviderTextView;
@@ -284,8 +286,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         groupNumberInput = (TextInputLayout) findViewById(R.id.health_insurance_group_number_layout);
         groupNumber = (EditText) findViewById(R.id.health_insurance_group_number);
 
-        policyHolderInput = (TextInputLayout) findViewById(R.id.health_insurance_policy_holder_layout);
-        policyHolder = (EditText) findViewById(R.id.health_insurance_policy_holder);
+        policyFirstNameHolderInput = (TextInputLayout) findViewById(R.id.health_insurance_policy_first_name_holder_layout);
+        policyFirstNameHolder = (EditText) findViewById(R.id.health_insurance_policy_first_name_holder);
+        policyLastNameHolderInput = (TextInputLayout) findViewById(R.id.health_insurance_policy_last_name_holder_layout);
+        policyLastNameHolder = (EditText) findViewById(R.id.health_insurance_policy_last_name_holder);
 
         setTextListeners();
         setChangeFocusListeners();
@@ -366,9 +370,16 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             groupNumber.getOnFocusChangeListener().onFocusChange(groupNumber, false);
         }
 
-        policyHolder.setText(demographicInsurancePayload.getPolicyHolder());
-        if (!StringUtil.isNullOrEmpty(demographicInsurancePayload.getPolicyHolder()) && policyHolder.getOnFocusChangeListener() != null) {
-            policyHolder.getOnFocusChangeListener().onFocusChange(policyHolder, false);
+        policyFirstNameHolder.setText(demographicInsurancePayload.getPolicyFirstNameHolder());
+        if (!StringUtil.isNullOrEmpty(demographicInsurancePayload.getPolicyFirstNameHolder())
+                && policyFirstNameHolder.getOnFocusChangeListener() != null) {
+            policyFirstNameHolder.getOnFocusChangeListener().onFocusChange(policyFirstNameHolder, false);
+        }
+
+        policyLastNameHolder.setText(demographicInsurancePayload.getPolicyLastNameHolder());
+        if (!StringUtil.isNullOrEmpty(demographicInsurancePayload.getPolicyLastNameHolder())
+                && policyLastNameHolder.getOnFocusChangeListener() != null) {
+            policyLastNameHolder.getOnFocusChangeListener().onFocusChange(policyLastNameHolder, false);
         }
 
         String title = selectedProvider + (selectedPlan != null ? " " + selectedPlan : "");
@@ -426,7 +437,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             demographicInsurancePayloadDTO.setInsuranceGroupId(groupNumber.getText().toString());
 
             demographicInsurancePayloadDTO.setRelationship(selectedRelationshipOption.getName());
-            demographicInsurancePayloadDTO.setPolicyHolder(policyHolder.getText().toString());
+            demographicInsurancePayloadDTO.setPolicyFirstNameHolder(policyFirstNameHolder.getText()
+                    .toString().trim());
+            demographicInsurancePayloadDTO.setPolicyLastNameHolder(policyLastNameHolder.getText()
+                    .toString().trim());
 
             setupImageBase64();
 
@@ -607,7 +621,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         String defaultError = Label.getLabel("demographics_required_field_msg");
         cardNumber.addTextChangedListener(getValidInputTextWatcher(cardNumberInput, false, defaultError));
         groupNumber.addTextChangedListener(getValidInputTextWatcher(groupNumberInput, false, defaultError));
-        policyHolder.addTextChangedListener(getValidInputTextWatcher(policyHolderInput, false, defaultError));
+        policyFirstNameHolder.addTextChangedListener(getValidInputTextWatcher(policyFirstNameHolderInput, false, defaultError));
+        policyLastNameHolder.addTextChangedListener(getValidInputTextWatcher(policyLastNameHolderInput, false, defaultError));
 
         otherProviderEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -635,13 +650,17 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private void setChangeFocusListeners() {
         cardNumber.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(cardNumberInput, null));
         groupNumber.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(groupNumberInput, null));
-        policyHolder.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(policyHolderInput, null));
+        policyFirstNameHolder.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(policyFirstNameHolderInput, null));
+        policyLastNameHolder.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(policyLastNameHolderInput, null));
     }
 
     private void setActionListeners() {
         cardNumber.setOnEditorActionListener(getEditorActionListener(groupNumber));
-        groupNumber.setOnEditorActionListener(getEditorActionListener(policyHolder));
-        policyHolder.setOnEditorActionListener(getEditorActionListener(null));
+        groupNumber.setOnEditorActionListener(getEditorActionListener(policyFirstNameHolder));
+        policyFirstNameHolder.setOnEditorActionListener(getEditorActionListener(policyLastNameHolder));
+        policyLastNameHolder.setOnEditorActionListener(getEditorActionListener(null));
     }
 
     private TextWatcher getValidInputTextWatcher(final TextInputLayout inputLayout, final boolean requiredField, final String errorMessage) {

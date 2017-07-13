@@ -55,6 +55,9 @@ public class LinksDTO {
     @SerializedName("pinpad")
     @Expose
     private TransitionDTO pinpad = new TransitionDTO();
+    @SerializedName("all_practice_forms")
+    @Expose
+    private TransitionDTO allPracticeForms = new TransitionDTO();
 
 
     /**
@@ -216,5 +219,13 @@ public class LinksDTO {
 
     public void setPinpad(TransitionDTO pinpad) {
         this.pinpad = pinpad;
+    }
+
+    public TransitionDTO getAllPracticeForms() {
+        return allPracticeForms;
+    }
+
+    public void setAllPracticeForms(TransitionDTO allPracticeForms) {
+        this.allPracticeForms = allPracticeForms;
     }
 }
