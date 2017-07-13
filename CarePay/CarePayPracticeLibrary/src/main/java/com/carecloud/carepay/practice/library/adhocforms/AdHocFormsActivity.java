@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +12,12 @@ import android.widget.LinearLayout;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
+import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.CompleteCheckActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
@@ -25,7 +29,9 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.interfaces.DTO;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFormsInterface {
 
@@ -138,4 +144,33 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
                 .findFragmentById(R.id.formLayout);
         adHocFormFragment.navigateBack();
     }
+
+    @Override
+    public void onPinConfirmationCheck(boolean isCorrectPin, String pin) {
+        TransitionDTO transitionDTO = appointmentModel.getMetadata().getTransitions().getPracticeMode();
+        Map<String, String> query = new HashMap<>();
+        query.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+        query.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
+        getWorkflowServiceHelper().execute(transitionDTO, patientHomeCallback, query);
+    }
+
+    WorkflowServiceCallback patientHomeCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 }
