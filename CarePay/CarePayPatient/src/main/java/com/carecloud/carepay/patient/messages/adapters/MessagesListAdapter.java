@@ -177,13 +177,14 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
                     }
                 }
             }
-        } else {
-            for (Messages.Participant participant : thread.getParticipants()) {
-                if (!participant.getUserId().equals(userId)) {
-                    return participant.getName();
-                }
+        }
+
+        for (Messages.Participant participant : thread.getParticipants()) {
+            if (!participant.getUserId().equals(userId)) {
+                return participant.getName();
             }
         }
+
         return null;
     }
 
