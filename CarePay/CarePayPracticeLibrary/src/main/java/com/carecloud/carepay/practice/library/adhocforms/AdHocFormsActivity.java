@@ -53,13 +53,13 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         }
         findViewById(R.id.goBackImageView).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 showPinDialog();
             }
         });
         findViewById(R.id.goBackTextView).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 showPinDialog();
             }
         });
