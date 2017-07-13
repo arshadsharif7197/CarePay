@@ -31,6 +31,9 @@ android {
             buildConfigField 'String', 'API_BASE_URL', '"https://breeze-entry.development.carecloud.com"'
         }
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
