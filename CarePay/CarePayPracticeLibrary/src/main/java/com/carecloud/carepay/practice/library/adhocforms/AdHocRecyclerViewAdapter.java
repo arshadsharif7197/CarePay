@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
@@ -50,6 +49,7 @@ public class AdHocRecyclerViewAdapter extends RecyclerView.Adapter<AdHocRecycler
 
     public void highlightFormName(int displayedFormsIndex) {
         this.displayedFormsIndex = displayedFormsIndex;
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

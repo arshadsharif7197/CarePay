@@ -35,7 +35,6 @@
                 android:id="@+id/formsNamesRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@id/goBackImageView"
                 android:layout_centerVertical="true"
                 android:layout_marginBottom="@dimen/dimen_10dp" />
 
