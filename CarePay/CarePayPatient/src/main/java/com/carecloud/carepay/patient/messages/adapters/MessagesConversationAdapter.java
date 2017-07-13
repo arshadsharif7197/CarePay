@@ -3,7 +3,9 @@ package com.carecloud.carepay.patient.messages.adapters;
 import android.content.Context;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,8 @@ import com.carecloud.carepay.patient.messages.models.Messages;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
+
+import org.xml.sax.XMLReader;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -168,5 +172,33 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
             messageText = (TextView) itemView.findViewById(R.id.message_text);
 
         }
+    }
+
+    class ConversationTagHandler implements Html.TagHandler{
+        private static final String TAG_STRIKE = "strike";
+        private static final String TAG_STRIKE_S = "s";
+
+
+        @Override
+        public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
+            if(opening){
+                if(tag.equalsIgnoreCase(TAG_STRIKE_S) || tag.equalsIgnoreCase(TAG_STRIKE)){
+
+                }
+            }else{
+
+            }
+        }
+
+        private void markStart(Editable editable, Object style){
+            int length = editable.length();
+            editable.setSpan(style, length, length, Spanned.SPAN_MARK_MARK);
+        }
+
+        private void markEnd(Editable editable, Class style){
+
+        }
+
+        private class StrikeStyle {}
     }
 }
