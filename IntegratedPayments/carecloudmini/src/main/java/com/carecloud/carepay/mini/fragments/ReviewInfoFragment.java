@@ -11,8 +11,14 @@ import android.widget.TextView;
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.models.response.LocationsDTO;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
+import com.carecloud.carepay.mini.utils.ApplicationPreferences;
 import com.carecloud.carepay.mini.utils.Defs;
 import com.carecloud.carepay.mini.utils.StringUtil;
+import com.carecloud.carepay.mini.views.CustomErrorToast;
+import com.carecloud.shamrocksdk.registrations.DeviceRegistration;
+import com.carecloud.shamrocksdk.registrations.interfaces.Callback;
+import com.carecloud.shamrocksdk.registrations.models.Device;
+import com.google.gson.JsonElement;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -176,8 +182,16 @@ public class ReviewInfoFragment extends RegistrationFragment {
         if(selectedImageStyle == Defs.IMAGE_STYLE_PRACTICE_LOGO){
             cacheLogoToFile();
         }
-        getApplicationHelper().getApplicationPreferences().setUserPracticeDTO(selectedPractice);
+        ApplicationPreferences applicationPreferences = getApplicationHelper().getApplicationPreferences();
+        applicationPreferences.setUserPracticeDTO(selectedPractice);
 
+        Device device = new Device();
+        device.setDeviceName(applicationPreferences.getDeviceName());
+        device.setOrganizationId(applicationPreferences.getPracticeId());
+        device.setSerialNumber("test"+System.currentTimeMillis());
+
+
+        DeviceRegistration.register(device, registrationCallback);
     }
 
     private void cacheLogoToFile(){
@@ -198,5 +212,29 @@ public class ReviewInfoFragment extends RegistrationFragment {
 
         selectedPractice.setPracticePhoto(imageFile.getAbsolutePath());
     }
+
+    private Callback registrationCallback = new Callback() {
+        @Override
+        public void onPreExecute() {
+            buttonRegisterDevice.setEnabled(false);
+        }
+
+        @Override
+        public void onPostExecute(JsonElement jsonElement) {
+            buttonRegisterDevice.setEnabled(true);
+
+
+
+            ApplicationPreferences applicationPreferences = getApplicationHelper().getApplicationPreferences();
+            applicationPreferences.setDeviceId("");
+            applicationPreferences.setDeviceToken("");
+        }
+
+        @Override
+        public void onFailure(String errorMessage) {
+            buttonRegisterDevice.setEnabled(true);
+            CustomErrorToast.showWithMessage(getContext(), errorMessage);
+        }
+    };
 
 }
