@@ -48,11 +48,29 @@
                 android:layout_below="@id/separator"
                 android:orientation="vertical">
 
-                <!--<include-->
-                <!--android:id="@+id/checkin_flow_demographics"-->
-                <!--layout="@layout/item_checkin_flow" />-->
-
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/goBackImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:src="@drawable/icon_adhoc_back" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/goBackTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_toEndOf="@id/goBackImageView"
+                android:textColor="@color/white"
+                app:customAssetFont="gotham_rounded_light"
+                breeze:textKey="demographics_back_text"
+                tools:text="Back" />
 
         </RelativeLayout>
 

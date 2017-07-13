@@ -5,11 +5,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.TypedValue;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
+import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.CompleteCheckActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
@@ -49,9 +51,28 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
                 }
             }
         }
+        findViewById(R.id.goBackImageView).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPinDialog();
+            }
+        });
+        findViewById(R.id.goBackTextView).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPinDialog();
+            }
+        });
+
         if (savedInstanceState == null) {
             addFragment(AdHocFormFragment.newInstance(), false);
         }
+    }
+
+    private void showPinDialog() {
+        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(getContext(),
+                appointmentModel.getMetadata().getLinks().getPinpad(), false);
+        confirmationPinDialog.show();
     }
 
     private void createLabel(ViewGroup viewGroup, PracticeForm practiceForm) {
