@@ -906,6 +906,8 @@ public class DateUtil {
 
         calLocal.setTime(getDate());
         calGMT.set(calLocal.get(Calendar.YEAR), calLocal.get(Calendar.MONTH), calLocal.get(Calendar.DATE), calLocal.get(Calendar.HOUR_OF_DAY), calLocal.get(Calendar.MINUTE));
+        calGMT.getTime();
+        calGMT.setTimeZone(calLocal.getTimeZone());
 
         setDate(calGMT);
         return this;
