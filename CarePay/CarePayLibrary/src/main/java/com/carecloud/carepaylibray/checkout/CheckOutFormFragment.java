@@ -97,7 +97,7 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
                 userResponse = jsonFormSaveResponseArray.get(displayedFormsIndex);
             } else {
                 String uuid = payload.get("uuid").toString().replace("\"", "");
-                for (ConsentFormUserResponseDTO response : appointmentsResultModel.getPayload().getResponses()) {
+                for (ConsentFormUserResponseDTO response : appointmentsResultModel.getPayload().getPatientFormsResponse()) {
                     if (uuid.equals(response.getFormId())) {
                         JsonObject json = new JsonObject();
                         json.addProperty("uuid", response.getFormId());
