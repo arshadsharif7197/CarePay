@@ -17,9 +17,11 @@ import com.carecloud.carepay.mini.models.response.SignInAuth;
 import com.carecloud.carepay.mini.services.ServiceCallback;
 import com.carecloud.carepay.mini.services.ServiceRequestDTO;
 import com.carecloud.carepay.mini.services.ServiceResponseDTO;
+import com.carecloud.carepay.mini.services.carepay.RestCallServiceCallback;
 import com.carecloud.carepay.mini.utils.DtoHelper;
 import com.carecloud.carepay.mini.utils.StringUtil;
 import com.carecloud.carepay.mini.views.CustomErrorToast;
+import com.google.gson.JsonElement;
 
 /**
  * Created by lmenendez on 6/23/17
@@ -78,8 +80,10 @@ public class LoginFragment extends RegistrationFragment {
         SignInDTO signInDTO = new SignInDTO();
         signInDTO.setUser(userDTO);
 
-        ServiceRequestDTO loginRequest = callback.getRegistrationDataModel().getMetadata().getTransitions().getSignIn();
-        getServiceHelper().execute(loginRequest, signInCallback, DtoHelper.getStringDTO(signInDTO));
+//        ServiceRequestDTO loginRequest = callback.getRegistrationDataModel().getMetadata().getTransitions().getSignIn();
+//        getServiceHelper().execute(loginRequest, signInCallback, DtoHelper.getStringDTO(signInDTO));
+
+        getRestHelper().executeSignIn(signInRestCallback, DtoHelper.getStringDTO(signInDTO));
 
     }
 
@@ -136,6 +140,25 @@ public class LoginFragment extends RegistrationFragment {
             enableFields(true);
             Log.d(LoginFragment.class.getName(), exceptionMessage);
             CustomErrorToast.showWithMessage(getContext(), exceptionMessage);
+        }
+    };
+
+    private RestCallServiceCallback signInRestCallback = new RestCallServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            enableFields(false);
+        }
+
+        @Override
+        public void onPostExecute(JsonElement jsonElement) {
+            enableFields(true);
+        }
+
+        @Override
+        public void onFailure(String errorMessage) {
+            enableFields(true);
+            Log.d(LoginFragment.class.getName(), errorMessage);
+            CustomErrorToast.showWithMessage(getContext(), errorMessage);
         }
     };
 

@@ -6,10 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.carecloud.carepay.mini.HttpConstants;
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.services.ServiceCallback;
-import com.carecloud.carepay.mini.services.ServiceRequestDTO;
 import com.carecloud.carepay.mini.services.ServiceResponseDTO;
 
 /**
@@ -36,11 +34,13 @@ public class StartRegistrationFragment extends RegistrationFragment {
     }
 
     private void startRegistration(){
-        ServiceRequestDTO serviceRequestDTO = new ServiceRequestDTO();
-        serviceRequestDTO.setMethod(ServiceRequestDTO.METHOD_GET);
-        serviceRequestDTO.setUrl(HttpConstants.getApiStartUrl());
+        callback.replaceFragment(new LoginFragment(), true);
 
-        getApplicationHelper().getServiceHelper().execute(serviceRequestDTO, startRegistrationCallback);
+//        ServiceRequestDTO serviceRequestDTO = new ServiceRequestDTO();
+//        serviceRequestDTO.setMethod(ServiceRequestDTO.METHOD_GET);
+//        serviceRequestDTO.setUrl(HttpConstants.getApiStartUrl());
+//
+//        getApplicationHelper().getServiceHelper().execute(serviceRequestDTO, startRegistrationCallback);
     }
 
     private ServiceCallback startRegistrationCallback = new ServiceCallback() {

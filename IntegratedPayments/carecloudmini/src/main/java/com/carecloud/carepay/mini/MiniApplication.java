@@ -7,6 +7,7 @@ import android.support.multidex.MultiDexApplication;
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
 import com.carecloud.carepay.mini.models.response.SignInAuth;
 import com.carecloud.carepay.mini.services.ServiceHelper;
+import com.carecloud.carepay.mini.services.carepay.RestCallServiceHelper;
 import com.carecloud.carepay.mini.utils.ApplicationPreferences;
 import com.carecloud.carepay.mini.utils.PicassoHelper;
 import com.squareup.picasso.Picasso;
@@ -21,6 +22,8 @@ import java.util.Map;
 public class MiniApplication extends MultiDexApplication implements ApplicationHelper {
 
     private ServiceHelper serviceHelper;
+    private RestCallServiceHelper restHelper;
+
     private ApplicationPreferences applicationPreferences;
     private SignInAuth.Cognito.Authentication authentication;
 
@@ -52,12 +55,19 @@ public class MiniApplication extends MultiDexApplication implements ApplicationH
     @Override
     public ServiceHelper getServiceHelper(){
         if(serviceHelper == null){
-            if(applicationPreferences == null){
-                applicationPreferences = new ApplicationPreferences(this);
-            }
+            initApplicationPreferences();
             serviceHelper = new ServiceHelper(applicationPreferences);
         }
         return serviceHelper;
+    }
+
+    @Override
+    public RestCallServiceHelper getRestHelper() {
+        if(restHelper == null){
+            initApplicationPreferences();
+            restHelper = new RestCallServiceHelper(this);
+        }
+        return restHelper;
     }
 
     @Override
@@ -70,6 +80,11 @@ public class MiniApplication extends MultiDexApplication implements ApplicationH
     public void setAuthentication(SignInAuth.Cognito.Authentication authentication) {
         this.authentication = authentication;
         updatePicassoHelper();
+    }
+
+    @Override
+    public SignInAuth.Cognito.Authentication getAuthentication() {
+        return authentication;
     }
 
     private void initApplicationPreferences(){
