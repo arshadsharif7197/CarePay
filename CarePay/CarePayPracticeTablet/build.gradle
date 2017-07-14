@@ -70,6 +70,9 @@ android {
             buildConfigField 'boolean', 'useUnifiedAuth', 'true'
         }
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
