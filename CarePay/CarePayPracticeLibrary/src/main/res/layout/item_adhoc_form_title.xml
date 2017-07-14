@@ -10,16 +10,10 @@
         android:id="@+id/formNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/dimen_10dp"
-        android:paddingTop="@dimen/dimen_10dp"
-        android:textColor="@color/textview_default_textcolor"
-        android:textSize="@dimen/text_size_22sp"
+        android:layout_marginBottom="@dimen/dimen_10dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_16sp"
         app:customAssetFont="gotham_rounded_light"
         tools:text="Font name" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_1dp"
-        android:background="@color/divider_color" />
 
 </LinearLayout>

@@ -33,7 +33,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:src="@drawable/icn_lock_patient"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:contentDescription="@string/content_description_lock_icon"/>
 
             <FrameLayout
                 android:layout_width="0dp"
@@ -155,7 +156,8 @@
                     style="@style/HomeButtonTextStyle"
                     app:customAssetFont="gotham_rounded_book"
                     breeze:textKey="checkin_button"
-                    tools:text="@string/home_icon_check_in" />
+                    tools:text="@string/home_icon_check_in"
+                    android:contentDescription="@string/content_description_check_in"/>
 
                 <FrameLayout
                     android:layout_width="match_parent"

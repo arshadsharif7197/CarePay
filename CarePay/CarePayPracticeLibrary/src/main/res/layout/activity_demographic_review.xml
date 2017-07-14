@@ -71,7 +71,8 @@
             android:textSize="@dimen/text_size_16sp"
             breeze:textKey="demographics_exit"
             android:textColor="@color/colorPrimary"
-            app:customAssetFont="gotham_rounded_medium"/>
+            app:customAssetFont="gotham_rounded_medium"
+            android:contentDescription="@string/content_description_check_in_home"/>
 
     </RelativeLayout>
 
