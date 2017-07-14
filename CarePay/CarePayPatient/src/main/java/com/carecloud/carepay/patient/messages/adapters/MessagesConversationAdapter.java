@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.style.StrikethroughSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,9 +93,9 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
         }
 
         if(Build.VERSION.SDK_INT<Build.VERSION_CODES.N){
-            holder.messageText.setText(Html.fromHtml(message.getBody()));
+            holder.messageText.setText(Html.fromHtml(message.getBody(), null, new ConversationTagHandler()));
         }else {
-            holder.messageText.setText(Html.fromHtml(message.getBody(), Html.FROM_HTML_SEPARATOR_LINE_BREAK_PARAGRAPH));
+            holder.messageText.setText(Html.fromHtml(message.getBody(), Html.FROM_HTML_SEPARATOR_LINE_BREAK_PARAGRAPH, null, new ConversationTagHandler()));
         }
 
         if(lastMessage != null) {
@@ -183,20 +184,42 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
         public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
             if(opening){
                 if(tag.equalsIgnoreCase(TAG_STRIKE_S) || tag.equalsIgnoreCase(TAG_STRIKE)){
-
+                    markStart(output, new StrikeStyle());
                 }
             }else{
-
+                if(tag.equalsIgnoreCase(TAG_STRIKE_S) || tag.equalsIgnoreCase(TAG_STRIKE)){
+                    markEnd(output, StrikeStyle.class);
+                }
             }
         }
 
-        private void markStart(Editable editable, Object style){
-            int length = editable.length();
-            editable.setSpan(style, length, length, Spanned.SPAN_MARK_MARK);
+        private void markStart(Editable output, Object style){
+            int start = output.length();
+            output.setSpan(style, start, start, Spanned.SPAN_MARK_MARK);
         }
 
-        private void markEnd(Editable editable, Class style){
+        private void markEnd(Editable output, Class style){
+            Object opening = getLastOccurrence(output, style);
+            int start = output.getSpanStart(opening);
+            int end = output.length();
 
+            output.removeSpan(opening);
+            if(start != end){
+                output.setSpan(new StrikethroughSpan(), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+
+        private Object getLastOccurrence(Editable output, Class style){
+            Object[] styleTags = output.getSpans(0, output.length(), style);
+            if(styleTags.length < 1){
+                return null;
+            }
+            for(int i = styleTags.length; i > 0; i++){
+                if(output.getSpanFlags(styleTags[i-1]) == Spanned.SPAN_MARK_MARK){
+                    return styleTags[i-1];
+                }
+            }
+            return null;
         }
 
         private class StrikeStyle {}
