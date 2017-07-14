@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.MessageNavigationCallback;
+import com.carecloud.carepay.patient.messages.models.ProviderContact;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -31,7 +31,7 @@ public class MessagesNewThreadFragment extends BaseFragment {
     private EditText messageInput;
     private View buttonCreate;
 
-    private ProviderDTO provider;
+    private ProviderContact provider;
     private MessageNavigationCallback callback;
 
     /**
@@ -39,7 +39,7 @@ public class MessagesNewThreadFragment extends BaseFragment {
      * @param provider provider to use for sending message
      * @return MessagesNewThreadFragment
      */
-    public static MessagesNewThreadFragment newInstance(ProviderDTO provider){
+    public static MessagesNewThreadFragment newInstance(ProviderContact provider){
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, provider);
 
@@ -64,7 +64,7 @@ public class MessagesNewThreadFragment extends BaseFragment {
 
         Bundle args = getArguments();
         if(args != null){
-            provider = DtoHelper.getConvertedDTO(ProviderDTO.class, args);
+            provider = DtoHelper.getConvertedDTO(ProviderContact.class, args);
         }
     }
 
@@ -103,7 +103,7 @@ public class MessagesNewThreadFragment extends BaseFragment {
         TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
         title.setText(Label.getLabel("messaging_subject_title"));
 
-        toolbar.setNavigationIcon(R.drawable.icn_close);
+        toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,7 +137,7 @@ public class MessagesNewThreadFragment extends BaseFragment {
             public void afterTextChanged(Editable editable) {
                 if(!StringUtil.isNullOrEmpty(editable.toString())){
                     layout.setError(null);
-                    layout.setEnabled(false);
+                    layout.setErrorEnabled(false);
                     validateForm();
                 }else{
                     layout.setErrorEnabled(true);

@@ -13,8 +13,8 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.MessageNavigationCallback;
 import com.carecloud.carepay.patient.messages.adapters.MessagesProvidersAdapter;
+import com.carecloud.carepay.patient.messages.models.ProviderContact;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
 
     private RecyclerView providersRecycler;
 
-    private List<ProviderDTO> providers = new ArrayList<>();
+    private List<ProviderContact> providers = new ArrayList<>();
     private MessageNavigationCallback callback;
 
     @Override
@@ -43,7 +43,7 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
-        return inflater.inflate(R.layout.fragment_new_thread, container, false);
+        return inflater.inflate(R.layout.fragment_messages_provider_list, container, false);
     }
 
     @Override
@@ -53,12 +53,12 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
         providersRecycler = (RecyclerView) view.findViewById(R.id.providers_recycler);
         providersRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
+        setAdapter();
     }
 
     @Override
     public void onResume(){
         super.onResume();
-        callback.getProvidersList();
         callback.displayToolbar(false, null);
     }
 
@@ -67,7 +67,7 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
         TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
         title.setText(Label.getLabel("messaging_providers_title"));
 
-        toolbar.setNavigationIcon(R.drawable.icn_nav_back);
+        toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -78,6 +78,7 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
     }
 
     private void setAdapter(){
+        providers = callback.getProvidersList();
         MessagesProvidersAdapter adapter = new MessagesProvidersAdapter(getContext(), providers, this);
         providersRecycler.setAdapter(adapter);
     }
@@ -87,13 +88,14 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
      * Set or update the list of providers
      * @param providers providers list
      */
-    public void updateProvidersList(List<ProviderDTO> providers){
+    public void updateProvidersList(List<ProviderContact> providers){
         this.providers = providers;
         setAdapter();
     }
 
     @Override
-    public void onProviderSelected(ProviderDTO providerDTO) {
-        callback.replaceFragment(MessagesNewThreadFragment.newInstance(providerDTO), true);
+    public void onProviderSelected(ProviderContact provider) {
+        callback.replaceFragment(MessagesNewThreadFragment.newInstance(provider), false);
     }
+
 }

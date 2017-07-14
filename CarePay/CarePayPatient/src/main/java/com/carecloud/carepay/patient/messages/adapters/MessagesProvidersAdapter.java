@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
+import com.carecloud.carepay.patient.messages.models.ProviderContact;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
@@ -22,11 +22,11 @@ import java.util.List;
 public class MessagesProvidersAdapter extends RecyclerView.Adapter<MessagesProvidersAdapter.ViewHolder> {
 
     public interface SelectProviderCallback{
-        void onProviderSelected(ProviderDTO providerDTO);
+        void onProviderSelected(ProviderContact provider);
     }
 
     private Context context;
-    private List<ProviderDTO> providers = new ArrayList<>();
+    private List<ProviderContact> providers = new ArrayList<>();
     private SelectProviderCallback callback;
 
     /**
@@ -35,7 +35,7 @@ public class MessagesProvidersAdapter extends RecyclerView.Adapter<MessagesProvi
      * @param providers list of providers
      * @param callback callback
      */
-    public MessagesProvidersAdapter(Context context, List<ProviderDTO> providers, SelectProviderCallback callback){
+    public MessagesProvidersAdapter(Context context, List<ProviderContact> providers, SelectProviderCallback callback){
         this.context = context;
         this.providers = providers;
         this.callback = callback;
@@ -49,12 +49,11 @@ public class MessagesProvidersAdapter extends RecyclerView.Adapter<MessagesProvi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final ProviderDTO provider = providers.get(position);
+        final ProviderContact provider = providers.get(position);
 
         String providerName = provider.getName();
         holder.providerName.setText(providerName);
         holder.providerInitials.setText(StringUtil.getShortName(providerName));
-        holder.providerTitle.setText(provider.getSpecialty().getName());
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
