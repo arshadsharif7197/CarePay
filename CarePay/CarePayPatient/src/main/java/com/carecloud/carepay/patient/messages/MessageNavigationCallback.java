@@ -3,7 +3,9 @@ package com.carecloud.carepay.patient.messages;
 import android.support.v4.app.Fragment;
 
 import com.carecloud.carepay.patient.messages.models.Messages;
-import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
+import com.carecloud.carepay.patient.messages.models.ProviderContact;
+
+import java.util.List;
 
 /**
  * Created by lmenendez on 6/30/17
@@ -23,11 +25,11 @@ public interface MessageNavigationCallback {
 
     void postMessage(Messages.Reply thread, String message);
 
-    void postNewMessage(ProviderDTO providerDTO, String subject, String message);
+    void postNewMessage(ProviderContact providerContact, String subject, String message);
 
     void startNewThread();
 
-    void getProvidersList();
+    List<ProviderContact> getProvidersList();
 
     void deleteMessageThread(Messages.Reply thread);
 

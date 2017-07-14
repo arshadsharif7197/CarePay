@@ -437,8 +437,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             demographicInsurancePayloadDTO.setInsuranceGroupId(groupNumber.getText().toString());
 
             demographicInsurancePayloadDTO.setRelationship(selectedRelationshipOption.getName());
-            demographicInsurancePayloadDTO.setPolicyFirstNameHolder(policyFirstNameHolder.getText().toString());
-            demographicInsurancePayloadDTO.setPolicyLastNameHolder(policyLastNameHolder.getText().toString());
+            demographicInsurancePayloadDTO.setPolicyFirstNameHolder(policyFirstNameHolder.getText()
+                    .toString().trim());
+            demographicInsurancePayloadDTO.setPolicyLastNameHolder(policyLastNameHolder.getText()
+                    .toString().trim());
 
             setupImageBase64();
 

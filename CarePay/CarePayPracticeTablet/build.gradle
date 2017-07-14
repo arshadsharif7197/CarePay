@@ -8,8 +8,8 @@ android {
         applicationId "com.carecloud.carepay.practice.tablet"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 53
-        versionName "1.1.18"
+        versionCode 55
+        versionName "1.1.19"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -69,6 +69,9 @@ android {
 
             buildConfigField 'boolean', 'useUnifiedAuth', 'true'
         }
+    }
+    lintOptions {
+        abortOnError false
     }
 }
 

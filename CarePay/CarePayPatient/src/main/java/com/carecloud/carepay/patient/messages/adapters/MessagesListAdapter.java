@@ -56,7 +56,7 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         final Messages.Reply thread = threads.get(position);
 
         //reset
@@ -81,6 +81,8 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
         holder.swipeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                thread.setRead(true);
+                holder.unreadCount.setVisibility(View.GONE);
                 callback.onMessageSelected(thread);
             }
         });
@@ -91,8 +93,11 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
                 callback.undoDeleteMessage(thread);
             }
         });
+
         if (!thread.isRead()) {
             holder.unreadCount.setVisibility(View.VISIBLE);
+        } else {
+            holder.unreadCount.setVisibility(View.GONE);
         }
     }
 
@@ -108,7 +113,7 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
      * @return Thread
      */
     public Messages.Reply getThread(int position) {
-        if (threads.size() > position && position > 0) {
+        if (threads.size() > position && position > -1) {
             return threads.get(position);
         }
         return null;

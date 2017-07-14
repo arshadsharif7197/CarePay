@@ -50,5 +50,8 @@
     <string name="content_description_available_hours">Available Hours</string>
     <string name="content_description_visit_type">Visit Type</string>
     <string name="content_description_request_appointment">Request Appointment</string>
+    <string name="content_description_check_in_home">Check-in Home</string>
+    <string name="content_description_lock_icon">Lock Icon</string>
+    <string name="content_description_check_in">Check-In</string>
 
 </resources>

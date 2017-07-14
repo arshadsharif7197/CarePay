@@ -13,6 +13,7 @@
     <string name="msg_query_page">offset</string>
     <string name="msg_query_size">limit</string>
     <string name="msg_field_message_text">body</string>
+    <string name="msg_field_message_subject">subject</string>
     <string name="msg_field_participant_id">participants[][id]</string>
     <string name="msg_field_participant_name">participants[][name]</string>
 </resources>

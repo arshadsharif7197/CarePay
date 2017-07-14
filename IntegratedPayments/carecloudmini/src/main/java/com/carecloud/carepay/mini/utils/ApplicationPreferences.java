@@ -18,21 +18,12 @@ public class ApplicationPreferences {
     private static final String KEY_WELCOME_MSG = "key_welcome_msg";
     private static final String KEY_IMAGE_STYLE = "key_icon_style";
     private static final String KEY_PRACTICE_INFO = "key_practice_info";
-    private static final String KEY_DEVICE_TOKEN = "key_device_token";
     private static final String KEY_DEVICE_ID = "key_device_id";
 
     private SharedPreferences sharedPreferences;
 
     public ApplicationPreferences(Context context){
         sharedPreferences = context.getSharedPreferences(APP_PREF, Context.MODE_PRIVATE);
-    }
-
-    public String getDeviceToken(){
-        return sharedPreferences.getString(KEY_DEVICE_TOKEN, "");
-    }
-
-    public void setDeviceToken(String deviceToken){
-        sharedPreferences.edit().putString(KEY_DEVICE_TOKEN, deviceToken);
     }
 
     public String getDeviceId(){
@@ -118,7 +109,6 @@ public class ApplicationPreferences {
      * @return true if registered
      */
     public boolean isDeviceRegistered(){
-        return !StringUtil.isNullOrEmpty(getDeviceToken()) &&
-                !StringUtil.isNullOrEmpty(getDeviceId());
+        return !StringUtil.isNullOrEmpty(getDeviceId());
     }
 }

@@ -5,7 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_marginBottom="@dimen/dimen_30dp"
+    android:layout_marginTop="@dimen/dimen_30dp"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/dimen_30dp"
+    android:paddingTop="@dimen/dimen_30dp">
 
     <LinearLayout
         android:id="@+id/closeViewLayout"
@@ -33,7 +37,7 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/search_content"
         android:layout_width="@dimen/dialog_width"
         android:layout_height="wrap_content"
@@ -46,8 +50,10 @@
 
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:layout_gravity="center"
             android:background="@drawable/dialog_header_dark_blue"
             android:gravity="center"
@@ -57,29 +63,11 @@
             app:customAssetFont="gotham_rounded_bold"
             breeze:textKey="adhoc_screen_title" />
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:gravity="center"
-            android:paddingBottom="10dp"
-            android:paddingTop="@dimen/dimen_10dp"
-            android:textSize="@dimen/text_size_16sp"
-            app:customAssetFont="proxima_nova_regular"
-            breeze:textKey="adhoc_screen_message"
-            tools:text="You can either give this device for the patient to fill out \n the forms now or push them to the patient's device" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/formsRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:paddingEnd="@dimen/dimen_16dp"
-            android:paddingStart="@dimen/dimen_16dp" />
-
         <LinearLayout
+            android:id="@+id/footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:background="@drawable/patient_mode_dialog_body_bg"
             android:orientation="horizontal"
             android:padding="@dimen/dimen_10dp">
@@ -104,15 +92,38 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimen_10dp"
                 android:layout_weight="2"
-                android:enabled="false"
                 android:background="@drawable/bg_green_overlay"
+                android:enabled="false"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="adhoc_fill_now_button_label" />
 
-
         </LinearLayout>
 
-    </LinearLayout>
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/subTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/header"
+            android:background="@color/white"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingTop="@dimen/dimen_10dp"
+            android:textSize="@dimen/text_size_16sp"
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="adhoc_screen_message"
+            tools:text="You can either give this device for the patient to fill out \n the forms now or push them to the patient's device" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/formsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/footer"
+            android:layout_below="@id/subTitle"
+            android:background="@color/white"
+            android:paddingEnd="@dimen/dimen_16dp"
+            android:paddingStart="@dimen/dimen_16dp" />
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
