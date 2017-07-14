@@ -13,8 +13,8 @@ import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
 import com.carecloud.carepay.mini.utils.Defs;
 import com.carecloud.carepay.mini.utils.StringUtil;
 import com.carecloud.shamrocksdk.connections.DeviceConnection;
-import com.carecloud.shamrocksdk.registrations.interfaces.Callback;
-import com.google.gson.JsonElement;
+import com.carecloud.shamrocksdk.connections.models.Connection;
+import com.carecloud.shamrocksdk.registrations.interfaces.ConnectionCallback;
 import com.squareup.picasso.Picasso;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
@@ -90,20 +90,20 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void connectDevice(){
-        String token = applicationHelper.getApplicationPreferences().getDeviceToken();
         String id = applicationHelper.getApplicationPreferences().getDeviceId();
-        DeviceConnection.connect(token, id, connectionCallback);
+        DeviceConnection.connect(id, connectionCallback, this);
     }
 
-    private Callback connectionCallback = new Callback() {
+    private ConnectionCallback connectionCallback = new ConnectionCallback() {
         @Override
         public void onPreExecute() {
             message.setText(getString(R.string.welcome_connecting));
         }
 
         @Override
-        public void onPostExecute(JsonElement jsonElement) {
+        public void onPostExecute(Connection connection) {
             message.setText(getString(R.string.welcome_waiting));
+
         }
 
         @Override

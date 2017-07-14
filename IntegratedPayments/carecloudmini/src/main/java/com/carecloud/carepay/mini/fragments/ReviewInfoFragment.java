@@ -16,9 +16,9 @@ import com.carecloud.carepay.mini.utils.Defs;
 import com.carecloud.carepay.mini.utils.StringUtil;
 import com.carecloud.carepay.mini.views.CustomErrorToast;
 import com.carecloud.shamrocksdk.registrations.DeviceRegistration;
-import com.carecloud.shamrocksdk.registrations.interfaces.Callback;
+import com.carecloud.shamrocksdk.registrations.interfaces.RegistrationCallback;
 import com.carecloud.shamrocksdk.registrations.models.Device;
-import com.google.gson.JsonElement;
+import com.carecloud.shamrocksdk.registrations.models.Registration;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -191,7 +191,7 @@ public class ReviewInfoFragment extends RegistrationFragment {
         device.setSerialNumber("test"+System.currentTimeMillis());
 
 
-        DeviceRegistration.register(device, registrationCallback);
+        DeviceRegistration.register(device, registrationCallback, getContext());
     }
 
     private void cacheLogoToFile(){
@@ -213,22 +213,23 @@ public class ReviewInfoFragment extends RegistrationFragment {
         selectedPractice.setPracticePhoto(imageFile.getAbsolutePath());
     }
 
-    private Callback registrationCallback = new Callback() {
+    private RegistrationCallback registrationCallback = new RegistrationCallback() {
         @Override
         public void onPreExecute() {
             buttonRegisterDevice.setEnabled(false);
         }
 
         @Override
-        public void onPostExecute(JsonElement jsonElement) {
+        public void onPostExecute(Registration registration) {
             buttonRegisterDevice.setEnabled(true);
 
 
 
             ApplicationPreferences applicationPreferences = getApplicationHelper().getApplicationPreferences();
-            applicationPreferences.setDeviceId("");
-            applicationPreferences.setDeviceToken("");
+            applicationPreferences.setDeviceId(registration.getId());
+
         }
+
 
         @Override
         public void onFailure(String errorMessage) {
