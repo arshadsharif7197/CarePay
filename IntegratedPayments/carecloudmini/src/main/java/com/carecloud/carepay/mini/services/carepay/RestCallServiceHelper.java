@@ -25,7 +25,9 @@ import retrofit2.Response;
 
 public class RestCallServiceHelper {
     private static final String HEADER_KEY_AUTHORIZATION = "Authorization";
+    private static final String HEADER_KEY_AUTH_TYPE = "x-token-type";
     private static final String HEADER_KEY_USER = "username";
+    private static final String HEADER_VALUE_AUTH_TYPE = "jwt";
 
     private ApplicationHelper applicationHelper;
 
@@ -50,6 +52,7 @@ public class RestCallServiceHelper {
                 String idToken = applicationHelper.getAuthentication().getIdToken();
                 if (idToken != null) {
                     authHeaders.put(HEADER_KEY_AUTHORIZATION, idToken);
+                    authHeaders.put(HEADER_KEY_AUTH_TYPE, HEADER_VALUE_AUTH_TYPE);
                 }
             }
         }
@@ -104,6 +107,27 @@ public class RestCallServiceHelper {
         });
     }
 
+    public void executePreRegister(@NonNull final RestCallServiceCallback callback, @NonNull String mid){
+        RestCallService restCallService = RestServiceGenerator.getInstance().createService(RestCallService.class, getAuthHeaders());
+
+        callback.onPreExecute();
+        Call<JsonElement> signInCall = restCallService.getPreRegistration(mid);
+        signInCall.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                if(response.isSuccessful()){
+                    callback.onPostExecute(response.body());
+                }else{
+                    callback.onFailure(parseError(response, "data", "error"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable throwable) {
+                callback.onFailure(throwable.getMessage());
+            }
+        });
+    }
 
 
     private static String parseError(Response<?> response, @NonNull String... errorFields){

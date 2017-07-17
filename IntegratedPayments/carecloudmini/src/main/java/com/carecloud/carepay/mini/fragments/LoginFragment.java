@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.carecloud.carepay.mini.R;
-import com.carecloud.carepay.mini.models.data.SignInDTO;
 import com.carecloud.carepay.mini.models.data.UserDTO;
 import com.carecloud.carepay.mini.models.response.RegistrationDataModel;
 import com.carecloud.carepay.mini.models.response.SignInAuth;
@@ -21,7 +20,10 @@ import com.carecloud.carepay.mini.services.carepay.RestCallServiceCallback;
 import com.carecloud.carepay.mini.utils.DtoHelper;
 import com.carecloud.carepay.mini.utils.StringUtil;
 import com.carecloud.carepay.mini.views.CustomErrorToast;
+import com.carecloud.shamrocksdk.registrations.DeviceRegistration;
+import com.carecloud.shamrocksdk.registrations.interfaces.AccountInfoAdapter;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 /**
  * Created by lmenendez on 6/23/17
@@ -77,13 +79,13 @@ public class LoginFragment extends RegistrationFragment {
         userDTO.setAlias(emailInput.getText().toString());
         userDTO.setPassword(passwordInput.getText().toString());
 
-        SignInDTO signInDTO = new SignInDTO();
-        signInDTO.setUser(userDTO);
+//        SignInDTO signInDTO = new SignInDTO();
+//        signInDTO.setUser(userDTO);
 
 //        ServiceRequestDTO loginRequest = callback.getRegistrationDataModel().getMetadata().getTransitions().getSignIn();
 //        getServiceHelper().execute(loginRequest, signInCallback, DtoHelper.getStringDTO(signInDTO));
 
-        getRestHelper().executeSignIn(signInRestCallback, DtoHelper.getStringDTO(signInDTO));
+        getRestHelper().executeSignIn(signInRestCallback, DtoHelper.getStringDTO(userDTO));
 
     }
 
@@ -95,6 +97,10 @@ public class LoginFragment extends RegistrationFragment {
 
         ServiceRequestDTO authRequest = callback.getRegistrationDataModel().getMetadata().getTransitions().getAuthenticate();
         getServiceHelper().execute(authRequest, authenticateCallback);
+    }
+
+    private void getPreRegistration(){
+        DeviceRegistration.getDeviceMid(getContext(), accountInfoAdapter);
     }
 
     private void displayNextStep(){
@@ -151,7 +157,11 @@ public class LoginFragment extends RegistrationFragment {
 
         @Override
         public void onPostExecute(JsonElement jsonElement) {
-            enableFields(true);
+            Log.d(LoginFragment.class.getName(), jsonElement.toString());
+            SignInAuth signInAuth = DtoHelper.getConvertedDTO(SignInAuth.class, (JsonObject) jsonElement);
+            callback.setAuthentication(signInAuth.getCognito().getAuthentication());
+            getApplicationHelper().getApplicationPreferences().setUsername(emailInput.getText().toString());
+            getPreRegistration();
         }
 
         @Override
@@ -181,6 +191,38 @@ public class LoginFragment extends RegistrationFragment {
             enableFields(true);
             Log.d(LoginFragment.class.getName(), exceptionMessage);
             CustomErrorToast.showWithMessage(getContext(), exceptionMessage);
+        }
+    };
+
+    private RestCallServiceCallback preRegisterCallback = new RestCallServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(JsonElement jsonElement) {
+            enableFields(true);
+        }
+
+        @Override
+        public void onFailure(String errorMessage) {
+            enableFields(true);
+            Log.d(LoginFragment.class.getName(), errorMessage);
+            CustomErrorToast.showWithMessage(getContext(), errorMessage);
+        }
+    };
+
+    private AccountInfoAdapter accountInfoAdapter = new AccountInfoAdapter() {
+        @Override
+        public void onRetrieveMerchantId(String merchantId){
+            getRestHelper().executePreRegister(preRegisterCallback, merchantId);
+        }
+
+        @Override
+        public void onAccountConnectionFailure(String errorMessage) {
+            enableFields(true);
+            CustomErrorToast.showWithMessage(getContext(), errorMessage);
         }
     };
 

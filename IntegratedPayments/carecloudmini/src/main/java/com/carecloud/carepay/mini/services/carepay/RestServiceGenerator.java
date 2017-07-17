@@ -70,7 +70,7 @@ public class RestServiceGenerator {
      * @return service type class
      */
     public <S> S createService(Class<S> serviceClass, Map<String, String> headers) {
-        return createService(serviceClass, null, null);
+        return createService(serviceClass, headers, null);
     }
 
     /**
