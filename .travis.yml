@@ -34,4 +34,5 @@ android:
 script:
    - jdk_switcher use oraclejdk8
    - cd CarePay
-   - ./gradlew :CarePayPracticeTablet:assembleRelease --dry-run --profile --configure-on-demand
+
+   - ./gradlew :CarePayPracticeTablet:assembleRelease --profile --configure-on-demand
