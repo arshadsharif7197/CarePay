@@ -63,7 +63,7 @@
                     android:textColor="@color/optionl_gray"
                     android:textSize="13sp"
                     tools:text="You do not currently have any messages, but you can start a conversation with your provider. Tap New Message to begin"
-                    breeze:textKey="messaging_no_messages_description"
+                    breeze:textKey="messaging_emergency_message"
                     app:customAssetFont="proxima_nova_regular" />
 
                 <View
