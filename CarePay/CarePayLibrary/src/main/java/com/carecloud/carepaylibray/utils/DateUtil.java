@@ -651,7 +651,28 @@ public class DateUtil {
         return end.get(Calendar.HOUR_OF_DAY) - start.get(Calendar.HOUR_OF_DAY);
     }
 
+    /**
+     * Get the number of months elapsed between two Dates
+     * @param start start Date
+     * @param end end Date
+     * @return number of months elapsed
+     */
+    public static int getMonthsElapsed(Date start, Date end){
+        Calendar startCal = Calendar.getInstance();
+        Calendar endCal = Calendar.getInstance();
 
+        startCal.setTime(start);
+        endCal.setTime(end);
+
+        return getMonthsElapsed(startCal, endCal);
+    }
+
+    /**
+     * Get the number of months elapsed between two Calendar instances
+     * @param start start Calendar
+     * @param end end Calendar
+     * @return number of months elapsed
+     */
     public static int getMonthsElapsed(Calendar start, Calendar end){
         if (end.compareTo(start) < 0) {//parameters in wrong order
             Log.w(TAG, "calendar parameters out of order");
@@ -662,28 +683,51 @@ public class DateUtil {
 
         int years = end.get(Calendar.YEAR) - start.get(Calendar.YEAR);
         if (years == 0) {//is the time period within the current year range
-            return end.get(Calendar.DAY_OF_YEAR) - start.get(Calendar.DAY_OF_YEAR);
-        } else if (years == 1) {//this is probably a care where the range is carrying over at the end of the year
-            int daysLeftStartingYear = start.getActualMaximum(Calendar.DAY_OF_YEAR) - start.get(Calendar.DAY_OF_YEAR);
-            return daysLeftStartingYear + end.get(Calendar.DAY_OF_YEAR);
+            return end.get(Calendar.MONTH) - start.get(Calendar.MONTH);
+        } else if (years == 1) {//this is probably a case where the range is carrying over at the end of the year
+            int monthsRemainingStartYear = start.getActualMaximum(Calendar.MONTH) - start.get(Calendar.MONTH);
+            return monthsRemainingStartYear + end.get(Calendar.MONTH);
         } else {//need to figure out how many years we are looking at
             int fullYearCount = years - 1;
 
-            int leapYearOffset = 0;
-            int yearCheck = start.get(Calendar.YEAR);
-            for (int i = 0; i < fullYearCount; i++) {
-                yearCheck++;
-                if (yearCheck % 4 == 0) {
-                    leapYearOffset++;
-                }
-            }
-
-            int daysLeftStartingYear = start.getActualMaximum(Calendar.DAY_OF_YEAR) - start.get(Calendar.DAY_OF_YEAR);
-            return daysLeftStartingYear + fullYearCount * 365 + end.get(Calendar.DAY_OF_YEAR) + leapYearOffset;
+            int monthsRemainingStartYear  = start.getActualMaximum(Calendar.MONTH) - start.get(Calendar.MONTH);
+            return monthsRemainingStartYear + fullYearCount * start.getActualMaximum(Calendar.MONTH) + end.get(Calendar.MONTH);
         }
 
     }
 
+    /**
+     * Get the number of years elapsed between two Dates
+     * @param start start Date
+     * @param end end Date
+     * @return number of years elapsed
+     */
+    public static int getYearsElapsed(Date start, Date end) {
+        Calendar startCal = Calendar.getInstance();
+        Calendar endCal = Calendar.getInstance();
+
+        startCal.setTime(start);
+        endCal.setTime(end);
+
+        return getYearsElapsed(startCal, endCal);
+    }
+
+    /**
+     * Get the number of years elapsed between two Calendar Instances
+     * @param start start Calendar
+     * @param end end Calendar
+     * @return number of years elapsed
+     */
+    public static int getYearsElapsed(Calendar start, Calendar end){
+        if (end.compareTo(start) < 0) {//parameters in wrong order
+            Log.w(TAG, "calendar parameters out of order");
+            Calendar temp = start;
+            start = end;
+            end = temp;
+        }
+
+        return end.get(Calendar.YEAR) - start.get(Calendar.YEAR);
+    }
 
     /**
      * Check whether the provided days are in the same year
@@ -932,9 +976,20 @@ public class DateUtil {
                     return weeksElapsed + Label.getLabel("label_weeks_ago");
                 }
             }else if (isSameYear(getDate(), compareDate)){
-//                int monthsElapsed = getm
+                int monthsElapsed = getMonthsElapsed(getDate(), compareDate);
+                if(monthsElapsed == 1){
+                    return Label.getLabel("label_last_month");
+                }else{
+                    return monthsElapsed + Label.getLabel("label_months_ago");
+                }
+            }else{
+                int yearsElapsed = getYearsElapsed(getDate(), compareDate);
+                if(yearsElapsed == 1){
+                    return Label.getLabel("label_last_year");
+                }else{
+                    return yearsElapsed + Label.getLabel("label_years_ago");
+                }
             }
-            return toStringWithFormat(FORMAT_MM_SLASH_DD_SLASH_YYYY);
         }
     }
 
