@@ -214,13 +214,14 @@ public class MessagesConversationFragment extends BaseFragment {
                     }
                 }
             }
-        }else{
-            for(Messages.Participant participant : thread.getParticipants()){
-                if(!participant.getUserId().equals(callback.getUserId())){
-                    return participant.getName();
-                }
+        }
+
+        for(Messages.Participant participant : thread.getParticipants()){
+            if(!participant.getUserId().equals(callback.getUserId())){
+                return participant.getName();
             }
         }
+
         return null;
     }
 
