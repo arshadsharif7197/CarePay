@@ -29,6 +29,7 @@ public class DateUtil {
     private static final String FORMAT_MM_DASH_DD_DASH_YYYY = "MM-dd-yyyy";
     private static final String FORMAT_MM_SLASH_DD_SLASH_YYYY = "MM/dd/yyyy";
     private static final String FORMAT_HOURS_AM_PM = "h:mm a";
+    private static final String FORMAT_MONTH_DAY_TIME12 = "MMM dd, h:mm a";
 
     private static DateUtil instance;
     private String[] formats;
@@ -1013,6 +1014,10 @@ public class DateUtil {
 
         setDate(calGMT);
         return this;
+    }
+
+    public String getDateAsMonthDayTime(){
+        return toStringWithFormat(FORMAT_MONTH_DAY_TIME12);
     }
 
 }
