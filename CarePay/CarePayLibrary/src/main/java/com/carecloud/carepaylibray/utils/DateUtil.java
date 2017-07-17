@@ -651,6 +651,40 @@ public class DateUtil {
         return end.get(Calendar.HOUR_OF_DAY) - start.get(Calendar.HOUR_OF_DAY);
     }
 
+
+    public static int getMonthsElapsed(Calendar start, Calendar end){
+        if (end.compareTo(start) < 0) {//parameters in wrong order
+            Log.w(TAG, "calendar parameters out of order");
+            Calendar temp = start;
+            start = end;
+            end = temp;
+        }
+
+        int years = end.get(Calendar.YEAR) - start.get(Calendar.YEAR);
+        if (years == 0) {//is the time period within the current year range
+            return end.get(Calendar.DAY_OF_YEAR) - start.get(Calendar.DAY_OF_YEAR);
+        } else if (years == 1) {//this is probably a care where the range is carrying over at the end of the year
+            int daysLeftStartingYear = start.getActualMaximum(Calendar.DAY_OF_YEAR) - start.get(Calendar.DAY_OF_YEAR);
+            return daysLeftStartingYear + end.get(Calendar.DAY_OF_YEAR);
+        } else {//need to figure out how many years we are looking at
+            int fullYearCount = years - 1;
+
+            int leapYearOffset = 0;
+            int yearCheck = start.get(Calendar.YEAR);
+            for (int i = 0; i < fullYearCount; i++) {
+                yearCheck++;
+                if (yearCheck % 4 == 0) {
+                    leapYearOffset++;
+                }
+            }
+
+            int daysLeftStartingYear = start.getActualMaximum(Calendar.DAY_OF_YEAR) - start.get(Calendar.DAY_OF_YEAR);
+            return daysLeftStartingYear + fullYearCount * 365 + end.get(Calendar.DAY_OF_YEAR) + leapYearOffset;
+        }
+
+    }
+
+
     /**
      * Check whether the provided days are in the same year
      *
@@ -880,12 +914,25 @@ public class DateUtil {
      * @return contextual date string
      */
     public String toContextualMessageDate(){
+        Date compareDate = new Date();
         if(isToday()){
-            return getHoursElapsed(getDate(), new Date()) + Label.getLabel("label_hours_ago");
+            return getTime12Hour();
         }else {
-            int daysElapsed = getDaysElapsed(getDate(), new Date());
-            if(daysElapsed < 10){
+            int daysElapsed = getDaysElapsed(getDate(), compareDate);
+            if(daysElapsed < 7){
+                if(daysElapsed == 1){
+                    return Label.getLabel("label_yesterday");
+                }
                 return daysElapsed + Label.getLabel("label_days_ago");
+            }else if (daysElapsed < 28){
+                int weeksElapsed = daysElapsed / 7;
+                if(weeksElapsed == 1){
+                    return Label.getLabel("label_last_week");
+                }else{
+                    return weeksElapsed + Label.getLabel("label_weeks_ago");
+                }
+            }else if (isSameYear(getDate(), compareDate)){
+//                int monthsElapsed = getm
             }
             return toStringWithFormat(FORMAT_MM_SLASH_DD_SLASH_YYYY);
         }
