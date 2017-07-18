@@ -60,4 +60,5 @@
     <dimen name="error_text">@dimen/sp_18</dimen>
     <dimen name="no_image_text">@dimen/sp_14</dimen>
     <dimen name="edit_initials_text">@dimen/sp_12</dimen>
+    <dimen name="confirm_practice_text">@dimen/sp_32</dimen>
 </resources>
