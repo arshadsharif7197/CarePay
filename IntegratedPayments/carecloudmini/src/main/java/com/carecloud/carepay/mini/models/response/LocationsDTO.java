@@ -88,6 +88,14 @@ public class LocationsDTO {
         }
     }
 
+    @Override
+    public int hashCode(){
+        if(getGuid() != null){
+            return getGuid().hashCode();
+        }
+        return super.hashCode();
+    }
+
 
     public class Address {
 

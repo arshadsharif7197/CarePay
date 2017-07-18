@@ -147,5 +147,14 @@ public class UserPracticeDTO {
             return false;
         }
     }
+
+    @Override
+    public int hashCode(){
+        if(getPracticeId() != null){
+            return getPracticeId().hashCode();
+        }
+        return super.hashCode();
+    }
+
 }
 
