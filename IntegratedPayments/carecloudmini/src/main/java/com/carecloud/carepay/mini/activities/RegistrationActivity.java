@@ -9,7 +9,7 @@ import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.fragments.StartRegistrationFragment;
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
 import com.carecloud.carepay.mini.interfaces.RegistrationNavigationCallback;
-`import com.carecloud.carepay.mini.models.response.PreRegisterDataModel;
+import com.carecloud.carepay.mini.models.response.PreRegisterDataModel;
 import com.carecloud.carepay.mini.models.response.RegistrationDataModel;
 import com.carecloud.carepay.mini.models.response.SignInAuth;
 import com.carecloud.carepay.mini.services.ServiceResponseDTO;
