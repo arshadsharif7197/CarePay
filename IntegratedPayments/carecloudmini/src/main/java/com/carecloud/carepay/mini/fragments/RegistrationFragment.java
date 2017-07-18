@@ -11,6 +11,7 @@ import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
 import com.carecloud.carepay.mini.interfaces.RegistrationNavigationCallback;
 import com.carecloud.carepay.mini.services.ServiceHelper;
+import com.carecloud.carepay.mini.services.carepay.RestCallServiceHelper;
 
 /**
  * Created by lmenendez on 6/23/17
@@ -58,4 +59,7 @@ public abstract class RegistrationFragment extends Fragment {
         return getApplicationHelper().getServiceHelper();
     }
 
+    protected RestCallServiceHelper getRestHelper(){
+        return getApplicationHelper().getRestHelper();
+    }
 }

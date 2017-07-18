@@ -8,7 +8,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class SignInAuth {
 
-    @SerializedName("cognito")
+//    @SerializedName("cognito")
+    @SerializedName("body")
     private Cognito cognito = new Cognito();
 
     public Cognito getCognito() {
@@ -21,7 +22,8 @@ public class SignInAuth {
 
     public class Cognito {
 
-        @SerializedName("authentication")
+//        @SerializedName("authentication")
+        @SerializedName("AuthenticationResult")
         private Authentication authentication = new Authentication();
 
         public Authentication getAuthentication() {
