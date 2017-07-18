@@ -178,16 +178,17 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
     class ConversationTagHandler implements Html.TagHandler{
         private static final String TAG_STRIKE = "strike";
         private static final String TAG_STRIKE_S = "s";
+        private static final String TAG_DEL = "del";
 
 
         @Override
         public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
             if(opening){
-                if(tag.equalsIgnoreCase(TAG_STRIKE_S) || tag.equalsIgnoreCase(TAG_STRIKE)){
+                if(tag.equalsIgnoreCase(TAG_STRIKE_S) || tag.equalsIgnoreCase(TAG_STRIKE) || tag.equalsIgnoreCase(TAG_DEL)){
                     markStart(output, new StrikeStyle());
                 }
             }else{
-                if(tag.equalsIgnoreCase(TAG_STRIKE_S) || tag.equalsIgnoreCase(TAG_STRIKE)){
+                if(tag.equalsIgnoreCase(TAG_STRIKE_S) || tag.equalsIgnoreCase(TAG_STRIKE) || tag.equalsIgnoreCase(TAG_DEL)){
                     markEnd(output, StrikeStyle.class);
                 }
             }
