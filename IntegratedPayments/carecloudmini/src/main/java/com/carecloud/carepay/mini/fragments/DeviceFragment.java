@@ -42,6 +42,11 @@ public class DeviceFragment extends RegistrationFragment {
         nameInput = (EditText) view.findViewById(R.id.input_device_name);
         nameInput.addTextChangedListener(emptyTextWatcher);
 
+        String selectedName = getApplicationHelper().getApplicationPreferences().getDeviceName();
+        if(StringUtil.isNullOrEmpty(selectedName)){
+            nameInput.setText(selectedName);
+        }
+
 //        welcomeInput = (EditText) view.findViewById(R.id.input_welcome);
 //        welcomeInput.addTextChangedListener(emptyTextWatcher);
 

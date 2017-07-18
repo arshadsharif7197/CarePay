@@ -26,6 +26,7 @@ public class PracticesAdapter extends RecyclerView.Adapter<PracticesAdapter.View
     private Context context;
     private SelectPracticeListener listener;
     private List<UserPracticeDTO> practices = new ArrayList<>();
+    private UserPracticeDTO selectedPractice;
 
     private View lastIndicator;
 
@@ -35,10 +36,11 @@ public class PracticesAdapter extends RecyclerView.Adapter<PracticesAdapter.View
      * @param practices list of practices
      * @param listener practice selection listener
      */
-    public PracticesAdapter(Context context, List<UserPracticeDTO> practices, SelectPracticeListener listener){
+    public PracticesAdapter(Context context, List<UserPracticeDTO> practices, SelectPracticeListener listener, UserPracticeDTO selectedPractice){
         this.context = context;
         this.practices = practices;
         this.listener = listener;
+        this.selectedPractice = selectedPractice;
     }
 
     @Override
@@ -50,9 +52,13 @@ public class PracticesAdapter extends RecyclerView.Adapter<PracticesAdapter.View
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final UserPracticeDTO userPracticeDTO = practices.get(position);
+        boolean isSelected = userPracticeDTO.equals(selectedPractice);
 
         holder.listItemText.setText(userPracticeDTO.getPracticeName());
-        holder.listItemIndicator.setSelected(false);
+        holder.listItemIndicator.setSelected(isSelected);
+        if(isSelected){
+            lastIndicator = holder.listItemIndicator;
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,6 +68,7 @@ public class PracticesAdapter extends RecyclerView.Adapter<PracticesAdapter.View
                 }
                 holder.listItemIndicator.setSelected(true);
                 lastIndicator = holder.listItemIndicator;
+                selectedPractice = userPracticeDTO;
             }
         });
     }

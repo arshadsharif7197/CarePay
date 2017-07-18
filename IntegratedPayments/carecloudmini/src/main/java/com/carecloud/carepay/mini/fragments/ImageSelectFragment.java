@@ -67,10 +67,33 @@ public class ImageSelectFragment extends RegistrationFragment {
         });
 
         initPracticeInfo(view);
+
+        selectedImageStyle = getApplicationHelper().getApplicationPreferences().getImageStyle();
+        if(selectedImageStyle > -1){
+            switch (selectedImageStyle){
+                case Defs.IMAGE_STYLE_PRACTICE_INITIALS:
+                    lastSelectionIcon = practiceInitialsSelect;
+                    break;
+                case Defs.IMAGE_STYLE_PRACTICE_LOGO:
+                    lastSelectionIcon = practiceLogoSelect;
+                    break;
+                case Defs.IMAGE_STYLE_CARECLOUD_LOGO:
+                default:
+                    lastSelectionIcon = carecloudSelect;
+            }
+            lastSelectionIcon.setVisibility(View.VISIBLE);
+            nextButton.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initPracticeInfo(View view){
-        UserPracticeDTO selectedPractice = callback.getRegistrationDataModel().getPayloadDTO().getUserPractices().get(0);
+        UserPracticeDTO selectedPractice;
+        if(callback.getRegistrationDataModel() != null) {
+            selectedPractice = callback.getRegistrationDataModel().getPayloadDTO().getUserPractices().get(0);
+        }else{
+            String selectedPracticeId = getApplicationHelper().getApplicationPreferences().getPracticeId();
+            selectedPractice = callback.getPreRegisterDataModel().getPracticeById(selectedPracticeId);
+        }
 
         final TextView practiceInitials = (TextView) view.findViewById(R.id.practice_initials_name);
         if(selectedPractice.getPracticeInitials()!=null){
@@ -80,10 +103,12 @@ public class ImageSelectFragment extends RegistrationFragment {
         }
 
         View practiceLogoLayout = view.findViewById(R.id.practice_logo_layout);
+        View practiceLogoPlaceholder = view.findViewById(R.id.logo_width_placeholder);
         final View practiceLogoUnavailable = view.findViewById(R.id.practice_logo_unavailable);
         String imageUrl = selectedPractice.getPracticePhoto();
         if(StringUtil.isNullOrEmpty(imageUrl)){
             practiceLogoLayout.setVisibility(View.GONE);
+            practiceLogoPlaceholder.setVisibility(View.GONE);
         }else{
             Picasso.with(getContext())
                     .load(imageUrl)
@@ -127,4 +152,6 @@ public class ImageSelectFragment extends RegistrationFragment {
             }
         };
     }
+
+
 }

@@ -26,6 +26,7 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.View
     private Context context;
     private SelectLocationListener listener;
     private List<LocationsDTO> locations = new ArrayList<>();
+    private LocationsDTO selectedLocation;
 
     private View lastIndicator;
 
@@ -35,10 +36,11 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.View
      * @param locations list of locations
      * @param listener location selection listener
      */
-    public LocationsAdapter(Context context, List<LocationsDTO> locations, SelectLocationListener listener){
+    public LocationsAdapter(Context context, List<LocationsDTO> locations, SelectLocationListener listener, LocationsDTO selectedLocation){
         this.context = context;
         this.locations = locations;
         this.listener = listener;
+        this.selectedLocation = selectedLocation;
     }
 
     @Override
@@ -50,9 +52,14 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.View
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final LocationsDTO locationsDTO = locations.get(position);
+        boolean isSelected = locationsDTO.equals(selectedLocation);
 
         holder.listItemText.setText(locationsDTO.getName());
-        holder.listItemIndicator.setSelected(false);
+        holder.listItemIndicator.setSelected(isSelected);
+        if(isSelected){
+            lastIndicator = holder.listItemIndicator;
+        }
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,6 +69,7 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.View
                 }
                 holder.listItemIndicator.setSelected(true);
                 lastIndicator = holder.listItemIndicator;
+                selectedLocation = locationsDTO;
             }
         });
     }
