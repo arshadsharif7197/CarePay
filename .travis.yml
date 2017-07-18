@@ -11,16 +11,22 @@ licenses:
  - android-sdk-preview-license-.+
  - android-sdk-license-.+
  - google-gdk-license-.+
-
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
 before_install:
   - chmod +x ./CarePay/gradlew
   - mkdir "$ANDROID_HOME/licenses" || true
   - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
   - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
   - ./CarePay/gradlew dependencies || true
+  - chmod +x ./CarePay/runner
 android:
   components:
-    - tools
     - tools
     - platform-tools
     # The BuildTools version used by your project
@@ -33,6 +39,22 @@ android:
     - addon-google_apis-google-19
 script:
    - jdk_switcher use oraclejdk8
-   - cd CarePay
-
-   - ./gradlew :CarePayPracticeTablet:assembleRelease --profile --configure-on-demand
+   - cd /home/travis/build/CareCloud/shamrock_android/CarePay
+   - ./runner
+before_deploy: 
+   - pip install --user awscli
+   - aws s3 rm s3://automation-zeus --recursive
+deploy:
+  provider: s3
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  bucket: "automation-zeus"
+  skip_cleanup: true
+  local_dir: build/outputs/apk
+  on:
+    all_branches: true
+branches:
+  only: 
+    - master
+    - QA
+    - development

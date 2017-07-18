@@ -1,0 +1,13 @@
+#!/bin/bash
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+reset=$(tput sgr0)
+
+if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+    echo "${green}*** Building APKS for Tests ***${reset}"
+    ./gradlew :CarePayPracticeTablet:assembleRelease --profile --configure-on-demand
+else
+    echo "${yellow}*** Skipping APK Build ***${reset}"
+    echo "${green}*** Compile Check Only ***${reset}"
+    ./gradlew :CarePayPracticeTablet:compileProductionReleaseSources --profile --configure-on-demand
+fi
