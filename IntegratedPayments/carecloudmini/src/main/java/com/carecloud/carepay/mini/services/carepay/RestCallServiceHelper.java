@@ -83,7 +83,11 @@ public class RestCallServiceHelper {
         return authQueryParams;
     }
 
-
+    /**
+     * Make http call to signin user
+     * @param callback callback
+     * @param jsonBody payload
+     */
     public void executeSignIn(@NonNull final RestCallServiceCallback callback, String jsonBody){
 
         RestCallService restCallService = RestServiceGenerator.getInstance().createService(RestCallService.class, getAuthHeaders());
@@ -107,6 +111,11 @@ public class RestCallServiceHelper {
         });
     }
 
+    /**
+     * Make http call to get practice and location info
+     * @param callback callback
+     * @param mid merchant id retrieved from SDK
+     */
     public void executePreRegister(@NonNull final RestCallServiceCallback callback, @NonNull String mid){
         RestCallService restCallService = RestServiceGenerator.getInstance().createService(RestCallService.class, getAuthHeaders());
 
