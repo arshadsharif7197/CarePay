@@ -91,7 +91,12 @@ public class ReviewInfoFragment extends RegistrationFragment {
     }
 
     private void setupPracticeInfo(){
-        selectedPractice = callback.getRegistrationDataModel().getPayloadDTO().getUserPractices().get(0);
+        if(callback.getRegistrationDataModel() != null) {
+            selectedPractice = callback.getRegistrationDataModel().getPayloadDTO().getUserPractices().get(0);
+        }else {
+            String selectedPracticeId = getApplicationHelper().getApplicationPreferences().getPracticeId();
+            selectedPractice = callback.getPreRegisterDataModel().getPracticeById(selectedPracticeId);
+        }
 
         practiceName.setText(selectedPractice.getPracticeName());
 

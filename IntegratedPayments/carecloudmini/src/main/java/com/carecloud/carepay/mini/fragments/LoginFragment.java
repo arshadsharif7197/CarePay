@@ -11,6 +11,7 @@ import android.widget.EditText;
 
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.models.data.UserDTO;
+import com.carecloud.carepay.mini.models.response.PreRegisterDataModel;
 import com.carecloud.carepay.mini.models.response.RegistrationDataModel;
 import com.carecloud.carepay.mini.models.response.SignInAuth;
 import com.carecloud.carepay.mini.services.ServiceCallback;
@@ -100,23 +101,40 @@ public class LoginFragment extends RegistrationFragment {
     }
 
     private void getPreRegistration(){
-        DeviceRegistration.getDeviceMid(getContext(), accountInfoAdapter);
+        DeviceRegistration.getAccountInfo(getContext(), accountInfoAdapter);
     }
 
     private void displayNextStep(){
         RegistrationDataModel registrationDataModel = callback.getRegistrationDataModel();
-        if(!registrationDataModel.getPayloadDTO().getUserPractices().isEmpty()){
-            if(registrationDataModel.getPayloadDTO().getUserPractices().size() > 1){
-                //show practice selection
-                callback.replaceFragment(new PracticesFragment(), true);
-            }else{
-                //show location selection
-                String practiceID = registrationDataModel.getPayloadDTO().getUserPractices().get(0).getPracticeId();
-                getApplicationHelper().getApplicationPreferences().setPracticeId(practiceID);
-                callback.replaceFragment(new LocationsFragment(), true);
+        if(registrationDataModel != null) {
+            if (!registrationDataModel.getPayloadDTO().getUserPractices().isEmpty()) {
+                if (registrationDataModel.getPayloadDTO().getUserPractices().size() > 1) {
+                    //show practice selection
+                    callback.replaceFragment(new PracticesFragment(), true);
+                } else {
+                    //show location selection
+                    String practiceID = registrationDataModel.getPayloadDTO().getUserPractices().get(0).getPracticeId();
+                    getApplicationHelper().getApplicationPreferences().setPracticeId(practiceID);
+                    callback.replaceFragment(new LocationsFragment(), true);
+                }
+            } else {
+                CustomErrorToast.showWithMessage(getContext(), getString(R.string.error_login));
             }
         }else{
-            CustomErrorToast.showWithMessage(getContext(), getString(R.string.error_login));
+            PreRegisterDataModel preRegisterDataModel = callback.getPreRegisterDataModel();
+            if(!preRegisterDataModel.getUserPracticeDTOList().isEmpty()){
+                if(preRegisterDataModel.getUserPracticeDTOList().size() > 1){
+                    //show practice selection
+                    callback.replaceFragment(new PracticesFragment(), true);
+                }else{
+                    //show practice confirmation Fragment
+                    String practiceId = preRegisterDataModel.getUserPracticeDTOList().get(0).getPracticeId();
+                    getApplicationHelper().getApplicationPreferences().setPracticeId(practiceId);
+                    callback.replaceFragment(new LocationsFragment(), true);
+                }
+            }else{
+                CustomErrorToast.showWithMessage(getContext(), getString(R.string.error_login));
+            }
         }
     }
 
@@ -203,6 +221,9 @@ public class LoginFragment extends RegistrationFragment {
         @Override
         public void onPostExecute(JsonElement jsonElement) {
             enableFields(true);
+            Log.d(LoginFragment.class.getName(), jsonElement.toString());
+            callback.setPreRegisterDataModel(jsonElement);
+            displayNextStep();
         }
 
         @Override

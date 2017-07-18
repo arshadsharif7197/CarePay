@@ -39,7 +39,11 @@ public class PracticesFragment extends RegistrationFragment implements Practices
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
         if(userPractices == null){
-            userPractices = new ArrayList<>(callback.getRegistrationDataModel().getPayloadDTO().getUserPractices());
+            if(callback.getRegistrationDataModel()!=null) {
+                userPractices = new ArrayList<>(callback.getRegistrationDataModel().getPayloadDTO().getUserPractices());
+            }else{
+                userPractices = new ArrayList<>(callback.getPreRegisterDataModel().getUserPracticeDTOList());
+            }
         }
     }
 
@@ -68,7 +72,14 @@ public class PracticesFragment extends RegistrationFragment implements Practices
         RecyclerView practicesRecycler = (RecyclerView) view.findViewById(R.id.practice_recycler);
         practicesRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-        PracticesAdapter practicesAdapter = new PracticesAdapter(getContext(), userPractices, this);
+        selectedPractice = null;
+        String selectedPracticeId = getApplicationHelper().getApplicationPreferences().getPracticeId();
+        if(callback.getPreRegisterDataModel() != null && selectedPracticeId != null){
+            selectedPractice = callback.getPreRegisterDataModel().getPracticeById(selectedPracticeId);
+            nextButton.setVisibility(View.VISIBLE);
+        }
+
+        PracticesAdapter practicesAdapter = new PracticesAdapter(getContext(), userPractices, this, selectedPractice);
         practicesRecycler.setAdapter(practicesAdapter);
 
         practicesRecycler.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
@@ -90,12 +101,17 @@ public class PracticesFragment extends RegistrationFragment implements Practices
     }
 
     private void selectPractice(){
-        Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("practice_id", selectedPractice.getPracticeId());
-        queryMap.put("practice_mgmt", selectedPractice.getPracticeMgmt());
+        if(callback.getRegistrationDataModel()!=null) {
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("practice_id", selectedPractice.getPracticeId());
+            queryMap.put("practice_mgmt", selectedPractice.getPracticeMgmt());
 
-        ServiceRequestDTO authenticatePractice = callback.getRegistrationDataModel().getMetadata().getTransitions().getAuthenticate();
-        getServiceHelper().execute(authenticatePractice, authenticatePracticeCallback, queryMap);
+            ServiceRequestDTO authenticatePractice = callback.getRegistrationDataModel().getMetadata().getTransitions().getAuthenticate();
+            getServiceHelper().execute(authenticatePractice, authenticatePracticeCallback, queryMap);
+        }else{
+            getApplicationHelper().getApplicationPreferences().setPracticeId(selectedPractice.getPracticeId());
+            getLocations();
+        }
     }
 
     private void getLocations(){

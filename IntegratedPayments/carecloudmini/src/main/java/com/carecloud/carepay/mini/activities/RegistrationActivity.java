@@ -9,10 +9,13 @@ import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.fragments.StartRegistrationFragment;
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
 import com.carecloud.carepay.mini.interfaces.RegistrationNavigationCallback;
+`import com.carecloud.carepay.mini.models.response.PreRegisterDataModel;
 import com.carecloud.carepay.mini.models.response.RegistrationDataModel;
 import com.carecloud.carepay.mini.models.response.SignInAuth;
 import com.carecloud.carepay.mini.services.ServiceResponseDTO;
 import com.carecloud.carepay.mini.utils.DtoHelper;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 /**
  * Created by lmenendez on 6/23/17
@@ -21,6 +24,7 @@ import com.carecloud.carepay.mini.utils.DtoHelper;
 public class RegistrationActivity extends AppCompatActivity implements RegistrationNavigationCallback {
 
     private RegistrationDataModel registrationDataModel;
+    private PreRegisterDataModel preRegisterDataModel;
 
     @Override
     public void onCreate(Bundle icicle){
@@ -56,8 +60,18 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     }
 
     @Override
+    public void setPreRegisterDataModel(JsonElement jsonElement) {
+        preRegisterDataModel = DtoHelper.getConvertedDTO(PreRegisterDataModel.class, (JsonObject) jsonElement);
+    }
+
+    @Override
     public RegistrationDataModel getRegistrationDataModel() {
         return registrationDataModel;
+    }
+
+    @Override
+    public PreRegisterDataModel getPreRegisterDataModel() {
+        return preRegisterDataModel;
     }
 
     @Override

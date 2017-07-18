@@ -10,8 +10,8 @@ import java.util.List;
 
 public class LocationsDTO {
 
-    @SerializedName("id")
-    private Integer id;
+//    @SerializedName("id")
+//    private Integer id;
 
     @SerializedName("name")
     private String name;
@@ -19,7 +19,8 @@ public class LocationsDTO {
     @SerializedName("is_visible_appointment_scheduler")
     private Boolean isVisibleAppointmentScheduler;
 
-    @SerializedName("guid")
+//    @SerializedName("guid")
+    @SerializedName("id")
     private String guid;
 
     @SerializedName("address")
@@ -28,13 +29,13 @@ public class LocationsDTO {
     @SerializedName("phones")
     private List<Phone> phones = null;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
+//    public Integer getId() {
+//        return id;
+//    }
+//
+//    public void setId(Integer id) {
+//        this.id = id;
+//    }
 
     public String getName() {
         return name;
@@ -75,6 +76,18 @@ public class LocationsDTO {
     public void setPhones(List<Phone> phones) {
         this.phones = phones;
     }
+
+
+    @Override
+    public boolean equals(Object object){
+        try{
+            LocationsDTO compare = (LocationsDTO) object;
+            return this.getGuid().equals(compare.getGuid());
+        }catch (ClassCastException cce){
+            return false;
+        }
+    }
+
 
     public class Address {
 
