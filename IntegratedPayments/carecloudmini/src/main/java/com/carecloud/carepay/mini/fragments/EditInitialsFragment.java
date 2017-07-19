@@ -21,6 +21,19 @@ import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
 
 public class EditInitialsFragment extends RegistrationFragment {
 
+    private UserPracticeDTO selectedPractice;
+
+    @Override
+    public void onCreate(Bundle icicle){
+        super.onCreate(icicle);
+        if(callback.getRegistrationDataModel()!=null){
+            selectedPractice = callback.getRegistrationDataModel().getPayloadDTO().getUserPractices().get(0);
+        }else{
+            String selectedPracticeId = getApplicationHelper().getApplicationPreferences().getPracticeId();
+            selectedPractice = callback.getPreRegisterDataModel().getPracticeById(selectedPracticeId);
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_registration_initials, container, false);
@@ -29,8 +42,6 @@ public class EditInitialsFragment extends RegistrationFragment {
     @Override
     public void onViewCreated(View view, Bundle icicle) {
         initToolbar(view);
-
-        final UserPracticeDTO selectedPractice = callback.getRegistrationDataModel().getPayloadDTO().getUserPractices().get(0);
 
         EditText practiceInitials = (EditText) view.findViewById(R.id.practice_initials_name);
         practiceInitials.setOnEditorActionListener(new TextView.OnEditorActionListener() {

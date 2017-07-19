@@ -3,6 +3,7 @@
 
     <string name="registrations_start_text">This device is not registered. In order to register please log in to your CareCloud account.</string>
     <string name="registration_start_button">Start</string>
+    <string name="registration_back_button">Back</string>
     <string name="registration_login_email_label">Email</string>
     <string name="registration_login_password_label">Password</string>
     <string name="registration_login_email_hint">Registered email</string>
@@ -11,6 +12,10 @@
     <string name="registration_login_title">Log in to register</string>
     <string name="registration_select_practice_title">Practices</string>
     <string name="registration_select_practice_text">Choose the default practice</string>
+    <string name="registration_confirm_practice_text">This device has been configured for:</string>
+    <string name="registration_confirm_correct">Is this correct?</string>
+    <string name="registration_yes_button">Yes</string>
+    <string name="registration_no_button">No</string>
     <string name="registration_next_button">Next</string>
     <string name="registration_select_location_text">Choose the default location</string>
     <string name="registration_select_location_title">Locations</string>
@@ -28,6 +33,9 @@
     <string name="registration_review_edit_image">Edit Image</string>
     <string name="registration_review_title">Review Information</string>
     <string name="registration_review_register_device">Register device</string>
+    <string name="registration_practice_config_error">Oops&#8230; Looks like this device has been configured incorrectly. Please contact our support team.</string>
+    <string name="registration_practice_config_call">1&#8211;866&#8211;931&#8211;3832</string>
+    <string name="registration_practice_config_back">Back to Start</string>
 
     <string name="welcome_waiting">Waiting for payment</string>
     <string name="welcome_connecting">Connecting&#8230;</string>
@@ -42,6 +50,7 @@
 
     <string name="error_email">Please provide a valid email address.</string>
     <string name="error_login">Sorry, an error occurred while logging in, please try again!</string>
+    <string name="error_confirm_practice">Please confirm practice to continue.</string>
 
     <string name="image_unavailable">Unavailable</string>
 </resources>

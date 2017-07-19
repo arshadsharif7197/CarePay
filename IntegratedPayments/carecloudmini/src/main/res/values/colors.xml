@@ -15,6 +15,7 @@
     <!--Specific Color Implementations referencing a generic color -->
     <color name="blueText">@color/lightBlue</color>
     <color name="buttonText">@color/white</color>
+    <color name="outlineButtonText">@color/lightBlue</color>
     <color name="whiteText">@color/white</color>
     <color name="toolbarText">@color/white</color>
     <color name="appBackground">@color/colorPrimaryDark</color>
