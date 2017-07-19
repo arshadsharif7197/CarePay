@@ -33,20 +33,23 @@ public abstract class RegistrationFragment extends Fragment {
 
     protected void initProgressToolbar(View view, String titleString, int progress){
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.registration_toolbar);
-        toolbar.setNavigationIcon(R.drawable.back_arrow_blue);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.onBackPressed();
-            }
-        });
-
-        TextView title = (TextView) view.findViewById(R.id.toolbar_title);
+//        toolbar.setNavigationIcon(R.drawable.back_arrow_blue);
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                callback.onBackPressed();
+//            }
+//        });
+//
+        TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
         title.setText(titleString);
 
-        ProgressBar registrationProgress = (ProgressBar) view.findViewById(R.id.progress_registration);
+        ProgressBar registrationProgress = (ProgressBar) toolbar.findViewById(R.id.progress_registration);
         registrationProgress.setMax(6);
         registrationProgress.setProgress(progress);
+
+        TextView progressText = (TextView) toolbar.findViewById(R.id.progress_text);
+        progressText.setText(String.format(getString(R.string.registration_progress_text), registrationProgress.getProgress(), registrationProgress.getMax()));
 
     }
 
