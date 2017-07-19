@@ -44,6 +44,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         setTransitionProfile(appointmentsResultModel.getMetadata().getLinks().getProfileUpdate());
         setTransitionAppointments(appointmentsResultModel.getMetadata().getLinks().getAppointments());
         setTransitionNotifications(appointmentsResultModel.getMetadata().getLinks().getNotifications());
+        setTransitionMyHealth(appointmentsResultModel.getMetadata().getLinks().getMyHealth());
 
         String userImageUrl = appointmentsResultModel.getPayload().getDemographicDTO().getPayload()
                 .getPersonalDetails().getProfilePhoto();

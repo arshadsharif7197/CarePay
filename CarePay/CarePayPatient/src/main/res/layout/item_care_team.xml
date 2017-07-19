@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingEnd="10dp"
+    android:paddingStart="10dp">
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/avatarTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="@dimen/dimen_10dp"
+        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:background="@drawable/round_list_tv"
+        android:src="@drawable/icn_placeholder_user_profile_png"
+        android:textColor="@color/lightSlateGray"
+        android:textSize="@dimen/apt_dl_text_big"
+        app:customAssetFont="gotham_rounded_medium" />
+
+    <ImageView
+        android:id="@+id/providerImageView"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="@dimen/dimen_10dp"
+        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_10dp" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/endSign"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/dimen_5dp"
+        android:text=">>"
+        android:textColor="@color/light_gray"
+        app:customAssetFont="gotham_rounded_bold"
+        tools:text=">>" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/providerNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/providerImageView"
+        android:layout_toStartOf="@id/endSign"
+        android:gravity="start"
+        android:maxLines="1"
+        android:paddingBottom="@dimen/dimen_20dp"
+        android:textSize="@dimen/text_size_18sp"
+        android:singleLine="true"
+        android:textColor="@color/providerTextColor"
+        app:customAssetFont="proxima_nova_semi_bold"
+        tools:text="Dr. Elliot Barthos" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/providerSpecialityTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/providerImageView"
+        android:layout_toStartOf="@id/endSign"
+        android:gravity="start"
+        android:maxLines="1"
+        android:paddingTop="@dimen/dimen_20dp"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        app:customAssetFont="proxima_nova_regular"
+        tools:text="Cardiology, CareCloud Clinic" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/light_gray" />
+
+</RelativeLayout>
