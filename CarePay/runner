@@ -3,11 +3,58 @@ green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
-if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-    echo "${green}*** Building APKS for Tests ***${reset}"
-    ./gradlew :CarePayPracticeTablet:assembleRelease --profile --configure-on-demand
-else
+COMMIT_RANGE=$(echo $TRAVIS_COMMIT_RANGE | sed 's/\.\.\./\.\./g')
+COMMIT_MESSAGES=$(echo $(git log $COMMIT_RANGE --pretty=format:%s))
+
+shopt -s nocasematch
+#####################################################################################
+########## CHECKS TO SEE IF BUILD IS TRIGGERED FROM PULL REQUEST ####################
+##########  IF IT IS NOT IT CHECKS BRANCH TO BUILD SPECIFIC APK  ####################
+#####################################################################################
+if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "development" ]]; then
+    echo "${green}*** DELETING DEVELOPMENT APKS FROM AWS ***${reset}"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 rm s3://automation-zeus --recursive --exclude "*" --include "*development*"
+    echo "${green}*** BUILDING DEVELOPMENT PRACTICE APK ***${reset}"
+    ./gradlew :CarePayPracticeTablet:assembleDevelopment --profile --configure-on-demand
+    echo "${green}*** BUILDING DEVELOPMENT PATIENT APK ***${reset}"
+    ./gradlew :CarePayPatient:assembleDevelopment --profile --configure-on-demand
+elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "QA" ]]; then
+    echo "${green}*** DELETING QA APKS FROM AWS ***${reset}"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 rm s3://automation-zeus --recursive --exclude "*" --include "*qa*"
+    echo "${green}*** BUILDING QA PRACTICE APK ***${reset}"
+    ./gradlew :CarePayPracticeTablet:assembleQa --profile --configure-on-demand
+    echo "${green}*** BUILDING QA PATIENT APK ***${reset}"
+    ./gradlew :CarePayPatient:assembleQa --profile --configure-on-demand
+elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "master" ]]; then
+    echo "${green}*** DELETING PRODUCTION APKS FROM AWS ***${reset}"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 rm s3://automation-zeus --recursive --exclude "*" --include "*production*"
+    echo "${green}*** BUILDING PRODUCTION PRACTICE APK ***${reset}"
+    ./gradlew :CarePayPracticeTablet:assembleProduction --profile --configure-on-demand
+    echo "${green}*** BUILDING PRODUCTION PATIENT APK ***${reset}"
+    ./gradlew :CarePayPatient:assembleProduction --profile --configure-on-demand
+fi
+
+#####################################################################################
+##########              CHECKS COMMIT MESSAGE FOR VERSION OF APP             ########
+##########  EXAMPLE "PRACTICEAPP" OR "PATIENTAPP" AND COMPILES THAT PROJECT  ########
+#####################################################################################
+if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [[ "$COMMIT_MESSAGES" =~ practice.*app ]]; then
     echo "${yellow}*** Skipping APK Build ***${reset}"
-    echo "${green}*** Compile Check Only ***${reset}"
+    echo "${green}*** Practice App Compile Check ***${reset}"
+    ./gradlew :CarePayPracticeTablet:compileProductionReleaseSources --profile --configure-on-demand
+fi
+if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [[ "$COMMIT_MESSAGES" =~ patient.*app ]]; then
+    echo "${yellow}*** Skipping APK Build ***${reset}"
+    echo "${green}*** Patient App Compile Check ***${reset}"
+    ./gradlew :CarePayPatient:compileProductionReleaseSources --profile --configure-on-demand
+fi
+if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [[ "$COMMIT_MESSAGES" =~ clover.*app ]]; then
+    echo "${yellow}*** Skipping APK Build ***${reset}"
+    echo "${green}*** Clover App Compile Check ***${reset}"
+    ./gradlew :CarePayPracticeClover:compileProductionReleaseSources --profile --configure-on-demand
+fi
+if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [[ "$COMMIT_MESSAGES" != *practice.*app* ]] && [[ "$COMMIT_MESSAGES" != *patient.*app* ]] && [[ "$COMMIT_MESSAGES" != *clover.*app* ]]; then
+    echo "${yellow}*** Skipping APK Build ***${reset}"
+    echo "${green}*** [NO SPECIFIED COMMIT MESSAGE FOR COMPILE] Default Practice App Compile Check ***${reset}"
     ./gradlew :CarePayPracticeTablet:compileProductionReleaseSources --profile --configure-on-demand
 fi
