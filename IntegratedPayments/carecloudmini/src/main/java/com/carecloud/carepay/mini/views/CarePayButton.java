@@ -62,10 +62,9 @@ public class CarePayButton extends FontButton {
 
         ViewParent viewParent = getParent();
 
-        if(progress == null) {
-            if (viewParent instanceof View) {
-                progress = ((View) viewParent).findViewById(R.id.progress_loading);
-            }
+        if(progress == null && viewParent instanceof View) {
+            progress = ((View) viewParent).findViewById(R.id.progress_loading);
+
         }
 
         if(progress!=null){
