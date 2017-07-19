@@ -75,6 +75,7 @@ public class EditInitialsFragment extends RegistrationFragment {
             @Override
             public void onClick(View view) {
                 callback.onBackPressed();
+                KeyboardUtil.hideSoftKeyboard(getActivity());
             }
         });
 
