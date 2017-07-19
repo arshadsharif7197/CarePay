@@ -55,7 +55,7 @@ public class DeviceFragment extends RegistrationFragment {
         nameInput.addTextChangedListener(emptyTextWatcher);
 
         String selectedName = getApplicationHelper().getApplicationPreferences().getDeviceName();
-        if(StringUtil.isNullOrEmpty(selectedName)){
+        if(!StringUtil.isNullOrEmpty(selectedName)){
             nameInput.setText(selectedName);
         }
 
