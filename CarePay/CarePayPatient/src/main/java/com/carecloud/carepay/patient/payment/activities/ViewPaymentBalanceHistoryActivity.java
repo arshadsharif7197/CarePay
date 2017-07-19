@@ -65,7 +65,10 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         displayToolbar(true, toolBarTitle);
         inflateDrawer();
 
+        initFragments();
+    }
 
+    private void initFragments(){
         if (hasPayments() || hasCharges()) {
             replaceFragment(new PaymentBalanceHistoryFragment(), false);
         } else {
@@ -221,7 +224,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
-
+        PaymentsModel updatePaymentModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+        paymentsDTO.getPaymentPayload().setPatientBalances(updatePaymentModel.getPaymentPayload().getPatientBalances());
+        initFragments();
     }
 
     @Override
