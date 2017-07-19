@@ -175,9 +175,16 @@ public class ReviewInfoFragment extends RegistrationFragment {
     }
 
     private String getLocationNameById(String locationId){
-        for(LocationsDTO location : callback.getRegistrationDataModel().getPayloadDTO().getLocations()){
-            if(location.getGuid().equals(locationId)){
-                return location.getName();
+        if(callback.getRegistrationDataModel() != null) {
+            for (LocationsDTO location : callback.getRegistrationDataModel().getPayloadDTO().getLocations()) {
+                if (location.getGuid().equals(locationId)) {
+                    return location.getName();
+                }
+            }
+        }else{
+            LocationsDTO locationsDTO = callback.getPreRegisterDataModel().getPracticeById(selectedPractice.getPracticeId()).findLocationById(locationId);
+            if(locationsDTO != null){
+                return locationsDTO.getName();
             }
         }
         return null;

@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
+import com.carecloud.carepay.mini.views.CustomErrorToast;
 
 /**
  * Created by lmenendez on 6/24/17
@@ -37,7 +38,6 @@ public class ConfirmPracticesFragment extends RegistrationFragment {
         initProgressToolbar(view, getString(R.string.registration_select_practice_title), 2);
 
         nextButton = view.findViewById(R.id.button_next);
-        nextButton.setVisibility(View.INVISIBLE);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,13 +67,17 @@ public class ConfirmPracticesFragment extends RegistrationFragment {
 
 
     private void selectPractice(){
+        if(lastSelectedOption == null){
+            CustomErrorToast.showWithMessage(getContext(), getString(R.string.error_confirm_practice));
+            return;
+        }
         switch (lastSelectedOption.getId()){
             case R.id.indicator_yes:
                 getLocations();
                 break;
             case R.id.indicator_no:
             default:
-
+                callback.replaceFragment(new ConfigurationErrorFragment(), true);
                 break;
         }
     }
@@ -86,7 +90,9 @@ public class ConfirmPracticesFragment extends RegistrationFragment {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                lastSelectedOption.setSelected(false);
+                if(lastSelectedOption != null) {
+                    lastSelectedOption.setSelected(false);
+                }
                 nextButton.setEnabled(true);
                 selectableView.setSelected(true);
                 lastSelectedOption = selectableView;

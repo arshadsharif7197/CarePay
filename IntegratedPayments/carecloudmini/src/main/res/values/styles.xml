@@ -13,7 +13,7 @@
     </style>
 
     <style name="ButtonRounded" parent="Widget.AppCompat.Button">
-        <item name="android:layout_width">@dimen/content_width_login</item>
+        <item name="android:layout_width">@dimen/content_width_buttons</item>
         <item name="android:background">@drawable/rounded_button_primary</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/buttonText</item>
@@ -22,7 +22,7 @@
     </style>
 
     <style name="ButtonRoundedOutline" parent="Widget.AppCompat.Button">
-        <item name="android:layout_width">@dimen/content_width_login</item>
+        <item name="android:layout_width">@dimen/content_width_buttons</item>
         <item name="android:background">@drawable/rounded_button_outline</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/outlineButtonText</item>

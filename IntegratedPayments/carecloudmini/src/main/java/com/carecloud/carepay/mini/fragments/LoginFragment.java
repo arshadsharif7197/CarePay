@@ -14,6 +14,7 @@ import com.carecloud.carepay.mini.models.data.UserDTO;
 import com.carecloud.carepay.mini.models.response.PreRegisterDataModel;
 import com.carecloud.carepay.mini.models.response.RegistrationDataModel;
 import com.carecloud.carepay.mini.models.response.SignInAuth;
+import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
 import com.carecloud.carepay.mini.services.ServiceCallback;
 import com.carecloud.carepay.mini.services.ServiceRequestDTO;
 import com.carecloud.carepay.mini.services.ServiceResponseDTO;
@@ -25,6 +26,8 @@ import com.carecloud.shamrocksdk.registrations.DeviceRegistration;
 import com.carecloud.shamrocksdk.registrations.interfaces.AccountInfoAdapter;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import java.util.List;
 
 /**
  * Created by lmenendez on 6/23/17
@@ -123,6 +126,9 @@ public class LoginFragment extends RegistrationFragment {
         }else{
             PreRegisterDataModel preRegisterDataModel = callback.getPreRegisterDataModel();
             if(!preRegisterDataModel.getUserPracticeDTOList().isEmpty()){
+                //strip out practices for testing
+                stripPractices(preRegisterDataModel.getUserPracticeDTOList());
+
                 if(preRegisterDataModel.getUserPracticeDTOList().size() > 1){
                     //show practice selection
                     callback.replaceFragment(new PracticesFragment(), true);
@@ -136,6 +142,12 @@ public class LoginFragment extends RegistrationFragment {
                 CustomErrorToast.showWithMessage(getContext(), getString(R.string.error_login));
             }
         }
+    }
+
+    private void stripPractices(List<UserPracticeDTO> practices){
+        UserPracticeDTO practiceDTO = practices.get(0);
+        practices.clear();
+        practices.add(  practiceDTO);
     }
 
     private void enableFields(boolean enabled){
