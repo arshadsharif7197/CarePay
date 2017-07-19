@@ -43,7 +43,7 @@ script:
    - ./runner
 before_deploy: 
    - pip install --user awscli
-   - aws s3 rm s3://automation-zeus --recursive
+   - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 rm s3://automation-zeus --recursive
 deploy:
   provider: s3
   access_key_id: $AWS_ACCESS_KEY
