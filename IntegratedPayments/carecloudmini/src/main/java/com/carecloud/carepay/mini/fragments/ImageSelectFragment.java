@@ -23,6 +23,7 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class ImageSelectFragment extends RegistrationFragment {
 
     private View nextButton;
+    private View buttonSpacer;
     private ImageView practiceLogo;
 
     private @Defs.ImageStyles int selectedImageStyle;
@@ -50,7 +51,7 @@ public class ImageSelectFragment extends RegistrationFragment {
         carecloudLogo.setOnClickListener(getChoiceClickListener(Defs.IMAGE_STYLE_CARECLOUD_LOGO, carecloudSelect));
 
         nextButton = view.findViewById(R.id.button_next);
-        nextButton.setVisibility(View.INVISIBLE);
+        nextButton.setVisibility(View.GONE);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,11 +59,22 @@ public class ImageSelectFragment extends RegistrationFragment {
             }
         });
 
+        buttonSpacer = view.findViewById(R.id.button_spacer);
+        buttonSpacer.setVisibility(nextButton.getVisibility());
+
+        View backButton = view.findViewById(R.id.button_back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.onBackPressed();
+            }
+        });
+
         View editInitials = view.findViewById(R.id.edit_initials);
         editInitials.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.replaceFragment(new EditInitialsFragment(), false);
+                callback.replaceFragment(new EditInitialsFragment(), true);
             }
         });
 
@@ -83,6 +95,7 @@ public class ImageSelectFragment extends RegistrationFragment {
             }
             lastSelectionIcon.setVisibility(View.VISIBLE);
             nextButton.setVisibility(View.VISIBLE);
+            buttonSpacer.setVisibility(nextButton.getVisibility());
         }
     }
 
@@ -149,6 +162,7 @@ public class ImageSelectFragment extends RegistrationFragment {
                 lastSelectionIcon = selectionIcon;
 
                 nextButton.setVisibility(View.VISIBLE);
+                buttonSpacer.setVisibility(nextButton.getVisibility());
             }
         };
     }

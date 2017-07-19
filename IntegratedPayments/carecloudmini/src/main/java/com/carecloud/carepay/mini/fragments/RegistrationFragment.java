@@ -41,12 +41,15 @@ public abstract class RegistrationFragment extends Fragment {
             }
         });
 
-        TextView title = (TextView) view.findViewById(R.id.toolbar_title);
+        TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
         title.setText(titleString);
 
-        ProgressBar registrationProgress = (ProgressBar) view.findViewById(R.id.progress_registration);
+        ProgressBar registrationProgress = (ProgressBar) toolbar.findViewById(R.id.progress_registration);
         registrationProgress.setMax(6);
         registrationProgress.setProgress(progress);
+
+        TextView progressText = (TextView) toolbar.findViewById(R.id.progress_text);
+        progressText.setText(String.format(getString(R.string.registration_progress_text), registrationProgress.getProgress(), registrationProgress.getMax()));
 
     }
 

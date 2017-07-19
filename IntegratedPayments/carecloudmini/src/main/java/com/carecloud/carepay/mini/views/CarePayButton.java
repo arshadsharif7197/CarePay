@@ -56,4 +56,21 @@ public class CarePayButton extends FontButton {
         }
     }
 
+    @Override
+    public void setVisibility(int visibility){
+        super.setVisibility(visibility);
+
+        ViewParent viewParent = getParent();
+
+        if(progress == null) {
+            if (viewParent instanceof View) {
+                progress = ((View) viewParent).findViewById(R.id.progress_loading);
+            }
+        }
+
+        if(progress!=null){
+            ((View) viewParent).setVisibility(visibility);
+        }
+    }
+
 }

@@ -28,7 +28,7 @@ public class PracticesAdapter extends RecyclerView.Adapter<PracticesAdapter.View
     private List<UserPracticeDTO> practices = new ArrayList<>();
     private UserPracticeDTO selectedPractice;
 
-    private View lastIndicator;
+    private ViewHolder lastIndicator;
 
     /**
      * Constructor
@@ -55,19 +55,22 @@ public class PracticesAdapter extends RecyclerView.Adapter<PracticesAdapter.View
         boolean isSelected = userPracticeDTO.equals(selectedPractice);
 
         holder.listItemText.setText(userPracticeDTO.getPracticeName());
+        holder.listItemText.setSelected(isSelected);
         holder.listItemIndicator.setSelected(isSelected);
         if(isSelected){
-            lastIndicator = holder.listItemIndicator;
+            lastIndicator = holder;
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 listener.onPracticeSelected(userPracticeDTO);
                 if(lastIndicator != null){
-                    lastIndicator.setSelected(false);
+                    lastIndicator.listItemIndicator.setSelected(false);
+                    lastIndicator.listItemText.setSelected(false);
                 }
                 holder.listItemIndicator.setSelected(true);
-                lastIndicator = holder.listItemIndicator;
+                holder.listItemText.setSelected(true);
+                lastIndicator = holder;
                 selectedPractice = userPracticeDTO;
             }
         });

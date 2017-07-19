@@ -18,6 +18,7 @@ import com.carecloud.carepay.mini.utils.StringUtil;
 public class DeviceFragment extends RegistrationFragment {
 
     private View nextButton;
+    private View buttonSpacer;
     private EditText nameInput;
 //    private EditText welcomeInput;
 
@@ -31,11 +32,22 @@ public class DeviceFragment extends RegistrationFragment {
         initProgressToolbar(view, getString(R.string.registration_device_title), 4);
 
         nextButton = view.findViewById(R.id.button_next);
-        nextButton.setVisibility(View.INVISIBLE);
+        nextButton.setVisibility(View.GONE);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setDeviceDetails();
+            }
+        });
+
+        buttonSpacer = view.findViewById(R.id.button_spacer);
+        buttonSpacer.setVisibility(nextButton.getVisibility());
+
+        View backButton = view.findViewById(R.id.button_back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.onBackPressed();
             }
         });
 
@@ -77,10 +89,11 @@ public class DeviceFragment extends RegistrationFragment {
         @Override
         public void afterTextChanged(Editable editable) {
             if(StringUtil.isNullOrEmpty(editable.toString())){
-                nextButton.setVisibility(View.INVISIBLE);
+                nextButton.setVisibility(View.GONE);
             }else if(validateForm()){
                 nextButton.setVisibility(View.VISIBLE);
             }
+            buttonSpacer.setVisibility(nextButton.getVisibility());
         }
     };
 

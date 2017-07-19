@@ -28,6 +28,6 @@
         android:textColor="@color/listItemText"
         android:textSize="@dimen/list_item_text"
         tools:text="List Item Text"
-        app:customFont="gotham_rounded_medium.otf"/>
+        app:customFont="gotham_rounded_book.otf"/>
 
 </LinearLayout>

@@ -102,7 +102,7 @@
             android:paddingEnd="@dimen/dp_40"
             android:gravity="center"
             android:textColor="@color/blueText"
-            android:textSize="@dimen/instructons_text"
+            android:textSize="@dimen/instructions_text"
             android:text="@string/welcome_waiting"
             app:customFont="proximanova_semibold.otf"/>
 

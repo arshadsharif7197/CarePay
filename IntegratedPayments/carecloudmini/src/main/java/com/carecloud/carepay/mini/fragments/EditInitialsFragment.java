@@ -1,6 +1,7 @@
 package com.carecloud.carepay.mini.fragments;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
+import com.carecloud.carepay.mini.utils.Defs;
+import com.carecloud.carepay.mini.utils.KeyboardUtil;
 
 /**
  * Created by lmenendez on 7/11/17
@@ -49,7 +52,10 @@ public class EditInitialsFragment extends RegistrationFragment {
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
                 if(actionId == EditorInfo.IME_ACTION_DONE){
                     selectedPractice.setPracticeInitials(textView.getText().toString());
-                    callback.replaceFragment(new ImageSelectFragment(), false);
+                    KeyboardUtil.hideSoftKeyboard(getActivity());
+                    getApplicationHelper().getApplicationPreferences().setImageStyle(Defs.IMAGE_STYLE_PRACTICE_INITIALS);
+                    getFragmentManager().popBackStackImmediate(ImageSelectFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    callback.replaceFragment(new ImageSelectFragment(), true);
                     return true;
                 }
                 return false;
@@ -59,6 +65,7 @@ public class EditInitialsFragment extends RegistrationFragment {
         practiceInitials.setText(selectedPractice.getPracticeInitials());
         practiceInitials.addTextChangedListener(capsInputWatcher);
         practiceInitials.requestFocus();
+        KeyboardUtil.showSoftKeyboard(getActivity());
     }
 
     private void initToolbar(View view){
@@ -67,7 +74,7 @@ public class EditInitialsFragment extends RegistrationFragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.replaceFragment(new ImageSelectFragment(), false);
+                callback.onBackPressed();
             }
         });
 

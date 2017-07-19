@@ -28,7 +28,7 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.View
     private List<LocationsDTO> locations = new ArrayList<>();
     private LocationsDTO selectedLocation;
 
-    private View lastIndicator;
+    private ViewHolder lastIndicator;
 
     /**
      * Constructor
@@ -55,9 +55,10 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.View
         boolean isSelected = locationsDTO.equals(selectedLocation);
 
         holder.listItemText.setText(locationsDTO.getName());
+        holder.listItemText.setSelected(isSelected);
         holder.listItemIndicator.setSelected(isSelected);
         if(isSelected){
-            lastIndicator = holder.listItemIndicator;
+            lastIndicator = holder;
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -65,10 +66,12 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.View
             public void onClick(View view) {
                 listener.onLocationSelected(locationsDTO.getGuid());
                 if(lastIndicator != null){
-                    lastIndicator.setSelected(false);
+                    lastIndicator.listItemIndicator.setSelected(false);
+                    lastIndicator.listItemText.setSelected(false);
                 }
                 holder.listItemIndicator.setSelected(true);
-                lastIndicator = holder.listItemIndicator;
+                holder.listItemText.setSelected(true);
+                lastIndicator = holder;
                 selectedLocation = locationsDTO;
             }
         });

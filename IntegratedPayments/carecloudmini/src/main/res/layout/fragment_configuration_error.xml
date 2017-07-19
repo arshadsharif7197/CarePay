@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="@dimen/content_width_image"
+        android:layout_width="@dimen/content_width_wide"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_40"
         android:orientation="vertical"
@@ -33,7 +33,7 @@
             android:layout_marginBottom="@dimen/dp_40"
             android:gravity="center"
             android:textColor="@color/blueText"
-            android:textSize="@dimen/instructons_text"
+            android:textSize="@dimen/instructions_text"
             android:text="@string/registration_practice_config_error"
             app:customFont="proximanova_semibold.otf"/>
 
