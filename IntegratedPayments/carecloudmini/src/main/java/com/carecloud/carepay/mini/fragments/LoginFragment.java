@@ -141,7 +141,7 @@ public class LoginFragment extends RegistrationFragment {
         }else{
             PreRegisterDataModel preRegisterDataModel = callback.getPreRegisterDataModel();
             if(!preRegisterDataModel.getUserPracticeDTOList().isEmpty()){
-                //strip out practices for testing
+                //strip out practices for testing TODO remove this for Prod
                 stripPractices(preRegisterDataModel.getUserPracticeDTOList());
 
                 if(preRegisterDataModel.getUserPracticeDTOList().size() > 1){
