@@ -57,11 +57,18 @@ public class PracticesFragment extends RegistrationFragment implements Practices
         initProgressToolbar(view, getString(R.string.registration_select_practice_title), 2);
 
         nextButton = view.findViewById(R.id.button_next);
-        nextButton.setVisibility(View.INVISIBLE);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 selectPractice();
+            }
+        });
+
+        View backButton = view.findViewById(R.id.button_back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.onBackPressed();
             }
         });
 
@@ -101,6 +108,11 @@ public class PracticesFragment extends RegistrationFragment implements Practices
     }
 
     private void selectPractice(){
+        if(selectedPractice == null){
+            CustomErrorToast.showWithMessage(getContext(), getString(R.string.error_select_practice));
+            return;
+        }
+
         if(callback.getRegistrationDataModel()!=null) {
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("practice_id", selectedPractice.getPracticeId());

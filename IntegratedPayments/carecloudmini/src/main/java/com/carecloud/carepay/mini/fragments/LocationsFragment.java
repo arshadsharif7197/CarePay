@@ -11,6 +11,7 @@ import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.adapters.LocationsAdapter;
 import com.carecloud.carepay.mini.models.response.LocationsDTO;
 import com.carecloud.carepay.mini.utils.StringUtil;
+import com.carecloud.carepay.mini.views.CustomErrorToast;
 
 import java.util.List;
 
@@ -46,11 +47,18 @@ public class LocationsFragment extends RegistrationFragment implements Locations
         initProgressToolbar(view, getString(R.string.registration_select_location_title), 3);
 
         nextButton = view.findViewById(R.id.button_next);
-        nextButton.setVisibility(View.INVISIBLE);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 selectLocation();
+            }
+        });
+
+        View backButton = view.findViewById(R.id.button_back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.onBackPressed();
             }
         });
 
@@ -73,6 +81,10 @@ public class LocationsFragment extends RegistrationFragment implements Locations
     }
 
     private void selectLocation(){
+        if(selectedLocationId == null){
+            CustomErrorToast.showWithMessage(getContext(), getString(R.string.error_select_location));
+            return;
+        }
         getApplicationHelper().getApplicationPreferences().setLocationId(selectedLocationId);
         callback.replaceFragment(new DeviceFragment(), true);
     }

@@ -86,6 +86,9 @@ public class ReviewInfoFragment extends RegistrationFragment {
         buttonRegisterDevice = view.findViewById(R.id.button_register);
         buttonRegisterDevice.setOnClickListener(clickListener);
 
+        View backButton = view.findViewById(R.id.button_back);
+        backButton.setOnClickListener(clickListener);
+
         setupPracticeInfo();
 
     }
@@ -159,8 +162,11 @@ public class ReviewInfoFragment extends RegistrationFragment {
                     popToFragment(PracticesFragment.class.getName());
                     break;
                 case R.id.button_register:
-                default:
                     registerDevice();
+                    break;
+                case R.id.button_back:
+                default:
+                    callback.onBackPressed();
                     break;
             }
         }
@@ -199,7 +205,7 @@ public class ReviewInfoFragment extends RegistrationFragment {
 
         Device device = new Device();
         device.setDeviceName(applicationPreferences.getDeviceName());
-        device.setOrganizationId(applicationPreferences.getPracticeId());
+        device.setOrganizationId(selectedPractice.getOrganizationId());
         device.setSerialNumber("test"+System.currentTimeMillis());
 
 

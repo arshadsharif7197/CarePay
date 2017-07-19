@@ -36,6 +36,8 @@ import java.util.List;
 public class LoginFragment extends RegistrationFragment {
 
     private View loginButton;
+    private View backButton;
+    private View buttonSpacer;
     private EditText emailInput;
     private EditText passwordInput;
 
@@ -49,13 +51,16 @@ public class LoginFragment extends RegistrationFragment {
         initProgressToolbar(view, getString(R.string.registration_login_title), 1);
 
         loginButton = view.findViewById(R.id.button_login);
-        loginButton.setVisibility(View.INVISIBLE);
+        loginButton.setVisibility(View.GONE);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 signInUser();
             }
         });
+
+        buttonSpacer = view.findViewById(R.id.button_spacer);
+        buttonSpacer.setVisibility(loginButton.getVisibility());
 
         emailInput = (EditText) view.findViewById(R.id.input_email);
         emailInput.setOnFocusChangeListener(emailFocusValidator);
@@ -64,6 +69,14 @@ public class LoginFragment extends RegistrationFragment {
 
         passwordInput = (EditText) view.findViewById(R.id.input_password);
         passwordInput.addTextChangedListener(emptyTextWatcher);
+
+        backButton = view.findViewById(R.id.button_back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.onBackPressed();
+            }
+        });
     }
 
 
@@ -72,9 +85,11 @@ public class LoginFragment extends RegistrationFragment {
                 StringUtil.isValidEmail(emailInput.getText().toString()) &&
                 !StringUtil.isNullOrEmpty(passwordInput.getText().toString())){
             loginButton.setVisibility(View.VISIBLE);
+
         }else{
-            loginButton.setVisibility(View.INVISIBLE);
+            loginButton.setVisibility(View.GONE);
         }
+        buttonSpacer.setVisibility(loginButton.getVisibility());
     }
 
 
@@ -152,6 +167,7 @@ public class LoginFragment extends RegistrationFragment {
 
     private void enableFields(boolean enabled){
         loginButton.setEnabled(enabled);
+        backButton.setEnabled(enabled);
         emailInput.setEnabled(enabled);
         passwordInput.setEnabled(enabled);
 
@@ -273,7 +289,8 @@ public class LoginFragment extends RegistrationFragment {
         @Override
         public void afterTextChanged(Editable editable) {
             if(StringUtil.isNullOrEmpty(editable.toString())){
-                loginButton.setVisibility(View.INVISIBLE);
+                loginButton.setVisibility(View.GONE);
+                buttonSpacer.setVisibility(loginButton.getVisibility());
             }
             validateFields();
         }

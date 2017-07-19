@@ -11,7 +11,7 @@
              android:id="@+id/registration_toolbar"/>
 
     <LinearLayout
-        android:layout_width="@dimen/content_width_login"
+        android:layout_width="@dimen/content_width_wide"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center_horizontal"
@@ -25,37 +25,59 @@
         <com.carecloud.carepay.mini.views.CarePayTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/dp_20"
-            android:paddingEnd="@dimen/dp_20"
             android:gravity="center"
             android:textColor="@color/blueText"
-            android:textSize="@dimen/instructons_text"
+            android:textSize="@dimen/instructions_text"
             android:text="@string/registration_select_location_text"
-            app:customFont="proximanova_semibold.otf"/>
+            app:customFont="proximanova_regular.otf"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/locations_recycler"
-            android:layout_width="match_parent"
+            android:layout_width="@dimen/content_width_center"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_marginTop="@dimen/dp_10"/>
 
-        <FrameLayout
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="@dimen/content_width_buttons"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_marginTop="@dimen/dp_20">
 
-            <com.carecloud.carepay.mini.views.CarePayButton
-                android:id="@+id/button_next"
+            <FrameLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                style="@style/ButtonRounded"
-                android:text="@string/registration_next_button"
-                app:customFont="gotham_rounded_medium.otf"/>
+                android:layout_weight="1"
+                android:layout_marginEnd="@dimen/dp_5">
 
-            <include layout="@layout/progress_loader"/>
+                <com.carecloud.carepay.mini.views.CarePayButton
+                    android:id="@+id/button_back"
+                    style="@style/ButtonRoundedOutline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/registration_back_button"
+                    app:customFont="gotham_rounded_medium.otf"/>
 
-        </FrameLayout>
+            </FrameLayout>
 
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/dp_5">
+
+                <com.carecloud.carepay.mini.views.CarePayButton
+                    android:id="@+id/button_next"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    style="@style/ButtonRounded"
+                    android:text="@string/registration_next_button"
+                    app:customFont="gotham_rounded_medium.otf"/>
+
+                <include layout="@layout/progress_loader"/>
+
+            </FrameLayout>
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
