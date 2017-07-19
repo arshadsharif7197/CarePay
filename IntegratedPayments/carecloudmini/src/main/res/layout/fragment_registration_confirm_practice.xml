@@ -35,6 +35,7 @@
             app:customFont="proximanova_regular.otf"/>
 
         <com.carecloud.carepay.mini.views.CarePayTextView
+            android:id="@+id/practice_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/dp_20"

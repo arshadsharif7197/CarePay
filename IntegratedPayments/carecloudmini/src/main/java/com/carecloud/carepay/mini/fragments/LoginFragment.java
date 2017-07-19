@@ -130,7 +130,7 @@ public class LoginFragment extends RegistrationFragment {
                     //show practice confirmation Fragment
                     String practiceId = preRegisterDataModel.getUserPracticeDTOList().get(0).getPracticeId();
                     getApplicationHelper().getApplicationPreferences().setPracticeId(practiceId);
-                    callback.replaceFragment(new LocationsFragment(), true);
+                    callback.replaceFragment(new ConfirmPracticesFragment(), true);
                 }
             }else{
                 CustomErrorToast.showWithMessage(getContext(), getString(R.string.error_login));
