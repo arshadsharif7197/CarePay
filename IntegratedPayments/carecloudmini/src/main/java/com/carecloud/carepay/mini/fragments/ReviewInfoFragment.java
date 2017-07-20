@@ -21,6 +21,7 @@ import com.carecloud.carepay.mini.views.CustomErrorToast;
 import com.carecloud.shamrocksdk.registrations.DeviceRegistration;
 import com.carecloud.shamrocksdk.registrations.interfaces.RegistrationCallback;
 import com.carecloud.shamrocksdk.registrations.models.Device;
+import com.carecloud.shamrocksdk.registrations.models.DeviceGroup;
 import com.carecloud.shamrocksdk.registrations.models.Registration;
 import com.squareup.picasso.Picasso;
 
@@ -211,6 +212,9 @@ public class ReviewInfoFragment extends RegistrationFragment {
         device.setOrganizationId(selectedPractice.getOrganizationId());
         device.setSerialNumber(Build.SERIAL);
 
+        DeviceGroup deviceGroup = new DeviceGroup();
+        deviceGroup.setName(applicationPreferences.getLocationId());
+        device.setDeviceGroup(deviceGroup);
 
         DeviceRegistration.register(device, registrationCallback, getContext());
     }
