@@ -69,7 +69,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         navigationView.setNavigationItemSelectedListener(this);
 
         String imageUrl = getApplicationPreferences().getUserPhotoUrl();
-        ImageView userImageView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.appointmentDrawerIdImageView);
+        ImageView userImageView = (ImageView) navigationView.getHeaderView(0)
+                .findViewById(R.id.appointmentDrawerIdImageView);
         if (!StringUtil.isNullOrEmpty(imageUrl)) {
             Picasso.with(this)
                     .load(imageUrl)
