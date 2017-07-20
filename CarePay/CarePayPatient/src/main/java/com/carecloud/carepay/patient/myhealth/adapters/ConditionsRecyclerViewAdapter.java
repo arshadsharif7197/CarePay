@@ -45,7 +45,7 @@ public class ConditionsRecyclerViewAdapter extends RecyclerView.Adapter<Conditio
                 Math.min(assertions.size(), maxItems) : assertions.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         TextView conditionNameTextView;
         TextView practiceTextView;
 

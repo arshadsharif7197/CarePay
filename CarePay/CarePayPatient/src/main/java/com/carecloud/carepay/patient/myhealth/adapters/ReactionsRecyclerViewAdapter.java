@@ -41,7 +41,7 @@ public class ReactionsRecyclerViewAdapter extends RecyclerView.Adapter<Reactions
         return reactions.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView labelTextView;
         TextView valueTextView;

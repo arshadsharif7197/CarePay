@@ -33,6 +33,11 @@ public class AllergyDetailFragment extends BaseFragment {
 
     }
 
+    /**
+     *
+     * @param id the allergy id
+     * @return a new instance of AllergyDetailFragment
+     */
     public static AllergyDetailFragment newInstance(Integer id) {
         Bundle args = new Bundle();
         args.putInt("allergyId", id);

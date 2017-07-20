@@ -26,10 +26,21 @@ public class MedicationsRecyclerViewAdapter extends RecyclerView.Adapter<Medicat
     private final boolean showEndSign;
     private MyHealthDataInterface callback;
 
+    /**
+     *
+     * @param medications a list of medications
+     * @param maxItems the max number of items to show
+     */
     public MedicationsRecyclerViewAdapter(List<MedicationDto> medications, int maxItems) {
         this(medications, maxItems, false);
     }
 
+    /**
+     *
+     * @param medications a list of medications
+     * @param maxItems the max number of items to show
+     * @param showEndSign a boolean indicating to show o or not the end sign
+     */
     public MedicationsRecyclerViewAdapter(List<MedicationDto> medications, int maxItems, boolean showEndSign) {
         this.medications = medications;
         this.maxItems = maxItems;
@@ -89,7 +100,7 @@ public class MedicationsRecyclerViewAdapter extends RecyclerView.Adapter<Medicat
         return super.getItemViewType(position);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         TextView myHealthActionButton;
         TextView medicationNameTextView;
         TextView frequencyTextView;

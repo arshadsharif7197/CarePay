@@ -50,6 +50,10 @@ public class MyHealthListFragment extends BaseFragment implements MyHealthDataIn
 
     }
 
+    /**
+     * @param type the type of list to show
+     * @return a new instance of MyHealthListFragment
+     */
     public static MyHealthListFragment newInstance(int type) {
         Bundle args = new Bundle();
         args.putInt("type", type);
@@ -162,6 +166,8 @@ public class MyHealthListFragment extends BaseFragment implements MyHealthDataIn
                 labsAdapter.setCallback(this);
                 recyclerView.setAdapter(labsAdapter);
                 title.setText(Label.getLabel("my_health_list_lab_title"));
+                break;
+            default:
                 break;
         }
     }

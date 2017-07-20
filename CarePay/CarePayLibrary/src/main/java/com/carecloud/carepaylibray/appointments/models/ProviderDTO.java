@@ -70,7 +70,7 @@ public class ProviderDTO {
     @Expose
     private SpecialtyDTO specialty = new SpecialtyDTO();
 
-    public boolean isError() {
+    public boolean hasError() {
         return error;
     }
 

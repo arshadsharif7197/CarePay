@@ -30,6 +30,11 @@ public class MedicationDetailFragment extends BaseFragment {
 
     }
 
+    /**
+     *
+     * @param id the medication Id
+     * @return a new instance of MedicationDetailFragment
+     */
     public static MedicationDetailFragment newInstance(Integer id) {
         Bundle args = new Bundle();
         args.putInt("medicationId", id);
@@ -118,7 +123,7 @@ public class MedicationDetailFragment extends BaseFragment {
             }
         });
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
-        title.setText(Label.getLabel("my_health_allergy_detail_title"));
+        title.setText(Label.getLabel("my_health_medication_detail_title"));
     }
 
     private MedicationDto getMedication(int medicationId) {

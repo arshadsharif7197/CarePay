@@ -25,10 +25,19 @@ public class LabsRecyclerViewAdapter extends RecyclerView.Adapter<LabsRecyclerVi
     private final boolean showEndSign;
     private MyHealthDataInterface callback;
 
+    /**
+     * @param labs     the list of labs
+     * @param maxItems the number of max items to show
+     */
     public LabsRecyclerViewAdapter(List<LabDto> labs, int maxItems) {
         this(labs, maxItems, false);
     }
 
+    /**
+     * @param labs        the list of labs
+     * @param maxItems    the number of max items to show
+     * @param showEndSign a boolean indicating to show or not the end sign
+     */
     public LabsRecyclerViewAdapter(List<LabDto> labs, int maxItems, boolean showEndSign) {
         this.labs = labs;
         this.maxItems = maxItems;
@@ -65,7 +74,7 @@ public class LabsRecyclerViewAdapter extends RecyclerView.Adapter<LabsRecyclerVi
                 Math.min(labs.size(), maxItems) : labs.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         TextView myHealthActionButton;
         TextView labNameTextView;
         TextView dateTextView;

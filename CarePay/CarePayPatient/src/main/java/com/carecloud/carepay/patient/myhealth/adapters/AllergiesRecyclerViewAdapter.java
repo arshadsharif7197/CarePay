@@ -26,10 +26,21 @@ public class AllergiesRecyclerViewAdapter extends RecyclerView.Adapter<Allergies
     private final boolean showEndSign;
     private MyHealthDataInterface callback;
 
+    /**
+     *
+     * @param allergies the list of allergies
+     * @param maxItems the number of max items to show
+     */
     public AllergiesRecyclerViewAdapter(List<AllergyDto> allergies, int maxItems) {
         this(allergies, maxItems, false);
     }
 
+    /**
+     *
+     * @param allergies the list of allergies
+     * @param maxItems the number of max items to show
+     * @param showEndSign a boolean indicating to show or not the end sign
+     */
     public AllergiesRecyclerViewAdapter(List<AllergyDto> allergies, int maxItems, boolean showEndSign) {
         this.allergies = allergies;
         this.maxItems = maxItems;
@@ -89,7 +100,7 @@ public class AllergiesRecyclerViewAdapter extends RecyclerView.Adapter<Allergies
         return super.getItemViewType(position);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         TextView myHealthActionButton;
         TextView allergyNameTextView;
         TextView practiceTextView;

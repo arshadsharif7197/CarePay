@@ -104,7 +104,7 @@ public class CareTeamRecyclerViewAdapter extends RecyclerView.Adapter<CareTeamRe
         return super.getItemViewType(position);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         ImageView providerImageView;
         TextView providerNameTextView;
         TextView providerSpecialityTextView;
