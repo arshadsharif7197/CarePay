@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingEnd="10dp"
+    android:paddingStart="10dp">
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/endSign"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/dimen_5dp"
+        android:text=">>"
+        android:textColor="@color/light_gray"
+        app:customAssetFont="gotham_rounded_bold"
+        tools:text=">>" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="@dimen/dimen_5dp"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_toStartOf="@id/endSign"
+        android:gravity="start"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/providerTextColor"
+        android:textSize="@dimen/text_size_18sp"
+        app:customAssetFont="proxima_nova_semi_bold"
+        tools:text="Migraine" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/subTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/titleTextView"
+        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:layout_toStartOf="@id/endSign"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:gravity="start"
+        android:textColor="@color/lightSlateGray"
+        app:customAssetFont="proxima_nova_regular"
+        tools:text="The red River Clinic" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/light_gray"
+        tools:text="The red River Clinic" />
+
+</RelativeLayout>

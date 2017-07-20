@@ -115,6 +115,9 @@
         <activity
             android:name=".messages.activities.MessagesActivity"
             android:screenOrientation="sensorPortrait" />
+        <activity
+            android:name=".myhealth.MyHealthActivity"
+            android:screenOrientation="sensorPortrait" />
 
     </application>
 
