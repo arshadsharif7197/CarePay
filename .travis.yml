@@ -25,6 +25,7 @@ before_install:
   - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
   - ./CarePay/gradlew dependencies || true
   - chmod +x ./CarePay/runner
+  - pip install --user awscli
 android:
   components:
     - tools
@@ -41,9 +42,6 @@ script:
    - jdk_switcher use oraclejdk8
    - cd /home/travis/build/CareCloud/shamrock_android/CarePay
    - ./runner
-before_deploy: 
-   - pip install --user awscli
-   - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 rm s3://automation-zeus --recursive
 deploy:
   provider: s3
   access_key_id: $AWS_ACCESS_KEY
