@@ -92,4 +92,7 @@
     <color name="greenProviderMessageHeader">@color/lemonGreen</color>
     <color name="cameraBackground">#aa575555</color>
     <color name="sky">#60C5CF</color>
+    <color name="myHealthRecyclerViewBackground">#FBFCFC</color>
+    <color name="myHealthTextColor">#607D8B</color>
+    <color name="providerTextColor">#546E7A</color>
 </resources>

@@ -17,4 +17,8 @@ public interface IApplicationSession {
     AppAuthorizationHelper getAppAuthorizationHelper();
 
     ApplicationMode getApplicationMode();
+
+    void setLastInteraction(long systemTime);
+
+    long getLastInteraction();
 }

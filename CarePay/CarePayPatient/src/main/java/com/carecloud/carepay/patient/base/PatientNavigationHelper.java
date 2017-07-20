@@ -11,6 +11,7 @@ import com.carecloud.carepay.patient.demographics.activities.DemographicsSetting
 import com.carecloud.carepay.patient.demographics.activities.NewDemographicsActivity;
 import com.carecloud.carepay.patient.demographics.activities.ReviewDemographicsActivity;
 import com.carecloud.carepay.patient.messages.activities.MessagesActivity;
+import com.carecloud.carepay.patient.myhealth.MyHealthActivity;
 import com.carecloud.carepay.patient.notifications.activities.NotificationActivity;
 import com.carecloud.carepay.patient.payment.activities.PaymentActivity;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
@@ -154,7 +155,7 @@ public class PatientNavigationHelper {
             case NavigationStateConstants.PATIENT_APP_CHECKOUT:
             case NavigationStateConstants.PATIENT_FORM_CHECKOUT:
             case NavigationStateConstants.PATIENT_PAY_CHECKOUT: {
-                if(context instanceof  AppointmentCheckoutActivity){
+                if (context instanceof AppointmentCheckoutActivity) {
                     ((AppointmentCheckoutActivity) context).initDto(workflowDTO);
                     return;
                 }
@@ -169,6 +170,11 @@ public class PatientNavigationHelper {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 context.startActivity(intent);
                 return;
+
+            case NavigationStateConstants.PATIENT_MY_HEALTH:
+                intent = new Intent(context, MyHealthActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                break;
 
             default: {
                 intent = new Intent(context, AppointmentsActivity.class);

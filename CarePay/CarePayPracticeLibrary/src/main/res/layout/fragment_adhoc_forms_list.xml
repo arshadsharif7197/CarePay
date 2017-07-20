@@ -55,10 +55,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_gravity="center"
-            android:background="@drawable/dialog_header_dark_blue"
+            android:background="@drawable/appointment_dialog_header_bg"
             android:gravity="center"
             android:padding="@dimen/dimen_10dp"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/white"
             android:textSize="@dimen/text_size_30sp"
             app:customAssetFont="gotham_rounded_bold"
             breeze:textKey="adhoc_screen_title" />

@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.appointments.models;
 
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepaylibray.base.dtos.BaseLinks;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -8,11 +9,8 @@ import com.google.gson.annotations.SerializedName;
  * Created by arpit_jain1 on 11/7/2016.
  * Model for Links
  */
-public class LinksDTO {
+public class LinksDTO extends BaseLinks {
 
-    @SerializedName("self")
-    @Expose
-    private LinkDTO self = new LinkDTO();
     @SerializedName("demographics")
     @Expose
     private LinkDTO demographics = new LinkDTO();
@@ -58,21 +56,15 @@ public class LinksDTO {
     @SerializedName("all_practice_forms")
     @Expose
     private TransitionDTO allPracticeForms = new TransitionDTO();
-
-
-    /**
-     * @return The self
-     */
-    public LinkDTO getSelf() {
-        return self;
-    }
-
-    /**
-     * @param self The self
-     */
-    public void setSelf(LinkDTO self) {
-        this.self = self;
-    }
+    @SerializedName("myhealth")
+    @Expose
+    private TransitionDTO myHealth;
+    @SerializedName("patient_appointments")
+    @Expose
+    private TransitionDTO patientAppointments;
+    @SerializedName("patient_payments")
+    @Expose
+    private TransitionDTO patientPayments;
 
     /**
      * @return The demographics
@@ -227,5 +219,29 @@ public class LinksDTO {
 
     public void setAllPracticeForms(TransitionDTO allPracticeForms) {
         this.allPracticeForms = allPracticeForms;
+    }
+
+    public TransitionDTO getMyHealth() {
+        return myHealth;
+    }
+
+    public void setMyHealth(TransitionDTO myHealth) {
+        this.myHealth = myHealth;
+    }
+
+    public TransitionDTO getPatientAppointments() {
+        return patientAppointments;
+    }
+
+    public void setPatientAppointments(TransitionDTO patientAppointments) {
+        this.patientAppointments = patientAppointments;
+    }
+
+    public TransitionDTO getPatientPayments() {
+        return patientPayments;
+    }
+
+    public void setPatientPayments(TransitionDTO patientPayments) {
+        this.patientPayments = patientPayments;
     }
 }
