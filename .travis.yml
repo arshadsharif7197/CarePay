@@ -42,15 +42,6 @@ script:
    - jdk_switcher use oraclejdk8
    - cd /home/travis/build/CareCloud/shamrock_android/CarePay
    - ./runner
-deploy:
-  provider: s3
-  access_key_id: $AWS_ACCESS_KEY
-  secret_access_key: $AWS_SECRET_KEY
-  bucket: "automation-zeus"
-  skip_cleanup: true
-  local_dir: /home/travis/build/CareCloud/shamrock_android/CarePay/CarePayPracticeTablet/build/outputs/apk
-  on:
-    all_branches: true
 branches:
   only: 
     - master
