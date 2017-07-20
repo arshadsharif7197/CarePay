@@ -19,6 +19,7 @@ public abstract class CarePayApplication extends MultiDexApplication implements 
     private ApplicationPreferences applicationPreferences;
     private WorkflowServiceHelper workflowServiceHelper;
     private AppAuthorizationHelper appAuthorizationHelper;
+    private long lastInteraction;
 
     @Override
     public void onCreate() {
@@ -60,4 +61,16 @@ public abstract class CarePayApplication extends MultiDexApplication implements 
 
         return appAuthorizationHelper;
     }
+
+    @Override
+    public void setLastInteraction(long systemTime){
+        this.lastInteraction = systemTime;
+    }
+
+    @Override
+    public long getLastInteraction(){
+        return this.lastInteraction;
+    }
+
+
 }
