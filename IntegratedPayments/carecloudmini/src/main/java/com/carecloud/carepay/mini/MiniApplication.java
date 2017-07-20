@@ -5,7 +5,7 @@ import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
-import com.carecloud.carepay.mini.models.response.SignInAuth;
+import com.carecloud.carepay.mini.models.response.Authentication;
 import com.carecloud.carepay.mini.services.ServiceHelper;
 import com.carecloud.carepay.mini.services.carepay.RestCallServiceHelper;
 import com.carecloud.carepay.mini.utils.ApplicationPreferences;
@@ -25,7 +25,7 @@ public class MiniApplication extends MultiDexApplication implements ApplicationH
     private RestCallServiceHelper restHelper;
 
     private ApplicationPreferences applicationPreferences;
-    private SignInAuth.Cognito.Authentication authentication;
+    private Authentication authentication;
 
     @Override
     public void onCreate() {
@@ -77,13 +77,13 @@ public class MiniApplication extends MultiDexApplication implements ApplicationH
     }
 
     @Override
-    public void setAuthentication(SignInAuth.Cognito.Authentication authentication) {
+    public void setAuthentication(Authentication authentication) {
         this.authentication = authentication;
         updatePicassoHelper();
     }
 
     @Override
-    public SignInAuth.Cognito.Authentication getAuthentication() {
+    public Authentication getAuthentication() {
         return authentication;
     }
 

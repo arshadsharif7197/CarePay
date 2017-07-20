@@ -9,9 +9,9 @@ import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.fragments.StartRegistrationFragment;
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
 import com.carecloud.carepay.mini.interfaces.RegistrationNavigationCallback;
+import com.carecloud.carepay.mini.models.response.Authentication;
 import com.carecloud.carepay.mini.models.response.PreRegisterDataModel;
 import com.carecloud.carepay.mini.models.response.RegistrationDataModel;
-import com.carecloud.carepay.mini.models.response.SignInAuth;
 import com.carecloud.carepay.mini.services.ServiceResponseDTO;
 import com.carecloud.carepay.mini.utils.DtoHelper;
 import com.google.gson.JsonElement;
@@ -75,7 +75,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     }
 
     @Override
-    public void setAuthentication(SignInAuth.Cognito.Authentication authentication) {
+    public void setAuthentication(Authentication authentication) {
         ((ApplicationHelper) getApplication()).setAuthentication(authentication);
     }
 

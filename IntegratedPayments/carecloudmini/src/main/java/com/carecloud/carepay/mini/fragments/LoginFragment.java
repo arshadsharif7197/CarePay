@@ -11,9 +11,9 @@ import android.widget.EditText;
 
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.models.data.UserDTO;
+import com.carecloud.carepay.mini.models.response.Authentication;
 import com.carecloud.carepay.mini.models.response.PreRegisterDataModel;
 import com.carecloud.carepay.mini.models.response.RegistrationDataModel;
-import com.carecloud.carepay.mini.models.response.SignInAuth;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
 import com.carecloud.carepay.mini.services.ServiceCallback;
 import com.carecloud.carepay.mini.services.ServiceRequestDTO;
@@ -109,7 +109,7 @@ public class LoginFragment extends RegistrationFragment {
     }
 
     private void authenticateUser(){
-        SignInAuth.Cognito.Authentication authentication = callback.getRegistrationDataModel().getPayloadDTO().getSignInAuth().getCognito().getAuthentication();
+        Authentication authentication = callback.getRegistrationDataModel().getPayloadDTO().getSignInAuth().getCognito().getAuthentication();
         if(authentication != null && authentication.getAccessToken() != null) {
             callback.setAuthentication(authentication);
         }
@@ -141,9 +141,6 @@ public class LoginFragment extends RegistrationFragment {
         }else{
             PreRegisterDataModel preRegisterDataModel = callback.getPreRegisterDataModel();
             if(!preRegisterDataModel.getUserPracticeDTOList().isEmpty()){
-                //strip out practices for testing TODO remove this for Prod
-                stripPractices(preRegisterDataModel.getUserPracticeDTOList());
-
                 if(preRegisterDataModel.getUserPracticeDTOList().size() > 1){
                     //show practice selection
                     callback.replaceFragment(new PracticesFragment(), true);
@@ -204,8 +201,8 @@ public class LoginFragment extends RegistrationFragment {
         @Override
         public void onPostExecute(JsonElement jsonElement) {
             Log.d(LoginFragment.class.getName(), jsonElement.toString());
-            SignInAuth signInAuth = DtoHelper.getConvertedDTO(SignInAuth.class, (JsonObject) jsonElement);
-            callback.setAuthentication(signInAuth.getCognito().getAuthentication());
+            Authentication signInAuth = DtoHelper.getConvertedDTO(Authentication.class, (JsonObject) jsonElement);
+            callback.setAuthentication(signInAuth);
             getApplicationHelper().getApplicationPreferences().setUsername(emailInput.getText().toString());
             getPreRegistration();
         }

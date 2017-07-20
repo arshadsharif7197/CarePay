@@ -1,6 +1,8 @@
 package com.carecloud.carepay.mini.fragments;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.mini.R;
+import com.carecloud.carepay.mini.activities.WelcomeActivity;
 import com.carecloud.carepay.mini.models.response.LocationsDTO;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
 import com.carecloud.carepay.mini.utils.ApplicationPreferences;
@@ -206,7 +209,7 @@ public class ReviewInfoFragment extends RegistrationFragment {
         Device device = new Device();
         device.setDeviceName(applicationPreferences.getDeviceName());
         device.setOrganizationId(selectedPractice.getOrganizationId());
-        device.setSerialNumber("test"+System.currentTimeMillis());
+        device.setSerialNumber(Build.SERIAL);
 
 
         DeviceRegistration.register(device, registrationCallback, getContext());
@@ -231,6 +234,12 @@ public class ReviewInfoFragment extends RegistrationFragment {
         selectedPractice.setPracticePhoto(imageFile.getAbsolutePath());
     }
 
+    private void launchWelcomeActivity(){
+        Intent main = new Intent(getContext(), WelcomeActivity.class);
+        main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(main);
+    }
+
     private RegistrationCallback registrationCallback = new RegistrationCallback() {
         @Override
         public void onPreExecute() {
@@ -241,10 +250,10 @@ public class ReviewInfoFragment extends RegistrationFragment {
         public void onPostExecute(Registration registration) {
             buttonRegisterDevice.setEnabled(true);
 
-
-
             ApplicationPreferences applicationPreferences = getApplicationHelper().getApplicationPreferences();
             applicationPreferences.setDeviceId(registration.getId());
+
+            launchWelcomeActivity();
 
         }
 
