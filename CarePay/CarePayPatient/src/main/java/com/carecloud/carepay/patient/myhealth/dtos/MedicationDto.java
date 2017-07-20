@@ -31,7 +31,7 @@ public class MedicationDto {
     //    @Expose
     //    private String? rxNormCode;
     @Expose
-    private Integer quantity;
+    private Double quantity;
     @Expose
     @SerializedName("refill_count")
     private Integer refillCount;
@@ -102,11 +102,11 @@ public class MedicationDto {
         this.status = status;
     }
 
-    public Integer getQuantity() {
+    public Double getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(Double quantity) {
         this.quantity = quantity;
     }
 

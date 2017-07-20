@@ -83,7 +83,6 @@ public class AllergyDetailFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        callback.displayToolbar(false, null);
         setUpToolbar(view);
         TextView allergyNameTextView = (TextView) view.findViewById(R.id.allergyName);
         allergyNameTextView.setText(allergy.getName());
@@ -98,6 +97,7 @@ public class AllergyDetailFragment extends BaseFragment {
     }
 
     private void setUpToolbar(View view) {
+        callback.displayToolbar(false, null);
         Toolbar toolbar = (Toolbar) view.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {

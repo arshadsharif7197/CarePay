@@ -10,6 +10,8 @@ import com.carecloud.carepay.patient.myhealth.dtos.AllergyDto;
 import com.carecloud.carepay.patient.myhealth.dtos.LabDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MedicationDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
+import com.carecloud.carepay.patient.myhealth.fragments.AllergyDetailFragment;
+import com.carecloud.carepay.patient.myhealth.fragments.MedicationDetailFragment;
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthListFragment;
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthMainFragment;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
@@ -68,7 +70,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
 
     @Override
     public void onAllergyClicked(AllergyDto allergy) {
-        
+        addFragment(AllergyDetailFragment.newInstance(allergy.getId()), true);
     }
 
     @Override
@@ -78,7 +80,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
 
     @Override
     public void onMedicationClicked(MedicationDto medication) {
-
+        addFragment(MedicationDetailFragment.newInstance(medication.getId()), true);
     }
 
     @Override
