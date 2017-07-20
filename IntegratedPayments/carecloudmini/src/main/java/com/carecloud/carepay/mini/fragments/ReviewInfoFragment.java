@@ -86,6 +86,9 @@ public class ReviewInfoFragment extends RegistrationFragment {
         buttonRegisterDevice = view.findViewById(R.id.button_register);
         buttonRegisterDevice.setOnClickListener(clickListener);
 
+        View backButton = view.findViewById(R.id.button_back);
+        backButton.setOnClickListener(clickListener);
+
         setupPracticeInfo();
 
     }
@@ -159,8 +162,11 @@ public class ReviewInfoFragment extends RegistrationFragment {
                     popToFragment(PracticesFragment.class.getName());
                     break;
                 case R.id.button_register:
-                default:
                     registerDevice();
+                    break;
+                case R.id.button_back:
+                default:
+                    callback.onBackPressed();
                     break;
             }
         }
@@ -175,9 +181,16 @@ public class ReviewInfoFragment extends RegistrationFragment {
     }
 
     private String getLocationNameById(String locationId){
-        for(LocationsDTO location : callback.getRegistrationDataModel().getPayloadDTO().getLocations()){
-            if(location.getGuid().equals(locationId)){
-                return location.getName();
+        if(callback.getRegistrationDataModel() != null) {
+            for (LocationsDTO location : callback.getRegistrationDataModel().getPayloadDTO().getLocations()) {
+                if (location.getGuid().equals(locationId)) {
+                    return location.getName();
+                }
+            }
+        }else{
+            LocationsDTO locationsDTO = callback.getPreRegisterDataModel().getPracticeById(selectedPractice.getPracticeId()).findLocationById(locationId);
+            if(locationsDTO != null){
+                return locationsDTO.getName();
             }
         }
         return null;
@@ -192,7 +205,7 @@ public class ReviewInfoFragment extends RegistrationFragment {
 
         Device device = new Device();
         device.setDeviceName(applicationPreferences.getDeviceName());
-        device.setOrganizationId(applicationPreferences.getPracticeId());
+        device.setOrganizationId(selectedPractice.getOrganizationId());
         device.setSerialNumber("test"+System.currentTimeMillis());
 
 

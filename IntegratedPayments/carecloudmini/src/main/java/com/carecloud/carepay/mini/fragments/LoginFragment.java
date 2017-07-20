@@ -14,6 +14,7 @@ import com.carecloud.carepay.mini.models.data.UserDTO;
 import com.carecloud.carepay.mini.models.response.PreRegisterDataModel;
 import com.carecloud.carepay.mini.models.response.RegistrationDataModel;
 import com.carecloud.carepay.mini.models.response.SignInAuth;
+import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
 import com.carecloud.carepay.mini.services.ServiceCallback;
 import com.carecloud.carepay.mini.services.ServiceRequestDTO;
 import com.carecloud.carepay.mini.services.ServiceResponseDTO;
@@ -26,6 +27,8 @@ import com.carecloud.shamrocksdk.registrations.interfaces.AccountInfoAdapter;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.util.List;
+
 /**
  * Created by lmenendez on 6/23/17
  */
@@ -33,6 +36,8 @@ import com.google.gson.JsonObject;
 public class LoginFragment extends RegistrationFragment {
 
     private View loginButton;
+    private View backButton;
+    private View buttonSpacer;
     private EditText emailInput;
     private EditText passwordInput;
 
@@ -46,13 +51,16 @@ public class LoginFragment extends RegistrationFragment {
         initProgressToolbar(view, getString(R.string.registration_login_title), 1);
 
         loginButton = view.findViewById(R.id.button_login);
-        loginButton.setVisibility(View.INVISIBLE);
+        loginButton.setVisibility(View.GONE);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 signInUser();
             }
         });
+
+        buttonSpacer = view.findViewById(R.id.button_spacer);
+        buttonSpacer.setVisibility(loginButton.getVisibility());
 
         emailInput = (EditText) view.findViewById(R.id.input_email);
         emailInput.setOnFocusChangeListener(emailFocusValidator);
@@ -61,6 +69,14 @@ public class LoginFragment extends RegistrationFragment {
 
         passwordInput = (EditText) view.findViewById(R.id.input_password);
         passwordInput.addTextChangedListener(emptyTextWatcher);
+
+        backButton = view.findViewById(R.id.button_back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.onBackPressed();
+            }
+        });
     }
 
 
@@ -69,9 +85,11 @@ public class LoginFragment extends RegistrationFragment {
                 StringUtil.isValidEmail(emailInput.getText().toString()) &&
                 !StringUtil.isNullOrEmpty(passwordInput.getText().toString())){
             loginButton.setVisibility(View.VISIBLE);
+
         }else{
-            loginButton.setVisibility(View.INVISIBLE);
+            loginButton.setVisibility(View.GONE);
         }
+        buttonSpacer.setVisibility(loginButton.getVisibility());
     }
 
 
@@ -123,6 +141,9 @@ public class LoginFragment extends RegistrationFragment {
         }else{
             PreRegisterDataModel preRegisterDataModel = callback.getPreRegisterDataModel();
             if(!preRegisterDataModel.getUserPracticeDTOList().isEmpty()){
+                //strip out practices for testing TODO remove this for Prod
+                stripPractices(preRegisterDataModel.getUserPracticeDTOList());
+
                 if(preRegisterDataModel.getUserPracticeDTOList().size() > 1){
                     //show practice selection
                     callback.replaceFragment(new PracticesFragment(), true);
@@ -130,7 +151,7 @@ public class LoginFragment extends RegistrationFragment {
                     //show practice confirmation Fragment
                     String practiceId = preRegisterDataModel.getUserPracticeDTOList().get(0).getPracticeId();
                     getApplicationHelper().getApplicationPreferences().setPracticeId(practiceId);
-                    callback.replaceFragment(new LocationsFragment(), true);
+                    callback.replaceFragment(new ConfirmPracticesFragment(), true);
                 }
             }else{
                 CustomErrorToast.showWithMessage(getContext(), getString(R.string.error_login));
@@ -138,8 +159,15 @@ public class LoginFragment extends RegistrationFragment {
         }
     }
 
+    private void stripPractices(List<UserPracticeDTO> practices){
+        UserPracticeDTO practiceDTO = practices.get(0);
+        practices.clear();
+        practices.add(  practiceDTO);
+    }
+
     private void enableFields(boolean enabled){
         loginButton.setEnabled(enabled);
+        backButton.setEnabled(enabled);
         emailInput.setEnabled(enabled);
         passwordInput.setEnabled(enabled);
 
@@ -261,7 +289,8 @@ public class LoginFragment extends RegistrationFragment {
         @Override
         public void afterTextChanged(Editable editable) {
             if(StringUtil.isNullOrEmpty(editable.toString())){
-                loginButton.setVisibility(View.INVISIBLE);
+                loginButton.setVisibility(View.GONE);
+                buttonSpacer.setVisibility(loginButton.getVisibility());
             }
             validateFields();
         }
