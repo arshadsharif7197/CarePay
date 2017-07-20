@@ -16,8 +16,6 @@ public interface MyHealthDataInterface {
 
     void onProviderClicked(ProviderDTO provider);
 
-    void onConditionClicked(AssertionDto assertion);
-
     void onAllergyClicked(AllergyDto allergy);
 
     void addAllergy();

@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.myhealth.dtos.LabDto;
+import com.carecloud.carepay.patient.myhealth.fragments.MyHealthMainFragment;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthDataInterface;
 
 import java.util.List;
@@ -19,11 +20,13 @@ import java.util.List;
 public class LabsRecyclerViewAdapter extends RecyclerView.Adapter<LabsRecyclerViewAdapter.ViewHolder> {
 
 
-    private final List<LabDto> medications;
+    private final List<LabDto> labs;
+    private final int maxItems;
     private MyHealthDataInterface callback;
 
-    public LabsRecyclerViewAdapter(List<LabDto> providers) {
-        this.medications = providers;
+    public LabsRecyclerViewAdapter(List<LabDto> providers, int maxItems) {
+        this.labs = providers;
+        this.maxItems = maxItems;
     }
 
     public void setCallback(MyHealthDataInterface callback) {
@@ -38,7 +41,7 @@ public class LabsRecyclerViewAdapter extends RecyclerView.Adapter<LabsRecyclerVi
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final LabDto lab = medications.get(position);
+        final LabDto lab = labs.get(position);
         holder.labNameTextView.setText(lab.getName());
         holder.dateTextView.setText(String.format("Performed on %s", lab.getCreatedAt()));
         holder.row.setOnClickListener(new View.OnClickListener() {
@@ -52,7 +55,8 @@ public class LabsRecyclerViewAdapter extends RecyclerView.Adapter<LabsRecyclerVi
 
     @Override
     public int getItemCount() {
-        return medications.size();
+        return maxItems == MyHealthMainFragment.MAX_ITEMS_TO_SHOW ?
+                Math.min(labs.size(), maxItems) : labs.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

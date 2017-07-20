@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.myhealth.adapters.AllergiesRecyclerViewAdapter;
@@ -21,9 +22,9 @@ import com.carecloud.carepay.patient.myhealth.dtos.LabDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MedicationDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthDataInterface;
+import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ import java.util.List;
 
 public class MyHealthMainFragment extends BaseFragment implements MyHealthDataInterface {
 
-    private FragmentActivityInterface callback;
+    private MyHealthInterface callback;
     private MyHealthDto myHealthDto;
     public static final int MAX_ITEMS_TO_SHOW = 3;
 
@@ -49,10 +50,16 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (FragmentActivityInterface) context;
+            callback = (MyHealthInterface) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException("the Activity must implement FragmentActivityInterface");
+            throw new ClassCastException("the Activity must implement MyHealthInterface");
         }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        callback = null;
     }
 
     @Override
@@ -63,7 +70,9 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         return inflater.inflate(R.layout.fragment_my_health_main, container, false);
     }
 
@@ -91,11 +100,19 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
                 }
             };
             labsRecyclerView.setLayoutManager(linearLayout);
-            LabsRecyclerViewAdapter labsAdapter = new LabsRecyclerViewAdapter(labs);
+            LabsRecyclerViewAdapter labsAdapter = new LabsRecyclerViewAdapter(labs, MAX_ITEMS_TO_SHOW);
             labsAdapter.setCallback(this);
             labsRecyclerView.setAdapter(labsAdapter);
-            if (labs.size() < MAX_ITEMS_TO_SHOW) {
-                view.findViewById(R.id.medicationsSeeAllTextView).setVisibility(View.GONE);
+            TextView seeAll = (TextView) view.findViewById(R.id.labsSeeAllTextView);
+            if (labs.size() <= MAX_ITEMS_TO_SHOW) {
+                seeAll.setVisibility(View.GONE);
+            } else {
+                seeAll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.showListFragment(MyHealthListFragment.LABS);
+                    }
+                });
             }
         }
     }
@@ -115,11 +132,21 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
                 }
             };
             medicationsRecyclerView.setLayoutManager(linearLayout);
-            MedicationsRecyclerViewAdapter medicationsAdapter = new MedicationsRecyclerViewAdapter(medications);
+            MedicationsRecyclerViewAdapter medicationsAdapter = new MedicationsRecyclerViewAdapter(
+                    medications, MAX_ITEMS_TO_SHOW);
             medicationsAdapter.setCallback(this);
             medicationsRecyclerView.setAdapter(medicationsAdapter);
-            if (medications.size() < MAX_ITEMS_TO_SHOW) {
-                view.findViewById(R.id.medicationsSeeAllTextView).setVisibility(View.GONE);
+
+            TextView seeAll = (TextView) view.findViewById(R.id.medicationsSeeAllTextView);
+            if (medications.size() <= MAX_ITEMS_TO_SHOW) {
+                seeAll.setVisibility(View.GONE);
+            } else {
+                seeAll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.showListFragment(MyHealthListFragment.MEDICATIONS);
+                    }
+                });
             }
         }
     }
@@ -138,11 +165,21 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
                 }
             };
             allergiesRecyclerView.setLayoutManager(linearLayout);
-            AllergiesRecyclerViewAdapter allergiesAdapter = new AllergiesRecyclerViewAdapter(allergies);
+            AllergiesRecyclerViewAdapter allergiesAdapter = new AllergiesRecyclerViewAdapter(allergies,
+                    MAX_ITEMS_TO_SHOW);
             allergiesAdapter.setCallback(this);
             allergiesRecyclerView.setAdapter(allergiesAdapter);
-            if (allergies.size() < MAX_ITEMS_TO_SHOW) {
-                view.findViewById(R.id.allergiesSeeAllTextView).setVisibility(View.GONE);
+
+            TextView seeAll = (TextView) view.findViewById(R.id.allergiesSeeAllTextView);
+            if (allergies.size() <= MAX_ITEMS_TO_SHOW) {
+                seeAll.setVisibility(View.GONE);
+            } else {
+                seeAll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.showListFragment(MyHealthListFragment.ALLERGIES);
+                    }
+                });
             }
         }
     }
@@ -162,11 +199,20 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
                 }
             };
             conditionsRecyclerView.setLayoutManager(linearLayout);
-            ConditionsRecyclerViewAdapter conditionsAdapter = new ConditionsRecyclerViewAdapter(assertions);
-            conditionsAdapter.setCallback(this);
+            ConditionsRecyclerViewAdapter conditionsAdapter = new ConditionsRecyclerViewAdapter(
+                    assertions, MAX_ITEMS_TO_SHOW);
             conditionsRecyclerView.setAdapter(conditionsAdapter);
-            if (assertions.size() < MAX_ITEMS_TO_SHOW) {
-                view.findViewById(R.id.conditionsSeeAllTextView).setVisibility(View.GONE);
+
+            TextView seeAll = (TextView) view.findViewById(R.id.conditionsSeeAllTextView);
+            if (assertions.size() <= MAX_ITEMS_TO_SHOW) {
+                seeAll.setVisibility(View.GONE);
+            } else {
+                seeAll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.showListFragment(MyHealthListFragment.CONDITIONS);
+                    }
+                });
             }
         }
 
@@ -187,52 +233,57 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
                 }
             };
             careTeamRecyclerView.setLayoutManager(linearLayout);
-            CareTeamRecyclerViewAdapter careTeamAdapter = new CareTeamRecyclerViewAdapter(providers);
+            CareTeamRecyclerViewAdapter careTeamAdapter = new CareTeamRecyclerViewAdapter(
+                    providers, MAX_ITEMS_TO_SHOW);
             careTeamAdapter.setCallback(this);
             careTeamRecyclerView.setAdapter(careTeamAdapter);
-            if (providers.size() < MAX_ITEMS_TO_SHOW) {
-                view.findViewById(R.id.careTeamSeeAllTextView).setVisibility(View.GONE);
+
+            TextView seeAll = (TextView) view.findViewById(R.id.careTeamSeeAllTextView);
+            if (providers.size() <= MAX_ITEMS_TO_SHOW) {
+                seeAll.setVisibility(View.GONE);
+            } else {
+                seeAll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.showListFragment(MyHealthListFragment.CARE_TEAM);
+                    }
+                });
             }
         }
     }
 
     @Override
     public void onSeeAllFullMedicalRecordClicked() {
-
+        callback.onSeeAllFullMedicalRecordClicked();
     }
 
     @Override
     public void onProviderClicked(ProviderDTO provider) {
-
-    }
-
-    @Override
-    public void onConditionClicked(AssertionDto assertion) {
-
+        callback.onProviderClicked(provider);
     }
 
     @Override
     public void onAllergyClicked(AllergyDto allergy) {
-
+        callback.onAllergyClicked(allergy);
     }
 
     @Override
     public void addAllergy() {
-
+        callback.addAllergy();
     }
 
     @Override
     public void onMedicationClicked(MedicationDto medication) {
-
+        callback.onMedicationClicked(medication);
     }
 
     @Override
     public void addMedication() {
-
+        callback.addMedication();
     }
 
     @Override
     public void onLabClicked(LabDto lab) {
-
+        callback.onLabClicked(lab);
     }
 }

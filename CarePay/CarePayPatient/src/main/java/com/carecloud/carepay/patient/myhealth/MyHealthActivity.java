@@ -6,15 +6,20 @@ import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.myhealth.dtos.AllergyDto;
+import com.carecloud.carepay.patient.myhealth.dtos.LabDto;
+import com.carecloud.carepay.patient.myhealth.dtos.MedicationDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
+import com.carecloud.carepay.patient.myhealth.fragments.MyHealthListFragment;
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthMainFragment;
+import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
-import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 
 /**
  * @author pjohnson on 17/07/17.
  */
-public class MyHealthActivity extends MenuPatientActivity implements FragmentActivityInterface {
+public class MyHealthActivity extends MenuPatientActivity implements MyHealthInterface {
 
     private MyHealthDto myHealthDto;
 
@@ -49,5 +54,45 @@ public class MyHealthActivity extends MenuPatientActivity implements FragmentAct
     @Override
     public void addFragment(Fragment fragment, boolean addToBackStack) {
         addFragment(R.id.container_main, fragment, addToBackStack);
+    }
+
+    @Override
+    public void onSeeAllFullMedicalRecordClicked() {
+
+    }
+
+    @Override
+    public void onProviderClicked(ProviderDTO provider) {
+
+    }
+
+    @Override
+    public void onAllergyClicked(AllergyDto allergy) {
+
+    }
+
+    @Override
+    public void addAllergy() {
+
+    }
+
+    @Override
+    public void onMedicationClicked(MedicationDto medication) {
+
+    }
+
+    @Override
+    public void addMedication() {
+
+    }
+
+    @Override
+    public void onLabClicked(LabDto lab) {
+
+    }
+
+    @Override
+    public void showListFragment(int type) {
+        addFragment(MyHealthListFragment.newInstance(type), true);
     }
 }

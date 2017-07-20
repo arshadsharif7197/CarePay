@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.myhealth.dtos.AssertionDto;
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthMainFragment;
-import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthDataInterface;
 
 import java.util.List;
 
@@ -20,14 +19,11 @@ import java.util.List;
 public class ConditionsRecyclerViewAdapter extends RecyclerView.Adapter<ConditionsRecyclerViewAdapter.ViewHolder> {
 
     private final List<AssertionDto> assertions;
-    private MyHealthDataInterface callback;
+    private final int maxItems;
 
-    public ConditionsRecyclerViewAdapter(List<AssertionDto> providers) {
+    public ConditionsRecyclerViewAdapter(List<AssertionDto> providers, int maxItems) {
         this.assertions = providers;
-    }
-
-    public void setCallback(MyHealthDataInterface callback) {
-        this.callback = callback;
+        this.maxItems = maxItems;
     }
 
     @Override
@@ -41,29 +37,22 @@ public class ConditionsRecyclerViewAdapter extends RecyclerView.Adapter<Conditio
         final AssertionDto assertion = assertions.get(position);
         holder.conditionNameTextView.setText(assertion.getName());
         holder.practiceTextView.setText(assertion.getPractice());
-        holder.row.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.onConditionClicked(assertion);
-            }
-        });
     }
 
     @Override
     public int getItemCount() {
-        return Math.min(assertions.size(), MyHealthMainFragment.MAX_ITEMS_TO_SHOW);
+        return maxItems == MyHealthMainFragment.MAX_ITEMS_TO_SHOW ?
+                Math.min(assertions.size(), maxItems) : assertions.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView conditionNameTextView;
         TextView practiceTextView;
-        ViewGroup row;
 
         public ViewHolder(View itemView) {
             super(itemView);
             conditionNameTextView = (TextView) itemView.findViewById(R.id.conditionNameTextView);
             practiceTextView = (TextView) itemView.findViewById(R.id.practiceTextView);
-            row = (ViewGroup) itemView.findViewById(R.id.row);
         }
     }
 }

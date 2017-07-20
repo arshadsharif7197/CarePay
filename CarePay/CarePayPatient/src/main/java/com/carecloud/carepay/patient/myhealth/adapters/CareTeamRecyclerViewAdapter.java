@@ -27,10 +27,12 @@ public class CareTeamRecyclerViewAdapter extends RecyclerView.Adapter<CareTeamRe
 
 
     private final List<ProviderDTO> providers;
+    private final int maxItems;
     private MyHealthDataInterface callback;
 
-    public CareTeamRecyclerViewAdapter(List<ProviderDTO> providers) {
+    public CareTeamRecyclerViewAdapter(List<ProviderDTO> providers, int maxItems) {
         this.providers = providers;
+        this.maxItems = maxItems;
     }
 
     public void setCallback(MyHealthDataInterface callback) {
@@ -50,7 +52,7 @@ public class CareTeamRecyclerViewAdapter extends RecyclerView.Adapter<CareTeamRe
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        if ((position < MyHealthMainFragment.MAX_ITEMS_TO_SHOW) && (position < providers.size())) {
+        if ((position < maxItems) && (position < providers.size())) {
             final ProviderDTO provider = providers.get(position);
             holder.providerNameTextView.setText(provider.getFullName());
             holder.providerSpecialityTextView.setText(String.format("%s, %s",
@@ -90,12 +92,13 @@ public class CareTeamRecyclerViewAdapter extends RecyclerView.Adapter<CareTeamRe
 
     @Override
     public int getItemCount() {
-        return Math.min(providers.size(), MyHealthMainFragment.MAX_ITEMS_TO_SHOW + 1);
+        return maxItems == MyHealthMainFragment.MAX_ITEMS_TO_SHOW ?
+                Math.min(providers.size() + 1, maxItems + 1) : providers.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if ((position == MyHealthMainFragment.MAX_ITEMS_TO_SHOW) || ((providers.size() + 1) == position)) {
+        if ((position == maxItems) || ((providers.size()) == position)) {
             return MyHealthMainFragment.MAX_ITEMS_TO_SHOW;
         }
         return super.getItemViewType(position);

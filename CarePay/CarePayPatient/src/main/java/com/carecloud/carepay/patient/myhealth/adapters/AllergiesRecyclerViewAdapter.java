@@ -22,10 +22,12 @@ public class AllergiesRecyclerViewAdapter extends RecyclerView.Adapter<Allergies
 
 
     private final List<AllergyDto> allergies;
+    private final int maxItems;
     private MyHealthDataInterface callback;
 
-    public AllergiesRecyclerViewAdapter(List<AllergyDto> providers) {
+    public AllergiesRecyclerViewAdapter(List<AllergyDto> providers, int maxItems) {
         this.allergies = providers;
+        this.maxItems = maxItems;
     }
 
     public void setCallback(MyHealthDataInterface callback) {
@@ -45,7 +47,7 @@ public class AllergiesRecyclerViewAdapter extends RecyclerView.Adapter<Allergies
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        if ((position < MyHealthMainFragment.MAX_ITEMS_TO_SHOW) && (position < allergies.size())) {
+        if ((position < maxItems) && (position < allergies.size())) {
             final AllergyDto allergy = allergies.get(position);
             holder.allergyNameTextView.setText(allergy.getName());
             holder.practiceTextView.setText(allergy.getPractice());
@@ -68,12 +70,13 @@ public class AllergiesRecyclerViewAdapter extends RecyclerView.Adapter<Allergies
 
     @Override
     public int getItemCount() {
-        return Math.min(allergies.size() + 1, MyHealthMainFragment.MAX_ITEMS_TO_SHOW + 1);
+        return maxItems == MyHealthMainFragment.MAX_ITEMS_TO_SHOW ?
+                Math.min(allergies.size() + 1, maxItems + 1) : allergies.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if ((position == MyHealthMainFragment.MAX_ITEMS_TO_SHOW) || ((allergies.size()) == position)) {
+        if ((position == maxItems) || ((allergies.size()) == position)) {
             return MyHealthMainFragment.MAX_ITEMS_TO_SHOW;
         }
         return super.getItemViewType(position);
