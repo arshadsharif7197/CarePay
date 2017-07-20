@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -35,22 +36,31 @@ import com.google.gson.internal.Primitives;
 public abstract class BaseActivity extends AppCompatActivity implements ISession {
 
     private static final int FULLSCREEN_VALUE = 0x10000000;
+    private static final long LOGOUT_SESSION_TIMEOUT = 1000 * 60 * 10;
+    private static boolean isForeground = false;
+    private static Handler handler;
 
     private Dialog progressDialog;
     private CustomPopupNotification errorNotification;
     private boolean isVisible = false;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         LayoutInflater inflater = LayoutInflater.from(this);
         inflater.setFactory2(new CarePayLayoutInflaterFactory(this));
         super.onCreate(savedInstanceState);
+        if(handler == null) {
+            handler = new Handler();
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         isVisible = false;
+        isForeground = false;
+        handler.postDelayed(logoutUserSession, LOGOUT_SESSION_TIMEOUT);
     }
 
     @Override
@@ -58,6 +68,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         super.onResume();
         getAppAuthorizationHelper();
         isVisible = true;
+        isForeground = true;
         final View rootView = findViewById(android.R.id.content);
         rootView.setSoundEffectsEnabled(false);
         rootView.setOnClickListener(new View.OnClickListener() {
@@ -66,7 +77,8 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
                 SystemUtil.hideSoftKeyboard(BaseActivity.this);
             }
         });
-
+        setLastInteraction(System.currentTimeMillis());
+        handler.removeCallbacksAndMessages(null);
     }
 
     public boolean isVisible() {
@@ -91,6 +103,17 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     public ApplicationMode getApplicationMode() {
         return ((IApplicationSession) getApplication()).getApplicationMode();
     }
+
+    @Override
+    public void setLastInteraction(long systemTime){
+        ((IApplicationSession) getApplication()).setLastInteraction(systemTime);
+    }
+
+    @Override
+    public long getLastInteraction(){
+        return ((IApplicationSession) getApplication()).getLastInteraction();
+    }
+
 
     public Context getContext() {
         return this;
@@ -340,5 +363,20 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         }
     }
 
+    private Runnable logoutUserSession = new Runnable() {
+        @Override
+        public void run() {
+            long now = System.currentTimeMillis();
+            if(now - getLastInteraction() > LOGOUT_SESSION_TIMEOUT && !isForeground && !isFinishing()){
+                getApplicationMode().clearUserPracticeDTO();
+                AppAuthorizationHelper authHelper = getAppAuthorizationHelper();
+                authHelper.setUser(null);
+                authHelper.setAccessToken(null);
+                authHelper.setIdToken(null);
+                authHelper.setRefreshToken(null);
+                finishAffinity();
+            }
+        }
+    };
 
 }

@@ -63,6 +63,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
             View decorView = dialog.getWindow().getDecorView();
             hideKeyboardOnViewTouch(decorView);
         }
+        setLastInteraction(System.currentTimeMillis());
     }
 
     @Override
@@ -177,6 +178,17 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     public ApplicationMode getApplicationMode() {
         return ((IApplicationSession) getActivity()).getApplicationMode();
     }
+
+    @Override
+    public void setLastInteraction(long systemTime){
+        ((IApplicationSession) getActivity()).setLastInteraction(systemTime);
+    }
+
+    @Override
+    public long getLastInteraction(){
+        return ((IApplicationSession) getActivity()).getLastInteraction();
+    }
+
 
     @Override
     public void showProgressDialog() {
