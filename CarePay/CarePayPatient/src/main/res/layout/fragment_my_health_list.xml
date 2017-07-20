@@ -14,8 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar_layout"
-        android:layout_marginEnd="@dimen/dimen_15dp"
-        android:layout_marginStart="@dimen/dimen_15dp" />
+        android:layout_marginEnd="@dimen/dimen_5dp"
+        android:layout_marginStart="@dimen/dimen_5dp" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/actionButton"
