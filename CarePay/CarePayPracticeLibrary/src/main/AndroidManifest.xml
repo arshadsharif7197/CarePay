@@ -13,7 +13,9 @@
         <activity
             android:name=".signin.ResetPasswordActivity"
             android:screenOrientation="sensorLandscape" />
-        <activity android:name=".adhocforms.AdHocFormsActivity"></activity>
+        <activity
+            android:name=".adhocforms.AdHocFormsActivity"
+            android:screenOrientation="sensorLandscape" />
     </application>
 
 </manifest>
