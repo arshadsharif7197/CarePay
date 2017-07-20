@@ -72,7 +72,7 @@
         android:maxLines="1"
         android:paddingTop="@dimen/dimen_20dp"
         android:singleLine="true"
-        android:textColor="@color/black"
+        android:textColor="@color/lightSlateGray"
         app:customAssetFont="proxima_nova_regular"
         tools:text="Cardiology, CareCloud Clinic" />
 

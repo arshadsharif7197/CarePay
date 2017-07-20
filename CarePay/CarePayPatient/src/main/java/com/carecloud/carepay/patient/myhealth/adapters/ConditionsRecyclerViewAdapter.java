@@ -21,8 +21,8 @@ public class ConditionsRecyclerViewAdapter extends RecyclerView.Adapter<Conditio
     private final List<AssertionDto> assertions;
     private final int maxItems;
 
-    public ConditionsRecyclerViewAdapter(List<AssertionDto> providers, int maxItems) {
-        this.assertions = providers;
+    public ConditionsRecyclerViewAdapter(List<AssertionDto> assertions, int maxItems) {
+        this.assertions = assertions;
         this.maxItems = maxItems;
     }
 

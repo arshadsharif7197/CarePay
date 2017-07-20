@@ -68,7 +68,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
 
     @Override
     public void onAllergyClicked(AllergyDto allergy) {
-
+        
     }
 
     @Override

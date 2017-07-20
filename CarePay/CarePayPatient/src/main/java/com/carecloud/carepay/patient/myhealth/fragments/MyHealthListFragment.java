@@ -127,7 +127,7 @@ public class MyHealthListFragment extends BaseFragment implements MyHealthDataIn
                 List<AllergyDto> allergies = myHealthDto.getPayload().getMyHealthData()
                         .getAllergies().getAllergies();
                 AllergiesRecyclerViewAdapter allergiesAdapter = new AllergiesRecyclerViewAdapter(
-                        allergies, allergies.size());
+                        allergies, allergies.size(), true);
                 allergiesAdapter.setCallback(this);
                 recyclerView.setAdapter(allergiesAdapter);
                 fab.setVisibility(View.VISIBLE);
@@ -143,7 +143,7 @@ public class MyHealthListFragment extends BaseFragment implements MyHealthDataIn
                 List<MedicationDto> medications = myHealthDto.getPayload().getMyHealthData()
                         .getMedications().getMedications();
                 MedicationsRecyclerViewAdapter medicationsAdapter = new MedicationsRecyclerViewAdapter(
-                        medications, medications.size());
+                        medications, medications.size(), true);
                 medicationsAdapter.setCallback(this);
                 recyclerView.setAdapter(medicationsAdapter);
                 fab.setVisibility(View.VISIBLE);

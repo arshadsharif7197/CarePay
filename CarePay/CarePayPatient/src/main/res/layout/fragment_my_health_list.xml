@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white">
 
     <include
@@ -23,7 +24,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/dimen_20dp"
-        android:background="@color/lemonGreen"
+        android:src="@drawable/ic_add_white"
+        app:backgroundTint="@color/lemonGreen"
         android:visibility="gone" />
 
 </RelativeLayout>

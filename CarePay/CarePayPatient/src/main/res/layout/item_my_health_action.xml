@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:background="@drawable/button_default_background"
+        android:foreground="?android:selectableItemBackground"
         android:paddingBottom="@dimen/dimen_10dp"
         android:paddingEnd="@dimen/dimen_20dp"
         android:paddingStart="@dimen/dimen_20dp"
