@@ -109,7 +109,7 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
             } else {
                 seeAll.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View view) {
                         callback.showListFragment(MyHealthListFragment.LABS);
                     }
                 });
@@ -143,7 +143,7 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
             } else {
                 seeAll.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View view) {
                         callback.showListFragment(MyHealthListFragment.MEDICATIONS);
                     }
                 });
@@ -176,7 +176,7 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
             } else {
                 seeAll.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View view) {
                         callback.showListFragment(MyHealthListFragment.ALLERGIES);
                     }
                 });
@@ -209,7 +209,7 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
             } else {
                 seeAll.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View view) {
                         callback.showListFragment(MyHealthListFragment.CONDITIONS);
                     }
                 });
@@ -244,7 +244,7 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
             } else {
                 seeAll.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View view) {
                         callback.showListFragment(MyHealthListFragment.CARE_TEAM);
                     }
                 });

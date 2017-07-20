@@ -133,7 +133,7 @@ public class MyHealthListFragment extends BaseFragment implements MyHealthDataIn
                 fab.setVisibility(View.VISIBLE);
                 fab.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View view) {
                         addAllergy();
                     }
                 });
@@ -149,7 +149,7 @@ public class MyHealthListFragment extends BaseFragment implements MyHealthDataIn
                 fab.setVisibility(View.VISIBLE);
                 fab.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View view) {
                         addMedication();
                     }
                 });
