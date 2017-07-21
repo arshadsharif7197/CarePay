@@ -9,6 +9,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
@@ -40,8 +41,10 @@ public class AdHocFormRecyclerViewAdapter extends RecyclerView
         final PracticeForm practiceForm = forms.get(position);
         holder.formNameTextView.setText(practiceForm.getPayload().get("title").getAsString());
         if (practiceForm.getLastModifiedDate() != null) {
-            holder.formLastEditDateTextView.setText(DateUtil.getInstance()
-                    .setDateRaw(practiceForm.getLastModifiedDate()).getDateAsDayMonthDayOrdinal());
+            holder.formLastEditDateTextView.setText(
+                    String.format(Label.getLabel("adhoc_form_date_placeholder"), DateUtil.getInstance()
+                            .setDateRaw(practiceForm.getLastModifiedDate())
+                            .toStringWithFormatMmSlashDdSlashYyyy()));
             holder.formLastEditDateTextView.setTextColor(holder.formLastEditDateTextView
                     .getContext().getResources().getColor(R.color.pastel_blue));
         }
