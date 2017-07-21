@@ -29,6 +29,7 @@ android {
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.development.carecloud.com/workflow/shamrock/patient_app/language_selection/start"'
             buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'
             buildConfigField 'String', 'API_BASE_URL', '"https://breeze-entry.development.carecloud.com"'
+            buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze.development.carecloud.com"'
         }
     }
     lintOptions {
