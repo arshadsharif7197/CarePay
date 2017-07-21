@@ -1,6 +1,6 @@
 package com.carecloud.carepay.mini.interfaces;
 
-import com.carecloud.carepay.mini.models.response.SignInAuth;
+import com.carecloud.carepay.mini.models.response.Authentication;
 import com.carecloud.carepay.mini.services.ServiceHelper;
 import com.carecloud.carepay.mini.services.carepay.RestCallServiceHelper;
 import com.carecloud.carepay.mini.utils.ApplicationPreferences;
@@ -16,8 +16,8 @@ public interface ApplicationHelper {
 
     ApplicationPreferences getApplicationPreferences();
 
-    void setAuthentication(SignInAuth.Cognito.Authentication authentication);
+    void setAuthentication(Authentication authentication);
 
-    SignInAuth.Cognito.Authentication getAuthentication();
+    Authentication getAuthentication();
 
 }
