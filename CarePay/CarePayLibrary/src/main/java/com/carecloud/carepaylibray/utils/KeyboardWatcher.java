@@ -67,20 +67,20 @@ public class KeyboardWatcher implements ViewTreeObserver.OnGlobalLayoutListener 
         final int actualHeight = rootView.getRootView().getHeight();
         final int heightDiff = actualHeight - visibleHeight;
 
-        Log.d(TAG, "RootView VisibleHeight: "+visibleHeight);
-        Log.d(TAG, "RootView ActualHeight: "+actualHeight);
-        Log.d(TAG, "Visible Height Diff: "+heightDiff);
+        Log.i(TAG, "RootView VisibleHeight: "+visibleHeight);
+        Log.i(TAG, "RootView ActualHeight: "+actualHeight);
+        Log.i(TAG, "Visible Height Diff: "+heightDiff);
 
         if(!isOpened() && heightDiff > visibleHeight/4){
             setOpened(true);
             notifyKeyboardStateChanged(heightDiff);
 
-            Log.d(TAG, "Keyboard visible");
+            Log.i(TAG, "Keyboard visible");
         }else if(isOpened() && heightDiff < visibleHeight/4){
             setOpened(false);
             notifyKeyboardStateChanged(0);
 
-            Log.d(TAG, "Keyboard gone");
+            Log.i(TAG, "Keyboard gone");
         }
     }
 

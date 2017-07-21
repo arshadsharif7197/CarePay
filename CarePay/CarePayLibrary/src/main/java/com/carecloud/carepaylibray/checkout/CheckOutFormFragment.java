@@ -98,7 +98,8 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
                 userResponse = jsonFormSaveResponseArray.get(displayedFormsIndex);
             } else {
                 String uuid = payload.get("uuid").toString().replace("\"", "");
-                for (ConsentFormUserResponseDTO response : appointmentsResultModel.getPayload().getPatientFormsResponse()) {
+                for (ConsentFormUserResponseDTO response : appointmentsResultModel.getPayload()
+                        .getPatientFormsResponse()) {
                     if (uuid.equals(response.getFormId())) {
                         JsonObject json = new JsonObject();
                         json.addProperty("uuid", response.getFormId());
@@ -111,7 +112,8 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
             JsonObject form = new JsonObject();
             form.add("formData", payload);
             form.add("userData", userResponse);
-            String formString = form.toString().replaceAll("\\\\", Matcher.quoteReplacement("\\\\")).replaceAll("\'", Matcher.quoteReplacement("\\\'"));
+            String formString = form.toString().replaceAll("\\\\", Matcher.quoteReplacement("\\\\"))
+                    .replaceAll("\'", Matcher.quoteReplacement("\\\'"));
 
             loadFormUrl(formString, "load_form");
 
@@ -120,7 +122,7 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
 
     @Override
     protected String getBaseUrl() {
-        return HttpConstants.getPracticeFormsUrl();
+        return HttpConstants.getFormsUrl() + "/practice-forms/";
     }
 
     @Override

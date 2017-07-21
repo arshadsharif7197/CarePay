@@ -37,8 +37,7 @@ android {
             buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"WSS://STAR-CLUSTER.DEVELOPMENT.CARECLOUD.COM"'
             buildConfigField 'String', 'MESSAGING_BASE_URL', '"https://messaging.development.carecloud.com"'
-            buildConfigField 'String', 'PRACTICE_FORMS_BASE_URL', '"https://breeze.development.carecloud.com/practice-forms/"'
-            buildConfigField 'String', 'INTAKE_FORMS_BASE_URL', '"https://breeze.development.carecloud.com/intake-forms/"'
+            buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze.development.carecloud.com"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AA11d2bb94e604c1b3a506dcda65bd7dfa9995d110"'
 
@@ -51,8 +50,7 @@ android {
             buildConfigField 'String', 'X_API_KEY', '"VMGQTfHsuP5PSi3UbyXWh7xGWMflwZtHa55LZyXr"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
             buildConfigField 'String', 'MESSAGING_BASE_URL', '"https://messaging.qa.carecloud.com"'
-            buildConfigField 'String', 'PRACTICE_FORMS_BASE_URL', '"https://breeze.development.carecloud.com/practice-forms/"'
-            buildConfigField 'String', 'INTAKE_FORMS_BASE_URL', '"https://breeze.development.carecloud.com/intake-forms/"'
+            buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze.development.carecloud.com"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AAb24320f2a02bf87d9faf0d7aff73bbeca08d264f"'
 
@@ -65,8 +63,7 @@ android {
             buildConfigField 'String', 'X_API_KEY', '"WQRPwvVVL89qyr9TqzGOo9Qx8jKOYxmO9eRdNFpq"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
             buildConfigField 'String', 'MESSAGING_BASE_URL', '"https://messaging-staging.carecloud.com"'
-            buildConfigField 'String', 'PRACTICE_FORMS_BASE_URL', '"https://breeze.development.carecloud.com/practice-forms/"'
-            buildConfigField 'String', 'INTAKE_FORMS_BASE_URL', '"https://breeze.development.carecloud.com/intake-forms/"'
+            buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze.development.carecloud.com"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AAb24320f2a02bf87d9faf0d7aff73bbeca08d264f"'
 
@@ -79,8 +76,7 @@ android {
             buildConfigField 'String', 'X_API_KEY', '"Jbr3ZMKbC54bezcc7DWjn7I5I4M8cEHl6Be9cAYT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
             buildConfigField 'String', 'MESSAGING_BASE_URL', '"https://messaging.carecloud.com"'
-            buildConfigField 'String', 'PRACTICE_FORMS_BASE_URL', '"https://web.gobreeze.com/practice-forms/"'
-            buildConfigField 'String', 'INTAKE_FORMS_BASE_URL', '"https://web.gobreeze.com/intake-forms/"'
+            buildConfigField 'String', 'FORMS_BASE_URL', '"https://web.gobreeze.com"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AA2faf2a0d9f02e9595012ede7e6a30ddda5e1b250"'
 

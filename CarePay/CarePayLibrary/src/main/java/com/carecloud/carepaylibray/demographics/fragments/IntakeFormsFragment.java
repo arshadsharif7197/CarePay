@@ -78,7 +78,7 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
 
     @Override
     protected String getBaseUrl() {
-        return HttpConstants.getIntakeFormsUrl();
+        return HttpConstants.getFormsUrl() + "/intake-forms/";
     }
 
     @Override
