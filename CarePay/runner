@@ -64,23 +64,18 @@ fi
 ##########              CHECKS COMMIT MESSAGE FOR VERSION OF APP             ########
 ##########  EXAMPLE "PRACTICEAPP" OR "PATIENTAPP" AND COMPILES THAT PROJECT  ########
 #####################################################################################
-if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [[ "$COMMIT_MESSAGES" =~ practice.*app ]]; then
-    echo "${yellow}*** Skipping APK Build ***${reset}"
-    echo "${green}*** Practice App Compile Check ***${reset}"
-    ./gradlew :CarePayPracticeTablet:compileProductionReleaseSources --profile --configure-on-demand
-fi
-if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [[ "$COMMIT_MESSAGES" =~ patient.*app ]]; then
-    echo "${yellow}*** Skipping APK Build ***${reset}"
-    echo "${green}*** Patient App Compile Check ***${reset}"
-    ./gradlew :CarePayPatient:compileProductionReleaseSources --profile --configure-on-demand
-fi
 if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [[ "$COMMIT_MESSAGES" =~ clover.*app ]]; then
     echo "${yellow}*** Skipping APK Build ***${reset}"
     echo "${green}*** Clover App Compile Check ***${reset}"
     ./gradlew :CarePayPracticeClover:compileProductionReleaseSources --profile --configure-on-demand
-fi
-if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [[ "$COMMIT_MESSAGES" != *practice.*app* ]] && [[ "$COMMIT_MESSAGES" != *patient.*app* ]] && [[ "$COMMIT_MESSAGES" != *clover.*app* ]]; then
-    echo "${yellow}*** Skipping APK Build ***${reset}"
-    echo "${green}*** [NO SPECIFIED COMMIT MESSAGE FOR COMPILE] Default Practice App Compile Check ***${reset}"
+    echo "${green}*** Patient App Compile Check ***${reset}"
+    ./gradlew :CarePayPatient:compileProductionReleaseSources --profile --configure-on-demand
+    echo "${green}*** Practice App Compile Check ***${reset}"
     ./gradlew :CarePayPracticeTablet:compileProductionReleaseSources --profile --configure-on-demand
+else
+    echo "${yellow}*** Skipping APK Build ***${reset}"
+    echo "${green}*** Practice App Compile Check ***${reset}"
+    ./gradlew :CarePayPracticeTablet:compileProductionReleaseSources --profile --configure-on-demand
+    echo "${green}*** Patient App Compile Check ***${reset}"
+    ./gradlew :CarePayPatient:compileProductionReleaseSources --profile --configure-on-demand
 fi
