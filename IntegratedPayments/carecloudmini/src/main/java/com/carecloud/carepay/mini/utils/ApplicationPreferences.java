@@ -31,7 +31,7 @@ public class ApplicationPreferences {
     }
 
     public void setDeviceId(String deviceId){
-        sharedPreferences.edit().putString(KEY_DEVICE_ID, deviceId);
+        sharedPreferences.edit().putString(KEY_DEVICE_ID, deviceId).apply();
     }
 
     public String getUsername(){

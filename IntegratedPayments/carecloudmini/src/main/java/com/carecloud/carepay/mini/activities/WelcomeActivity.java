@@ -2,7 +2,6 @@ package com.carecloud.carepay.mini.activities;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,7 +22,7 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
  * Created by lmenendez on 7/12/17
  */
 
-public class WelcomeActivity extends AppCompatActivity {
+public class WelcomeActivity extends FullScreenActivity {
     private static final int CONNECTION_RETRY_DELAY = 1000 * 5;
 
     private ApplicationHelper applicationHelper;

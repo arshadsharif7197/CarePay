@@ -3,7 +3,6 @@ package com.carecloud.carepay.mini.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
@@ -12,7 +11,7 @@ import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
  * Created by lmenendez on 6/20/17
  */
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends FullScreenActivity {
 
     @Override
     public void onCreate(Bundle icicle){
