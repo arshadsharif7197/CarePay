@@ -53,6 +53,9 @@ public class ProviderDTO {
     @SerializedName(value = "photo", alternate = "photo_links")
     @Expose
     private String photo;
+    @SerializedName("primary_address")
+    @Expose
+    private PrimaryAddressDto address = new PrimaryAddressDto();
     @SerializedName(value = "phone_number", alternate = "primary_phone")
     @Expose
     private String phone;
@@ -188,6 +191,14 @@ public class ProviderDTO {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public PrimaryAddressDto getAddress() {
+        return address;
+    }
+
+    public void setAddress(PrimaryAddressDto address) {
+        this.address = address;
     }
 
     public String getPhone() {
