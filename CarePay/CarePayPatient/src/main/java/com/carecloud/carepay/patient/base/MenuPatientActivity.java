@@ -330,6 +330,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         return transitionAppointments;
     }
 
+    public static TransitionDTO getTransitionNotifications() {
+        return transitionNotifications;
+    }
+
     private void displayMessagesScreen() {
         WorkflowDTO workflowDTO = new WorkflowDTO();
         workflowDTO.setState(NavigationStateConstants.MESSAGES);
