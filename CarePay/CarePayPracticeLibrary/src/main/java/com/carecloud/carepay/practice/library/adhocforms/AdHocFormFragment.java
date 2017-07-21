@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -120,7 +121,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
 
     @Override
     protected String getBaseUrl() {
-        return "file:///android_asset/breeze-practice-forms/dist/index.html";
+        return HttpConstants.getPracticeFormsUrl();
     }
 
     @Override
@@ -183,7 +184,6 @@ public class AdHocFormFragment extends BaseWebFormFragment {
     }
 
     /**
-     *
      * @return a boolean indicating if it intercepts the event
      */
     public boolean navigateBack() {

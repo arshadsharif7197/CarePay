@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
@@ -81,7 +82,7 @@ public class FormsFragment extends BaseWebFormFragment {
 
     @Override
     protected String getBaseUrl() {
-        return "file:///android_asset/breeze-practice-forms/dist/index.html";
+        return HttpConstants.getPracticeFormsUrl();
     }
 
     @Override

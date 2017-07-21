@@ -31,6 +31,8 @@ public class HttpConstants {
 
 
     private static DeviceIdentifierDTO deviceInformation;
+    private static String practiceFormsUrl;
+    private static String intakeFormsUrl;
 
     public static DeviceIdentifierDTO getDeviceInformation() {
         return deviceInformation;
@@ -95,5 +97,21 @@ public class HttpConstants {
 
     public static void setMessagingBaseUrl(String messagingBaseUrl) {
         HttpConstants.messagingBaseUrl = messagingBaseUrl;
+    }
+
+    public static void setPracticeFormsUrl(String practiceFormsUrl) {
+        HttpConstants.practiceFormsUrl = practiceFormsUrl;
+    }
+
+    public static String getPracticeFormsUrl() {
+        return practiceFormsUrl;
+    }
+
+    public static void setIntakeFormsUrl(String intakeFormsUrl) {
+        HttpConstants.intakeFormsUrl = intakeFormsUrl;
+    }
+
+    public static String getIntakeFormsUrl() {
+        return intakeFormsUrl;
     }
 }

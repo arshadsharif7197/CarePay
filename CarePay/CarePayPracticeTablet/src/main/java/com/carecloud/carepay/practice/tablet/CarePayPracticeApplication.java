@@ -46,6 +46,8 @@ public class CarePayPracticeApplication extends CarePayApplication
         deviceIdentifierDTO.setDeviceSystemVersion(Build.VERSION.RELEASE);
         HttpConstants.setDeviceInformation(deviceIdentifierDTO);
         HttpConstants.setApiBaseUrl(BuildConfig.API_BASE_URL);
+        HttpConstants.setPracticeFormsUrl(BuildConfig.PRACTICE_FORMS_BASE_URL);
+        HttpConstants.setIntakeFormsUrl(BuildConfig.INTAKE_FORMS_BASE_URL);
         HttpConstants.setApiStartUrl(BuildConfig.API_START_URL);
         HttpConstants.setApiStartKey(BuildConfig.X_API_KEY);
         HttpConstants.setPushNotificationWebclientUrl(BuildConfig.WEBCLIENT_URL);
