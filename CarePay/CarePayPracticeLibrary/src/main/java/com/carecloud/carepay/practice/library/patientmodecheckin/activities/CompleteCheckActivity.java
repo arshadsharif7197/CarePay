@@ -50,7 +50,12 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
         workflowDTO = retrieveStoredWorkflow(id);
         if (workflowDTO != null) {
             workflowString = workflowDTO.toString();
+            AppointmentDTO appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, extra);
             if (hasPayment) {
+                if (appointmentDTO.getPayload().getAppointmentStatus().getName().toLowerCase()
+                        .equals("Pending".toLowerCase())) {
+                    appointmentDTO.getPayload().getAppointmentStatus().setName("Checked-In");
+                }
                 dto = gson.fromJson(workflowString, PaymentsModel.class);
             } else {
                 dto = gson.fromJson(workflowString, AppointmentsResultModel.class);
@@ -61,7 +66,6 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
                         appointmentTransitionsWorkflow);
             }
 
-            AppointmentDTO appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, extra);
             if (savedInstanceState == null) {
                 replaceFragment(CheckInCompletedDialogFragment.newInstance(appointmentDTO,
                         hasPayment, isAdHocForms), false);
