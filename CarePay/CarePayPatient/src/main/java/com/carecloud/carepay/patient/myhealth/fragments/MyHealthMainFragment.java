@@ -223,7 +223,7 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
         List<ProviderDTO> providers = myHealthDto
                 .getPayload().getMyHealthData().getProviders().getProviders();
         if (providers.isEmpty()) {
-            view.findViewById(R.id.providerContainer).setVisibility(View.GONE);
+            view.findViewById(R.id.careTeamContainer).setVisibility(View.GONE);
             careTeamRecyclerView.setVisibility(View.GONE);
         } else {
             LinearLayoutManager linearLayout = new LinearLayoutManager(getContext()) {
