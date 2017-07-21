@@ -19,11 +19,11 @@ public class HttpConstants {
 
     private static String apiStartUrl;
 
-    private static  String apiStartKey;
+    private static String apiStartKey;
 
     private static String messagingBaseUrl;
 
-    private static  String pushNotificationWebclientUrl;
+    private static String pushNotificationWebclientUrl;
 
     private static boolean useUnifiedAuth = false;
 
@@ -31,6 +31,7 @@ public class HttpConstants {
 
 
     private static DeviceIdentifierDTO deviceInformation;
+    private static String formsUrl;
 
     public static DeviceIdentifierDTO getDeviceInformation() {
         return deviceInformation;
@@ -95,5 +96,13 @@ public class HttpConstants {
 
     public static void setMessagingBaseUrl(String messagingBaseUrl) {
         HttpConstants.messagingBaseUrl = messagingBaseUrl;
+    }
+
+    public static void setFormsUrl(String formsUrl) {
+        HttpConstants.formsUrl = formsUrl;
+    }
+
+    public static String getFormsUrl() {
+        return formsUrl;
     }
 }
