@@ -128,14 +128,14 @@ public class CareTeamDetailFragment extends BaseFragment {
         phoneValueTextView.setText(provider.getPhone());
         phoneValueTextView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 dialPhoneNumber(provider.getPhone());
             }
         });
 
     }
 
-    public void dialPhoneNumber(String phoneNumber) {
+    private void dialPhoneNumber(String phoneNumber) {
         Intent intent = new Intent(Intent.ACTION_DIAL);
         intent.setData(Uri.parse("tel:" + phoneNumber));
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
