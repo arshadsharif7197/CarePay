@@ -41,7 +41,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
         super.onResume();
         MenuItem menuItem = navigationView.getMenu().findItem(com.carecloud.carepaylibrary.R.id.nav_my_health);
         menuItem.setChecked(true);
-        if (getFragmentManager().getBackStackEntryCount() == 0) {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             displayToolbar(true, menuItem.getTitle().toString());
         }
     }
