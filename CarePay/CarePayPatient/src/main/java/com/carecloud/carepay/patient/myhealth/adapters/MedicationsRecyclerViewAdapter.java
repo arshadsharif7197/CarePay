@@ -23,28 +23,15 @@ public class MedicationsRecyclerViewAdapter extends RecyclerView.Adapter<Medicat
 
     private final List<MedicationDto> medications;
     private final int maxItems;
-    private final boolean showEndSign;
     private MyHealthDataInterface callback;
 
     /**
-     *
      * @param medications a list of medications
-     * @param maxItems the max number of items to show
+     * @param maxItems    the max number of items to show
      */
     public MedicationsRecyclerViewAdapter(List<MedicationDto> medications, int maxItems) {
-        this(medications, maxItems, false);
-    }
-
-    /**
-     *
-     * @param medications a list of medications
-     * @param maxItems the max number of items to show
-     * @param showEndSign a boolean indicating to show o or not the end sign
-     */
-    public MedicationsRecyclerViewAdapter(List<MedicationDto> medications, int maxItems, boolean showEndSign) {
         this.medications = medications;
         this.maxItems = maxItems;
-        this.showEndSign = showEndSign;
     }
 
     public void setCallback(MyHealthDataInterface callback) {
@@ -74,7 +61,6 @@ public class MedicationsRecyclerViewAdapter extends RecyclerView.Adapter<Medicat
                     callback.onMedicationClicked(medication);
                 }
             });
-            holder.endSign.setVisibility(showEndSign ? View.VISIBLE : View.GONE);
         } else {
             holder.myHealthActionButton.setText(Label.getLabel("my_health_add_medication_button_label"));
             holder.row.setOnClickListener(new View.OnClickListener() {
@@ -104,14 +90,12 @@ public class MedicationsRecyclerViewAdapter extends RecyclerView.Adapter<Medicat
         TextView myHealthActionButton;
         TextView medicationNameTextView;
         TextView frequencyTextView;
-        TextView endSign;
         ViewGroup row;
 
         public ViewHolder(View itemView) {
             super(itemView);
             medicationNameTextView = (TextView) itemView.findViewById(R.id.titleTextView);
             frequencyTextView = (TextView) itemView.findViewById(R.id.subTitleTextView);
-            endSign = (TextView) itemView.findViewById(R.id.endSign);
             row = (ViewGroup) itemView.findViewById(R.id.row);
             myHealthActionButton = (TextView) itemView.findViewById(R.id.myHealthActionButton);
         }
