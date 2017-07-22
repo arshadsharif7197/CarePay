@@ -45,6 +45,8 @@
 
     <string name="welcome_waiting">Waiting for payment</string>
     <string name="welcome_connecting">Connecting&#8230;</string>
+    <string name="welcome_processing">Processing&#8230;</string>
+
 
     <string name="content_logo">logo</string>
     <string name="content_icon_header">header icon</string>
@@ -59,6 +61,7 @@
     <string name="error_confirm_practice">Please confirm practice to continue.</string>
     <string name="error_select_practice">Please select a practice to continue.</string>
     <string name="error_select_location">Please select a location to continue.</string>
+    <string name="error_device_in_use">Device is currently in use.</string>
 
     <string name="image_unavailable">Unavailable</string>
 </resources>

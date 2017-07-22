@@ -267,6 +267,12 @@ public class LoginFragment extends RegistrationFragment {
 
         @Override
         public void onAccountConnectionFailure(String errorMessage) {
+            // TODO: 7/21/17 REMOVE THIS STUB
+//            if(Debug.isDebuggerConnected()){
+//                String merchantId = "6VR6H15HZ1HSG";
+//                getRestHelper().executePreRegister(preRegisterCallback, merchantId);
+//                return;
+//            }
             enableFields(true);
             CustomErrorToast.showWithMessage(getContext(), errorMessage);
         }
