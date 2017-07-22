@@ -11,6 +11,7 @@ import com.carecloud.carepay.patient.myhealth.dtos.LabDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MedicationDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.myhealth.fragments.AllergyDetailFragment;
+import com.carecloud.carepay.patient.myhealth.fragments.CareTeamDetailFragment;
 import com.carecloud.carepay.patient.myhealth.fragments.MedicationDetailFragment;
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthListFragment;
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthMainFragment;
@@ -40,7 +41,9 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
         super.onResume();
         MenuItem menuItem = navigationView.getMenu().findItem(com.carecloud.carepaylibrary.R.id.nav_my_health);
         menuItem.setChecked(true);
-        displayToolbar(true, menuItem.getTitle().toString());
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            displayToolbar(true, menuItem.getTitle().toString());
+        }
     }
 
     @Override
@@ -65,7 +68,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
 
     @Override
     public void onProviderClicked(ProviderDTO provider) {
-
+        addFragment(CareTeamDetailFragment.newInstance(provider.getId()), true);
     }
 
     @Override
