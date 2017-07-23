@@ -103,7 +103,7 @@ public class MessagesNewThreadFragment extends BaseFragment {
         TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
         title.setText(Label.getLabel("messaging_subject_title"));
 
-        toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
+        toolbar.setNavigationIcon(R.drawable.icn_nav_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

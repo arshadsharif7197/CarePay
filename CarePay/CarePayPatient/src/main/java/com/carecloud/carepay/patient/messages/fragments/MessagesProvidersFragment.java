@@ -95,7 +95,7 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
 
     @Override
     public void onProviderSelected(ProviderContact provider) {
-        callback.replaceFragment(MessagesNewThreadFragment.newInstance(provider), false);
+        callback.replaceFragment(MessagesNewThreadFragment.newInstance(provider), true);
     }
 
 }
