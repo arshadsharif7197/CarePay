@@ -233,6 +233,13 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
                 callback.deleteMessageThread(deleteThread);
                 //reset delete thread
                 deleteThread = null;
+                Paging paging = messagingDataModel.getMessages().getPaging();
+                if(messagesListAdapter.getItemCount() == 0){
+                    setAdapters();
+                }else if(paging.getResultsPerPage() % messagesListAdapter.getItemCount() < BOTTOM_ROW_OFFSET &&
+                        hasMorePages()){
+                    callback.getMessageThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage());
+                }
             }
         }
     }
