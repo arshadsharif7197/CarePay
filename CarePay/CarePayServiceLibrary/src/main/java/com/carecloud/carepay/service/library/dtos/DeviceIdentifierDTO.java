@@ -17,9 +17,11 @@ public class DeviceIdentifierDTO {
     @SerializedName("deviceType")
     @Expose
     private String deviceType;
-    @SerializedName("deviceSystemVersion")
+    @SerializedName("deviceOSVersion")
     @Expose
-    private String deviceSystemVersion;
+    private String deviceOSVersion;
+    private String version;
+    private String deviceOS;
 
     /**
      *
@@ -60,24 +62,40 @@ public class DeviceIdentifierDTO {
     /**
      *
      * @return
-     * The deviceSystemVersion
+     * The deviceOSVersion
      */
-    public String getDeviceSystemVersion() {
-        return deviceSystemVersion;
+    public String getDeviceOSVersion() {
+        return deviceOSVersion;
     }
 
     /**
      *
-     * @param deviceSystemVersion
-     * The deviceSystemVersion
+     * @param deviceOSVersion
+     * The deviceOSVersion
      */
-    public void setDeviceSystemVersion(String deviceSystemVersion) {
-        this.deviceSystemVersion = deviceSystemVersion;
+    public void setDeviceOSVersion(String deviceOSVersion) {
+        this.deviceOSVersion = deviceOSVersion;
     }
 
     @Override
     public String toString() {
         Gson gson = new Gson();
         return  gson.toJson(this);
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setDeviceOS(String deviceOS) {
+        this.deviceOS = deviceOS;
+    }
+
+    public String getDeviceOS() {
+        return deviceOS;
     }
 }
