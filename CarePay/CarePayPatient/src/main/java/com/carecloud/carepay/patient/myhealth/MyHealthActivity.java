@@ -63,7 +63,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (getSupportFragmentManager().getBackStackEntryCount() < 2){
+        if (getSupportFragmentManager().getBackStackEntryCount() < 1){
             displayToolbar(true, null);
         }
     }
