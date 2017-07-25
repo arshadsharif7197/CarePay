@@ -75,6 +75,7 @@ public class CloverPaymentActivity extends BaseActivity {
     private String queueTransitionString;
     private PaymentPostModel postModel;
     private PatientBalanceDTO patientBalance;
+    private String appointmentId;
 
     private PaymentLineItem[] paymentLineItems;
 
@@ -107,6 +108,10 @@ public class CloverPaymentActivity extends BaseActivity {
             String patientPaymentMetaDataString = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_METADATA);
             patientBalance = gson.fromJson(patientPaymentMetaDataString, PatientBalanceDTO.class);
 
+        }
+
+        if (intent.hasExtra(CarePayConstants.APPOINTMENT_ID)){
+            appointmentId = intent.getStringExtra(CarePayConstants.APPOINTMENT_ID);
         }
 
         Gson gson = new Gson();
@@ -393,13 +398,16 @@ public class CloverPaymentActivity extends BaseActivity {
     }
 
     private void postPayment(String paymentModelJson, Payment payment) {
-        Gson gson = new Gson();
         Map<String, String> queries = new HashMap<>();
         queries.put("patient_id", patientBalance.getBalances().get(0).getMetadata().getPatientId());
+        if(appointmentId != null){
+            queries.put("appointment_id", appointmentId);
+        }
 
         Map<String, String> header = new HashMap<>();
         header.put("transition", "true");
 
+        Gson gson = new Gson();
         TransitionDTO transitionDTO = gson.fromJson(paymentTransitionString, TransitionDTO.class);
 //        transitionDTO.setUrl(transitionDTO.getUrl()+"FAIL");
         getWorkflowServiceHelper().execute(transitionDTO, getMakePaymentCallback(payment), paymentModelJson, queries, header);

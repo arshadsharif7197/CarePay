@@ -161,6 +161,15 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         finish();
     }
 
+    @Nullable
+    @Override
+    public String getAppointmentId() {
+        if(demographicsPresenter != null){
+            return demographicsPresenter.getAppointmentId();
+        }
+        return null;
+    }
+
     @Override
     public void onBackPressed() {
         try {

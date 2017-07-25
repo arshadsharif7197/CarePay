@@ -218,6 +218,12 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         return null;
     }
 
+    @Nullable
+    @Override
+    public String getAppointmentId() {
+        return null;
+    }
+
     @Override
     public void onLeftActionTapped(PaymentsModel paymentsModel, double owedAmount) {
         onPartialPaymentClicked(owedAmount);

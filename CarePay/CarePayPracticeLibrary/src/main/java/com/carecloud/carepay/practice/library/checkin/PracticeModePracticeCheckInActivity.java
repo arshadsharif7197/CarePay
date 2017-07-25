@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -491,6 +492,12 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
         if(paymentsModel!=null && !paymentsModel.getPaymentPayload().getUserPractices().isEmpty()){
             return paymentsModel.getPaymentPayload().getUserPractices().get(0);
         }
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public String getAppointmentId() {
         return null;
     }
 
