@@ -53,13 +53,20 @@ public class WelcomeActivity extends FullScreenActivity {
         setPracticeDetails();
 
         message = (TextView) findViewById(R.id.welcome_message);
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
         connectDevice();
     }
 
     @Override
-    protected void onDestroy(){
-        disconnectDevice();
-        super.onDestroy();
+    protected void onStop(){
+        if(connectedDevice == null || !connectedDevice.isProcessing()) {
+            disconnectDevice();
+        }
+        super.onStop();
     }
 
     private void setPracticeDetails(){
