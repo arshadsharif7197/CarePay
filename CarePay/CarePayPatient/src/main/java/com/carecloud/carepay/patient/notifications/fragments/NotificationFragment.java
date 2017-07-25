@@ -241,6 +241,9 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
                 notificationsRecycler.getAdapter().notifyItemRemoved(index);
                 deleteNotification(notificationItem);
                 notificationItem = null;
+                if(notificationItems.size()==0){
+                    setAdapter();
+                }
             }
         }
 
