@@ -8,13 +8,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 /**
- * Created by kkannan on 7/10/17.
+ * Created by kkannan on 7/10/17
  */
 
-public class JSONHelper {
+public class JsonHelper {
 
     /**
      * Wraps plain string into JSON formatter string.
+     * @param jsonString JSON String to format
+     * @return formatted json string or original string if exception occurs
      */
     public static String getJSONFormattedString(String jsonString) {
         try {
@@ -28,6 +30,14 @@ public class JSONHelper {
         }
     }
 
+    /**
+     * Converts to the desired DTO object from String DTO
+     *
+     * @param gsonClass class to convert
+     * @param bundle bundle containing JSON
+     * @param <S> Dynamic class to convert
+     * @return Dynamic converted class object
+     */
     public static <S> S getConvertedGSON(Class<S> gsonClass, Bundle bundle) {
         if(bundle == null){
             return null;
@@ -38,7 +48,7 @@ public class JSONHelper {
     }
 
     /**
-     * Converts to the desire DTO object from String DTO
+     * Converts to the desired DTO object from String DTO
      *
      * @param gsonClass class to convert
      * @param <S>      Dynamic class to convert

@@ -11,7 +11,7 @@ import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
 import com.carecloud.carepay.mini.utils.Defs;
-import com.carecloud.carepay.mini.utils.JSONHelper;
+import com.carecloud.carepay.mini.utils.JsonHelper;
 import com.carecloud.carepay.mini.utils.StringUtil;
 import com.carecloud.carepay.mini.views.CustomErrorToast;
 import com.carecloud.shamrocksdk.connections.DeviceConnection;
@@ -322,13 +322,13 @@ public class WelcomeActivity extends FullScreenActivity {
         public void onPaymentRequestUpdate(String paymentRequestId, PaymentRequest paymentRequest) {
             Log.d(TAG, "Payment Request Update received for: "+paymentRequestId);
             Gson gson = new Gson();
-            Log.d(TAG, JSONHelper.getJSONFormattedString(gson.toJson(paymentRequest)));
+            Log.d(TAG, JsonHelper.getJSONFormattedString(gson.toJson(paymentRequest)));
         }
 
         @Override
         public void onPaymentRequestUpdateFail(String paymentRequestId, JsonElement recordObject) {
             Log.d(TAG, "Payment Reques Update FAILED for: "+paymentRequestId);
-            Log.d(TAG, JSONHelper.getJSONFormattedString(recordObject.toString()));
+            Log.d(TAG, JsonHelper.getJSONFormattedString(recordObject.toString()));
 
         }
 
