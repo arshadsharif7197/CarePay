@@ -398,7 +398,6 @@ public class CloverPaymentActivity extends BaseActivity {
     }
 
     private void postPayment(String paymentModelJson, Payment payment) {
-        Gson gson = new Gson();
         Map<String, String> queries = new HashMap<>();
         queries.put("patient_id", patientBalance.getBalances().get(0).getMetadata().getPatientId());
         if(appointmentId != null){
@@ -408,6 +407,7 @@ public class CloverPaymentActivity extends BaseActivity {
         Map<String, String> header = new HashMap<>();
         header.put("transition", "true");
 
+        Gson gson = new Gson();
         TransitionDTO transitionDTO = gson.fromJson(paymentTransitionString, TransitionDTO.class);
 //        transitionDTO.setUrl(transitionDTO.getUrl()+"FAIL");
         getWorkflowServiceHelper().execute(transitionDTO, getMakePaymentCallback(payment), paymentModelJson, queries, header);
