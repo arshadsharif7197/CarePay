@@ -30,7 +30,7 @@ public class UserPracticeDTO {
     @SerializedName("papi_organization_id")
     private String organizationId;
 
-    @SerializedName("logo_url")
+    @SerializedName("photo_url")
     private String practicePhoto;
 
     @SerializedName("practice_phone")

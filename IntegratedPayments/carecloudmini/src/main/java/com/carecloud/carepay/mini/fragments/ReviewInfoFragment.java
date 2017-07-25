@@ -1,9 +1,9 @@
 package com.carecloud.carepay.mini.fragments;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.mini.R;
-import com.carecloud.carepay.mini.activities.WelcomeActivity;
 import com.carecloud.carepay.mini.models.response.LocationsDTO;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
 import com.carecloud.carepay.mini.utils.ApplicationPreferences;
@@ -227,12 +226,6 @@ public class ReviewInfoFragment extends RegistrationFragment {
         selectedPractice.setPracticePhoto(imageFile.getAbsolutePath());
     }
 
-    private void launchWelcomeActivity(){
-        Intent main = new Intent(getContext(), WelcomeActivity.class);
-        main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(main);
-    }
-
     private RegistrationCallback registrationCallback = new RegistrationCallback() {
         @Override
         public void onPreExecute() {
@@ -246,7 +239,8 @@ public class ReviewInfoFragment extends RegistrationFragment {
             ApplicationPreferences applicationPreferences = getApplicationHelper().getApplicationPreferences();
             applicationPreferences.setDeviceId(registration.getId());
 
-            launchWelcomeActivity();
+            getFragmentManager().popBackStackImmediate(LoginFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            callback.replaceFragment(new CompleteRegistrationFragment(), false);
 
         }
 
