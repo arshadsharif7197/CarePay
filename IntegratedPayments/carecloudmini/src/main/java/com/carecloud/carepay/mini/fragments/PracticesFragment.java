@@ -3,7 +3,6 @@ package com.carecloud.carepay.mini.fragments;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,15 +11,10 @@ import android.view.ViewGroup;
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.adapters.PracticesAdapter;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
-import com.carecloud.carepay.mini.services.ServiceCallback;
-import com.carecloud.carepay.mini.services.ServiceRequestDTO;
-import com.carecloud.carepay.mini.services.ServiceResponseDTO;
 import com.carecloud.carepay.mini.views.CustomErrorToast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by lmenendez on 6/24/17
@@ -39,11 +33,7 @@ public class PracticesFragment extends RegistrationFragment implements Practices
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
         if(userPractices == null){
-            if(callback.getRegistrationDataModel()!=null) {
-                userPractices = new ArrayList<>(callback.getRegistrationDataModel().getPayloadDTO().getUserPractices());
-            }else{
-                userPractices = new ArrayList<>(callback.getPreRegisterDataModel().getUserPracticeDTOList());
-            }
+            userPractices = new ArrayList<>(callback.getPreRegisterDataModel().getUserPracticeDTOList());
         }
     }
 
@@ -113,17 +103,9 @@ public class PracticesFragment extends RegistrationFragment implements Practices
             return;
         }
 
-        if(callback.getRegistrationDataModel()!=null) {
-            Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("practice_id", selectedPractice.getPracticeId());
-            queryMap.put("practice_mgmt", selectedPractice.getPracticeMgmt());
+        getApplicationHelper().getApplicationPreferences().setPracticeId(selectedPractice.getPracticeId());
+        getLocations();
 
-            ServiceRequestDTO authenticatePractice = callback.getRegistrationDataModel().getMetadata().getTransitions().getAuthenticate();
-            getServiceHelper().execute(authenticatePractice, authenticatePracticeCallback, queryMap);
-        }else{
-            getApplicationHelper().getApplicationPreferences().setPracticeId(selectedPractice.getPracticeId());
-            getLocations();
-        }
     }
 
     private void getLocations(){
@@ -138,29 +120,4 @@ public class PracticesFragment extends RegistrationFragment implements Practices
         }
     }
 
-    private ServiceCallback authenticatePracticeCallback = new ServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            nextButton.setEnabled(false);
-            preventSelection = true;
-        }
-
-        @Override
-        public void onPostExecute(ServiceResponseDTO serviceResponseDTO) {
-            nextButton.setEnabled(true);
-            preventSelection = false;
-            Log.d(PracticesFragment.class.getName(), serviceResponseDTO.toString());
-            callback.setRegistrationDataModel(serviceResponseDTO);
-            getApplicationHelper().getApplicationPreferences().setPracticeId(selectedPractice.getPracticeId());
-            getLocations();
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            nextButton.setEnabled(true);
-            preventSelection = false;
-            Log.d(PracticesFragment.class.getName(), exceptionMessage);
-            CustomErrorToast.showWithMessage(getContext(), exceptionMessage);
-        }
-    };
 }

@@ -10,8 +10,6 @@ import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
 import com.carecloud.carepay.mini.interfaces.RegistrationNavigationCallback;
 import com.carecloud.carepay.mini.models.response.Authentication;
 import com.carecloud.carepay.mini.models.response.PreRegisterDataModel;
-import com.carecloud.carepay.mini.models.response.RegistrationDataModel;
-import com.carecloud.carepay.mini.services.ServiceResponseDTO;
 import com.carecloud.carepay.mini.utils.DtoHelper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -22,7 +20,6 @@ import com.google.gson.JsonObject;
 
 public class RegistrationActivity extends FullScreenActivity implements RegistrationNavigationCallback {
 
-    private RegistrationDataModel registrationDataModel;
     private PreRegisterDataModel preRegisterDataModel;
 
     @Override
@@ -50,22 +47,8 @@ public class RegistrationActivity extends FullScreenActivity implements Registra
     }
 
     @Override
-    public void setRegistrationDataModel(ServiceResponseDTO serviceResponseDTO) {
-        if(registrationDataModel == null) {
-            registrationDataModel = DtoHelper.getConvertedDTO(RegistrationDataModel.class, serviceResponseDTO);
-        }else{
-            registrationDataModel.merge(DtoHelper.getConvertedDTO(RegistrationDataModel.class, serviceResponseDTO));
-        }
-    }
-
-    @Override
     public void setPreRegisterDataModel(JsonElement jsonElement) {
         preRegisterDataModel = DtoHelper.getConvertedDTO(PreRegisterDataModel.class, (JsonObject) jsonElement);
-    }
-
-    @Override
-    public RegistrationDataModel getRegistrationDataModel() {
-        return registrationDataModel;
     }
 
     @Override

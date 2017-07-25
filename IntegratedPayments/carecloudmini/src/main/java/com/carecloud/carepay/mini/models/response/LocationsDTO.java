@@ -10,16 +10,12 @@ import java.util.List;
 
 public class LocationsDTO {
 
-//    @SerializedName("id")
-//    private Integer id;
-
     @SerializedName("name")
     private String name;
 
     @SerializedName("is_visible_appointment_scheduler")
     private Boolean isVisibleAppointmentScheduler;
 
-//    @SerializedName("guid")
     @SerializedName("id")
     private String guid;
 
@@ -29,13 +25,6 @@ public class LocationsDTO {
     @SerializedName("phones")
     private List<Phone> phones = null;
 
-//    public Integer getId() {
-//        return id;
-//    }
-//
-//    public void setId(Integer id) {
-//        this.id = id;
-//    }
 
     public String getName() {
         return name;
