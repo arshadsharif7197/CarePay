@@ -401,6 +401,9 @@ public class CloverPaymentActivity extends BaseActivity {
         Gson gson = new Gson();
         Map<String, String> queries = new HashMap<>();
         queries.put("patient_id", patientBalance.getBalances().get(0).getMetadata().getPatientId());
+        if(appointmentId != null){
+            queries.put("appointment_id", appointmentId);
+        }
 
         Map<String, String> header = new HashMap<>();
         header.put("transition", "true");
