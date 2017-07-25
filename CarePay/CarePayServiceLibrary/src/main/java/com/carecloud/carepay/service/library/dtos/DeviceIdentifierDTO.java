@@ -20,8 +20,10 @@ public class DeviceIdentifierDTO {
     @SerializedName("deviceOSVersion")
     @Expose
     private String deviceOSVersion;
+    @Expose
     private String version;
-    private String deviceOS;
+    @Expose
+    private String devicePlatform;
 
     /**
      *
@@ -91,11 +93,11 @@ public class DeviceIdentifierDTO {
         return version;
     }
 
-    public void setDeviceOS(String deviceOS) {
-        this.deviceOS = deviceOS;
+    public void setDevicePlatform(String devicePlatform) {
+        this.devicePlatform = devicePlatform;
     }
 
-    public String getDeviceOS() {
-        return deviceOS;
+    public String getDevicePlatform() {
+        return devicePlatform;
     }
 }
