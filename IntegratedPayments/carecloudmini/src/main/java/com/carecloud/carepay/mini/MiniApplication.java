@@ -6,7 +6,6 @@ import android.support.multidex.MultiDexApplication;
 
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
 import com.carecloud.carepay.mini.models.response.Authentication;
-import com.carecloud.carepay.mini.services.ServiceHelper;
 import com.carecloud.carepay.mini.services.carepay.RestCallServiceHelper;
 import com.carecloud.carepay.mini.utils.ApplicationPreferences;
 import com.carecloud.carepay.mini.utils.PicassoHelper;
@@ -21,7 +20,6 @@ import java.util.Map;
 
 public class MiniApplication extends MultiDexApplication implements ApplicationHelper {
 
-    private ServiceHelper serviceHelper;
     private RestCallServiceHelper restHelper;
 
     private ApplicationPreferences applicationPreferences;
@@ -53,15 +51,6 @@ public class MiniApplication extends MultiDexApplication implements ApplicationH
     }
 
     @Override
-    public ServiceHelper getServiceHelper(){
-        if(serviceHelper == null){
-            initApplicationPreferences();
-            serviceHelper = new ServiceHelper(applicationPreferences);
-        }
-        return serviceHelper;
-    }
-
-    @Override
     public RestCallServiceHelper getRestHelper() {
         if(restHelper == null){
             initApplicationPreferences();
@@ -90,7 +79,7 @@ public class MiniApplication extends MultiDexApplication implements ApplicationH
     private void initApplicationPreferences(){
         if(applicationPreferences == null){
             applicationPreferences = new ApplicationPreferences(this);
-            serviceHelper = new ServiceHelper(applicationPreferences);
+            restHelper = new RestCallServiceHelper(this);
         }
     }
 }

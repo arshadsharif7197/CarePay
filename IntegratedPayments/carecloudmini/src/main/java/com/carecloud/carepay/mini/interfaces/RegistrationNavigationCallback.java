@@ -4,8 +4,6 @@ import android.support.v4.app.Fragment;
 
 import com.carecloud.carepay.mini.models.response.Authentication;
 import com.carecloud.carepay.mini.models.response.PreRegisterDataModel;
-import com.carecloud.carepay.mini.models.response.RegistrationDataModel;
-import com.carecloud.carepay.mini.services.ServiceResponseDTO;
 import com.google.gson.JsonElement;
 
 /**
@@ -18,11 +16,7 @@ public interface RegistrationNavigationCallback {
 
     void onBackPressed();
 
-    void setRegistrationDataModel(ServiceResponseDTO serviceResponseDTO);
-
     void setPreRegisterDataModel(JsonElement jsonElement);
-
-    RegistrationDataModel getRegistrationDataModel();
 
     PreRegisterDataModel getPreRegisterDataModel();
 

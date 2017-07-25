@@ -13,11 +13,7 @@ import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.models.data.UserDTO;
 import com.carecloud.carepay.mini.models.response.Authentication;
 import com.carecloud.carepay.mini.models.response.PreRegisterDataModel;
-import com.carecloud.carepay.mini.models.response.RegistrationDataModel;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
-import com.carecloud.carepay.mini.services.ServiceCallback;
-import com.carecloud.carepay.mini.services.ServiceRequestDTO;
-import com.carecloud.carepay.mini.services.ServiceResponseDTO;
 import com.carecloud.carepay.mini.services.carepay.RestCallServiceCallback;
 import com.carecloud.carepay.mini.utils.DtoHelper;
 import com.carecloud.carepay.mini.utils.StringUtil;
@@ -98,24 +94,8 @@ public class LoginFragment extends RegistrationFragment {
         userDTO.setAlias(emailInput.getText().toString());
         userDTO.setPassword(passwordInput.getText().toString());
 
-//        SignInDTO signInDTO = new SignInDTO();
-//        signInDTO.setUser(userDTO);
-
-//        ServiceRequestDTO loginRequest = callback.getRegistrationDataModel().getMetadata().getTransitions().getSignIn();
-//        getServiceHelper().execute(loginRequest, signInCallback, DtoHelper.getStringDTO(signInDTO));
-
         getRestHelper().executeSignIn(signInRestCallback, DtoHelper.getStringDTO(userDTO));
 
-    }
-
-    private void authenticateUser(){
-        Authentication authentication = callback.getRegistrationDataModel().getPayloadDTO().getSignInAuth().getCognito().getAuthentication();
-        if(authentication != null && authentication.getAccessToken() != null) {
-            callback.setAuthentication(authentication);
-        }
-
-        ServiceRequestDTO authRequest = callback.getRegistrationDataModel().getMetadata().getTransitions().getAuthenticate();
-        getServiceHelper().execute(authRequest, authenticateCallback);
     }
 
     private void getPreRegistration(){
@@ -123,22 +103,6 @@ public class LoginFragment extends RegistrationFragment {
     }
 
     private void displayNextStep(){
-        RegistrationDataModel registrationDataModel = callback.getRegistrationDataModel();
-        if(registrationDataModel != null) {
-            if (!registrationDataModel.getPayloadDTO().getUserPractices().isEmpty()) {
-                if (registrationDataModel.getPayloadDTO().getUserPractices().size() > 1) {
-                    //show practice selection
-                    callback.replaceFragment(new PracticesFragment(), true);
-                } else {
-                    //show location selection
-                    String practiceID = registrationDataModel.getPayloadDTO().getUserPractices().get(0).getPracticeId();
-                    getApplicationHelper().getApplicationPreferences().setPracticeId(practiceID);
-                    callback.replaceFragment(new LocationsFragment(), true);
-                }
-            } else {
-                CustomErrorToast.showWithMessage(getContext(), getString(R.string.error_login));
-            }
-        }else{
             PreRegisterDataModel preRegisterDataModel = callback.getPreRegisterDataModel();
             if(!preRegisterDataModel.getUserPracticeDTOList().isEmpty()){
                 if(preRegisterDataModel.getUserPracticeDTOList().size() > 1){
@@ -153,7 +117,7 @@ public class LoginFragment extends RegistrationFragment {
             }else{
                 CustomErrorToast.showWithMessage(getContext(), getString(R.string.error_login));
             }
-        }
+
     }
 
     private void stripPractices(List<UserPracticeDTO> practices){
@@ -170,27 +134,6 @@ public class LoginFragment extends RegistrationFragment {
 
     }
 
-    private ServiceCallback signInCallback = new ServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            enableFields(false);
-        }
-
-        @Override
-        public void onPostExecute(ServiceResponseDTO serviceResponseDTO) {
-            Log.d(LoginFragment.class.getName(), serviceResponseDTO.toString());
-            callback.setRegistrationDataModel(serviceResponseDTO);
-            getApplicationHelper().getApplicationPreferences().setUsername(emailInput.getText().toString());
-            authenticateUser();
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            enableFields(true);
-            Log.d(LoginFragment.class.getName(), exceptionMessage);
-            CustomErrorToast.showWithMessage(getContext(), exceptionMessage);
-        }
-    };
 
     private RestCallServiceCallback signInRestCallback = new RestCallServiceCallback() {
         @Override
@@ -212,28 +155,6 @@ public class LoginFragment extends RegistrationFragment {
             enableFields(true);
             Log.d(LoginFragment.class.getName(), errorMessage);
             CustomErrorToast.showWithMessage(getContext(), errorMessage);
-        }
-    };
-
-    private ServiceCallback authenticateCallback = new ServiceCallback() {
-        @Override
-        public void onPreExecute() {
-
-        }
-
-        @Override
-        public void onPostExecute(ServiceResponseDTO serviceResponseDTO) {
-            enableFields(true);
-            Log.d(LoginFragment.class.getName(), serviceResponseDTO.toString());
-            callback.setRegistrationDataModel(serviceResponseDTO);
-            displayNextStep();
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            enableFields(true);
-            Log.d(LoginFragment.class.getName(), exceptionMessage);
-            CustomErrorToast.showWithMessage(getContext(), exceptionMessage);
         }
     };
 
@@ -267,12 +188,6 @@ public class LoginFragment extends RegistrationFragment {
 
         @Override
         public void onAccountConnectionFailure(String errorMessage) {
-            // TODO: 7/21/17 REMOVE THIS STUB
-//            if(Debug.isDebuggerConnected()){
-//                String merchantId = "6VR6H15HZ1HSG";
-//                getRestHelper().executePreRegister(preRegisterCallback, merchantId);
-//                return;
-//            }
             enableFields(true);
             CustomErrorToast.showWithMessage(getContext(), errorMessage);
         }
