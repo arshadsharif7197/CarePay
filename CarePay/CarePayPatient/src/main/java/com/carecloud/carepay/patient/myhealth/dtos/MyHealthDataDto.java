@@ -17,6 +17,9 @@ public class MyHealthDataDto {
     private MyHealthAssertionsDto assertions = new MyHealthAssertionsDto();
     @Expose
     private MyHealthProvidersDto providers = new MyHealthProvidersDto();
+    @Expose
+    private MyHealthPatientDto patient = new MyHealthPatientDto();
+
 
     public MyHealthMedicationsDto getMedications() {
         return medications;
@@ -56,5 +59,13 @@ public class MyHealthDataDto {
 
     public void setProviders(MyHealthProvidersDto providers) {
         this.providers = providers;
+    }
+
+    public MyHealthPatientDto getPatient() {
+        return patient;
+    }
+
+    public void setPatient(MyHealthPatientDto patient) {
+        this.patient = patient;
     }
 }
