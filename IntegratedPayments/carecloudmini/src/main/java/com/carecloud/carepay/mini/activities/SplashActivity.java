@@ -14,10 +14,14 @@ import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
 public class SplashActivity extends FullScreenActivity {
 
     @Override
-    public void onCreate(Bundle icicle){
+    protected void onCreate(Bundle icicle){
         super.onCreate(icicle);
-
         setContentView(R.layout.activity_splash);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
 
         final boolean isDeviceRegistered = ((ApplicationHelper) getApplication()).getApplicationPreferences().isDeviceRegistered();
 

@@ -42,6 +42,8 @@
     <string name="registration_practice_config_call">1&#8211;866&#8211;931&#8211;3832</string>
     <string name="registration_practice_config_back">Back to Start</string>
     <string name="registration_progress_text">%1$d of %2$d</string>
+    <string name="registration_complete_text">This device is ready to accept payments.</string>
+    <string name="registration_complete_button">Let\'s go</string>
 
     <string name="welcome_waiting">Waiting for payment</string>
     <string name="welcome_connecting">Connecting&#8230;</string>

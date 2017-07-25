@@ -17,9 +17,9 @@
         <ImageView
             android:id="@+id/carecloud_logo"
             style="@style/HeaderIcon"
-            android:src="@drawable/alert_icon"
+            android:src="@drawable/white_check"
             android:layout_marginBottom="@dimen/dp_40"
-            android:contentDescription="@string/content_error_icon"/>
+            android:contentDescription="@string/content_icon_header"/>
 
         <View
             android:layout_width="match_parent"
@@ -34,30 +34,18 @@
             android:gravity="center"
             android:textColor="@color/blueText"
             android:textSize="@dimen/instructions_text"
-            android:text="@string/registration_practice_config_error"
+            android:text="@string/registration_complete_text"
             app:customFont="proximanova_semibold.otf"/>
 
-        <com.carecloud.carepay.mini.views.CarePayTextView
-            android:id="@+id/practice_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/dp_20"
-            android:paddingEnd="@dimen/dp_20"
-            android:gravity="center"
-            android:textColor="@color/whiteText"
-            android:textSize="@dimen/confirm_error_phone"
-            android:text="@string/registration_practice_config_call"
-            app:customFont="gotham_rounded_bold.otf"/>
 
         <com.carecloud.carepay.mini.views.CarePayButton
-            android:id="@+id/button_back"
+            android:id="@+id/button_go"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_60"
-            style="@style/ButtonRoundedOutline"
-            android:text="@string/registration_practice_config_back"
+            android:layout_marginTop="@dimen/dp_40"
+            style="@style/ButtonRounded"
+            android:text="@string/registration_complete_button"
             app:customFont="gotham_rounded_medium.otf"/>
 
     </LinearLayout>
-
 
 </FrameLayout>
