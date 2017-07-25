@@ -116,9 +116,6 @@ public class MedicationDetailFragment extends BaseFragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (getFragmentManager().getBackStackEntryCount() < 2) {
-                    callback.displayToolbar(true, null);
-                }
                 getActivity().onBackPressed();
             }
         });

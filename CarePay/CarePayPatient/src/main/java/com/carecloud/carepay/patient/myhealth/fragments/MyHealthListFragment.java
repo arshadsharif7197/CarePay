@@ -100,7 +100,6 @@ public class MyHealthListFragment extends BaseFragment implements MyHealthDataIn
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.displayToolbar(true, null);
                 getActivity().onBackPressed();
             }
         });

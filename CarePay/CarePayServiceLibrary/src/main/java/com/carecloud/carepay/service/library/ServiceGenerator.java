@@ -71,9 +71,9 @@ public class ServiceGenerator {
                         .removeHeader("x-api-key")
                         .removeHeader("username")
                         .method(original.method(), original.body());
-                DeviceIdentifierDTO deviceIdentifierDTO=HttpConstants.getDeviceInformation();
-                if(deviceIdentifierDTO!=null){
-                    requestBuilderWithToken.header("deviceInformation", deviceIdentifierDTO.toString());
+                DeviceIdentifierDTO deviceIdentifierDTO = HttpConstants.getDeviceInformation();
+                if (deviceIdentifierDTO != null) {
+                    requestBuilderWithToken.header("deviceinformation", deviceIdentifierDTO.toString());
                 }
 
                 Request request = requestBuilderWithToken.build();

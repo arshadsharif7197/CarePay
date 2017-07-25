@@ -30,6 +30,20 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         myHealthDto = getConvertedDTO(MyHealthDto.class);
+
+        setTransitionBalance(myHealthDto.getMetadata().getLinks().getPatientBalances());
+        setTransitionLogout(myHealthDto.getMetadata().getTransitions().getLogout());
+        setTransitionProfile(myHealthDto.getMetadata().getLinks().getProfileUpdate());
+        setTransitionAppointments(myHealthDto.getMetadata().getLinks().getAppointments());
+        setTransitionNotifications(myHealthDto.getMetadata().getLinks().getNotifications());
+        setTransitionMyHealth(myHealthDto.getMetadata().getLinks().getMyHealth());
+
+        String userImageUrl = myHealthDto.getPayload().getMyHealthData().getPatient().getPatients()
+                .get(0).getProfilePhoto();
+        if (userImageUrl != null) {
+            getApplicationPreferences().setUserPhotoUrl(userImageUrl);
+        }
+
         if (icicle == null) {
             replaceFragment(MyHealthMainFragment.newInstance(), false);
         }
@@ -43,6 +57,14 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
         menuItem.setChecked(true);
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             displayToolbar(true, menuItem.getTitle().toString());
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (getSupportFragmentManager().getBackStackEntryCount() < 1){
+            displayToolbar(true, null);
         }
     }
 
