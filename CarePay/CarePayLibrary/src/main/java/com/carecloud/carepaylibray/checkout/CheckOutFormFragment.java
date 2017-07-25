@@ -17,7 +17,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
-import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -173,11 +172,6 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
             Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
-
-    @Override
-    protected CheckinFlowState getCheckinFlowState() {
-        return CheckinFlowState.CONSENT;
-    }
 
     @Override
     protected void validateForm() {

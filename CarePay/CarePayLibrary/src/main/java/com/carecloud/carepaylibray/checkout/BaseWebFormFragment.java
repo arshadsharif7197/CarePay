@@ -24,7 +24,6 @@ import android.widget.Toast;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.utils.KeyboardWatcher;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.WebViewKeyboardAdjuster;
@@ -143,11 +142,9 @@ public abstract class BaseWebFormFragment extends BaseFragment {
             public void onProgressChanged(WebView view, int progress) {
                 if (progress < 100) {
                     progressBar.setVisibility(View.VISIBLE);
-                    nextButton.setEnabled(false);
                 }
                 if (progress == 100) {
                     progressBar.setVisibility(View.INVISIBLE);
-                    nextButton.setEnabled(true);
                 }
             }
         });
@@ -169,8 +166,6 @@ public abstract class BaseWebFormFragment extends BaseFragment {
 
     protected abstract void submitAllForms();
 
-    protected abstract CheckinFlowState getCheckinFlowState();
-
     protected abstract void validateForm();
 
     protected void validateForm(String function) {
@@ -179,7 +174,6 @@ public abstract class BaseWebFormFragment extends BaseFragment {
 
     protected void loadFormUrl(String formString, String function) {
         webView.loadUrl("javascript:window." + function + "('" + formString + "')");
-        nextButton.setEnabled(true);
         progressIndicator.setCurrentProgressDot(displayedFormsIndex);
         if (getDisplayedFormsIndex() == getTotalForms() - 1) {
             //last form
@@ -283,12 +277,25 @@ public abstract class BaseWebFormFragment extends BaseFragment {
             }
         }
 
+        /**
+         * called from interface when form html has been replaced
+         */
+        @JavascriptInterface
+        public void loadedForm() {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    nextButton.setEnabled(true);
+                }
+            });
+        }
+
     }
 
     private void getNextStep() {
         if (displayedFormsIndex < totalForms - 1) {
             ++displayedFormsIndex;
-
+            nextButton.setEnabled(false);
             displayNextForm();
 
         } else {
