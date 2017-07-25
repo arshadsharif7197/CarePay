@@ -17,7 +17,7 @@
         <ImageView
             android:id="@+id/carecloud_logo"
             style="@style/HeaderIcon"
-            android:src="@drawable/practice_group"
+            android:src="@drawable/alert_icon"
             android:layout_marginBottom="@dimen/dp_40"
             android:contentDescription="@string/content_error_icon"/>
 
