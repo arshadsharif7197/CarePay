@@ -81,8 +81,14 @@ public class LocationsDTO {
     @Override
     public boolean equals(Object object){
         try{
-            LocationsDTO compare = (LocationsDTO) object;
-            return this.getGuid().equals(compare.getGuid());
+            LocationsDTO compareObject = (LocationsDTO) object;
+            if(compareObject == null){
+                return false;
+            }
+            if(compareObject.getGuid() == null){
+                return this.getGuid() == null;
+            }
+            return this.getGuid() != null && this.getGuid().equals(compareObject.getGuid());
         }catch (ClassCastException cce){
             return false;
         }
