@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.payments.presenter;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 
@@ -19,5 +20,7 @@ public interface PaymentViewHandler {
     void displayDialogFragment(DialogFragment fragment, boolean addToBackStack);
 
     void exitPaymentProcess(boolean cancelled);
+
+    @Nullable String getAppointmentId();
 
 }

@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.patientmodecheckin.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -268,6 +269,12 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     @Override
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
         return null;
+    }
+
+    @Nullable
+    @Override
+    public String getAppointmentId() {
+        return appointmentId;
     }
 
     @Override

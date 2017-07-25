@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.payment.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.widget.Toast;
@@ -239,6 +240,12 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
         return selectedUserPractice;
+    }
+
+    @Nullable
+    @Override
+    public String getAppointmentId() {
+        return null;
     }
 
     @Override

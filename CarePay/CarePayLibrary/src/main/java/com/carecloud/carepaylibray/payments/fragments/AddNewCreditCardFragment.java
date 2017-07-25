@@ -18,7 +18,6 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.CreditCardModel;
@@ -199,6 +198,9 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             queries.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
             queries.put("practice_id", userPracticeDTO.getPracticeId());
             queries.put("patient_id", userPracticeDTO.getPatientId());
+            if(callback.getAppointmentId() != null){
+                queries.put("appointment_id", callback.getAppointmentId());
+            }
         }else {
             PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
             queries.put("practice_mgmt", metadata.getPracticeMgmt());

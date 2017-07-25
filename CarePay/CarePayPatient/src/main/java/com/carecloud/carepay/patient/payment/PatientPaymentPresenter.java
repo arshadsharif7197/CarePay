@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.payment;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
@@ -90,6 +91,12 @@ public class PatientPaymentPresenter extends PaymentPresenter {
             }
         }
         return null;
+    }
+
+    @Nullable
+    @Override
+    public String getAppointmentId() {
+        return viewHandler.getAppointmentId();
     }
 
     @Override

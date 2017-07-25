@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.payment.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
@@ -169,6 +170,12 @@ public class PaymentActivity extends BasePatientActivity implements PaymentViewH
             setResult(cancelled ? RESULT_CANCELED : RESULT_OK);
         }
         finish();
+    }
+
+    @Nullable
+    @Override
+    public String getAppointmentId() {
+        return null;
     }
 
 }
