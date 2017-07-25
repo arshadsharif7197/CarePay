@@ -3,7 +3,6 @@ package com.carecloud.carepay.mini.activities;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.fragments.StartRegistrationFragment;
@@ -21,7 +20,7 @@ import com.google.gson.JsonObject;
  * Created by lmenendez on 6/23/17
  */
 
-public class RegistrationActivity extends AppCompatActivity implements RegistrationNavigationCallback {
+public class RegistrationActivity extends FullScreenActivity implements RegistrationNavigationCallback {
 
     private RegistrationDataModel registrationDataModel;
     private PreRegisterDataModel preRegisterDataModel;
