@@ -3,6 +3,7 @@ package com.carecloud.carepay.service.library;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
 import com.carecloud.carepay.service.library.interceptors.HeaderInterceptor;
+import com.carecloud.carepay.service.library.interceptors.JSONFormattedLoggingInterceptor;
 
 import java.io.IOException;
 import java.util.Map;
