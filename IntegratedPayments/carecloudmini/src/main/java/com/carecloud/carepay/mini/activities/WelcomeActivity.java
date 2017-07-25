@@ -168,6 +168,21 @@ public class WelcomeActivity extends FullScreenActivity {
         });
     }
 
+    private void releasePaymentRequest(final String paymentRequestId){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                connectedDevice.setState(Device.STATE_READY);
+                connectedDevice.setProcessing(false);
+                connectedDevice.setPaymentRequestId(null);
+                updateConnectedDevice();
+                if(paymentRequestId != null) {
+                    DevicePayment.releasePaymentRequest(WelcomeActivity.this, paymentRequestId);
+                }
+            }
+        });
+    }
+
     private ConnectionCallback connectionCallback = new ConnectionCallback() {
         @Override
         public void onPreExecute() {
@@ -215,7 +230,7 @@ public class WelcomeActivity extends FullScreenActivity {
                 switch (connectedDevice.getState()){
                     case Device.STATE_READY: //Device is ready to process payments
                         if(paymentRequestId == null ) {
-                            // if device does not contain a payment request then this update can be ignored, device is still in Ready state
+                            updateMessage(getString(R.string.welcome_waiting));
                             return;
                         }
                         if(connectedDevice.getPaymentRequestId() == null) {
@@ -283,30 +298,21 @@ public class WelcomeActivity extends FullScreenActivity {
         @Override
         public void onPaymentComplete(String paymentRequestId) {
             Log.d(TAG, "Payment completed for: "+paymentRequestId);
-            connectedDevice.setState(Device.STATE_READY);
-            connectedDevice.setProcessing(false);
-            connectedDevice.setPaymentRequestId(null);
-            DevicePayment.releasePaymentRequest(WelcomeActivity.this, paymentRequestId);
+            releasePaymentRequest(paymentRequestId);
             //TODO display popup
         }
 
         @Override
         public void onPaymentCanceled(String paymentRequestId, String message) {
             Log.d(TAG, "Payment canceled for: "+paymentRequestId);
-            connectedDevice.setState(Device.STATE_READY);
-            connectedDevice.setProcessing(false);
-            connectedDevice.setPaymentRequestId(null);
-            DevicePayment.releasePaymentRequest(WelcomeActivity.this, paymentRequestId);
+            releasePaymentRequest(paymentRequestId);
         }
 
         @Override
         public void onPaymentFailed(String paymentRequestId, String message) {
             Log.d(TAG, "Payment failed for: "+paymentRequestId);
             Log.d(TAG, message);
-            connectedDevice.setState(Device.STATE_READY);
-            connectedDevice.setProcessing(false);
-            connectedDevice.setPaymentRequestId(null);
-            DevicePayment.releasePaymentRequest(WelcomeActivity.this, paymentRequestId);
+            releasePaymentRequest(paymentRequestId);
         }
 
     };
@@ -314,7 +320,7 @@ public class WelcomeActivity extends FullScreenActivity {
     private PaymentRequestCallback paymentRequestCallback = new PaymentRequestCallback() {
         @Override
         public void onPaymentRequestUpdate(String paymentRequestId, PaymentRequest paymentRequest) {
-            Log.d(TAG, "Payment Reques Update received for: "+paymentRequestId);
+            Log.d(TAG, "Payment Request Update received for: "+paymentRequestId);
             Gson gson = new Gson();
             Log.d(TAG, JSONHelper.getJSONFormattedString(gson.toJson(paymentRequest)));
         }
@@ -331,14 +337,7 @@ public class WelcomeActivity extends FullScreenActivity {
             Log.d(TAG, message);
             if(connectedDevice != null){
                 String paymentRequestId = connectedDevice.getPaymentRequestId();
-                connectedDevice.setState(Device.STATE_READY);
-                connectedDevice.setProcessing(false);
-                connectedDevice.setPaymentRequestId(null);
-                updateConnectedDevice();
-                if(paymentRequestId != null) {
-                    DevicePayment.releasePaymentRequest(WelcomeActivity.this, paymentRequestId);
-                    updateMessage(getString(R.string.welcome_waiting));
-                }
+                releasePaymentRequest(paymentRequestId);
             }else {
                 Log.d(TAG, "Reconnect device");
                 connectDevice();//reset the connection
@@ -349,12 +348,7 @@ public class WelcomeActivity extends FullScreenActivity {
         public void onPaymentRequestDestroyed(String paymentRequestId) {
             Log.d(TAG, "Payment Destroyed: "+paymentRequestId);
             if(connectedDevice != null){
-                connectedDevice.setState(Device.STATE_READY);
-                connectedDevice.setProcessing(false);
-                connectedDevice.setPaymentRequestId(null);
-                updateConnectedDevice();
-                DevicePayment.releasePaymentRequest(WelcomeActivity.this, paymentRequestId);
-                updateMessage(getString(R.string.welcome_waiting));
+                releasePaymentRequest(paymentRequestId);
             }else {
                 connectDevice();//reset the connection
             }
