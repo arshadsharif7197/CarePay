@@ -305,6 +305,9 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
             }
         }
 
+        /**
+         * called from interface when form html has been replaced
+         */
         @JavascriptInterface
         public void loadedForm() {
             getActivity().runOnUiThread(new Runnable() {
@@ -315,6 +318,9 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
             });
         }
 
+        /**
+         * called from interface when intake form html has been replaced
+         */
         @JavascriptInterface
         public void loadedIntake() {
             getActivity().runOnUiThread(new Runnable() {

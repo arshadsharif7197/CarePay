@@ -277,6 +277,9 @@ public abstract class BaseWebFormFragment extends BaseFragment {
             }
         }
 
+        /**
+         * called from interface when form html has been replaced
+         */
         @JavascriptInterface
         public void loadedForm() {
             getActivity().runOnUiThread(new Runnable() {
