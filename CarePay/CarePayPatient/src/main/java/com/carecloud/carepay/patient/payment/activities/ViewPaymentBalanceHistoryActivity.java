@@ -26,6 +26,8 @@ import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
+import com.carecloud.carepaylibray.payments.models.PatientPaymentPayload;
+import com.carecloud.carepaylibray.payments.models.PaymentExceptionDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -254,14 +256,26 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
-        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+        PatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload().get(0);
+        if(payload.getPaymentExceptions()!=null && !payload.getPaymentExceptions().isEmpty() && payload.getTotal()==0D){
+            StringBuilder builder = new StringBuilder();
+            for(PaymentExceptionDTO paymentException : payload.getPaymentExceptions()){
+                builder.append(paymentException.getMessage());
+                builder.append("\n");
+            }
+            int last = builder.lastIndexOf("\n");
+            builder.replace(last, builder.length(), "");
+            showErrorNotification(builder.toString());
+        }else {
+            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            Bundle args = new Bundle();
+            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
 
-        Bundle args = new Bundle();
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
-
-        PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
-        confirmationFragment.setArguments(args);
-        confirmationFragment.show(getSupportFragmentManager(), confirmationFragment.getClass().getSimpleName());
+            PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
+            confirmationFragment.setArguments(args);
+            displayDialogFragment(confirmationFragment, false);
+        }
 
     }
 
