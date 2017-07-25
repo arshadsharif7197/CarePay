@@ -29,12 +29,9 @@ public class EditInitialsFragment extends RegistrationFragment {
     @Override
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
-        if(callback.getRegistrationDataModel()!=null){
-            selectedPractice = callback.getRegistrationDataModel().getPayloadDTO().getUserPractices().get(0);
-        }else{
-            String selectedPracticeId = getApplicationHelper().getApplicationPreferences().getPracticeId();
-            selectedPractice = callback.getPreRegisterDataModel().getPracticeById(selectedPracticeId);
-        }
+        String selectedPracticeId = getApplicationHelper().getApplicationPreferences().getPracticeId();
+        selectedPractice = callback.getPreRegisterDataModel().getPracticeById(selectedPracticeId);
+
     }
 
     @Override
@@ -74,8 +71,8 @@ public class EditInitialsFragment extends RegistrationFragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.onBackPressed();
                 KeyboardUtil.hideSoftKeyboard(getActivity());
+                callback.onBackPressed();
             }
         });
 

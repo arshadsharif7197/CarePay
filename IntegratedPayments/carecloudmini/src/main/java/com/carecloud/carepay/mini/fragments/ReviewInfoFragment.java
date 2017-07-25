@@ -98,12 +98,8 @@ public class ReviewInfoFragment extends RegistrationFragment {
     }
 
     private void setupPracticeInfo(){
-        if(callback.getRegistrationDataModel() != null) {
-            selectedPractice = callback.getRegistrationDataModel().getPayloadDTO().getUserPractices().get(0);
-        }else {
-            String selectedPracticeId = getApplicationHelper().getApplicationPreferences().getPracticeId();
-            selectedPractice = callback.getPreRegisterDataModel().getPracticeById(selectedPracticeId);
-        }
+        String selectedPracticeId = getApplicationHelper().getApplicationPreferences().getPracticeId();
+        selectedPractice = callback.getPreRegisterDataModel().getPracticeById(selectedPracticeId);
 
         practiceName.setText(selectedPractice.getPracticeName());
 
@@ -185,18 +181,11 @@ public class ReviewInfoFragment extends RegistrationFragment {
     }
 
     private String getLocationNameById(String locationId){
-        if(callback.getRegistrationDataModel() != null) {
-            for (LocationsDTO location : callback.getRegistrationDataModel().getPayloadDTO().getLocations()) {
-                if (location.getGuid().equals(locationId)) {
-                    return location.getName();
-                }
-            }
-        }else{
-            LocationsDTO locationsDTO = callback.getPreRegisterDataModel().getPracticeById(selectedPractice.getPracticeId()).findLocationById(locationId);
-            if(locationsDTO != null){
-                return locationsDTO.getName();
-            }
+        LocationsDTO locationsDTO = callback.getPreRegisterDataModel().getPracticeById(selectedPractice.getPracticeId()).findLocationById(locationId);
+        if(locationsDTO != null){
+            return locationsDTO.getName();
         }
+
         return null;
     }
 

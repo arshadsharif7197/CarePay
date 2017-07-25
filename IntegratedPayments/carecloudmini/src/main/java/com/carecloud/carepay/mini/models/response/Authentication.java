@@ -8,15 +8,12 @@ import com.google.gson.annotations.SerializedName;
 
 public class Authentication {
 
-//    @SerializedName("AccessToken")
     @SerializedName("access_token")
     private String accessToken;
 
-//    @SerializedName("RefreshToken")
     @SerializedName("refresh_token")
     private String refreshToken;
 
-//    @SerializedName("IdToken")
     @SerializedName("id_token")
     private String idToken;
 

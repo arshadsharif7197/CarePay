@@ -101,12 +101,8 @@ public class ImageSelectFragment extends RegistrationFragment {
 
     private void initPracticeInfo(View view){
         UserPracticeDTO selectedPractice;
-        if(callback.getRegistrationDataModel() != null) {
-            selectedPractice = callback.getRegistrationDataModel().getPayloadDTO().getUserPractices().get(0);
-        }else{
-            String selectedPracticeId = getApplicationHelper().getApplicationPreferences().getPracticeId();
-            selectedPractice = callback.getPreRegisterDataModel().getPracticeById(selectedPracticeId);
-        }
+        String selectedPracticeId = getApplicationHelper().getApplicationPreferences().getPracticeId();
+        selectedPractice = callback.getPreRegisterDataModel().getPracticeById(selectedPracticeId);
 
         final TextView practiceInitials = (TextView) view.findViewById(R.id.practice_initials_name);
         if(selectedPractice.getPracticeInitials()!=null){

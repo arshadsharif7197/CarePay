@@ -29,12 +29,9 @@ public class LocationsFragment extends RegistrationFragment implements Locations
     @Override
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
-        if(callback.getRegistrationDataModel() != null){
-            locations = callback.getRegistrationDataModel().getPayloadDTO().getLocations();
-        }else {
-            String selectedPractice = getApplicationHelper().getApplicationPreferences().getPracticeId();
-            locations = callback.getPreRegisterDataModel().getPracticeById(selectedPractice).getLocationsDTOList();
-        }
+        String selectedPractice = getApplicationHelper().getApplicationPreferences().getPracticeId();
+        locations = callback.getPreRegisterDataModel().getPracticeById(selectedPractice).getLocationsDTOList();
+
     }
 
     @Override

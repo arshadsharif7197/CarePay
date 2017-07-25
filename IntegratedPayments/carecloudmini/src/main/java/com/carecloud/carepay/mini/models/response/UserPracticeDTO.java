@@ -18,11 +18,9 @@ public class UserPracticeDTO {
     @SerializedName("practice_mgmt")
     private String practiceMgmt;
 
-//    @SerializedName("practice_id")
     @SerializedName("id")
     private String practiceId;
 
-//    @SerializedName("practice_name")
     @SerializedName("name")
     private String practiceName;
 
@@ -32,7 +30,7 @@ public class UserPracticeDTO {
     @SerializedName("papi_organization_id")
     private String organizationId;
 
-    @SerializedName("practice_photo")
+    @SerializedName("logo_url")
     private String practicePhoto;
 
     @SerializedName("practice_phone")

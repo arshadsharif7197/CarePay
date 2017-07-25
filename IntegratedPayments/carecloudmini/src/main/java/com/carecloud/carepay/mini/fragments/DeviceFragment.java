@@ -20,7 +20,6 @@ public class DeviceFragment extends RegistrationFragment {
     private View nextButton;
     private View buttonSpacer;
     private EditText nameInput;
-//    private EditText welcomeInput;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
@@ -58,9 +57,6 @@ public class DeviceFragment extends RegistrationFragment {
         if(!StringUtil.isNullOrEmpty(selectedName)){
             nameInput.setText(selectedName);
         }
-
-//        welcomeInput = (EditText) view.findViewById(R.id.input_welcome);
-//        welcomeInput.addTextChangedListener(emptyTextWatcher);
 
     }
 
