@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.carecloud.carepay.patient.patientsplash.SplashActivity;
+import com.carecloud.carepay.patient.notifications.activities.NotificationProxyActivity;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.fcm.NotificationModel;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -37,7 +37,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             .setSmallIcon(R.mipmap.ic_launcher)
                             .setContentTitle("Breeze")
                             .setContentText(notificationModel.getAlert());
-            Intent resultIntent = new Intent(this, SplashActivity.class);
+            Intent resultIntent = new Intent(this, NotificationProxyActivity.class);
             PendingIntent resultPendingIntent =
                     PendingIntent.getActivity(
                             this,

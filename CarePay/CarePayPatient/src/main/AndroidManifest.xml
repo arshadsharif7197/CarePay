@@ -91,6 +91,8 @@
             android:name=".notifications.activities.NotificationActivity"
             android:screenOrientation="sensorPortrait" />
         <activity
+            android:name=".notifications.activities.NotificationProxyActivity" />
+        <activity
             android:name=".purchases.activities.PurchaseActivity"
             android:screenOrientation="sensorPortrait" />
 
@@ -105,6 +107,15 @@
             </intent-filter>
         </service>
         <service android:name="com.carecloud.carepaylibray.fcm.RegistrationIntentService" />
+        <receiver
+            android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.carecloud.carepay.patient" />
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name=".tutorial.tutorial.TutorialActivity"

@@ -257,7 +257,8 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
             hideProgressDialog();
             Gson gson = new Gson();
             Messages.Reply thread = gson.fromJson(jsonElement, Messages.Reply.class);
-            replaceFragment(MessagesConversationFragment.newInstance(thread), false);
+            getSupportFragmentManager().popBackStackImmediate(MessagesProvidersFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            replaceFragment(MessagesConversationFragment.newInstance(thread), true);
         }
 
         @Override

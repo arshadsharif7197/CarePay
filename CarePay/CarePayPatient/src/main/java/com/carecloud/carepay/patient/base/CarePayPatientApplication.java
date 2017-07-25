@@ -40,6 +40,7 @@ public class CarePayPatientApplication extends CarePayApplication {
         deviceIdentifierDTO.setDeviceSystemVersion(Build.VERSION.RELEASE);
         HttpConstants.setDeviceInformation(deviceIdentifierDTO);
         HttpConstants.setApiBaseUrl(BuildConfig.API_BASE_URL);
+        HttpConstants.setFormsUrl(BuildConfig.FORMS_BASE_URL);
         HttpConstants.setApiStartUrl(BuildConfig.API_START_URL);
         HttpConstants.setApiStartKey(BuildConfig.X_API_KEY);
         HttpConstants.setMessagingBaseUrl(BuildConfig.MESSAGING_BASE_URL);

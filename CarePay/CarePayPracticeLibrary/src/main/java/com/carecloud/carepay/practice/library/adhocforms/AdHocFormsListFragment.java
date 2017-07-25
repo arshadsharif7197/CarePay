@@ -47,9 +47,8 @@ public class AdHocFormsListFragment extends BaseDialogFragment implements AdHocF
     }
 
     /**
-     *
      * @param appointmentsResultModel the appoinment model
-     * @param appointmentId the appointment id
+     * @param appointmentId           the appointment id
      * @return a new instance of AdHocFormsListFragment
      */
     public static AdHocFormsListFragment newInstance(AppointmentsResultModel appointmentsResultModel,
@@ -79,40 +78,44 @@ public class AdHocFormsListFragment extends BaseDialogFragment implements AdHocF
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         selectedForms = new SelectedAdHocForms();
-        setModifiedDates(dto.getMetadata().getDataModels().getAllPracticeForms(),
-                dto.getPayload().getPatientFormsFilled());
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.formsRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        AdHocFormRecyclerViewAdapter adapter = new AdHocFormRecyclerViewAdapter(dto.getMetadata().getDataModels()
-                .getAllPracticeForms());
-        adapter.setCallback(this);
-        recyclerView.setAdapter(adapter);
+        if (!dto.getMetadata().getDataModels().getAllPracticeForms().isEmpty()) {
+            setModifiedDates(dto.getMetadata().getDataModels().getAllPracticeForms(),
+                    dto.getPayload().getPatientFormsFilled());
+            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.formsRecyclerView);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            AdHocFormRecyclerViewAdapter adapter = new AdHocFormRecyclerViewAdapter(dto.getMetadata().getDataModels()
+                    .getAllPracticeForms());
+            adapter.setCallback(this);
+            recyclerView.setAdapter(adapter);
+
+            fillNowFormButton = (Button) view.findViewById(R.id.fillNowFormButton);
+            fillNowFormButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Map<String, String> queryMap = new HashMap<>();
+                    queryMap.put("appointment_id", appointmentId);
+                    TransitionDTO adHocForms = dto.getMetadata().getTransitions().getAdHocFormsPatientMode();
+                    JsonObject jsonObject = new JsonObject();
+                    JsonArray jsonArray = new JsonArray();
+                    for (String uuidForm : selectedForms.getForms()) {
+                        JsonObject uuiiJson = new JsonObject();
+                        uuiiJson.addProperty("form_uuid", uuidForm);
+                        jsonArray.add(uuiiJson);
+                    }
+                    jsonObject.add("adhoc_forms", jsonArray);
+                    getWorkflowServiceHelper().execute(adHocForms, adHocServiceCallback,
+                            jsonObject.toString(), queryMap);
+                }
+            });
+        } else {
+            view.findViewById(R.id.noFormsContainer).setVisibility(View.VISIBLE);
+        }
 
         ImageView cancelImageView = (ImageView) view.findViewById(R.id.cancel_img);
         cancelImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();
-            }
-        });
-
-        fillNowFormButton = (Button) view.findViewById(R.id.fillNowFormButton);
-        fillNowFormButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Map<String, String> queryMap = new HashMap<>();
-                queryMap.put("appointment_id", appointmentId);
-                TransitionDTO adHocForms = dto.getMetadata().getTransitions().getAdHocFormsPatientMode();
-                JsonObject jsonObject = new JsonObject();
-                JsonArray jsonArray = new JsonArray();
-                for (String uuidForm : selectedForms.getForms()) {
-                    JsonObject uuiiJson = new JsonObject();
-                    uuiiJson.addProperty("form_uuid", uuidForm);
-                    jsonArray.add(uuiiJson);
-                }
-                jsonObject.add("adhoc_forms", jsonArray);
-                getWorkflowServiceHelper().execute(adHocForms, adHocServiceCallback,
-                        jsonObject.toString(), queryMap);
             }
         });
     }

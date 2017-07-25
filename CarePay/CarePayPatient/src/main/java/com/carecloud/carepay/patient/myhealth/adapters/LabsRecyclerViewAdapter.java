@@ -22,7 +22,6 @@ public class LabsRecyclerViewAdapter extends RecyclerView.Adapter<LabsRecyclerVi
 
     private final List<LabDto> labs;
     private final int maxItems;
-    private final boolean showEndSign;
     private MyHealthDataInterface callback;
 
     /**
@@ -30,18 +29,8 @@ public class LabsRecyclerViewAdapter extends RecyclerView.Adapter<LabsRecyclerVi
      * @param maxItems the number of max items to show
      */
     public LabsRecyclerViewAdapter(List<LabDto> labs, int maxItems) {
-        this(labs, maxItems, false);
-    }
-
-    /**
-     * @param labs        the list of labs
-     * @param maxItems    the number of max items to show
-     * @param showEndSign a boolean indicating to show or not the end sign
-     */
-    public LabsRecyclerViewAdapter(List<LabDto> labs, int maxItems, boolean showEndSign) {
         this.labs = labs;
         this.maxItems = maxItems;
-        this.showEndSign = showEndSign;
     }
 
     public void setCallback(MyHealthDataInterface callback) {
@@ -65,7 +54,6 @@ public class LabsRecyclerViewAdapter extends RecyclerView.Adapter<LabsRecyclerVi
                 callback.onLabClicked(lab);
             }
         });
-        holder.endSign.setVisibility(showEndSign ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -78,14 +66,12 @@ public class LabsRecyclerViewAdapter extends RecyclerView.Adapter<LabsRecyclerVi
         TextView myHealthActionButton;
         TextView labNameTextView;
         TextView dateTextView;
-        TextView endSign;
         ViewGroup row;
 
         public ViewHolder(View itemView) {
             super(itemView);
             labNameTextView = (TextView) itemView.findViewById(R.id.titleTextView);
             dateTextView = (TextView) itemView.findViewById(R.id.subTitleTextView);
-            endSign = (TextView) itemView.findViewById(R.id.endSign);
             row = (ViewGroup) itemView.findViewById(R.id.row);
             myHealthActionButton = (TextView) itemView.findViewById(R.id.myHealthActionButton);
         }

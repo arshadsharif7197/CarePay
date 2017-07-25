@@ -23,28 +23,15 @@ public class AllergiesRecyclerViewAdapter extends RecyclerView.Adapter<Allergies
 
     private final List<AllergyDto> allergies;
     private final int maxItems;
-    private final boolean showEndSign;
     private MyHealthDataInterface callback;
 
     /**
-     *
      * @param allergies the list of allergies
-     * @param maxItems the number of max items to show
+     * @param maxItems  the number of max items to show
      */
     public AllergiesRecyclerViewAdapter(List<AllergyDto> allergies, int maxItems) {
-        this(allergies, maxItems, false);
-    }
-
-    /**
-     *
-     * @param allergies the list of allergies
-     * @param maxItems the number of max items to show
-     * @param showEndSign a boolean indicating to show or not the end sign
-     */
-    public AllergiesRecyclerViewAdapter(List<AllergyDto> allergies, int maxItems, boolean showEndSign) {
         this.allergies = allergies;
         this.maxItems = maxItems;
-        this.showEndSign = showEndSign;
     }
 
     public void setCallback(MyHealthDataInterface callback) {
@@ -74,7 +61,6 @@ public class AllergiesRecyclerViewAdapter extends RecyclerView.Adapter<Allergies
                     callback.onAllergyClicked(allergy);
                 }
             });
-            holder.endSign.setVisibility(showEndSign ? View.VISIBLE : View.GONE);
         } else {
             holder.myHealthActionButton.setText(Label.getLabel("my_health_add_allergy_button_label"));
             holder.row.setOnClickListener(new View.OnClickListener() {
@@ -104,14 +90,12 @@ public class AllergiesRecyclerViewAdapter extends RecyclerView.Adapter<Allergies
         TextView myHealthActionButton;
         TextView allergyNameTextView;
         TextView practiceTextView;
-        TextView endSign;
         ViewGroup row;
 
         public ViewHolder(View itemView) {
             super(itemView);
             allergyNameTextView = (TextView) itemView.findViewById(R.id.titleTextView);
             practiceTextView = (TextView) itemView.findViewById(R.id.subTitleTextView);
-            endSign = (TextView) itemView.findViewById(R.id.endSign);
             row = (ViewGroup) itemView.findViewById(R.id.row);
             myHealthActionButton = (TextView) itemView.findViewById(R.id.myHealthActionButton);
         }
