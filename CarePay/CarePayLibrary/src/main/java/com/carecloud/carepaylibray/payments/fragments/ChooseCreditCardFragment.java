@@ -61,7 +61,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     protected double amountToMakePayment;
 
     protected String titleLabel;
-    private ChooseCreditCardInterface callback;
+    protected ChooseCreditCardInterface callback;
 
     private List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = new ArrayList<>();
 

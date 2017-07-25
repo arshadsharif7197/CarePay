@@ -75,6 +75,7 @@ public class CloverPaymentActivity extends BaseActivity {
     private String queueTransitionString;
     private PaymentPostModel postModel;
     private PatientBalanceDTO patientBalance;
+    private String appointmentId;
 
     private PaymentLineItem[] paymentLineItems;
 
@@ -107,6 +108,10 @@ public class CloverPaymentActivity extends BaseActivity {
             String patientPaymentMetaDataString = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_METADATA);
             patientBalance = gson.fromJson(patientPaymentMetaDataString, PatientBalanceDTO.class);
 
+        }
+
+        if (intent.hasExtra(CarePayConstants.APPOINTMENT_ID)){
+            appointmentId = intent.getStringExtra(CarePayConstants.APPOINTMENT_ID);
         }
 
         Gson gson = new Gson();

@@ -74,7 +74,7 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
     }
 
     protected void handleSwipeCard() {
-        CloverPaymentAdapter cloverPaymentAdapter = new CloverPaymentAdapter(getActivity(), paymentsModel);
+        CloverPaymentAdapter cloverPaymentAdapter = new CloverPaymentAdapter(getActivity(), paymentsModel, callback.getAppointmentId());
         PaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
         if (paymentPostModel == null) {
             cloverPaymentAdapter.setCloverPayment(amountToMakePayment);
