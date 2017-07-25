@@ -141,8 +141,14 @@ public class UserPracticeDTO {
     @Override
     public boolean equals(Object object){
         try{
-            UserPracticeDTO compare = (UserPracticeDTO) object;
-            return this.getPracticeId().equals(compare.getPracticeId());
+            UserPracticeDTO compareObject = (UserPracticeDTO) object;
+            if(compareObject == null){
+                return false;
+            }
+            if(compareObject.getPracticeId() == null){
+                return this.getPracticeId() == null;
+            }
+            return this.getPracticeId()!= null && this.getPracticeId().equals(compareObject.getPracticeId());
         }catch (ClassCastException cce){
             return false;
         }

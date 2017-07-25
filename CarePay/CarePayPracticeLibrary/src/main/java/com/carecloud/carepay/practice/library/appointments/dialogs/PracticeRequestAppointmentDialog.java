@@ -84,7 +84,6 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         requestAppointmentButton.setText(Label.getLabel("appointments_request_heading"));
         requestAppointmentButton.setOnClickListener(requestAppointmentClickListener);
         requestAppointmentButton.requestFocus();
-        SystemUtil.setGothamRoundedBookTypeface(context, requestAppointmentButton);
 
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentSlot.getStartTime());
 

@@ -18,6 +18,12 @@ public abstract class FullScreenActivity extends AppCompatActivity {
         setSystemUiVisibility();
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+        setSystemUiVisibility();
+    }
+
     private void setSystemUiVisibility() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -28,6 +34,7 @@ public abstract class FullScreenActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.KEEP_SCREEN_ON
                 | FULLSCREEN_VALUE;
         decorView.setSystemUiVisibility(uiOptions);
     }
