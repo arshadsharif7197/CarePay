@@ -57,14 +57,14 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
     private CheckinFlowCallback callback;
 
     @Override
-    public void attachCallback(Context context){
-        try{
+    public void attachCallback(Context context) {
+        try {
             if (context instanceof DemographicsView) {
                 callback = ((DemographicsView) context).getPresenter();
             } else {
                 callback = (CheckinFlowCallback) context;
             }
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement CheckinFlowCallback");
         }
     }
@@ -75,7 +75,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         inflateToolbarViews(view);
 
         nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.consentButtonNext);
@@ -88,10 +88,10 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         nextButton.setEnabled(false);
 
         progressIndicator = (StepProgressBar) view.findViewById(R.id.progress_indicator);
-        if(totalForms>1) {
+        if (totalForms > 1) {
             progressIndicator.setVisibility(View.VISIBLE);
             progressIndicator.setNumDots(totalForms);
-        }else{
+        } else {
             progressIndicator.setVisibility(View.GONE);
         }
 
@@ -105,21 +105,21 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(callback == null){
+        if (callback == null) {
             attachCallback(getContext());
         }
-        callback.setCheckinFlow(getCheckinFlowState(), totalForms, displayedFormsIndex+1);
+        callback.setCheckinFlow(getCheckinFlowState(), totalForms, displayedFormsIndex + 1);
     }
 
-    protected void setHeader(String text){
+    protected void setHeader(String text) {
         header.setText(text);
     }
 
-    private void inflateToolbarViews(View view){
+    private void inflateToolbarViews(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
-        if(toolbar == null) {
+        if (toolbar == null) {
             return;
         }
         toolbar.setTitle("");
@@ -168,11 +168,9 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
             public void onProgressChanged(WebView view, int progress) {
                 if (progress < 100) {
                     progressBar.setVisibility(View.VISIBLE);
-                    nextButton.setEnabled(false);
                 }
                 if (progress == 100) {
                     progressBar.setVisibility(View.INVISIBLE);
-                    nextButton.setEnabled(true);
                 }
             }
         });
@@ -201,17 +199,16 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
 
     protected void validateForm(String function) {
 
-        webView.loadUrl("javascript:window."+function+"()");
+        webView.loadUrl("javascript:window." + function + "()");
 
 
     }
 
-    protected void loadFormUrl(String formString, String function){
-        webView.loadUrl("javascript:window."+function+"('"+formString+"')");
-        nextButton.setEnabled(true);
+    protected void loadFormUrl(String formString, String function) {
+        webView.loadUrl("javascript:window." + function + "('" + formString + "')");
         progressIndicator.setCurrentProgressDot(displayedFormsIndex);
 
-        callback.setCheckinFlow(getCheckinFlowState(), totalForms, displayedFormsIndex+1);//adjust for zero index
+        callback.setCheckinFlow(getCheckinFlowState(), totalForms, displayedFormsIndex + 1);//adjust for zero index
     }
 
     public void setTotalForms(int totalForms) {
@@ -303,17 +300,37 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
          */
         @JavascriptInterface
         public void makeToast(String message, boolean lengthLong) {
-            if(context!=null) {
+            if (context != null) {
                 Toast.makeText(context, message, (lengthLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT)).show();
             }
         }
 
+        @JavascriptInterface
+        public void loadedForm() {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    nextButton.setEnabled(true);
+                }
+            });
+        }
+
+        @JavascriptInterface
+        public void loadedIntake() {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    nextButton.setEnabled(true);
+                }
+            });
+        }
+
     }
 
-    private void getNextStep(){
-        if (displayedFormsIndex < totalForms-1) {
+    private void getNextStep() {
+        if (displayedFormsIndex < totalForms - 1) {
             ++displayedFormsIndex;
-
+            nextButton.setEnabled(false);
             displayNextForm();
 
         } else {
@@ -324,8 +341,8 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
 
 
     @Override
-    public boolean navigateBack(){
-        if(totalForms>1 && displayedFormsIndex > 0){
+    public boolean navigateBack() {
+        if (totalForms > 1 && displayedFormsIndex > 0) {
             --displayedFormsIndex;
             displayNextForm();
             return true;
