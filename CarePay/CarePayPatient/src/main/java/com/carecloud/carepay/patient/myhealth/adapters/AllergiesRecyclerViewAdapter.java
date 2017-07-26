@@ -75,7 +75,9 @@ public class AllergiesRecyclerViewAdapter extends RecyclerView.Adapter<Allergies
     @Override
     public int getItemCount() {
         return maxItems == MyHealthMainFragment.MAX_ITEMS_TO_SHOW ?
-                Math.min(allergies.size() + 1, maxItems + 1) : allergies.size();
+                Math.min(allergies.size(), maxItems) : allergies.size();
+//        return maxItems == MyHealthMainFragment.MAX_ITEMS_TO_SHOW ?
+//                Math.min(allergies.size() + 1, maxItems + 1) : allergies.size();
     }
 
     @Override

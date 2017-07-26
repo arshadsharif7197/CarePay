@@ -169,6 +169,8 @@ public class MyHealthListFragment extends BaseFragment implements MyHealthDataIn
             default:
                 break;
         }
+        //TODO: Erase this
+        fab.setVisibility(View.GONE);
     }
 
     @Override
