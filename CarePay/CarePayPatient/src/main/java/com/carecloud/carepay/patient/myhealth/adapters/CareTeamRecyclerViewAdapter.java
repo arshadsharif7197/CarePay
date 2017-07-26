@@ -93,7 +93,10 @@ public class CareTeamRecyclerViewAdapter extends RecyclerView.Adapter<CareTeamRe
     @Override
     public int getItemCount() {
         return maxItems == MyHealthMainFragment.MAX_ITEMS_TO_SHOW ?
-                Math.min(providers.size() + 1, maxItems + 1) : providers.size();
+                Math.min(providers.size(), maxItems) : providers.size();
+        //TODO: Uncomment this
+//        return maxItems == MyHealthMainFragment.MAX_ITEMS_TO_SHOW ?
+//                Math.min(providers.size() + 1, maxItems + 1) : providers.size();
     }
 
     @Override
