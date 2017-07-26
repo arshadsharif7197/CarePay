@@ -10,16 +10,13 @@ import java.util.List;
 
 public class LocationsDTO {
 
-    @SerializedName("id")
-    private Integer id;
-
     @SerializedName("name")
     private String name;
 
     @SerializedName("is_visible_appointment_scheduler")
     private Boolean isVisibleAppointmentScheduler;
 
-    @SerializedName("guid")
+    @SerializedName("id")
     private String guid;
 
     @SerializedName("address")
@@ -28,13 +25,6 @@ public class LocationsDTO {
     @SerializedName("phones")
     private List<Phone> phones = null;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -75,6 +65,32 @@ public class LocationsDTO {
     public void setPhones(List<Phone> phones) {
         this.phones = phones;
     }
+
+
+    @Override
+    public boolean equals(Object object){
+        try{
+            LocationsDTO compareObject = (LocationsDTO) object;
+            if(compareObject == null){
+                return false;
+            }
+            if(compareObject.getGuid() == null){
+                return this.getGuid() == null;
+            }
+            return this.getGuid() != null && this.getGuid().equals(compareObject.getGuid());
+        }catch (ClassCastException cce){
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode(){
+        if(getGuid() != null){
+            return getGuid().hashCode();
+        }
+        return super.hashCode();
+    }
+
 
     public class Address {
 

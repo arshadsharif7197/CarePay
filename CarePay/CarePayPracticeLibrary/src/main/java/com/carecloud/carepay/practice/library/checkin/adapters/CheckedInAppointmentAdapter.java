@@ -152,6 +152,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
         holder.appointmentStatusCartView.setTag(patient.raw);
         holder.appointmentStatusCartView.setWaitingRoom(isWaitingRoom);
         holder.appointmentStatusCartView.setShortName(patient.initials);
+        holder.itemView.setContentDescription(patient.name);
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.carecloud.carepay.mini.fragments;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,15 +11,10 @@ import android.view.ViewGroup;
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.adapters.PracticesAdapter;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
-import com.carecloud.carepay.mini.services.ServiceCallback;
-import com.carecloud.carepay.mini.services.ServiceRequestDTO;
-import com.carecloud.carepay.mini.services.ServiceResponseDTO;
 import com.carecloud.carepay.mini.views.CustomErrorToast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by lmenendez on 6/24/17
@@ -39,7 +33,7 @@ public class PracticesFragment extends RegistrationFragment implements Practices
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
         if(userPractices == null){
-            userPractices = new ArrayList<>(callback.getRegistrationDataModel().getPayloadDTO().getUserPractices());
+            userPractices = new ArrayList<>(callback.getPreRegisterDataModel().getUserPracticeDTOList());
         }
     }
 
@@ -53,11 +47,18 @@ public class PracticesFragment extends RegistrationFragment implements Practices
         initProgressToolbar(view, getString(R.string.registration_select_practice_title), 2);
 
         nextButton = view.findViewById(R.id.button_next);
-        nextButton.setVisibility(View.INVISIBLE);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 selectPractice();
+            }
+        });
+
+        View backButton = view.findViewById(R.id.button_back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.onBackPressed();
             }
         });
 
@@ -68,7 +69,14 @@ public class PracticesFragment extends RegistrationFragment implements Practices
         RecyclerView practicesRecycler = (RecyclerView) view.findViewById(R.id.practice_recycler);
         practicesRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-        PracticesAdapter practicesAdapter = new PracticesAdapter(getContext(), userPractices, this);
+        selectedPractice = null;
+        String selectedPracticeId = getApplicationHelper().getApplicationPreferences().getPracticeId();
+        if(callback.getPreRegisterDataModel() != null && selectedPracticeId != null){
+            selectedPractice = callback.getPreRegisterDataModel().getPracticeById(selectedPracticeId);
+            nextButton.setVisibility(View.VISIBLE);
+        }
+
+        PracticesAdapter practicesAdapter = new PracticesAdapter(getContext(), userPractices, this, selectedPractice);
         practicesRecycler.setAdapter(practicesAdapter);
 
         practicesRecycler.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
@@ -90,12 +98,14 @@ public class PracticesFragment extends RegistrationFragment implements Practices
     }
 
     private void selectPractice(){
-        Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("practice_id", selectedPractice.getPracticeId());
-        queryMap.put("practice_mgmt", selectedPractice.getPracticeMgmt());
+        if(selectedPractice == null){
+            CustomErrorToast.showWithMessage(getContext(), getString(R.string.error_select_practice));
+            return;
+        }
 
-        ServiceRequestDTO authenticatePractice = callback.getRegistrationDataModel().getMetadata().getTransitions().getAuthenticate();
-        getServiceHelper().execute(authenticatePractice, authenticatePracticeCallback, queryMap);
+        getApplicationHelper().getApplicationPreferences().setPracticeId(selectedPractice.getPracticeId());
+        getLocations();
+
     }
 
     private void getLocations(){
@@ -110,29 +120,4 @@ public class PracticesFragment extends RegistrationFragment implements Practices
         }
     }
 
-    private ServiceCallback authenticatePracticeCallback = new ServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            nextButton.setEnabled(false);
-            preventSelection = true;
-        }
-
-        @Override
-        public void onPostExecute(ServiceResponseDTO serviceResponseDTO) {
-            nextButton.setEnabled(true);
-            preventSelection = false;
-            Log.d(PracticesFragment.class.getName(), serviceResponseDTO.toString());
-            callback.setRegistrationDataModel(serviceResponseDTO);
-            getApplicationHelper().getApplicationPreferences().setPracticeId(selectedPractice.getPracticeId());
-            getLocations();
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            nextButton.setEnabled(true);
-            preventSelection = false;
-            Log.d(PracticesFragment.class.getName(), exceptionMessage);
-            CustomErrorToast.showWithMessage(getContext(), exceptionMessage);
-        }
-    };
 }

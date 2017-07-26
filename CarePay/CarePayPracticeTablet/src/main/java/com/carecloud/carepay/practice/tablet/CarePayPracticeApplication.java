@@ -43,9 +43,12 @@ public class CarePayPracticeApplication extends CarePayApplication
         DeviceIdentifierDTO deviceIdentifierDTO = new DeviceIdentifierDTO();
         deviceIdentifierDTO.setDeviceIdentifier(Settings.Secure.ANDROID_ID);
         deviceIdentifierDTO.setDeviceType("Android");
-        deviceIdentifierDTO.setDeviceSystemVersion(Build.VERSION.RELEASE);
+        deviceIdentifierDTO.setDevicePlatform("android");
+        deviceIdentifierDTO.setDeviceOSVersion(Build.VERSION.RELEASE);
+        deviceIdentifierDTO.setVersion(BuildConfig.VERSION_NAME);
         HttpConstants.setDeviceInformation(deviceIdentifierDTO);
         HttpConstants.setApiBaseUrl(BuildConfig.API_BASE_URL);
+        HttpConstants.setFormsUrl(BuildConfig.FORMS_BASE_URL);
         HttpConstants.setApiStartUrl(BuildConfig.API_START_URL);
         HttpConstants.setApiStartKey(BuildConfig.X_API_KEY);
         HttpConstants.setPushNotificationWebclientUrl(BuildConfig.WEBCLIENT_URL);

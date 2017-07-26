@@ -8,7 +8,7 @@ android {
         applicationId "com.carecloud.carepay.practice.tablet"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 55
+        versionCode 57
         versionName "1.1.19"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -31,6 +31,7 @@ android {
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.development.carecloud.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
+            buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze.development.carecloud.com"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AAa1dc91ad54786d7f8f9cce36898810d795f1f75a"'
 
@@ -42,6 +43,7 @@ android {
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.qa.carecloud.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"VMGQTfHsuP5PSi3UbyXWh7xGWMflwZtHa55LZyXr"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
+            buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze.development.carecloud.com"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AA8bbfbf57d80019455e6c05822d9d5038a718b924"'
 
@@ -53,6 +55,7 @@ android {
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry-staging.carecloud.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"WQRPwvVVL89qyr9TqzGOo9Qx8jKOYxmO9eRdNFpq"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
+            buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze.development.carecloud.com"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AA8bbfbf57d80019455e6c05822d9d5038a718b924"'
 
@@ -64,11 +67,15 @@ android {
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.gobreeze.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"Jbr3ZMKbC54bezcc7DWjn7I5I4M8cEHl6Be9cAYT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
+            buildConfigField 'String', 'FORMS_BASE_URL', '"https://web.gobreeze.com"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AAae417ce2d433e6eb08fb05d2beffd8ac08f5917c"'
 
             buildConfigField 'boolean', 'useUnifiedAuth', 'true'
         }
+    }
+    lintOptions {
+        abortOnError false
     }
 }
 

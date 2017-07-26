@@ -3,8 +3,10 @@ package com.carecloud.carepaylibray.payments.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
- * Created by lmenendez on 3/24/17.
+ * Created by lmenendez on 3/24/17
  */
 
 public class PatientPaymentPayload {
@@ -24,6 +26,10 @@ public class PatientPaymentPayload {
     @SerializedName("total")
     @Expose
     private Double total;
+    @SerializedName("paymentExceptions")
+    @Expose
+    private List<PaymentExceptionDTO> paymentExceptions;
+
 
     public String getConfirmation() {
         return confirmation;
@@ -63,5 +69,13 @@ public class PatientPaymentPayload {
 
     public void setTotal(Double total) {
         this.total = total;
+    }
+
+    public List<PaymentExceptionDTO> getPaymentExceptions() {
+        return paymentExceptions;
+    }
+
+    public void setPaymentExceptions(List<PaymentExceptionDTO> paymentExceptions) {
+        this.paymentExceptions = paymentExceptions;
     }
 }

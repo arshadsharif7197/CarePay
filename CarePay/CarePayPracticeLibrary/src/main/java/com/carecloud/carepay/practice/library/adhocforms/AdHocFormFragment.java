@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -17,7 +18,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.checkout.BaseWebFormFragment;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
-import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -120,7 +120,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
 
     @Override
     protected String getBaseUrl() {
-        return "file:///android_asset/breeze-practice-forms/dist/index.html";
+        return HttpConstants.getFormsUrl() + "/practice-forms/";
     }
 
     @Override
@@ -173,17 +173,11 @@ public class AdHocFormFragment extends BaseWebFormFragment {
     };
 
     @Override
-    protected CheckinFlowState getCheckinFlowState() {
-        return CheckinFlowState.CONSENT;
-    }
-
-    @Override
     protected void validateForm() {
         validateForm("save_form");
     }
 
     /**
-     *
      * @return a boolean indicating if it intercepts the event
      */
     public boolean navigateBack() {

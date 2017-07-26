@@ -1,10 +1,7 @@
 package com.carecloud.carepay.mini.utils;
 
-import android.content.Intent;
 import android.os.Bundle;
 
-import com.carecloud.carepay.mini.services.ServiceRequestDTO;
-import com.carecloud.carepay.mini.services.ServiceResponseDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -64,16 +61,6 @@ public class DtoHelper {
         return null;
     }
 
-    /**
-     * Converts to the desire DTO object from JsonObject DTO
-     *
-     * @param dtoClass class to convert
-     * @param serviceResponseDTO  generic workflow to be converted
-     * @return Dynamic converted class object
-     */
-    public static <S> S getConvertedDTO(Class<S> dtoClass, ServiceResponseDTO serviceResponseDTO) {
-        return getConvertedDTO(dtoClass, getStringDTO(serviceResponseDTO));
-    }
 
     /**
      * Converts DTO object to String
@@ -91,8 +78,5 @@ public class DtoHelper {
         bundle.putString(dto.getClass().getSimpleName(), getStringDTO(dto));
     }
 
-    public static void putExtra(Intent intent, Object dto) {
-        intent.putExtra(ServiceRequestDTO.class.getSimpleName(), getStringDTO(dto));
-    }
 
 }

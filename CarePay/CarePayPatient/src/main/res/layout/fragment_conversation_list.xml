@@ -52,16 +52,17 @@
             android:paddingBottom="@dimen/dimen_14dp"
             android:background="@color/transparent_apt"
             android:textColorHint="@color/pastel_blue"
-            android:textColor="@color/textview_default_textcolor"
+            android:textColor="@color/dark_blue"
             android:textSize="@dimen/text_size_14"
             tools:hint="Send a message"
+            breeze:hintKey="messaging_send_hint"
             app:customAssetFont="proxima_nova_regular"/>
 
         <ImageView
             android:id="@+id/button_send"
             android:layout_width="@dimen/dimen_36dp"
             android:layout_height="match_parent"
-            android:src="@drawable/icn_messages_send"
+            android:src="@drawable/icn_messages_send_selector"
             android:scaleType="fitCenter"/>
 
     </LinearLayout>

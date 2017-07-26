@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.messages.models;
 
+import com.carecloud.carepay.patient.base.PagingDto;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -9,22 +10,10 @@ import java.util.List;
  * Created by lmenendez on 6/30/17
  */
 
-public class Messages {
+public class Messages extends PagingDto {
 
     @SerializedName("data")
     private List<Reply> data = new ArrayList<>();
-
-    @SerializedName("paging")
-    private Paging paging = new Paging();
-
-
-    public Paging getPaging() {
-        return paging;
-    }
-
-    public void setPaging(Paging paging) {
-        this.paging = paging;
-    }
 
     public List<Reply> getData() {
         return data;
@@ -33,7 +22,6 @@ public class Messages {
     public void setData(List<Reply> data) {
         this.data = data;
     }
-
 
     public class Reply {
 

@@ -3,24 +3,24 @@ package com.carecloud.carepay.mini.activities;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.fragments.StartRegistrationFragment;
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
 import com.carecloud.carepay.mini.interfaces.RegistrationNavigationCallback;
-import com.carecloud.carepay.mini.models.response.RegistrationDataModel;
-import com.carecloud.carepay.mini.models.response.SignInAuth;
-import com.carecloud.carepay.mini.services.ServiceResponseDTO;
+import com.carecloud.carepay.mini.models.response.Authentication;
+import com.carecloud.carepay.mini.models.response.PreRegisterDataModel;
 import com.carecloud.carepay.mini.utils.DtoHelper;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 /**
  * Created by lmenendez on 6/23/17
  */
 
-public class RegistrationActivity extends AppCompatActivity implements RegistrationNavigationCallback {
+public class RegistrationActivity extends FullScreenActivity implements RegistrationNavigationCallback {
 
-    private RegistrationDataModel registrationDataModel;
+    private PreRegisterDataModel preRegisterDataModel;
 
     @Override
     public void onCreate(Bundle icicle){
@@ -47,21 +47,17 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     }
 
     @Override
-    public void setRegistrationDataModel(ServiceResponseDTO serviceResponseDTO) {
-        if(registrationDataModel == null) {
-            registrationDataModel = DtoHelper.getConvertedDTO(RegistrationDataModel.class, serviceResponseDTO);
-        }else{
-            registrationDataModel.merge(DtoHelper.getConvertedDTO(RegistrationDataModel.class, serviceResponseDTO));
-        }
+    public void setPreRegisterDataModel(JsonElement jsonElement) {
+        preRegisterDataModel = DtoHelper.getConvertedDTO(PreRegisterDataModel.class, (JsonObject) jsonElement);
     }
 
     @Override
-    public RegistrationDataModel getRegistrationDataModel() {
-        return registrationDataModel;
+    public PreRegisterDataModel getPreRegisterDataModel() {
+        return preRegisterDataModel;
     }
 
     @Override
-    public void setAuthentication(SignInAuth.Cognito.Authentication authentication) {
+    public void setAuthentication(Authentication authentication) {
         ((ApplicationHelper) getApplication()).setAuthentication(authentication);
     }
 

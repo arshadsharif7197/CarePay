@@ -23,15 +23,17 @@ public class CloverPaymentAdapter {
 
     private PaymentsModel paymentsModel;
     private Activity activity;
+    private String appointmentId;
 
     /**
      * Constructor
      * @param activity Activity
      * @param paymentsModel payment model
      */
-    public CloverPaymentAdapter(Activity activity, PaymentsModel paymentsModel){
+    public CloverPaymentAdapter(Activity activity, PaymentsModel paymentsModel, String appointmentId){
         this.activity = activity;
         this.paymentsModel = paymentsModel;
+        this.appointmentId = appointmentId;
     }
 
     /**
@@ -60,6 +62,10 @@ public class CloverPaymentAdapter {
 
         double paymentAmount = postModel.getAmount();
         intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, paymentAmount);
+
+        if(appointmentId != null) {
+            intent.putExtra(CarePayConstants.APPOINTMENT_ID, appointmentId);
+        }
 
         Gson gson = new Gson();
         String paymentTransitionString = gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment());

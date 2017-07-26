@@ -38,6 +38,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
     private static TransitionDTO transitionAppointments;
     private static TransitionDTO transitionLogout;
     private static TransitionDTO transitionNotifications;
+    private static TransitionDTO transitionMyHealth;
 
     protected ActionBarDrawerToggle toggle;
     protected TextView appointmentsDrawerUserIdTextView;
@@ -47,7 +48,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
     protected boolean toolbarVisibility = false;
 
     @Override
-    protected void onCreate(Bundle icicle){
+    protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.activity_navigation);
         toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.toolbar);
@@ -68,7 +69,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         navigationView.setNavigationItemSelectedListener(this);
 
         String imageUrl = getApplicationPreferences().getUserPhotoUrl();
-        ImageView userImageView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.appointmentDrawerIdImageView);
+        ImageView userImageView = (ImageView) navigationView.getHeaderView(0)
+                .findViewById(R.id.appointmentDrawerIdImageView);
         if (!StringUtil.isNullOrEmpty(imageUrl)) {
             Picasso.with(this)
                     .load(imageUrl)
@@ -81,9 +83,9 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
-        if(appointmentsDrawerUserIdTextView!=null){
+        if (appointmentsDrawerUserIdTextView != null) {
             String userId = getApplicationPreferences().getUserId();
             if (userId != null) {
                 appointmentsDrawerUserIdTextView.setText(userId);
@@ -109,7 +111,11 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         Map<String, String> queryMap = new HashMap<>();
 
         int id = item.getItemId();
-        switch (id){
+        switch (id) {
+            case R.id.nav_my_health:
+                callback = myHealthWorkflowCallback;
+                transition = transitionMyHealth;
+                break;
             case R.id.nav_messages:
                 displayMessagesScreen();
                 transition = null;
@@ -146,15 +152,15 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
                 return false;
         }
 
-        if(transition == null || transition.getUrl()==null){
+        if (transition == null || transition.getUrl() == null) {
             drawer.closeDrawer(GravityCompat.START);
             return false;
         }
 
-        if(headersMap.isEmpty()){
+        if (headersMap.isEmpty()) {
             //do regular transition
             getWorkflowServiceHelper().execute(transition, callback, queryMap);
-        }else{
+        } else {
             //do transition with headers since no query params are required we can ignore them
             getWorkflowServiceHelper().execute(transition, callback, queryMap, headersMap);
         }
@@ -205,6 +211,27 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
 
             hideProgressDialog();
 
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    private WorkflowServiceCallback myHealthWorkflowCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            PatientNavigationHelper.setAccessPaymentsBalances(false);
+            navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -287,19 +314,27 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         MenuPatientActivity.transitionAppointments = transitionAppointments;
     }
 
+    public static void setTransitionMyHealth(TransitionDTO transitionMyHealth) {
+        MenuPatientActivity.transitionMyHealth = transitionMyHealth;
+    }
+
     public static void setTransitionLogout(TransitionDTO transitionLogout) {
         MenuPatientActivity.transitionLogout = transitionLogout;
     }
 
-    public static void setTransitionNotifications(TransitionDTO transitionNotifications){
+    public static void setTransitionNotifications(TransitionDTO transitionNotifications) {
         MenuPatientActivity.transitionNotifications = transitionNotifications;
     }
 
-    public static TransitionDTO getTransitionAppointments(){
+    public static TransitionDTO getTransitionAppointments() {
         return transitionAppointments;
     }
 
-    private void displayMessagesScreen(){
+    public static TransitionDTO getTransitionNotifications() {
+        return transitionNotifications;
+    }
+
+    private void displayMessagesScreen() {
         WorkflowDTO workflowDTO = new WorkflowDTO();
         workflowDTO.setState(NavigationStateConstants.MESSAGES);
         PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
@@ -317,10 +352,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         }
         if (visibility) {
             setSupportActionBar(toolbar);
-            if(getSupportActionBar() !=null){
+            if (getSupportActionBar() != null) {
                 getSupportActionBar().show();
             }
-        } else if(getSupportActionBar()!=null) {
+        } else if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
     }

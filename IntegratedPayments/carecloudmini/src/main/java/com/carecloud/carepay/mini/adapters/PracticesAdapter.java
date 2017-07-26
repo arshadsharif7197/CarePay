@@ -26,8 +26,9 @@ public class PracticesAdapter extends RecyclerView.Adapter<PracticesAdapter.View
     private Context context;
     private SelectPracticeListener listener;
     private List<UserPracticeDTO> practices = new ArrayList<>();
+    private UserPracticeDTO selectedPractice;
 
-    private View lastIndicator;
+    private ViewHolder lastIndicator;
 
     /**
      * Constructor
@@ -35,10 +36,11 @@ public class PracticesAdapter extends RecyclerView.Adapter<PracticesAdapter.View
      * @param practices list of practices
      * @param listener practice selection listener
      */
-    public PracticesAdapter(Context context, List<UserPracticeDTO> practices, SelectPracticeListener listener){
+    public PracticesAdapter(Context context, List<UserPracticeDTO> practices, SelectPracticeListener listener, UserPracticeDTO selectedPractice){
         this.context = context;
         this.practices = practices;
         this.listener = listener;
+        this.selectedPractice = selectedPractice;
     }
 
     @Override
@@ -50,18 +52,26 @@ public class PracticesAdapter extends RecyclerView.Adapter<PracticesAdapter.View
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final UserPracticeDTO userPracticeDTO = practices.get(position);
+        boolean isSelected = userPracticeDTO.equals(selectedPractice);
 
         holder.listItemText.setText(userPracticeDTO.getPracticeName());
-        holder.listItemIndicator.setSelected(false);
+        holder.listItemText.setSelected(isSelected);
+        holder.listItemIndicator.setSelected(isSelected);
+        if(isSelected){
+            lastIndicator = holder;
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 listener.onPracticeSelected(userPracticeDTO);
                 if(lastIndicator != null){
-                    lastIndicator.setSelected(false);
+                    lastIndicator.listItemIndicator.setSelected(false);
+                    lastIndicator.listItemText.setSelected(false);
                 }
                 holder.listItemIndicator.setSelected(true);
-                lastIndicator = holder.listItemIndicator;
+                holder.listItemText.setSelected(true);
+                lastIndicator = holder;
+                selectedPractice = userPracticeDTO;
             }
         });
     }

@@ -10,16 +10,20 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.carecloud.carepay.mini.R;
-import com.carecloud.carepay.mini.models.data.SignInDTO;
 import com.carecloud.carepay.mini.models.data.UserDTO;
-import com.carecloud.carepay.mini.models.response.RegistrationDataModel;
-import com.carecloud.carepay.mini.models.response.SignInAuth;
-import com.carecloud.carepay.mini.services.ServiceCallback;
-import com.carecloud.carepay.mini.services.ServiceRequestDTO;
-import com.carecloud.carepay.mini.services.ServiceResponseDTO;
+import com.carecloud.carepay.mini.models.response.Authentication;
+import com.carecloud.carepay.mini.models.response.PreRegisterDataModel;
+import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
+import com.carecloud.carepay.mini.services.carepay.RestCallServiceCallback;
 import com.carecloud.carepay.mini.utils.DtoHelper;
 import com.carecloud.carepay.mini.utils.StringUtil;
 import com.carecloud.carepay.mini.views.CustomErrorToast;
+import com.carecloud.shamrocksdk.registrations.DeviceRegistration;
+import com.carecloud.shamrocksdk.registrations.interfaces.AccountInfoAdapter;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import java.util.List;
 
 /**
  * Created by lmenendez on 6/23/17
@@ -28,6 +32,8 @@ import com.carecloud.carepay.mini.views.CustomErrorToast;
 public class LoginFragment extends RegistrationFragment {
 
     private View loginButton;
+    private View backButton;
+    private View buttonSpacer;
     private EditText emailInput;
     private EditText passwordInput;
 
@@ -41,13 +47,16 @@ public class LoginFragment extends RegistrationFragment {
         initProgressToolbar(view, getString(R.string.registration_login_title), 1);
 
         loginButton = view.findViewById(R.id.button_login);
-        loginButton.setVisibility(View.INVISIBLE);
+        loginButton.setVisibility(View.GONE);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 signInUser();
             }
         });
+
+        buttonSpacer = view.findViewById(R.id.button_spacer);
+        buttonSpacer.setVisibility(loginButton.getVisibility());
 
         emailInput = (EditText) view.findViewById(R.id.input_email);
         emailInput.setOnFocusChangeListener(emailFocusValidator);
@@ -56,6 +65,14 @@ public class LoginFragment extends RegistrationFragment {
 
         passwordInput = (EditText) view.findViewById(R.id.input_password);
         passwordInput.addTextChangedListener(emptyTextWatcher);
+
+        backButton = view.findViewById(R.id.button_back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.onBackPressed();
+            }
+        });
     }
 
 
@@ -64,9 +81,11 @@ public class LoginFragment extends RegistrationFragment {
                 StringUtil.isValidEmail(emailInput.getText().toString()) &&
                 !StringUtil.isNullOrEmpty(passwordInput.getText().toString())){
             loginButton.setVisibility(View.VISIBLE);
+
         }else{
-            loginButton.setVisibility(View.INVISIBLE);
+            loginButton.setVisibility(View.GONE);
         }
+        buttonSpacer.setVisibility(loginButton.getVisibility());
     }
 
 
@@ -75,89 +94,102 @@ public class LoginFragment extends RegistrationFragment {
         userDTO.setAlias(emailInput.getText().toString());
         userDTO.setPassword(passwordInput.getText().toString());
 
-        SignInDTO signInDTO = new SignInDTO();
-        signInDTO.setUser(userDTO);
-
-        ServiceRequestDTO loginRequest = callback.getRegistrationDataModel().getMetadata().getTransitions().getSignIn();
-        getServiceHelper().execute(loginRequest, signInCallback, DtoHelper.getStringDTO(signInDTO));
+        getRestHelper().executeSignIn(signInRestCallback, DtoHelper.getStringDTO(userDTO));
 
     }
 
-    private void authenticateUser(){
-        SignInAuth.Cognito.Authentication authentication = callback.getRegistrationDataModel().getPayloadDTO().getSignInAuth().getCognito().getAuthentication();
-        if(authentication != null && authentication.getAccessToken() != null) {
-            callback.setAuthentication(authentication);
-        }
-
-        ServiceRequestDTO authRequest = callback.getRegistrationDataModel().getMetadata().getTransitions().getAuthenticate();
-        getServiceHelper().execute(authRequest, authenticateCallback);
+    private void getPreRegistration(){
+        DeviceRegistration.getAccountInfo(getContext(), accountInfoAdapter);
     }
 
     private void displayNextStep(){
-        RegistrationDataModel registrationDataModel = callback.getRegistrationDataModel();
-        if(!registrationDataModel.getPayloadDTO().getUserPractices().isEmpty()){
-            if(registrationDataModel.getPayloadDTO().getUserPractices().size() > 1){
-                //show practice selection
-                callback.replaceFragment(new PracticesFragment(), true);
+            PreRegisterDataModel preRegisterDataModel = callback.getPreRegisterDataModel();
+            if(!preRegisterDataModel.getUserPracticeDTOList().isEmpty()){
+                if(preRegisterDataModel.getUserPracticeDTOList().size() > 1){
+                    //show practice selection
+                    callback.replaceFragment(new PracticesFragment(), true);
+                }else{
+                    //show practice confirmation Fragment
+                    String practiceId = preRegisterDataModel.getUserPracticeDTOList().get(0).getPracticeId();
+                    getApplicationHelper().getApplicationPreferences().setPracticeId(practiceId);
+                    callback.replaceFragment(new ConfirmPracticesFragment(), true);
+                }
             }else{
-                //show location selection
-                String practiceID = registrationDataModel.getPayloadDTO().getUserPractices().get(0).getPracticeId();
-                getApplicationHelper().getApplicationPreferences().setPracticeId(practiceID);
-                callback.replaceFragment(new LocationsFragment(), true);
+                CustomErrorToast.showWithMessage(getContext(), getString(R.string.error_login));
             }
-        }else{
-            CustomErrorToast.showWithMessage(getContext(), getString(R.string.error_login));
-        }
+
+    }
+
+    private void stripPractices(List<UserPracticeDTO> practices){
+        UserPracticeDTO practiceDTO = practices.get(0);
+        practices.clear();
+        practices.add(  practiceDTO);
     }
 
     private void enableFields(boolean enabled){
         loginButton.setEnabled(enabled);
+        backButton.setEnabled(enabled);
         emailInput.setEnabled(enabled);
         passwordInput.setEnabled(enabled);
 
     }
 
-    private ServiceCallback signInCallback = new ServiceCallback() {
+
+    private RestCallServiceCallback signInRestCallback = new RestCallServiceCallback() {
         @Override
         public void onPreExecute() {
             enableFields(false);
         }
 
         @Override
-        public void onPostExecute(ServiceResponseDTO serviceResponseDTO) {
-            Log.d(LoginFragment.class.getName(), serviceResponseDTO.toString());
-            callback.setRegistrationDataModel(serviceResponseDTO);
+        public void onPostExecute(JsonElement jsonElement) {
+            Log.d(LoginFragment.class.getName(), jsonElement.toString());
+            Authentication signInAuth = DtoHelper.getConvertedDTO(Authentication.class, (JsonObject) jsonElement);
+            callback.setAuthentication(signInAuth);
             getApplicationHelper().getApplicationPreferences().setUsername(emailInput.getText().toString());
-            authenticateUser();
+            getPreRegistration();
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(String errorMessage) {
             enableFields(true);
-            Log.d(LoginFragment.class.getName(), exceptionMessage);
-            CustomErrorToast.showWithMessage(getContext(), exceptionMessage);
+            Log.d(LoginFragment.class.getName(), errorMessage);
+            CustomErrorToast.showWithMessage(getContext(), errorMessage);
         }
     };
 
-    private ServiceCallback authenticateCallback = new ServiceCallback() {
+    private RestCallServiceCallback preRegisterCallback = new RestCallServiceCallback() {
         @Override
         public void onPreExecute() {
 
         }
 
         @Override
-        public void onPostExecute(ServiceResponseDTO serviceResponseDTO) {
+        public void onPostExecute(JsonElement jsonElement) {
             enableFields(true);
-            Log.d(LoginFragment.class.getName(), serviceResponseDTO.toString());
-            callback.setRegistrationDataModel(serviceResponseDTO);
+            Log.d(LoginFragment.class.getName(), jsonElement.toString());
+            callback.setPreRegisterDataModel(jsonElement);
             displayNextStep();
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(String errorMessage) {
             enableFields(true);
-            Log.d(LoginFragment.class.getName(), exceptionMessage);
-            CustomErrorToast.showWithMessage(getContext(), exceptionMessage);
+            Log.d(LoginFragment.class.getName(), errorMessage);
+            CustomErrorToast.showWithMessage(getContext(), errorMessage);
+        }
+    };
+
+    private AccountInfoAdapter accountInfoAdapter = new AccountInfoAdapter() {
+        @Override
+        public void onRetrieveMerchantId(String merchantId){
+            getRestHelper().executePreRegister(preRegisterCallback, merchantId);
+        }
+
+        @Override
+        public void onAccountConnectionFailure(String errorMessage) {
+            enableFields(true);
+            CustomErrorToast.showWithMessage(getContext(), errorMessage);
         }
     };
 
@@ -175,7 +207,8 @@ public class LoginFragment extends RegistrationFragment {
         @Override
         public void afterTextChanged(Editable editable) {
             if(StringUtil.isNullOrEmpty(editable.toString())){
-                loginButton.setVisibility(View.INVISIBLE);
+                loginButton.setVisibility(View.GONE);
+                buttonSpacer.setVisibility(loginButton.getVisibility());
             }
             validateFields();
         }

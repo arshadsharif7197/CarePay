@@ -55,10 +55,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_gravity="center"
-            android:background="@drawable/dialog_header_dark_blue"
+            android:background="@drawable/appointment_dialog_header_bg"
             android:gravity="center"
             android:padding="@dimen/dimen_10dp"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/white"
             android:textSize="@dimen/text_size_30sp"
             app:customAssetFont="gotham_rounded_bold"
             breeze:textKey="adhoc_screen_title" />
@@ -122,6 +122,52 @@
             android:background="@color/white"
             android:paddingEnd="@dimen/dimen_16dp"
             android:paddingStart="@dimen/dimen_16dp" />
+
+        <RelativeLayout
+            android:id="@+id/noFormsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/header"
+            android:background="@drawable/patient_mode_dialog_body_bg"
+            android:clickable="true"
+            android:visibility="gone">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/noFormsTitleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_margin="@dimen/dimen_10dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:textColor="@color/Feldgrau"
+                android:textSize="@dimen/text_size_22sp"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="adhoc_no_forms_title"
+                tools:text="No forms available" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/noFormsTitleTextView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:src="@drawable/icon_no_forms" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/noFormsSubTitleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/noFormsTitleTextView"
+                android:background="@color/white"
+                android:gravity="center"
+                android:textColor="@color/pastel_blue"
+                android:textSize="@dimen/text_size_18sp"
+                app:customAssetFont="gotham_rounded_light"
+                breeze:textKey="adhoc_no_forms_subtitle"
+                tools:text="No forms were added yet." />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

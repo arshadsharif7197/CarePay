@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
@@ -39,6 +40,8 @@ import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PatientPaymentPayload;
+import com.carecloud.carepaylibray.payments.models.PaymentExceptionDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -423,14 +426,25 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
-//        Gson gson = new Gson();
-        Bundle args = new Bundle();
-//        String paymentsDTOString = gson.toJson(paymentsModel);
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
+        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+        PatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload().get(0);
+        if(payload.getPaymentExceptions()!=null && !payload.getPaymentExceptions().isEmpty() && payload.getTotal()==0D){
+            StringBuilder builder = new StringBuilder();
+            for(PaymentExceptionDTO paymentException : payload.getPaymentExceptions()){
+                builder.append(paymentException.getMessage());
+                builder.append("\n");
+            }
+            int last = builder.lastIndexOf("\n");
+            builder.replace(last, builder.length(), "");
+            showErrorNotification(builder.toString());
+        }else {
+            Bundle args = new Bundle();
+            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
 
-        PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
-        confirmationFragment.setArguments(args);
-        confirmationFragment.show(getSupportFragmentManager(), confirmationFragment.getClass().getSimpleName());
+            PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
+            confirmationFragment.setArguments(args);
+            displayDialogFragment(confirmationFragment, false);
+        }
     }
 
     @Override
@@ -478,6 +492,12 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         if(paymentsModel!=null && !paymentsModel.getPaymentPayload().getUserPractices().isEmpty()){
             return paymentsModel.getPaymentPayload().getUserPractices().get(0);
         }
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public String getAppointmentId() {
         return null;
     }
 

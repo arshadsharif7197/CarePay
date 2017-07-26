@@ -15,6 +15,7 @@
     <!--Specific Color Implementations referencing a generic color -->
     <color name="blueText">@color/lightBlue</color>
     <color name="buttonText">@color/white</color>
+    <color name="outlineButtonText">@color/lightBlue</color>
     <color name="whiteText">@color/white</color>
     <color name="toolbarText">@color/white</color>
     <color name="appBackground">@color/colorPrimaryDark</color>
@@ -27,7 +28,7 @@
     <color name="radio_selected_background">@color/brightBlue</color>
     <color name="radio_selected_foreground">@color/white</color>
     <color name="radio_unselected_background">@color/darkBlue</color>
-    <color name="listItemText">@color/white</color>
+    <color name="listItemText">@color/list_item_color_selector</color>
     <color name="practiceNoImageBackground">@color/darkBlue</color>
     <color name="practiceInitialsBackground">@color/colorPrimary</color>
     <color name="carecloudLogoBackground">@color/white</color>

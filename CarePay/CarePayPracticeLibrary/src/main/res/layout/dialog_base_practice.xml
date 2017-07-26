@@ -46,9 +46,9 @@
 
     <LinearLayout
         android:layout_width="@dimen/dialog_width"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dimen_26dp"
+        android:layout_marginEnd="@dimen/dimen_26dp"
         android:background="@android:color/transparent"
         android:gravity="center"
         android:orientation="vertical">
@@ -85,7 +85,7 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <Button
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/footer_main_button"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_50dp"
@@ -93,7 +93,8 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22sp"
                 android:textAllCaps="false"
-                android:enabled="false" />
+                android:enabled="false"
+                app:customAssetFont="gotham_rounded_medium"/>
         </LinearLayout>
     </LinearLayout>
 

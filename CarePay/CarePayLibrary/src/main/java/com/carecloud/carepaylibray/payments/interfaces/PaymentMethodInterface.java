@@ -1,5 +1,7 @@
 package com.carecloud.carepaylibray.payments.interfaces;
 
+import android.support.annotation.Nullable;
+
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 
@@ -21,4 +23,6 @@ public interface PaymentMethodInterface {
      * @param amount                amount to pay
      */
     void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel);
+
+    @Nullable String getAppointmentId();
 }

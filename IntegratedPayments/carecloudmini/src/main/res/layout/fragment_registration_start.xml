@@ -28,19 +28,19 @@
         <com.carecloud.carepay.mini.views.CarePayTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_60"
+            android:layout_marginTop="@dimen/dp_40"
             android:paddingStart="@dimen/dp_40"
             android:paddingEnd="@dimen/dp_40"
             android:gravity="center"
             android:textColor="@color/blueText"
-            android:textSize="@dimen/instructons_text"
+            android:textSize="@dimen/instructions_text"
             android:text="@string/registrations_start_text"
-            app:customFont="proximanova_semibold.otf"/>
+            app:customFont="proximanova_regular.otf"/>
 
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_60">
+            android:layout_marginTop="@dimen/dp_40">
 
             <com.carecloud.carepay.mini.views.CarePayButton
                 android:id="@+id/button_start"

@@ -32,6 +32,8 @@ import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragmen
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PatientPaymentPayload;
+import com.carecloud.carepaylibray.payments.models.PaymentExceptionDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -165,12 +167,25 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
-        Bundle args = new Bundle();
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
+        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+        PatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload().get(0);
+        if(payload.getPaymentExceptions()!=null && !payload.getPaymentExceptions().isEmpty() && payload.getTotal()==0D){
+            StringBuilder builder = new StringBuilder();
+            for(PaymentExceptionDTO paymentException : payload.getPaymentExceptions()){
+                builder.append(paymentException.getMessage());
+                builder.append("\n");
+            }
+            int last = builder.lastIndexOf("\n");
+            builder.replace(last, builder.length(), "");
+            showErrorNotification(builder.toString());
+        }else {
+            Bundle args = new Bundle();
+            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
 
-        PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
-        confirmationFragment.setArguments(args);
-        displayDialogFragment(confirmationFragment, false);
+            PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
+            confirmationFragment.setArguments(args);
+            displayDialogFragment(confirmationFragment, false);
+        }
     }
 
     @Override
@@ -200,6 +215,12 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         if(paymentsModel!=null && !paymentsModel.getPaymentPayload().getUserPractices().isEmpty()){
             return paymentsModel.getPaymentPayload().getUserPractices().get(0);
         }
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public String getAppointmentId() {
         return null;
     }
 

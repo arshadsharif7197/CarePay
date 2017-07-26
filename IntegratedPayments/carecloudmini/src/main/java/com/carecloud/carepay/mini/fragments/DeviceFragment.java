@@ -18,8 +18,8 @@ import com.carecloud.carepay.mini.utils.StringUtil;
 public class DeviceFragment extends RegistrationFragment {
 
     private View nextButton;
+    private View buttonSpacer;
     private EditText nameInput;
-//    private EditText welcomeInput;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
@@ -31,7 +31,7 @@ public class DeviceFragment extends RegistrationFragment {
         initProgressToolbar(view, getString(R.string.registration_device_title), 4);
 
         nextButton = view.findViewById(R.id.button_next);
-        nextButton.setVisibility(View.INVISIBLE);
+        nextButton.setVisibility(View.GONE);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -39,11 +39,24 @@ public class DeviceFragment extends RegistrationFragment {
             }
         });
 
+        buttonSpacer = view.findViewById(R.id.button_spacer);
+        buttonSpacer.setVisibility(nextButton.getVisibility());
+
+        View backButton = view.findViewById(R.id.button_back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.onBackPressed();
+            }
+        });
+
         nameInput = (EditText) view.findViewById(R.id.input_device_name);
         nameInput.addTextChangedListener(emptyTextWatcher);
 
-//        welcomeInput = (EditText) view.findViewById(R.id.input_welcome);
-//        welcomeInput.addTextChangedListener(emptyTextWatcher);
+        String selectedName = getApplicationHelper().getApplicationPreferences().getDeviceName();
+        if(!StringUtil.isNullOrEmpty(selectedName)){
+            nameInput.setText(selectedName);
+        }
 
     }
 
@@ -72,10 +85,11 @@ public class DeviceFragment extends RegistrationFragment {
         @Override
         public void afterTextChanged(Editable editable) {
             if(StringUtil.isNullOrEmpty(editable.toString())){
-                nextButton.setVisibility(View.INVISIBLE);
+                nextButton.setVisibility(View.GONE);
             }else if(validateForm()){
                 nextButton.setVisibility(View.VISIBLE);
             }
+            buttonSpacer.setVisibility(nextButton.getVisibility());
         }
     };
 

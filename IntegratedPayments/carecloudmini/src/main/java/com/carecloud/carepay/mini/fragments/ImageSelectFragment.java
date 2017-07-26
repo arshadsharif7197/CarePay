@@ -23,6 +23,7 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class ImageSelectFragment extends RegistrationFragment {
 
     private View nextButton;
+    private View buttonSpacer;
     private ImageView practiceLogo;
 
     private @Defs.ImageStyles int selectedImageStyle;
@@ -50,7 +51,7 @@ public class ImageSelectFragment extends RegistrationFragment {
         carecloudLogo.setOnClickListener(getChoiceClickListener(Defs.IMAGE_STYLE_CARECLOUD_LOGO, carecloudSelect));
 
         nextButton = view.findViewById(R.id.button_next);
-        nextButton.setVisibility(View.INVISIBLE);
+        nextButton.setVisibility(View.GONE);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,19 +59,50 @@ public class ImageSelectFragment extends RegistrationFragment {
             }
         });
 
+        buttonSpacer = view.findViewById(R.id.button_spacer);
+        buttonSpacer.setVisibility(nextButton.getVisibility());
+
+        View backButton = view.findViewById(R.id.button_back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.onBackPressed();
+            }
+        });
+
         View editInitials = view.findViewById(R.id.edit_initials);
         editInitials.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.replaceFragment(new EditInitialsFragment(), false);
+                callback.replaceFragment(new EditInitialsFragment(), true);
             }
         });
 
         initPracticeInfo(view);
+
+        selectedImageStyle = getApplicationHelper().getApplicationPreferences().getImageStyle();
+        if(selectedImageStyle > -1){
+            switch (selectedImageStyle){
+                case Defs.IMAGE_STYLE_PRACTICE_INITIALS:
+                    lastSelectionIcon = practiceInitialsSelect;
+                    break;
+                case Defs.IMAGE_STYLE_PRACTICE_LOGO:
+                    lastSelectionIcon = practiceLogoSelect;
+                    break;
+                case Defs.IMAGE_STYLE_CARECLOUD_LOGO:
+                default:
+                    lastSelectionIcon = carecloudSelect;
+            }
+            lastSelectionIcon.setVisibility(View.VISIBLE);
+            nextButton.setVisibility(View.VISIBLE);
+            buttonSpacer.setVisibility(nextButton.getVisibility());
+        }
     }
 
     private void initPracticeInfo(View view){
-        UserPracticeDTO selectedPractice = callback.getRegistrationDataModel().getPayloadDTO().getUserPractices().get(0);
+        UserPracticeDTO selectedPractice;
+        String selectedPracticeId = getApplicationHelper().getApplicationPreferences().getPracticeId();
+        selectedPractice = callback.getPreRegisterDataModel().getPracticeById(selectedPracticeId);
 
         final TextView practiceInitials = (TextView) view.findViewById(R.id.practice_initials_name);
         if(selectedPractice.getPracticeInitials()!=null){
@@ -80,10 +112,12 @@ public class ImageSelectFragment extends RegistrationFragment {
         }
 
         View practiceLogoLayout = view.findViewById(R.id.practice_logo_layout);
+        View practiceLogoPlaceholder = view.findViewById(R.id.logo_width_placeholder);
         final View practiceLogoUnavailable = view.findViewById(R.id.practice_logo_unavailable);
         String imageUrl = selectedPractice.getPracticePhoto();
         if(StringUtil.isNullOrEmpty(imageUrl)){
             practiceLogoLayout.setVisibility(View.GONE);
+            practiceLogoPlaceholder.setVisibility(View.GONE);
         }else{
             Picasso.with(getContext())
                     .load(imageUrl)
@@ -124,7 +158,10 @@ public class ImageSelectFragment extends RegistrationFragment {
                 lastSelectionIcon = selectionIcon;
 
                 nextButton.setVisibility(View.VISIBLE);
+                buttonSpacer.setVisibility(nextButton.getVisibility());
             }
         };
     }
+
+
 }

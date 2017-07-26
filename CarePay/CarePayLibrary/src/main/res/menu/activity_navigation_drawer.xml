@@ -4,6 +4,10 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_my_health"
+            android:icon="@drawable/icn_drawer_my_health"
+            android:title="My Health" />
+        <item
             android:id="@+id/nav_appointments"
             android:icon="@drawable/icn_drawer_appointments"
             android:title="Appointments" />
@@ -14,8 +18,7 @@
         <item
             android:id="@+id/nav_messages"
             android:icon="@drawable/icn_messages"
-            android:title="Messages"
-            android:visible="false"/>
+            android:title="Messages"/>
         <item
             android:id="@+id/nav_purchase"
             android:icon="@drawable/icn_drawer_purchase_default"
@@ -30,7 +33,7 @@
             <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/nav_settings"
-                   android:title="Settings" />  <!--android:icon="@drawable/ic_settings_white_24dp"-->
+                    android:title="Settings" />  <!--android:icon="@drawable/ic_settings_white_24dp"-->
                 <item
                     android:id="@+id/nav_logout"
                     android:title="Logout" />  <!--android:icon="@drawable/ic_power_settings_new_white_24dp"-->

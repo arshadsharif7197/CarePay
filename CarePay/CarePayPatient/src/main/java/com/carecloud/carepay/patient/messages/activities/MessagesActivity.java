@@ -5,24 +5,26 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.messages.MessageNavigationCallback;
 import com.carecloud.carepay.patient.messages.fragments.MessagesConversationFragment;
 import com.carecloud.carepay.patient.messages.fragments.MessagesListFragment;
+import com.carecloud.carepay.patient.messages.fragments.MessagesProvidersFragment;
 import com.carecloud.carepay.patient.messages.models.Messages;
 import com.carecloud.carepay.patient.messages.models.MessagingDataModel;
+import com.carecloud.carepay.patient.messages.models.ProviderContact;
 import com.carecloud.carepay.service.library.RestCallServiceCallback;
 import com.carecloud.carepay.service.library.RestCallServiceHelper;
 import com.carecloud.carepay.service.library.RestDef;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
-import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,8 +33,10 @@ import java.util.Map;
 
 public class MessagesActivity extends MenuPatientActivity implements MessageNavigationCallback {
 
-    RestCallServiceHelper restCallServiceHelper;
-    String userId;
+    private RestCallServiceHelper restCallServiceHelper;
+    private String userId;
+
+    private List<ProviderContact> providerContacts = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle icicle){
@@ -123,19 +127,33 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
     }
 
     @Override
-    public void postNewMessage(ProviderDTO providerDTO, String subject, String message) {
+    public void postNewMessage(ProviderContact provider, String subject, String message) {
+        Map<String, String> fieldMap = new HashMap<>();
+        fieldMap.put(getString(R.string.msg_field_message_text), message);
+        fieldMap.put(getString(R.string.msg_field_participant_id), provider.getId());
+        fieldMap.put(getString(R.string.msg_field_participant_name), provider.getName());
+        fieldMap.put(getString(R.string.msg_field_message_subject), subject);
+
+        restCallServiceHelper.executeRequest(RestDef.POST,
+                HttpConstants.getMessagingBaseUrl(),
+                postNewMessageCallback,
+                true,
+                getString(R.string.msg_auth_token_key),
+                null,
+                null,
+                fieldMap,
+                getString(R.string.msg_path_message));
 
     }
 
     @Override
     public void startNewThread() {
-        Toast.makeText(getContext(), "No endpoint ready for providers list", Toast.LENGTH_LONG).show();
-        //replaceFragment(new MessagesProvidersFragment(), true);
+        replaceFragment(new MessagesProvidersFragment(), true);
     }
 
     @Override
-    public void getProvidersList() {
-
+    public List<ProviderContact> getProvidersList() {
+        return providerContacts;
     }
 
     @Override
@@ -173,6 +191,7 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
             Gson gson = new Gson();
             MessagingDataModel messagingDataModel = gson.fromJson(jsonElement, MessagingDataModel.class);
             userId = messagingDataModel.getInbox().getUserId();
+            providerContacts = messagingDataModel.getProviderContacts();
             try {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 MessagesListFragment messagesListFragment = (MessagesListFragment) fragmentManager.findFragmentById(R.id.container_main);
@@ -218,6 +237,28 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
         public void onPostExecute(JsonElement jsonElement) {
             hideProgressDialog();
             loadConversationsList(jsonElement);
+        }
+
+        @Override
+        public void onFailure(String errorMessage) {
+            hideProgressDialog();
+            showErrorNotification(errorMessage);
+        }
+    };
+
+    private RestCallServiceCallback postNewMessageCallback = new RestCallServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(JsonElement jsonElement) {
+            hideProgressDialog();
+            Gson gson = new Gson();
+            Messages.Reply thread = gson.fromJson(jsonElement, Messages.Reply.class);
+            getSupportFragmentManager().popBackStackImmediate(MessagesProvidersFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            replaceFragment(MessagesConversationFragment.newInstance(thread), true);
         }
 
         @Override

@@ -26,6 +26,12 @@ public abstract class BaseFragment extends Fragment implements ISession {
         isPracticeAppPatientMode = getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        setLastInteraction(System.currentTimeMillis());
+    }
+
     protected void hideKeyboardOnViewTouch(View view){
         if(isPracticeAppPatientMode && view!=null){
             view.setSoundEffectsEnabled(false);
@@ -109,6 +115,17 @@ public abstract class BaseFragment extends Fragment implements ISession {
     public ApplicationMode getApplicationMode() {
         return ((IApplicationSession) getActivity()).getApplicationMode();
     }
+
+    @Override
+    public void setLastInteraction(long systemTime){
+        ((IApplicationSession) getActivity()).setLastInteraction(systemTime);
+    }
+
+    @Override
+    public long getLastInteraction(){
+        return ((IApplicationSession) getActivity()).getLastInteraction();
+    }
+
 
     @Override
     public void showProgressDialog() {

@@ -4,9 +4,9 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.intake.models.IntakeFindings;
 import com.carecloud.carepaylibray.intake.models.IntakeForm;
@@ -78,7 +78,7 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
 
     @Override
     protected String getBaseUrl() {
-        return "file:///android_asset/breeze-intake-forms/dist/index.html";
+        return HttpConstants.getFormsUrl() + "/intake-forms/";
     }
 
     @Override

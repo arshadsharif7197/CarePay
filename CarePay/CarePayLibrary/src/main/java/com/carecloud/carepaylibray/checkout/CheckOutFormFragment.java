@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -16,7 +17,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
-import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -97,7 +97,8 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
                 userResponse = jsonFormSaveResponseArray.get(displayedFormsIndex);
             } else {
                 String uuid = payload.get("uuid").toString().replace("\"", "");
-                for (ConsentFormUserResponseDTO response : appointmentsResultModel.getPayload().getPatientFormsResponse()) {
+                for (ConsentFormUserResponseDTO response : appointmentsResultModel.getPayload()
+                        .getPatientFormsResponse()) {
                     if (uuid.equals(response.getFormId())) {
                         JsonObject json = new JsonObject();
                         json.addProperty("uuid", response.getFormId());
@@ -110,7 +111,8 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
             JsonObject form = new JsonObject();
             form.add("formData", payload);
             form.add("userData", userResponse);
-            String formString = form.toString().replaceAll("\\\\", Matcher.quoteReplacement("\\\\")).replaceAll("\'", Matcher.quoteReplacement("\\\'"));
+            String formString = form.toString().replaceAll("\\\\", Matcher.quoteReplacement("\\\\"))
+                    .replaceAll("\'", Matcher.quoteReplacement("\\\'"));
 
             loadFormUrl(formString, "load_form");
 
@@ -119,7 +121,7 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
 
     @Override
     protected String getBaseUrl() {
-        return "file:///android_asset/breeze-practice-forms/dist/index.html";
+        return HttpConstants.getFormsUrl() + "/practice-forms/";
     }
 
     @Override
@@ -170,11 +172,6 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
             Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
-
-    @Override
-    protected CheckinFlowState getCheckinFlowState() {
-        return CheckinFlowState.CONSENT;
-    }
 
     @Override
     protected void validateForm() {

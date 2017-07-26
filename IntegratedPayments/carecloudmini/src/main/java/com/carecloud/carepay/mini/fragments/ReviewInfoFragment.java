@@ -1,7 +1,9 @@
 package com.carecloud.carepay.mini.fragments;
 
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +18,10 @@ import com.carecloud.carepay.mini.utils.Defs;
 import com.carecloud.carepay.mini.utils.StringUtil;
 import com.carecloud.carepay.mini.views.CustomErrorToast;
 import com.carecloud.shamrocksdk.registrations.DeviceRegistration;
-import com.carecloud.shamrocksdk.registrations.interfaces.Callback;
+import com.carecloud.shamrocksdk.registrations.interfaces.RegistrationCallback;
 import com.carecloud.shamrocksdk.registrations.models.Device;
-import com.google.gson.JsonElement;
+import com.carecloud.shamrocksdk.registrations.models.DeviceGroup;
+import com.carecloud.shamrocksdk.registrations.models.Registration;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -86,12 +89,16 @@ public class ReviewInfoFragment extends RegistrationFragment {
         buttonRegisterDevice = view.findViewById(R.id.button_register);
         buttonRegisterDevice.setOnClickListener(clickListener);
 
+        View backButton = view.findViewById(R.id.button_back);
+        backButton.setOnClickListener(clickListener);
+
         setupPracticeInfo();
 
     }
 
     private void setupPracticeInfo(){
-        selectedPractice = callback.getRegistrationDataModel().getPayloadDTO().getUserPractices().get(0);
+        String selectedPracticeId = getApplicationHelper().getApplicationPreferences().getPracticeId();
+        selectedPractice = callback.getPreRegisterDataModel().getPracticeById(selectedPracticeId);
 
         practiceName.setText(selectedPractice.getPracticeName());
 
@@ -154,8 +161,11 @@ public class ReviewInfoFragment extends RegistrationFragment {
                     popToFragment(PracticesFragment.class.getName());
                     break;
                 case R.id.button_register:
-                default:
                     registerDevice();
+                    break;
+                case R.id.button_back:
+                default:
+                    callback.onBackPressed();
                     break;
             }
         }
@@ -170,11 +180,11 @@ public class ReviewInfoFragment extends RegistrationFragment {
     }
 
     private String getLocationNameById(String locationId){
-        for(LocationsDTO location : callback.getRegistrationDataModel().getPayloadDTO().getLocations()){
-            if(location.getGuid().equals(locationId)){
-                return location.getName();
-            }
+        LocationsDTO locationsDTO = callback.getPreRegisterDataModel().getPracticeById(selectedPractice.getPracticeId()).findLocationById(locationId);
+        if(locationsDTO != null){
+            return locationsDTO.getName();
         }
+
         return null;
     }
 
@@ -187,11 +197,14 @@ public class ReviewInfoFragment extends RegistrationFragment {
 
         Device device = new Device();
         device.setDeviceName(applicationPreferences.getDeviceName());
-        device.setOrganizationId(applicationPreferences.getPracticeId());
-        device.setSerialNumber("test"+System.currentTimeMillis());
+        device.setOrganizationId(selectedPractice.getOrganizationId());
+        device.setSerialNumber(Build.SERIAL);
 
+        DeviceGroup deviceGroup = new DeviceGroup();
+        deviceGroup.setName(applicationPreferences.getLocationId());
+        device.setDeviceGroup(deviceGroup);
 
-        DeviceRegistration.register(device, registrationCallback);
+        DeviceRegistration.register(device, registrationCallback, getContext());
     }
 
     private void cacheLogoToFile(){
@@ -213,22 +226,24 @@ public class ReviewInfoFragment extends RegistrationFragment {
         selectedPractice.setPracticePhoto(imageFile.getAbsolutePath());
     }
 
-    private Callback registrationCallback = new Callback() {
+    private RegistrationCallback registrationCallback = new RegistrationCallback() {
         @Override
         public void onPreExecute() {
             buttonRegisterDevice.setEnabled(false);
         }
 
         @Override
-        public void onPostExecute(JsonElement jsonElement) {
+        public void onPostExecute(Registration registration) {
             buttonRegisterDevice.setEnabled(true);
 
-
-
             ApplicationPreferences applicationPreferences = getApplicationHelper().getApplicationPreferences();
-            applicationPreferences.setDeviceId("");
-            applicationPreferences.setDeviceToken("");
+            applicationPreferences.setDeviceId(registration.getId());
+
+            getFragmentManager().popBackStackImmediate(LoginFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            callback.replaceFragment(new CompleteRegistrationFragment(), false);
+
         }
+
 
         @Override
         public void onFailure(String errorMessage) {

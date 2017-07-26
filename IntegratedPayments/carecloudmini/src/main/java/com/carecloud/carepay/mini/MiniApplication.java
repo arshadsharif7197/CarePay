@@ -5,8 +5,8 @@ import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
-import com.carecloud.carepay.mini.models.response.SignInAuth;
-import com.carecloud.carepay.mini.services.ServiceHelper;
+import com.carecloud.carepay.mini.models.response.Authentication;
+import com.carecloud.carepay.mini.services.carepay.RestCallServiceHelper;
 import com.carecloud.carepay.mini.utils.ApplicationPreferences;
 import com.carecloud.carepay.mini.utils.PicassoHelper;
 import com.squareup.picasso.Picasso;
@@ -20,9 +20,10 @@ import java.util.Map;
 
 public class MiniApplication extends MultiDexApplication implements ApplicationHelper {
 
-    private ServiceHelper serviceHelper;
+    private RestCallServiceHelper restHelper;
+
     private ApplicationPreferences applicationPreferences;
-    private SignInAuth.Cognito.Authentication authentication;
+    private Authentication authentication;
 
     @Override
     public void onCreate() {
@@ -50,14 +51,12 @@ public class MiniApplication extends MultiDexApplication implements ApplicationH
     }
 
     @Override
-    public ServiceHelper getServiceHelper(){
-        if(serviceHelper == null){
-            if(applicationPreferences == null){
-                applicationPreferences = new ApplicationPreferences(this);
-            }
-            serviceHelper = new ServiceHelper(applicationPreferences);
+    public RestCallServiceHelper getRestHelper() {
+        if(restHelper == null){
+            initApplicationPreferences();
+            restHelper = new RestCallServiceHelper(this);
         }
-        return serviceHelper;
+        return restHelper;
     }
 
     @Override
@@ -67,15 +66,20 @@ public class MiniApplication extends MultiDexApplication implements ApplicationH
     }
 
     @Override
-    public void setAuthentication(SignInAuth.Cognito.Authentication authentication) {
+    public void setAuthentication(Authentication authentication) {
         this.authentication = authentication;
         updatePicassoHelper();
+    }
+
+    @Override
+    public Authentication getAuthentication() {
+        return authentication;
     }
 
     private void initApplicationPreferences(){
         if(applicationPreferences == null){
             applicationPreferences = new ApplicationPreferences(this);
-            serviceHelper = new ServiceHelper(applicationPreferences);
+            restHelper = new RestCallServiceHelper(this);
         }
     }
 }

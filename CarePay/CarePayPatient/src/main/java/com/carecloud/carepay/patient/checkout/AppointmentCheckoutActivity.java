@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.checkout;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -37,6 +38,8 @@ import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.models.PatientPaymentPayload;
+import com.carecloud.carepaylibray.payments.models.PaymentExceptionDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -226,14 +229,26 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
-        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        Bundle args = new Bundle();
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
+        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+        PatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload().get(0);
+        if(payload.getPaymentExceptions()!=null && !payload.getPaymentExceptions().isEmpty() && payload.getTotal()==0D){
+            StringBuilder builder = new StringBuilder();
+            for(PaymentExceptionDTO paymentException : payload.getPaymentExceptions()){
+                builder.append(paymentException.getMessage());
+                builder.append("\n");
+            }
+            int last = builder.lastIndexOf("\n");
+            builder.replace(last, builder.length(), "");
+            showErrorNotification(builder.toString());
+        }else {
+            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            Bundle args = new Bundle();
+            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
 
-        PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
-        confirmationFragment.setArguments(args);
-
-        displayDialogFragment(confirmationFragment, true);
+            PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
+            confirmationFragment.setArguments(args);
+            displayDialogFragment(confirmationFragment, false);
+        }
     }
 
     @Override
@@ -245,6 +260,12 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
             }
         }
         return null;
+    }
+
+    @Nullable
+    @Override
+    public String getAppointmentId() {
+        return appointmentId;
     }
 
     @Override
