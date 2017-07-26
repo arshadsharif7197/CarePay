@@ -75,7 +75,10 @@ public class MedicationsRecyclerViewAdapter extends RecyclerView.Adapter<Medicat
     @Override
     public int getItemCount() {
         return maxItems == MyHealthMainFragment.MAX_ITEMS_TO_SHOW ?
-                Math.min(medications.size() + 1, maxItems + 1) : medications.size();
+                Math.min(medications.size(), maxItems) : medications.size();
+        //TODO: Uncomment this
+//        return maxItems == MyHealthMainFragment.MAX_ITEMS_TO_SHOW ?
+//                Math.min(medications.size() + 1, maxItems + 1) : medications.size();
     }
 
     @Override
