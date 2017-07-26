@@ -112,15 +112,15 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
 
         int id = item.getItemId();
         switch (id) {
-            case R.id.nav_my_health:
-                callback = myHealthWorkflowCallback;
-                transition = transitionMyHealth;
-                break;
-            case R.id.nav_messages:
-                displayMessagesScreen();
-                transition = null;
-                callback = null;
-                break;
+//            case R.id.nav_my_health:
+//                callback = myHealthWorkflowCallback;
+//                transition = transitionMyHealth;
+//                break;
+//            case R.id.nav_messages:
+//                displayMessagesScreen();
+//                transition = null;
+//                callback = null;
+//                break;
             case R.id.nav_appointments:
                 callback = appointmentsWorkflowCallback;
                 transition = transitionAppointments;
