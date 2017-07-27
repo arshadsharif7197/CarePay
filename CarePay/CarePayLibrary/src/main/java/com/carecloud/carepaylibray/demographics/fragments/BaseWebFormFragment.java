@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -310,12 +311,17 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
          */
         @JavascriptInterface
         public void loadedForm() {
-            getActivity().runOnUiThread(new Runnable() {
+            new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    nextButton.setEnabled(true);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            nextButton.setEnabled(true);
+                        }
+                    });
                 }
-            });
+            }, 500);
         }
 
         /**
@@ -323,20 +329,25 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
          */
         @JavascriptInterface
         public void loadedIntake() {
-            getActivity().runOnUiThread(new Runnable() {
+            new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    nextButton.setEnabled(true);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            nextButton.setEnabled(true);
+                        }
+                    });
                 }
-            });
+            }, 500);
         }
 
     }
 
     private void getNextStep() {
+        nextButton.setEnabled(false);
         if (displayedFormsIndex < totalForms - 1) {
             ++displayedFormsIndex;
-            nextButton.setEnabled(false);
             displayNextForm();
 
         } else {
@@ -366,10 +377,12 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             onUpdate(callback, workflowDTO);
+            nextButton.setEnabled(true);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            nextButton.setEnabled(true);
             hideProgressDialog();
             showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -282,20 +283,25 @@ public abstract class BaseWebFormFragment extends BaseFragment {
          */
         @JavascriptInterface
         public void loadedForm() {
-            getActivity().runOnUiThread(new Runnable() {
+            new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    nextButton.setEnabled(true);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            nextButton.setEnabled(true);
+                        }
+                    });
                 }
-            });
+            }, 500);
         }
 
     }
 
     private void getNextStep() {
+        nextButton.setEnabled(false);
         if (displayedFormsIndex < totalForms - 1) {
             ++displayedFormsIndex;
-            nextButton.setEnabled(false);
             displayNextForm();
 
         } else {
