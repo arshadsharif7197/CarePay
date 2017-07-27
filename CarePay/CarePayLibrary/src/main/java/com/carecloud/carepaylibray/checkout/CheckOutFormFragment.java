@@ -163,10 +163,12 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             callback.showAllDone(workflowDTO);
+            nextButton.setEnabled(true);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            nextButton.setEnabled(true);
             hideProgressDialog();
             showErrorNotification(exceptionMessage);
             Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
