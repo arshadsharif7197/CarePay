@@ -321,7 +321,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
                         }
                     });
                 }
-            }, 500);
+            }, 1000);
         }
 
         /**
@@ -339,7 +339,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
                         }
                     });
                 }
-            }, 500);
+            }, 1000);
         }
 
     }

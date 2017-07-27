@@ -293,7 +293,7 @@ public abstract class BaseWebFormFragment extends BaseFragment {
                         }
                     });
                 }
-            }, 500);
+            }, 1000);
         }
 
     }
