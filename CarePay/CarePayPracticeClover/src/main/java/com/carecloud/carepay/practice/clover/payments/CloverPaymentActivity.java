@@ -401,7 +401,7 @@ public class CloverPaymentActivity extends BaseActivity {
         Map<String, String> queries = new HashMap<>();
         queries.put("patient_id", patientBalance.getBalances().get(0).getMetadata().getPatientId());
         if(appointmentId != null){
-//            queries.put("appointment_id", appointmentId);
+            queries.put("appointment_id", appointmentId);
         }
 
         Map<String, String> header = new HashMap<>();
@@ -409,7 +409,6 @@ public class CloverPaymentActivity extends BaseActivity {
 
         Gson gson = new Gson();
         TransitionDTO transitionDTO = gson.fromJson(paymentTransitionString, TransitionDTO.class);
-//        transitionDTO.setUrl(transitionDTO.getUrl()+"FAIL");
         getWorkflowServiceHelper().execute(transitionDTO, getMakePaymentCallback(payment), paymentModelJson, queries, header);
 
     }
