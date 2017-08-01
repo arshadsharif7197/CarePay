@@ -159,7 +159,7 @@ public class UpdateEmailFragment extends BaseFragment {
     }
 
     private boolean isEmailValid() {
-        String email = emailEditText.getText().toString();
+        String email = emailEditText.getText().toString().trim();
         boolean isEmailValid = StringUtil.isValidmail(email);
         emailLabelLayout.setErrorEnabled(!isEmailValid); // enable for error if either empty or invalid email
         if (!isEmailValid) {
@@ -180,7 +180,7 @@ public class UpdateEmailFragment extends BaseFragment {
     }
 
     private boolean checkPassword() {
-        String password = passwordEditText.getText().toString();
+        String password = passwordEditText.getText().toString().trim();
         isPasswordEmpty = StringUtil.isNullOrEmpty(password);
         passwordLabelLayout.setErrorEnabled(isPasswordEmpty); // enable for error if either empty or invalid password
         if (isPasswordEmpty) {
@@ -211,8 +211,8 @@ public class UpdateEmailFragment extends BaseFragment {
                     Map<String, String> properties = new HashMap<>();
 
                     properties.put("login_email", getCurrentEmail());
-                    properties.put("proposed_email", emailEditText.getText().toString());
-                    properties.put("current_password", passwordEditText.getText().toString());
+                    properties.put("proposed_email", emailEditText.getText().toString().trim());
+                    properties.put("current_password", passwordEditText.getText().toString().trim());
                     JSONObject attributes = new JSONObject(properties);
                     String encodedAttributes = new String(Base64.encodeBase64(attributes.toString().getBytes()));
                     Map<String, String> header = new HashMap<>();

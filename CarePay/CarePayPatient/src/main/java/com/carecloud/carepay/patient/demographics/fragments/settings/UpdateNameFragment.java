@@ -104,7 +104,8 @@ public class UpdateNameFragment extends DemographicsBaseSettingsFragment {
         firstName = (EditText) view.findViewById(R.id.reviewdemogrFirstNameEdit);
         firstName.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(firstNameLayout, null));
         firstName.setText(demographicPayload.getPersonalDetails().getFirstName());
-        firstName.getOnFocusChangeListener().onFocusChange(firstName, !StringUtil.isNullOrEmpty(firstName.getText().toString()));
+        firstName.getOnFocusChangeListener().onFocusChange(firstName,
+                !StringUtil.isNullOrEmpty(firstName.getText().toString().trim()));
         setVisibility(firstNameLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getFirstName().isDisplayed());
         if (dataModel.getDemographic().getPersonalDetails().getProperties().getFirstName().isRequired()) {
             firstName.addTextChangedListener(getValidateEmptyTextWatcher(firstNameLayout));
@@ -115,7 +116,8 @@ public class UpdateNameFragment extends DemographicsBaseSettingsFragment {
         lastName = (EditText) view.findViewById(R.id.reviewdemogrLastNameEdit);
         lastName.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(lastNameLayout, null));
         lastName.setText(demographicPayload.getPersonalDetails().getLastName());
-        lastName.getOnFocusChangeListener().onFocusChange(lastName, !StringUtil.isNullOrEmpty(lastName.getText().toString()));
+        lastName.getOnFocusChangeListener().onFocusChange(lastName,
+                !StringUtil.isNullOrEmpty(lastName.getText().toString().trim()));
         setVisibility(lastNameLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getLastName().isDisplayed());
         if (dataModel.getDemographic().getPersonalDetails().getProperties().getLastName().isRequired()) {
             lastName.addTextChangedListener(getValidateEmptyTextWatcher(lastNameLayout));
@@ -126,7 +128,8 @@ public class UpdateNameFragment extends DemographicsBaseSettingsFragment {
         middleName = (EditText) view.findViewById(R.id.reviewdemogrMiddleNameEdit);
         middleName.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(middleNameLayout, null));
         middleName.setText(demographicPayload.getPersonalDetails().getMiddleName());
-        middleName.getOnFocusChangeListener().onFocusChange(middleName, !StringUtil.isNullOrEmpty(middleName.getText().toString()));
+        middleName.getOnFocusChangeListener().onFocusChange(middleName,
+                !StringUtil.isNullOrEmpty(middleName.getText().toString().trim()));
         setVisibility(middleNameLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isDisplayed());
         if (dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isRequired()) {
             middleName.addTextChangedListener(getValidateEmptyTextWatcher(middleNameLayout));
@@ -146,17 +149,17 @@ public class UpdateNameFragment extends DemographicsBaseSettingsFragment {
         //add all demographic info
         PatientModel patientModel = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
 
-        String firstNameString = firstName.getText().toString();
+        String firstNameString = firstName.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(firstNameString)) {
             patientModel.setFirstName(firstNameString);
         }
 
-        String middleNameString = middleName.getText().toString();
+        String middleNameString = middleName.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(middleNameString)) {
             patientModel.setMiddleName(middleNameString);
         }
 
-        String lastNameString = lastName.getText().toString();
+        String lastNameString = lastName.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(lastNameString)) {
             patientModel.setLastName(lastNameString);
         }
