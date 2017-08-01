@@ -88,7 +88,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_review_demographic_base, container, false);
         stepProgressBar = (StepProgressBar) view.findViewById(R.id.stepProgressBarCheckin);
-        stepProgressBar.setCumulativeDots(true);
+//        stepProgressBar.setCumulativeDots(true);
         stepProgressBar.setNumDots(5);
         inflateContent(inflater, view);
         //initializeToolbar(view);
