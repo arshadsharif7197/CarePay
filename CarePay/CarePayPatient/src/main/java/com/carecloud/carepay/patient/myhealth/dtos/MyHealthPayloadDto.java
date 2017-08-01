@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.myhealth.dtos;
 
 import com.carecloud.carepay.patient.patientsplash.dtos.OptionsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -18,6 +19,7 @@ public class MyHealthPayloadDto {
     @SerializedName("myhealth")
     @Expose
     private MyHealthDataDto myHealthData = new MyHealthDataDto();
+    private DemographicPayloadDTO demographicDTO = new DemographicPayloadDTO();
 
     public List<OptionsDTO> getLanguages() {
         return languages;
@@ -33,5 +35,13 @@ public class MyHealthPayloadDto {
 
     public void setMyHealthData(MyHealthDataDto myHealthData) {
         this.myHealthData = myHealthData;
+    }
+
+    public DemographicPayloadDTO getDemographicDTO() {
+        return demographicDTO;
+    }
+
+    public void setDemographicDTO(DemographicPayloadDTO demographicDTO) {
+        this.demographicDTO = demographicDTO;
     }
 }

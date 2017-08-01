@@ -38,8 +38,8 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
         setTransitionNotifications(myHealthDto.getMetadata().getLinks().getNotifications());
         setTransitionMyHealth(myHealthDto.getMetadata().getLinks().getMyHealth());
 
-        String userImageUrl = myHealthDto.getPayload().getMyHealthData().getPatient().getPatients()
-                .get(0).getProfilePhoto();
+        String userImageUrl = myHealthDto.getPayload().getDemographicDTO().
+                getPersonalDetails().getProfilePhoto();
         if (userImageUrl != null) {
             getApplicationPreferences().setUserPhotoUrl(userImageUrl);
         }
@@ -63,7 +63,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (getSupportFragmentManager().getBackStackEntryCount() < 1){
+        if (getSupportFragmentManager().getBackStackEntryCount() < 1) {
             displayToolbar(true, null);
         }
     }
