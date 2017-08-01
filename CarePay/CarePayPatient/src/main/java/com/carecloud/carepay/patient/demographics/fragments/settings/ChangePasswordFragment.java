@@ -94,7 +94,7 @@ public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
         initViews(view);
     }
 
-    private void initViews(View view){
+    private void initViews(View view) {
         TextInputLayout currentPasswordLabel = (TextInputLayout) view.findViewById(R.id.oldPasswordTextInputLayout);
         currentPasswordEditText = (EditText) view.findViewById(R.id.currentPasswordEditText);
         currentPasswordEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(currentPasswordLabel, null));
@@ -146,8 +146,8 @@ public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
 
                     Map<String, String> properties = new HashMap<>();
                     properties.put("login_email", getCurrentEmail());
-                    properties.put("current_password", currentPasswordEditText.getText().toString());
-                    properties.put("proposed_password", newPasswordEditText.getText().toString());
+                    properties.put("current_password", currentPasswordEditText.getText().toString().trim());
+                    properties.put("proposed_password", newPasswordEditText.getText().toString().trim());
                     JSONObject attributes = new JSONObject(properties);
                     String encodedAttributes = new String(Base64.encodeBase64(attributes.toString().getBytes()));
                     Map<String, String> header = new HashMap<>();
@@ -186,23 +186,25 @@ public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
 
     @Override
     protected boolean passConstraints() {
-        if(StringUtil.isNullOrEmpty(currentPasswordEditText.getText().toString())){
+        if (StringUtil.isNullOrEmpty(currentPasswordEditText.getText().toString().trim())) {
             return false;
         }
-        if(StringUtil.isNullOrEmpty(newPasswordEditText.getText().toString())){
+        if (StringUtil.isNullOrEmpty(newPasswordEditText.getText().toString().trim())) {
             return false;
         }
-        if(StringUtil.isNullOrEmpty(repeatPasswordEditText.getText().toString())){
+        if (StringUtil.isNullOrEmpty(repeatPasswordEditText.getText().toString().trim())) {
             return false;
         }
 
         View view = getView();
-        if(view == null){
+        if (view == null) {
             return false;
         }
 
-        if(!repeatPasswordEditText.getText().toString().equals(newPasswordEditText.getText().toString())){
-            TextInputLayout repeatPasswordLabel = (TextInputLayout) view.findViewById(R.id.repeatPasswordTextInputLayout);
+        if (!repeatPasswordEditText.getText().toString().trim()
+                .equals(newPasswordEditText.getText().toString().trim())) {
+            TextInputLayout repeatPasswordLabel = (TextInputLayout) view
+                    .findViewById(R.id.repeatPasswordTextInputLayout);
             repeatPasswordLabel.setErrorEnabled(true);
             repeatPasswordLabel.setError(Label.getLabel("settings_repeat_password_error"));
             return false;

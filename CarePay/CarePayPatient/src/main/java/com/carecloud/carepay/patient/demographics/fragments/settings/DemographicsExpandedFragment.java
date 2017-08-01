@@ -126,7 +126,8 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         preferredName.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(preferredNameLayout, null));
         setVisibility(preferredNameLayout, personalInfoSection.getProperties().getPreferredName().isDisplayed());
         preferredName.setText(demographicPayload.getPersonalDetails().getPreferredName());
-        preferredName.getOnFocusChangeListener().onFocusChange(preferredName, !StringUtil.isNullOrEmpty(preferredName.getText().toString()));
+        preferredName.getOnFocusChangeListener().onFocusChange(preferredName,
+                !StringUtil.isNullOrEmpty(preferredName.getText().toString().trim()));
         if(personalInfoSection.getProperties().getPreferredName().isRequired()) {
             preferredName.addTextChangedListener(getValidateEmptyTextWatcher(preferredNameLayout));
         }else if(personalInfoSection.getProperties().getPreferredName().isDisplayed() &&
@@ -141,7 +142,8 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         socialSecurity.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(socialSecurityLayout, null));
         setVisibility(socialSecurityLayout, personalInfoSection.getProperties().getSocialSecurityNumber().isDisplayed());
         socialSecurity.setText(demographicPayload.getPersonalDetails().getSocialSecurityNumber());
-        socialSecurity.getOnFocusChangeListener().onFocusChange(socialSecurity, !StringUtil.isNullOrEmpty(socialSecurity.getText().toString()));
+        socialSecurity.getOnFocusChangeListener().onFocusChange(socialSecurity,
+                !StringUtil.isNullOrEmpty(socialSecurity.getText().toString().trim()));
         if(personalInfoSection.getProperties().getSocialSecurityNumber().isRequired()) {
             socialSecurity.addTextChangedListener(getValidateEmptyTextWatcher(socialSecurityLayout));
         }else if(personalInfoSection.getProperties().getSocialSecurityNumber().isDisplayed() &&
@@ -156,7 +158,8 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         emailAddress.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(emailAddressLayout, null));
         setVisibility(emailAddressLayout, personalInfoSection.getProperties().getEmailAddress().isDisplayed());
         emailAddress.setText(demographicPayload.getPersonalDetails().getEmailAddress());
-        emailAddress.getOnFocusChangeListener().onFocusChange(emailAddress, !StringUtil.isNullOrEmpty(emailAddress.getText().toString()));
+        emailAddress.getOnFocusChangeListener().onFocusChange(emailAddress,
+                !StringUtil.isNullOrEmpty(emailAddress.getText().toString().trim()));
         if(personalInfoSection.getProperties().getEmailAddress().isRequired()) {
             emailAddress.addTextChangedListener(getValidateEmptyTextWatcher(emailAddressLayout));
         }else if(personalInfoSection.getProperties().getEmailAddress().isDisplayed() &&
@@ -183,7 +186,8 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         driverLicense.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(driverLicenseLayout, null));
         setVisibility(driverLicenseLayout, personalInfoSection.getProperties().getDriversLicenseNumber().isDisplayed());
         driverLicense.setText(demographicPayload.getPersonalDetails().getDriversLicenseNumber());
-        driverLicense.getOnFocusChangeListener().onFocusChange(driverLicense, !StringUtil.isNullOrEmpty(driverLicense.getText().toString()));
+        driverLicense.getOnFocusChangeListener().onFocusChange(driverLicense,
+                !StringUtil.isNullOrEmpty(driverLicense.getText().toString().trim()));
         if(personalInfoSection.getProperties().getDriversLicenseNumber().isRequired()) {
             driverLicense.addTextChangedListener(getValidateEmptyTextWatcher(driverLicenseLayout));
         }else if(personalInfoSection.getProperties().getDriversLicenseNumber().isDisplayed() &&
@@ -213,7 +217,8 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
 
         String secondaryPhoneNumberString = demographicPayload.getPersonalDetails().getSecondaryPhoneNumber();
         secondaryPhone.setText(StringUtil.formatPhoneNumber(secondaryPhoneNumberString));
-        secondaryPhone.getOnFocusChangeListener().onFocusChange(secondaryPhone, !StringUtil.isNullOrEmpty(secondaryPhone.getText().toString()));
+        secondaryPhone.getOnFocusChangeListener().onFocusChange(secondaryPhone,
+                !StringUtil.isNullOrEmpty(secondaryPhone.getText().toString().trim()));
         if(personalInfoSection.getProperties().getSecondaryPhoneNumber().isRequired()) {
             secondaryPhone.addTextChangedListener(getValidateEmptyTextWatcher(secondaryPhoneLayout));
         }else{
@@ -371,7 +376,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.secondaryPhoneInputLayout);
         EditText secondaryPhoneNumber = (EditText) view.findViewById(R.id.secondaryPhone);
         if(phoneLayout.getVisibility() == View.VISIBLE &&
-                !StringUtil.isNullOrEmpty(secondaryPhoneNumber.getText().toString()) &&
+                !StringUtil.isNullOrEmpty(secondaryPhoneNumber.getText().toString().trim()) &&
                 !ValidationHelper.isValidString(secondaryPhoneNumber.getText().toString().trim(), ValidationHelper.PHONE_NUMBER_PATTERN)){
             phoneLayout.setErrorEnabled(true);
             phoneLayout.setError(Label.getLabel("demographics_phone_number_validation_msg"));
@@ -381,7 +386,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         TextInputLayout emailLayout = (TextInputLayout) view.findViewById(R.id.emailInputLayout);
         EditText emailAddress = (EditText) view.findViewById(R.id.email);
         if(emailLayout.getVisibility() == View.VISIBLE &&
-                !StringUtil.isNullOrEmpty(emailAddress.getText().toString()) &&
+                !StringUtil.isNullOrEmpty(emailAddress.getText().toString().trim()) &&
                 !ValidationHelper.isValidString(emailAddress.getText().toString().trim(), ValidationHelper.EMAIL_PATTERN)){
             emailLayout.setErrorEnabled(true);
             emailLayout.setError(Label.getLabel("demographics_email_validation_msg"));
@@ -402,17 +407,17 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         //add all demographic info
         PatientModel patientModel = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
 
-        String preferredName = ((TextView) findViewById(R.id.preferredName)).getText().toString();
+        String preferredName = ((TextView) findViewById(R.id.preferredName)).getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(preferredName)) {
             patientModel.setPreferredName(preferredName);
         }
 
-        String socialSecurity = ((TextView) findViewById(R.id.socialSecurityNumber)).getText().toString();
+        String socialSecurity = ((TextView) findViewById(R.id.socialSecurityNumber)).getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(socialSecurity)) {
             patientModel.setSocialSecurityNumber(socialSecurity);
         }
 
-        String emailAddress = ((TextView) findViewById(R.id.email)).getText().toString();
+        String emailAddress = ((TextView) findViewById(R.id.email)).getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(emailAddress)) {
             patientModel.setEmailAddress(emailAddress);
         }
@@ -422,7 +427,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
             patientModel.setPreferredLanguage(preferredLanguage);
         }
 
-        String driverLicense = ((TextView) findViewById(R.id.driverLicense)).getText().toString();
+        String driverLicense = ((TextView) findViewById(R.id.driverLicense)).getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(driverLicense)) {
             patientModel.setDriversLicenseNumber(driverLicense);
         }
@@ -432,7 +437,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
             patientModel.setDriversLicenseState(driverLicenseState);
         }
 
-        String secondaryPhone = ((TextView) findViewById(R.id.secondaryPhone)).getText().toString();
+        String secondaryPhone = ((TextView) findViewById(R.id.secondaryPhone)).getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(secondaryPhone)) {
             patientModel.setSecondaryPhoneNumber(StringUtil.revertToRawPhoneFormat(secondaryPhone));
         }
