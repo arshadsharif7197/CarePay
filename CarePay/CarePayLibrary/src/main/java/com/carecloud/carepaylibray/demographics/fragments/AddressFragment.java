@@ -125,7 +125,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         setVisibility(address2InputLayout, addressSection.getProperties().getAddress2().isDisplayed());
         address2.setText(demographicPayload.getAddress().getAddress2());
         address2.getOnFocusChangeListener().onFocusChange(address2,
-                !StringUtil.isNullOrEmpty(address2.getText().toString()));
+                !StringUtil.isNullOrEmpty(address2.getText().toString().trim()));
         if (addressSection.getProperties().getAddress2().isRequired()) {
             address2.addTextChangedListener(getValidateEmptyTextWatcher(address2InputLayout));
             View address2Optional = view.findViewById(R.id.demogrAddressOptionalLabel);
