@@ -73,14 +73,19 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
         pendingAmountTextView = (TextView) view.findViewById(R.id.pendingAmountTextView);
         pendingAmountTextView.setVisibility(View.VISIBLE);
         updatePendingAmountText(amount);
-        amountText.addTextChangedListener(updatePendingListener);
+    }
+
+    @Override
+    protected void updateLayout() {
+        double entry = StringUtil.isNullOrEmpty(numberStr) ? 0D : Double.parseDouble(numberStr);
+        updatePendingAmountText(amount - entry);
     }
 
     @Override
     public void onClick(View view) {
         super.onClick(view);
-        if ((view.getId() == R.id.enter_amount_button) && !StringUtil.isNullOrEmpty(amountText.getText().toString())) {
-            double amount = Double.parseDouble(amountText.getText().toString());
+        if ((view.getId() == R.id.enter_amount_button) && !StringUtil.isNullOrEmpty(numberStr)) {
+            double amount = Double.parseDouble(numberStr);
             createPaymentModel(amount);
             callback.onPayButtonClicked(amount, paymentsModel);
             dismiss();
@@ -91,39 +96,16 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
         pendingAmountTextView.setText(Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount(amount));
     }
 
-    private TextWatcher updatePendingListener = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence sequence, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-            double entry = 0D;
-            try {
-                entry = Double.parseDouble(editable.toString());
-            } catch (NumberFormatException nfe) {
-                nfe.printStackTrace();
-            }
-            updatePendingAmountText(amount - entry);
-        }
-    };
-
-    private void createPaymentModel(double payAmount){
+    private void createPaymentModel(double payAmount) {
         PaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
-        if( postModel == null){
+        if (postModel == null) {
             postModel = new PaymentPostModel();
         }
         postModel.setAmount(payAmount);
 
         List<PendingBalancePayloadDTO> responsibilityTypes = getPendingResponsibilityTypes();
-        for(PendingBalancePayloadDTO responsibility : responsibilityTypes){
-            if(payAmount > 0D) {
+        for (PendingBalancePayloadDTO responsibility : responsibilityTypes) {
+            if (payAmount > 0D) {
                 double itemAmount;
                 if (payAmount >= responsibility.getAmount()) {
                     itemAmount = responsibility.getAmount();
@@ -134,7 +116,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
 
                 PaymentObject paymentObject = new PaymentObject();
                 paymentObject.setAmount(itemAmount);
-                switch (responsibility.getType()){
+                switch (responsibility.getType()) {
                     case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
                         paymentObject.setResponsibilityType(ResponsibilityType.co_insurance);
                         break;
@@ -150,7 +132,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
             }
         }
 
-        if(payAmount > 0){//payment is greater than any responsibility types
+        if (payAmount > 0) {//payment is greater than any responsibility types
             PaymentObject paymentObject = new PaymentObject();
             paymentObject.setAmount(payAmount);
             paymentObject.setDescription("Unapplied Amount");
@@ -161,12 +143,12 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
         paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
     }
 
-    private List<PendingBalancePayloadDTO> getPendingResponsibilityTypes(){
+    private List<PendingBalancePayloadDTO> getPendingResponsibilityTypes() {
         List<PendingBalancePayloadDTO> responsibilityTypes = new ArrayList<>();
-        for(PatientBalanceDTO patientBalanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()){
-            for(PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()){
-                for(PendingBalancePayloadDTO pendingBalancePayloadDTO : pendingBalanceDTO.getPayload()){
-                    switch (pendingBalancePayloadDTO.getType()){
+        for (PatientBalanceDTO patientBalanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()) {
+            for (PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()) {
+                for (PendingBalancePayloadDTO pendingBalancePayloadDTO : pendingBalanceDTO.getPayload()) {
+                    switch (pendingBalancePayloadDTO.getType()) {
                         case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
                         case PendingBalancePayloadDTO.CO_PAY_TYPE:
                         case PendingBalancePayloadDTO.DEDUCTIBLE_TYPE:
