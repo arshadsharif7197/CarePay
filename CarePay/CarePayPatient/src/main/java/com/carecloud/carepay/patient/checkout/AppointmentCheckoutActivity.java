@@ -59,6 +59,8 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     private PaymentsModel paymentsModel;
 
     private boolean shouldAddBackStack = false;
+    private String providerId;
+    private String locationId;
 
 
     @Override
@@ -68,6 +70,8 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
         appointmentId = extra.getString(CarePayConstants.APPOINTMENT_ID);
+        providerId = extra.getString(CarePayConstants.PROVIDER_ID);
+        locationId = extra.getString(CarePayConstants.LOCATION_ID);
 
         if (savedInstanceState == null) {
             initDto(getConvertedDTO(WorkflowDTO.class));
@@ -78,9 +82,10 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     /**
      * Init current fragment based on the received workflow
+     *
      * @param workflowDTO workflow dto
      */
-    public void initDto(WorkflowDTO workflowDTO){
+    public void initDto(WorkflowDTO workflowDTO) {
         if (NavigationStateConstants.PATIENT_APP_CHECKOUT.equals(workflowDTO.getState())) {
             appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
             showNextAppointmentFragment(appointmentId);
@@ -206,7 +211,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null &&
                 !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel,
-                    selectedPaymentMethod.getLabel(), amount);
+                    selectedPaymentMethod.getLabel(), amount, providerId, locationId);
             replaceFragment(fragment, true);
         } else {
             showAddCard(amount, paymentsModel);
@@ -221,6 +226,8 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         String paymentsDTOString = gson.toJson(paymentsModel);
         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+        args.putString(CarePayConstants.PROVIDER_ID, providerId);
+        args.putString(CarePayConstants.LOCATION_ID, locationId);
         fragment = new AddNewCreditCardFragment();
 
 
@@ -232,16 +239,16 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         PatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload().get(0);
-        if(payload.getPaymentExceptions()!=null && !payload.getPaymentExceptions().isEmpty() && payload.getTotal()==0D){
+        if (payload.getPaymentExceptions() != null && !payload.getPaymentExceptions().isEmpty() && payload.getTotal() == 0D) {
             StringBuilder builder = new StringBuilder();
-            for(PaymentExceptionDTO paymentException : payload.getPaymentExceptions()){
+            for (PaymentExceptionDTO paymentException : payload.getPaymentExceptions()) {
                 builder.append(paymentException.getMessage());
                 builder.append("\n");
             }
             int last = builder.lastIndexOf("\n");
             builder.replace(last, builder.length(), "");
             showErrorNotification(builder.toString());
-        }else {
+        } else {
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             Bundle args = new Bundle();
             args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());

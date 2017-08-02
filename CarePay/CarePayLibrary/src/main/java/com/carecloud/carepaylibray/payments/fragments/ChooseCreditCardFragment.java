@@ -79,10 +79,27 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
      */
     public static ChooseCreditCardFragment newInstance(PaymentsModel paymentsDTO,
                                                        String selectedPaymentMethodLabel, double amount) {
+        return newInstance(paymentsDTO, selectedPaymentMethodLabel, amount, null, null);
+    }
+
+    /**
+     * @param paymentsDTO                the payment model
+     * @param selectedPaymentMethodLabel the selected payment method label
+     * @param amount                     the amount
+     * @param providerId                 the provider Id
+     * @param locationId                 the location Id
+     * @return an instance of PracticeChooseCreditCardFragment
+     */
+    public static ChooseCreditCardFragment newInstance(PaymentsModel paymentsDTO,
+                                                       String selectedPaymentMethodLabel,
+                                                       double amount, String providerId,
+                                                       String locationId) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsDTO);
         args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethodLabel);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+        args.putString(CarePayConstants.PROVIDER_ID, providerId);
+        args.putString(CarePayConstants.LOCATION_ID, locationId);
         ChooseCreditCardFragment chooseCreditCardFragment = new ChooseCreditCardFragment();
         chooseCreditCardFragment.setArguments(args);
         return chooseCreditCardFragment;
