@@ -82,6 +82,7 @@
                     android:focusable="false"
                     android:focusableInTouchMode="false"
                     android:text="$"
+                    android:visibility="gone"
                     android:textColor="@color/white_transparent"
                     android:textSize="@dimen/calculator_entry_text"
                     app:customAssetFont="gotham_rounded_medium" />
@@ -93,7 +94,7 @@
                     android:background="@android:color/transparent"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:hint="0.00"
+                    android:hint="$0.00"
                     android:inputType="numberDecimal"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white_transparent"

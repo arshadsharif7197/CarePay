@@ -213,7 +213,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         View view = inflater.inflate(R.layout.fragment_review_demographic_base, container, false);
 
         StepProgressBar stepProgressBar = (StepProgressBar) view.findViewById(R.id.stepProgressBarCheckin);
-        stepProgressBar.setCumulativeDots(true);
         stepProgressBar.setNumDots(5);
         stepProgressBar.setCurrentProgressDot(4);
 
