@@ -205,7 +205,8 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
         if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null &&
                 !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel, selectedPaymentMethod.getLabel(), amount);
+            Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel,
+                    selectedPaymentMethod.getLabel(), amount);
             replaceFragment(fragment, true);
         } else {
             showAddCard(amount, paymentsModel);
