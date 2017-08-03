@@ -199,7 +199,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             queries.put("practice_id", userPracticeDTO.getPracticeId());
             queries.put("patient_id", userPracticeDTO.getPatientId());
             if(callback.getAppointmentId() != null){
-//                queries.put("appointment_id", callback.getAppointmentId());
+                queries.put("appointment_id", callback.getAppointmentId());
             }
         }else {
             PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
