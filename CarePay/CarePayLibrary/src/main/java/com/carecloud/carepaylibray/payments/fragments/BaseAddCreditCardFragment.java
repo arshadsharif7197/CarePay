@@ -225,7 +225,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
                 if (StringUtil.isNullOrEmpty(editable.toString())) {
                     address2EditText.setEnabled(false);
                     address2EditText.setText("");
-                } else {
+                } else if (!useProfileAddressCheckBox.isChecked()) {
                     address2EditText.setEnabled(true);
                 }
             }
@@ -594,11 +594,16 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
 
     private void setAddressFieldsEnabled(boolean isEnabled) {
         address1EditText.setEnabled(isEnabled);
+        address1TextInput.setEnabled(isEnabled);
         address2EditText.setEnabled(isEnabled);
+        address2TextInput.setEnabled(isEnabled);
         zipCodeEditText.setEnabled(isEnabled);
+        zipCodeTextInput.setEnabled(isEnabled);
         cityEditText.setEnabled(isEnabled);
+        cityTextInput.setEnabled(isEnabled);
         stateAutoCompleteTextView.setEnabled(isEnabled);
         stateAutoCompleteTextView.setClickable(isEnabled);
+        stateTextInput.setEnabled(isEnabled);
     }
 
     private View.OnClickListener pickDateListener = new View.OnClickListener() {
