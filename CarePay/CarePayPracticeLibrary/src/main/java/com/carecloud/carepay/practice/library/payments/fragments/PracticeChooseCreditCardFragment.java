@@ -31,6 +31,15 @@ public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
         return newInstance(paymentsDTO, selectedPaymentMethodLabel, amount, null, null);
     }
 
+    /**
+     *
+     * @param paymentsDTO the payment model
+     * @param selectedPaymentMethodLabel the selected payment method label
+     * @param amount the amount
+     * @param providerId the provider Id
+     * @param locationId the location Id
+     * @return an instance of PracticeChooseCreditCardFragment
+     */
     public static PracticeChooseCreditCardFragment newInstance(PaymentsModel paymentsDTO,
                                                                String selectedPaymentMethodLabel,
                                                                double amount, String providerId,

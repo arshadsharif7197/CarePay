@@ -222,13 +222,12 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
         Gson gson = new Gson();
         Bundle args = new Bundle();
-        Fragment fragment;
         String paymentsDTOString = gson.toJson(paymentsModel);
         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
         args.putString(CarePayConstants.PROVIDER_ID, providerId);
         args.putString(CarePayConstants.LOCATION_ID, locationId);
-        fragment = new AddNewCreditCardFragment();
+        AddNewCreditCardFragment fragment = new AddNewCreditCardFragment();
 
 
         fragment.setArguments(args);
