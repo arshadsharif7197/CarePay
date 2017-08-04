@@ -75,10 +75,12 @@ public abstract class PartialPaymentBaseDialogFragment extends BaseDialogFragmen
                     if (numberStr.isEmpty()) {
                         numberIsDecimal = false;
                         putADecimal = false;
+                        currencyFormat.setMinimumFractionDigits(0);
                         amountSymbol.setTextColor(getResources().getColor(R.color.white_transparent));
                     } else if (!numberStr.contains(".")) {
                         numberIsDecimal = false;
                         putADecimal = false;
+                        currencyFormat.setMinimumFractionDigits(0);
                     }
                     if (numberStr.isEmpty()) {
                         amountTextView.setText(numberStr);
@@ -90,11 +92,14 @@ public abstract class PartialPaymentBaseDialogFragment extends BaseDialogFragmen
                     (view.getId() == R.id.key_zero && numberStr.isEmpty())) {
                 if (numberStr.isEmpty()) {
                     putADecimal = true;
+                    currencyFormat.setMinimumFractionDigits(2);
                 } else if (!numberIsDecimal) {
                     putADecimal = true;
+                    currencyFormat.setMinimumFractionDigits(2);
+                    amountTextView.setText(currencyFormat.format(Double.parseDouble(numberStr)));
                 }
             } else {
-                if (numberStr.length() < 8) {
+                if (numberStr.length() < 8 || numberIsDecimal || putADecimal) {
                     String input = ((TextView) view).getText().toString();
                     if (numberStr.isEmpty() && putADecimal) {
                         input = "0." + input;
@@ -113,13 +118,11 @@ public abstract class PartialPaymentBaseDialogFragment extends BaseDialogFragmen
                     amountSymbol.setTextColor(getResources().getColor(R.color.white));
                 }
             }
-            if (numberStr.length() < 3) {
+            if (numberStr.length() < 5) {
                 amountTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 80);
-            } else if (numberStr.length() < 5) {
-                amountTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 70);
             } else if (numberStr.length() < 7) {
-                amountTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 60);
-            } else if (numberStr.length() < 9) {
+                amountTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 65);
+            } else if (numberStr.length() < 10) {
                 amountTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 50);
             }
             
