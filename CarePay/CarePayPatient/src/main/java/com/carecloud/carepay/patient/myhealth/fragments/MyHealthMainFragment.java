@@ -87,168 +87,145 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
     }
 
     private void setUpLabsRecyclerView(View view) {
-        RecyclerView labsRecyclerView = (RecyclerView) view.findViewById(R.id.labsRecyclerView);
+
         List<LabDto> labs = myHealthDto.getPayload().getMyHealthData().getLabs().getLabs();
-        if (labs.isEmpty()) {
-            view.findViewById(R.id.labsContainer).setVisibility(View.GONE);
-            labsRecyclerView.setVisibility(View.GONE);
-        } else {
-            LinearLayoutManager linearLayout = new LinearLayoutManager(getContext()) {
-                @Override
-                public boolean canScrollVertically() {
-                    return false;
-                }
-            };
-            labsRecyclerView.setLayoutManager(linearLayout);
-            LabsRecyclerViewAdapter labsAdapter = new LabsRecyclerViewAdapter(labs, MAX_ITEMS_TO_SHOW);
-            labsAdapter.setCallback(this);
-            labsRecyclerView.setAdapter(labsAdapter);
-            TextView seeAll = (TextView) view.findViewById(R.id.labsSeeAllTextView);
-            if (labs.size() <= MAX_ITEMS_TO_SHOW) {
-                seeAll.setVisibility(View.GONE);
-            } else {
-                seeAll.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        callback.showListFragment(MyHealthListFragment.LABS);
-                    }
-                });
+        LinearLayoutManager linearLayout = new LinearLayoutManager(getContext()) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
             }
+        };
+        RecyclerView labsRecyclerView = (RecyclerView) view.findViewById(R.id.labsRecyclerView);
+        labsRecyclerView.setLayoutManager(linearLayout);
+        LabsRecyclerViewAdapter labsAdapter = new LabsRecyclerViewAdapter(labs, MAX_ITEMS_TO_SHOW);
+        labsAdapter.setCallback(this);
+        labsRecyclerView.setAdapter(labsAdapter);
+        TextView seeAll = (TextView) view.findViewById(R.id.labsSeeAllTextView);
+        if (labs.size() <= MAX_ITEMS_TO_SHOW) {
+            seeAll.setVisibility(View.GONE);
+        } else {
+            seeAll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callback.showListFragment(MyHealthListFragment.LABS);
+                }
+            });
         }
+
     }
 
     private void setUpMedicationsRecyclerView(View view) {
-        RecyclerView medicationsRecyclerView = (RecyclerView) view.findViewById(R.id.medicationsRecyclerView);
         List<MedicationDto> medications = myHealthDto
                 .getPayload().getMyHealthData().getMedications().getMedications();
-        if (medications.isEmpty()) {
-            view.findViewById(R.id.medicationsContainer).setVisibility(View.GONE);
-            medicationsRecyclerView.setVisibility(View.GONE);
-        } else {
-            LinearLayoutManager linearLayout = new LinearLayoutManager(getContext()) {
-                @Override
-                public boolean canScrollVertically() {
-                    return false;
-                }
-            };
-            medicationsRecyclerView.setLayoutManager(linearLayout);
-            MedicationsRecyclerViewAdapter medicationsAdapter = new MedicationsRecyclerViewAdapter(
-                    medications, MAX_ITEMS_TO_SHOW);
-            medicationsAdapter.setCallback(this);
-            medicationsRecyclerView.setAdapter(medicationsAdapter);
-
-            TextView seeAll = (TextView) view.findViewById(R.id.medicationsSeeAllTextView);
-            if (medications.size() <= MAX_ITEMS_TO_SHOW) {
-                seeAll.setVisibility(View.GONE);
-            } else {
-                seeAll.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        callback.showListFragment(MyHealthListFragment.MEDICATIONS);
-                    }
-                });
+        LinearLayoutManager linearLayout = new LinearLayoutManager(getContext()) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
             }
+        };
+        RecyclerView medicationsRecyclerView = (RecyclerView) view.findViewById(R.id.medicationsRecyclerView);
+        medicationsRecyclerView.setLayoutManager(linearLayout);
+        MedicationsRecyclerViewAdapter medicationsAdapter = new MedicationsRecyclerViewAdapter(
+                medications, MAX_ITEMS_TO_SHOW);
+        medicationsAdapter.setCallback(this);
+        medicationsRecyclerView.setAdapter(medicationsAdapter);
+
+        TextView seeAll = (TextView) view.findViewById(R.id.medicationsSeeAllTextView);
+        if (medications.size() <= MAX_ITEMS_TO_SHOW) {
+            seeAll.setVisibility(View.GONE);
+        } else {
+            seeAll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callback.showListFragment(MyHealthListFragment.MEDICATIONS);
+                }
+            });
         }
+
     }
 
     private void setUpAllergiesRecyclerView(View view) {
-        RecyclerView allergiesRecyclerView = (RecyclerView) view.findViewById(R.id.allergiesRecyclerView);
         List<AllergyDto> allergies = myHealthDto.getPayload().getMyHealthData().getAllergies().getAllergies();
-        if (allergies.isEmpty()) {
-            view.findViewById(R.id.allergiesContainer).setVisibility(View.GONE);
-            allergiesRecyclerView.setVisibility(View.GONE);
-        } else {
-            LinearLayoutManager linearLayout = new LinearLayoutManager(getContext()) {
-                @Override
-                public boolean canScrollVertically() {
-                    return false;
-                }
-            };
-            allergiesRecyclerView.setLayoutManager(linearLayout);
-            AllergiesRecyclerViewAdapter allergiesAdapter = new AllergiesRecyclerViewAdapter(allergies,
-                    MAX_ITEMS_TO_SHOW);
-            allergiesAdapter.setCallback(this);
-            allergiesRecyclerView.setAdapter(allergiesAdapter);
-
-            TextView seeAll = (TextView) view.findViewById(R.id.allergiesSeeAllTextView);
-            if (allergies.size() <= MAX_ITEMS_TO_SHOW) {
-                seeAll.setVisibility(View.GONE);
-            } else {
-                seeAll.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        callback.showListFragment(MyHealthListFragment.ALLERGIES);
-                    }
-                });
+        LinearLayoutManager linearLayout = new LinearLayoutManager(getContext()) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
             }
+        };
+        RecyclerView allergiesRecyclerView = (RecyclerView) view.findViewById(R.id.allergiesRecyclerView);
+        allergiesRecyclerView.setLayoutManager(linearLayout);
+        AllergiesRecyclerViewAdapter allergiesAdapter = new AllergiesRecyclerViewAdapter(allergies,
+                MAX_ITEMS_TO_SHOW);
+        allergiesAdapter.setCallback(this);
+        allergiesRecyclerView.setAdapter(allergiesAdapter);
+
+        TextView seeAll = (TextView) view.findViewById(R.id.allergiesSeeAllTextView);
+        if (allergies.size() <= MAX_ITEMS_TO_SHOW) {
+            seeAll.setVisibility(View.GONE);
+        } else {
+            seeAll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callback.showListFragment(MyHealthListFragment.ALLERGIES);
+                }
+            });
         }
     }
 
     private void setUpConditionsRecyclerView(View view) {
-        RecyclerView conditionsRecyclerView = (RecyclerView) view.findViewById(R.id.conditionsRecyclerView);
         List<AssertionDto> assertions = myHealthDto
                 .getPayload().getMyHealthData().getAssertions().getAssertions();
-        if (assertions.isEmpty()) {
-            view.findViewById(R.id.conditionsContainer).setVisibility(View.GONE);
-            conditionsRecyclerView.setVisibility(View.GONE);
-        } else {
-            LinearLayoutManager linearLayout = new LinearLayoutManager(getContext()) {
-                @Override
-                public boolean canScrollVertically() {
-                    return false;
-                }
-            };
-            conditionsRecyclerView.setLayoutManager(linearLayout);
-            ConditionsRecyclerViewAdapter conditionsAdapter = new ConditionsRecyclerViewAdapter(
-                    assertions, MAX_ITEMS_TO_SHOW);
-            conditionsRecyclerView.setAdapter(conditionsAdapter);
-
-            TextView seeAll = (TextView) view.findViewById(R.id.conditionsSeeAllTextView);
-            if (assertions.size() <= MAX_ITEMS_TO_SHOW) {
-                seeAll.setVisibility(View.GONE);
-            } else {
-                seeAll.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        callback.showListFragment(MyHealthListFragment.CONDITIONS);
-                    }
-                });
+        LinearLayoutManager linearLayout = new LinearLayoutManager(getContext()) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
             }
-        }
+        };
+        RecyclerView conditionsRecyclerView = (RecyclerView) view.findViewById(R.id.conditionsRecyclerView);
+        conditionsRecyclerView.setLayoutManager(linearLayout);
+        ConditionsRecyclerViewAdapter conditionsAdapter = new ConditionsRecyclerViewAdapter(
+                assertions, MAX_ITEMS_TO_SHOW);
+        conditionsRecyclerView.setAdapter(conditionsAdapter);
 
+        TextView seeAll = (TextView) view.findViewById(R.id.conditionsSeeAllTextView);
+        if (assertions.size() <= MAX_ITEMS_TO_SHOW) {
+            seeAll.setVisibility(View.GONE);
+        } else {
+            seeAll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callback.showListFragment(MyHealthListFragment.CONDITIONS);
+                }
+            });
+        }
     }
 
     private void setUpCareTeamRecyclerView(View view) {
-        RecyclerView careTeamRecyclerView = (RecyclerView) view.findViewById(R.id.careTeamRecyclerView);
         List<ProviderDTO> providers = myHealthDto
                 .getPayload().getMyHealthData().getProviders().getProviders();
-        if (providers.isEmpty()) {
-            view.findViewById(R.id.careTeamContainer).setVisibility(View.GONE);
-            careTeamRecyclerView.setVisibility(View.GONE);
-        } else {
-            LinearLayoutManager linearLayout = new LinearLayoutManager(getContext()) {
-                @Override
-                public boolean canScrollVertically() {
-                    return false;
-                }
-            };
-            careTeamRecyclerView.setLayoutManager(linearLayout);
-            CareTeamRecyclerViewAdapter careTeamAdapter = new CareTeamRecyclerViewAdapter(
-                    providers, MAX_ITEMS_TO_SHOW);
-            careTeamAdapter.setCallback(this);
-            careTeamRecyclerView.setAdapter(careTeamAdapter);
-
-            TextView seeAll = (TextView) view.findViewById(R.id.careTeamSeeAllTextView);
-            if (providers.size() <= MAX_ITEMS_TO_SHOW) {
-                seeAll.setVisibility(View.GONE);
-            } else {
-                seeAll.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        callback.showListFragment(MyHealthListFragment.CARE_TEAM);
-                    }
-                });
+        LinearLayoutManager linearLayout = new LinearLayoutManager(getContext()) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
             }
+        };
+        RecyclerView careTeamRecyclerView = (RecyclerView) view.findViewById(R.id.careTeamRecyclerView);
+        careTeamRecyclerView.setLayoutManager(linearLayout);
+        CareTeamRecyclerViewAdapter careTeamAdapter = new CareTeamRecyclerViewAdapter(
+                providers, MAX_ITEMS_TO_SHOW);
+        careTeamAdapter.setCallback(this);
+        careTeamRecyclerView.setAdapter(careTeamAdapter);
+
+        TextView seeAll = (TextView) view.findViewById(R.id.careTeamSeeAllTextView);
+        if (providers.size() <= MAX_ITEMS_TO_SHOW) {
+            seeAll.setVisibility(View.GONE);
+        } else {
+            seeAll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callback.showListFragment(MyHealthListFragment.CARE_TEAM);
+                }
+            });
         }
     }
 
