@@ -286,12 +286,14 @@ public abstract class BaseWebFormFragment extends BaseFragment {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            nextButton.setEnabled(true);
-                        }
-                    });
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                nextButton.setEnabled(true);
+                            }
+                        });
+                    }
                 }
             }, 1000);
         }
