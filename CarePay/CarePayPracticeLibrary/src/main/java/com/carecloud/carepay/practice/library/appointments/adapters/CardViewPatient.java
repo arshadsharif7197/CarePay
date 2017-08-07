@@ -17,6 +17,7 @@ import java.util.Date;
 public class CardViewPatient {
     public Object raw;
     public String id;
+    public String appointmentId;
     public String initials;
     public String name;
     public String providerName;
