@@ -311,17 +311,19 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
          */
         @JavascriptInterface
         public void loadedForm() {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            nextButton.setEnabled(true);
-                        }
-                    });
-                }
-            }, 1000);
+            if (getActivity() != null) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                nextButton.setEnabled(true);
+                            }
+                        });
+                    }
+                }, 1000);
+            }
         }
 
         /**
@@ -329,17 +331,19 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
          */
         @JavascriptInterface
         public void loadedIntake() {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            nextButton.setEnabled(true);
-                        }
-                    });
-                }
-            }, 1000);
+            if (getActivity() != null) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                nextButton.setEnabled(true);
+                            }
+                        });
+                    }
+                }, 1000);
+            }
         }
 
     }
