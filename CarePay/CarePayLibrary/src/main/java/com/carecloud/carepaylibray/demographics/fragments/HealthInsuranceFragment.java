@@ -103,7 +103,8 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     private List<DemographicInsurancePayloadDTO> getInsurances(DemographicDTO demographicDTO) {
         List<DemographicInsurancePayloadDTO> insuranceList = new ArrayList<>();
         if (demographicDTO != null) {
-            for (DemographicInsurancePayloadDTO insurance : demographicDTO.getPayload().getDemographics().getPayload().getInsurances()) {
+            for (DemographicInsurancePayloadDTO insurance : demographicDTO.getPayload().getDemographics()
+                    .getPayload().getInsurances()) {
                 if (!insurance.isDeleted()) {
                     insuranceList.add(insurance);
                     if (insurance.getInsurancePhotos().size() == 0) {
