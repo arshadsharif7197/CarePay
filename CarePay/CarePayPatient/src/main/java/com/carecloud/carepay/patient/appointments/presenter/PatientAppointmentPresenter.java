@@ -353,7 +353,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
 
 
     private void setPatientID(String practiceID) {
-        PracticePatientIdsDTO[] practicePatientIdArray = viewHandler.getApplicationPreferences().getObjectFromSharedPreferences(CarePayConstants.KEY_PRACTICE_PATIENT_IDS, PracticePatientIdsDTO[].class);
+        PracticePatientIdsDTO[] practicePatientIdArray = viewHandler.getApplicationPreferences()
+                .getObjectFromSharedPreferences(CarePayConstants.KEY_PRACTICE_PATIENT_IDS,
+                        PracticePatientIdsDTO[].class);
         for (PracticePatientIdsDTO practicePatientId : practicePatientIdArray) {
             if (practicePatientId.getPracticeId().equals(practiceID)) {
                 patientId = practicePatientId.getPatientId();

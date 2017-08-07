@@ -16,13 +16,10 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
-
-import java.util.List;
 
 public class AppointmentsActivity extends MenuPatientActivity implements AppointmentViewHandler {
 
@@ -32,25 +29,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
-        if (appointmentsResultModel.getPayload() != null) {
-            List<PracticePatientIdsDTO> practicePatientIds = appointmentsResultModel.getPayload().getPracticePatientIds();
-            if (!practicePatientIds.isEmpty()) {
-                getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants.KEY_PRACTICE_PATIENT_IDS, appointmentsResultModel.getPayload().getPracticePatientIds());
-            }
-        }
-
-        setTransitionBalance(appointmentsResultModel.getMetadata().getLinks().getPatientBalances());
-        setTransitionLogout(appointmentsResultModel.getMetadata().getTransitions().getLogout());
-        setTransitionProfile(appointmentsResultModel.getMetadata().getLinks().getProfileUpdate());
-        setTransitionAppointments(appointmentsResultModel.getMetadata().getLinks().getAppointments());
-        setTransitionNotifications(appointmentsResultModel.getMetadata().getLinks().getNotifications());
-        setTransitionMyHealth(appointmentsResultModel.getMetadata().getLinks().getMyHealth());
-        String userImageUrl = appointmentsResultModel.getPayload().getDemographicDTO().getPayload()
-                .getPersonalDetails().getProfilePhoto();
-        if (userImageUrl != null) {
-            getApplicationPreferences().setUserPhotoUrl(userImageUrl);
-        }
-
         //hold off on calling super until imageURL can be stored to shared pref
         super.onCreate(savedInstanceState);
 
@@ -76,7 +54,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         navigateToFragment(appointmentsListFragment, false);
     }
 
-    private void initPresenter(){
+    private void initPresenter() {
         this.presenter = new PatientAppointmentPresenter(this, appointmentsResultModel);
     }
 
@@ -133,7 +111,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
     @Override
-    public void refreshAppointments(){
+    public void refreshAppointments() {
         AppointmentsListFragment fragment = (AppointmentsListFragment)
                 getSupportFragmentManager().findFragmentById(R.id.container_main);
 
