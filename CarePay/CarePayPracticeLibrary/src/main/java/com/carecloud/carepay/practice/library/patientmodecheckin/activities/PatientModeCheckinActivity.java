@@ -25,6 +25,7 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -208,8 +209,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
         if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            AppointmentDTO appointmentDTO = presenter.getAppointmentPayload();
             DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel,
-                    selectedPaymentMethod.getLabel(), amount);
+                    selectedPaymentMethod.getLabel(), amount, appointmentDTO.getPayload()
+                            .getProvider().getGuid(),
+                    String.valueOf(appointmentDTO.getPayload().getLocation().getGuid()));
             displayDialogFragment(fragment, false);
         } else {
             showAddCard(amount, paymentsModel);
@@ -266,7 +270,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     @Nullable
     @Override
     public String getAppointmentId() {
-        if(presenter != null){
+        if (presenter != null) {
             return presenter.getAppointmentId();
         }
         return null;
@@ -323,9 +327,9 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     public void onBackPressed() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         BaseCheckinFragment fragment;
-        try{
+        try {
             fragment = (BaseCheckinFragment) fragmentManager.findFragmentById(R.id.root_layout);
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             cce.printStackTrace();
             super.onBackPressed();
             return;

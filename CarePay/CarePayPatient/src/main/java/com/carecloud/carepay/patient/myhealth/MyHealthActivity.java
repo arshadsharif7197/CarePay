@@ -16,8 +16,12 @@ import com.carecloud.carepay.patient.myhealth.fragments.MedicationDetailFragment
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthListFragment;
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthMainFragment;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
+
+import java.util.List;
 
 /**
  * @author pjohnson on 17/07/17.
@@ -31,6 +35,11 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
         super.onCreate(icicle);
         myHealthDto = getConvertedDTO(MyHealthDto.class);
 
+        List<PracticePatientIdsDTO> practicePatientIds = myHealthDto.getPayload().getPracticePatientIds();
+        if (!practicePatientIds.isEmpty()) {
+            getApplicationPreferences().writeObjectToSharedPreference(
+                    CarePayConstants.KEY_PRACTICE_PATIENT_IDS, practicePatientIds);
+        }
         setTransitionBalance(myHealthDto.getMetadata().getLinks().getPatientBalances());
         setTransitionLogout(myHealthDto.getMetadata().getTransitions().getLogout());
         setTransitionProfile(myHealthDto.getMetadata().getLinks().getProfileUpdate());
