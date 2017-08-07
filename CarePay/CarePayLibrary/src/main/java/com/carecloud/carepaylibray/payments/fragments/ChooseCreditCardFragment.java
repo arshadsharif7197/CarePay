@@ -258,14 +258,16 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
 
         if (locationId != null) {
             paymentObject.setLocationID(locationId);
-        } else {
-//            paymentObject.setLocationID(String.valueOf(defaultLocation.getGuid()));
         }
+//        else {
+//            paymentObject.setLocationID(String.valueOf(defaultLocation.getGuid()));
+//        }
         if (providerId != null) {
             paymentObject.setProviderID(providerId);
-        } else {
-//            paymentObject.setProviderID(String.valueOf(defaultProvider.getGuid()));
         }
+//        else {
+////            paymentObject.setProviderID(String.valueOf(defaultProvider.getGuid()));
+//        }
 
 
         PapiPaymentMethod papiPaymentMethod = getPapiPaymentMethod();
