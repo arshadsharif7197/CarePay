@@ -39,8 +39,8 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
     /**
      * Constructor.
      *
-     * @param context context
-     * @param checkInDTO    checkIn DTO
+     * @param context    context
+     * @param checkInDTO checkIn DTO
      */
     public CheckedInAppointmentAdapter(Context context, CheckInDTO checkInDTO, boolean isWaitingRoom) {
 
@@ -60,8 +60,11 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
             // Set profile photo
             PatientModel patientDTO = appointmentDTO.getPayload().getPatient();
             patientDTO.setProfilePhoto(profilePhotoMap.get(patientDTO.getPatientId()));
+            CardViewPatient patientCardView = new CardViewPatient(appointmentDTO.getPayload(),
+                    totalBalanceMap.get(patientDTO.getPatientId()));
+            patientCardView.appointmentId = appointmentDTO.getPayload().getId();
 
-            this.allPatients.add(new CardViewPatient(appointmentDTO.getPayload(), totalBalanceMap.get(patientDTO.getPatientId())));
+            this.allPatients.add(patientCardView);
         }
 
         sortListByDate(this.allPatients);
@@ -144,7 +147,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
     public void onBindViewHolder(CheckedInAppointmentAdapter.CartViewHolder holder, final int position) {
         final CardViewPatient patient = filteredPatients.get(position);
         holder.appointmentStatusCartView.setPatientName(patient.name);
-        holder.appointmentStatusCartView.setAppointmentId(patient.id);
+        holder.appointmentStatusCartView.setAppointmentId(patient.appointmentId);
         holder.appointmentStatusCartView.setAmount(patient.balance);
         holder.appointmentStatusCartView.setPatientImage(patient.photoUrl);
         holder.appointmentStatusCartView.setProviderName(patient.providerName);
@@ -165,14 +168,14 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
     }
 
     /**
-     * @param id patient ID
+     * @param id       patient ID
      * @param filtered true if search have to be scoped to only displayed patients
      * @return patient
      */
     public CardViewPatient getAppointmentById(String id, boolean filtered) {
         List<CardViewPatient> list = filtered ? filteredPatients : allPatients;
         for (CardViewPatient patient : list) {
-            if (patient.id.equalsIgnoreCase(id)) {
+            if (patient.appointmentId.equalsIgnoreCase(id)) {
                 return patient;
             }
         }
@@ -181,7 +184,8 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
 
     /**
      * Flip patient between Pending / Checking-In and Checked-In states
-     * @param id patient ID
+     *
+     * @param id       patient ID
      * @param filtered true if search have to be scoped to only displayed patients
      * @return true is patient was found and was successfully flipped
      */
@@ -214,23 +218,24 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
         return false;
     }
 
-    class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         AppointmentStatusCardView appointmentStatusCartView;
 
         /**
          * Constructor.
+         *
          * @param view view
          */
 
         CartViewHolder(View view) {
             super(view);
-            appointmentStatusCartView= (AppointmentStatusCardView) view;
+            appointmentStatusCartView = (AppointmentStatusCardView) view;
             appointmentStatusCartView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            ((PracticeModePracticeCheckInActivity)context).onCheckInItemClick((AppointmentsPayloadDTO)view.getTag(), isWaitingRoom);
+            ((PracticeModePracticeCheckInActivity) context).onCheckInItemClick((AppointmentsPayloadDTO) view.getTag(), isWaitingRoom);
         }
     }
 }
