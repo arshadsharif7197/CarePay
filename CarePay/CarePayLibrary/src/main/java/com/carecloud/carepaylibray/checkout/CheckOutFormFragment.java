@@ -162,7 +162,7 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            callback.showAllDone(workflowDTO);
+            callback.navigateToWorkflow(workflowDTO);
             nextButton.setEnabled(true);
         }
 
