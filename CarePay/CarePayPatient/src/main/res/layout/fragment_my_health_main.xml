@@ -69,6 +69,45 @@
             android:layout_marginBottom="@dimen/dimen_30dp"
             android:background="@drawable/my_health_recycler_view_background" />
 
+        <LinearLayout
+            android:id="@+id/careTeamNoDataContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:background="@drawable/my_health_no_data_background"
+            android:orientation="vertical"
+            android:padding="@dimen/dimen_20dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/icon_care_team_no_data" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:text="No provider added to your Care Team"
+                android:textSize="@dimen/text_size_22sp"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="my_health_no_care_team_data_title" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:text="We’ll list all your providers here."
+                android:textSize="@dimen/text_size_16"
+                app:customAssetFont="proxima_nova_regular"
+                breeze:textKey="my_health_no_care_team_data_subtitle" />
+
+        </LinearLayout>
+
         <RelativeLayout
             android:id="@+id/conditionsContainer"
             android:layout_width="match_parent"
@@ -123,6 +162,45 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_30dp"
             android:background="@drawable/my_health_recycler_view_background" />
+
+        <LinearLayout
+            android:id="@+id/conditionsNoDataContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:background="@drawable/my_health_no_data_background"
+            android:orientation="vertical"
+            android:padding="@dimen/dimen_20dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/icon_condition_no_data" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:text="No provider added to your Care Team"
+                android:textSize="@dimen/text_size_22sp"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="my_health_no_condition_data_title" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:text="We’ll list all your providers here."
+                android:textSize="@dimen/text_size_16"
+                app:customAssetFont="proxima_nova_regular"
+                breeze:textKey="my_health_no_condition_data_subtitle" />
+
+        </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/medicationsContainer"
@@ -179,6 +257,45 @@
             android:layout_marginBottom="@dimen/dimen_30dp"
             android:background="@drawable/my_health_recycler_view_background" />
 
+        <LinearLayout
+            android:id="@+id/medicationsNoDataContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:background="@drawable/my_health_no_data_background"
+            android:orientation="vertical"
+            android:padding="@dimen/dimen_20dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/icon_medication_no_data" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:textSize="@dimen/text_size_22sp"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="my_health_no_medication_data_title"
+                tools:text="No provider added to your Care Team" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:textSize="@dimen/text_size_16"
+                app:customAssetFont="proxima_nova_regular"
+                breeze:textKey="my_health_no_medication_data_subtitle"
+                tools:text="We’ll list all your providers here." />
+
+        </LinearLayout>
+
         <RelativeLayout
             android:id="@+id/allergiesContainer"
             android:layout_width="match_parent"
@@ -234,6 +351,45 @@
             android:layout_marginBottom="@dimen/dimen_30dp"
             android:background="@drawable/my_health_recycler_view_background" />
 
+        <LinearLayout
+            android:id="@+id/allergiesNoDataContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:background="@drawable/my_health_no_data_background"
+            android:orientation="vertical"
+            android:padding="@dimen/dimen_20dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/icon_allergy_no_data" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:textSize="@dimen/text_size_22sp"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="my_health_no_allergy_data_title"
+                tools:text="No provider added to your Care Team" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:textSize="@dimen/text_size_16"
+                app:customAssetFont="proxima_nova_regular"
+                breeze:textKey="my_health_no_allergy_data_subtitle"
+                tools:text="We’ll list all your providers here." />
+
+        </LinearLayout>
+
         <RelativeLayout
             android:id="@+id/labsContainer"
             android:layout_width="match_parent"
@@ -288,6 +444,45 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_20dp"
             android:background="@drawable/my_health_recycler_view_background" />
+
+        <LinearLayout
+            android:id="@+id/labsNoDataContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:background="@drawable/my_health_no_data_background"
+            android:orientation="vertical"
+            android:padding="@dimen/dimen_20dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/icon_lab_no_data" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:textSize="@dimen/text_size_22sp"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="my_health_no_lab_data_title"
+                tools:text="No provider added to your Care Team" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:textSize="@dimen/text_size_16"
+                app:customAssetFont="proxima_nova_regular"
+                breeze:textKey="my_health_no_lab_data_subtitle"
+                tools:text="We’ll list all your providers here." />
+
+        </LinearLayout>
 
     </LinearLayout>
 
