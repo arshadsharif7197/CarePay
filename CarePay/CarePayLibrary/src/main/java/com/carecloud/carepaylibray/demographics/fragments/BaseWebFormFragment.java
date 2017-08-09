@@ -311,10 +311,10 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
          */
         @JavascriptInterface
         public void loadedForm() {
-            if (getActivity() != null) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (getActivity() != null) {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -322,8 +322,9 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
                             }
                         });
                     }
-                }, 1000);
-            }
+                }
+            }, 1000);
+
         }
 
         /**
@@ -331,10 +332,10 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
          */
         @JavascriptInterface
         public void loadedIntake() {
-            if (getActivity() != null) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (getActivity() != null) {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -342,8 +343,8 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
                             }
                         });
                     }
-                }, 1000);
-            }
+                }
+            }, 1000);
         }
 
     }

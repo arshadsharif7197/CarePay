@@ -283,10 +283,10 @@ public abstract class BaseWebFormFragment extends BaseFragment {
          */
         @JavascriptInterface
         public void loadedForm() {
-            if (getActivity() != null) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (getActivity() != null) {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -294,8 +294,8 @@ public abstract class BaseWebFormFragment extends BaseFragment {
                             }
                         });
                     }
-                }, 1000);
-            }
+                }
+            }, 1000);
         }
 
     }
