@@ -239,8 +239,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     @Override
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
-        PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO,
-                getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO));
+        showAllDone(workflowDTO);
     }
 
     @Override
@@ -389,7 +388,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         appointmentsResultModel.getMetadata().getLinks().setPinpad(practiceAppointmentDTO.getMetadata().getLinks().getPinpad());
         appointmentsResultModel.getMetadata().getTransitions().setPracticeMode(practiceAppointmentDTO.getMetadata().getTransitions().getPracticeMode());
         extra.putString(CarePayConstants.EXTRA_APPOINTMENT_TRANSITIONS, DtoHelper.getStringDTO(appointmentsResultModel));
-        DtoHelper.bundleDto(extra, practiceAppointmentDTO.getPayload().getPracticeAppointments());
+        DtoHelper.bundleDto(extra, appointmentsResultModel.getPayload().getAppointments().get(0));
+        extra.putBoolean("isCheckOut", true);
         Intent intent = new Intent(this, CompleteCheckActivity.class);
         intent.putExtra(CarePayConstants.EXTRA_BUNDLE, extra);
         startActivity(intent);

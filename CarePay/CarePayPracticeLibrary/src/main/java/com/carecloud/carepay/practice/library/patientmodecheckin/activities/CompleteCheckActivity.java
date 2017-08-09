@@ -47,12 +47,15 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
         boolean hasPayment = extra.getBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, false);
         boolean isAdHocForms = extra.getBoolean(CarePayConstants.ADHOC_FORMS, false);
         long id = extra.getLong(CarePayConstants.EXTRA_WORKFLOW);
+        boolean isCheckOut = extra.getBoolean("isCheckOut", false);
         workflowDTO = retrieveStoredWorkflow(id);
         if (workflowDTO != null) {
             workflowString = workflowDTO.toString();
             AppointmentDTO appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, extra);
             if (hasPayment) {
-                if (appointmentDTO.getPayload().getAppointmentStatus().getName().toLowerCase()
+                if (isCheckOut) {
+                    appointmentDTO.getPayload().getAppointmentStatus().setName("Checked-Out");
+                } else if (appointmentDTO.getPayload().getAppointmentStatus().getName().toLowerCase()
                         .equals("Pending".toLowerCase())) {
                     appointmentDTO.getPayload().getAppointmentStatus().setName("Checked-In");
                 }
