@@ -1,8 +1,6 @@
 package com.carecloud.carepay.patient.myhealth.dtos;
 
 import com.carecloud.carepay.patient.patientsplash.dtos.TransitionsDTO;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.google.gson.annotations.Expose;
 
 /**
@@ -11,16 +9,16 @@ import com.google.gson.annotations.Expose;
 public class MyHealthMetadataDto {
 
     @Expose
-    private LinksDTO links = new LinksDTO();
+    private MyHealthLinks links = new MyHealthLinks();
 
     @Expose
     private TransitionsDTO transitions = new TransitionsDTO();
 
-    public LinksDTO getLinks() {
+    public MyHealthLinks getLinks() {
         return links;
     }
 
-    public void setLinks(LinksDTO links) {
+    public void setLinks(MyHealthLinks links) {
         this.links = links;
     }
 

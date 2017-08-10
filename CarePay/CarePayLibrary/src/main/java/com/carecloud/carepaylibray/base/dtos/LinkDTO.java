@@ -1,5 +1,6 @@
-package com.carecloud.carepaylibray.appointments.models;
+package com.carecloud.carepaylibray.base.dtos;
 
+import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
