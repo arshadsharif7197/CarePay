@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.appointments.models;
 
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepaylibray.base.dtos.BaseLinks;
+import com.carecloud.carepaylibray.base.dtos.LinkDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -29,9 +30,6 @@ public class LinksDTO extends BaseLinks {
     @SerializedName("appointment_availability")
     @Expose
     private TransitionDTO appointmentAvailability = new TransitionDTO();
-    @SerializedName("profile_update")
-    @Expose
-    private TransitionDTO profileUpdate = new TransitionDTO();
     @SerializedName("find_patient")
     @Expose
     private TransitionDTO findPatient = new TransitionDTO();
@@ -44,9 +42,6 @@ public class LinksDTO extends BaseLinks {
     @SerializedName("page")
     @Expose
     private TransitionDTO pagePatient = new TransitionDTO();
-    @SerializedName("unread_notifications")
-    @Expose
-    private TransitionDTO unreadNotifications = new TransitionDTO();
     @SerializedName("notifications")
     @Expose
     private TransitionDTO notifications = new TransitionDTO();
@@ -56,12 +51,6 @@ public class LinksDTO extends BaseLinks {
     @SerializedName("all_practice_forms")
     @Expose
     private TransitionDTO allPracticeForms = new TransitionDTO();
-    @SerializedName("myhealth")
-    @Expose
-    private TransitionDTO myHealth;
-    @SerializedName("patient_appointments")
-    @Expose
-    private TransitionDTO patientAppointments;
     @SerializedName("patient_payments")
     @Expose
     private TransitionDTO patientPayments;
@@ -109,20 +98,6 @@ public class LinksDTO extends BaseLinks {
     }
 
     /**
-     * @return The providersSchedule
-     */
-    public LinkDTO getProvidersSchedule() {
-        return providersSchedule;
-    }
-
-    /**
-     * @param providersSchedule The providers_schedule
-     */
-    public void setProvidersSchedule(LinkDTO providersSchedule) {
-        this.providersSchedule = providersSchedule;
-    }
-
-    /**
      * Gets appointment availability.
      *
      * @return the appointment availability
@@ -155,20 +130,6 @@ public class LinksDTO extends BaseLinks {
         this.resourcesToSchedule = resourcesToSchedule;
     }
 
-    /**
-     * @return The profileUpdate
-     */
-    public TransitionDTO getProfileUpdate() {
-        return profileUpdate;
-    }
-
-    /**
-     * @param profileUpdate The profileUpdate
-     */
-    public void setProfileUpdate(TransitionDTO profileUpdate) {
-        this.profileUpdate = profileUpdate;
-    }
-
     public TransitionDTO getFindPatient() {
         return findPatient;
     }
@@ -187,14 +148,6 @@ public class LinksDTO extends BaseLinks {
 
     public void setPagePatient(TransitionDTO pagePatient) {
         this.pagePatient = pagePatient;
-    }
-
-    public TransitionDTO getUnreadNotifications() {
-        return unreadNotifications;
-    }
-
-    public void setUnreadNotifications(TransitionDTO unreadNotifications) {
-        this.unreadNotifications = unreadNotifications;
     }
 
     public TransitionDTO getNotifications() {
@@ -219,22 +172,6 @@ public class LinksDTO extends BaseLinks {
 
     public void setAllPracticeForms(TransitionDTO allPracticeForms) {
         this.allPracticeForms = allPracticeForms;
-    }
-
-    public TransitionDTO getMyHealth() {
-        return myHealth;
-    }
-
-    public void setMyHealth(TransitionDTO myHealth) {
-        this.myHealth = myHealth;
-    }
-
-    public TransitionDTO getPatientAppointments() {
-        return patientAppointments;
-    }
-
-    public void setPatientAppointments(TransitionDTO patientAppointments) {
-        this.patientAppointments = patientAppointments;
     }
 
     public TransitionDTO getPatientPayments() {

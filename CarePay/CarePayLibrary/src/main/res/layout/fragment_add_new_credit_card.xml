@@ -295,7 +295,7 @@
                             android:maxLength="256"
                             android:padding="@dimen/dimen_10dp"
                             android:nextFocusForward="@+id/addressEditText2Id"
-                            breeze:hintKey="payment_address_line1_text"
+                            breeze:hintKey="credit_card_address_line1_label"
                             app:customAssetFont="proxima_nova_regular" />
 
                     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
@@ -330,7 +330,7 @@
                                 android:maxLength="256"
                                 android:padding="@dimen/dimen_10dp"
                                 android:nextFocusForward="@+id/zipCodeId"
-                                breeze:hintKey="payment_address_line2_text"
+                                breeze:hintKey="credit_card_address_line2_label"
                                 app:customAssetFont="proxima_nova_regular" />
 
                         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>

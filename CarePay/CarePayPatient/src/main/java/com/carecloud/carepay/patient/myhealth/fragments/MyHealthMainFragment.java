@@ -1,8 +1,16 @@
 package com.carecloud.carepay.patient.myhealth.fragments;
 
+import android.Manifest;
+import android.app.DownloadManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,6 +31,7 @@ import com.carecloud.carepay.patient.myhealth.dtos.MedicationDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthDataInterface;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 
@@ -37,6 +46,8 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
     private MyHealthInterface callback;
     private MyHealthDto myHealthDto;
     public static final int MAX_ITEMS_TO_SHOW = 3;
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 10;
+    private LabDto selectedLab;
 
     public MyHealthMainFragment() {
 
@@ -288,7 +299,49 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
     }
 
     @Override
-    public void onLabClicked(LabDto lab) {
-        callback.onLabClicked(lab);
+    public void onLabClicked(final LabDto lab) {
+        selectedLab = lab;
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PermissionChecker.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+        } else {
+            preparePdf(lab);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    preparePdf(selectedLab);
+                }
+                break;
+            }
+        }
+    }
+
+    private void preparePdf(final LabDto lab) {
+        TransitionDTO getPdfTransition = myHealthDto.getMetadata().getLinks().getLabsPdf();
+        String url = String.format("%s?%s=%s", getPdfTransition.getUrl(), "labs_id", lab.getId());
+        downloadPdf(url, lab.getName(), ".pdf", lab.getPractice());
+    }
+
+    private void downloadPdf(String url, String title, String fileExtension, String description) {
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+        request.setTitle(title + fileExtension);
+        request.setDescription(description);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.addRequestHeader("Accept", "application/pdf");
+        request.addRequestHeader("username", getAppAuthorizationHelper().getCurrUser());
+        request.addRequestHeader("Authorization", getAppAuthorizationHelper().getIdToken());
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "");
+
+        DownloadManager downloadManager = (DownloadManager) getContext()
+                .getSystemService(Context.DOWNLOAD_SERVICE);
+        downloadManager.enqueue(request);
     }
 }
