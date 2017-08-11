@@ -1,7 +1,7 @@
 package com.carecloud.carepay.patient.notifications.models;
 
-import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.TransitionsDTO;
+import com.carecloud.carepaylibray.base.dtos.LandingLinks;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -13,17 +13,17 @@ public class NotificationsMetadataDTO {
 
     @SerializedName("links")
     @Expose
-    private LinksDTO links = new LinksDTO();
+    private LandingLinks links = new LandingLinks();
 
     @SerializedName("transitions")
     @Expose
     private TransitionsDTO transitions = new TransitionsDTO();
 
-    public LinksDTO getLinks() {
+    public LandingLinks getLinks() {
         return links;
     }
 
-    public void setLinks(LinksDTO links) {
+    public void setLinks(LandingLinks links) {
         this.links = links;
     }
 

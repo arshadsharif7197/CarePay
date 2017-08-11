@@ -144,6 +144,8 @@ public class CarePayConstants {
     public static final String LOCATION_ID = "locationId";
     public static final String PROVIDER_ID = "providerId";
 
+    public static final String OPEN_NOTIFICATIONS = "shouldOpenNotifications";
+
     //AdHoc
     public static final String ADHOC_FORMS = "adhocForms";
 

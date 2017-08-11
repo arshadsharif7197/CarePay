@@ -51,7 +51,8 @@ public class PatientNavigationHelper {
         navigateToWorkflow(context, workflowDTO, false, 0, info);
     }
 
-    public static void navigateToWorkflow(Context context, WorkflowDTO workflowDTO, boolean expectsResult, int requestCode) {
+    public static void navigateToWorkflow(Context context, WorkflowDTO workflowDTO,
+                                          boolean expectsResult, int requestCode) {
         navigateToWorkflow(context, workflowDTO, expectsResult, requestCode, null);
     }
 

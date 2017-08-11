@@ -10,6 +10,8 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.signinsignuppatient.fragments.SigninFragment;
 import com.carecloud.carepay.patient.tutorial.tutorial.TutorialActivity;
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
@@ -29,8 +31,11 @@ public class SigninSignupActivity extends BasePatientActivity implements Fragmen
         signInSignUpDTO = getConvertedDTO(SignInDTO.class);
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
+            boolean shouldOpenNotifications = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO)
+                    .getBoolean(CarePayConstants.OPEN_NOTIFICATIONS, false);
+            SigninFragment fragment = SigninFragment.newInstance(shouldOpenNotifications);
             fragmentManager.beginTransaction()
-                    .replace(R.id.layoutSigninSignup, new SigninFragment(), SigninFragment.class.getSimpleName())
+                    .replace(R.id.layoutSigninSignup, fragment, SigninFragment.class.getSimpleName())
                     .commit();
         }
         if (!getApplicationPreferences().isTutorialShown()) {
