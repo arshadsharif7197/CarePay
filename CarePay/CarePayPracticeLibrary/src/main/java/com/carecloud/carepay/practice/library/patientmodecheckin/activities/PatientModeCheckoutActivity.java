@@ -286,6 +286,19 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         return appointmentId;
     }
 
+    @Nullable
+    @Override
+    public AppointmentDTO getAppointment() {
+        if(appointmentsResultModel != null){
+            for(AppointmentDTO appointment : appointmentsResultModel.getPayload().getAppointments()){
+                if(appointment.getPayload().getId().equals(getAppointmentId())){
+                    return appointment;
+                }
+            }
+        }
+        return null;
+    }
+
     @Override
     public void onPayLaterClicked(PendingBalanceDTO pendingBalanceDTO) {
         Map<String, String> queryMap = new HashMap<>();

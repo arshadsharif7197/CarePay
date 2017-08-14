@@ -19,7 +19,8 @@ import android.widget.Toast;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentInterface;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -55,7 +56,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private boolean amountChangeFlag = true;
     private String balanceBeforeTextChange;
 
-    private PaymentInterface payNowClickListener;
+    private PaymentConfirmationInterface payListener;
 
     /**
      * Contructor
@@ -70,9 +71,9 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
 
         try {
             if (context instanceof PaymentViewHandler) {
-                payNowClickListener = ((PaymentViewHandler) context).getPaymentPresenter();
+                payListener = ((PaymentViewHandler) context).getPaymentPresenter();
             } else {
-                payNowClickListener = (PaymentInterface) context;
+                payListener = (PaymentConfirmationInterface) context;
             }
         } catch (ClassCastException cce) {
             throw new ClassCastException("Dialog Context must implement PaymentInterface for callback");
@@ -220,7 +221,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         try {
             double amount = Double.parseDouble(enterPartialAmountEditText.getText().toString());
             createPaymentModel(amount);
-            payNowClickListener.onPayButtonClicked(amount, paymentsDTO);
+            payListener.onPayButtonClicked(amount, paymentsDTO);
             dismiss();
         } catch (NumberFormatException nfe) {
             nfe.printStackTrace();
@@ -267,6 +268,13 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
 
                 PaymentObject paymentObject = new PaymentObject();
                 paymentObject.setAmount(itemAmount);
+
+                AppointmentDTO appointmentDTO = payListener.getAppointment();
+                if(appointmentDTO != null){
+                    paymentObject.setProviderID(appointmentDTO.getPayload().getProvider().getGuid());
+                    paymentObject.setLocationID(appointmentDTO.getPayload().getLocation().getGuid());
+                }
+
                 switch (responsibility.getType()){
                     case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
                         paymentObject.setResponsibilityType(ResponsibilityType.co_insurance);

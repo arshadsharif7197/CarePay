@@ -10,6 +10,7 @@ import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
@@ -97,6 +98,12 @@ public class PatientPaymentPresenter extends PaymentPresenter {
     @Override
     public String getAppointmentId() {
         return viewHandler.getAppointmentId();
+    }
+
+    @Nullable
+    @Override
+    public AppointmentDTO getAppointment() {
+        return viewHandler.getAppointment();
     }
 
     @Override

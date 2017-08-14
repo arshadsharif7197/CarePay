@@ -16,7 +16,9 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.customdialogs.BaseDialogFragment;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -43,6 +45,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
     private PaymentsModel paymentsModel;
     private PatientBalanceDTO patientBalance;
     private PayResponsibilityCallback callback;
+    @Nullable private PaymentConfirmationInterface payInfoCallback;
     private double owedAmount = 0;
     private ResponsibilityHeaderModel headerModel;
     private boolean isLeftButtonEnabled;
@@ -120,6 +123,13 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
             callback = (PayResponsibilityCallback) context;
         } catch (ClassCastException cce) {
             throw new ClassCastException("Provided context must implement PayResponsibilityCallback");
+        }
+
+        try{
+            payInfoCallback = (PaymentConfirmationInterface) context;
+        }catch (ClassCastException cce){
+            //this callback is optional and expected only in patient mode
+            cce.printStackTrace();
         }
     }
 
@@ -297,6 +307,15 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
 
                 PaymentObject paymentObject = new PaymentObject();
                 paymentObject.setAmount(itemAmount);
+
+                if(payInfoCallback != null) {
+                    AppointmentDTO appointmentDTO = payInfoCallback.getAppointment();
+                    if (appointmentDTO != null) {
+                        paymentObject.setProviderID(appointmentDTO.getPayload().getProvider().getGuid());
+                        paymentObject.setLocationID(appointmentDTO.getPayload().getLocation().getGuid());
+                    }
+                }
+
                 switch (responsibility.getType()){
                     case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
                         paymentObject.setResponsibilityType(ResponsibilityType.co_insurance);

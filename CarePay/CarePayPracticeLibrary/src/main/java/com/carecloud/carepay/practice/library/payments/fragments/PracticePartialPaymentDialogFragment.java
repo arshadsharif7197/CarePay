@@ -3,13 +3,12 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -116,6 +115,13 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
 
                 PaymentObject paymentObject = new PaymentObject();
                 paymentObject.setAmount(itemAmount);
+
+                AppointmentDTO appointmentDTO = callback.getAppointment();
+                if(appointmentDTO != null){
+                    paymentObject.setProviderID(appointmentDTO.getPayload().getProvider().getGuid());
+                    paymentObject.setLocationID(appointmentDTO.getPayload().getLocation().getGuid());
+                }
+
                 switch (responsibility.getType()) {
                     case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
                         paymentObject.setResponsibilityType(ResponsibilityType.co_insurance);

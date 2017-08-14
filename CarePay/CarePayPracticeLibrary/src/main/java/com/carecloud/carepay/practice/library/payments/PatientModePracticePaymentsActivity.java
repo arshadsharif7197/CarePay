@@ -28,6 +28,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
@@ -221,6 +222,12 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
     @Nullable
     @Override
     public String getAppointmentId() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public AppointmentDTO getAppointment() {
         return null;
     }
 

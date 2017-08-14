@@ -276,6 +276,15 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         return null;
     }
 
+    @Nullable
+    @Override
+    public AppointmentDTO getAppointment() {
+        if (presenter != null) {
+            return presenter.getAppointment();
+        }
+        return null;
+    }
+
     @Override
     public void onPaymentPlanAction(PaymentsModel paymentsModel) {
         PatientPaymentPlanFragment fragment = new PatientPaymentPlanFragment();

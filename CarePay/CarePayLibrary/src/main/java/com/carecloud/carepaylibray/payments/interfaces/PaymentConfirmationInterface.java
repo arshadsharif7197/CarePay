@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 
 /**
@@ -30,6 +31,15 @@ public interface PaymentConfirmationInterface extends PaymentInterface {
      * Get the appointment id associated with this payment event
      * @return appointment id or null if no appointment linked to this event
      */
-    @Nullable String getAppointmentId();
+    @Nullable
+    String getAppointmentId();
+
+    /**
+     * Get the appointment object associated with this payment event
+     * @return appointment object or null if no appointment linked to this event
+     */
+    @Nullable
+    AppointmentDTO getAppointment();
+
 
 }
