@@ -78,6 +78,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
     @Override
     public void onViewCreated(View view, Bundle icicle) {
         inflateToolbarViews(view);
+        showProgressDialog();
 
         nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.consentButtonNext);
         nextButton.setOnClickListener(new View.OnClickListener() {
@@ -206,6 +207,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
     }
 
     protected void loadFormUrl(String formString, String function) {
+        showProgressDialog();
         webView.loadUrl("javascript:window." + function + "('" + formString + "')");
         progressIndicator.setCurrentProgressDot(displayedFormsIndex);
 
@@ -311,6 +313,9 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
          */
         @JavascriptInterface
         public void loadedForm() {
+            if (getActivity() != null) {
+                hideProgressDialog();
+            }
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -332,6 +337,9 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
          */
         @JavascriptInterface
         public void loadedIntake() {
+            if (getActivity() != null) {
+                hideProgressDialog();
+            }
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {

@@ -59,7 +59,7 @@ public abstract class BaseWebFormFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle icicle) {
         inflateToolbarViews(view);
-
+        showProgressDialog();
         nextButton = (Button) view.findViewById(R.id.consentButtonNext);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,6 +174,7 @@ public abstract class BaseWebFormFragment extends BaseFragment {
     }
 
     protected void loadFormUrl(String formString, String function) {
+        showProgressDialog();
         webView.loadUrl("javascript:window." + function + "('" + formString + "')");
         progressIndicator.setCurrentProgressDot(displayedFormsIndex);
         if (getDisplayedFormsIndex() == getTotalForms() - 1) {
@@ -283,6 +284,9 @@ public abstract class BaseWebFormFragment extends BaseFragment {
          */
         @JavascriptInterface
         public void loadedForm() {
+            if (getActivity() != null) {
+                hideProgressDialog();
+            }
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
