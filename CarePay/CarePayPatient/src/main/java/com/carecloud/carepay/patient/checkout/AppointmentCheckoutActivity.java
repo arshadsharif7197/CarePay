@@ -108,7 +108,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     private void showResponsibilityFragment() {
         replaceFragment(ResponsibilityFragment
-                .newInstance(getConvertedDTO(PaymentsModel.class), null, true,
+                .newInstance(paymentsModel, null, true,
                         Label.getLabel("checkout_responsibility_title")), shouldAddBackStack);
     }
 
