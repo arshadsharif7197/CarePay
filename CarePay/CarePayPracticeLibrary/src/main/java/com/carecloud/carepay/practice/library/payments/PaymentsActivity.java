@@ -34,6 +34,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
@@ -501,6 +502,12 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     @Nullable
     @Override
     public String getAppointmentId() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public AppointmentDTO getAppointment() {
         return null;
     }
 

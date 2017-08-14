@@ -1,6 +1,8 @@
 package com.carecloud.carepaylibray.payments.interfaces;
 
-import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import android.support.annotation.Nullable;
+
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 
 /**
@@ -22,4 +24,7 @@ public interface ResponsibilityPaymentInterface extends PaymentInterface {
      * @param owedAmount the owed amount
      */
     void onPartialPaymentClicked(double owedAmount);
+
+    @Nullable
+    AppointmentDTO getAppointment();
 }

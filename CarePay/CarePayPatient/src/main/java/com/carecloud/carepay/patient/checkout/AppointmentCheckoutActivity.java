@@ -23,6 +23,7 @@ import com.carecloud.carepaylibray.appointments.interfaces.AvailableHoursInterfa
 import com.carecloud.carepaylibray.appointments.interfaces.DateRangeInterface;
 import com.carecloud.carepaylibray.appointments.interfaces.VisitTypeInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
@@ -273,6 +274,19 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     @Override
     public String getAppointmentId() {
         return appointmentId;
+    }
+
+    @Nullable
+    @Override
+    public AppointmentDTO getAppointment() {
+        if(appointmentsResultModel != null){
+            for(AppointmentDTO appointment : appointmentsResultModel.getPayload().getAppointments()){
+                if(appointment.getPayload().getId().equals(getAppointmentId())){
+                    return appointment;
+                }
+            }
+        }
+        return null;
     }
 
     @Override

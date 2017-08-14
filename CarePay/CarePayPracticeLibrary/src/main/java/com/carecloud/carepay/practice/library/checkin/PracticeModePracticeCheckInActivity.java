@@ -501,6 +501,12 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
         return null;
     }
 
+    @Nullable
+    @Override
+    public AppointmentDTO getAppointment() {
+        return null;
+    }
+
 
     @Override
     public void showPaymentDistributionDialog(PaymentsModel paymentsModel) {
