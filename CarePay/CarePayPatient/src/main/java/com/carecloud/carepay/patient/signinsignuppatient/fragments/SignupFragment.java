@@ -207,7 +207,7 @@ public class SignupFragment extends BaseFragment {
                 FragmentManager fm = getFragmentManager();
                 SigninFragment fragment = (SigninFragment) fm.findFragmentByTag(SigninFragment.class.getSimpleName());
                 if (fragment == null) {
-                    fragment = new SigninFragment();
+                    fragment = SigninFragment.newInstance(false);
                 }
                 fm.beginTransaction()
                         .replace(R.id.layoutSigninSignup, fragment, SigninFragment.class.getSimpleName())
