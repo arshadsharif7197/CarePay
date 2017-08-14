@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="black_overlay">#66000000</color>
-    <color name="colorPrimary">#5BC5D0</color>
-    <color name="colorPrimaryDark">#489DA6</color>
-    <color name="screen_gradient">#41949D</color>
-
-    <color name="colorAccent">#acacac</color>
-</resources>
