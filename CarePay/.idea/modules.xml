@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/BreezeMini/BreezeMini.iml" filepath="$PROJECT_DIR$/BreezeMini/BreezeMini.iml" />
       <module fileurl="file://$PROJECT_DIR$/CarePay.iml" filepath="$PROJECT_DIR$/CarePay.iml" />
       <module fileurl="file://$PROJECT_DIR$/CarePayLibrary/CarePayLibrary.iml" filepath="$PROJECT_DIR$/CarePayLibrary/CarePayLibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/CarePayPatient/CarePayPatient.iml" filepath="$PROJECT_DIR$/CarePayPatient/CarePayPatient.iml" />
