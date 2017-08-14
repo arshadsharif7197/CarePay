@@ -20,4 +20,13 @@ public abstract class BasePatientActivity extends BaseActivity {
     public void navigateToWorkflow(WorkflowDTO workflowDTO) {
         PatientNavigationHelper.navigateToWorkflow(this, workflowDTO);
     }
+
+    /**
+     *
+     * @param workflowDTO the workflow
+     * @param info a bundle with extra info
+     */
+    public void navigateToWorkflow(WorkflowDTO workflowDTO, Bundle info) {
+        PatientNavigationHelper.navigateToWorkflow(this, workflowDTO, info);
+    }
 }

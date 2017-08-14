@@ -1,5 +1,7 @@
 package com.carecloud.carepay.patient.notifications.models;
 
+import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -15,6 +17,12 @@ public class NotificationsPayload {
     @SerializedName("notifications")
     @Expose
     private List<NotificationItem> notifications = new ArrayList<>();
+    @SerializedName("practice_patient_ids")
+    @Expose
+    private List<PracticePatientIdsDTO> practicePatientIds = new ArrayList<>();
+    @SerializedName("demographics")
+    @Expose
+    private DemographicPayloadDTO demographicDTO = new DemographicPayloadDTO();
 
     public List<NotificationItem> getNotifications() {
         return notifications;
@@ -23,4 +31,24 @@ public class NotificationsPayload {
     public void setNotifications(List<NotificationItem> notifications) {
         this.notifications = notifications;
     }
+
+    public List<PracticePatientIdsDTO> getPracticePatientIds() {
+        return practicePatientIds;
+    }
+
+    public void setPracticePatientIds(List<PracticePatientIdsDTO> practicePatientIds) {
+        this.practicePatientIds = practicePatientIds;
+    }
+
+    public DemographicPayloadDTO getDemographicDTO() {
+        return demographicDTO;
+    }
+
+    public void setDemographicDTO(DemographicPayloadDTO demographicDTO) {
+        this.demographicDTO = demographicDTO;
+    }
+
+
+
+
 }

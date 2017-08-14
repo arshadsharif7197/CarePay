@@ -12,18 +12,22 @@ import com.carecloud.carepay.patient.notifications.fragments.NotificationFragmen
 import com.carecloud.carepay.patient.notifications.models.NotificationItem;
 import com.carecloud.carepay.patient.notifications.models.NotificationStatus;
 import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,11 +40,37 @@ public class NotificationActivity extends MenuPatientActivity implements Notific
     private NotificationsDTO notificationsDTO;
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         notificationsDTO = getConvertedDTO(NotificationsDTO.class);
-        NotificationFragment notificationFragment = NotificationFragment.newInstance(notificationsDTO);
-        navigateToFragment(notificationFragment, false);
+
+        boolean isLandingPage = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO)
+                .getBoolean(CarePayConstants.OPEN_NOTIFICATIONS, false);
+
+        if (isLandingPage){
+            List<PracticePatientIdsDTO> practicePatientIds = notificationsDTO.getPayload().getPracticePatientIds();
+            if (!practicePatientIds.isEmpty()) {
+                getApplicationPreferences().writeObjectToSharedPreference(
+                        CarePayConstants.KEY_PRACTICE_PATIENT_IDS, practicePatientIds);
+            }
+            setTransitionBalance(notificationsDTO.getMetadata().getLinks().getPatientBalances());
+            setTransitionLogout(notificationsDTO.getMetadata().getTransitions().getLogout());
+            setTransitionProfile(notificationsDTO.getMetadata().getLinks().getProfileUpdate());
+            setTransitionAppointments(notificationsDTO.getMetadata().getLinks().getAppointments());
+            setTransitionNotifications(notificationsDTO.getMetadata().getLinks().getNotifications());
+            setTransitionMyHealth(notificationsDTO.getMetadata().getLinks().getMyHealth());
+
+            String userImageUrl = notificationsDTO.getPayload().getDemographicDTO()
+                    .getPersonalDetails().getProfilePhoto();
+            if (userImageUrl != null) {
+                getApplicationPreferences().setUserPhotoUrl(userImageUrl);
+            }
+        }
+
+        if (icicle == null) {
+            NotificationFragment notificationFragment = NotificationFragment.newInstance(notificationsDTO);
+            navigateToFragment(notificationFragment, false);
+        }
 
         initPresenter(null);
     }
@@ -55,15 +85,15 @@ public class NotificationActivity extends MenuPatientActivity implements Notific
 
     @Override
     public void displayNotification(NotificationItem notificationItem) {
-        switch (notificationItem.getPayload().getNotificationType()){
+        switch (notificationItem.getPayload().getNotificationType()) {
             case appointment:
                 AppointmentDTO appointment = notificationItem.getPayload().getAppointment();
-                if(appointmentPresenter !=null){
+                if (appointmentPresenter != null) {
                     appointmentPresenter.displayAppointmentDetails(appointment);
-                    if(notificationItem.getPayload().getReadStatus()== NotificationStatus.unread) {
+                    if (notificationItem.getPayload().getReadStatus() == NotificationStatus.unread) {
                         markNotificationRead(notificationItem);
                     }
-                }else{
+                } else {
                     initPresenter(appointment);
                 }
                 break;
@@ -94,12 +124,12 @@ public class NotificationActivity extends MenuPatientActivity implements Notific
 
     }
 
-    private void initPresenter(final AppointmentDTO appointmentDTO){
+    private void initPresenter(final AppointmentDTO appointmentDTO) {
         TransitionDTO appointmentTransition = getTransitionAppointments();
         getWorkflowServiceHelper().execute(appointmentTransition, new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
-                if(appointmentDTO!=null){
+                if (appointmentDTO != null) {
                     showProgressDialog();
                 }
             }
@@ -107,12 +137,12 @@ public class NotificationActivity extends MenuPatientActivity implements Notific
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 AppointmentsResultModel appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
-                if(appointmentsResultModel != null) {
+                if (appointmentsResultModel != null) {
                     appointmentPresenter = new PatientAppointmentPresenter(NotificationActivity.this, appointmentsResultModel);
                 }
-                if(appointmentDTO != null){
+                if (appointmentDTO != null) {
                     hideProgressDialog();
-                    if(appointmentPresenter !=null){
+                    if (appointmentPresenter != null) {
                         appointmentPresenter.displayAppointmentDetails(appointmentDTO);
                     }
                 }
@@ -120,7 +150,7 @@ public class NotificationActivity extends MenuPatientActivity implements Notific
 
             @Override
             public void onFailure(String exceptionMessage) {
-                if(appointmentDTO!=null){
+                if (appointmentDTO != null) {
                     hideProgressDialog();
                     showErrorNotification(exceptionMessage);
                 }
@@ -130,7 +160,7 @@ public class NotificationActivity extends MenuPatientActivity implements Notific
     }
 
 
-    private void markNotificationRead(NotificationItem notificationItem){
+    private void markNotificationRead(NotificationItem notificationItem) {
         TransitionDTO readNotifications = notificationsDTO.getMetadata().getTransitions().getReadNotifications();
 
         Map<String, String> properties = new HashMap<>();
