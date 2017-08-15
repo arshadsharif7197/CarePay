@@ -27,7 +27,8 @@ public class RestCallServiceHelper {
     private static final String HEADER_KEY_AUTHORIZATION = "Authorization";
     private static final String HEADER_KEY_AUTH_TYPE = "x-token-type";
     private static final String HEADER_KEY_USER = "username";
-    private static final String HEADER_VALUE_AUTH_TYPE = "jwt";
+    private static final String HEADER_VALUE_AUTH_TYPE_COGNITO = "jwt";
+    private static final String HEADER_VALUE_AUTH_TYPE_KMS = "kms";
 
     private ApplicationHelper applicationHelper;
 
@@ -52,7 +53,7 @@ public class RestCallServiceHelper {
                 String idToken = applicationHelper.getAuthentication().getIdToken();
                 if (idToken != null) {
                     authHeaders.put(HEADER_KEY_AUTHORIZATION, idToken);
-                    authHeaders.put(HEADER_KEY_AUTH_TYPE, HEADER_VALUE_AUTH_TYPE);
+                    authHeaders.put(HEADER_KEY_AUTH_TYPE, HEADER_VALUE_AUTH_TYPE_COGNITO);
                 }
             }
         }
@@ -128,6 +129,32 @@ public class RestCallServiceHelper {
                     callback.onPostExecute(response.body());
                 }else{
                     callback.onFailure(parseError(response, "data", "error"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable throwable) {
+                callback.onFailure(throwable.getMessage());
+            }
+        });
+    }
+
+    public void executePostPayment(@NonNull final RestCallServiceCallback callback, String token, @NonNull String payload){
+        Map<String, String> customHeaders = new HashMap<>();
+        customHeaders.put(HEADER_KEY_AUTH_TYPE, HEADER_VALUE_AUTH_TYPE_KMS);
+        customHeaders.put(HEADER_KEY_AUTHORIZATION, token);
+
+        RestCallService restCallService = RestServiceGenerator.getInstance().createService(RestCallService.class, getFullHeaders(customHeaders));
+
+        callback.onPreExecute();
+        Call<JsonElement> postPaymentCall = restCallService.postPaymentRequest(payload);
+        postPaymentCall.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                if(response.isSuccessful()){
+                    callback.onPostExecute(response.body());
+                }else{
+                    callback.onFailure(parseError(response, "error"));
                 }
             }
 

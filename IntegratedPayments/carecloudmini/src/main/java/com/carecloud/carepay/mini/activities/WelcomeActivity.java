@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
+import com.carecloud.carepay.mini.services.carepay.RestCallServiceCallback;
 import com.carecloud.carepay.mini.utils.Defs;
 import com.carecloud.carepay.mini.utils.JsonHelper;
 import com.carecloud.carepay.mini.utils.StringUtil;
@@ -22,6 +23,8 @@ import com.carecloud.shamrocksdk.payment.DevicePayment;
 import com.carecloud.shamrocksdk.payment.interfaces.PaymentActionCallback;
 import com.carecloud.shamrocksdk.payment.interfaces.PaymentRequestCallback;
 import com.carecloud.shamrocksdk.payment.models.PaymentRequest;
+import com.carecloud.shamrocksdk.payment.models.StreamRecord;
+import com.carecloud.shamrocksdk.utils.AuthorizationUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.squareup.picasso.Picasso;
@@ -35,6 +38,7 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class WelcomeActivity extends FullScreenActivity {
     private static final String TAG = WelcomeActivity.class.getName();
     private static final int CONNECTION_RETRY_DELAY = 1000 * 5;
+    private static final int PAYMENT_COMPLETE_RESET = 1000 * 3;
 
     private ApplicationHelper applicationHelper;
     private TextView message;
@@ -42,6 +46,7 @@ public class WelcomeActivity extends FullScreenActivity {
 
     private Device connectedDevice;
 
+    private int paymentAttempt = 0;
 
     @Override
     protected void onCreate(Bundle icicle){
@@ -257,13 +262,13 @@ public class WelcomeActivity extends FullScreenActivity {
                         break;
                     case Device.STATE_IN_USE:
                         if(connectedDevice.getPaymentRequestId() == null){
-                            Log.d(TAG, "Error state, devie is in use but no request id, reset device state");
+                            Log.d(TAG, "Error state, device is in use but no request id, reset device state");
                             //this device should not be in use without a payment request
                             connectedDevice.setState(Device.STATE_READY);
                             updateConnectedDevice();
                             return;
                         }
-                        if(!connectedDevice.getPaymentRequestId().equals(paymentRequestId)){
+                        if(paymentRequestId!=null && !connectedDevice.getPaymentRequestId().equals(paymentRequestId)){
                             Log.d(TAG, "Cannot process this request device is in use");
                             //this is an error because device should be processing a transaction already
                             showErrorToast(getString(R.string.error_device_in_use));
@@ -305,8 +310,8 @@ public class WelcomeActivity extends FullScreenActivity {
         @Override
         public void onPaymentComplete(String paymentRequestId) {
             Log.d(TAG, "Payment completed for: "+paymentRequestId);
-            releasePaymentRequest(paymentRequestId);
-            //TODO display popup
+
+            postPaymentRequest(paymentRequestId);
         }
 
         @Override
@@ -361,4 +366,57 @@ public class WelcomeActivity extends FullScreenActivity {
             }
         }
     };
+
+    private void postPaymentRequest(String paymentRequestId){
+        StreamRecord streamRecord = new StreamRecord();
+        streamRecord.setDeepstreamRecordId(paymentRequestId);
+
+        Gson gson = new Gson();
+        String token = AuthorizationUtil.getAuthorizationToken(this).replace("\n", "");
+        getRestHelper().executePostPayment(getPostPaymentCallback(paymentRequestId), token, gson.toJson(streamRecord));
+    }
+
+    private RestCallServiceCallback getPostPaymentCallback(final String paymentRequestId) {
+        return new RestCallServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                paymentAttempt++;
+            }
+
+            @Override
+            public void onPostExecute(JsonElement jsonElement) {
+                updateMessage(getString(R.string.welcome_complete));
+                resetDevice(paymentRequestId);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateMessage(getString(R.string.welcome_waiting));
+                    }
+                }, PAYMENT_COMPLETE_RESET);
+
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                CustomErrorToast.showWithMessage(WelcomeActivity.this, errorMessage);
+                if(shouldRetry(errorMessage)) {
+                    updateMessage(String.format(getString(R.string.welcome_retrying), paymentAttempt + 1));
+                    postPaymentRequest(paymentRequestId);
+                }else{
+                    resetDevice(paymentRequestId);
+                    updateMessage(getString(R.string.welcome_waiting));
+                }
+            }
+        };
+    }
+
+    private boolean shouldRetry(String errorMessage){
+        return !errorMessage.contains("payment request has already been completed");
+    }
+
+    private void resetDevice(String paymentRequestId){
+        releasePaymentRequest(paymentRequestId);
+        paymentAttempt = 0;
+    }
+
 }

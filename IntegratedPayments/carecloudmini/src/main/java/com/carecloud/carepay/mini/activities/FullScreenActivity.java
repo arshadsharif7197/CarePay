@@ -5,6 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
+import com.carecloud.carepay.mini.services.carepay.RestCallServiceHelper;
+
 /**
  * Created by lmenendez on 7/20/17
  */
@@ -39,6 +42,13 @@ public abstract class FullScreenActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(uiOptions);
     }
 
+    protected ApplicationHelper getApplicationHelper(){
+        return (ApplicationHelper) getApplication();
+    }
+
+    protected RestCallServiceHelper getRestHelper(){
+        return getApplicationHelper().getRestHelper();
+    }
 
 
 }
