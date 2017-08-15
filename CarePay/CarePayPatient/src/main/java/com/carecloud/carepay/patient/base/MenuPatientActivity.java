@@ -69,7 +69,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    protected void setUserImage() {
+    private void setUserImage() {
         String imageUrl = getApplicationPreferences().getUserPhotoUrl();
         ImageView userImageView = (ImageView) navigationView.getHeaderView(0)
                 .findViewById(R.id.appointmentDrawerIdImageView);

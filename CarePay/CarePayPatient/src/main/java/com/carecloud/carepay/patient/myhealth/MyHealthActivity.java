@@ -65,7 +65,6 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
                 .getPersonalDetails().getProfilePhoto();
         if (userImageUrl != null) {
             getApplicationPreferences().setUserPhotoUrl(userImageUrl);
-            setUserImage();
         }
 
         if (icicle == null) {

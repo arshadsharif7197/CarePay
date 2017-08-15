@@ -259,7 +259,4 @@
 
     </ScrollView>
 
-    <include layout="@layout/toolbar_demographics_settings" />
-
-
 </LinearLayout>
