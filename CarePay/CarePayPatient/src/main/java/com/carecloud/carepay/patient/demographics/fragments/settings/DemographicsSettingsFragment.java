@@ -106,10 +106,12 @@ public class DemographicsSettingsFragment extends BaseFragment {
         PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload().getDemographics()
                 .getPayload().getPersonalDetails();
         String imageUrl = demographicsPersonalDetails.getProfilePhoto();
+        getApplicationPreferences().setUserPhotoUrl(imageUrl);
         if (!StringUtil.isNullOrEmpty(imageUrl)) {
             ImageView profileImageview = (ImageView) view.findViewById(R.id.providerPicImageView);
             Picasso.with(getContext())
                     .load(imageUrl)
+                    .placeholder(R.drawable.icn_placeholder_user_profile_png)
                     .resize(160, 160)
                     .centerCrop()
                     .transform(new CircleImageTransform())
