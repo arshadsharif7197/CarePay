@@ -10,6 +10,8 @@
     android:orientation="vertical"
     tools:ignore="MissingPrefix">
 
+    <include layout="@layout/toolbar_demographics_settings" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
