@@ -48,6 +48,8 @@
     <string name="welcome_waiting">Waiting for payment</string>
     <string name="welcome_connecting">Connecting&#8230;</string>
     <string name="welcome_processing">Processing&#8230;</string>
+    <string name="welcome_complete">Payment Complete\nThank you for your payment.</string>
+    <string name="welcome_retrying">Retrying&#8230;\nAttempt #%d</string>
 
 
     <string name="content_logo">logo</string>
