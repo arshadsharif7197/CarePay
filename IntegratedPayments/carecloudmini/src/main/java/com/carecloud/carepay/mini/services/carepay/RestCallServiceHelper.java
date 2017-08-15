@@ -160,7 +160,7 @@ public class RestCallServiceHelper {
                 if(response.isSuccessful()){
                     callback.onPostExecute(response.body());
                 }else{
-                    callback.onFailure(parseError(response, "error"));
+                    callback.onFailure(parseError(response, "error", "message"));
                 }
             }
 
