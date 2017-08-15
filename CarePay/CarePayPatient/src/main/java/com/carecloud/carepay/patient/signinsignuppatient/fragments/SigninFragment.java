@@ -253,6 +253,7 @@ public class SigninFragment extends BaseFragment {
             setSignInButtonClickable(true);
             boolean shouldShowNotificationScreen = getArguments()
                     .getBoolean(CarePayConstants.OPEN_NOTIFICATIONS);
+            getApplicationPreferences().setUserPhotoUrl(null);
             if (shouldShowNotificationScreen) {
                 manageNotificationAsLandingScreen(workflowDTO.toString());
             } else {

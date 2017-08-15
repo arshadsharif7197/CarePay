@@ -67,7 +67,9 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+    }
 
+    private void setUserImage() {
         String imageUrl = getApplicationPreferences().getUserPhotoUrl();
         ImageView userImageView = (ImageView) navigationView.getHeaderView(0)
                 .findViewById(R.id.appointmentDrawerIdImageView);
@@ -85,6 +87,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        setUserImage();
         if (appointmentsDrawerUserIdTextView != null) {
             String userId = getApplicationPreferences().getUserId();
             if (userId != null) {
