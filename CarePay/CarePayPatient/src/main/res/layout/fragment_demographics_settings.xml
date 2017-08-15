@@ -10,8 +10,6 @@
     android:orientation="vertical"
     tools:ignore="MissingPrefix">
 
-    <include layout="@layout/toolbar_demographics_settings" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,10 +19,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="@dimen/dimen_20dp"
             android:paddingBottom="@dimen/dimen_20dp"
+            android:paddingEnd="@dimen/dimen_17dp"
             android:paddingStart="@dimen/dimen_17dp"
-            android:paddingEnd="@dimen/dimen_17dp">
+            android:paddingTop="@dimen/dimen_20dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -36,14 +34,14 @@
                     android:layout_width="@dimen/imageview_profile_ht_wdh"
                     android:layout_height="@dimen/imageview_profile_ht_wdh"
                     android:layout_marginEnd="@dimen/textview_margin"
-                    android:src="@drawable/icn_placeholder_user_profile"/>
+                    android:src="@drawable/icn_placeholder_user_profile" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_toEndOf="@id/providerPicImageView"
                     android:layout_toStartOf="@+id/editTextView"
-                    android:layout_centerVertical="true"
                     android:orientation="vertical">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -59,6 +57,7 @@
                         android:id="@+id/patient_id"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:gravity="start"
                         android:textColor="@color/lightSlateGray"
                         android:textSize="@dimen/textview_textsize"
                         app:customAssetFont="proxima_nova_regular" />
@@ -71,9 +70,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginTop="@dimen/dimen_12dp"
-                    android:paddingEnd="@dimen/dimen_17dp"
-                    android:paddingStart="0dp"
+                    android:background="?android:selectableItemBackground"
+                    android:padding="@dimen/dimen_10dp"
                     android:textColor="@color/emerald"
                     android:textSize="@dimen/button_textsize_medium"
                     app:customAssetFont="gotham_rounded_bold"
@@ -223,9 +221,9 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/textview_default_textsize"
                 android:theme="@style/MyCheckBox"
-                tools:text="Push Notifications"
                 app:customAssetFont="proxima_nova_regular"
-                breeze:textKey="push_notifications_checkbox_label" />
+                breeze:textKey="push_notifications_checkbox_label"
+                tools:text="Push Notifications" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
                 android:id="@+id/emailNotificationCheckBox"
@@ -238,10 +236,9 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/textview_default_textsize"
                 android:theme="@style/MyCheckBox"
-                tools:text="Email Notifications"
                 app:customAssetFont="proxima_nova_regular"
-                breeze:textKey="email_notifications_checkbox_label" />
-
+                breeze:textKey="email_notifications_checkbox_label"
+                tools:text="Email Notifications" />
 
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
@@ -251,14 +248,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_40dp"
                 android:textAllCaps="true"
-                tools:text="logout"
                 app:customAssetFont="proxima_nova_regular"
-                breeze:textKey="signout_button_label" />
+                breeze:textKey="signout_button_label"
+                tools:text="logout" />
 
 
         </LinearLayout>
 
     </ScrollView>
+
+    <include layout="@layout/toolbar_demographics_settings" />
 
 
 </LinearLayout>
