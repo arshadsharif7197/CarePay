@@ -46,8 +46,6 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
     private MyHealthInterface callback;
     private MyHealthDto myHealthDto;
     public static final int MAX_ITEMS_TO_SHOW = 3;
-    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 10;
-    private LabDto selectedLab;
 
     public MyHealthMainFragment() {
 
@@ -300,44 +298,6 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
 
     @Override
     public void onLabClicked(final LabDto lab) {
-        selectedLab = lab;
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PermissionChecker.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-        } else {
-            preparePdf(lab);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE
-                && (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-            preparePdf(selectedLab);
-        }
-    }
-
-    private void preparePdf(final LabDto lab) {
-        TransitionDTO getPdfTransition = myHealthDto.getMetadata().getLinks().getLabsPdf();
-        String url = String.format("%s?%s=%s", getPdfTransition.getUrl(), "labs_id", lab.getId());
-        downloadPdf(url, lab.getName(), ".pdf", lab.getPractice());
-    }
-
-    private void downloadPdf(String url, String title, String fileExtension, String description) {
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-        request.setTitle(title + fileExtension);
-        request.setDescription(description);
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.addRequestHeader("Accept", "application/pdf");
-        request.addRequestHeader("username", getAppAuthorizationHelper().getCurrUser());
-        request.addRequestHeader("Authorization", getAppAuthorizationHelper().getIdToken());
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "");
-
-        DownloadManager downloadManager = (DownloadManager) getContext()
-                .getSystemService(Context.DOWNLOAD_SERVICE);
-        downloadManager.enqueue(request);
+        callback.onLabClicked(lab);
     }
 }
