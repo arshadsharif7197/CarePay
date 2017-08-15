@@ -139,6 +139,12 @@ public class RestCallServiceHelper {
         });
     }
 
+    /**
+     * Make Http call to post a payment object id to carepay for processing
+     * @param callback callback
+     * @param token kms token from sdk
+     * @param payload payment object id payload
+     */
     public void executePostPayment(@NonNull final RestCallServiceCallback callback, String token, @NonNull String payload){
         Map<String, String> customHeaders = new HashMap<>();
         customHeaders.put(HEADER_KEY_AUTH_TYPE, HEADER_VALUE_AUTH_TYPE_KMS);
