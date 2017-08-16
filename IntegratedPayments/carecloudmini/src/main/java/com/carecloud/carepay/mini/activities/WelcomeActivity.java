@@ -119,6 +119,14 @@ public class WelcomeActivity extends FullScreenActivity {
             }
         }
 
+        View settings = findViewById(R.id.button_settings);
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toggleCustomerMode();
+            }
+        });
+
     }
 
     private void connectDevice(){
