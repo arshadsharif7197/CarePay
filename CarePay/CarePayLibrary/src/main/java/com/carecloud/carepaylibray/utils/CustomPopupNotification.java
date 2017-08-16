@@ -1,6 +1,6 @@
 package com.carecloud.carepaylibray.utils;
 
-import android.annotation.TargetApi;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -41,8 +41,8 @@ public class CustomPopupNotification extends PopupWindow {
     private int errorColor;
     private int notificationType;
     private View parentView;
-    public Context context ;
-    public Window window ;
+    public Context context;
+    public Window window;
     private CustomPopupNotificationListener callback;
     private Boolean hasStatusBar = true;
 
@@ -51,20 +51,20 @@ public class CustomPopupNotification extends PopupWindow {
     }
 
     /**
-     * @param context the context to inflate custom popup layout
-     * @param parentView a parent view to get the {@link android.view.View#getWindowToken()} token from
+     * @param context          the context to inflate custom popup layout
+     * @param parentView       a parent view to get the {@link android.view.View#getWindowToken()} token from
      * @param popupMessageText Sets the string value of the TextView popup message
      * @param notificationType The notification type to be displayed from CustomPopupNotification class
      */
     public CustomPopupNotification(Context context, View parentView, Window window, String popupMessageText, int notificationType, CustomPopupNotificationListener callback) {
 
         super(((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                        .inflate(R.layout.custom_popup, null));
+                .inflate(R.layout.custom_popup, null));
         this.context = context;
         this.parentView = parentView;
         this.callback = callback;
         this.window = window;
-        this.statusBarColor =  ContextCompat.getColor(context, R.color.colorPrimaryDark) ;
+        this.statusBarColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
         this.errorColor = ContextCompat.getColor(context, R.color.remove_red);
         this.notificationType = notificationType;
 
@@ -91,7 +91,7 @@ public class CustomPopupNotification extends PopupWindow {
                 popupWindowLayout.setBackgroundResource(R.drawable.error_notification_background);
                 popupMessageLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
                 ApplicationMode.ApplicationType appMode = ((IApplicationSession) context).getApplicationMode().getApplicationType();
-                if(popupMessageText ==null) {
+                if (popupMessageText == null) {
                     popupMessageText = CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE;
                 }
                 this.hasStatusBar = (appMode == ApplicationMode.ApplicationType.PATIENT);
@@ -106,11 +106,9 @@ public class CustomPopupNotification extends PopupWindow {
             default:
         }
 
-        if (Build.VERSION.SDK_INT >= 24)
-        {
+        if (Build.VERSION.SDK_INT >= 24) {
             popupMessageLabel.setText(Html.fromHtml(popupMessageText, Html.FROM_HTML_MODE_LEGACY));
-        } else
-        {
+        } else {
             popupMessageLabel.setText(Html.fromHtml(popupMessageText));
         }
 
@@ -118,9 +116,9 @@ public class CustomPopupNotification extends PopupWindow {
     }
 
     private void initializeDimensions() {
-        if(DisplayUtils.getScreenOrientation(context) == Configuration.ORIENTATION_PORTRAIT){
+        if (DisplayUtils.getScreenOrientation(context) == Configuration.ORIENTATION_PORTRAIT) {
             setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        }else {
+        } else {
             setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
         }
 
@@ -131,20 +129,19 @@ public class CustomPopupNotification extends PopupWindow {
      * Show pop window.
      */
     public void showPopWindow() {
-        if(parentView == null && window == null){
+        if (parentView == null && window == null) {
             return;
         }
-        if(parentView == null){
+        if (parentView == null) {
             parentView = window.getDecorView();
-            if(parentView == null){
+            if (parentView == null) {
                 return;
             }
         }
         showAtLocation(parentView, Gravity.TOP, 0, 0);
 
-        if(notificationType == TYPE_ERROR_NOTIFICATION) {
-            if(hasStatusBar)
-            {
+        if (notificationType == TYPE_ERROR_NOTIFICATION) {
+            if (hasStatusBar) {
                 setStatusBarColor(errorColor);
             }
             Handler handler = new Handler();
@@ -152,14 +149,13 @@ public class CustomPopupNotification extends PopupWindow {
 
                 @Override
                 public void run() {
-                    if(hasStatusBar)
-                    {
+                    if (hasStatusBar) {
                         setStatusBarColor(statusBarColor);
                     }
                     if (isShowing()) {
                         try {
                             dismiss();
-                        }catch (IllegalArgumentException iae){
+                        } catch (IllegalArgumentException iae) {
                             //do nothing
                         }
                     }
@@ -170,33 +166,32 @@ public class CustomPopupNotification extends PopupWindow {
         }
     }
 
-    private void setSwipeListener()
-    {
+    private void setSwipeListener() {
         getContentView().setOnTouchListener(new SwipeGuestureListener(context) {
 
             public void onSwipeTop() {
-                if(hasStatusBar) {
+                if (hasStatusBar) {
                     setStatusBarColor(statusBarColor);
                 }
                 callback.onSwipe(GESTURE_DIRECTION_TOP);
             }
 
             public void onSwipeRight() {
-                if(hasStatusBar) {
+                if (hasStatusBar) {
                     setStatusBarColor(statusBarColor);
                 }
                 callback.onSwipe(GESTURE_DIRECTION_RIGHT);
             }
 
             public void onSwipeLeft() {
-                if(hasStatusBar){
+                if (hasStatusBar) {
                     setStatusBarColor(statusBarColor);
                 }
                 callback.onSwipe(GESTURE_DIRECTION_LEFT);
             }
 
             public void onSwipeBottom() {
-                if(hasStatusBar){
+                if (hasStatusBar) {
                     setStatusBarColor(statusBarColor);
                 }
                 callback.onSwipe(GESTURE_DIRECTION_BOTTOM);
@@ -205,10 +200,9 @@ public class CustomPopupNotification extends PopupWindow {
         });
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setStatusBarColor(int color){
-        if(window!= null)
-        {
+    @SuppressLint("NewApi")
+    private void setStatusBarColor(int color) {
+        if (window != null && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)) {
             window.setStatusBarColor(color);
         }
     }
