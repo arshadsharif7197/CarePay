@@ -72,7 +72,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         initFragments();
     }
 
-    private void initFragments(){
+    private void initFragments() {
         if (hasPayments() || hasCharges()) {
             replaceFragment(new PaymentBalanceHistoryFragment(), false);
         } else {
@@ -271,17 +271,19 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        PatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload().get(0);
-        if(payload.getPaymentExceptions()!=null && !payload.getPaymentExceptions().isEmpty() && payload.getTotal()==0D){
+        PatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments()
+                .getPayload().get(0);
+        if (payload.getPaymentExceptions() != null && !payload.getPaymentExceptions().isEmpty()
+                && payload.getTotal() == 0D) {
             StringBuilder builder = new StringBuilder();
-            for(PaymentExceptionDTO paymentException : payload.getPaymentExceptions()){
+            for (PaymentExceptionDTO paymentException : payload.getPaymentExceptions()) {
                 builder.append(paymentException.getMessage());
                 builder.append("\n");
             }
             int last = builder.lastIndexOf("\n");
             builder.replace(last, builder.length(), "");
             showErrorNotification(builder.toString());
-        }else {
+        } else {
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             Bundle args = new Bundle();
             args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
@@ -324,7 +326,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         loadPaymentAmountScreen(null, paymentsModel);
     }
 
-    private void setPendingBalance(PaymentsBalancesItem selectedBalancesItem){
+    private void setPendingBalance(PaymentsBalancesItem selectedBalancesItem) {
         PendingBalanceDTO pendingBalanceDTO = new PendingBalanceDTO();
         pendingBalanceDTO.setMetadata(selectedBalancesItem.getMetadata());
         pendingBalanceDTO.getPayload().add(selectedBalancesItem.getBalance());
