@@ -63,7 +63,9 @@ public class WelcomeActivity extends FullScreenActivity {
     @Override
     protected void onStart(){
         super.onStart();
-        connectDevice();
+        if(connectedDevice == null || !connectedDevice.isProcessing()) {
+            connectDevice();
+        }
     }
 
     @Override
