@@ -146,7 +146,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
                 break;
             case R.id.nav_logout:
                 transition = transitionLogout;
-                callback = appointmentsWorkflowCallback;
+                callback = logoutWorkflowCallback;
                 headersMap.put("x-api-key", HttpConstants.getApiStartKey());
                 headersMap.put("transition", "true");
                 break;
@@ -190,7 +190,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -210,10 +210,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
 
         @Override
         public void onFailure(String exceptionMessage) {
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
-
+            showErrorNotification(exceptionMessage);
             hideProgressDialog();
-
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -234,7 +232,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -255,7 +253,28 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    private WorkflowServiceCallback logoutWorkflowCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            getAppAuthorizationHelper().setAccessToken(null);
+            navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -278,7 +297,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -299,7 +318,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
