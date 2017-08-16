@@ -6,7 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.text.style.StrikethroughSpan;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +69,13 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
     }
 
     @Override
+    public void onViewRecycled(ViewHolder holder){
+        holder.messageText.setAutoLinkMask(0);
+        holder.messageText.setMovementMethod(null);
+        super.onViewRecycled(holder);
+    }
+
+    @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Messages.Reply message = messages.get(position);
         Messages.Reply lastMessage = null;
@@ -98,6 +107,10 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
         }else {
             holder.messageText.setText(Html.fromHtml(message.getBody(), Html.FROM_HTML_SEPARATOR_LINE_BREAK_PARAGRAPH, null, new ConversationTagHandler()));
         }
+
+        Linkify.addLinks(holder.messageText, Linkify.ALL);
+        holder.messageText.setMovementMethod(LinkMovementMethod.getInstance());
+        holder.messageText.setLinksClickable(true);
 
         if(lastMessage != null) {
             Date lastDate = DateUtil.getInstance().setDateRaw(lastMessage.getCreatedDate()).getDate();
@@ -176,11 +189,15 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
         }
     }
 
-    class ConversationTagHandler implements Html.TagHandler{
+    private class ConversationTagHandler implements Html.TagHandler{
         private static final String TAG_STRIKE = "strike";
         private static final String TAG_STRIKE_S = "s";
         private static final String TAG_DEL = "del";
 
+        private static final String TAG_ROW = "tr";
+        private static final String TAG_COLUMN = "td";
+        private static final String TAG_LIST = "li";
+        private static final String TAG_LINK = "a";
 
         @Override
         public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
@@ -188,9 +205,27 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
                 if(tag.equalsIgnoreCase(TAG_STRIKE_S) || tag.equalsIgnoreCase(TAG_STRIKE) || tag.equalsIgnoreCase(TAG_DEL)){
                     markStart(output, new StrikeStyle());
                 }
+                else if(tag.equalsIgnoreCase(TAG_ROW)){
+                    markStart(output, new RowStyle());
+                }
+                else if(tag.equalsIgnoreCase(TAG_COLUMN)){
+                    markStart(output, new ColumnStyle());
+                }
+                else if(tag.equalsIgnoreCase(TAG_LIST)){
+                    markStart(output, new ListStyle());
+                }
             }else{
                 if(tag.equalsIgnoreCase(TAG_STRIKE_S) || tag.equalsIgnoreCase(TAG_STRIKE) || tag.equalsIgnoreCase(TAG_DEL)){
                     markEnd(output, StrikeStyle.class);
+                }
+                else if(tag.equalsIgnoreCase(TAG_ROW)){
+                    markEnd(output, RowStyle.class);
+                }
+                else if(tag.equalsIgnoreCase(TAG_COLUMN)){
+                    markEnd(output, ColumnStyle.class);
+                }
+                else if(tag.equalsIgnoreCase(TAG_LIST)){
+                    markEnd(output, ListStyle.class);
                 }
             }
         }
@@ -207,7 +242,19 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
 
             output.removeSpan(opening);
             if(start != end){
-                output.setSpan(new StrikethroughSpan(), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if(style == StrikeStyle.class) {
+                    output.setSpan(new StrikethroughSpan(), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                else if(style == ListStyle.class){
+                    output.insert(start, "• ");
+                    output.append("\n");
+                }
+                else if(style == RowStyle.class){
+                    output.append("\n");
+                }
+                else if(style == ColumnStyle.class){
+                    output.append("   ");
+                }
             }
         }
 
@@ -225,5 +272,12 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
         }
 
         private class StrikeStyle {}
+
+        private class RowStyle {}
+
+        private class ColumnStyle {}
+
+        private class ListStyle {}
+
     }
 }
