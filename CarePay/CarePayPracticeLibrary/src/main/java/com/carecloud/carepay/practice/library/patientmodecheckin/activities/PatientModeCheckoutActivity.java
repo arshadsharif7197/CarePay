@@ -82,8 +82,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     private boolean shouldAddBackStack = false;
 
     private WorkflowDTO paymentConfirmationWorkflow;
-    private String providerId;
-    private String locationId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,8 +91,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
         appointmentId = extra.getString(CarePayConstants.APPOINTMENT_ID);
-        providerId = extra.getString(CarePayConstants.PROVIDER_ID);
-        locationId = extra.getString(CarePayConstants.LOCATION_ID);
         if (savedInstanceState == null) {
             WorkflowDTO workflowDTO = getConvertedDTO(WorkflowDTO.class);
             initDto(workflowDTO);
@@ -191,8 +187,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         String paymentsDTOString = gson.toJson(paymentsModel);
         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-        args.putString(CarePayConstants.LOCATION_ID, locationId);
-        args.putString(CarePayConstants.PROVIDER_ID, providerId);
         DialogFragment fragment = new PracticeAddNewCreditCardFragment();
         fragment.setArguments(args);
         displayDialogFragment(fragment, false);
@@ -210,7 +204,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
                 && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel,
-                    selectedPaymentMethod.getLabel(), amount, providerId, locationId);
+                    selectedPaymentMethod.getLabel(), amount);
             displayDialogFragment(fragment, false);
         } else {
             showAddCard(amount, paymentsModel);

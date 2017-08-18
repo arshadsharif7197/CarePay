@@ -60,9 +60,6 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     private PaymentsModel paymentsModel;
 
     private boolean shouldAddBackStack = false;
-    private String providerId;
-    private String locationId;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +68,6 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
         appointmentId = extra.getString(CarePayConstants.APPOINTMENT_ID);
-        providerId = extra.getString(CarePayConstants.PROVIDER_ID);
-        locationId = extra.getString(CarePayConstants.LOCATION_ID);
 
         if (savedInstanceState == null) {
             initDto(getConvertedDTO(WorkflowDTO.class));
@@ -212,7 +207,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null &&
                 !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel,
-                    selectedPaymentMethod.getLabel(), amount, providerId, locationId);
+                    selectedPaymentMethod.getLabel(), amount);
             replaceFragment(fragment, true);
         } else {
             showAddCard(amount, paymentsModel);
@@ -226,8 +221,6 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         String paymentsDTOString = gson.toJson(paymentsModel);
         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-        args.putString(CarePayConstants.PROVIDER_ID, providerId);
-        args.putString(CarePayConstants.LOCATION_ID, locationId);
         AddNewCreditCardFragment fragment = new AddNewCreditCardFragment();
 
 

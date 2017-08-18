@@ -20,17 +20,13 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.LocationDTO;
-import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.payments.adapter.CreditCardsListAdapter;
 import com.carecloud.carepaylibray.payments.interfaces.ChooseCreditCardInterface;
-import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
-import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.CreditCardModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethodType;
@@ -66,40 +62,21 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     protected ChooseCreditCardInterface callback;
 
     private List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = new ArrayList<>();
-    private LocationDTO defaultLocation;
-    private ProviderDTO defaultProvider;
-    protected String locationId;
-    protected String providerId;
+
 
     /**
      * @param paymentsDTO                the payment model
      * @param selectedPaymentMethodLabel the selected payment method label
      * @param amount                     the amount
-     * @return an instance of PracticeChooseCreditCardFragment
-     */
-    public static ChooseCreditCardFragment newInstance(PaymentsModel paymentsDTO,
-                                                       String selectedPaymentMethodLabel, double amount) {
-        return newInstance(paymentsDTO, selectedPaymentMethodLabel, amount, null, null);
-    }
-
-    /**
-     * @param paymentsDTO                the payment model
-     * @param selectedPaymentMethodLabel the selected payment method label
-     * @param amount                     the amount
-     * @param providerId                 the provider Id
-     * @param locationId                 the location Id
      * @return an instance of PracticeChooseCreditCardFragment
      */
     public static ChooseCreditCardFragment newInstance(PaymentsModel paymentsDTO,
                                                        String selectedPaymentMethodLabel,
-                                                       double amount, String providerId,
-                                                       String locationId) {
+                                                       double amount) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsDTO);
         args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethodLabel);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-        args.putString(CarePayConstants.PROVIDER_ID, providerId);
-        args.putString(CarePayConstants.LOCATION_ID, locationId);
         ChooseCreditCardFragment chooseCreditCardFragment = new ChooseCreditCardFragment();
         chooseCreditCardFragment.setArguments(args);
         return chooseCreditCardFragment;
@@ -135,8 +112,6 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
             titleLabel = arguments.getString(CarePayConstants.PAYMENT_METHOD_BUNDLE);
             paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
             amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
-            locationId = arguments.getString(CarePayConstants.LOCATION_ID);
-            providerId = arguments.getString(CarePayConstants.PROVIDER_ID);
 
             if (paymentsModel != null) {
                 creditCardList = paymentsModel.getPaymentPayload().getPatientCreditCards();
@@ -228,12 +203,6 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         for (PaymentObject paymentObject : postModel.getPaymentObjects()) {
             paymentObject.setType(PaymentType.credit_card);
             paymentObject.setExecution(PaymentExecution.papi);
-            if ((locationId != null) && (paymentObject.getLocationID() == null)) {
-                paymentObject.setLocationID(locationId);
-            }
-            if (providerId != null && paymentObject.getProviderID() == null) {
-                paymentObject.setProviderID(providerId);
-            }
 
             if (papiPaymentMethod != null) {
                 paymentObject.setPapiPaymentMethod(papiPaymentMethod);
@@ -255,20 +224,6 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         paymentObject.setType(PaymentType.credit_card);
         paymentObject.setExecution(PaymentExecution.papi);
         paymentObject.setAmount(amountToMakePayment);
-
-        if (locationId != null) {
-            paymentObject.setLocationID(locationId);
-        }
-//        else {
-//            paymentObject.setLocationID(String.valueOf(defaultLocation.getGuid()));
-//        }
-        if (providerId != null) {
-            paymentObject.setProviderID(providerId);
-        }
-//        else {
-////            paymentObject.setProviderID(String.valueOf(defaultProvider.getGuid()));
-//        }
-
 
         PapiPaymentMethod papiPaymentMethod = getPapiPaymentMethod();
         if (papiPaymentMethod != null) {
@@ -387,51 +342,4 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         nextButton.setEnabled(true);
     }
 
-    private void setDefaultProviderLocation() {
-        if (paymentsModel.getPaymentPayload().getPatientBalances().isEmpty() ||
-                paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().isEmpty()) {
-            return;
-        }
-        String patientID = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPatientId();
-        String locationID = null;
-        String providerID = null;
-        for (LocationIndexDTO locationIndex : paymentsModel.getPaymentPayload().getLocationIndex()) {
-            for (String locationPatientID : locationIndex.getPatientIds()) {
-                if (locationPatientID.equals(patientID)) {
-                    locationID = locationIndex.getId();
-                    break;
-                }
-            }
-        }
-        for (ProviderIndexDTO providerIndex : paymentsModel.getPaymentPayload().getProviderIndex()) {
-            for (String providerPatientID : providerIndex.getPatientIds()) {
-                if (providerPatientID.equals(patientID)) {
-                    providerID = providerIndex.getId();
-                    break;
-                }
-            }
-        }
-
-        if (locationID != null) {
-            for (LocationDTO location : paymentsModel.getPaymentPayload().getLocations()) {
-                if (locationID.equals(location.getId().toString())) {
-                    defaultLocation = location;
-                    break;
-                }
-            }
-        } else if (paymentsModel.getPaymentPayload().getLocations().size() == 1) {
-            defaultLocation = paymentsModel.getPaymentPayload().getLocations().get(0);
-        }
-
-        if (providerID != null) {
-            for (ProviderDTO provider : paymentsModel.getPaymentPayload().getProviders()) {
-                if (providerID.equals(provider.getId().toString())) {
-                    defaultProvider = provider;
-                    break;
-                }
-            }
-        } else if (paymentsModel.getPaymentPayload().getProviders().size() == 1) {
-            defaultProvider = paymentsModel.getPaymentPayload().getProviders().get(0);
-        }
-    }
 }

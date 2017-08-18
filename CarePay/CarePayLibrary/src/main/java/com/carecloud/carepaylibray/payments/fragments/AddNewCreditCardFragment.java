@@ -16,14 +16,10 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.LocationDTO;
-import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
-import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
-import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.CreditCardModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
@@ -42,10 +38,6 @@ import java.util.Map;
 public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implements BaseAddCreditCardFragment.IAuthoriseCreditCardResponse {
 
     private UserPracticeDTO userPracticeDTO;
-    private String locationId;
-    private String providerId;
-    private LocationDTO defaultLocation;
-    private ProviderDTO defaultProvider;
 
     @Override
     protected void attachCallback(Context context) {
@@ -76,8 +68,6 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             Gson gson = new Gson();
             String paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
             paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
-            locationId = arguments.getString(CarePayConstants.LOCATION_ID);
-            providerId = arguments.getString(CarePayConstants.PROVIDER_ID);
             if(paymentsModel!=null) {
                 addressPayloadDTO = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getAddress();
                 userPracticeDTO = callback.getPracticeInfo(paymentsModel);
@@ -170,12 +160,6 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             paymentObject.setType(PaymentType.credit_card);
             paymentObject.setExecution(PaymentExecution.papi);
             paymentObject.setCreditCard(creditCardModel);
-            if ((locationId != null) && (paymentObject.getLocationID() == null)) {
-                paymentObject.setLocationID(locationId);
-            }
-            if (providerId != null && paymentObject.getProviderID() == null) {
-                paymentObject.setProviderID(providerId);
-            }
         }
 
         Gson gson = new Gson();
@@ -192,19 +176,6 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         paymentObject.setExecution(PaymentExecution.papi);
         paymentObject.setAmount(amountToMakePayment);
         paymentObject.setCreditCard(getCreditCardModel());
-
-        if (locationId != null) {
-            paymentObject.setLocationID(locationId);
-        }
-//        else {
-//            paymentObject.setLocationID(String.valueOf(defaultLocation.getGuid()));
-//        }
-        if (providerId!=null){
-            paymentObject.setProviderID(providerId);
-        }
-//        else{
-////            paymentObject.setProviderID(String.valueOf(defaultProvider.getGuid()));
-//        }
 
         PaymentPostModel paymentPostModel = new PaymentPostModel();
         paymentPostModel.setAmount(amountToMakePayment);
@@ -283,54 +254,6 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
                 dismiss();
             }
         };
-    }
-
-    private void setDefaultProviderLocation() {
-        if (paymentsModel.getPaymentPayload().getPatientBalances().isEmpty() ||
-                paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().isEmpty()) {
-            return;
-        }
-        String patientID = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPatientId();
-        String locationID = null;
-        String providerID = null;
-        for (LocationIndexDTO locationIndex : paymentsModel.getPaymentPayload().getLocationIndex()) {
-            for (String locationPatientID : locationIndex.getPatientIds()) {
-                if (locationPatientID.equals(patientID)) {
-                    locationID = locationIndex.getId();
-                    break;
-                }
-            }
-        }
-        for (ProviderIndexDTO providerIndex : paymentsModel.getPaymentPayload().getProviderIndex()) {
-            for (String providerPatientID : providerIndex.getPatientIds()) {
-                if (providerPatientID.equals(patientID)) {
-                    providerID = providerIndex.getId();
-                    break;
-                }
-            }
-        }
-
-        if (locationID != null) {
-            for (LocationDTO location : paymentsModel.getPaymentPayload().getLocations()) {
-                if (locationID.equals(location.getId().toString())) {
-                    defaultLocation = location;
-                    break;
-                }
-            }
-        } else if (paymentsModel.getPaymentPayload().getLocations().size() == 1) {
-            defaultLocation = paymentsModel.getPaymentPayload().getLocations().get(0);
-        }
-
-        if (providerID != null) {
-            for (ProviderDTO provider : paymentsModel.getPaymentPayload().getProviders()) {
-                if (providerID.equals(provider.getId().toString())) {
-                    defaultProvider = provider;
-                    break;
-                }
-            }
-        } else if (paymentsModel.getPaymentPayload().getProviders().size() == 1) {
-            defaultProvider = paymentsModel.getPaymentPayload().getProviders().get(0);
-        }
     }
 
 }
