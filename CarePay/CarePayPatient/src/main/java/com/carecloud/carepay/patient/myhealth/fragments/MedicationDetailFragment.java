@@ -117,7 +117,7 @@ public class MedicationDetailFragment extends BaseFragment {
 
         view.findViewById(R.id.educationButton).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 Map<String, String> queryMap = new HashMap<>();
                 String code = "";
                 String codeSystem = "";
@@ -176,9 +176,9 @@ public class MedicationDetailFragment extends BaseFragment {
     };
 
     private void openExternalBrowser(String url) {
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(Uri.parse(url));
-        startActivity(i);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        startActivity(intent);
     }
 
     private void setUpToolbar(View view) {
