@@ -172,7 +172,6 @@
             android:layout_marginEnd="@dimen/dimen_5dp"
             android:layout_weight="1"
             android:background="@drawable/blue_border_rounded_button_selector"
-            android:enabled="false"
             tools:text="Pay Partial"
             app:customAssetFont="gotham_rounded_medium"/>
 

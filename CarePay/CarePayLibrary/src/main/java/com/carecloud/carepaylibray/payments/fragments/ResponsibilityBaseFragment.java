@@ -194,11 +194,16 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
         return responsibilityTypes;
     }
 
-    protected boolean isPartialPayAvailable(String practiceId){
+    protected boolean isPartialPayAvailable(String practiceId, double total){
         if(practiceId != null) {
             for (PaymentsPayloadSettingsDTO payloadSettingsDTO : paymentDTO.getPaymentPayload().getPaymentSettings()) {
                 if (practiceId.equals(payloadSettingsDTO.getMetadata().getPracticeId())) {
-                    return payloadSettingsDTO.getPayload().getRegularPayments().isAllowPartialPayments();
+                    if(payloadSettingsDTO.getPayload().getRegularPayments().isAllowPartialPayments()){
+                        double minBalance = payloadSettingsDTO.getPayload().getRegularPayments().getPartialPaymentsThreshold();
+                        return total >= minBalance;
+                    }
+
+                    return false;
                 }
             }
         }
