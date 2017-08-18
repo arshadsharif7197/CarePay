@@ -673,10 +673,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                 Bundle appointmentInfo = new Bundle();
                 appointmentInfo.putString(CarePayConstants.APPOINTMENT_ID,
                         appointmentDTO.getPayload().getId());
-                appointmentInfo.putString(CarePayConstants.LOCATION_ID, appointmentDTO
-                        .getPayload().getLocation().getGuid());
-                appointmentInfo.putString(CarePayConstants.PROVIDER_ID,
-                        appointmentDTO.getPayload().getProvider().getGuid());
                 PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, appointmentInfo);
                 finish();
             }

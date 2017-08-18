@@ -280,8 +280,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
         TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getCheckingOut();
         final Bundle bundle = new Bundle();
         bundle.putString(CarePayConstants.APPOINTMENT_ID, appointmentDTO.getPayload().getId());
-        bundle.putString(CarePayConstants.PROVIDER_ID, appointmentDTO.getPayload().getProvider().getGuid());
-        bundle.putString(CarePayConstants.LOCATION_ID, appointmentDTO.getPayload().getLocation().getGuid());
         viewHandler.getWorkflowServiceHelper().execute(transitionDTO, new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
