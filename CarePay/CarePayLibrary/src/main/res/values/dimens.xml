@@ -450,5 +450,8 @@
     <dimen name="completeCheckInItemValueTextSize">16sp</dimen>
     <dimen name="completeCheckInItemMargin">10dp</dimen>
     <dimen name="dimen_50dp">50dp</dimen>
+    <dimen name="confirmationNumberTextSize">11sp</dimen>
+    <dimen name="icon_check_size">130dp</dimen>
+    <dimen name="confirmationPracticeNameMargin">20dp</dimen>
 
 </resources>

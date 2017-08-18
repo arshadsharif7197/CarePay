@@ -652,9 +652,11 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("appointment_id", appointmentDTO.getPayload().getId());
 
-        TransitionDTO checkoutPatientTransition = checkInDTO.getMetadata().getTransitions().getCheckoutPatientMode();
+        TransitionDTO checkoutPatientTransition = checkInDTO.getMetadata().getTransitions()
+                .getCheckoutPatientMode();
 
-        getWorkflowServiceHelper().execute(checkoutPatientTransition, getPatientModeCallback(appointmentDTO), queryMap);
+        getWorkflowServiceHelper().execute(checkoutPatientTransition,
+                getPatientModeCallback(appointmentDTO), queryMap);
     }
 
 
@@ -669,7 +671,12 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
                 Bundle appointmentInfo = new Bundle();
-                appointmentInfo.putString(CarePayConstants.APPOINTMENT_ID, appointmentDTO.getPayload().getId());
+                appointmentInfo.putString(CarePayConstants.APPOINTMENT_ID,
+                        appointmentDTO.getPayload().getId());
+                appointmentInfo.putString(CarePayConstants.LOCATION_ID, appointmentDTO
+                        .getPayload().getLocation().getGuid());
+                appointmentInfo.putString(CarePayConstants.PROVIDER_ID,
+                        appointmentDTO.getPayload().getProvider().getGuid());
                 PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, appointmentInfo);
                 finish();
             }

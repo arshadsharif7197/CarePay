@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -117,13 +118,15 @@ public class ConfirmationResetPasswordFragment extends BaseFragment {
         view.findViewById(R.id.resendMailButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                resetPassword(((SignInDTO) listener.getDto()).getMetadata().getTransitions().getForgotPassword(), email);
+                resetPassword(((SignInDTO) listener.getDto()).getMetadata().getTransitions()
+                        .getForgotPassword(), email);
             }
         });
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         if (toolbar != null) {
             listener.setToolbar(toolbar);
-            listener.setActionBarTitle(Label.getLabel("forgot_password_confirmation_screen_title"));
+            ((TextView)toolbar.findViewById(R.id.toolbar_title))
+                    .setText(Label.getLabel("forgot_password_confirmation_screen_title"));
         }
 
     }

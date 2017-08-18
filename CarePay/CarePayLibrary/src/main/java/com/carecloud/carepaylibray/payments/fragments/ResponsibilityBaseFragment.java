@@ -12,6 +12,7 @@ import android.view.View;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payments.interfaces.ResponsibilityPaymentInterface;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
@@ -139,6 +140,13 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
 
                 PaymentObject paymentObject = new PaymentObject();
                 paymentObject.setAmount(itemAmount);
+
+                AppointmentDTO appointmentDTO = actionCallback.getAppointment();
+                if(appointmentDTO != null){
+                    paymentObject.setProviderID(appointmentDTO.getPayload().getProvider().getGuid());
+                    paymentObject.setLocationID(appointmentDTO.getPayload().getLocation().getGuid());
+                }
+
                 switch (responsibility.getType()){
                     case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
                         paymentObject.setResponsibilityType(ResponsibilityType.co_insurance);

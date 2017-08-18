@@ -120,12 +120,12 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
         filterOnTextView.setVisibility(View.GONE);
         filterTextView.setVisibility(View.VISIBLE);
 
-        goBackTextview.setOnClickListener(onGobackButtonClick());
+        goBackTextview.setOnClickListener(onGoBackButtonClick());
         findViewById(R.id.filterLayout).setOnClickListener(onFilterIconClick());
     }
 
     @NonNull
-    private View.OnClickListener onGobackButtonClick() {
+    private View.OnClickListener onGoBackButtonClick() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -239,15 +239,15 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     View.OnDragListener onCheckingInListDragListener = new View.OnDragListener() {
         @Override
         public boolean onDrag(View view, DragEvent dragEvent) {
-            String patientId = "";
+            String appointmentId = "";
             if (dragEvent.getClipDescription() != null) {
-                patientId = dragEvent.getClipDescription().getLabel().toString();
+                appointmentId = dragEvent.getClipDescription().getLabel().toString();
             }
             switch (dragEvent.getAction()) {
                 //signal for the start of a drag and drop operation.
                 case DragEvent.ACTION_DRAG_STARTED:
                     // do nothing
-                    if (waitingRoomAdapter.getAppointmentById(patientId, true) == null) {
+                    if (waitingRoomAdapter.getAppointmentById(appointmentId, true) == null) {
                         findViewById(R.id.drop_down_area_view).setVisibility(View.VISIBLE);
                     }
                     break;
@@ -259,8 +259,8 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
                     break;
                 //drag shadow has been released,the drag point is within the bounding box of the View
                 case DragEvent.ACTION_DROP:
-                    if (waitingRoomAdapter.flipAppointmentById(patientId, true)) {
-                        checkedInAdapter.flipAppointmentById(patientId, false);
+                    if (waitingRoomAdapter.flipAppointmentById(appointmentId, true)) {
+                        checkedInAdapter.flipAppointmentById(appointmentId, false);
 
                         applyFilter();
                     } else {
@@ -294,15 +294,15 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
                     break;
                 //drag shadow has been released,the drag point is within the bounding box of the View
                 case DragEvent.ACTION_DROP:
-                    String patientId = dragEvent.getClipDescription().getLabel().toString();
-                    if (checkedInAdapter.flipAppointmentById(patientId, true)) {
-                        waitingRoomAdapter.flipAppointmentById(patientId, false);
+                    String appointmentId = dragEvent.getClipDescription().getLabel().toString();
+                    if (checkedInAdapter.flipAppointmentById(appointmentId, true)) {
+                        waitingRoomAdapter.flipAppointmentById(appointmentId, false);
 
                         applyFilter();
 
                         ((TextView) findViewById(R.id.drop_here_icon)).setText(Label.getLabel("practice_checkin_success_label"));
                         ((TextView) findViewById(R.id.drop_here_icon)).setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icn_check, 0, 0);
-                        onCheckInAppointment(patientId);
+                        onCheckInAppointment(appointmentId);
                     }
                     break;
                 //the drag and drop operation has concluded.
@@ -498,6 +498,12 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     @Nullable
     @Override
     public String getAppointmentId() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public AppointmentDTO getAppointment() {
         return null;
     }
 

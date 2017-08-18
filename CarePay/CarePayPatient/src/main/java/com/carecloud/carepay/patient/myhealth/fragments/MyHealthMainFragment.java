@@ -1,8 +1,16 @@
 package com.carecloud.carepay.patient.myhealth.fragments;
 
+import android.Manifest;
+import android.app.DownloadManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,6 +31,7 @@ import com.carecloud.carepay.patient.myhealth.dtos.MedicationDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthDataInterface;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 
@@ -87,11 +96,11 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
     }
 
     private void setUpLabsRecyclerView(View view) {
-        RecyclerView labsRecyclerView = (RecyclerView) view.findViewById(R.id.labsRecyclerView);
         List<LabDto> labs = myHealthDto.getPayload().getMyHealthData().getLabs().getLabs();
         if (labs.isEmpty()) {
             view.findViewById(R.id.labsContainer).setVisibility(View.GONE);
-            labsRecyclerView.setVisibility(View.GONE);
+            view.findViewById(R.id.labsRecyclerView).setVisibility(View.GONE);
+            view.findViewById(R.id.labsNoDataContainer).setVisibility(View.VISIBLE);
         } else {
             LinearLayoutManager linearLayout = new LinearLayoutManager(getContext()) {
                 @Override
@@ -99,6 +108,7 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
                     return false;
                 }
             };
+            RecyclerView labsRecyclerView = (RecyclerView) view.findViewById(R.id.labsRecyclerView);
             labsRecyclerView.setLayoutManager(linearLayout);
             LabsRecyclerViewAdapter labsAdapter = new LabsRecyclerViewAdapter(labs, MAX_ITEMS_TO_SHOW);
             labsAdapter.setCallback(this);
@@ -118,12 +128,12 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
     }
 
     private void setUpMedicationsRecyclerView(View view) {
-        RecyclerView medicationsRecyclerView = (RecyclerView) view.findViewById(R.id.medicationsRecyclerView);
         List<MedicationDto> medications = myHealthDto
                 .getPayload().getMyHealthData().getMedications().getMedications();
         if (medications.isEmpty()) {
             view.findViewById(R.id.medicationsContainer).setVisibility(View.GONE);
-            medicationsRecyclerView.setVisibility(View.GONE);
+            view.findViewById(R.id.medicationsRecyclerView).setVisibility(View.GONE);
+            view.findViewById(R.id.medicationsNoDataContainer).setVisibility(View.VISIBLE);
         } else {
             LinearLayoutManager linearLayout = new LinearLayoutManager(getContext()) {
                 @Override
@@ -131,6 +141,7 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
                     return false;
                 }
             };
+            RecyclerView medicationsRecyclerView = (RecyclerView) view.findViewById(R.id.medicationsRecyclerView);
             medicationsRecyclerView.setLayoutManager(linearLayout);
             MedicationsRecyclerViewAdapter medicationsAdapter = new MedicationsRecyclerViewAdapter(
                     medications, MAX_ITEMS_TO_SHOW);
@@ -152,11 +163,12 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
     }
 
     private void setUpAllergiesRecyclerView(View view) {
-        RecyclerView allergiesRecyclerView = (RecyclerView) view.findViewById(R.id.allergiesRecyclerView);
-        List<AllergyDto> allergies = myHealthDto.getPayload().getMyHealthData().getAllergies().getAllergies();
+        List<AllergyDto> allergies = myHealthDto.getPayload().getMyHealthData().getAllergies()
+                .getAllergies();
         if (allergies.isEmpty()) {
             view.findViewById(R.id.allergiesContainer).setVisibility(View.GONE);
-            allergiesRecyclerView.setVisibility(View.GONE);
+            view.findViewById(R.id.allergiesRecyclerView).setVisibility(View.GONE);
+            view.findViewById(R.id.allergiesNoDataContainer).setVisibility(View.VISIBLE);
         } else {
             LinearLayoutManager linearLayout = new LinearLayoutManager(getContext()) {
                 @Override
@@ -164,6 +176,7 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
                     return false;
                 }
             };
+            RecyclerView allergiesRecyclerView = (RecyclerView) view.findViewById(R.id.allergiesRecyclerView);
             allergiesRecyclerView.setLayoutManager(linearLayout);
             AllergiesRecyclerViewAdapter allergiesAdapter = new AllergiesRecyclerViewAdapter(allergies,
                     MAX_ITEMS_TO_SHOW);
@@ -185,12 +198,12 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
     }
 
     private void setUpConditionsRecyclerView(View view) {
-        RecyclerView conditionsRecyclerView = (RecyclerView) view.findViewById(R.id.conditionsRecyclerView);
         List<AssertionDto> assertions = myHealthDto
                 .getPayload().getMyHealthData().getAssertions().getAssertions();
         if (assertions.isEmpty()) {
             view.findViewById(R.id.conditionsContainer).setVisibility(View.GONE);
-            conditionsRecyclerView.setVisibility(View.GONE);
+            view.findViewById(R.id.conditionsRecyclerView).setVisibility(View.GONE);
+            view.findViewById(R.id.conditionsNoDataContainer).setVisibility(View.VISIBLE);
         } else {
             LinearLayoutManager linearLayout = new LinearLayoutManager(getContext()) {
                 @Override
@@ -198,6 +211,7 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
                     return false;
                 }
             };
+            RecyclerView conditionsRecyclerView = (RecyclerView) view.findViewById(R.id.conditionsRecyclerView);
             conditionsRecyclerView.setLayoutManager(linearLayout);
             ConditionsRecyclerViewAdapter conditionsAdapter = new ConditionsRecyclerViewAdapter(
                     assertions, MAX_ITEMS_TO_SHOW);
@@ -215,16 +229,15 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
                 });
             }
         }
-
     }
 
     private void setUpCareTeamRecyclerView(View view) {
-        RecyclerView careTeamRecyclerView = (RecyclerView) view.findViewById(R.id.careTeamRecyclerView);
         List<ProviderDTO> providers = myHealthDto
                 .getPayload().getMyHealthData().getProviders().getProviders();
         if (providers.isEmpty()) {
             view.findViewById(R.id.careTeamContainer).setVisibility(View.GONE);
-            careTeamRecyclerView.setVisibility(View.GONE);
+            view.findViewById(R.id.careTeamRecyclerView).setVisibility(View.GONE);
+            view.findViewById(R.id.careTeamNoDataContainer).setVisibility(View.VISIBLE);
         } else {
             LinearLayoutManager linearLayout = new LinearLayoutManager(getContext()) {
                 @Override
@@ -232,6 +245,7 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
                     return false;
                 }
             };
+            RecyclerView careTeamRecyclerView = (RecyclerView) view.findViewById(R.id.careTeamRecyclerView);
             careTeamRecyclerView.setLayoutManager(linearLayout);
             CareTeamRecyclerViewAdapter careTeamAdapter = new CareTeamRecyclerViewAdapter(
                     providers, MAX_ITEMS_TO_SHOW);
@@ -283,7 +297,7 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
     }
 
     @Override
-    public void onLabClicked(LabDto lab) {
+    public void onLabClicked(final LabDto lab) {
         callback.onLabClicked(lab);
     }
 }

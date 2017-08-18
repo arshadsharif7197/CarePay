@@ -82,6 +82,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     private boolean shouldAddBackStack = false;
 
     private WorkflowDTO paymentConfirmationWorkflow;
+    private String providerId;
+    private String locationId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +93,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
         appointmentId = extra.getString(CarePayConstants.APPOINTMENT_ID);
+        providerId = extra.getString(CarePayConstants.PROVIDER_ID);
+        locationId = extra.getString(CarePayConstants.LOCATION_ID);
         if (savedInstanceState == null) {
             WorkflowDTO workflowDTO = getConvertedDTO(WorkflowDTO.class);
             initDto(workflowDTO);
@@ -187,6 +191,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         String paymentsDTOString = gson.toJson(paymentsModel);
         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+        args.putString(CarePayConstants.LOCATION_ID, locationId);
+        args.putString(CarePayConstants.PROVIDER_ID, providerId);
         DialogFragment fragment = new PracticeAddNewCreditCardFragment();
         fragment.setArguments(args);
         displayDialogFragment(fragment, false);
@@ -198,14 +204,18 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
-        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+    public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount,
+                                      PaymentsModel paymentsModel) {
+
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
+                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel,
-                    selectedPaymentMethod.getLabel(), amount);
+                    selectedPaymentMethod.getLabel(), amount, providerId, locationId);
             displayDialogFragment(fragment, false);
         } else {
             showAddCard(amount, paymentsModel);
         }
+
     }
 
     @Override
@@ -229,8 +239,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     @Override
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
-        PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO,
-                getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO));
+        showAllDone(workflowDTO);
     }
 
     @Override
@@ -247,16 +256,16 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         paymentConfirmationWorkflow = workflowDTO;
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         PatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload().get(0);
-        if(payload.getPaymentExceptions()!=null && !payload.getPaymentExceptions().isEmpty() && payload.getTotal()==0D){
+        if (payload.getPaymentExceptions() != null && !payload.getPaymentExceptions().isEmpty() && payload.getTotal() == 0D) {
             StringBuilder builder = new StringBuilder();
-            for(PaymentExceptionDTO paymentException : payload.getPaymentExceptions()){
+            for (PaymentExceptionDTO paymentException : payload.getPaymentExceptions()) {
                 builder.append(paymentException.getMessage());
                 builder.append("\n");
             }
             int last = builder.lastIndexOf("\n");
             builder.replace(last, builder.length(), "");
             showErrorNotification(builder.toString());
-        }else {
+        } else {
             Bundle args = new Bundle();
             args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
 
@@ -275,6 +284,19 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     @Override
     public String getAppointmentId() {
         return appointmentId;
+    }
+
+    @Nullable
+    @Override
+    public AppointmentDTO getAppointment() {
+        if(appointmentsResultModel != null){
+            for(AppointmentDTO appointment : appointmentsResultModel.getPayload().getAppointments()){
+                if(appointment.getPayload().getId().equals(getAppointmentId())){
+                    return appointment;
+                }
+            }
+        }
+        return null;
     }
 
     @Override
@@ -379,7 +401,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         appointmentsResultModel.getMetadata().getLinks().setPinpad(practiceAppointmentDTO.getMetadata().getLinks().getPinpad());
         appointmentsResultModel.getMetadata().getTransitions().setPracticeMode(practiceAppointmentDTO.getMetadata().getTransitions().getPracticeMode());
         extra.putString(CarePayConstants.EXTRA_APPOINTMENT_TRANSITIONS, DtoHelper.getStringDTO(appointmentsResultModel));
-        DtoHelper.bundleDto(extra, practiceAppointmentDTO.getPayload().getPracticeAppointments());
+        DtoHelper.bundleDto(extra, appointmentsResultModel.getPayload().getAppointments().get(0));
+        extra.putBoolean("isCheckOut", true);
         Intent intent = new Intent(this, CompleteCheckActivity.class);
         intent.putExtra(CarePayConstants.EXTRA_BUNDLE, extra);
         startActivity(intent);

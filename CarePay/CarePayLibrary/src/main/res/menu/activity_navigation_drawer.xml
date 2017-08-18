@@ -6,9 +6,8 @@
         <item
             android:id="@+id/nav_my_health"
             android:icon="@drawable/icn_drawer_my_health"
-            android:title="My Health"
-            android:visible="false" />
-        
+            android:title="My Health" />
+
         <item
             android:id="@+id/nav_appointments"
             android:icon="@drawable/icn_drawer_appointments"
@@ -20,8 +19,7 @@
         <item
             android:id="@+id/nav_messages"
             android:icon="@drawable/icn_messages"
-            android:title="Messages"
-            android:visible="false" />
+            android:title="Messages" />
         <item
             android:id="@+id/nav_purchase"
             android:icon="@drawable/icn_drawer_purchase_default"

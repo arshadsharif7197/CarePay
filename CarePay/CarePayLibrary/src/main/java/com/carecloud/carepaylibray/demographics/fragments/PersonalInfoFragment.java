@@ -113,7 +113,8 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         firstName.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(firstNameLayout, null));
         setVisibility(firstNameLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getFirstName().isDisplayed());
         firstName.setText(demographicPayload.getPersonalDetails().getFirstName());
-        firstName.getOnFocusChangeListener().onFocusChange(firstName, !StringUtil.isNullOrEmpty(firstName.getText().toString()));
+        firstName.getOnFocusChangeListener().onFocusChange(firstName,
+                !StringUtil.isNullOrEmpty(firstName.getText().toString().trim()));
         if(dataModel.getDemographic().getPersonalDetails().getProperties().getFirstName().isRequired()) {
             firstName.addTextChangedListener(getValidateEmptyTextWatcher(firstNameLayout));
         }
@@ -124,7 +125,8 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         lastName.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(lastNameLayout, null));
         setVisibility(lastNameLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getLastName().isDisplayed());
         lastName.setText(demographicPayload.getPersonalDetails().getLastName());
-        lastName.getOnFocusChangeListener().onFocusChange(lastName, !StringUtil.isNullOrEmpty(lastName.getText().toString()));
+        lastName.getOnFocusChangeListener().onFocusChange(lastName,
+                !StringUtil.isNullOrEmpty(lastName.getText().toString().trim()));
         if(dataModel.getDemographic().getPersonalDetails().getProperties().getLastName().isRequired()) {
             lastName.addTextChangedListener(getValidateEmptyTextWatcher(lastNameLayout));
         }
@@ -135,7 +137,8 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         middleName.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(middleNameLayout, null));
         setVisibility(middleNameLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isDisplayed());
         middleName.setText(demographicPayload.getPersonalDetails().getMiddleName());
-        middleName.getOnFocusChangeListener().onFocusChange(middleName, !StringUtil.isNullOrEmpty(middleName.getText().toString()));
+        middleName.getOnFocusChangeListener().onFocusChange(middleName,
+                !StringUtil.isNullOrEmpty(middleName.getText().toString().trim()));
         if(dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isRequired()) {
             middleName.addTextChangedListener(getValidateEmptyTextWatcher(middleNameLayout));
             View middleNameOptional = view.findViewById(R.id.reviewdemogrMiddleNameOptionalLabel);
@@ -265,8 +268,8 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         TextInputLayout dateBirthLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
         EditText dateOfBirth = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
         if(dateBirthLayout.getVisibility() == View.VISIBLE &&
-                !StringUtil.isNullOrEmpty(dateOfBirth.getText().toString()) &&
-                !DateUtil.isValidateStringDateOfBirth(dateOfBirth.getText().toString())) {
+                !StringUtil.isNullOrEmpty(dateOfBirth.getText().toString().trim()) &&
+                !DateUtil.isValidateStringDateOfBirth(dateOfBirth.getText().toString().trim())) {
             dateBirthLayout.setErrorEnabled(true);
             dateBirthLayout.setError(Label.getLabel("demographics_date_validation_msg"));
             return false;
@@ -275,7 +278,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
         EditText phoneNumber = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
         if(phoneLayout.getVisibility() == View.VISIBLE &&
-                !StringUtil.isNullOrEmpty(phoneNumber.getText().toString()) &&
+                !StringUtil.isNullOrEmpty(phoneNumber.getText().toString().trim()) &&
                 !ValidationHelper.isValidString(phoneNumber.getText().toString().trim(), ValidationHelper.PHONE_NUMBER_PATTERN)){
             phoneLayout.setErrorEnabled(true);
             phoneLayout.setError(Label.getLabel("demographics_phone_number_validation_msg"));
@@ -306,22 +309,22 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
 
 
         EditText firstNameText = (EditText) view.findViewById(R.id.reviewdemogrFirstNameEdit);
-        String firstName = firstNameText.getText().toString();
+        String firstName = firstNameText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(firstName)) {
             demographicPersDetailsPayloadDTO.setFirstName(firstName);
         }
         EditText middleNameText = (EditText) view.findViewById(R.id.reviewdemogrMiddleNameEdit);
-        String middleName = middleNameText.getText().toString();
+        String middleName = middleNameText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(middleName)) {
             demographicPersDetailsPayloadDTO.setMiddleName(middleName);
         }
         EditText lastNameText = (EditText) view.findViewById(R.id.reviewdemogrLastNameEdit);
-        String lastName = lastNameText.getText().toString();
+        String lastName = lastNameText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(lastName)) {
             demographicPersDetailsPayloadDTO.setLastName(lastName);
         }
         EditText dobEditText = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
-        String dateOfBirth = dobEditText.getText().toString();
+        String dateOfBirth = dobEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(dateOfBirth)) {
             // the date is DateUtil as
             demographicPersDetailsPayloadDTO.setDateOfBirth(DateUtil.getInstance().setDateRaw(dateOfBirth).toStringWithFormatYyyyDashMmDashDd());
@@ -339,7 +342,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
             demographicAddressPayloadDTO = new DemographicAddressPayloadDTO();
         }
         EditText phoneNumberEditText = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
-        String phoneNumber = phoneNumberEditText.getText().toString();
+        String phoneNumber = phoneNumberEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(phoneNumber)) {
             // 'de-format' before saving to model
             demographicAddressPayloadDTO.setPhone(StringUtil.revertToRawPhoneFormat(phoneNumber));

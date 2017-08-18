@@ -34,6 +34,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
@@ -140,7 +141,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         applyFilter();
     }
 
-    private void updateDateLabel(){
+    private void updateDateLabel() {
         if (null != startDate && null != endDate) {
             String practiceCountLabel = DateUtil.getFormattedDate(
                     startDate,
@@ -366,6 +367,9 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         //reload list data
         TwoColumnPatientListView patientListView = (TwoColumnPatientListView) findViewById(R.id.list_patients);
         patientListView.setPaymentsModel(paymentsModel);
+        setTextViewById(R.id.practice_payment_in_office_count,
+                String.format(Locale.getDefault(), "%1s", paymentsModel.getPaymentPayload()
+                        .getPatientBalances().size()));
 
     }
 
@@ -428,16 +432,16 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         PatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload().get(0);
-        if(payload.getPaymentExceptions()!=null && !payload.getPaymentExceptions().isEmpty() && payload.getTotal()==0D){
+        if (payload.getPaymentExceptions() != null && !payload.getPaymentExceptions().isEmpty() && payload.getTotal() == 0D) {
             StringBuilder builder = new StringBuilder();
-            for(PaymentExceptionDTO paymentException : payload.getPaymentExceptions()){
+            for (PaymentExceptionDTO paymentException : payload.getPaymentExceptions()) {
                 builder.append(paymentException.getMessage());
                 builder.append("\n");
             }
             int last = builder.lastIndexOf("\n");
             builder.replace(last, builder.length(), "");
             showErrorNotification(builder.toString());
-        }else {
+        } else {
             Bundle args = new Bundle();
             args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
 
@@ -489,7 +493,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
-        if(paymentsModel!=null && !paymentsModel.getPaymentPayload().getUserPractices().isEmpty()){
+        if (paymentsModel != null && !paymentsModel.getPaymentPayload().getUserPractices().isEmpty()) {
             return paymentsModel.getPaymentPayload().getUserPractices().get(0);
         }
         return null;
@@ -498,6 +502,12 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     @Nullable
     @Override
     public String getAppointmentId() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public AppointmentDTO getAppointment() {
         return null;
     }
 

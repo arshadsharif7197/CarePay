@@ -53,6 +53,10 @@ public class DemographicInsurancePayloadDTO extends PatientModel {
     @Expose
     private boolean deleted = false;
 
+    @SerializedName("insurance_id")
+    @Expose
+    private String insuranceId;
+
     /**
      * @return The insuranceProvider
      */
@@ -149,5 +153,13 @@ public class DemographicInsurancePayloadDTO extends PatientModel {
 
     public void setPolicyLastNameHolder(String policyLastNameHolder) {
         this.policyLastNameHolder = policyLastNameHolder;
+    }
+
+    public String getInsuranceId() {
+        return insuranceId;
+    }
+
+    public void setInsuranceId(String insuranceId) {
+        this.insuranceId = insuranceId;
     }
 }

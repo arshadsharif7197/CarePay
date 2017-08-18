@@ -1,1 +1,1 @@
-include ':CarePayLibrary', ':CarePayServiceLibrary', ':CarePayPatient', ':CarePayPracticeLibrary', ':CarePayPracticeClover', ':CarePayPracticeTablet', ':payeezysdk', ':BreezeMini'
+include ':CarePayLibrary', ':CarePayServiceLibrary', ':CarePayPatient', ':CarePayPracticeLibrary', ':CarePayPracticeClover', ':CarePayPracticeTablet', ':payeezysdk'

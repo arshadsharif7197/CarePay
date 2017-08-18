@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -19,7 +20,8 @@ import android.widget.Toast;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentInterface;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -55,7 +57,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private boolean amountChangeFlag = true;
     private String balanceBeforeTextChange;
 
-    private PaymentInterface payNowClickListener;
+    private PaymentConfirmationInterface payListener;
 
     /**
      * Contructor
@@ -70,9 +72,9 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
 
         try {
             if (context instanceof PaymentViewHandler) {
-                payNowClickListener = ((PaymentViewHandler) context).getPaymentPresenter();
+                payListener = ((PaymentViewHandler) context).getPaymentPresenter();
             } else {
-                payNowClickListener = (PaymentInterface) context;
+                payListener = (PaymentConfirmationInterface) context;
             }
         } catch (ClassCastException cce) {
             throw new ClassCastException("Dialog Context must implement PaymentInterface for callback");
@@ -136,6 +138,16 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
             amountSymbol.setTextColor(ContextCompat.getColor(context, R.color.white_transparent));
             amountText.setHint("0.00");
         }
+        if (str.length() > 7) {
+            amountText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 35);
+            amountSymbol.setTextSize(TypedValue.COMPLEX_UNIT_SP, 35);
+        } else if (str.length() > 5) {
+            amountText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 50);
+            amountSymbol.setTextSize(TypedValue.COMPLEX_UNIT_SP, 50);
+        } else {
+            amountText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 60);
+            amountSymbol.setTextSize(TypedValue.COMPLEX_UNIT_SP, 60);
+        }
     }
 
     @Override
@@ -147,6 +159,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     @Override
     public void onTextChanged(CharSequence str, int start, int before, int count) {
         String amountEditText = amountText.getText().toString();
+        int selection = amountText.getSelectionStart();
         try {
             if (amountChangeFlag) {
                 // flag to avoid the onTextChanged listener call after setText manipulated number
@@ -179,6 +192,12 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
                                 amountEditText = amountEditText.substring(0, amountEditText.indexOf(".") + 3);
                                 amountText.setText(amountEditText);
                             } else {
+                                if (amountEditText.length() > 8) {
+                                    amountEditText = amountEditText.substring(0, 8);
+                                }
+                                if (amountEditText.startsWith("0")){
+                                    amountEditText=amountEditText.substring(1);
+                                }
                                 amountText.setText(amountEditText);
                             }
                             if (amountText.getText().toString().endsWith("0") && amountEditText.contains(".")) {
@@ -188,6 +207,9 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
                             }
                         }
             } else {
+                if (!amountEditText.contains(".")){
+                    amountText.setSelection(amountText.length());
+                }
                 amountChangeFlag = true;
             }
         } catch (Exception e) {
@@ -220,7 +242,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         try {
             double amount = Double.parseDouble(enterPartialAmountEditText.getText().toString());
             createPaymentModel(amount);
-            payNowClickListener.onPayButtonClicked(amount, paymentsDTO);
+            payListener.onPayButtonClicked(amount, paymentsDTO);
             dismiss();
         } catch (NumberFormatException nfe) {
             nfe.printStackTrace();
@@ -247,16 +269,16 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         }
     }
 
-    private void createPaymentModel(double payAmount){
+    private void createPaymentModel(double payAmount) {
         PaymentPostModel postModel = paymentsDTO.getPaymentPayload().getPaymentPostModel();
-        if( postModel == null){
+        if (postModel == null) {
             postModel = new PaymentPostModel();
         }
         postModel.setAmount(payAmount);
 
         List<PendingBalancePayloadDTO> responsibilityTypes = getPendingResponsibilityTypes();
-        for(PendingBalancePayloadDTO responsibility : responsibilityTypes){
-            if(payAmount > 0D) {
+        for (PendingBalancePayloadDTO responsibility : responsibilityTypes) {
+            if (payAmount > 0D) {
                 double itemAmount;
                 if (payAmount >= responsibility.getAmount()) {
                     itemAmount = responsibility.getAmount();
@@ -267,7 +289,14 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
 
                 PaymentObject paymentObject = new PaymentObject();
                 paymentObject.setAmount(itemAmount);
-                switch (responsibility.getType()){
+
+                AppointmentDTO appointmentDTO = payListener.getAppointment();
+                if (appointmentDTO != null) {
+                    paymentObject.setProviderID(appointmentDTO.getPayload().getProvider().getGuid());
+                    paymentObject.setLocationID(appointmentDTO.getPayload().getLocation().getGuid());
+                }
+
+                switch (responsibility.getType()) {
                     case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
                         paymentObject.setResponsibilityType(ResponsibilityType.co_insurance);
                         break;
@@ -275,15 +304,15 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
                         paymentObject.setResponsibilityType(ResponsibilityType.deductable);
                         break;
                     case PendingBalancePayloadDTO.CO_PAY_TYPE:
-                        default:
-                            paymentObject.setResponsibilityType(ResponsibilityType.co_pay);
-                            break;
+                    default:
+                        paymentObject.setResponsibilityType(ResponsibilityType.co_pay);
+                        break;
                 }
                 postModel.addPaymentMethod(paymentObject);
             }
         }
 
-        if(payAmount > 0){//payment is greater than any responsibility types
+        if (payAmount > 0) {//payment is greater than any responsibility types
             PaymentObject paymentObject = new PaymentObject();
             paymentObject.setAmount(payAmount);
             paymentObject.setDescription("Unapplied Amount");
@@ -294,12 +323,12 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         paymentsDTO.getPaymentPayload().setPaymentPostModel(postModel);
     }
 
-    private List<PendingBalancePayloadDTO> getPendingResponsibilityTypes(){
+    private List<PendingBalancePayloadDTO> getPendingResponsibilityTypes() {
         List<PendingBalancePayloadDTO> responsibilityTypes = new ArrayList<>();
-        for(PatientBalanceDTO patientBalanceDTO : paymentsDTO.getPaymentPayload().getPatientBalances()){
-            for(PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()){
-                for(PendingBalancePayloadDTO pendingBalancePayloadDTO : pendingBalanceDTO.getPayload()){
-                    switch (pendingBalancePayloadDTO.getType()){
+        for (PatientBalanceDTO patientBalanceDTO : paymentsDTO.getPaymentPayload().getPatientBalances()) {
+            for (PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()) {
+                for (PendingBalancePayloadDTO pendingBalancePayloadDTO : pendingBalanceDTO.getPayload()) {
+                    switch (pendingBalancePayloadDTO.getType()) {
                         case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
                         case PendingBalancePayloadDTO.CO_PAY_TYPE:
                         case PendingBalancePayloadDTO.DEDUCTIBLE_TYPE:

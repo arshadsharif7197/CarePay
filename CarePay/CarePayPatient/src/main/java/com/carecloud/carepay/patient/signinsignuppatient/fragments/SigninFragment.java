@@ -19,6 +19,8 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
+import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -43,12 +45,6 @@ import com.newrelic.agent.android.NewRelic;
 import java.util.HashMap;
 import java.util.Map;
 
-
-/**
- * Created by harish_revuri on 9/7/2016.
- * The fragment corresponding to SignUp screen.
- */
-
 /**
  * Created by harish_revuri on 9/7/2016.
  * The fragment corresponding to SignUp screen.
@@ -64,13 +60,25 @@ public class SigninFragment extends BaseFragment {
 
     private FragmentActivityInterface listener;
 
+    /**
+     * @param shouldOpenNotifications a boolean indicating if Notification screen should be opened
+     * @return a new instance of SigninFragment
+     */
+    public static SigninFragment newInstance(boolean shouldOpenNotifications) {
+        Bundle args = new Bundle();
+        args.putBoolean(CarePayConstants.OPEN_NOTIFICATIONS, shouldOpenNotifications);
+        SigninFragment fragment = new SigninFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
             listener = (FragmentActivityInterface) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException("Attached Context must implement DTOInterface");
+            throw new ClassCastException("Attached Context must implement FragmentActivityInterface");
         }
     }
 
@@ -87,7 +95,8 @@ public class SigninFragment extends BaseFragment {
 
     @Nullable
     @Override
-    public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_signin, container, false);
     }
 
@@ -98,7 +107,6 @@ public class SigninFragment extends BaseFragment {
         setEditTexts(view);
         setClickListeners(view);
         enableSignInButton(emailEditText.getText().toString(), passwordEditText.getText().toString());
-
     }
 
     private void setClickListeners(View view) {
@@ -133,7 +141,8 @@ public class SigninFragment extends BaseFragment {
                 if (passwordEditText.getInputType() != InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
                     setInputType(passwordEditText, InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                 } else {
-                    setInputType(passwordEditText, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    setInputType(passwordEditText, InputType.TYPE_CLASS_TEXT
+                            | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 }
             }
         });
@@ -196,7 +205,8 @@ public class SigninFragment extends BaseFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             Gson gson = new Gson();
             String signInResponseString = gson.toJson(workflowDTO);
-            UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString, UnifiedSignInResponse.class);
+            UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString,
+                    UnifiedSignInResponse.class);
             authenticate(signInResponse, signInDTO.getMetadata().getTransitions().getRefresh(),
                     signInDTO.getMetadata().getTransitions().getAuthenticate());
         }
@@ -241,7 +251,14 @@ public class SigninFragment extends BaseFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             setSignInButtonClickable(true);
-            PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
+            boolean shouldShowNotificationScreen = getArguments()
+                    .getBoolean(CarePayConstants.OPEN_NOTIFICATIONS);
+            getApplicationPreferences().setUserPhotoUrl(null);
+            if (shouldShowNotificationScreen) {
+                manageNotificationAsLandingScreen(workflowDTO.toString());
+            } else {
+                PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
+            }
         }
 
         @Override
@@ -252,6 +269,54 @@ public class SigninFragment extends BaseFragment {
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+    private void manageNotificationAsLandingScreen(String workflow) {
+        final Gson gson = new Gson();
+        final MyHealthDto landingDto = gson.fromJson(workflow, MyHealthDto.class);
+
+        showProgressDialog();
+        TransitionDTO transition = landingDto.getMetadata().getLinks().getNotifications();
+        getWorkflowServiceHelper().execute(transition, new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                NotificationsDTO notificationsDTO = gson
+                        .fromJson(workflowDTO.toString(), NotificationsDTO.class);
+                notificationsDTO.getPayload().setPracticePatientIds(landingDto
+                        .getPayload().getPracticePatientIds());
+
+                notificationsDTO.getMetadata().getLinks().setPatientBalances(landingDto.getMetadata()
+                        .getLinks().getPatientBalances());
+                notificationsDTO.getMetadata().getTransitions().setLogout(landingDto.getMetadata()
+                        .getTransitions().getLogout());
+                notificationsDTO.getMetadata().getLinks().setProfileUpdate(landingDto.getMetadata()
+                        .getLinks().getProfileUpdate());
+                notificationsDTO.getMetadata().getLinks().setAppointments(landingDto.getMetadata()
+                        .getLinks().getAppointments());
+                notificationsDTO.getMetadata().getLinks().setNotifications(landingDto.getMetadata()
+                        .getLinks().getNotifications());
+                notificationsDTO.getMetadata().getLinks().setMyHealth(landingDto.getMetadata()
+                        .getLinks().getMyHealth());
+
+                WorkflowDTO notificationWorkFlow = gson.fromJson(gson.toJson(notificationsDTO),
+                        WorkflowDTO.class);
+                hideProgressDialog();
+                PatientNavigationHelper.setAccessPaymentsBalances(false);
+                Bundle args = new Bundle();
+                args.putBoolean(CarePayConstants.OPEN_NOTIFICATIONS, true);
+                PatientNavigationHelper.navigateToWorkflow(getContext(), notificationWorkFlow, args);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+            }
+        });
+    }
 
     private boolean areAllFieldsValid(String email, String password) {
         boolean isPasswordValid = checkPassword(password);
@@ -310,28 +375,12 @@ public class SigninFragment extends BaseFragment {
         emailEditText = (EditText) view.findViewById(R.id.signinEmailEditText);
         passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
         passwordTextInputLayout = (TextInputLayout) view.findViewById(R.id.passwordTextInputLayout);
-        emailEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(signInEmailTextInputLayout, null));
-        passwordEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(passwordTextInputLayout, null));
-//        if (signInDTO != null) {
-//            String emailAddress = Label.getLabel("signup_email");
-//            signInEmailTextInputLayout.setTag(emailAddress);
-//            emailEditText.setHint(emailAddress);
-//            emailEditText.setTag(signInEmailTextInputLayout);
-//
-//            String password = signInDTO.getMetadata().getDataModels().getSignin().getProperties().getPassword().getLabel();
-//            if (SystemUtil.isNotEmptyString(password)) {
-//                passwordTextInputLayout.setTag(password);
-//            }
-//
-//            passwordEditText.setHint(password);
-//            passwordEditText.setTag(passwordTextInputLayout);
-//        }
+        emailEditText.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(signInEmailTextInputLayout, null));
+        passwordEditText.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(passwordTextInputLayout, null));
         setTextListeners();
         setActionListeners();
-
-//        emailEditText.clearFocus();
-//        passwordEditText.clearFocus();
-
     }
 
     /**

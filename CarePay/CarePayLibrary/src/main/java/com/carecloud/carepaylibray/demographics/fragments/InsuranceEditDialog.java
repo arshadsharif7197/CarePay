@@ -45,14 +45,15 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.marcok.stepprogressbar.StepProgressBar;
 
-import java.util.List;
-
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_BACK_DTO;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_FRONT_DTO;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_BACK;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_FRONT;
+
+import java.util.Iterator;
+import java.util.List;
 
 public class InsuranceEditDialog extends BaseDialogFragment implements MediaViewInterface {
 
@@ -213,12 +214,11 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         View view = inflater.inflate(R.layout.fragment_review_demographic_base, container, false);
 
         StepProgressBar stepProgressBar = (StepProgressBar) view.findViewById(R.id.stepProgressBarCheckin);
-        stepProgressBar.setCumulativeDots(true);
         stepProgressBar.setNumDots(5);
         stepProgressBar.setCurrentProgressDot(4);
 
-        View child = inflater.inflate(R.layout.add_edit_insurance_view, null);
-        ((ViewGroup) view.findViewById(R.id.checkinDemographicsContentLayout)).addView(child);
+        ViewGroup contentLayout = (ViewGroup) view.findViewById(R.id.checkinDemographicsContentLayout);
+        inflater.inflate(R.layout.add_edit_insurance_view, contentLayout, true);
 
         View heading = view.findViewById(R.id.demographicsHeading);
         if (heading != null) {
@@ -240,7 +240,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             return;
         }
         toolbar.setTitle("");
-        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_nav_back));
+        toolbar.setNavigationIcon(R.drawable.icn_nav_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -433,8 +433,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             demographicInsurancePayloadDTO.setInsurancePlan(selectedPlanOption.getName());
             demographicInsurancePayloadDTO.setInsuranceType(selectedTypeOption.getName() != null ? selectedTypeOption.getName() : defaultType);
 
-            demographicInsurancePayloadDTO.setInsuranceMemberId(cardNumber.getText().toString());
-            demographicInsurancePayloadDTO.setInsuranceGroupId(groupNumber.getText().toString());
+            demographicInsurancePayloadDTO.setInsuranceMemberId(cardNumber.getText().toString().trim());
+            demographicInsurancePayloadDTO.setInsuranceGroupId(groupNumber.getText().toString().trim());
 
             demographicInsurancePayloadDTO.setRelationship(selectedRelationshipOption.getName());
             demographicInsurancePayloadDTO.setPolicyFirstNameHolder(policyFirstNameHolder.getText()
@@ -446,17 +446,18 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
             List<DemographicInsurancePhotoDTO> photos = demographicInsurancePayloadDTO.getInsurancePhotos();
             if (frontInsurancePhotoDTO != null) {
+                removeOldPhoto(photos, FRONT_PIC);
                 photos.add(frontInsurancePhotoDTO);
             }
 
             if (backInsurancePhotoDTO != null) {
+                removeOldPhoto(photos, BACK_PIC);
                 photos.add(backInsurancePhotoDTO);
             }
 
             closeDialog();
         }
     };
-
 
     private void closeDialog() {
         dismiss();
@@ -807,6 +808,15 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         listView.setOnItemClickListener(clickListener);
     }
 
+    private void removeOldPhoto(List<DemographicInsurancePhotoDTO> photos, int page){
+        Iterator<DemographicInsurancePhotoDTO> iterator = photos.iterator();
+        while (iterator.hasNext()){
+            DemographicInsurancePhotoDTO photoDTO = iterator.next();
+            if(photoDTO.getPage() == page){
+                iterator.remove();
+            }
+        }
+    }
 
     private interface OnOptionSelectedListener {
         void onOptionSelected(DemographicsOption option);

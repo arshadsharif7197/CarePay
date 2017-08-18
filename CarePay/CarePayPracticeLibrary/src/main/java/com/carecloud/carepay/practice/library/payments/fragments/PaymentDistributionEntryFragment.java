@@ -38,12 +38,17 @@ public class PaymentDistributionEntryFragment extends PartialPaymentBaseDialogFr
         super.onViewCreated(view, icicle);
         TextView header = (TextView) view.findViewById(R.id.enter_amount_header);
         if (chargeItem != null) {
-            apply.setText(Label.getLabel("payment_add_item"));
+            applyButton.setText(Label.getLabel("payment_add_item"));
             header.setText(chargeItem.getDescription());
-            if(chargeItem.getAmount() > 0) {
-                amountText.setText(String.valueOf(chargeItem.getAmount()));
+            if (chargeItem.getAmount() > 0) {
+                amountTextView.setText(currencyFormat.format(chargeItem.getAmount()));
             }
         }
+    }
+
+    @Override
+    protected void updateLayout() {
+
     }
 
     @Override
@@ -69,14 +74,14 @@ public class PaymentDistributionEntryFragment extends PartialPaymentBaseDialogFr
 
     }
 
-    private double getDoubleAmountForEntry(){
-        String entry = amountText.getText().toString();
-        if(StringUtil.isNullOrEmpty(entry)){
+    private double getDoubleAmountForEntry() {
+        String entry = numberStr;
+        if (StringUtil.isNullOrEmpty(entry)) {
             return 0D;
         }
         try {
             return Double.parseDouble(entry);
-        }catch (NumberFormatException nfe){
+        } catch (NumberFormatException nfe) {
             nfe.printStackTrace();
         }
         return 0D;
@@ -84,6 +89,7 @@ public class PaymentDistributionEntryFragment extends PartialPaymentBaseDialogFr
 
     /**
      * sets the callback
+     *
      * @param callback the callback
      */
     public void setCallback(PaymentDistributionAmountCallback callback) {
@@ -92,6 +98,7 @@ public class PaymentDistributionEntryFragment extends PartialPaymentBaseDialogFr
 
     /**
      * sets the balance item
+     *
      * @param balanceItem the balance item
      */
     public void setBalanceItem(BalanceItemDTO balanceItem) {
@@ -100,6 +107,7 @@ public class PaymentDistributionEntryFragment extends PartialPaymentBaseDialogFr
 
     /**
      * sets the charge item
+     *
      * @param chargeItem charge item
      */
     public void setChargeItem(SimpleChargeItem chargeItem) {

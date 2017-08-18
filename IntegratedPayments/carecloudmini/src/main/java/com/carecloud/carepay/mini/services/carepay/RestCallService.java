@@ -18,4 +18,7 @@ public interface RestCallService {
     @GET("carepay/merchants/{mid}/devices/pre_registration")
     Call<JsonElement> getPreRegistration(@Path(value = "mid") String mid);
 
+    @POST("carepay/payments")
+    Call<JsonElement> postPaymentRequest(@Body String jsonString);
+
 }

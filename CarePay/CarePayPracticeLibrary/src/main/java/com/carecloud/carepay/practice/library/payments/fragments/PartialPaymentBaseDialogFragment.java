@@ -1,13 +1,11 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -20,9 +18,13 @@ import java.text.NumberFormat;
  */
 public abstract class PartialPaymentBaseDialogFragment extends BaseDialogFragment implements View.OnClickListener {
 
-    protected EditText amountText;
+    protected TextView amountTextView;
     protected TextView amountSymbol;
-    protected Button apply;
+    protected Button applyButton;
+    protected String numberStr = "";
+    private boolean numberIsDecimal;
+    private boolean putADecimal;
+    protected NumberFormat currencyFormat;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
@@ -32,16 +34,20 @@ public abstract class PartialPaymentBaseDialogFragment extends BaseDialogFragmen
     @Override
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
-        amountText = (EditText) view.findViewById(R.id.enter_amount_text);
-        amountText.addTextChangedListener(payAmountTextFormatter);
-        String symbol = NumberFormat.getCurrencyInstance().getCurrency().getSymbol();
+        amountTextView = (TextView) view.findViewById(R.id.enter_amount_text);
+
+        currencyFormat = NumberFormat.getCurrencyInstance();
+        String symbol = currencyFormat.getCurrency().getSymbol();
         amountSymbol = (TextView) view.findViewById(R.id.amountSymbolTextView);
         amountSymbol.setText(symbol);
-        apply = (Button) view.findViewById(R.id.enter_amount_button);
-        apply.setOnClickListener(this);
+        applyButton = (Button) view.findViewById(R.id.enter_amount_button);
+        applyButton.setOnClickListener(this);
         View close = view.findViewById(R.id.closeViewLayout);
         close.setOnClickListener(this);
         setEntryListeners(view);
+
+        currencyFormat.setMaximumFractionDigits(2);
+        currencyFormat.setMinimumFractionDigits(0);
     }
 
     private void setEntryListeners(View view) {
@@ -59,25 +65,72 @@ public abstract class PartialPaymentBaseDialogFragment extends BaseDialogFragmen
         view.findViewById(R.id.key_clear).setOnClickListener(digitsClickListener);
     }
 
+
     View.OnClickListener digitsClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             if (view.getId() == R.id.key_clear) {
-                String currentText = amountText.getText().toString();
-                if (currentText.length() > 0) {
-                    amountText.setText(currentText.substring(0, currentText.length() - 1));
+                if (!numberStr.isEmpty()) {
+                    numberStr = numberStr.substring(0, numberStr.length() - 1);
+                    if (numberStr.isEmpty()) {
+                        numberIsDecimal = false;
+                        putADecimal = false;
+                        currencyFormat.setMinimumFractionDigits(0);
+                        amountSymbol.setTextColor(getResources().getColor(R.color.white_transparent));
+                    } else if (!numberStr.contains(".")) {
+                        numberIsDecimal = false;
+                        putADecimal = false;
+                        currencyFormat.setMinimumFractionDigits(0);
+                    }
+                    if (numberStr.isEmpty()) {
+                        amountTextView.setText(numberStr);
+                    } else {
+                        amountTextView.setText(currencyFormat.format(Double.parseDouble(numberStr)));
+                    }
+                }
+            } else if ((view.getId() == R.id.key_blank) ||
+                    (view.getId() == R.id.key_zero && numberStr.isEmpty())) {
+                if (numberStr.isEmpty()) {
+                    putADecimal = true;
+                    currencyFormat.setMinimumFractionDigits(2);
+                } else if (!numberIsDecimal) {
+                    putADecimal = true;
+                    currencyFormat.setMinimumFractionDigits(2);
+                    amountTextView.setText(currencyFormat.format(Double.parseDouble(numberStr)));
                 }
             } else {
-                int start = amountText.getSelectionStart();
-                String input = ((TextView) view).getText().toString();
-                if (start < amountText.length()) {
-                    amountText.getText().insert(start, input);
-                } else {
-                    amountText.append(input);
+                if (numberStr.length() < 8 || numberIsDecimal || putADecimal) {
+                    String input = ((TextView) view).getText().toString();
+                    if (numberStr.isEmpty() && putADecimal) {
+                        input = "0." + input;
+                        numberIsDecimal = true;
+                        putADecimal = false;
+                    } else if (putADecimal) {
+                        input = "." + input;
+                        numberIsDecimal = true;
+                        putADecimal = false;
+                    }
+                    if (!numberStr.contains(".") || (numberStr.length() - numberStr.indexOf(".") < 3)) {
+                        numberStr = numberStr + input;
+                        amountTextView.setText(currencyFormat.format(Double.parseDouble(numberStr)));
+                    }
+
+                    amountSymbol.setTextColor(getResources().getColor(R.color.white));
                 }
             }
+            if (numberStr.length() < 5) {
+                amountTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 80);
+            } else if (numberStr.length() < 7) {
+                amountTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 65);
+            } else if (numberStr.length() < 10) {
+                amountTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 50);
+            }
+            
+            updateLayout();
         }
     };
+
+    protected abstract void updateLayout();
 
     @Override
     public void onClick(View view) {
@@ -85,78 +138,5 @@ public abstract class PartialPaymentBaseDialogFragment extends BaseDialogFragmen
             dismiss();
         }
     }
-
-
-    private TextWatcher payAmountTextFormatter = new TextWatcher() {
-        private boolean amountChangeFlag = true;
-        private String balanceBeforeTextChange;
-
-        @Override
-        public void afterTextChanged(Editable str) {
-            if (str.length() > 0) {
-                amountSymbol.setTextColor(getResources().getColor(R.color.white));
-                amountText.setHint(null);
-            } else {
-                amountSymbol.setTextColor(getResources().getColor(R.color.white_transparent));
-                amountText.setHint("0.00");
-            }
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence str, int start, int count, int after) {
-            balanceBeforeTextChange = str.toString();
-        }
-
-        @Override
-        public void onTextChanged(CharSequence str, int start, int before, int count) {
-            String amountString = str.toString();
-            try {
-                if (amountChangeFlag) {
-                    // flag to avoid the onTextChanged listener call after setText manipulated number
-                    amountChangeFlag = false;
-                    //when deleting a decimal point, delete any non-integral portion of the number
-                    if (balanceBeforeTextChange.contains(".") && !amountString.contains(".")) {
-                        amountString = balanceBeforeTextChange.substring(0, balanceBeforeTextChange.indexOf("."));
-                        amountText.setText(amountString);
-                        amountText.setSelection(amountString.length());
-                    } else
-                        // user cannot enter amountText less than 1
-                        if (amountString.equalsIgnoreCase(".") || Double.parseDouble(amountString) < 1) {
-                            amountString = "0";
-                            amountText.setText(amountString);
-                        } else
-                            // Only when user enters dot, we should show the decimal values as 00
-                            if (amountString.endsWith(".")) {
-                                amountString = amountString + "00";
-                                amountText.setText(amountString);
-                                amountText.setSelection(amountString.length() - 2);
-                                // When user removes dot, we should show the integer before that
-                            } else if (amountString.endsWith(".0")) {
-                                amountText.setText(amountString.substring(0, amountString.length() - 2));
-                                amountText.setSelection(amountText.length());
-                                // When user enters number, we should simply append the number entered
-                                // Also adjusting the cursor position after removing DOT and appending number
-                            } else {
-                                if (amountString.contains(".") && amountString.length() - 3 > amountString.indexOf(".")) {
-                                    //enterPartialAmountEditText.setText(new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER).format(Double.parseDouble(amountString)));
-                                    amountString = amountString.substring(0, amountString.indexOf(".") + 3);
-                                    amountText.setText(amountString);
-                                } else {
-                                    amountText.setText(amountString);
-                                }
-                                if (amountText.getText().toString().endsWith("0") && amountString.contains(".")) {
-                                    amountText.setSelection(amountString.length() - 1);
-                                } else {
-                                    amountText.setSelection(amountString.length());
-                                }
-                            }
-                } else {
-                    amountChangeFlag = true;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    };
 
 }

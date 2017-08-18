@@ -198,6 +198,11 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     @Override
+    public AppointmentDTO getAppointment() {
+        return appointmentPayload;
+    }
+
+    @Override
     public void displayCheckInSuccess(final WorkflowDTO workflowDTO) {
         demographicsView.completeCheckIn(workflowDTO);
     }

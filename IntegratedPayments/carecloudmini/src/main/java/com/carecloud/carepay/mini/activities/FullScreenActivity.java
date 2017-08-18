@@ -5,26 +5,33 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
+import com.carecloud.carepay.mini.services.carepay.RestCallServiceHelper;
+import com.clover.sdk.util.CustomerMode;
+
 /**
  * Created by lmenendez on 7/20/17
  */
 
 public abstract class FullScreenActivity extends AppCompatActivity {
     private static final int FULLSCREEN_VALUE = 0x10000000;
+    private boolean customerMode;
 
     @Override
     protected void onCreate(Bundle icicle){
         super.onCreate(icicle);
-        setSystemUiVisibility();
+        setSystemUiFullscreen();
     }
 
     @Override
     protected void onResume(){
         super.onResume();
-        setSystemUiVisibility();
+        setSystemUiFullscreen();
+        CustomerMode.enable(this);
+        customerMode = true;
     }
 
-    private void setSystemUiVisibility() {
+    private void setSystemUiFullscreen() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         View decorView = getWindow().getDecorView();
@@ -39,6 +46,36 @@ public abstract class FullScreenActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(uiOptions);
     }
 
+    private void setSystemUiShowNavbar(){
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.KEEP_SCREEN_ON;
+        decorView.setSystemUiVisibility(uiOptions);
+    }
+
+    protected ApplicationHelper getApplicationHelper(){
+        return (ApplicationHelper) getApplication();
+    }
+
+    protected RestCallServiceHelper getRestHelper(){
+        return getApplicationHelper().getRestHelper();
+    }
 
 
+    public boolean isCustomerMode() {
+        return customerMode;
+    }
+
+    protected void toggleCustomerMode(){
+        if(isCustomerMode()){
+            setSystemUiShowNavbar();
+            CustomerMode.disable(this);
+            customerMode = false;
+        }else{
+            setSystemUiFullscreen();
+            CustomerMode.enable(this);
+            customerMode = true;
+        }
+    }
 }

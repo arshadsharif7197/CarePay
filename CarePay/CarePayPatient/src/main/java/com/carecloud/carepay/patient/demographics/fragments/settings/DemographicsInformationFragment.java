@@ -236,7 +236,8 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         address.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(addressInputLayout, null));
         setVisibility(addressInputLayout, addressSection.getProperties().getAddress1().isDisplayed());
         address.setText(demographicPayload.getAddress().getAddress1());
-        address.getOnFocusChangeListener().onFocusChange(address, !StringUtil.isNullOrEmpty(address.getText().toString()));
+        address.getOnFocusChangeListener().onFocusChange(address,
+                !StringUtil.isNullOrEmpty(address.getText().toString().trim()));
         if (addressSection.getProperties().getAddress1().isRequired()) {
             address.addTextChangedListener(getValidateEmptyTextWatcher(addressInputLayout));
         }
@@ -268,7 +269,8 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         address2.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address2InputLayout, null));
         setVisibility(address2InputLayout, addressSection.getProperties().getAddress2().isDisplayed());
         address2.setText(demographicPayload.getAddress().getAddress2());
-        address2.getOnFocusChangeListener().onFocusChange(address2, !StringUtil.isNullOrEmpty(address2.getText().toString()));
+        address2.getOnFocusChangeListener().onFocusChange(address2,
+                !StringUtil.isNullOrEmpty(address2.getText().toString().trim()));
         if (addressSection.getProperties().getAddress2().isRequired()) {
             address2.addTextChangedListener(getValidateEmptyTextWatcher(address2InputLayout));
             View address2Optional = view.findViewById(R.id.demogrAddressOptionalLabel);
@@ -282,7 +284,8 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         setVisibility(zipCodeInputLayout, addressSection.getProperties().getZipcode().isDisplayed());
         zipCode.addTextChangedListener(zipInputFormatter);
         zipCode.setText(demographicPayload.getAddress().getZipcode());
-        zipCode.getOnFocusChangeListener().onFocusChange(zipCode, !StringUtil.isNullOrEmpty(zipCode.getText().toString()));
+        zipCode.getOnFocusChangeListener().onFocusChange(zipCode,
+                !StringUtil.isNullOrEmpty(zipCode.getText().toString().trim()));
         if (addressSection.getProperties().getZipcode().isRequired()) {
             zipCode.addTextChangedListener(getValidateEmptyTextWatcher(zipCodeInputLayout));
         } else {
@@ -295,7 +298,8 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         cityEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(cityInputLayout, null));
         setVisibility(cityInputLayout, addressSection.getProperties().getCity().isDisplayed());
         cityEditText.setText(demographicPayload.getAddress().getCity());
-        cityEditText.getOnFocusChangeListener().onFocusChange(cityEditText, !StringUtil.isNullOrEmpty(cityEditText.getText().toString()));
+        cityEditText.getOnFocusChangeListener().onFocusChange(cityEditText,
+                !StringUtil.isNullOrEmpty(cityEditText.getText().toString().trim()));
         if (addressSection.getProperties().getCity().isRequired()) {
             cityEditText.addTextChangedListener(getValidateEmptyTextWatcher(cityInputLayout));
         }
@@ -382,8 +386,8 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         TextInputLayout dateBirthLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
         EditText dateOfBirth = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
         if (dateBirthLayout.getVisibility() == View.VISIBLE &&
-                !StringUtil.isNullOrEmpty(dateOfBirth.getText().toString()) &&
-                !DateUtil.isValidateStringDateOfBirth(dateOfBirth.getText().toString())) {
+                !StringUtil.isNullOrEmpty(dateOfBirth.getText().toString().trim()) &&
+                !DateUtil.isValidateStringDateOfBirth(dateOfBirth.getText().toString().trim())) {
             dateBirthLayout.setErrorEnabled(true);
             dateBirthLayout.setError(Label.getLabel("demographics_date_validation_msg"));
             return false;
@@ -392,7 +396,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
         EditText phoneNumber = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
         if (phoneLayout.getVisibility() == View.VISIBLE &&
-                !StringUtil.isNullOrEmpty(phoneNumber.getText().toString()) &&
+                !StringUtil.isNullOrEmpty(phoneNumber.getText().toString().trim()) &&
                 !ValidationHelper.isValidString(phoneNumber.getText().toString().trim(), ValidationHelper.PHONE_NUMBER_PATTERN)) {
             phoneLayout.setErrorEnabled(true);
             phoneLayout.setError(Label.getLabel("demographics_phone_number_validation_msg"));
@@ -402,8 +406,9 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         TextInputLayout zipLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
         EditText zipCode = (EditText) view.findViewById(R.id.zipCodeId);
         if (zipLayout.getVisibility() == View.VISIBLE &&
-                !StringUtil.isNullOrEmpty(zipCode.getText().toString()) &&
-                !ValidationHelper.isValidString(zipCode.getText().toString(), ValidationHelper.ZIP_CODE_PATTERN)) {
+                !StringUtil.isNullOrEmpty(zipCode.getText().toString().trim()) &&
+                !ValidationHelper.isValidString(zipCode.getText().toString().trim(),
+                        ValidationHelper.ZIP_CODE_PATTERN)) {
             zipLayout.setErrorEnabled(true);
             zipLayout.setError(Label.getLabel("demographics_zip_code_validation_msg"));
             return false;
@@ -466,7 +471,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         //add all demographic info
         PatientModel patientModel = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
 
-        String dobString = dateOfBirth.getText().toString();
+        String dobString = dateOfBirth.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(dobString)) {
             // the date is DateUtil as
             patientModel.setDateOfBirth(DateUtil.getInstance().setDateRaw(dobString).toStringWithFormatYyyyDashMmDashDd());
@@ -495,29 +500,29 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
 
         DemographicAddressPayloadDTO addressModel = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getAddress();
 
-        String phoneNumberString = phoneNumber.getText().toString();
+        String phoneNumberString = phoneNumber.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(phoneNumberString)) {
             // 'de-format' before saving to model
             addressModel.setPhone(StringUtil.revertToRawPhoneFormat(phoneNumberString));
         }
 
-        String addressString = address.getText().toString();
+        String addressString = address.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(addressString)) {
             addressModel.setAddress1(addressString);
         }
 
-        String address2String = address2.getText().toString();
+        String address2String = address2.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(address2String)) {
             addressModel.setAddress2(address2String);
         }
 
-        String zipCodeString = zipCode.getText().toString();
+        String zipCodeString = zipCode.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(zipCodeString)) {
             // 'de-format' before saving to model
             addressModel.setZipcode(StringUtil.revertZipToRawFormat(zipCodeString));
         }
 
-        String cityString = cityEditText.getText().toString();
+        String cityString = cityEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(cityString)) {
             addressModel.setCity(cityString);
         }

@@ -12,6 +12,7 @@ import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.payment.PatientPaymentPresenter;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenterImpl;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
@@ -166,6 +167,15 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     public String getAppointmentId() {
         if(demographicsPresenter != null){
             return demographicsPresenter.getAppointmentId();
+        }
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public AppointmentDTO getAppointment() {
+        if(demographicsPresenter != null){
+            return demographicsPresenter.getAppointment();
         }
         return null;
     }

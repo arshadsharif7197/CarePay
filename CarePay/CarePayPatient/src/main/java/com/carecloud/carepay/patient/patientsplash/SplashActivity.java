@@ -30,28 +30,22 @@ import java.util.Map;
 
 public class SplashActivity extends BasePatientActivity {
 
-    private static final int STOPSPLASH = 0;
-    private static final long SPLASHTIME = 1000;
-    WorkflowServiceCallback signInCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-        }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash);
 
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            getWorkflowServiceHelper().saveLabels(workflowDTO);
-            navigateToWorkflow(workflowDTO);
-            // end-splash activity and transition
-            SplashActivity.this.finish();
-        }
+        WorkflowSessionHandler.createSession(this);
 
-        @Override
-        public void onFailure(String exceptionMessage) {
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        // dynamic transition
+        getWorkflowServiceHelper().executeApplicationStartRequest(applicationStartCallback);
 
-        }
-    };
+        String newRelicId = BuildConfig.NEW_RELIC_ID;
+        NewRelic.withApplicationToken(newRelicId).start(this.getApplication());
+
+        Intent intent = new Intent(this, RegistrationIntentService.class);
+        startService(intent);
+    }
 
     WorkflowServiceCallback applicationStartCallback = new WorkflowServiceCallback() {
         @Override
@@ -64,7 +58,7 @@ public class SplashActivity extends BasePatientActivity {
             if (!SystemUtil.isNotEmptyString(getApplicationPreferences().getUserLanguage())) {
                 navigateToWorkflow(workflowDTO);
             } else if (SystemUtil.isNotEmptyString(getApplicationPreferences().getUserLanguage())) {
-              String languageid=  getApplicationPreferences().getUserLanguage();
+                String languageid = getApplicationPreferences().getUserLanguage();
 
                 // Convert to SignInSignUpDTO
                 Gson gson = new Gson();
@@ -85,20 +79,24 @@ public class SplashActivity extends BasePatientActivity {
         }
     };
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
+    WorkflowServiceCallback signInCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
 
-        WorkflowSessionHandler.createSession(this);
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            getWorkflowServiceHelper().saveLabels(workflowDTO);
+            navigateToWorkflow(workflowDTO, getIntent().getExtras());
+            // end-splash activity and transition
+            SplashActivity.this.finish();
+        }
 
-        // dynamic transition
-        getWorkflowServiceHelper().executeApplicationStartRequest(applicationStartCallback);
+        @Override
+        public void onFailure(String exceptionMessage) {
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
 
-        String newRelicId = BuildConfig.NEW_RELIC_ID;
-        NewRelic.withApplicationToken(newRelicId).start(this.getApplication());
-
-        Intent intent = new Intent(this, RegistrationIntentService.class);
-        startService(intent);
-    }
+        }
+    };
 }

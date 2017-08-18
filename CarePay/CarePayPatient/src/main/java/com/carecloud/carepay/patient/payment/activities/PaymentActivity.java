@@ -14,6 +14,7 @@ import com.carecloud.carepay.patient.payment.androidpay.ConfirmationActivity;
 import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
@@ -175,6 +176,12 @@ public class PaymentActivity extends BasePatientActivity implements PaymentViewH
     @Nullable
     @Override
     public String getAppointmentId() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public AppointmentDTO getAppointment() {
         return null;
     }
 

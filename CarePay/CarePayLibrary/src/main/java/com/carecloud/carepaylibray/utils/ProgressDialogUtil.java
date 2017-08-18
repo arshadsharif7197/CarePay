@@ -68,9 +68,10 @@ public class ProgressDialogUtil extends Dialog {
         setStatusBarColor();
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setStatusBarColor() {
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        getWindow().setStatusBarColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().setStatusBarColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
+        }
     }
 }

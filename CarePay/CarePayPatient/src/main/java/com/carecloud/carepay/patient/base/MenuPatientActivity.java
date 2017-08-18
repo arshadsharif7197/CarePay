@@ -67,7 +67,9 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+    }
 
+    private void setUserImage() {
         String imageUrl = getApplicationPreferences().getUserPhotoUrl();
         ImageView userImageView = (ImageView) navigationView.getHeaderView(0)
                 .findViewById(R.id.appointmentDrawerIdImageView);
@@ -85,6 +87,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        setUserImage();
         if (appointmentsDrawerUserIdTextView != null) {
             String userId = getApplicationPreferences().getUserId();
             if (userId != null) {
@@ -112,15 +115,15 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
 
         int id = item.getItemId();
         switch (id) {
-//            case R.id.nav_my_health:
-//                callback = myHealthWorkflowCallback;
-//                transition = transitionMyHealth;
-//                break;
-//            case R.id.nav_messages:
-//                displayMessagesScreen();
-//                transition = null;
-//                callback = null;
-//                break;
+            case R.id.nav_my_health:
+                callback = myHealthWorkflowCallback;
+                transition = transitionMyHealth;
+                break;
+            case R.id.nav_messages:
+                displayMessagesScreen();
+                transition = null;
+                callback = null;
+                break;
             case R.id.nav_appointments:
                 callback = appointmentsWorkflowCallback;
                 transition = transitionAppointments;
@@ -143,7 +146,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
                 break;
             case R.id.nav_logout:
                 transition = transitionLogout;
-                callback = appointmentsWorkflowCallback;
+                callback = logoutWorkflowCallback;
                 headersMap.put("x-api-key", HttpConstants.getApiStartKey());
                 headersMap.put("transition", "true");
                 break;
@@ -187,7 +190,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -207,10 +210,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
 
         @Override
         public void onFailure(String exceptionMessage) {
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
-
+            showErrorNotification(exceptionMessage);
             hideProgressDialog();
-
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -231,7 +232,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -252,7 +253,28 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    private WorkflowServiceCallback logoutWorkflowCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            getAppAuthorizationHelper().setAccessToken(null);
+            navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -275,7 +297,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -296,7 +318,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

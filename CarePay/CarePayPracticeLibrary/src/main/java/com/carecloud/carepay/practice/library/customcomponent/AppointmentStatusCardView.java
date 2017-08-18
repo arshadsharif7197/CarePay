@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.squareup.picasso.Picasso;
@@ -43,6 +42,7 @@ public class AppointmentStatusCardView extends LinearLayout {
 
     /**
      * AppointmentStatusCardView with context
+     *
      * @param context context
      */
     public AppointmentStatusCardView(Context context) {
@@ -53,6 +53,7 @@ public class AppointmentStatusCardView extends LinearLayout {
 
     /**
      * AppointmentStatusCardView with context & attrs
+     *
      * @param context context
      */
     public AppointmentStatusCardView(Context context, AttributeSet attrs) {
@@ -63,6 +64,7 @@ public class AppointmentStatusCardView extends LinearLayout {
 
     /**
      * AppointmentStatusCardView with context, attrs & defStyleAttr
+     *
      * @param context context
      */
     public AppointmentStatusCardView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -82,12 +84,13 @@ public class AppointmentStatusCardView extends LinearLayout {
         amountTextView = (CarePayTextView) findViewById(R.id.amount_text_view);
         timeTextView = (CarePayTextView) findViewById(R.id.timeTextView);
         containerLayout = (ViewGroup) findViewById(R.id.containerLayout);
-        shortNameTextView =(CarePayTextView) findViewById(R.id.patient_short_name);
+        shortNameTextView = (CarePayTextView) findViewById(R.id.patient_short_name);
         this.setOnLongClickListener(onLongClickListener);
     }
 
     /**
      * Set Image
+     *
      * @param photoUrl image Url
      */
     public void setPatientImage(String photoUrl) {
@@ -112,7 +115,7 @@ public class AppointmentStatusCardView extends LinearLayout {
     }
 
     public void setAmount(String amount) {
-        this.amountTextView.setText(Label.getLabel("responsibility_balance_title") + amount);
+        this.amountTextView.setText(amount);
     }
 
     public String getAppointmentId() {
@@ -127,12 +130,13 @@ public class AppointmentStatusCardView extends LinearLayout {
         this.appointmentId = appointmentId;
     }
 
-    public void setShortName(String shortName){
+    public void setShortName(String shortName) {
         this.shortNameTextView.setText(shortName);
     }
 
     /**
      * Appointment time set
+     *
      * @param appointmentTime appointment Time
      */
     public void setAppointmentTime(Date appointmentTime) {

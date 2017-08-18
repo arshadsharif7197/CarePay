@@ -409,7 +409,6 @@ public class CloverPaymentActivity extends BaseActivity {
 
         Gson gson = new Gson();
         TransitionDTO transitionDTO = gson.fromJson(paymentTransitionString, TransitionDTO.class);
-//        transitionDTO.setUrl(transitionDTO.getUrl()+"FAIL");
         getWorkflowServiceHelper().execute(transitionDTO, getMakePaymentCallback(payment), paymentModelJson, queries, header);
 
     }

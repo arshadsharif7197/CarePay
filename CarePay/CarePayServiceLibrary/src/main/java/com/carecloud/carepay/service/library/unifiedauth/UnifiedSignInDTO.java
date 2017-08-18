@@ -23,10 +23,11 @@ public class UnifiedSignInDTO {
 
     /**
      * Check if required fields are provided
+     *
      * @return true if valid user
      */
-    public boolean isValidUser(){
-        return user.getEmail()!=null &&
-                user.getPassword()!=null;
+    public boolean isValidUser() {
+        return user.getEmail() != null &&
+                user.getPassword() != null;
     }
 }

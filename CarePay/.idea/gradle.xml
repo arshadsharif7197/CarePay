@@ -8,7 +8,6 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/BreezeMini" />
             <option value="$PROJECT_DIR$/CarePayLibrary" />
             <option value="$PROJECT_DIR$/CarePayPatient" />
             <option value="$PROJECT_DIR$/CarePayPracticeClover" />
