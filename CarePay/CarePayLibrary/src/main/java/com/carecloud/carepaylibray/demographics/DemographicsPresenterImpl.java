@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.demographics;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,7 +12,6 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
-import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
@@ -38,7 +36,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     private AppointmentDTO appointmentPayload;
     private DemographicsView demographicsView;
 
-    private CarePayCameraCallback carePayCameraCallback;
     private InsuranceEditDialog insuranceEditDialog;
 
     private DemographicDTO demographicDTO;
@@ -141,10 +138,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             transaction.addToBackStack(tag);
         }
         transaction.commitAllowingStateLoss();
-
-//        if(fragment instanceof MediaResultListener){
-//            demographicsView.setMediaResultListener((MediaResultListener) fragment);
-//        }
     }
 
     @Override
@@ -310,20 +303,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     @Override
     public DemographicDTO getDemographicDTO() {
         return demographicDTO;
-    }
-
-    @Override
-    public void onCapturedSuccess(Bitmap bitmap) {
-        if (carePayCameraCallback != null) {
-            carePayCameraCallback.onCapturedSuccess(bitmap);
-        }
-    }
-
-    @Override
-    public void onCaptureFail() {
-        if (carePayCameraCallback != null) {
-            carePayCameraCallback.onCaptureFail();
-        }
     }
 
     @Override
