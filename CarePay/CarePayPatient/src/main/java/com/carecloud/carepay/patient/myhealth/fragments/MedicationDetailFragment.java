@@ -1,6 +1,8 @@
 package com.carecloud.carepay.patient.myhealth.fragments;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
@@ -13,14 +15,20 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.myhealth.dtos.MedicationDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author pjohnson on 19/07/17.
  */
-
 public class MedicationDetailFragment extends BaseFragment {
 
     private MyHealthInterface callback;
@@ -31,7 +39,6 @@ public class MedicationDetailFragment extends BaseFragment {
     }
 
     /**
-     *
      * @param id the medication Id
      * @return a new instance of MedicationDetailFragment
      */
@@ -107,6 +114,71 @@ public class MedicationDetailFragment extends BaseFragment {
         }
         TextView instructionValueTextView = (TextView) view.findViewById(R.id.instructionValueTextView);
         instructionValueTextView.setText(medication.getPrescriptionInstructions());
+
+        view.findViewById(R.id.educationButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Map<String, String> queryMap = new HashMap<>();
+                String code = "";
+                String codeSystem = "";
+                String url = "";
+                boolean shouldCallBreezeService = true;
+                if (medication.getRxNormCode() != null) {
+                    code = medication.getRxNormCode();
+                    codeSystem = "rxnorm";
+                } else if (medication.getSnomed() != null) {
+                    code = medication.getSnomed();
+                    codeSystem = "snomed";
+                } else if (medication.getLoinc() != null) {
+                    code = medication.getLoinc();
+                    codeSystem = "loinc";
+                } else {
+                    shouldCallBreezeService = false;
+                    url = "http://vsearch.nlm.nih.gov/vivisimo/cgi-bin/query-meta?v%3Aproject=medlineplus&query="
+                            + medication.getDrugName();
+                }
+
+                if (shouldCallBreezeService) {
+                    queryMap.put("code", code);
+                    queryMap.put("code_system", codeSystem);
+                    queryMap.put("term", medication.getDrugName());
+                    TransitionDTO transitionDTO = ((MyHealthDto) callback.getDto()).getMetadata()
+                            .getLinks().getEducationMaterial();
+                    getWorkflowServiceHelper().execute(transitionDTO, educationCallback, queryMap);
+                } else {
+                    openExternalBrowser(url);
+                }
+
+            }
+        });
+    }
+
+    private WorkflowServiceCallback educationCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            Gson gson = new Gson();
+            MyHealthDto myHealthDto = gson.fromJson(workflowDTO.toString(), MyHealthDto.class);
+            hideProgressDialog();
+            openExternalBrowser(myHealthDto.getPayload().getEducationMaterial().getLink());
+
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            callback.showErrorToast(exceptionMessage);
+        }
+    };
+
+    private void openExternalBrowser(String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        startActivity(intent);
     }
 
     private void setUpToolbar(View view) {

@@ -22,11 +22,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/toolbar_layout"
-            android:paddingStart="@dimen/dimen_10dp"
-            android:paddingEnd="@dimen/dimen_10dp"
             android:layout_marginBottom="@dimen/dimen_30dp"
             android:layout_marginTop="@dimen/dimen_20dp"
             android:gravity="center"
+            android:paddingEnd="@dimen/dimen_10dp"
+            android:paddingStart="@dimen/dimen_10dp"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/text_size_18sp"
             app:customAssetFont="gotham_rounded_medium"
@@ -321,7 +321,7 @@
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/text_size_16"
                 app:customAssetFont="proxima_nova_regular"
-                breeze:textKey="Refills"
+                breeze:textKey="my_health_refills_label"
                 tools:text="Practice" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -391,6 +391,28 @@
                 android:background="@color/light_gray" />
 
         </RelativeLayout>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/educationButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/instructionContainer"
+            android:layout_marginBottom="@dimen/dimen_20dp"
+            android:layout_marginEnd="@dimen/dimen_15dp"
+            android:layout_marginStart="@dimen/dimen_15dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:background="@drawable/button_default_background"
+            android:foreground="?android:selectableItemBackground"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dimen_10dp"
+            android:paddingEnd="@dimen/dimen_20dp"
+            android:paddingStart="@dimen/dimen_20dp"
+            android:paddingTop="@dimen/dimen_10dp"
+            breeze:textKey="my_health_education_button_label"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
+            app:customAssetFont="gotham_rounded_medium"
+            tools:text="EDUCATION" />
 
 
     </RelativeLayout>
