@@ -248,6 +248,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
         } else {
             leftButton.setText(leftLabel);
             leftButton.setEnabled(isLeftButtonEnabled);
+            leftButton.setVisibility(isLeftButtonEnabled?View.VISIBLE:View.GONE);
             leftButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
