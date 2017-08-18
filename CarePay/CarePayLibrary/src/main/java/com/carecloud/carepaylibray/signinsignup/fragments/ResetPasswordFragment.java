@@ -199,7 +199,7 @@ public class ResetPasswordFragment extends BaseFragment {
             hideProgressDialog();
             try {
                 JSONObject json = new JSONObject(exceptionMessage);
-                String message = json.getString("exception");
+                String message = json.getJSONObject("message").getString("error");
                 if ( message != null ) {
                     listener.showErrorToast(StringUtil.capitalize(message));
                 }
