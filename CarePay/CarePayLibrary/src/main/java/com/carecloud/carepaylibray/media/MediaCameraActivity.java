@@ -26,7 +26,9 @@ public class MediaCameraActivity extends BaseActivity implements MediaCameraFrag
         setContentView(R.layout.activity_scanner);
         cameraType = (CarePayCameraPreview.CameraType) getIntent()
                 .getSerializableExtra("cameraType");
-        displayCameraFragment("img_" + System.currentTimeMillis());
+        if (icicle == null) {
+            displayCameraFragment("img_" + System.currentTimeMillis());
+        }
     }
 
     @Override
