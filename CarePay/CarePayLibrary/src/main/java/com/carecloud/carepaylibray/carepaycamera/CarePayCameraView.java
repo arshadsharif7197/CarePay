@@ -101,7 +101,6 @@ public class CarePayCameraView extends RelativeLayout {
         buttonCapture = (Button) findViewById(R.id.button_capture);
         carePayCameraPreview = (CarePayCameraPreview) findViewById(R.id.camera_preview);
         carePayCameraPreview.setCameraType(cameraType);
-//        carePayCameraPreview.initialize();
         buttonCapture.setOnClickListener(onCaptureClick);
 
         final Button flashButton = (Button) findViewById(R.id.button_flash);
@@ -125,6 +124,7 @@ public class CarePayCameraView extends RelativeLayout {
             @Override
             public void onClick(View view) {
                 currentCameraId = carePayCameraPreview.changeCamera();
+                callback.onChangeCamera(currentCameraId);
                 flashButton.setSelected(false);
                 flashButton.setEnabled(carePayCameraPreview.hasFlash());
             }
@@ -142,7 +142,7 @@ public class CarePayCameraView extends RelativeLayout {
         }
     };
 
-    public void start() {
+    public void start(int currentCameraId) {
         carePayCameraPreview.start(currentCameraId);
     }
 

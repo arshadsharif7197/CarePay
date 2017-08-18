@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ public class MediaCameraFragment extends BaseDialogFragment implements CarePayCa
 
     private CarePayCameraPreview.CameraType cameraType;
     private CarePayCameraView carePayCameraView;
+    private int currentCameraId = CarePayCameraPreview.NO_DEFINED_CAMERA;
 
     public interface MediaCameraCallback {
         void onMediaFileCreated(File file);
@@ -114,7 +116,7 @@ public class MediaCameraFragment extends BaseDialogFragment implements CarePayCa
                 window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             }
         }
-        carePayCameraView.start();
+        carePayCameraView.start(currentCameraId);
 
     }
 
@@ -137,5 +139,24 @@ public class MediaCameraFragment extends BaseDialogFragment implements CarePayCa
     @Override
     public void onCaptureFail() {
         showErrorNotification("Failed to Capture image");
+    }
+
+    @Override
+    public void onChangeCamera(int currentCameraId) {
+        this.currentCameraId = currentCameraId;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("currentCameraId", currentCameraId);
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            currentCameraId = savedInstanceState.getInt("currentCameraId");
+        }
     }
 }

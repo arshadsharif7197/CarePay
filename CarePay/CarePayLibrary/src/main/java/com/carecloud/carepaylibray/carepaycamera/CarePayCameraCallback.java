@@ -10,4 +10,6 @@ public interface CarePayCameraCallback {
     void onCapturedSuccess(Bitmap bitmap);
 
     void onCaptureFail();
+
+    void onChangeCamera(int currentCameraId);
 }
