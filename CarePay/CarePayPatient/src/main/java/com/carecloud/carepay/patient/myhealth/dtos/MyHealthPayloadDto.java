@@ -23,6 +23,9 @@ public class MyHealthPayloadDto {
     @SerializedName("demographics")
     @Expose
     private DemographicPayloadDTO demographicDTO = new DemographicPayloadDTO();
+    @SerializedName("education_material")
+    @Expose
+    private EducationMaterial educationMaterial = new EducationMaterial();
     @SerializedName("practice_patient_ids")
     @Expose
     private List<PracticePatientIdsDTO> practicePatientIds = new ArrayList<>();
@@ -57,5 +60,13 @@ public class MyHealthPayloadDto {
 
     public void setPracticePatientIds(List<PracticePatientIdsDTO> practicePatientIds) {
         this.practicePatientIds = practicePatientIds;
+    }
+
+    public EducationMaterial getEducationMaterial() {
+        return educationMaterial;
+    }
+
+    public void setEducationMaterial(EducationMaterial educationMaterial) {
+        this.educationMaterial = educationMaterial;
     }
 }

@@ -28,8 +28,15 @@ public class MedicationDto {
     private String prescriptionInstructions;
     @Expose
     private String status;
-    //    @Expose
-    //    private String? rxNormCode;
+    @Expose
+    @SerializedName("rx_norm_code")
+    private String rxNormCode;
+    @Expose
+    @SerializedName("loinc")
+    private String loinc;
+    @Expose
+    @SerializedName("snomed")
+    private String snomed;
     @Expose
     private Double quantity;
     @Expose
@@ -148,5 +155,29 @@ public class MedicationDto {
 
     public void setPractice(String practice) {
         this.practice = practice;
+    }
+
+    public String getRxNormCode() {
+        return rxNormCode;
+    }
+
+    public void setRxNormCode(String rxNormCode) {
+        this.rxNormCode = rxNormCode;
+    }
+
+    public String getLoinc() {
+        return loinc;
+    }
+
+    public void setLoinc(String loinc) {
+        this.loinc = loinc;
+    }
+
+    public String getSnomed() {
+        return snomed;
+    }
+
+    public void setSnomed(String snomed) {
+        this.snomed = snomed;
     }
 }
