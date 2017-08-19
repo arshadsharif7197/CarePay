@@ -166,7 +166,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
             }
         });
 
-        makePartialPaymentButton.setVisibility(isPartialPayAvailable(selectedBalance.getMetadata().getPracticeId()) ? View.VISIBLE : View.GONE);
+        makePartialPaymentButton.setVisibility(isPartialPayAvailable(selectedBalance.getMetadata().getPracticeId(), total) ? View.VISIBLE : View.GONE);
     }
 
     @Override

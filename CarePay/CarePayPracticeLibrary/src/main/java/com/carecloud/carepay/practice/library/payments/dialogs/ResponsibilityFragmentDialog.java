@@ -21,6 +21,7 @@ import com.carecloud.carepaylibray.customdialogs.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsSettingsRegularPaymentsDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
@@ -48,7 +49,6 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
     @Nullable private PaymentConfirmationInterface payInfoCallback;
     private double owedAmount = 0;
     private ResponsibilityHeaderModel headerModel;
-    private boolean isLeftButtonEnabled;
 
     @Override
     protected String getCancelString() {
@@ -247,8 +247,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
             leftButton.setVisibility(View.GONE);
         } else {
             leftButton.setText(leftLabel);
-            leftButton.setEnabled(isLeftButtonEnabled);
-            leftButton.setVisibility(isLeftButtonEnabled?View.VISIBLE:View.GONE);
+            leftButton.setVisibility(isPartialPayAvailable(owedAmount)?View.VISIBLE:View.GONE);
             leftButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -273,10 +272,6 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
                 dismiss();
             }
         });
-    }
-
-    public void setLeftButtonEnabled(boolean enabled) {
-        isLeftButtonEnabled = enabled;
     }
 
     public interface PayResponsibilityCallback {
@@ -362,6 +357,16 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
             }
         }
         return responsibilityTypes;
+    }
+
+    protected boolean isPartialPayAvailable(double balance){
+        PaymentsSettingsRegularPaymentsDTO regularPaymentsDTO = paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments();
+        if(regularPaymentsDTO.isAllowPartialPayments()){
+            double minBalance = regularPaymentsDTO.getPartialPaymentsThreshold();
+            return balance >= minBalance;
+        }
+
+        return false;
     }
 
 }
