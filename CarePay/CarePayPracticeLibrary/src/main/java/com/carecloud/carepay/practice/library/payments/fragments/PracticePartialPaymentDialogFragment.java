@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -20,6 +21,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.ResponsibilityType;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +35,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
     private double amount;
     private PaymentNavigationCallback callback;
     private TextView pendingAmountTextView;
+    private double minimumPayment;
 
     /**
      * @param paymentResultModel the payment model
@@ -72,6 +75,13 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
         pendingAmountTextView = (TextView) view.findViewById(R.id.pendingAmountTextView);
         pendingAmountTextView.setVisibility(View.VISIBLE);
         updatePendingAmountText(amount);
+
+        minimumPayment = getMinimumPayment();
+        if(minimumPayment > 0){
+            TextView header = (TextView) view.findViewById(R.id.partialPaymentHeader);
+            String headerText = Label.getLabel("payment_partial_minimum_amount") + NumberFormat.getCurrencyInstance().format(minimumPayment);
+            header.setText(headerText);
+        }
     }
 
     @Override
@@ -85,6 +95,12 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
         super.onClick(view);
         if ((view.getId() == R.id.enter_amount_button) && !StringUtil.isNullOrEmpty(numberStr)) {
             double amount = Double.parseDouble(numberStr);
+            if(minimumPayment > 0 && amount < minimumPayment){
+                String errorMessage = Label.getLabel("payment_partial_minimum_error") + NumberFormat.getCurrencyInstance().format(minimumPayment);
+                CustomMessageToast toast = new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
+                toast.show();
+                return;
+            }
             createPaymentModel(amount);
             callback.onPayButtonClicked(amount, paymentsModel);
             dismiss();
@@ -167,6 +183,10 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
             }
         }
         return responsibilityTypes;
+    }
+
+    private double getMinimumPayment(){
+        return paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments().getMinimumPartialPaymentAmount();
     }
 
 }

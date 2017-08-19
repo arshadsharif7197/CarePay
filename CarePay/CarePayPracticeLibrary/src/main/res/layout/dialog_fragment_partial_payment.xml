@@ -53,7 +53,7 @@
             android:orientation="vertical">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/enter_amount_header"
+                android:id="@+id/partialPaymentHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
