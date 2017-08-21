@@ -37,6 +37,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -186,6 +187,15 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
         noApptTitle.setText(Label.getLabel("no_appointment_slots_title"));
         TextView noApptMessage = (TextView) view.findViewById(R.id.no_apt_message_desc);
         noApptMessage.setText(Label.getLabel("no_appointment_slots_message"));
+
+        TextView prepaymentMessage = (TextView) view.findViewById(R.id.prepaymentMessage);
+        if(selectedVisitTypeDTO.getAmount() > 0) {
+            String message = Label.getLabel("appointment_prepayment_message") + NumberFormat.getCurrencyInstance().format(selectedVisitTypeDTO.getAmount());
+            prepaymentMessage.setText(message);
+            prepaymentMessage.setVisibility(View.VISIBLE);
+        }else{
+            prepaymentMessage.setVisibility(View.GONE);
+        }
     }
 
 

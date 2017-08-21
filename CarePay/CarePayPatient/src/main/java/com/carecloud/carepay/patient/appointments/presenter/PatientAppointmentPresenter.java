@@ -82,7 +82,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
         practiceId = selectedResourcesPracticeDTO.getPracticeId();
         practiceMgmt = selectedResourcesPracticeDTO.getPracticeMgmt();
 
-        VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog.newInstance(appointmentResourcesDTO, appointmentsResultModel);
+        VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog.newInstance(appointmentResourcesDTO, appointmentsResultModel, getPracticeSettings());
         viewHandler.displayDialogFragment(dialog, true);
     }
 
