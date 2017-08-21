@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentCompletedInterface;
 import com.carecloud.carepaylibray.payments.models.PatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -38,6 +39,8 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
         try {
             if (context instanceof PaymentViewHandler) {
                 callback = ((PaymentViewHandler) context).getPaymentPresenter();
+            }else if (context instanceof AppointmentViewHandler){
+                callback = (PaymentCompletedInterface) ((AppointmentViewHandler) context).getAppointmentPresenter();
             } else {
                 callback = (PaymentCompletedInterface) context;
             }

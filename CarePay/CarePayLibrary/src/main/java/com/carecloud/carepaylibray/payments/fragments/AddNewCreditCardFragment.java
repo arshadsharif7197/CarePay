@@ -16,6 +16,7 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -44,6 +45,8 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         try {
             if(context instanceof PaymentViewHandler){
                 callback = ((PaymentViewHandler) context).getPaymentPresenter();
+            }else if (context instanceof AppointmentViewHandler){
+                callback = (PaymentConfirmationInterface) ((AppointmentViewHandler) context).getAppointmentPresenter();
             }else {
                 callback = (PaymentConfirmationInterface) context;
             }

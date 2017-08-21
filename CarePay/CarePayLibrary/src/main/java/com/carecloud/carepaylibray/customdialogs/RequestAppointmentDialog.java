@@ -5,24 +5,26 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.utils.SystemUtil;
+
+import java.text.NumberFormat;
 
 public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
 
     private final AppointmentsSlotsDTO appointmentSlot;
     private Context context;
-    private AppointmentDTO appointmentDTO;
+    private VisitTypeDTO visitTypeDTO;
 
     private AppointmentNavigationCallback callback;
 
@@ -34,12 +36,13 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
      * @param appointmentsSlot  The appointment slot
      */
     public RequestAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
-                                    AppointmentsSlotsDTO appointmentsSlot) {
+                                    AppointmentsSlotsDTO appointmentsSlot,
+                                    VisitTypeDTO visitTypeDTO) {
 
         super(context, appointmentDTO, true);
         this.context = context;
-        this.appointmentDTO = appointmentDTO;
         this.appointmentSlot = appointmentsSlot;
+        this.visitTypeDTO = visitTypeDTO;
         setupCallback();
     }
 
@@ -73,21 +76,22 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         appointmentRequestButton.setOnClickListener(this);
         appointmentRequestButton.requestFocus();
 
-        CarePayTextView reasonTypeTextView = (CarePayTextView)
-                childActionView.findViewById(R.id.reasonTypeTextView);
-        SystemUtil.setProximaNovaRegularTypeface(context, reasonTypeTextView);
-        reasonTypeTextView.setText(Label.getLabel("visit_type_heading"));
+        TextView reasonTextView = (TextView) childActionView.findViewById(R.id.reasonTextView);
 
-        CarePayTextView reasonTextView = (CarePayTextView)
-                childActionView.findViewById(R.id.reasonTextView);
-        SystemUtil.setProximaNovaRegularTypeface(context, reasonTextView);
+        String visitReason = visitTypeDTO.getName();// (String) appointmentDTO.getPayload().getChiefComplaint();
+        reasonTextView.setText(visitReason);
 
-        String visitReason = (String) appointmentDTO.getPayload().getChiefComplaint();
-        if (SystemUtil.isNotEmptyString(visitReason)) {
-            reasonTextView.setText(visitReason);
+        View prepaidLayout = childActionView.findViewById(R.id.prepaymentLayout);
+        if(visitTypeDTO.getAmount() > 0){
+            prepaidLayout.setVisibility(View.VISIBLE);
+            TextView prepaidAmount = (TextView) childActionView.findViewById(R.id.prepaymentAmount);
+            prepaidAmount.setText(NumberFormat.getCurrencyInstance().format(visitTypeDTO.getAmount()));
+            appointmentRequestButton.setText(Label.getLabel("appointments_prepyment_message"));
+        }else{
+            prepaidLayout.setVisibility(View.GONE);
         }
 
-        ((LinearLayout) getAddActionChildView()).addView(childActionView);
+        ((ViewGroup) getAddActionChildView()).addView(childActionView);
     }
 
     @Override

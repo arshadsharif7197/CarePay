@@ -1,6 +1,8 @@
 package com.carecloud.carepay.patient.appointments.presenter;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
@@ -10,10 +12,13 @@ import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDia
 import com.carecloud.carepay.patient.appointments.fragments.AvailableHoursFragment;
 import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragment;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
+import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.appointment.DataDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
@@ -28,13 +33,26 @@ import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
+import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customdialogs.QrCodeViewDialog;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
+import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
+import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
+import com.carecloud.carepaylibray.payments.models.PatientPaymentPayload;
+import com.carecloud.carepaylibray.payments.models.PaymentExceptionDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.ResponsibilityType;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -58,8 +76,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     private AppointmentDTO appointmentDTO;
 
 
-    public PatientAppointmentPresenter(AppointmentViewHandler viewHandler, AppointmentsResultModel appointmentsResultModel) {
-        super(viewHandler, appointmentsResultModel);
+    public PatientAppointmentPresenter(AppointmentViewHandler viewHandler, AppointmentsResultModel appointmentsResultModel, PaymentsModel paymentsModel) {
+        super(viewHandler, appointmentsResultModel, paymentsModel);
     }
 
     @Override
@@ -162,8 +180,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
         payloadDTO.setStartTime(appointmentsSlot.getStartTime());
         payloadDTO.setEndTime(appointmentsSlot.getEndTime());
         payloadDTO.setLocation(appointmentsSlot.getLocation());
-        payloadDTO.setVisitReasonId(selectedVisitTypeDTO.getId());
-        payloadDTO.setChiefComplaint(selectedVisitTypeDTO.getName());
 
         payloadDTO.setProvider(providersDTO);
         payloadDTO.setProviderId(providersDTO.getId().toString());
@@ -176,39 +192,39 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
         appointmentDTO.setPayload(payloadDTO);
 
         final RequestAppointmentDialog requestAppointmentDialog = new RequestAppointmentDialog(getContext(),
-                appointmentDTO, appointmentsSlot);
+                appointmentDTO, appointmentsSlot, selectedVisitTypeDTO);
         requestAppointmentDialog.show();
     }
 
     @Override
     public void requestAppointment(AppointmentsSlotsDTO appointmentSlot, String comments) {
         Map<String, String> queryMap = new HashMap<>();
-//        queryMap.put("language", getApplicationPreferences().getUserLanguage());
         queryMap.put("practice_mgmt", practiceMgmt);
         queryMap.put("practice_id", practiceId);
 
-        JsonObject patientJSONObj = new JsonObject();
-        patientJSONObj.addProperty("id", patientId);
+        ScheduleAppointmentRequestDTO scheduleAppointmentRequestDTO = new ScheduleAppointmentRequestDTO();
+        ScheduleAppointmentRequestDTO.Appointment appointment = scheduleAppointmentRequestDTO.getAppointment();
+        appointment.setStartTime(appointmentSlot.getStartTime());
+        appointment.setEndTime(appointmentSlot.getEndTime());
+        appointment.setLocationId(appointmentSlot.getLocation().getId());
+        appointment.setLocationGuid(appointmentSlot.getLocation().getGuid());
+        appointment.setProviderId(selectedAppointmentResourcesDTO.getResource().getProvider().getId());
+        appointment.setProviderGuid(selectedAppointmentResourcesDTO.getResource().getProvider().getGuid());
+        appointment.setVisitReasonId(selectedVisitTypeDTO.getId());
+        appointment.setResourceId(selectedAppointmentResourcesDTO.getResource().getId());
+        appointment.setComplaint(selectedVisitTypeDTO.getName());
+        appointment.setComments(comments);
 
-        JsonObject appointmentJSONObj = new JsonObject();
-        appointmentJSONObj.addProperty("start_time", appointmentSlot.getStartTime());
-        appointmentJSONObj.addProperty("end_time", appointmentSlot.getEndTime());
-        appointmentJSONObj.addProperty("appointment_status_id", "5");
-        appointmentJSONObj.addProperty("location_id", appointmentSlot.getLocation().getId());
-        appointmentJSONObj.addProperty("provider_id", selectedAppointmentResourcesDTO.getResource().getProvider().getId());
-        appointmentJSONObj.addProperty("visit_reason_id", selectedVisitTypeDTO.getId());
-        appointmentJSONObj.addProperty("resource_id", selectedAppointmentResourcesDTO.getResource().getId());
-        appointmentJSONObj.addProperty("chief_complaint", selectedVisitTypeDTO.getName());
-        appointmentJSONObj.addProperty("comments", comments);
+        appointment.getPatient().setId(patientId);
 
-        appointmentJSONObj.add("patient", patientJSONObj);
-
-        JsonObject makeAppointmentJSONObj = new JsonObject();
-        makeAppointmentJSONObj.add("appointment", appointmentJSONObj);
-
-        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getMakeAppointment();
-
-        viewHandler.getWorkflowServiceHelper().execute(transitionDTO, getMakeAppointmentCallback, makeAppointmentJSONObj.toString(), queryMap);
+        double amount = selectedVisitTypeDTO.getAmount();
+        if(amount > 0 && paymentsModel != null){
+            startPrepaymentProcess(scheduleAppointmentRequestDTO, amount);
+        }else {
+            Gson gson = new Gson();
+            TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getMakeAppointment();
+            viewHandler.getWorkflowServiceHelper().execute(transitionDTO, getMakeAppointmentCallback, gson.toJson(scheduleAppointmentRequestDTO), queryMap);
+        }
     }
 
     @Override
@@ -426,4 +442,118 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     };
 
 
+    @Override
+    public void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDTO, double amount) {
+        PaymentPostModel postModel = new PaymentPostModel();
+        postModel.setAmount(amount);
+
+        PaymentObject paymentObject = new PaymentObject();
+        paymentObject.setAmount(amount);
+        paymentObject.setProviderID(appointmentRequestDTO.getAppointment().getProviderGuid());
+        paymentObject.setLocationID(appointmentRequestDTO.getAppointment().getLocationGuid());
+        paymentObject.setResponsibilityType(ResponsibilityType.prepayment);
+
+        postModel.getPaymentObjects().add(paymentObject);
+        postModel.setAppointmentRequestDTO(appointmentRequestDTO);
+
+        paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
+
+        onPayButtonClicked(amount, paymentsModel);
+    }
+
+    @Override
+    public void requestAppointment(PaymentPostModel paymentPostModel, ScheduleAppointmentRequestDTO appointmentRequestDTO) {
+
+    }
+
+    @Override
+    public void showAddCard(double amount, PaymentsModel paymentsModel) {
+        Gson gson = new Gson();
+        Bundle args = new Bundle();
+        String paymentsDTOString = gson.toJson(paymentsModel);
+        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
+        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+        Fragment fragment = new AddNewCreditCardFragment();
+        fragment.setArguments(args);
+        viewHandler.navigateToFragment(fragment, true);
+    }
+
+    @Override
+    public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
+        PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment.newInstance(paymentsModel, amount);
+        viewHandler.navigateToFragment(prepaymentFragment, true);
+    }
+
+    @Override
+    public void onPaymentPlanAction(PaymentsModel paymentsModel) {
+        PaymentPlanFragment fragment = new PaymentPlanFragment();
+
+        Bundle args = new Bundle();
+        Gson gson = new Gson();
+        String paymentsDTOString = gson.toJson(paymentsModel);
+        args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+        fragment.setArguments(args);
+
+        viewHandler.navigateToFragment(fragment, true);
+    }
+
+    @Override
+    public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel, selectedPaymentMethod.getLabel(), amount);
+            viewHandler.navigateToFragment(fragment, true);
+        } else {
+            showAddCard(amount, paymentsModel);
+        }
+    }
+
+    @Nullable
+    @Override
+    public String getAppointmentId() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public AppointmentDTO getAppointment() {
+        return null;
+    }
+
+    @Override
+    public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
+        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+        PatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload().get(0);
+        if(payload.getPaymentExceptions()!=null && !payload.getPaymentExceptions().isEmpty() && payload.getTotal()==0D){
+            StringBuilder builder = new StringBuilder();
+            for(PaymentExceptionDTO paymentException : payload.getPaymentExceptions()){
+                builder.append(paymentException.getMessage());
+                builder.append("\n");
+            }
+            int last = builder.lastIndexOf("\n");
+            builder.replace(last, builder.length(), "");
+            ((ISession)viewHandler.getContext()).showErrorNotification(builder.toString());
+        }else {
+            Bundle args = new Bundle();
+            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
+
+            PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
+            confirmationFragment.setArguments(args);
+            viewHandler.displayDialogFragment(confirmationFragment, false);
+        }
+    }
+
+    @Override
+    public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
+        for (UserPracticeDTO userPracticeDTO : paymentsModel.getPaymentPayload().getUserPractices()){
+            if(userPracticeDTO.getPatientId()!=null && userPracticeDTO.getPatientId().equals(patientId)){
+                return userPracticeDTO;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void completePaymentProcess(WorkflowDTO workflowDTO) {
+        onAppointmentRequestSuccess();
+    }
 }
