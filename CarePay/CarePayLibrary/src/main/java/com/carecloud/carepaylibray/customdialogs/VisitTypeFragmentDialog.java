@@ -2,13 +2,13 @@ package com.carecloud.carepaylibray.customdialogs;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.label.Label;
@@ -18,6 +18,7 @@ import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentDialogF
 import com.carecloud.carepaylibray.appointments.interfaces.VisitTypeInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -26,10 +27,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment {
+public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment implements VisitTypeListAdapter.VisitTypeSelectionCallback {
 
     private VisitTypeInterface callback;
     private List<VisitTypeDTO> visitTypeList;
+    private AppointmentsSettingDTO appointmentSettings;
     private AppointmentResourcesDTO model;
     private AppointmentsResultModel appointmentsResultModel;
 
@@ -40,11 +42,13 @@ public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment {
      * @param appointmentsResultModel The appointment resource model
      */
     public static VisitTypeFragmentDialog newInstance(AppointmentResourcesDTO model,
-                                                      AppointmentsResultModel appointmentsResultModel) {
+                                                      AppointmentsResultModel appointmentsResultModel,
+                                                      AppointmentsSettingDTO appointmentsSettings) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, model);
         DtoHelper.bundleDto(args, appointmentsResultModel);
+        DtoHelper.bundleDto(args, appointmentsSettings);
 
         VisitTypeFragmentDialog dialog = new VisitTypeFragmentDialog();
         dialog.setArguments(args);
@@ -93,7 +97,7 @@ public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment {
         model = DtoHelper.getConvertedDTO(AppointmentResourcesDTO.class, arguments);
         appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, arguments);
         visitTypeList = model.getResource().getVisitReasons();
-
+        appointmentSettings = DtoHelper.getConvertedDTO(AppointmentsSettingDTO.class, arguments);
     }
 
     @Override
@@ -123,11 +127,6 @@ public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment {
 
         setCancelable(closeView == null);
 
-        if (view.findViewById(R.id.visit_type_header_title) != null) {
-            TextView title = (TextView) view.findViewById(R.id.visit_type_header_title);
-            title.setText(Label.getLabel("visit_type_heading"));
-        }
-
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.respons_toolbar);
         if (toolbar != null) {
             TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
@@ -140,17 +139,9 @@ public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment {
         }
 
         // Load and display list
-        ListView visitTypeListView = (ListView) view.findViewById(R.id.visitTypeList);
-        visitTypeListView.setAdapter(new VisitTypeListAdapter(view.getContext(), visitTypeList));
-        visitTypeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                VisitTypeDTO selectedVisitType = visitTypeList.get(position);
-                dismiss();
-                callback.onVisitTypeSelected(selectedVisitType, model, appointmentsResultModel);
-
-            }
-        });
+        RecyclerView visitTypeListView = (RecyclerView) view.findViewById(R.id.visitTypeList);
+        visitTypeListView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        visitTypeListView.setAdapter(new VisitTypeListAdapter(view.getContext(), visitTypeList, appointmentSettings.getPrePayments(), this));
     }
 
     private void sortVisitTypeListByName() {
@@ -163,5 +154,11 @@ public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment {
                 return -1;
             }
         });
+    }
+
+    @Override
+    public void onVisitTypeSelected(VisitTypeDTO visitTypeDTO) {
+        dismiss();
+        callback.onVisitTypeSelected(visitTypeDTO, model, appointmentsResultModel);
     }
 }

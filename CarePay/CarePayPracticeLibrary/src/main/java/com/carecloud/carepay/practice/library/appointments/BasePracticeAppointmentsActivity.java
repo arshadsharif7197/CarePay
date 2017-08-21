@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by cocampo on 3/13/17.
+ * Created by cocampo on 3/13/17
  */
 
 public abstract class BasePracticeAppointmentsActivity extends BasePracticeActivity
@@ -46,11 +46,9 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     private AppointmentResourcesDTO appointmentResourcesDTO;
     private AppointmentsResultModel appointmentsResultModel;
-    private AppointmentAvailabilityDTO availabilityDTO;
     private VisitTypeDTO visitTypeDTO;
 
     private String patientId;
-    private static final String LOG_TAG = "BasePracticeAppointment";
 
     /**
      * Shows Confirmation after Appointment Created
@@ -66,7 +64,6 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     @Override
     public void onHoursAndLocationSelected(AppointmentsSlotsDTO appointmentsSlot, AppointmentAvailabilityDTO availabilityDTO) {
-        this.availabilityDTO = availabilityDTO;
         // Call Request appointment Summary dialog from here
         String cancelString = Label.getLabel("available_hours_back");
         new PracticeRequestAppointmentDialog(
@@ -172,7 +169,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         }
         ft.addToBackStack(null);
 
-        VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog.newInstance(appointmentResourcesDTO, appointmentsResultModel);
+        VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog.newInstance(appointmentResourcesDTO, appointmentsResultModel, appointmentsResultModel.getPayload().getAppointmentsSettings().get(0));
         dialog.show(ft, tag);
     }
 
