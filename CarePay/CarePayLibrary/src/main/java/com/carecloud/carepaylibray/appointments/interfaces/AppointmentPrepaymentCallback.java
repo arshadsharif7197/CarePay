@@ -4,7 +4,6 @@ import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentReques
 import com.carecloud.carepaylibray.payments.interfaces.ChooseCreditCardInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentCompletedInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodInterface;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
 
 /**
  * Created by lmenendez on 8/21/17
@@ -13,7 +12,5 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
 public interface AppointmentPrepaymentCallback extends PaymentMethodInterface, ChooseCreditCardInterface, PaymentCompletedInterface {
 
     void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDTO, double amount);
-
-    void requestAppointment(PaymentPostModel paymentPostModel, ScheduleAppointmentRequestDTO appointmentRequestDTO);
 
 }

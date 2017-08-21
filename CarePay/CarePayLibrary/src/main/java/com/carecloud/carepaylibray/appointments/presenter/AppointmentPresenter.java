@@ -16,7 +16,12 @@ public abstract class AppointmentPresenter implements AppointmentNavigationCallb
     protected AppointmentViewHandler viewHandler;
     protected PaymentsModel paymentsModel;
 
-
+    /**
+     * Constructor
+     * @param viewHandler viewHandler
+     * @param appointmentsResultModel appointment model
+     * @param paymentsModel payment model
+     */
     public AppointmentPresenter(AppointmentViewHandler viewHandler, AppointmentsResultModel appointmentsResultModel, PaymentsModel paymentsModel){
         this.viewHandler = viewHandler;
         this.appointmentsResultModel = appointmentsResultModel;

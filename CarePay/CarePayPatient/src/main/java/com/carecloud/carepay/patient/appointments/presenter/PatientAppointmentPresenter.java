@@ -462,11 +462,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     }
 
     @Override
-    public void requestAppointment(PaymentPostModel paymentPostModel, ScheduleAppointmentRequestDTO appointmentRequestDTO) {
-
-    }
-
-    @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
         Gson gson = new Gson();
         Bundle args = new Bundle();
