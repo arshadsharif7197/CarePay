@@ -141,7 +141,7 @@ public class CareTeamDetailFragment extends BaseFragment {
         });
         view.findViewById(R.id.medicalRecordButton).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage(Label.getLabel("my_health_download_confirm_message"))
                         .setPositiveButton(Label.getLabel("my_health_confirm_download_button_label"),
