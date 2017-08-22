@@ -23,7 +23,7 @@ public class PaymentPostModel {
     private JsonObject transactionResponse;
 
     @SerializedName("appointment")
-    private ScheduleAppointmentRequestDTO appointmentRequestDTO;
+    private ScheduleAppointmentRequestDTO.Appointment appointmentRequestDTO;
 
     @SerializedName("appointment_id")
     private String appointmentId;
@@ -89,11 +89,11 @@ public class PaymentPostModel {
         return payAmount == amount;
     }
 
-    public ScheduleAppointmentRequestDTO getAppointmentRequestDTO() {
+    public ScheduleAppointmentRequestDTO.Appointment getAppointmentRequestDTO() {
         return appointmentRequestDTO;
     }
 
-    public void setAppointmentRequestDTO(ScheduleAppointmentRequestDTO appointmentRequestDTO) {
+    public void setAppointmentRequestDTO(ScheduleAppointmentRequestDTO.Appointment appointmentRequestDTO) {
         this.appointmentRequestDTO = appointmentRequestDTO;
     }
 
