@@ -67,7 +67,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             hideProgressDialog();
             DemographicDTO demographicDTO = new Gson().fromJson(workflowDTO.toString(), DemographicDTO.class);
 
-            if (checkinFlowCallback.getCurrentStep() >= 5) {
+            if (checkinFlowCallback.getCurrentStep() >= checkinFlowCallback.getTotalSteps()) {
                 checkinFlowCallback.setCurrentStep(checkinFlowCallback.getCurrentStep() + 1);
                 checkinFlowCallback.navigateToWorkflow(workflowDTO);
             } else {
@@ -89,7 +89,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         View view = inflater.inflate(R.layout.fragment_review_demographic_base, container, false);
         stepProgressBar = (StepProgressBar) view.findViewById(R.id.stepProgressBarCheckin);
 //        stepProgressBar.setCumulativeDots(true);
-        stepProgressBar.setNumDots(5);
+        stepProgressBar.setNumDots(checkinFlowCallback.getTotalSteps());
         inflateContent(inflater, view);
         //initializeToolbar(view);
         inflateToolbarViews(view);
@@ -178,7 +178,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             public void onClick(View buttonView) {
                 if (passConstraints(view)) {
                     DemographicDTO demographicDTO = updateDemographicDTO(view);
-                    openNextFragment(demographicDTO, (checkinFlowCallback.getCurrentStep() + 1) > 5);
+                    openNextFragment(demographicDTO, (checkinFlowCallback.getCurrentStep() + 1) > checkinFlowCallback.getTotalSteps());
                 }
             }
         });

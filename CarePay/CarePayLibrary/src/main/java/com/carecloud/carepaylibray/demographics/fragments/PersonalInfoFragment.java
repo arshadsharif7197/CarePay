@@ -33,6 +33,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressP
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.media.MediaScannerPresenter;
 import com.carecloud.carepaylibray.media.MediaViewInterface;
@@ -89,9 +90,9 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
     @Override
     public void onResume() {
         super.onResume();
-        stepProgressBar.setCurrentProgressDot(0);
-        checkinFlowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 1);
-        checkinFlowCallback.setCurrentStep(1);
+        stepProgressBar.setCurrentProgressDot(CheckinFlowCallback.PERSONAL_INFO - 1);
+        checkinFlowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, checkinFlowCallback.getTotalSteps(), CheckinFlowCallback.PERSONAL_INFO);
+        checkinFlowCallback.setCurrentStep(CheckinFlowCallback.PERSONAL_INFO);
     }
 
 
