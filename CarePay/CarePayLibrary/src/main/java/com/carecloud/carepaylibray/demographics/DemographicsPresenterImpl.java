@@ -272,8 +272,39 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     @Override
-    public Integer getCurrentStep() {
+    public int getCurrentStep() {
         return currentDemographicStep;
+    }
+
+    @Override
+    public int getTotalSteps() {
+        int countSteps = 0;
+        for(int i=0; i<MAX_STEPS; i++){
+            countSteps += hasStep(i+1);
+        }
+        return countSteps;
+    }
+
+    @Override
+    public int hasStep(int step) {
+        switch (step){
+            case PERSONAL_INFO:
+            case ADDRESS:
+            case DEMOGRAPHICS:
+                return 1;
+            case IDENTITY:
+                if(false) {//check if identity is disabled
+                    return 0;
+                }
+                return 1;
+            case INSURANCE:
+                if(false){//check if insurance is disabled
+                    return 0;
+                }
+                return 1;
+            default:
+                return 0;
+        }
     }
 
     @Override
@@ -347,16 +378,19 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     protected CheckInDemographicsBaseFragment getDemographicFragment(int step) {
+        if(hasStep(step)!=1){
+            return getDemographicFragment(++step);
+        }
         switch (step) {
-            case 1:
+            case PERSONAL_INFO:
                 return new PersonalInfoFragment();
-            case 2:
+            case ADDRESS:
                 return new AddressFragment();
-            case 3:
+            case DEMOGRAPHICS:
                 return new DemographicsFragment();
-            case 4:
+            case IDENTITY:
                 return new IdentificationFragment();
-            case 5:
+            case INSURANCE:
                 return new HealthInsuranceFragment();
             default:
                 return null;

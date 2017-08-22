@@ -20,6 +20,7 @@ import com.carecloud.carepaylibray.demographics.adapters.InsuranceLineItemsListA
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -148,9 +149,11 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         if (callback == null) {
             attachCallback(getContext());
         }
-        stepProgressBar.setCurrentProgressDot(4);
-        checkinFlowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 5);
-        checkinFlowCallback.setCurrentStep(5);
+        int total = checkinFlowCallback.getTotalSteps();
+        int step = CheckinFlowCallback.INSURANCE>total?total:CheckinFlowCallback.INSURANCE;
+        stepProgressBar.setCurrentProgressDot(step-1);
+        checkinFlowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, total, step);
+        checkinFlowCallback.setCurrentStep(step);
     }
 
     @Override
