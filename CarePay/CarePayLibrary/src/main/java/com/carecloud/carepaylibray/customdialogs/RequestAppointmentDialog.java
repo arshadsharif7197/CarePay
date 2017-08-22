@@ -86,7 +86,7 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
             prepaidLayout.setVisibility(View.VISIBLE);
             TextView prepaidAmount = (TextView) childActionView.findViewById(R.id.prepaymentAmount);
             prepaidAmount.setText(NumberFormat.getCurrencyInstance().format(visitTypeDTO.getAmount()));
-            appointmentRequestButton.setText(Label.getLabel("appointments_prepyment_message"));
+            appointmentRequestButton.setText(Label.getLabel("appointments_prepayment_button"));
         }else{
             prepaidLayout.setVisibility(View.GONE);
         }

@@ -69,7 +69,7 @@
                 android:textSize="@dimen/apt_available_hours_list_row_text"
                 tools:text="Required Prepayment "
                 app:customAssetFont="proxima_nova_regular"
-                breeze:textKey="appointments_prepyment_message"/>
+                breeze:textKey="appointments_prepayment_message"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/prepaymentAmount"
