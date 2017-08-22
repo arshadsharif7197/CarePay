@@ -19,6 +19,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
@@ -32,6 +33,7 @@ import com.google.gson.Gson;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -165,7 +167,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         }
         ft.addToBackStack(null);
 
-        VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog.newInstance(appointmentResourcesDTO, appointmentsResultModel, appointmentsResultModel.getPayload().getAppointmentsSettings().get(0));
+        VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog.newInstance(appointmentResourcesDTO, appointmentsResultModel, getAppointmentsSettings());
         dialog.show(ft, tag);
     }
 
@@ -251,4 +253,12 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     protected abstract TransitionDTO getMakeAppointmentTransition();
 
     protected abstract LinksDTO getLinks();
+
+    private AppointmentsSettingDTO getAppointmentsSettings(){
+        List<AppointmentsSettingDTO> appointmentsSettingDTOList = appointmentsResultModel.getPayload().getAppointmentsSettings();
+        if(!appointmentsSettingDTOList.isEmpty()){
+            return appointmentsSettingDTOList.get(0);
+        }
+        return new AppointmentsSettingDTO();
+    }
 }
