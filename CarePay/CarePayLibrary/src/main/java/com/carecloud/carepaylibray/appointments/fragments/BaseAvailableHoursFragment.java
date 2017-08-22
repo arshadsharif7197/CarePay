@@ -190,7 +190,7 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
 
         TextView prepaymentMessage = (TextView) view.findViewById(R.id.prepaymentMessage);
         if(selectedVisitTypeDTO.getAmount() > 0) {
-            String message = Label.getLabel("appointment_prepayment_message") + NumberFormat.getCurrencyInstance().format(selectedVisitTypeDTO.getAmount());
+            String message = Label.getLabel("appointments_prepayment_message") + NumberFormat.getCurrencyInstance().format(selectedVisitTypeDTO.getAmount());
             prepaymentMessage.setText(message);
             prepaymentMessage.setVisibility(View.VISIBLE);
         }else{

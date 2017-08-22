@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.payments.models.postmodel;
 
+import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
@@ -20,6 +21,12 @@ public class PaymentPostModel {
 
     @SerializedName("transaction_response")
     private JsonObject transactionResponse;
+
+    @SerializedName("appointment")
+    private ScheduleAppointmentRequestDTO appointmentRequestDTO;
+
+    @SerializedName("appointment_id")
+    private String appointmentId;
 
     public double getAmount() {
         return amount;
@@ -80,5 +87,21 @@ public class PaymentPostModel {
             }
             }
         return payAmount == amount;
+    }
+
+    public ScheduleAppointmentRequestDTO getAppointmentRequestDTO() {
+        return appointmentRequestDTO;
+    }
+
+    public void setAppointmentRequestDTO(ScheduleAppointmentRequestDTO appointmentRequestDTO) {
+        this.appointmentRequestDTO = appointmentRequestDTO;
+    }
+
+    public String getAppointmentId() {
+        return appointmentId;
+    }
+
+    public void setAppointmentId(String appointmentId) {
+        this.appointmentId = appointmentId;
     }
 }

@@ -19,18 +19,21 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
+import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.gson.JsonObject;
+import com.google.gson.Gson;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -92,30 +95,25 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     @Override
     public void requestAppointment(AppointmentsSlotsDTO appointmentSlot, String comments) {
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("language", getApplicationPreferences().getUserLanguage());
         queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
         queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
 
-        JsonObject appointmentJSONObj = new JsonObject();
-        JsonObject patientJSONObj = new JsonObject();
 
-        patientJSONObj.addProperty("id", patientId);
-        appointmentJSONObj.addProperty("start_time", appointmentSlot.getStartTime());
-        appointmentJSONObj.addProperty("end_time", appointmentSlot.getEndTime());
-        appointmentJSONObj.addProperty("appointment_status_id", "5");
-        appointmentJSONObj.addProperty("location_id", appointmentSlot.getLocation().getId());
-        appointmentJSONObj.addProperty("provider_id", appointmentResourcesDTO.getResource().getProvider().getId());
-        appointmentJSONObj.addProperty("visit_reason_id", visitTypeDTO.getId());
-        appointmentJSONObj.addProperty("resource_id", appointmentResourcesDTO.getResource().getId());
-        appointmentJSONObj.addProperty("chief_complaint", visitTypeDTO.getName());
-        appointmentJSONObj.addProperty("comments", comments);
-        appointmentJSONObj.add("patient", patientJSONObj);
+        ScheduleAppointmentRequestDTO scheduleAppointmentRequestDTO = new ScheduleAppointmentRequestDTO();
+        ScheduleAppointmentRequestDTO.Appointment appointment = scheduleAppointmentRequestDTO.getAppointment();
+        appointment.setStartTime(appointmentSlot.getStartTime());
+        appointment.setEndTime(appointmentSlot.getEndTime());
+        appointment.setLocationId(appointmentSlot.getLocation().getId());
+        appointment.setProviderId(appointmentResourcesDTO.getResource().getProvider().getId());
+        appointment.setVisitReasonId(visitTypeDTO.getId());
+        appointment.setResourceId(appointmentResourcesDTO.getResource().getId());
+        appointment.setComplaint(visitTypeDTO.getName());
+        appointment.setComments(comments);
 
-        JsonObject makeAppointmentJSONObj = new JsonObject();
-        makeAppointmentJSONObj.add("appointment", appointmentJSONObj);
+        appointment.getPatient().setId(patientId);
 
-        getWorkflowServiceHelper().execute(getMakeAppointmentTransition(), getMakeAppointmentCallback, makeAppointmentJSONObj
-                .toString(), queryMap);
+        Gson gson = new Gson();
+        getWorkflowServiceHelper().execute(getMakeAppointmentTransition(), getMakeAppointmentCallback, gson.toJson(scheduleAppointmentRequestDTO), queryMap);
     }
 
     @Override
@@ -169,7 +167,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         }
         ft.addToBackStack(null);
 
-        VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog.newInstance(appointmentResourcesDTO, appointmentsResultModel, appointmentsResultModel.getPayload().getAppointmentsSettings().get(0));
+        VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog.newInstance(appointmentResourcesDTO, appointmentsResultModel, getAppointmentsSettings());
         dialog.show(ft, tag);
     }
 
@@ -255,4 +253,12 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     protected abstract TransitionDTO getMakeAppointmentTransition();
 
     protected abstract LinksDTO getLinks();
+
+    private AppointmentsSettingDTO getAppointmentsSettings(){
+        List<AppointmentsSettingDTO> appointmentsSettingDTOList = appointmentsResultModel.getPayload().getAppointmentsSettings();
+        if(!appointmentsSettingDTOList.isEmpty()){
+            return appointmentsSettingDTOList.get(0);
+        }
+        return new AppointmentsSettingDTO();
+    }
 }
