@@ -50,7 +50,8 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         LayoutInflater inflater = LayoutInflater.from(this);
         inflater.setFactory2(new CarePayLayoutInflaterFactory(this));
         super.onCreate(savedInstanceState);
-        if(handler == null) {
+        isVisible = true;
+        if (handler == null) {
             handler = new Handler();
         }
     }
@@ -105,12 +106,12 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     }
 
     @Override
-    public void setLastInteraction(long systemTime){
+    public void setLastInteraction(long systemTime) {
         ((IApplicationSession) getApplication()).setLastInteraction(systemTime);
     }
 
     @Override
-    public long getLastInteraction(){
+    public long getLastInteraction() {
         return ((IApplicationSession) getApplication()).getLastInteraction();
     }
 
@@ -167,7 +168,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             }
             errorNotification.showPopWindow();
         } catch (Exception e) {
-            Log.e("Base Activity", e.getMessage()+"");
+            Log.e("Base Activity", e.getMessage() + "");
         }
     }
 
@@ -367,7 +368,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         @Override
         public void run() {
             long now = System.currentTimeMillis();
-            if(now - getLastInteraction() > LOGOUT_SESSION_TIMEOUT && !isForeground && !isFinishing()){
+            if (now - getLastInteraction() > LOGOUT_SESSION_TIMEOUT && !isForeground && !isFinishing()) {
                 getApplicationMode().clearUserPracticeDTO();
                 AppAuthorizationHelper authHelper = getAppAuthorizationHelper();
                 authHelper.setUser(null);
