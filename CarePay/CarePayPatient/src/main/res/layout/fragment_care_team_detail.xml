@@ -385,6 +385,28 @@
 
             </RelativeLayout>
 
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/medicalRecordButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/phoneContainer"
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:layout_marginEnd="@dimen/dimen_15dp"
+                android:layout_marginStart="@dimen/dimen_15dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:background="@drawable/button_default_background"
+                android:foreground="?android:selectableItemBackground"
+                android:gravity="center"
+                android:paddingBottom="@dimen/dimen_10dp"
+                android:paddingEnd="@dimen/dimen_20dp"
+                android:paddingStart="@dimen/dimen_20dp"
+                android:paddingTop="@dimen/dimen_10dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="my_health_download_medical_record_button_label"
+                tools:text="DOWNLOAD MEDICAL RECORD" />
+
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
 </RelativeLayout>

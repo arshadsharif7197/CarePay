@@ -1,10 +1,12 @@
 package com.carecloud.carepay.patient.myhealth.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -91,6 +93,11 @@ public class CareTeamDetailFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpToolbar(view);
+        setUpUI(view);
+
+    }
+
+    private void setUpUI(View view) {
         final TextView avatarTextView = (TextView) view.findViewById(R.id.avatarTextView);
         avatarTextView.setText(StringUtil.getShortName(provider.getFullName()));
         final ImageView providerImageView = (ImageView) view.findViewById(R.id.providerImageView);
@@ -132,7 +139,26 @@ public class CareTeamDetailFragment extends BaseFragment {
                 dialPhoneNumber(provider.getPhone());
             }
         });
-
+        view.findViewById(R.id.medicalRecordButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage(Label.getLabel("my_health_download_confirm_message"))
+                        .setPositiveButton(Label.getLabel("my_health_confirm_download_button_label"),
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        callback.onSeeAllFullMedicalRecordClicked();
+                                    }
+                                })
+                        .setNegativeButton(Label.getLabel("my_health_cancel"),
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                builder.create().show();
+            }
+        });
     }
 
     private void dialPhoneNumber(String phoneNumber) {
