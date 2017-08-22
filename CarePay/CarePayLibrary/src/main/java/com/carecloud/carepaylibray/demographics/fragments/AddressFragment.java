@@ -22,6 +22,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressP
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -74,9 +75,9 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        stepProgressBar.setCurrentProgressDot(1);
-        checkinFlowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 2);
-        checkinFlowCallback.setCurrentStep(2);
+        stepProgressBar.setCurrentProgressDot(CheckinFlowCallback.ADDRESS - 1);
+        checkinFlowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, checkinFlowCallback.getTotalSteps(), CheckinFlowCallback.ADDRESS);
+        checkinFlowCallback.setCurrentStep(CheckinFlowCallback.ADDRESS);
     }
 
 
