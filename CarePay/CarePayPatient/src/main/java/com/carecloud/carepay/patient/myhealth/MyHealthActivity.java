@@ -21,6 +21,7 @@ import com.carecloud.carepay.patient.myhealth.dtos.AllergyDto;
 import com.carecloud.carepay.patient.myhealth.dtos.LabDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MedicationDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
+import com.carecloud.carepay.patient.myhealth.dtos.PatientDto;
 import com.carecloud.carepay.patient.myhealth.fragments.AllergyDetailFragment;
 import com.carecloud.carepay.patient.myhealth.fragments.CareTeamDetailFragment;
 import com.carecloud.carepay.patient.myhealth.fragments.MedicationDetailFragment;
@@ -108,7 +109,13 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
 
     @Override
     public void onSeeAllFullMedicalRecordClicked() {
+        TransitionDTO transitionDTO = myHealthDto.getMetadata().getLinks().getMedicalRecord();
+        PatientDto patientDto = myHealthDto.getPayload().getMyHealthData()
+                .getPatient().getPatients().get(0);
+        String url = String.format("%s?%s=%s", transitionDTO.getUrl(), "patient_id",
+                String.valueOf(patientDto.getId()));
 
+        downloadPdf(url, patientDto.getFullName(), ".pdf", "Medical Record");
     }
 
     @Override
@@ -171,7 +178,8 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
         downloadPdf(url, lab.getName(), ".pdf", lab.getPractice());
     }
 
-    private void downloadPdf(String url, String title, String fileExtension, String description) {
+    private void downloadPdf(String url, String title,
+                             String fileExtension, String description) {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         request.setTitle(title + fileExtension);
         request.setDescription(description);

@@ -63,7 +63,7 @@ public class MedicationsRecyclerViewAdapter extends RecyclerView.Adapter<Medicat
             });
         } else {
             holder.myHealthActionButton.setText(Label.getLabel("my_health_add_medication_button_label"));
-            holder.row.setOnClickListener(new View.OnClickListener() {
+            holder.myHealthActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     callback.addMedication();
