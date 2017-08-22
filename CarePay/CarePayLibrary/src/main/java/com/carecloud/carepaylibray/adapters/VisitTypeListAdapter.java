@@ -30,6 +30,13 @@ public class VisitTypeListAdapter extends RecyclerView.Adapter<VisitTypeListAdap
     private List<AppointmentsPrePaymentDTO> prepaidVisitTypes = new ArrayList<>();
     private Context context;
 
+    /**
+     * Constructor
+     * @param context context
+     * @param visitTypes visit types
+     * @param prepaidVisitTypes prepaid visit types from practice settings
+     * @param callback callback
+     */
     public VisitTypeListAdapter(Context context, List<VisitTypeDTO> visitTypes, List<AppointmentsPrePaymentDTO> prepaidVisitTypes, VisitTypeSelectionCallback callback) {
         this.context = context;
         this.visitTypes = visitTypes;
