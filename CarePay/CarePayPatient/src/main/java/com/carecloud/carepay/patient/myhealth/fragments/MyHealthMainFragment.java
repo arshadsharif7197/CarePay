@@ -268,7 +268,7 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
 
     @Override
     public void onSeeAllFullMedicalRecordClicked() {
-        callback.onSeeAllFullMedicalRecordClicked();
+
     }
 
     @Override

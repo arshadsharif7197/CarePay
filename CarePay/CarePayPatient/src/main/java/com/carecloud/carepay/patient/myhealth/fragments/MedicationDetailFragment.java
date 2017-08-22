@@ -87,8 +87,14 @@ public class MedicationDetailFragment extends BaseFragment {
         medicationNameTextView.setText(medication.getDrugName());
         TextView practiceTextView = (TextView) view.findViewById(R.id.practiceValueTextView);
         practiceTextView.setText(medication.getPractice());
+
         TextView prescribedValueTextView = (TextView) view.findViewById(R.id.prescribedValueTextView);
-        prescribedValueTextView.setText(medication.getProvider().getName());
+        if (medication.getProvider() == null) {
+            prescribedValueTextView.setText("--");
+        } else {
+            prescribedValueTextView.setText(medication.getProvider().getName());
+        }
+
         TextView dateValueTextView = (TextView) view.findViewById(R.id.dateValueTextView);
         dateValueTextView.setText(DateUtil.getInstance().setDateRaw(medication.getEffectiveFrom())
                 .toStringWithFormatMmSlashDdSlashYyyy());

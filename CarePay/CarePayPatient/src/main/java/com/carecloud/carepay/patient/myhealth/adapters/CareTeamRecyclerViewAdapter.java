@@ -81,7 +81,7 @@ public class CareTeamRecyclerViewAdapter extends RecyclerView.Adapter<CareTeamRe
             });
         } else {
             holder.myHealthActionButton.setText(Label.getLabel("my_health_full_medical_record_button_label"));
-            holder.row.setOnClickListener(new View.OnClickListener() {
+            holder.myHealthActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     callback.onSeeAllFullMedicalRecordClicked();
