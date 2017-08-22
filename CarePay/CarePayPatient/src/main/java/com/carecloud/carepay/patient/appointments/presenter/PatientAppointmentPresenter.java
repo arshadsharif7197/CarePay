@@ -454,7 +454,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
         paymentObject.setResponsibilityType(ResponsibilityType.prepayment);
 
         postModel.getPaymentObjects().add(paymentObject);
-        postModel.setAppointmentRequestDTO(appointmentRequestDTO);
+        postModel.setAppointmentRequestDTO(appointmentRequestDTO.getAppointment());
 
         paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
 
@@ -544,7 +544,24 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
                 return userPracticeDTO;
             }
         }
-        return null;
+
+        UserPracticeDTO userPracticeDTO = new UserPracticeDTO();
+        for(ResourcesPracticeDTO resourcesPracticeDTO : appointmentsResultModel.getPayload().getUserPractices()){
+            if(resourcesPracticeDTO.getPracticeId().equals(practiceId)){
+                userPracticeDTO.setPracticeMgmt(resourcesPracticeDTO.getPracticeMgmt());
+                userPracticeDTO.setPracticeId(resourcesPracticeDTO.getPracticeId());
+                userPracticeDTO.setPracticeName(resourcesPracticeDTO.getPracticeName());
+                userPracticeDTO.setPracticePhoto(resourcesPracticeDTO.getPracticePhoto());
+                userPracticeDTO.setPatientId(patientId);
+
+                return userPracticeDTO;
+            }
+        }
+
+        userPracticeDTO.setPatientId(patientId);
+        userPracticeDTO.setPracticeId(practiceId);
+        userPracticeDTO.setPracticeMgmt(practiceMgmt);
+        return userPracticeDTO;
     }
 
     @Override
