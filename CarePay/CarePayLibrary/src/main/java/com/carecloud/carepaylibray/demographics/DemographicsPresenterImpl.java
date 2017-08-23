@@ -293,15 +293,15 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             case DEMOGRAPHICS:
                 return 1;
             case IDENTITY:
-                if(false) {//check if identity is disabled
-                    return 0;
+                if(demographicDTO.getPayload().getCheckinSettings().shouldShowIdentityDocs()) {
+                    return 1;
                 }
-                return 1;
+                return 0;
             case INSURANCE:
-                if(false){//check if insurance is disabled
-                    return 0;
+                if(demographicDTO.getPayload().getCheckinSettings().shouldShowHealthInsurance()){
+                    return 1;
                 }
-                return 1;
+                return 0;
             default:
                 return 0;
         }
