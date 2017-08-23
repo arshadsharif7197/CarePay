@@ -17,6 +17,8 @@ import com.google.gson.Gson;
 
 public class PurchaseActivity extends MenuPatientActivity {
 
+    private PurchaseFragment purchaseFragment;
+
     @Override
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
@@ -24,7 +26,7 @@ public class PurchaseActivity extends MenuPatientActivity {
         AppointmentsResultModel appointmentDTO = getConvertedDTO(AppointmentsResultModel.class);
         Bundle bundle = new Bundle();
         bundle.putString(CarePayConstants.APPOINTMENT_INFO_BUNDLE, gson.toJson(appointmentDTO));
-        PurchaseFragment purchaseFragment = new PurchaseFragment();
+        purchaseFragment = new PurchaseFragment();
         purchaseFragment.setArguments(bundle);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -38,5 +40,12 @@ public class PurchaseActivity extends MenuPatientActivity {
         MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_purchase);
         menuItem.setChecked(true);
         displayToolbar(true, menuItem.getTitle().toString());
+    }
+
+    @Override
+    public void onBackPressed(){
+        if(purchaseFragment == null || !purchaseFragment.handleBackButton()){
+            super.onBackPressed();
+        }
     }
 }
