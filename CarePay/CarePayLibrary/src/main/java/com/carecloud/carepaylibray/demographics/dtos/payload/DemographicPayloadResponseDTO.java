@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.demographics.dtos.payload;
 
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.CheckinSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -23,6 +24,9 @@ public class DemographicPayloadResponseDTO extends DemographicsSettingsPayloadDT
     @SerializedName("appointments")
     @Expose
     private List<AppointmentDTO> appointmentpayloaddto = new ArrayList<>();
+    @SerializedName("checkin_settings")
+    @Expose
+    private CheckinSettingsDTO checkinSettings = new CheckinSettingsDTO();
 
     public DemographicPayloadInfoDTO getDemographics() {
         return demographics;
@@ -52,5 +56,13 @@ public class DemographicPayloadResponseDTO extends DemographicsSettingsPayloadDT
      */
     public void setQrcode(String qrCode) {
         this.qrCode = qrCode;
+    }
+
+    public CheckinSettingsDTO getCheckinSettings() {
+        return checkinSettings;
+    }
+
+    public void setCheckinSettings(CheckinSettingsDTO checkinSettings) {
+        this.checkinSettings = checkinSettings;
     }
 }
