@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.interfaces.AppointmentPrepaymentCallback;
+import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
@@ -20,6 +23,8 @@ import java.text.NumberFormat;
  */
 
 public class PaymentMethodPrepaymentFragment extends PatientPaymentMethodFragment {
+
+    private AppointmentPrepaymentCallback callback;
 
     /**
      * @param paymentsModel the payments DTO
@@ -33,6 +38,20 @@ public class PaymentMethodPrepaymentFragment extends PatientPaymentMethodFragmen
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void attachCallback(Context context) {
+        super.attachCallback(context);
+        try {
+             if (context instanceof AppointmentViewHandler){
+                callback = (AppointmentPrepaymentCallback) ((AppointmentViewHandler) context).getAppointmentPresenter();
+            } else {
+                callback = (AppointmentPrepaymentCallback) context;
+            }
+        } catch (ClassCastException cce) {
+            throw new ClassCastException("Attached Context must implement PaymentMethodInterface");
+        }
     }
 
     @Override
@@ -61,7 +80,8 @@ public class PaymentMethodPrepaymentFragment extends PatientPaymentMethodFragmen
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    dismiss();
+                    getActivity().onBackPressed();
+                    callback.onPaymentDismissed();
                 }
             });
         }

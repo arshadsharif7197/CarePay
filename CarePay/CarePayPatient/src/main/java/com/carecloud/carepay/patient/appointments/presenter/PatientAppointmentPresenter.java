@@ -74,6 +74,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     private AppointmentResourcesDTO selectedAppointmentResourcesDTO;
     private VisitTypeDTO selectedVisitTypeDTO;
     private AppointmentDTO appointmentDTO;
+    private AppointmentsSlotsDTO appointmentSlot;
 
 
     public PatientAppointmentPresenter(AppointmentViewHandler viewHandler, AppointmentsResultModel appointmentsResultModel, PaymentsModel paymentsModel) {
@@ -219,7 +220,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
 
         double amount = selectedVisitTypeDTO.getAmount();
         if(amount > 0 && paymentsModel != null){
-            startPrepaymentProcess(scheduleAppointmentRequestDTO, amount);
+            startPrepaymentProcess(scheduleAppointmentRequestDTO, appointmentSlot, amount);
         }else {
             Gson gson = new Gson();
             TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getMakeAppointment();
@@ -443,7 +444,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
 
 
     @Override
-    public void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDTO, double amount) {
+    public void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDTO, AppointmentsSlotsDTO appointmentSlot, double amount) {
+        this.appointmentSlot = appointmentSlot;
         PaymentPostModel postModel = new PaymentPostModel();
         postModel.setAmount(amount);
 
@@ -459,6 +461,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
         paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
 
         onPayButtonClicked(amount, paymentsModel);
+    }
+
+    @Override
+    public void onPaymentDismissed() {
+        onHoursAndLocationSelected(appointmentSlot, null);
     }
 
     @Override

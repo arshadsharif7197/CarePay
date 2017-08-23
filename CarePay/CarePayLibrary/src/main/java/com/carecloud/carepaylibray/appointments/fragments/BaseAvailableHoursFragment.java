@@ -137,9 +137,11 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
         handler.post(new Runnable() {
             @Override
             public void run() {
-                getAvailableHoursTimeSlots();
-                if (progressView != null) {
-                    progressView.setVisibility(View.GONE);
+                if(isAdded()) {
+                    getAvailableHoursTimeSlots();
+                    if (progressView != null) {
+                        progressView.setVisibility(View.GONE);
+                    }
                 }
             }
         });
