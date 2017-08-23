@@ -194,15 +194,18 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     }
 
     private void downloadPdf(String url, String title,
-                             String fileExtension, String description) {
+                              String fileExtension, String description) {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         request.setTitle(title + fileExtension);
         request.setDescription(description);
+        request.setVisibleInDownloadsUi(true);
+        request.allowScanningByMediaScanner();
+        request.setMimeType("application/pdf");
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.addRequestHeader("Accept", "application/pdf");
         request.addRequestHeader("username", getAppAuthorizationHelper().getCurrUser());
         request.addRequestHeader("Authorization", getAppAuthorizationHelper().getIdToken());
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "");
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, title + fileExtension);
 
         DownloadManager downloadManager = (DownloadManager) getContext()
                 .getSystemService(Context.DOWNLOAD_SERVICE);
