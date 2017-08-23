@@ -17,10 +17,11 @@ import com.carecloud.carepaylibray.appointments.interfaces.AppointmentNavigation
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+
+import java.text.NumberFormat;
 
 public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
 
@@ -89,29 +90,39 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
 
         setDialogTitle(dateUtil.getDateAsDayMonthDayOrdinalYear(Label.getLabel("appointments_web_today_heading")));
 
-        CarePayTextView appointmentTimeTextView = (CarePayTextView) view.findViewById(R.id.appointment_time);
+        TextView appointmentTimeTextView = (TextView) view.findViewById(R.id.appointment_time);
         appointmentTimeTextView.setText(dateUtil.getTime12Hour());
-        SystemUtil.setGothamRoundedBoldTypeface(context, appointmentTimeTextView);
 
-        CarePayTextView providerImageTextView = (CarePayTextView) view.findViewById(R.id.provider_short_name);
+        TextView providerImageTextView = (TextView) view.findViewById(R.id.provider_short_name);
         providerImageTextView.setText(StringUtil.getShortName(appointmentResourcesDTO.getResource().getProvider().getName()));
-        CarePayTextView appointmentDoctorNameTextView = (CarePayTextView) view.findViewById(R.id.provider_doctor_name);
+
+        TextView appointmentDoctorNameTextView = (TextView) view.findViewById(R.id.provider_doctor_name);
         appointmentDoctorNameTextView.setText(appointmentResourcesDTO.getResource().getProvider().getName());
-        CarePayTextView appointmentDoctorSpecialityTextView = (CarePayTextView) view.findViewById(R.id.provider_doctor_speciality);
+
+        TextView appointmentDoctorSpecialityTextView = (TextView) view.findViewById(R.id.provider_doctor_speciality);
         appointmentDoctorSpecialityTextView.setText(appointmentResourcesDTO.getResource().getProvider().getSpecialty().getName());
 
-        CarePayTextView appointmentPlaceNameTextView = (CarePayTextView) view.findViewById(R.id.provider_place_name);
+        TextView appointmentPlaceNameTextView = (TextView) view.findViewById(R.id.provider_place_name);
         appointmentPlaceNameTextView.setText(appointmentSlot.getLocation().getName());
-        SystemUtil.setProximaNovaExtraboldTypeface(context, appointmentPlaceNameTextView);
-        CarePayTextView appointmentAddressTextView = (CarePayTextView) view.findViewById(R.id.provider_place_address);
+
+        TextView appointmentAddressTextView = (TextView) view.findViewById(R.id.provider_place_address);
         appointmentAddressTextView.setText(appointmentSlot.getLocation().getAddress().getPlaceAddressString());
-        CarePayTextView visitTypeLabel = (CarePayTextView) view.findViewById(R.id.visitTypeLabel);
-        visitTypeLabel.setText(Label.getLabel("visit_type_heading"));
 
         initializeVisitTypeTextView(view);
 
         setCancelImage(R.drawable.icn_arrow_left);
         setCancelable(false);
+
+        View prepaidLayout = findViewById(R.id.prepaymentLayout);
+        if(visitTypeDTO.getAmount() > 0){
+            prepaidLayout.setVisibility(View.VISIBLE);
+            TextView prepaidAmount = (TextView) findViewById(R.id.prepaymentAmount);
+            prepaidAmount.setText(NumberFormat.getCurrencyInstance().format(visitTypeDTO.getAmount()));
+            requestAppointmentButton.setText(Label.getLabel("appointments_prepayment_button"));
+        }else{
+            prepaidLayout.setVisibility(View.GONE);
+        }
+
     }
 
     private void initializeVisitTypeTextView(View view) {
