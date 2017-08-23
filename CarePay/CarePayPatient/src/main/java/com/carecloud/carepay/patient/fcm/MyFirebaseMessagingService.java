@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.notifications.activities.NotificationProxyActivity;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.fcm.NotificationModel;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -15,7 +15,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.Map;
 
 /**
- * Created by pjohnson on 4/04/17.
+ * Created by pjohnson on 4/04/17
  */
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -34,7 +34,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             NotificationCompat.Builder builder =
                     new NotificationCompat.Builder(this)
                             .setAutoCancel(true)
-                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .setSmallIcon(R.drawable.notification_icon)
                             .setContentTitle("Breeze")
                             .setContentText(notificationModel.getAlert());
             Intent resultIntent = new Intent(this, NotificationProxyActivity.class);
