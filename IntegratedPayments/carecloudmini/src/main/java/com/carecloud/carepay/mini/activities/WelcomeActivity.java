@@ -1,5 +1,6 @@
 package com.carecloud.carepay.mini.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -9,7 +10,9 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
+import com.carecloud.carepay.mini.models.queue.QueuePaymentRecord;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
+import com.carecloud.carepay.mini.services.QueueUploadService;
 import com.carecloud.carepay.mini.services.carepay.RestCallServiceCallback;
 import com.carecloud.carepay.mini.utils.Defs;
 import com.carecloud.carepay.mini.utils.JsonHelper;
@@ -420,6 +423,14 @@ public class WelcomeActivity extends FullScreenActivity {
                         }
                     }, paymentAttempt * POST_RETRY_DELAY);
                 }else{
+                    if(paymentAttempt >= MAX_RETRIES){
+                        QueuePaymentRecord queuePaymentRecord = new QueuePaymentRecord();
+                        queuePaymentRecord.setPaymentRequestId(paymentRequestId);
+                        queuePaymentRecord.save();
+
+                        Intent queueService = new Intent(WelcomeActivity.this, QueueUploadService.class);
+                        startService(queueService);
+                    }
                     resetDevice(paymentRequestId);
                     updateMessage(getString(R.string.welcome_waiting));
                 }
