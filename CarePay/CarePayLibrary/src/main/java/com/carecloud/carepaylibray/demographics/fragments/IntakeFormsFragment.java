@@ -62,15 +62,15 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
 
             JsonObject form = new JsonObject();
             form.add("formData", payload);
-            if (userResponse == null && displayedFormsIndex == 0) {//only send this the first time
+            if (userResponse == null) {
                 form.add("userData", intakeFindings.getPayload());
             } else {
                 form.add("userData", userResponse);
             }
             String formString = form.toString()
+                    .replace("\\", "\\\\")
                     .replaceAll("\'", Matcher.quoteReplacement("\\\'"))
-                    .replaceAll("\"", Matcher.quoteReplacement("\\\""))
-                    .replace("\\n", "");
+                    .replaceAll("\"", Matcher.quoteReplacement("\\\""));
 
             loadFormUrl(formString, "load_intake");
         }
