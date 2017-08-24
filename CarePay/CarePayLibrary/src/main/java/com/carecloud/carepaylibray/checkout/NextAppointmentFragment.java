@@ -417,6 +417,9 @@ public class NextAppointmentFragment extends BaseFragment {
                 }
             }
         }
+        if(appointmentsSettingsList.isEmpty()){
+            return new AppointmentsSettingDTO();
+        }
         return appointmentsSettingsList.get(0);
     }
 
