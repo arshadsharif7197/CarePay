@@ -37,8 +37,10 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class WelcomeActivity extends FullScreenActivity {
     private static final String TAG = WelcomeActivity.class.getName();
+    private static final int MAX_RETRIES = 3;
     private static final int CONNECTION_RETRY_DELAY = 1000 * 5;
     private static final int PAYMENT_COMPLETE_RESET = 1000 * 3;
+    private static final int POST_RETRY_DELAY = 1000 * 30;
 
     private ApplicationHelper applicationHelper;
     private TextView message;
@@ -411,7 +413,12 @@ public class WelcomeActivity extends FullScreenActivity {
                 CustomErrorToast.showWithMessage(WelcomeActivity.this, errorMessage);
                 if(shouldRetry(errorMessage)) {
                     updateMessage(String.format(getString(R.string.welcome_retrying), paymentAttempt + 1));
-                    postPaymentRequest(paymentRequestId);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            postPaymentRequest(paymentRequestId);
+                        }
+                    }, paymentAttempt * POST_RETRY_DELAY);
                 }else{
                     resetDevice(paymentRequestId);
                     updateMessage(getString(R.string.welcome_waiting));
@@ -421,7 +428,7 @@ public class WelcomeActivity extends FullScreenActivity {
     }
 
     private boolean shouldRetry(String errorMessage){
-        return !errorMessage.contains("payment request has already been completed");
+        return !errorMessage.contains("payment request has already been completed") && paymentAttempt <= MAX_RETRIES;
     }
 
     private void resetDevice(String paymentRequestId){
