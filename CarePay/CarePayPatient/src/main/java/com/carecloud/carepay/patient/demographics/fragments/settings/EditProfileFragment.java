@@ -142,12 +142,14 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
             @Override
             public void onClick(View view) {
                 setupImageBase64();
-                TransitionDTO demographicsSettingsUpdateDemographicsDTO = demographicsSettingsDTO.getMetadata().getTransitions().getUpdateDemographics();
-                DemographicPayloadDTO demographicPayload = demographicsSettingsDTO.getPayload().getDemographics()
-                        .getPayload();
+                TransitionDTO demographicsSettingsUpdateDemographicsDTO = demographicsSettingsDTO
+                        .getMetadata().getTransitions().getUpdateDemographics();
+                DemographicPayloadDTO demographicPayload = demographicsSettingsDTO.getPayload()
+                        .getDemographics().getPayload();
                 Gson gson = new Gson();
                 String jsonInString = gson.toJson(demographicPayload);
-                getWorkflowServiceHelper().execute(demographicsSettingsUpdateDemographicsDTO, updateProfileCallback, jsonInString, null);
+                getWorkflowServiceHelper().execute(demographicsSettingsUpdateDemographicsDTO,
+                        updateProfileCallback, jsonInString, null);
             }
         });
 
@@ -188,8 +190,13 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            DemographicsSettingsDTO updatedModel = DtoHelper.getConvertedDTO(DemographicsSettingsDTO.class, workflowDTO);
-            demographicsSettingsDTO.getPayload().getDemographics().getPayload().setPersonalDetails(updatedModel.getPayload().getDemographics().getPayload().getPersonalDetails());
+            DemographicsSettingsDTO updatedModel = DtoHelper
+                    .getConvertedDTO(DemographicsSettingsDTO.class, workflowDTO);
+            demographicsSettingsDTO.getPayload().getDemographics().getPayload()
+                    .setPersonalDetails(updatedModel.getPayload().getDemographics().getPayload()
+                            .getPersonalDetails());
+            getApplicationPreferences().setUserPhotoUrl(updatedModel.getPayload().getDemographics()
+                    .getPayload().getPersonalDetails().getProfilePhoto());
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
             getActivity().onBackPressed();
         }
@@ -234,7 +241,7 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
             displayImage(filePath, view);
 
             PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
-            demographicsPersonalDetails.setProfilePhoto(filePath);
+            demographicsPersonalDetails.setLocalUriPhoto(filePath);
             hasNewImage = true;
 
         }
@@ -294,21 +301,25 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
     @Override
     public void setupImageBase64() {
         if (hasNewImage) {
-            String filePath = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
+            String filePath = demographicsSettingsDTO.getPayload().getDemographics().getPayload()
+                    .getPersonalDetails().getLocalUriPhoto();
             File file = new File(filePath);
             Bitmap bitmap = null;
             if (file.exists()) {
                 bitmap = BitmapFactory.decodeFile(filePath);
             } else {
                 try {
-                    bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.parse(filePath));
+                    bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(),
+                            Uri.parse(filePath));
                 } catch (IOException ioe) {
                     //do nothing
                 }
             }
             if (bitmap != null) {
-                String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
-                PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
+                String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap,
+                        Bitmap.CompressFormat.JPEG, 90);
+                PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload()
+                        .getDemographics().getPayload().getPersonalDetails();
                 demographicsPersonalDetails.setProfilePhoto(imageAsBase64);
             }
         }

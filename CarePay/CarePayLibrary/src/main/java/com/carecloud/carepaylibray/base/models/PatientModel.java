@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class PatientModel {
 
-    @SerializedName(value="patient_id", alternate={"id"})
+    @SerializedName(value = "patient_id", alternate = {"id"})
     @Expose
     private String patientId;
 
@@ -46,6 +46,7 @@ public class PatientModel {
     @SerializedName("profile_photo")
     @Expose
     private String profilePhoto;
+    private transient String localUriPhoto;
 
     @SerializedName("primary_phone_number")
     @Expose
@@ -333,6 +334,11 @@ public class PatientModel {
         return name;
     }
 
+    public String getLocalUriPhoto() {
+        return localUriPhoto;
+    }
 
-
+    public void setLocalUriPhoto(String localUriPhoto) {
+        this.localUriPhoto = localUriPhoto;
+    }
 }
