@@ -62,7 +62,7 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
 
             JsonObject form = new JsonObject();
             form.add("formData", payload);
-            if (userResponse == null && displayedFormsIndex == 0) {//only send this the first time
+            if (userResponse == null) {
                 form.add("userData", intakeFindings.getPayload());
             } else {
                 form.add("userData", userResponse);
@@ -70,7 +70,8 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
             String formString = form.toString()
                     .replaceAll("\'", Matcher.quoteReplacement("\\\'"))
                     .replaceAll("\"", Matcher.quoteReplacement("\\\""))
-                    .replace("\\n", "");
+                    .replace("\\n", "")
+                    .replace("\\r", "");
 
             loadFormUrl(formString, "load_intake");
         }
