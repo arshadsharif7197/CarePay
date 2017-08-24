@@ -19,10 +19,10 @@ public class PaymentsSettingsRegularPaymentsDTO {
     private boolean allowPartialPayments;
     @SerializedName("partial_payments_threshold")
     @Expose
-    private double partialPaymentsThreshold;
+    private transient double partialPaymentsThreshold;
     @SerializedName("minimum_partial_payment_amount")
     @Expose
-    private double minimumPartialPaymentAmount;
+    private transient double minimumPartialPaymentAmount;
 
     /**
      * Gets payment methods.
