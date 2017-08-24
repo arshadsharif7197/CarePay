@@ -17,7 +17,7 @@ public class CheckinSettingsDTO {
     @SerializedName("identity_documents_required")
     private boolean showIdentityDocs = true;
 
-    @SerializedName("healh_insurance_required")
+    @SerializedName("health_insurance_required")
     private boolean showHealthInsurance = true;
 
     public boolean shouldShowMedications() {
