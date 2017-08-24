@@ -355,6 +355,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
         if (!healthInsuranceFragment.isAdded()) {
             fm.popBackStack();
+            healthInsuranceFragment.updateInsuranceList(demographicDTO);
             navigateToFragment(healthInsuranceFragment, true);
         }
 
