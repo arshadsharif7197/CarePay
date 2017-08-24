@@ -25,6 +25,7 @@
         android:layout_margin="@dimen/dimen_10dp"
         android:layout_width="0dp"
         android:layout_weight="1"
+        android:foreground="?android:selectableItemBackground"
         android:text="@string/selectOrTakePhotoButton"
         app:customAssetFont="proxima_nova_regular"/>
 
