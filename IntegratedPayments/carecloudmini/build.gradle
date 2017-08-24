@@ -9,7 +9,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 25
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -44,6 +44,8 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
     compile 'com.android.support:multidex:1.0.1'
+    compile 'com.github.satyan:sugar:1.4'
+
     testCompile 'junit:junit:4.12'
     compile project(':fontviews')
     compile project(':shamrocksdk')

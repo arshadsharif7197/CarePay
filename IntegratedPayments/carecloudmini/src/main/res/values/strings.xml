@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CarePay</string>
+    <string name="app_name">CareCloud Payments</string>
 
     <string name="registrations_start_text">This device is not registered. In order to register please log in to your CareCloud account.</string>
     <string name="registration_start_button">Start</string>

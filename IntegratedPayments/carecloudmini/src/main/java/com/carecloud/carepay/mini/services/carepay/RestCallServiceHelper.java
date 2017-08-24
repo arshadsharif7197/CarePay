@@ -146,14 +146,8 @@ public class RestCallServiceHelper {
      * @param payload payment object id payload
      */
     public void executePostPayment(@NonNull final RestCallServiceCallback callback, String token, @NonNull String payload){
-        Map<String, String> customHeaders = new HashMap<>();
-        customHeaders.put(HEADER_KEY_AUTH_TYPE, HEADER_VALUE_AUTH_TYPE_KMS);
-        customHeaders.put(HEADER_KEY_AUTHORIZATION, token);
-
-        RestCallService restCallService = RestServiceGenerator.getInstance().createService(RestCallService.class, getFullHeaders(customHeaders));
-
         callback.onPreExecute();
-        Call<JsonElement> postPaymentCall = restCallService.postPaymentRequest(payload);
+        Call<JsonElement> postPaymentCall = getPostPaymentCall(token, payload);
         postPaymentCall.enqueue(new Callback<JsonElement>() {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
@@ -171,8 +165,30 @@ public class RestCallServiceHelper {
         });
     }
 
+    /**
+     * Create the call for posting payment object to carepay
+     * @param token kms token from sdk
+     * @param payload payment object id payload
+     * @return new Rest Call
+     */
+    public Call<JsonElement> getPostPaymentCall(String token, @NonNull String payload){
+        Map<String, String> customHeaders = new HashMap<>();
+        customHeaders.put(HEADER_KEY_AUTH_TYPE, HEADER_VALUE_AUTH_TYPE_KMS);
+        customHeaders.put(HEADER_KEY_AUTHORIZATION, token);
 
-    private static String parseError(Response<?> response, @NonNull String... errorFields){
+        RestCallService restCallService = RestServiceGenerator.getInstance().createService(RestCallService.class, getFullHeaders(customHeaders));
+
+        return restCallService.postPaymentRequest(payload);
+    }
+
+
+    /**
+     * Parse Response to retrieve error string
+     * @param response response
+     * @param errorFields Array of possible error keys in order of preference, 1st non-null will return the value of the key
+     * @return error message
+     */
+    public static String parseError(Response<?> response, @NonNull String... errorFields){
         String message = response.message();
         try{
             JsonElement jsonElement = new JsonParser().parse(response.errorBody().string());
