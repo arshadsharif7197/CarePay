@@ -23,10 +23,8 @@ android {
     productFlavors {
         development {
             applicationId "com.carecloud.carepay.mini"
-            buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.development.carecloud.com/workflow/shamrock/practice_cc_mode/practice_mode_signin/start"'
-            buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'
-//            buildConfigField 'String', 'API_BASE_URL', '"https://breeze-entry.development.carecloud.com"'
-            buildConfigField 'String', 'API_BASE_URL', '"https://r2rs8qvgmj.execute-api.us-east-1.amazonaws.com/dev/"'
+            buildConfigField 'String', 'X_API_KEY', '"jLA75b9L3I5r5lkuqMZQF2v41kyPBMLZ29OvGciV"'
+            buildConfigField 'String', 'API_BASE_URL', '"https://payments.development.carecloud.com/"'
         }
     }
 }

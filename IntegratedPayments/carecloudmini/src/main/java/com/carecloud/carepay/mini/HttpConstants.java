@@ -40,14 +40,6 @@ public class HttpConstants {
         HttpConstants.apiBaseUrl = apiBaseUrl;
     }
 
-    public static String getApiStartUrl() {
-        return apiStartUrl;
-    }
-
-    public static void setApiStartUrl(String apiStartUrl) {
-        HttpConstants.apiStartUrl = apiStartUrl;
-    }
-
     public static String getApiStartKey() {
         return apiStartKey;
     }
