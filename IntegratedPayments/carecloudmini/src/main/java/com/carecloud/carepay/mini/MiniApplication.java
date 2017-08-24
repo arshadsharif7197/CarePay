@@ -39,7 +39,6 @@ public class MiniApplication extends MultiDexApplication implements ApplicationH
         deviceIdentifierDTO.setDeviceType("CloverMini");
         deviceIdentifierDTO.setDeviceSystemVersion(Build.VERSION.RELEASE);
         HttpConstants.setDeviceInformation(deviceIdentifierDTO);
-        HttpConstants.setApiStartUrl(BuildConfig.API_START_URL);
         HttpConstants.setApiStartKey(BuildConfig.X_API_KEY);
         HttpConstants.setApiBaseUrl(BuildConfig.API_BASE_URL);
     }

@@ -94,8 +94,7 @@ public class RestServiceGenerator {
                         .header("Content-Type", "application/json")
                         .header("Accept", "application/json")
                         .header("Cache-Control", "no-cache, no-store")
-                        .removeHeader("x-api-key")
-                        .removeHeader("username")
+                        .removeHeader("username") //.removeHeader("x-api-key")
                         .method(original.method(), original.body());
                 DeviceIdentifierDTO deviceIdentifierDTO=HttpConstants.getDeviceInformation();
                 if(deviceIdentifierDTO!=null){
