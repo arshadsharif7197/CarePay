@@ -122,7 +122,8 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
             }
         }
         if (addressPayloadDTO == null) {
-            payloadString = getApplicationPreferences().readStringFromSharedPref(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE);
+            payloadString = getApplicationPreferences().readStringFromSharedPref(CarePayConstants
+                    .DEMOGRAPHICS_ADDRESS_BUNDLE);
             addressPayloadDTO = new DemographicAddressPayloadDTO();
             if (payloadString.length() > 1) {
                 addressPayloadDTO = gson.fromJson(payloadString, DemographicAddressPayloadDTO.class);
@@ -135,7 +136,8 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View addNewCreditCardView = inflater.inflate(com.carecloud.carepaylibrary.R.layout.fragment_add_new_credit_card,
+        View addNewCreditCardView = inflater.inflate(com.carecloud.carepaylibrary.R.layout
+                        .fragment_add_new_credit_card,
                 container, false);
 
         setupTitleViews(addNewCreditCardView);
@@ -253,15 +255,18 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         String type;
         if (cardNumber.startsWith("4") || cardNumber.matches(CardPattern.VISA)) {
             type = "Visa";
-        } else if (cardNumber.matches(CardPattern.MASTERCARD_SHORTER) || cardNumber.matches(CardPattern.MASTERCARD_SHORT) || cardNumber.matches(CardPattern.MASTERCARD)) {
+        } else if (cardNumber.matches(CardPattern.MASTERCARD_SHORTER) || cardNumber.matches(CardPattern
+                .MASTERCARD_SHORT) || cardNumber.matches(CardPattern.MASTERCARD)) {
             type = "Mastercard";
         } else if (cardNumber.matches(CardPattern.AMERICAN_EXPRESS)) {
             type = "American Express";
-        } else if (cardNumber.matches(CardPattern.DISCOVER_SHORT) || cardNumber.matches(CardPattern.DISCOVER)) {
+        } else if (cardNumber.matches(CardPattern.DISCOVER_SHORT)
+                || cardNumber.matches(CardPattern.DISCOVER)) {
             type = "Discover";
         } else if (cardNumber.matches(CardPattern.JCB_SHORT) || cardNumber.matches(CardPattern.JCB)) {
             type = "JCB";
-        } else if (cardNumber.matches(CardPattern.DINERS_CLUB_SHORT) || cardNumber.matches(CardPattern.DINERS_CLUB)) {
+        } else if (cardNumber.matches(CardPattern.DINERS_CLUB_SHORT)
+                || cardNumber.matches(CardPattern.DINERS_CLUB)) {
             type = "Diners Club";
         } else {
             type = null;
@@ -390,7 +395,8 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         cityEditText = (EditText) view.findViewById(R.id.cityId);
 
         stateTextInput = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
-        stateAutoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.addNewCredidCardStateAutoCompleteTextView);
+        stateAutoCompleteTextView = (AutoCompleteTextView) view
+                .findViewById(R.id.addNewCredidCardStateAutoCompleteTextView);
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
                 R.layout.autocomplete_state_item,
@@ -489,7 +495,8 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
             String tokenType = merchantServiceDTO.getTokenType();
             String tokenAuth = merchantServiceDTO.getTokenizationAuth();
             PayeezyRequestTask requestTask = new PayeezyRequestTask(getContext(), this);
-            requestTask.execute("gettokenvisa", tokenAuth, "", currency, tokenType, cardType, name, number, expiryDate, cvv);
+            requestTask.execute("gettokenvisa", tokenAuth, "", currency, tokenType, cardType, name,
+                    number, expiryDate, cvv);
             System.out.println("first authorize call end");
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -500,19 +507,25 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     private void setDefaultBillingAddressTexts() {
         if (addressPayloadDTO != null && !StringUtil.isNullOrEmpty(addressPayloadDTO.getAddress1())) {
             address1EditText.setText(addressPayloadDTO.getAddress1());
-            address1EditText.getOnFocusChangeListener().onFocusChange(address1EditText, !StringUtil.isNullOrEmpty(addressPayloadDTO.getAddress1()));
+            address1EditText.getOnFocusChangeListener().onFocusChange(address1EditText,
+                    !StringUtil.isNullOrEmpty(addressPayloadDTO.getAddress1()));
 
-            address2EditText.setText(!StringUtil.isNullOrEmpty(addressPayloadDTO.getAddress2()) ? addressPayloadDTO.getAddress2() : " ");
-            address2EditText.getOnFocusChangeListener().onFocusChange(address2EditText, !StringUtil.isNullOrEmpty(addressPayloadDTO.getAddress2()));
+            address2EditText.setText(!StringUtil.isNullOrEmpty(addressPayloadDTO.getAddress2())
+                    ? addressPayloadDTO.getAddress2() : " ");
+            address2EditText.getOnFocusChangeListener().onFocusChange(address2EditText,
+                    !StringUtil.isNullOrEmpty(addressPayloadDTO.getAddress2()));
 
             zipCodeEditText.setText(addressPayloadDTO.getZipcode());
-            zipCodeEditText.getOnFocusChangeListener().onFocusChange(zipCodeEditText, !StringUtil.isNullOrEmpty(addressPayloadDTO.getZipcode()));
+            zipCodeEditText.getOnFocusChangeListener().onFocusChange(zipCodeEditText,
+                    !StringUtil.isNullOrEmpty(addressPayloadDTO.getZipcode()));
 
             cityEditText.setText(addressPayloadDTO.getCity());
-            cityEditText.getOnFocusChangeListener().onFocusChange(cityEditText, !StringUtil.isNullOrEmpty(addressPayloadDTO.getCity()));
+            cityEditText.getOnFocusChangeListener().onFocusChange(cityEditText,
+                    !StringUtil.isNullOrEmpty(addressPayloadDTO.getCity()));
 
             stateAutoCompleteTextView.setText(addressPayloadDTO.getState());
-            stateAutoCompleteTextView.getOnFocusChangeListener().onFocusChange(stateAutoCompleteTextView, !StringUtil.isNullOrEmpty(addressPayloadDTO.getState()));
+            stateAutoCompleteTextView.getOnFocusChangeListener().onFocusChange(stateAutoCompleteTextView,
+                    !StringUtil.isNullOrEmpty(addressPayloadDTO.getState()));
         } else {
             useProfileAddressCheckBox.setChecked(false);
             useProfileAddressCheckBox.setEnabled(false);
@@ -522,12 +535,17 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
 
 
     private void setChangeFocusListeners() {
-        creditCardNoEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(creditCardNoTextInput, null));
-        nameOnCardEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(nameOnCardTextInputLayout, null));
+        creditCardNoEditText.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(creditCardNoTextInput, null));
+        nameOnCardEditText.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(nameOnCardTextInputLayout, null));
         verificationCodeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(verificationCodeTextInput, null));
-        address1EditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address1TextInput, null));
-        address2EditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address2TextInput, null));
-        zipCodeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeTextInput, new View.OnFocusChangeListener() {
+        address1EditText.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(address1TextInput, null));
+        address2EditText.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(address2TextInput, null));
+        zipCodeEditText.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(zipCodeTextInput, new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (!hasFocus) { // for SmartyStreets
@@ -536,7 +554,8 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
             }
         }));
         cityEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(cityTextInput, null));
-        stateAutoCompleteTextView.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(stateTextInput, null));
+        stateAutoCompleteTextView.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(stateTextInput, null));
     }
 
     private void setActionListeners() {
@@ -581,12 +600,14 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
             if (isChecked) {
                 setAddressFieldsEnabled(false);
                 setDefaultBillingAddressTexts();
+                stateAutoCompleteTextView.dismissDropDown();
             } else {
                 setAddressFieldsEnabled(true);
                 address1EditText.setText(null);
                 address2EditText.setText(null);
                 zipCodeEditText.setText(null);
                 cityEditText.setText(null);
+                stateAutoCompleteTextView.dismissDropDown();
                 stateAutoCompleteTextView.setText(null);
             }
         }
