@@ -68,10 +68,9 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
                 form.add("userData", userResponse);
             }
             String formString = form.toString()
+                    .replace("\\", "\\\\")
                     .replaceAll("\'", Matcher.quoteReplacement("\\\'"))
-                    .replaceAll("\"", Matcher.quoteReplacement("\\\""))
-                    .replace("\\n", "")
-                    .replace("\\r", "");
+                    .replaceAll("\"", Matcher.quoteReplacement("\\\""));
 
             loadFormUrl(formString, "load_intake");
         }
