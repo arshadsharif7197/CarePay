@@ -182,6 +182,12 @@ public class RestCallServiceHelper {
     }
 
 
+    /**
+     * Parse Response to retrieve error string
+     * @param response response
+     * @param errorFields Array of possible error keys in order of preference, 1st non-null will return the value of the key
+     * @return error message
+     */
     public static String parseError(Response<?> response, @NonNull String... errorFields){
         String message = response.message();
         try{
