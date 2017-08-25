@@ -15,7 +15,7 @@
         android:right="4dp"
         android:top="4dp">
         <shape android:shape="oval">
-            <solid android:color="@color/sky" />
+            <solid android:color="@color/yellowGreen" />
             <size android:height="@dimen/custom_appointment_dialog_checkbox_normal_size"
                 android:width="@dimen/custom_appointment_dialog_checkbox_normal_size"/>
         </shape>
