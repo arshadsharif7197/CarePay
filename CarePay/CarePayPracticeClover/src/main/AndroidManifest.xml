@@ -51,7 +51,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.carecloud.carepay.practice.library.checkin.PracticeModePracticeCheckInActivity"
+            android:name="com.carecloud.carepay.practice.library.checkin.PracticeModeCheckInActivity"
             android:parentActivityName="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity"
             android:screenOrientation="sensorLandscape">
             <meta-data
