@@ -178,46 +178,38 @@
         </LinearLayout>
 
         <FrameLayout
-            android:id="@+id/queue_text_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@color/white"
-            android:visibility="gone">
+            android:background="@color/white">
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/queue_text"
+            <RelativeLayout
+                android:id="@+id/checkbox_layout"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="@dimen/text_size_30"
-                android:textColor="@color/colorPrimaryDark"
-                app:customAssetFont="proxima_nova_extra_bold"/>
-
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/checkbox_layout"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:visibility="visible">
-
-            <LinearLayout
-                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:paddingTop="@dimen/custom_appointment_dialog_layout_margin"
                 android:background="@color/white"
                 android:orientation="horizontal">
 
+                <View
+                    android:id="@+id/spacer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/appointment_detail_dialog_checkbox_divider_height"
+                    android:layout_toEndOf="@+id/demographicsCheckbox"
+                    android:layout_toStartOf="@+id/responsibilityCheckbox"
+                    android:layout_marginLeft="@dimen/appointment_detail_dialog_checkbox_divider_margin"
+                    android:layout_marginRight="@dimen/appointment_detail_dialog_checkbox_divider_margin"
+                    android:layout_marginTop="@dimen/appointment_detail_dialog_checkbox_divider_margin_top"
+                    android:background="@color/timberwolf"
+                    android:gravity="center_horizontal"
+                    android:visibility="visible"/>
+
                 <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
                     android:id="@+id/demographicsCheckbox"
-                    android:layout_width="0dp"
+                    android:layout_width="@dimen/dimen_120dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/custom_appointment_dialog_checkbox_margin"
-                    android:layout_weight="1"
+                    android:layout_marginTop="@dimen/custom_appointment_dialog_checkbox_margin"
                     android:button="@null"
                     android:checked="false"
                     android:clickable="false"
@@ -229,23 +221,13 @@
                     tools:text="Patient\nInfo"
                     app:customAssetFont="proxima_nova_light"/>
 
-                <View
-                    android:id="@+id/spacer_one"
-                    android:layout_width="@dimen/appointment_detail_dialog_checkbox_divider_width"
-                    android:layout_height="@dimen/appointment_detail_dialog_checkbox_divider_height"
-                    android:layout_marginLeft="@dimen/appointment_detail_dialog_checkbox_divider_margin"
-                    android:layout_marginRight="@dimen/appointment_detail_dialog_checkbox_divider_margin"
-                    android:layout_marginTop="@dimen/appointment_detail_dialog_checkbox_divider_margin_top"
-                    android:background="@color/timberwolf"
-                    android:gravity="center_horizontal"
-                    android:visibility="visible"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
                     android:id="@+id/consentFormsCheckbox"
-                    android:layout_width="0dp"
+                    android:layout_width="@dimen/dimen_120dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/custom_appointment_dialog_checkbox_margin"
-                    android:layout_weight="1"
+                    android:layout_marginTop="@dimen/custom_appointment_dialog_checkbox_margin"
+                    android:layout_toEndOf="@id/demographicsCheckbox"
                     android:button="@null"
                     android:checked="false"
                     android:clickable="false"
@@ -258,23 +240,13 @@
                     tools:text="Patient\nForms"
                     app:customAssetFont="proxima_nova_light"/>
 
-                <View
-                    android:id="@+id/spacer_two"
-                    android:layout_width="@dimen/appointment_detail_dialog_checkbox_divider_width"
-                    android:layout_height="@dimen/appointment_detail_dialog_checkbox_divider_height"
-                    android:layout_marginLeft="@dimen/appointment_detail_dialog_checkbox_divider_margin"
-                    android:layout_marginRight="@dimen/appointment_detail_dialog_checkbox_divider_margin"
-                    android:layout_marginTop="@dimen/appointment_detail_dialog_checkbox_divider_margin_top"
-                    android:background="@color/timberwolf"
-                    android:gravity="center_horizontal"
-                    android:visibility="visible"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
                     android:id="@+id/medsAllergiesCheckbox"
-                    android:layout_width="0dp"
+                    android:layout_width="@dimen/dimen_120dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/custom_appointment_dialog_checkbox_margin"
-                    android:layout_weight="1"
+                    android:layout_toEndOf="@id/consentFormsCheckbox"
+                    android:layout_marginTop="@dimen/custom_appointment_dialog_checkbox_margin"
                     android:button="@null"
                     android:checked="false"
                     android:clickable="false"
@@ -287,23 +259,13 @@
                     tools:text="Meds &amp;\nAllergies"
                     app:customAssetFont="proxima_nova_light"/>
 
-                <View
-                    android:id="@+id/spacer_three"
-                    android:layout_width="@dimen/appointment_detail_dialog_checkbox_divider_width"
-                    android:layout_height="@dimen/appointment_detail_dialog_checkbox_divider_height"
-                    android:layout_marginLeft="@dimen/appointment_detail_dialog_checkbox_divider_margin"
-                    android:layout_marginRight="@dimen/appointment_detail_dialog_checkbox_divider_margin"
-                    android:layout_marginTop="@dimen/appointment_detail_dialog_checkbox_divider_margin_top"
-                    android:background="@color/timberwolf"
-                    android:gravity="center_horizontal"
-                    android:visibility="visible"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
                     android:id="@+id/intakeFormsCheckbox"
-                    android:layout_width="0dp"
+                    android:layout_width="@dimen/dimen_120dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/custom_appointment_dialog_checkbox_margin"
-                    android:layout_weight="1"
+                    android:layout_toEndOf="@id/medsAllergiesCheckbox"
+                    android:layout_marginTop="@dimen/custom_appointment_dialog_checkbox_margin"
                     android:button="@null"
                     android:clickable="false"
                     android:drawablePadding="@dimen/custom_appointment_dialog_view_padding"
@@ -315,23 +277,13 @@
                     tools:text="Patient\nIntake"
                     app:customAssetFont="proxima_nova_light"/>
 
-                <View
-                    android:id="@+id/spacer_four"
-                    android:layout_width="@dimen/appointment_detail_dialog_checkbox_divider_width"
-                    android:layout_height="@dimen/appointment_detail_dialog_checkbox_divider_height"
-                    android:layout_marginLeft="@dimen/appointment_detail_dialog_checkbox_divider_margin"
-                    android:layout_marginRight="@dimen/appointment_detail_dialog_checkbox_divider_margin"
-                    android:layout_marginTop="@dimen/appointment_detail_dialog_checkbox_divider_margin_top"
-                    android:background="@color/timberwolf"
-                    android:gravity="center_horizontal"
-                    android:visibility="visible"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
                     android:id="@+id/responsibilityCheckbox"
-                    android:layout_width="0dp"
+                    android:layout_width="@dimen/dimen_120dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/custom_appointment_dialog_checkbox_margin"
-                    android:layout_weight="1"
+                    android:layout_toEndOf="@id/intakeFormsCheckbox"
+                    android:layout_marginTop="@dimen/custom_appointment_dialog_checkbox_margin"
                     android:button="@null"
                     android:clickable="false"
                     android:drawablePadding="@dimen/custom_appointment_dialog_view_padding"
@@ -343,9 +295,29 @@
                     tools:text="Payment"
                     app:customAssetFont="proxima_nova_light"/>
 
-            </LinearLayout>
+            </RelativeLayout>
+
+            <FrameLayout
+                android:id="@+id/queue_text_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/queue_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/text_size_30"
+                    android:textColor="@color/colorPrimaryDark"
+                    tools:text="1st in Queue"
+                    app:customAssetFont="proxima_nova_extra_bold"/>
+
+            </FrameLayout>
 
         </FrameLayout>
+
+
 
         <LinearLayout
             android:layout_width="match_parent"

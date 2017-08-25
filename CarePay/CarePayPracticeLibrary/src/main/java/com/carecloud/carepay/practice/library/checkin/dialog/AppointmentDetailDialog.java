@@ -79,6 +79,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
     private CarePayTextView balanceValueLabel;
     private CheckBox demographicsCheckbox;
     private CheckBox consentFormsCheckbox;
+    private CheckBox medicationsCheckbox;
     private CheckBox intakeCheckbox;
     private CheckBox responsibilityCheckbox;
     private CarePayButton paymentButton;
@@ -93,7 +94,6 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
     private boolean isWaitingRoom;
     private Vector<CheckBox> checkBoxes = new Vector<>();
-    private Vector<View> spacers = new Vector<>();
 
     private ISession sessionHandler;
 
@@ -170,6 +170,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
         demographicsCheckbox = (CheckBox) findViewById(R.id.demographicsCheckbox);
         consentFormsCheckbox = (CheckBox) findViewById(R.id.consentFormsCheckbox);
+        medicationsCheckbox = (CheckBox) findViewById(R.id.medsAllergiesCheckbox);
         intakeCheckbox = (CheckBox) findViewById(R.id.intakeFormsCheckbox);
         responsibilityCheckbox = (CheckBox) findViewById(R.id.responsibilityCheckbox);
 
@@ -188,15 +189,6 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         checkboxLayout = findViewById(R.id.checkbox_layout);
         queueTextLayout = findViewById(R.id.queue_text_layout);
         queueText = (TextView) findViewById(R.id.queue_text);
-
-        View spacer = findViewById(R.id.spacer_one);
-        spacers.add(spacer);
-        spacer = findViewById(R.id.spacer_two);
-        spacers.add(spacer);
-        spacer = findViewById(R.id.spacer_three);
-        spacers.add(spacer);
-        spacer = findViewById(R.id.spacer_four);
-        spacers.add(spacer);
 
         pickerWindow = new PopupPickerWindow(context);
         pickerWindow.flipPopup(true);
@@ -224,13 +216,16 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         if (!isWaitingRoom) {
             demographicsCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_demographics"));
             consentFormsCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_consent_forms"));
+            medicationsCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_medications"));
             intakeCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_intake"));
             responsibilityCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_responsibility"));
         } else {
+            checkboxLayout.setVisibility(View.INVISIBLE);
             checkBoxes.add(demographicsCheckbox);
             checkBoxes.add(consentFormsCheckbox);
             checkBoxes.add(intakeCheckbox);
             checkBoxes.add(responsibilityCheckbox);
+            medicationsCheckbox.setVisibility(View.GONE);
         }
 
         checkingInLabel.setText(isWaitingRoom ?
@@ -464,8 +459,6 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                     //hide other checkboxes
                     checkBoxes.get(1).setVisibility(View.GONE);
                     checkBoxes.get(2).setVisibility(View.GONE);
-                    spacers.get(1).setVisibility(View.GONE);
-                    spacers.get(2).setVisibility(View.GONE);
                     break;
                 }
                 case 3:
@@ -494,7 +487,6 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
                     //hide other checkboxes
                     checkBoxes.get(2).setVisibility(View.GONE);
-                    spacers.get(2).setVisibility(View.GONE);
 
                     break;
                 }
@@ -539,6 +531,8 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                 demographicsCheckbox.setChecked(payloadValueDTO.getDemographicsVerifyComplete()
                         .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
                 consentFormsCheckbox.setChecked(payloadValueDTO.getConsentFormsComplete()
+                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
+                medicationsCheckbox.setChecked(payloadValueDTO.getMedicationsComplete()
                         .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
                 intakeCheckbox.setChecked(payloadValueDTO.getIntakeFormsComplete()
                         .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
