@@ -54,6 +54,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     private Handler autoFocusHandler;
     public CameraType cameraType = CameraType.SCAN_DOC;
     public static final int NO_DEFINED_CAMERA = -999;
+    CarePayCameraCallback carePayCameraCallback;
 
     /**
      * Constructor
@@ -336,8 +337,6 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     private boolean checkCameraHardware() {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
-
-    CarePayCameraCallback carePayCameraCallback;
 
     /**
      * Capture Picture with selected Camera

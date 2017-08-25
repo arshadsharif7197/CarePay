@@ -9,6 +9,8 @@ import com.carecloud.carepay.mini.models.response.Authentication;
 import com.carecloud.carepay.mini.services.carepay.RestCallServiceHelper;
 import com.carecloud.carepay.mini.utils.ApplicationPreferences;
 import com.carecloud.carepay.mini.utils.PicassoHelper;
+import com.carecloud.shamrocksdk.ShamrockSdk;
+import com.orm.SugarContext;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -29,8 +31,16 @@ public class MiniApplication extends MultiDexApplication implements ApplicationH
     public void onCreate() {
         super.onCreate();
 
+        SugarContext.init(this);
+        ShamrockSdk.init(BuildConfig.X_API_KEY);
         setHttpConstants();
         Picasso.setSingletonInstance(PicassoHelper.getPicassoInstance(this));
+    }
+
+    @Override
+    public void onTerminate(){
+        SugarContext.terminate();
+        super.onTerminate();
     }
 
     private void setHttpConstants() {
@@ -39,7 +49,6 @@ public class MiniApplication extends MultiDexApplication implements ApplicationH
         deviceIdentifierDTO.setDeviceType("CloverMini");
         deviceIdentifierDTO.setDeviceSystemVersion(Build.VERSION.RELEASE);
         HttpConstants.setDeviceInformation(deviceIdentifierDTO);
-        HttpConstants.setApiStartUrl(BuildConfig.API_START_URL);
         HttpConstants.setApiStartKey(BuildConfig.X_API_KEY);
         HttpConstants.setApiBaseUrl(BuildConfig.API_BASE_URL);
     }

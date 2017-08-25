@@ -6,12 +6,15 @@ import android.os.Handler;
 
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
+import com.carecloud.carepay.mini.services.QueueUploadService;
 
 /**
  * Created by lmenendez on 6/20/17
  */
 
 public class SplashActivity extends FullScreenActivity {
+
+    boolean isDeviceRegistered;
 
     @Override
     protected void onCreate(Bundle icicle){
@@ -23,7 +26,7 @@ public class SplashActivity extends FullScreenActivity {
     protected void onResume(){
         super.onResume();
 
-        final boolean isDeviceRegistered = ((ApplicationHelper) getApplication()).getApplicationPreferences().isDeviceRegistered();
+        isDeviceRegistered = ((ApplicationHelper) getApplication()).getApplicationPreferences().isDeviceRegistered();
 
 
         new Handler().postDelayed(new Runnable() {
@@ -41,5 +44,14 @@ public class SplashActivity extends FullScreenActivity {
                 startActivity(main);
             }
         }, 1000);
+    }
+
+    @Override
+    protected void onStop(){
+        if(isDeviceRegistered) {
+            Intent queueService = new Intent(this, QueueUploadService.class);
+            startService(queueService);
+        }
+        super.onStop();
     }
 }

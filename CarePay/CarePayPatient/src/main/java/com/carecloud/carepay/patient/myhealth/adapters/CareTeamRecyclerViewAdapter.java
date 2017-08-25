@@ -81,7 +81,7 @@ public class CareTeamRecyclerViewAdapter extends RecyclerView.Adapter<CareTeamRe
             });
         } else {
             holder.myHealthActionButton.setText(Label.getLabel("my_health_full_medical_record_button_label"));
-            holder.row.setOnClickListener(new View.OnClickListener() {
+            holder.myHealthActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     callback.onSeeAllFullMedicalRecordClicked();
@@ -93,7 +93,9 @@ public class CareTeamRecyclerViewAdapter extends RecyclerView.Adapter<CareTeamRe
     @Override
     public int getItemCount() {
         return maxItems == MyHealthMainFragment.MAX_ITEMS_TO_SHOW ?
-                Math.min(providers.size() + 1, maxItems + 1) : providers.size();
+                Math.min(providers.size(), maxItems) : providers.size();
+//        return maxItems == MyHealthMainFragment.MAX_ITEMS_TO_SHOW ?
+//                Math.min(providers.size() + 1, maxItems + 1) : providers.size();
     }
 
     @Override

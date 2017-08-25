@@ -209,11 +209,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
         if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            AppointmentDTO appointmentDTO = presenter.getAppointmentPayload();
             DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel,
-                    selectedPaymentMethod.getLabel(), amount, appointmentDTO.getPayload()
-                            .getProvider().getGuid(),
-                    String.valueOf(appointmentDTO.getPayload().getLocation().getGuid()));
+                    selectedPaymentMethod.getLabel(), amount);
             displayDialogFragment(fragment, false);
         } else {
             showAddCard(amount, paymentsModel);

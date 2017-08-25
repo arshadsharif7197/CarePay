@@ -1,5 +1,6 @@
 package com.carecloud.carepay.mini.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -9,7 +10,9 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
+import com.carecloud.carepay.mini.models.queue.QueuePaymentRecord;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
+import com.carecloud.carepay.mini.services.QueueUploadService;
 import com.carecloud.carepay.mini.services.carepay.RestCallServiceCallback;
 import com.carecloud.carepay.mini.utils.Defs;
 import com.carecloud.carepay.mini.utils.JsonHelper;
@@ -37,8 +40,10 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class WelcomeActivity extends FullScreenActivity {
     private static final String TAG = WelcomeActivity.class.getName();
+    private static final int MAX_RETRIES = 3;
     private static final int CONNECTION_RETRY_DELAY = 1000 * 5;
     private static final int PAYMENT_COMPLETE_RESET = 1000 * 3;
+    private static final int POST_RETRY_DELAY = 1000 * 30;
 
     private ApplicationHelper applicationHelper;
     private TextView message;
@@ -411,8 +416,21 @@ public class WelcomeActivity extends FullScreenActivity {
                 CustomErrorToast.showWithMessage(WelcomeActivity.this, errorMessage);
                 if(shouldRetry(errorMessage)) {
                     updateMessage(String.format(getString(R.string.welcome_retrying), paymentAttempt + 1));
-                    postPaymentRequest(paymentRequestId);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            postPaymentRequest(paymentRequestId);
+                        }
+                    }, paymentAttempt * POST_RETRY_DELAY);
                 }else{
+                    if(paymentAttempt >= MAX_RETRIES){
+                        QueuePaymentRecord queuePaymentRecord = new QueuePaymentRecord();
+                        queuePaymentRecord.setPaymentRequestId(paymentRequestId);
+                        queuePaymentRecord.save();
+
+                        Intent queueService = new Intent(WelcomeActivity.this, QueueUploadService.class);
+                        startService(queueService);
+                    }
                     resetDevice(paymentRequestId);
                     updateMessage(getString(R.string.welcome_waiting));
                 }
@@ -421,7 +439,7 @@ public class WelcomeActivity extends FullScreenActivity {
     }
 
     private boolean shouldRetry(String errorMessage){
-        return !errorMessage.contains("payment request has already been completed");
+        return !errorMessage.contains("payment request has already been completed") && paymentAttempt <= MAX_RETRIES;
     }
 
     private void resetDevice(String paymentRequestId){

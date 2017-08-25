@@ -21,6 +21,7 @@ import com.carecloud.carepay.patient.myhealth.dtos.AllergyDto;
 import com.carecloud.carepay.patient.myhealth.dtos.LabDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MedicationDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
+import com.carecloud.carepay.patient.myhealth.dtos.PatientDto;
 import com.carecloud.carepay.patient.myhealth.fragments.AllergyDetailFragment;
 import com.carecloud.carepay.patient.myhealth.fragments.CareTeamDetailFragment;
 import com.carecloud.carepay.patient.myhealth.fragments.MedicationDetailFragment;
@@ -41,7 +42,8 @@ import java.util.List;
 public class MyHealthActivity extends MenuPatientActivity implements MyHealthInterface {
 
     private MyHealthDto myHealthDto;
-    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 10;
+    private static final int MY_PERMISSIONS_LAB_REQUEST_WRITE_EXTERNAL_STORAGE = 10;
+    private static final int MY_PERMISSIONS_MR_REQUEST_WRITE_EXTERNAL_STORAGE = 11;
     private LabDto selectedLab;
 
     @Override
@@ -106,9 +108,16 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
         addFragment(R.id.container_main, fragment, addToBackStack);
     }
 
+    @SuppressLint("NewApi")
     @Override
     public void onSeeAllFullMedicalRecordClicked() {
-
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PermissionChecker.PERMISSION_GRANTED && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_MR_REQUEST_WRITE_EXTERNAL_STORAGE);
+        } else {
+            prepareMedicalRecordPdf();
+        }
     }
 
     @Override
@@ -148,10 +157,10 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PermissionChecker.PERMISSION_GRANTED && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+                    MY_PERMISSIONS_LAB_REQUEST_WRITE_EXTERNAL_STORAGE);
 
         } else {
-            preparePdf(lab);
+            prepareLabPdf(lab);
         }
     }
 
@@ -159,27 +168,44 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE
+        if (requestCode == MY_PERMISSIONS_LAB_REQUEST_WRITE_EXTERNAL_STORAGE
                 && (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-            preparePdf(selectedLab);
+            prepareLabPdf(selectedLab);
+        } else if (requestCode == MY_PERMISSIONS_MR_REQUEST_WRITE_EXTERNAL_STORAGE
+                && (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+            prepareMedicalRecordPdf();
         }
     }
 
-    private void preparePdf(final LabDto lab) {
+    private void prepareMedicalRecordPdf() {
+        TransitionDTO transitionDTO = myHealthDto.getMetadata().getLinks().getMedicalRecord();
+        PatientDto patientDto = myHealthDto.getPayload().getMyHealthData()
+                .getPatient().getPatients().get(0);
+        String url = String.format("%s?%s=%s", transitionDTO.getUrl(), "patient_id",
+                String.valueOf(patientDto.getId()));
+
+        downloadPdf(url, patientDto.getFullName(), ".pdf", "Medical Record");
+    }
+
+    private void prepareLabPdf(final LabDto lab) {
         TransitionDTO getPdfTransition = myHealthDto.getMetadata().getLinks().getLabsPdf();
         String url = String.format("%s?%s=%s", getPdfTransition.getUrl(), "labs_id", lab.getId());
         downloadPdf(url, lab.getName(), ".pdf", lab.getPractice());
     }
 
-    private void downloadPdf(String url, String title, String fileExtension, String description) {
+    private void downloadPdf(String url, String title,
+                              String fileExtension, String description) {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         request.setTitle(title + fileExtension);
         request.setDescription(description);
+        request.setVisibleInDownloadsUi(true);
+        request.allowScanningByMediaScanner();
+        request.setMimeType("application/pdf");
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.addRequestHeader("Accept", "application/pdf");
         request.addRequestHeader("username", getAppAuthorizationHelper().getCurrUser());
         request.addRequestHeader("Authorization", getAppAuthorizationHelper().getIdToken());
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "");
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, title + fileExtension);
 
         DownloadManager downloadManager = (DownloadManager) getContext()
                 .getSystemService(Context.DOWNLOAD_SERVICE);

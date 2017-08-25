@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.payments.adapter.PaymentMethodAdapter;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodInterface;
@@ -55,6 +56,8 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
         try {
             if (context instanceof PaymentViewHandler) {
                 callback = ((PaymentViewHandler) context).getPaymentPresenter();
+            }else if (context instanceof AppointmentViewHandler){
+                callback = (PaymentMethodInterface) ((AppointmentViewHandler) context).getAppointmentPresenter();
             } else {
                 callback = (PaymentMethodInterface) context;
             }

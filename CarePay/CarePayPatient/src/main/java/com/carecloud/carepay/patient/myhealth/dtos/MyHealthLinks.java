@@ -26,6 +26,12 @@ public class MyHealthLinks extends LandingLinks {
     @Expose
     @SerializedName("labs_pdf")
     private TransitionDTO labsPdf = new TransitionDTO();
+    @Expose
+    @SerializedName("education_material")
+    private TransitionDTO educationMaterial = new TransitionDTO();
+    @Expose
+    @SerializedName("careteam")
+    private TransitionDTO medicalRecord = new TransitionDTO();
 
     public TransitionDTO getMedications() {
         return medications;
@@ -65,5 +71,21 @@ public class MyHealthLinks extends LandingLinks {
 
     public void setLabsPdf(TransitionDTO labsPdf) {
         this.labsPdf = labsPdf;
+    }
+
+    public TransitionDTO getEducationMaterial() {
+        return educationMaterial;
+    }
+
+    public void setEducationMaterial(TransitionDTO educationMaterial) {
+        this.educationMaterial = educationMaterial;
+    }
+
+    public TransitionDTO getMedicalRecord() {
+        return medicalRecord;
+    }
+
+    public void setMedicalRecord(TransitionDTO medicalRecord) {
+        this.medicalRecord = medicalRecord;
     }
 }

@@ -7,7 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -114,16 +114,18 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
         rootLayout = findViewById(R.id.rootDialogAppointLayout);
 
         phoneNumber = payload.getProvider().getPhone();
-        if (TextUtils.isEmpty(phoneNumber)) {
-            Drawable originalIcon = context.getResources().getDrawable(R.drawable.icn_appointment_card_call);
+        if (StringUtil.isNullOrEmpty(phoneNumber)) {
+            Drawable originalIcon = ContextCompat.getDrawable(context, R.drawable.icn_appointment_card_call);
+            originalIcon.setAlpha(40);
             ((ImageView) findViewById(R.id.appointDailImageView))
-                    .setImageDrawable(SystemUtil.convertDrawableToGrayScale(originalIcon));
+                    .setImageDrawable(originalIcon);
         }
 
-        if (!SystemUtil.isNotEmptyString(placeAddress)) {
-            Drawable originalIcon = context.getResources().getDrawable(R.drawable.icn_appointment_card_directions);
+        if (StringUtil.isNullOrEmpty(placeAddress)) {
+            Drawable originalIcon = ContextCompat.getDrawable(context, R.drawable.icn_appointment_card_directions);
+            originalIcon.setAlpha(40);
             ((ImageView) findViewById(R.id.appointLocationImageView))
-                    .setImageDrawable(SystemUtil.convertDrawableToGrayScale(originalIcon));
+                    .setImageDrawable(originalIcon);
         }
     }
 
@@ -134,7 +136,7 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
             cancel();
         } else if (viewId == R.id.appointLocationImageView) {
             onMapView(placeName, placeAddress);
-        } else if (viewId == R.id.appointDailImageView && !TextUtils.isEmpty(phoneNumber)) {
+        } else if (viewId == R.id.appointDailImageView && !StringUtil.isNullOrEmpty(phoneNumber)) {
             onPhoneCall(phoneNumber);
         }
     }

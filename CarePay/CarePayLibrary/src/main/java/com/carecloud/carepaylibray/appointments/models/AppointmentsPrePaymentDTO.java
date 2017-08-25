@@ -6,29 +6,29 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 /**
- * Created by harshal_patil on 2/14/2017.
+ * Created by harshal_patil on 2/14/2017
  */
 public class AppointmentsPrePaymentDTO implements Serializable {
     @SerializedName("visit_type")
     @Expose
-    private Integer visitType;
+    private int visitType;
     @SerializedName("amount")
     @Expose
-    private String amount;
+    private double amount;
 
-    public Integer getVisitType() {
+    public int getVisitType() {
         return visitType;
     }
 
-    public void setVisitType(Integer visitType) {
+    public void setVisitType(int visitType) {
         this.visitType = visitType;
     }
 
-    public String getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 

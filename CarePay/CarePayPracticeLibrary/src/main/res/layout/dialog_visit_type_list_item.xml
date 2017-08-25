@@ -1,19 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-        android:id="@+id/visitTypeListItem"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="start"
-        android:textSize="@dimen/payment_method_layout_label_text_size"
-        android:textColor="@color/cadet_gray"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        app:customAssetFont="gotham_rounded_medium"/>
+        android:orientation="horizontal"
+        android:layout_marginStart="@dimen/dimen_13dp"
+        android:layout_marginEnd="@dimen/dimen_13dp"
+        android:paddingTop="@dimen/dimen_15dp"
+        android:paddingBottom="@dimen/dimen_15dp">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/visitTypeListItem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/textview_default_textcolor"
+            android:textSize="@dimen/text_size_24sp"
+            android:gravity="start"
+            tools:text="Follow-Up"
+            app:customAssetFont="gotham_rounded_book"/>
+
+        <LinearLayout
+            android:id="@+id/prepaymentLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:gravity="end|center_vertical"
+            android:orientation="horizontal">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/prepaymentAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_5dp"
+                android:layout_marginEnd="@dimen/dimen_5dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_17"
+                android:gravity="end"
+                tools:text="$49.00"
+                app:customAssetFont="proxima_nova_semi_bold"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icn_notification_error"
+                android:tint="@color/light_gray"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:background="@color/divider_color" />
 
 </LinearLayout>

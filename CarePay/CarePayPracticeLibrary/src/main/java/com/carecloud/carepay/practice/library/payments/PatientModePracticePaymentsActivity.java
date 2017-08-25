@@ -133,7 +133,6 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
                 .newInstance(paymentsModel, showPartial ? Label.getLabel("payment_partial_payment_text") : null,
                         Label.getLabel("payment_details_pay_now"), headerModel);
-        dialog.setLeftButtonEnabled(true);
         displayDialogFragment(dialog, false);
     }
 
@@ -336,4 +335,5 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
     public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
         startPaymentProcess(paymentsModel);
     }
+
 }

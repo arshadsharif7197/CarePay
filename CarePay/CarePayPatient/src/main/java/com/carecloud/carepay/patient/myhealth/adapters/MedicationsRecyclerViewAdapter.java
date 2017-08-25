@@ -63,7 +63,7 @@ public class MedicationsRecyclerViewAdapter extends RecyclerView.Adapter<Medicat
             });
         } else {
             holder.myHealthActionButton.setText(Label.getLabel("my_health_add_medication_button_label"));
-            holder.row.setOnClickListener(new View.OnClickListener() {
+            holder.myHealthActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     callback.addMedication();
@@ -75,7 +75,9 @@ public class MedicationsRecyclerViewAdapter extends RecyclerView.Adapter<Medicat
     @Override
     public int getItemCount() {
         return maxItems == MyHealthMainFragment.MAX_ITEMS_TO_SHOW ?
-                Math.min(medications.size() + 1, maxItems + 1) : medications.size();
+                Math.min(medications.size(), maxItems) : medications.size();
+//        return maxItems == MyHealthMainFragment.MAX_ITEMS_TO_SHOW ?
+//                Math.min(medications.size() + 1, maxItems + 1) : medications.size();
     }
 
     @Override

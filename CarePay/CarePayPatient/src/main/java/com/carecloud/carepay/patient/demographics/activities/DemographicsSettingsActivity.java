@@ -1,6 +1,5 @@
 package com.carecloud.carepay.patient.demographics.activities;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,7 +23,6 @@ import com.carecloud.carepay.patient.payment.fragments.CreditCardDetailsFragment
 import com.carecloud.carepay.patient.payment.fragments.CreditCardListFragment;
 import com.carecloud.carepay.patient.payment.fragments.SettingAddCreditCardFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
@@ -36,11 +34,9 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
  * Main activity for Settings workflow
  */
 public class DemographicsSettingsActivity extends BasePatientActivity implements
-        DemographicsSettingsFragmentListener, InsuranceEditDialog.InsuranceEditDialogListener,
-        CarePayCameraCallback {
+        DemographicsSettingsFragmentListener, InsuranceEditDialog.InsuranceEditDialogListener {
 
     DemographicsSettingsDTO demographicsSettingsDTO;
-    private CarePayCameraCallback carePayCameraCallback;
 
     private View rootView;
 
@@ -66,10 +62,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         }
-        if (item.getItemId() == R.id.action_remove_credit_card) {
-            return false;
-        }
-        return true;
+        return item.getItemId() != R.id.action_remove_credit_card;
     }
 
     @Override
@@ -159,20 +152,6 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     public void displayCreditCardDetailsFragment(DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO) {
         CreditCardDetailsFragment creditCardDetailsFragment = CreditCardDetailsFragment.newInstance(creditCardsPayloadDTO);
         replaceFragment(creditCardDetailsFragment, true);
-    }
-
-    @Override
-    public void onCapturedSuccess(Bitmap bitmap) {
-        if (carePayCameraCallback != null) {
-            carePayCameraCallback.onCapturedSuccess(bitmap);
-        }
-    }
-
-    @Override
-    public void onCaptureFail() {
-        if (carePayCameraCallback != null) {
-            carePayCameraCallback.onCaptureFail();
-        }
     }
 
     @Override

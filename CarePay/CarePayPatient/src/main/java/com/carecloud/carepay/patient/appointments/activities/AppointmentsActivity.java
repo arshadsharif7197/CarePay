@@ -18,17 +18,20 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 public class AppointmentsActivity extends MenuPatientActivity implements AppointmentViewHandler {
 
     private AppointmentsResultModel appointmentsResultModel;
+    private PaymentsModel paymentsModel;
     private PatientAppointmentPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
+        paymentsModel = getConvertedDTO(PaymentsModel.class);
         //hold off on calling super until imageURL can be stored to shared pref
         super.onCreate(savedInstanceState);
 
@@ -55,7 +58,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
     private void initPresenter() {
-        this.presenter = new PatientAppointmentPresenter(this, appointmentsResultModel);
+        this.presenter = new  PatientAppointmentPresenter(this, appointmentsResultModel, paymentsModel);
     }
 
     @Override

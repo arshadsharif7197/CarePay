@@ -138,7 +138,7 @@ public class NotificationActivity extends MenuPatientActivity implements Notific
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 AppointmentsResultModel appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
                 if (appointmentsResultModel != null) {
-                    appointmentPresenter = new PatientAppointmentPresenter(NotificationActivity.this, appointmentsResultModel);
+                    appointmentPresenter = new PatientAppointmentPresenter(NotificationActivity.this, appointmentsResultModel, null);
                 }
                 if (appointmentDTO != null) {
                     hideProgressDialog();

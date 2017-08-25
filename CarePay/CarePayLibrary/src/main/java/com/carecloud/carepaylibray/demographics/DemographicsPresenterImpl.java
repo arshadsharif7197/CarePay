@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.demographics;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,7 +12,6 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
-import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
@@ -38,7 +36,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     private AppointmentDTO appointmentPayload;
     private DemographicsView demographicsView;
 
-    private CarePayCameraCallback carePayCameraCallback;
     private InsuranceEditDialog insuranceEditDialog;
 
     private DemographicDTO demographicDTO;
@@ -141,10 +138,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             transaction.addToBackStack(tag);
         }
         transaction.commitAllowingStateLoss();
-
-//        if(fragment instanceof MediaResultListener){
-//            demographicsView.setMediaResultListener((MediaResultListener) fragment);
-//        }
     }
 
     @Override
@@ -279,8 +272,39 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     @Override
-    public Integer getCurrentStep() {
+    public int getCurrentStep() {
         return currentDemographicStep;
+    }
+
+    @Override
+    public int getTotalSteps() {
+        int countSteps = 0;
+        for(int i=0; i<MAX_STEPS; i++){
+            countSteps += hasStep(i+1);
+        }
+        return countSteps;
+    }
+
+    @Override
+    public int hasStep(int step) {
+        switch (step){
+            case PERSONAL_INFO:
+            case ADDRESS:
+            case DEMOGRAPHICS:
+                return 1;
+            case IDENTITY:
+                if(demographicDTO.getPayload().getCheckinSettings().shouldShowIdentityDocs()) {
+                    return 1;
+                }
+                return 0;
+            case INSURANCE:
+                if(demographicDTO.getPayload().getCheckinSettings().shouldShowHealthInsurance()){
+                    return 1;
+                }
+                return 0;
+            default:
+                return 0;
+        }
     }
 
     @Override
@@ -313,20 +337,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     @Override
-    public void onCapturedSuccess(Bitmap bitmap) {
-        if (carePayCameraCallback != null) {
-            carePayCameraCallback.onCapturedSuccess(bitmap);
-        }
-    }
-
-    @Override
-    public void onCaptureFail() {
-        if (carePayCameraCallback != null) {
-            carePayCameraCallback.onCaptureFail();
-        }
-    }
-
-    @Override
     public void onInsuranceEdited(DemographicDTO demographicDTO, boolean proceed) {
         if (demographicDTO != null) {
             this.demographicDTO = demographicDTO;
@@ -345,6 +355,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
         if (!healthInsuranceFragment.isAdded()) {
             fm.popBackStack();
+            healthInsuranceFragment.updateInsuranceList(demographicDTO);
             navigateToFragment(healthInsuranceFragment, true);
         }
 
@@ -368,16 +379,19 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     protected CheckInDemographicsBaseFragment getDemographicFragment(int step) {
+        if(hasStep(step)!=1){
+            return getDemographicFragment(++step);
+        }
         switch (step) {
-            case 1:
+            case PERSONAL_INFO:
                 return new PersonalInfoFragment();
-            case 2:
+            case ADDRESS:
                 return new AddressFragment();
-            case 3:
+            case DEMOGRAPHICS:
                 return new DemographicsFragment();
-            case 4:
+            case IDENTITY:
                 return new IdentificationFragment();
-            case 5:
+            case INSURANCE:
                 return new HealthInsuranceFragment();
             default:
                 return null;

@@ -18,6 +18,7 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.Demograp
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -76,9 +77,9 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
     @Override
     public void onResume(){
         super.onResume();
-        stepProgressBar.setCurrentProgressDot(2);
-        checkinFlowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 3);
-        checkinFlowCallback.setCurrentStep(3);
+        stepProgressBar.setCurrentProgressDot(CheckinFlowCallback.DEMOGRAPHICS - 1);
+        checkinFlowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, checkinFlowCallback.getTotalSteps(), CheckinFlowCallback.DEMOGRAPHICS);
+        checkinFlowCallback.setCurrentStep(CheckinFlowCallback.DEMOGRAPHICS);
     }
 
     private void initViews(View view){

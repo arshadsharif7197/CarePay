@@ -1,63 +1,106 @@
 package com.carecloud.carepaylibray.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPrePaymentDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by pjohnson on 13/03/17.
+ * Created by pjohnson on 13/03/17
  */
 
-public class VisitTypeListAdapter extends BaseAdapter {
+public class VisitTypeListAdapter extends RecyclerView.Adapter<VisitTypeListAdapter.ViewHolder> {
 
-    private List<VisitTypeDTO> listItems;
+    public interface VisitTypeSelectionCallback{
+        void onVisitTypeSelected(VisitTypeDTO visitTypeDTO);
+    }
 
-    public VisitTypeListAdapter(Context context, List<VisitTypeDTO> items) {
-        this.listItems = items;
+    private VisitTypeSelectionCallback callback;
+    private List<VisitTypeDTO> visitTypes = new ArrayList<>();
+    private List<AppointmentsPrePaymentDTO> prepaidVisitTypes = new ArrayList<>();
+    private Context context;
+
+    /**
+     * Constructor
+     * @param context context
+     * @param visitTypes visit types
+     * @param prepaidVisitTypes prepaid visit types from practice settings
+     * @param callback callback
+     */
+    public VisitTypeListAdapter(Context context, List<VisitTypeDTO> visitTypes, List<AppointmentsPrePaymentDTO> prepaidVisitTypes, VisitTypeSelectionCallback callback) {
+        this.context = context;
+        this.visitTypes = visitTypes;
+        this.prepaidVisitTypes = prepaidVisitTypes;
+        this.callback = callback;
     }
 
     @Override
-    public int getCount() {
-        return listItems.size();
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_visit_type_list_item, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public String getItem(int position) {
-        return listItems.get(position).getName();
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        final VisitTypeDTO visitTypeDTO = visitTypes.get(position);
+        holder.type.setText(visitTypeDTO.getName());
+
+        double amount = getVisitAmount(visitTypeDTO.getId());
+        if(amount > 0){
+            visitTypeDTO.setAmount(amount);
+            holder.amount.setText(NumberFormat.getCurrencyInstance().format(amount));
+            holder.prepayLayout.setVisibility(View.VISIBLE);
+        }else{
+            holder.prepayLayout.setVisibility(View.INVISIBLE);
+        }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.onVisitTypeSelected(visitTypeDTO);
+            }
+        });
     }
 
     @Override
     public long getItemId(int position) {
-        return listItems.get(position).getId();
+        return visitTypes.get(position).getId();
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup viewGroup) {
-        VisitTypeListHolder holder;
-        if (view == null) {
-            view = LayoutInflater.from(viewGroup.getContext()).inflate(
-                    R.layout.dialog_visit_type_list_item, viewGroup, false);
-
-            holder = new VisitTypeListHolder();
-            holder.type = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.visitTypeListItem);
-            view.setTag(holder);
-        } else {
-            holder = (VisitTypeListHolder) view.getTag();
-        }
-
-        holder.type.setText(getItem(position));
-        return view;
+    public int getItemCount() {
+        return visitTypes.size();
     }
 
-    class VisitTypeListHolder {
+    private double getVisitAmount(int id){
+        for(AppointmentsPrePaymentDTO prePaymentDTO : prepaidVisitTypes){
+            if(prePaymentDTO.getVisitType() == id){
+                return prePaymentDTO.getAmount();
+            }
+        }
+        return 0D;
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
         TextView type;
+        TextView amount;
+        View prepayLayout;
+
+        ViewHolder(View itemView) {
+            super(itemView);
+            type = (TextView) itemView.findViewById(R.id.visitTypeListItem);
+            amount = (TextView) itemView.findViewById(R.id.prepaymentAmount);
+            prepayLayout = itemView.findViewById(R.id.prepaymentLayout);
+        }
     }
 }

@@ -19,6 +19,9 @@ public class VisitTypeDTO {
     @SerializedName("description")
     @Expose
     private String description;
+    @SerializedName("amount")
+    @Expose
+    private double amount;
 
     /**
      * Visit type getter id
@@ -72,5 +75,13 @@ public class VisitTypeDTO {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
     }
 }

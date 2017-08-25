@@ -23,6 +23,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
@@ -39,6 +40,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -323,7 +325,7 @@ public class NextAppointmentFragment extends BaseFragment {
                     AppointmentsResultModel.class);
             appointmentResourceDTO = getResourceFromModel(appointmentsResultModel, selectedAppointment);
 
-            VisitTypeFragmentDialog fragmentDialog = VisitTypeFragmentDialog.newInstance(appointmentResourceDTO, appointmentsResultModel);
+            VisitTypeFragmentDialog fragmentDialog = VisitTypeFragmentDialog.newInstance(appointmentResourceDTO, appointmentsResultModel, getPracticeSettings());
             callback.displayDialogFragment(fragmentDialog, false);
         }
 
@@ -404,4 +406,21 @@ public class NextAppointmentFragment extends BaseFragment {
         }
         providerMessage.setText(label);
     }
+
+    private AppointmentsSettingDTO getPracticeSettings() {
+        List<AppointmentsSettingDTO> appointmentsSettingsList = appointmentsResultModel.getPayload().getAppointmentsSettings();
+        String practiceId = selectedAppointment.getMetadata().getPracticeId();
+        if(practiceId != null){
+            for(AppointmentsSettingDTO appointmentsSettingDTO : appointmentsSettingsList){
+                if(appointmentsSettingDTO.getPracticeId().equals(practiceId)){
+                    return appointmentsSettingDTO;
+                }
+            }
+        }
+        if(appointmentsSettingsList.isEmpty()){
+            return new AppointmentsSettingDTO();
+        }
+        return appointmentsSettingsList.get(0);
+    }
+
 }
