@@ -18,7 +18,7 @@ public class AppointmentsSettingDTO implements Serializable
     private AppointmentsRequestsDTO requests = new AppointmentsRequestsDTO();
     @SerializedName("pre_payments")
     @Expose
-    private transient List<AppointmentsPrePaymentDTO> prePayments = new ArrayList<>();
+    private List<AppointmentsPrePaymentDTO> prePayments = new ArrayList<>();
     @SerializedName("practice_id")
     @Expose
     private String practiceId;
