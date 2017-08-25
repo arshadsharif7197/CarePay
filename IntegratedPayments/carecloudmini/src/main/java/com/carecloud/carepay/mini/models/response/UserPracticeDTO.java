@@ -160,5 +160,16 @@ public class UserPracticeDTO {
         return super.hashCode();
     }
 
+    @Override
+    public String toString(){
+        return  "user_id" + ": " + userId + "\n" +
+                "practice_mgmt" + ": " + practiceMgmt + "\n" +
+                "id" + ": " + practiceId + "\n" +
+                "name" + ": " + practiceName + "\n" +
+                "name_alias" + ": " + getPracticeAliasName() + "\n" +
+                "papi_organization_id" + ": " + organizationId + "\n" +
+                "photo_url" + ": " + practicePhoto + "\n" +
+                "practice_phone" + ": " + practicePhone;
+    }
 }
 

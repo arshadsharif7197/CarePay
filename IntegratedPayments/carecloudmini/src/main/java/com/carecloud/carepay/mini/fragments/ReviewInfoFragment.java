@@ -214,6 +214,7 @@ public class ReviewInfoFragment extends RegistrationFragment {
         OutputStream outputStream;
         try {
             outputStream = new FileOutputStream(imageFile);
+            practiceLogo.buildDrawingCache();
             Bitmap bitmap = practiceLogo.getDrawingCache();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             outputStream.flush();

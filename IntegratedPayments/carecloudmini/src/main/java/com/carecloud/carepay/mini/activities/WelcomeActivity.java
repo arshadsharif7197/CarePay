@@ -32,6 +32,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 /**
@@ -108,8 +110,9 @@ public class WelcomeActivity extends FullScreenActivity {
             case Defs.IMAGE_STYLE_PRACTICE_LOGO: {
                 practiceLogoLayout.setVisibility(View.VISIBLE);
                 String imageUrl = selectedPractice.getPracticePhoto();
+                File photoFile = new File(imageUrl);
                 Picasso.with(this)
-                        .load(imageUrl)
+                        .load(photoFile)
                         .resize(400, 400)
                         .centerCrop()
                         .transform(new CropCircleTransformation())
@@ -122,7 +125,12 @@ public class WelcomeActivity extends FullScreenActivity {
                 carecloudLogoLayout.setVisibility(View.VISIBLE);
                 break;
             }
+
         }
+
+        Log.d(TAG, selectedPractice.toString());
+        Log.d(TAG, "Device Name: " + getApplicationHelper().getApplicationPreferences().getDeviceName());
+        Log.d(TAG, "Location Id: " + getApplicationHelper().getApplicationPreferences().getLocationId());
 
         View settings = findViewById(R.id.button_settings);
         settings.setOnClickListener(new View.OnClickListener() {
