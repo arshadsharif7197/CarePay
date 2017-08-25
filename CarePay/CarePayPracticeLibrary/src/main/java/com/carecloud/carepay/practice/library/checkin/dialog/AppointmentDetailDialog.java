@@ -528,15 +528,15 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
             if (checkInStatusPayloadDTO != null) {
                 CheckInStatusDataPayloadValueDTO payloadValueDTO = checkInStatusPayloadDTO
                         .getCheckInStatusData().getPayload();
-                boolean demographicsComplete = payloadValueDTO.getDemographicsVerifyComplete()
+                final boolean demographicsComplete = payloadValueDTO.getDemographicsVerifyComplete()
                         .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED);
-                boolean consentComplete = payloadValueDTO.getConsentFormsComplete()
+                final boolean consentComplete = payloadValueDTO.getConsentFormsComplete()
                         .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED);
-                boolean medicationsComplete = payloadValueDTO.getMedicationsComplete()
+                final boolean medicationsComplete = payloadValueDTO.getMedicationsComplete()
                         .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED);
-                boolean intakeComplete = payloadValueDTO.getIntakeFormsComplete()
+                final boolean intakeComplete = payloadValueDTO.getIntakeFormsComplete()
                         .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED);
-                boolean paymentComplete = payloadValueDTO.getRespsonsibility()
+                final boolean paymentComplete = payloadValueDTO.getRespsonsibility()
                         .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED);
 
                 if(demographicsComplete){
