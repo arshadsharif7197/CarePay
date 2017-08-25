@@ -67,7 +67,10 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
-public class PracticeModePracticeCheckInActivity extends BasePracticeActivity implements FilterDialog.FilterDialogListener, PracticePaymentNavigationCallback, AppointmentDetailDialog.AppointmentDialogCallback {
+public class PracticeModeCheckInActivity extends BasePracticeActivity implements FilterDialog.FilterDialogListener,
+        PracticePaymentNavigationCallback,
+        AppointmentDetailDialog.AppointmentDialogCallback,
+        CheckedInAppointmentAdapter.CheckinItemCallback{
 
 
     private RecyclerView checkinginRecyclerView;
@@ -108,13 +111,13 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
         checkinginRecyclerView = (RecyclerView) findViewById(R.id.checkinginRecyclerView);
         checkinginRecyclerView.setHasFixedSize(true);
         checkinginRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        checkinginRecyclerView.setLayoutManager(new LinearLayoutManager(PracticeModePracticeCheckInActivity.this));
+        checkinginRecyclerView.setLayoutManager(new LinearLayoutManager(PracticeModeCheckInActivity.this));
         checkinginRecyclerView.setOnDragListener(onCheckingInListDragListener);
 
         waitingRoomRecyclerView = (RecyclerView) findViewById(R.id.waitingRoomRecyclerView);
         waitingRoomRecyclerView.setHasFixedSize(true);
         waitingRoomRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        waitingRoomRecyclerView.setLayoutManager(new LinearLayoutManager(PracticeModePracticeCheckInActivity.this));
+        waitingRoomRecyclerView.setLayoutManager(new LinearLayoutManager(PracticeModeCheckInActivity.this));
         waitingRoomRecyclerView.setOnDragListener(onWaitListDragListener);
 
         filterOnTextView.setVisibility(View.GONE);
@@ -186,10 +189,10 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     }
 
     private void setAdapter() {
-        checkedInAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, false);
+        checkedInAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this, false);
         checkinginRecyclerView.setAdapter(checkedInAdapter);
 
-        waitingRoomAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, true);
+        waitingRoomAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this, true);
         waitingRoomRecyclerView.setAdapter(waitingRoomAdapter);
 
         applyFilter();
@@ -376,6 +379,7 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
      *
      * @param appointmentPayloadDTO the appointment payload dto
      */
+    @Override
     public void onCheckInItemClick(AppointmentsPayloadDTO appointmentPayloadDTO, boolean isWaitingRoom) {
         AppointmentDetailDialog dialog = new AppointmentDetailDialog(getContext(),
                 checkInDTO, getPatientBalanceDTOs(appointmentPayloadDTO.getPatient().getPatientId()),

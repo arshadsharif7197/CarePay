@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.adapters.PagePickerAdapter;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.CheckInLabelDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusDataPayloadValueDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueryStrings;
@@ -71,7 +70,6 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
     private CheckInDTO checkInDTO;
     private AppointmentsPayloadDTO appointmentPayloadDTO;
     private PendingBalanceDTO pendingBalanceDTO;
-    private CheckInLabelDTO checkInLabelDTO;
 
     private CarePayTextView checkingInLabel;
     private CarePayTextView hourLabel;
@@ -197,6 +195,8 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         spacers.add(spacer);
         spacer = findViewById(R.id.spacer_three);
         spacers.add(spacer);
+        spacer = findViewById(R.id.spacer_four);
+        spacers.add(spacer);
 
         pickerWindow = new PopupPickerWindow(context);
         pickerWindow.flipPopup(true);
@@ -221,12 +221,11 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
      * for setting values to UI Component from DTO .
      */
     private void onSetValuesFromDTO() {
-        checkInLabelDTO = checkInDTO.getMetadata().getLabel();
         if (!isWaitingRoom) {
-            demographicsCheckbox.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_demographics")));
-            consentFormsCheckbox.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_consent_forms")));
-            intakeCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogIntake()));
-            responsibilityCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogResponsibility()));
+            demographicsCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_demographics"));
+            consentFormsCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_consent_forms"));
+            intakeCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_intake"));
+            responsibilityCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_responsibility"));
         } else {
             checkBoxes.add(demographicsCheckbox);
             checkBoxes.add(consentFormsCheckbox);
@@ -234,12 +233,9 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
             checkBoxes.add(responsibilityCheckbox);
         }
 
-        checkingInLabel.setText(StringUtil.getFormatedLabal(context, isWaitingRoom ?
-                checkInLabelDTO.getPracticeCheckinDetailDialogWaitingRoom() : Label.getLabel("practice_checkin_detail_dialog_checking_in")));
-        balanceTextLabel.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_balance")));
-        assistButton.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_assist")));
-        pageButton.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_page")));
-        paymentButton.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_payment")));
+        checkingInLabel.setText(isWaitingRoom ?
+                Label.getLabel("practice_checkin_detail_dialog_waiting_room") :
+                Label.getLabel("practice_checkin_detail_dialog_checking_in"));
 
         balanceValueLabel.setText(StringUtil.getFormattedBalanceAmount(getPatientBalance()));
         patientNameLabel.setText(StringUtil.getFormatedLabal(context, appointmentPayloadDTO.getPatient().getFullName()));

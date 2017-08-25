@@ -132,7 +132,7 @@
     <dimen name="appointment_detail_dialog_checkbox_divider_height">4dp</dimen>
     <dimen name="appointment_detail_dialog_checkbox_divider_margin">-165dp</dimen>
     <dimen name="appointment_detail_dialog_checkbox_divider_margin_top">20dp</dimen>
-    <dimen name="custom_appointment_dialog_checkbox_textsize">16sp</dimen>
+    <dimen name="custom_appointment_dialog_checkbox_textsize">15sp</dimen>
     <dimen name="custom_appointment_dialog_button_textsize">22sp</dimen>
 
     <dimen name="custom_appointment_dialog_background_shape_radius">7dp</dimen>
