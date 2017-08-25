@@ -528,16 +528,55 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
             if (checkInStatusPayloadDTO != null) {
                 CheckInStatusDataPayloadValueDTO payloadValueDTO = checkInStatusPayloadDTO
                         .getCheckInStatusData().getPayload();
-                demographicsCheckbox.setChecked(payloadValueDTO.getDemographicsVerifyComplete()
-                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
-                consentFormsCheckbox.setChecked(payloadValueDTO.getConsentFormsComplete()
-                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
-                medicationsCheckbox.setChecked(payloadValueDTO.getMedicationsComplete()
-                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
-                intakeCheckbox.setChecked(payloadValueDTO.getIntakeFormsComplete()
-                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
-                responsibilityCheckbox.setChecked(payloadValueDTO.getRespsonsibility()
-                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
+                boolean demographicsComplete = payloadValueDTO.getDemographicsVerifyComplete()
+                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED);
+                boolean consentComplete = payloadValueDTO.getConsentFormsComplete()
+                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED);
+                boolean medicationsComplete = payloadValueDTO.getMedicationsComplete()
+                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED);
+                boolean intakeComplete = payloadValueDTO.getIntakeFormsComplete()
+                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED);
+                boolean paymentComplete = payloadValueDTO.getRespsonsibility()
+                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED);
+
+                if(demographicsComplete){
+                    demographicsCheckbox.setChecked(true);
+                }else{
+                    demographicsCheckbox.setChecked(false);
+                    demographicsCheckbox.setSelected(true);
+                }
+                if(consentComplete){
+                    consentFormsCheckbox.setChecked(true);
+                }else{
+                    consentFormsCheckbox.setChecked(false);
+                    if(demographicsComplete){
+                        consentFormsCheckbox.setSelected(true);
+                    }
+                }
+                if(medicationsComplete){
+                    medicationsCheckbox.setChecked(true);
+                }else{
+                    medicationsCheckbox.setChecked(false);
+                    if(consentComplete){
+                        medicationsCheckbox.setSelected(true);
+                    }
+                }
+                if(intakeComplete){
+                    intakeCheckbox.setChecked(true);
+                }else{
+                    intakeCheckbox.setChecked(false);
+                    if(medicationsComplete){
+                        intakeCheckbox.setSelected(true);
+                    }
+                }
+                if(paymentComplete) {
+                    responsibilityCheckbox.setChecked(true);
+                }else{
+                    responsibilityCheckbox.setChecked(false);
+                    if(intakeComplete){
+                        responsibilityCheckbox.setSelected(true);
+                    }
+                }
             }
         } catch (Exception ex) {
             callback.onFailure(ex.getMessage());
