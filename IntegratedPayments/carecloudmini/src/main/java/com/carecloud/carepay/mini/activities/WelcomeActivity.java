@@ -42,10 +42,10 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class WelcomeActivity extends FullScreenActivity {
     private static final String TAG = WelcomeActivity.class.getName();
-    private static final int MAX_RETRIES = 3;
+    private static final int MAX_RETRIES = 2;
     private static final int CONNECTION_RETRY_DELAY = 1000 * 5;
     private static final int PAYMENT_COMPLETE_RESET = 1000 * 3;
-    private static final int POST_RETRY_DELAY = 1000 * 30;
+    private static final int POST_RETRY_DELAY = 1000 * 10;
 
     private ApplicationHelper applicationHelper;
     private TextView message;
@@ -417,6 +417,8 @@ public class WelcomeActivity extends FullScreenActivity {
                     }
                 }, PAYMENT_COMPLETE_RESET);
 
+                //this will clean up any pending requests that may have been queued since now we have been able to successfully process a request
+                launchQueueService();
             }
 
             @Override
@@ -436,14 +438,18 @@ public class WelcomeActivity extends FullScreenActivity {
                         queuePaymentRecord.setPaymentRequestId(paymentRequestId);
                         queuePaymentRecord.save();
 
-                        Intent queueService = new Intent(WelcomeActivity.this, QueueUploadService.class);
-                        startService(queueService);
+                        launchQueueService();
                     }
                     resetDevice(paymentRequestId);
                     updateMessage(getString(R.string.welcome_waiting));
                 }
             }
         };
+    }
+
+    private void launchQueueService(){
+        Intent queueService = new Intent(this, QueueUploadService.class);
+        startService(queueService);
     }
 
     private boolean shouldRetry(String errorMessage){
