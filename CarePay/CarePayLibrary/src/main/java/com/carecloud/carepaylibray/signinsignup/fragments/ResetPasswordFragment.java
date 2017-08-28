@@ -196,17 +196,18 @@ public class ResetPasswordFragment extends BaseFragment {
 
         @Override
         public void onFailure(String exceptionMessage)  {
+            listener.showErrorToast(StringUtil.capitalize(exceptionMessage));
             hideProgressDialog();
-            try {
-                JSONObject json = new JSONObject(exceptionMessage);
-                String message = json.getJSONObject("message").getString("error");
-                if ( message != null ) {
-                    listener.showErrorToast(StringUtil.capitalize(message));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                listener.showErrorToast(exceptionMessage);
-            }
+//            try {
+//                JSONObject json = new JSONObject(exceptionMessage);
+//                String message = json.getJSONObject("message").getString("error");
+//                if ( message != null ) {
+//                    listener.showErrorToast(StringUtil.capitalize(message));
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//                listener.showErrorToast(exceptionMessage);
+//            }
         }
     };
 

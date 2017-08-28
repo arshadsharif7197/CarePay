@@ -60,7 +60,7 @@ public class SelectLanguageFragment extends BaseFragment implements LanguageList
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             languageConfirmButton.setEnabled(true);
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

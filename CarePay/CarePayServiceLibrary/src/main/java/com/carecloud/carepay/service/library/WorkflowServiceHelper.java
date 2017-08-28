@@ -21,14 +21,15 @@ import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
@@ -350,22 +351,22 @@ public class WorkflowServiceHelper {
                         || (errorBodyString.toLowerCase().contains(TOKEN) && errorBodyString.toLowerCase().contains(REVOKED))) {
                     atomicAppRestart();
                 } else {
-                    try {
-                        JSONObject json = new JSONObject(errorBodyString);
-                        if (json.has("exception")) {
-                            JSONObject exceptionJson = json.getJSONObject("exception");
-                            if (exceptionJson.has("body")) {
-                                JSONObject bodyJson = exceptionJson.getJSONObject("body");
-                                if (bodyJson.has("error")) {
-                                    errorBodyString = bodyJson.getString("error");
-                                }
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+//                    try {
+//                        JSONObject json = new JSONObject(errorBodyString);
+//                        if (json.has("exception")) {
+//                            JSONObject exceptionJson = json.getJSONObject("exception");
+//                            if (exceptionJson.has("body")) {
+//                                JSONObject bodyJson = exceptionJson.getJSONObject("body");
+//                                if (bodyJson.has("error")) {
+//                                    errorBodyString = bodyJson.getString("error");
+//                                }
+//                            }
+//                        }
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
 
-                    onFailure(errorBodyString);
+                    onFailure(parseError(message, errorBodyString, "message", "exception", "error"));
                 }
             }
 
@@ -389,7 +390,7 @@ public class WorkflowServiceHelper {
              * @param <S>      Dynamic class to convert
              * @return Dynamic converted class object
              */
-            private  <S> S getConvertedDTO(Class<S> dtoClass, String jsonString) {
+            private <S> S getConvertedDTO(Class<S> dtoClass, String jsonString) {
 
                 Gson gson = new Gson();
                 return gson.fromJson(jsonString, dtoClass);
@@ -397,8 +398,14 @@ public class WorkflowServiceHelper {
             }
 
             private void onFailure(Response<WorkflowDTO> response) throws IOException {
-                if (null != response.errorBody()) {
-                    onFailure(response.errorBody().string());
+                if (response.errorBody() != null) {
+                    String errorBodyString = "";
+                    try {
+                        errorBodyString = response.errorBody().string();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    onFailure(parseError(response.message(), errorBodyString, "message", "data", "error"));
                 } else {
                     onFailure("");
                 }
@@ -522,6 +529,7 @@ public class WorkflowServiceHelper {
 
     /**
      * Persist all Labels contained in Workflow DTO
+     *
      * @param workflowDTO workflow dto
      */
     public void saveLabels(WorkflowDTO workflowDTO) {
@@ -531,13 +539,58 @@ public class WorkflowServiceHelper {
         if (labels != null && !contains) {
             Set<Map.Entry<String, JsonElement>> set = labels.entrySet();
             for (Map.Entry<String, JsonElement> entry : set) {
-                Log.d(state, "Saving Label "+entry.getKey());
+                Log.d(state, "Saving Label " + entry.getKey());
                 Label.putLabelAsync(entry.getKey(), entry.getValue().getAsString());
             }
             Label.applyAsyncLabels();
             SharedPreferences.Editor editor = ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences().edit();
             editor.putBoolean("labelFor" + state, true).apply();
         }
+    }
+
+    private static String parseError(String message, String errorBodyString, @NonNull String... errorFields) {
+        try {
+            JsonElement jsonElement = new JsonParser().parse(errorBodyString);
+            String error;
+            for (String errorField : errorFields) {
+                error = findErrorElement(jsonElement, errorField);
+                if (error != null) {
+                    message = error;
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return message;
+    }
+
+    private static String findErrorElement(JsonElement jsonElement, String errorFieldName) {
+        if (jsonElement instanceof JsonObject) {
+            JsonObject jsonObject = (JsonObject) jsonElement;
+            Set<Map.Entry<String, JsonElement>> entrySet = jsonObject.entrySet();
+            for (Map.Entry<String, JsonElement> entry : entrySet) {
+                if (entry.getKey().equals(errorFieldName) && entry.getValue() instanceof JsonPrimitive) {
+                    return entry.getValue().getAsString();
+                }
+                if (entry.getValue() instanceof JsonObject) {
+                    String error = findErrorElement(entry.getValue(), errorFieldName);
+                    if (error != null) {
+                        return error;
+                    }
+                }
+            }
+        } else if (jsonElement instanceof JsonArray) {
+            JsonArray array = (JsonArray) jsonElement;
+            Iterator<JsonElement> iterator = array.iterator();
+            while (iterator.hasNext()) {
+                String error = findErrorElement(iterator.next(), errorFieldName);
+                if (error != null) {
+                    return error;
+                }
+            }
+        }
+        return null;
     }
 
 }

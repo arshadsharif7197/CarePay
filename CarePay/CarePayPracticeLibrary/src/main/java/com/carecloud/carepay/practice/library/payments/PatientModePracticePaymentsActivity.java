@@ -285,7 +285,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
         }
     };
 

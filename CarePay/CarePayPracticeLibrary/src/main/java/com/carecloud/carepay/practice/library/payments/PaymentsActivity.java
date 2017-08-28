@@ -295,7 +295,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
         }
     };
 
