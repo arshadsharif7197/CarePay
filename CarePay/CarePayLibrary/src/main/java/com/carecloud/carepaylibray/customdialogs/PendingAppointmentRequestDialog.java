@@ -9,29 +9,25 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 
 public class PendingAppointmentRequestDialog extends BaseDoctorInfoDialog {
 
     private Context context;
     private LinearLayout mainLayout;
-    private AppointmentLabelDTO appointmentLabels;
 
     /**
      * Constructor.
      *
-     * @param context           activity context
-     * @param appointmentDTO    appointment model
-     * @param appointmentLabels screen labels
+     * @param context        activity context
+     * @param appointmentDTO appointment model
      */
-    public PendingAppointmentRequestDialog(Context context, AppointmentDTO appointmentDTO,
-                                           AppointmentLabelDTO appointmentLabels) {
+    public PendingAppointmentRequestDialog(Context context, AppointmentDTO appointmentDTO) {
         super(context, appointmentDTO, false);
         this.context = context;
-        this.appointmentLabels = appointmentLabels;
     }
 
     @Override
@@ -50,7 +46,7 @@ public class PendingAppointmentRequestDialog extends BaseDoctorInfoDialog {
 
         CarePayTextView pendingRequestTextView = (CarePayTextView)
                 childActionView.findViewById(R.id.appointRequestPendingTextView);
-        pendingRequestTextView.setText(appointmentLabels.getAppointmentsRequestPendingHeading());
+        pendingRequestTextView.setText(Label.getLabel("appointments_request_pending_heading"));
         pendingRequestTextView.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));
         pendingRequestTextView.setOnClickListener(this);
 

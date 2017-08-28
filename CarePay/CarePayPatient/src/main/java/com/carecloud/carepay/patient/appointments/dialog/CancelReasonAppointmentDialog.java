@@ -21,10 +21,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentCancellationReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.CancellationReasonDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -54,13 +54,14 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
 
     /**
      * Contractor for dialog.
-     * @param context context
-     * @param appointmentDTO appointment Item
+     *
+     * @param context         context
+     * @param appointmentDTO  appointment Item
      * @param appointmentInfo Appointment Info data
      */
     public CancelReasonAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
-                                  AppointmentsResultModel appointmentInfo,
-                                        CancelReasonAppointmentDialogListener callback) {
+                                         AppointmentsResultModel appointmentInfo,
+                                         CancelReasonAppointmentDialogListener callback) {
         super(context);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
@@ -89,16 +90,16 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
     @SuppressWarnings("deprecation")
     @SuppressLint("InflateParams")
     private void onInitialization() {
-        AppointmentLabelDTO label = appointmentInfo.getMetadata().getLabel();
-        ((CarePayTextView) findViewById(R.id.heading_text)).setText(label.getCancelAppointmentReasonsTitle());
-        reasonTextInputLayout = (TextInputLayout)findViewById(R.id.reasonTextInputLayout);
+        ((CarePayTextView) findViewById(R.id.heading_text))
+                .setText(Label.getLabel("cancel_appointment_reasons_title"));
+        reasonTextInputLayout = (TextInputLayout) findViewById(R.id.reasonTextInputLayout);
         reasonEditText = (EditText) findViewById(R.id.reasonEditText);
-        reasonEditText.setHint(label.getCancelAppointmentOtherReasonHint());
+        reasonEditText.setHint(Label.getLabel("cancel_appointment_other_reason_hint"));
         reasonEditText.setHintTextColor(context.getResources().getColor(R.color.light_gray_dialog));
 
         cancelReasonRadioGroup = (RadioGroup) findViewById(R.id.cancelReasonRadioGroup);
         cancelAppointmentButton = (Button) findViewById(R.id.cancelAppointmentButton);
-        cancelAppointmentButton.setText(label.getCancelAppointmentsHeading());
+        cancelAppointmentButton.setText(Label.getLabel("cancel_appointments_heading"));
         SystemUtil.setProximaNovaRegularTypeface(context, cancelAppointmentButton);
 
         cancellationReasons = appointmentInfo.getPayload().getCancellationReasons();
@@ -109,9 +110,6 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
                 addCancelReason(cancellationReason.getName(), cancellationReason.getId());
             }
         }
-
-        // Add Other radio button
-        //addCancelReason(label.getCancelAppointmentOtherReasonLabel(), 100);
     }
 
     @SuppressWarnings("deprecation")

@@ -79,7 +79,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
             Log.e(getActivity().getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -88,10 +88,8 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_review_demographic_base, container, false);
         stepProgressBar = (StepProgressBar) view.findViewById(R.id.stepProgressBarCheckin);
-//        stepProgressBar.setCumulativeDots(true);
         stepProgressBar.setNumDots(checkinFlowCallback.getTotalSteps());
         inflateContent(inflater, view);
-        //initializeToolbar(view);
         inflateToolbarViews(view);
 
         View mainContainer = view.findViewById(R.id.container_main);

@@ -88,7 +88,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         try {
             if (context instanceof PaymentViewHandler) {
                 callback = ((PaymentViewHandler) context).getPaymentPresenter();
-            }else if (context instanceof AppointmentViewHandler){
+            } else if (context instanceof AppointmentViewHandler) {
                 callback = (ChooseCreditCardInterface) ((AppointmentViewHandler) context).getAppointmentPresenter();
             } else {
                 callback = (ChooseCreditCardInterface) context;
@@ -321,7 +321,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
             System.out.print(exceptionMessage);
         }
     };

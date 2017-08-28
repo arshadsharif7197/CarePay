@@ -265,7 +265,7 @@ public class SigninFragment extends BaseFragment {
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             setSignInButtonClickable(true);
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

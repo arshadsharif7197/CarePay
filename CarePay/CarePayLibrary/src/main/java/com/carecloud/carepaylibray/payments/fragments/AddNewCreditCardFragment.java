@@ -43,11 +43,11 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
     @Override
     protected void attachCallback(Context context) {
         try {
-            if(context instanceof PaymentViewHandler){
+            if (context instanceof PaymentViewHandler) {
                 callback = ((PaymentViewHandler) context).getPaymentPresenter();
-            }else if (context instanceof AppointmentViewHandler){
+            } else if (context instanceof AppointmentViewHandler) {
                 callback = (PaymentConfirmationInterface) ((AppointmentViewHandler) context).getAppointmentPresenter();
-            }else {
+            } else {
                 callback = (PaymentConfirmationInterface) context;
             }
         } catch (ClassCastException cce) {
@@ -56,9 +56,9 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(callback == null){
+        if (callback == null) {
             attachCallback(getContext());
         }
     }
@@ -71,7 +71,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             Gson gson = new Gson();
             String paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
             paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
-            if(paymentsModel!=null) {
+            if (paymentsModel != null) {
                 addressPayloadDTO = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getAddress();
                 userPracticeDTO = callback.getPracticeInfo(paymentsModel);
             }
@@ -109,7 +109,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             nextButton.setEnabled(true);
-            SystemUtil.showErrorToast(getContext(), CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            SystemUtil.showErrorToast(getContext(), exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -126,7 +126,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             nextButton.setEnabled(true);
             Log.d("makePaymentCallback", "=========================>\nworkflowDTO=" + workflowDTO.toString());
             callback.showPaymentConfirmation(workflowDTO);
-            if(getDialog()!=null){
+            if (getDialog() != null) {
                 dismiss();
             }
         }
@@ -135,7 +135,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             nextButton.setEnabled(true);
-            SystemUtil.showErrorToast(getContext(), CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            SystemUtil.showErrorToast(getContext(), exceptionMessage);
             Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -195,14 +195,14 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
 
     private void postPayment(String paymentModelJson) {
         Map<String, String> queries = new HashMap<>();
-        if(userPracticeDTO!=null){
+        if (userPracticeDTO != null) {
             queries.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
             queries.put("practice_id", userPracticeDTO.getPracticeId());
             queries.put("patient_id", userPracticeDTO.getPatientId());
-            if(callback.getAppointmentId() != null){
+            if (callback.getAppointmentId() != null) {
                 queries.put("appointment_id", callback.getAppointmentId());
             }
-        }else {
+        } else {
             PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
             queries.put("practice_mgmt", metadata.getPracticeMgmt());
             queries.put("practice_id", metadata.getPracticeId());
@@ -249,7 +249,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         new LargeAlertDialog(getActivity(), Label.getLabel("payment_failed_error"), Label.getLabel("payment_change_payment_label"), R.color.Feldgrau, R.drawable.icn_card_error, getLargeAlertInterface()).show();
     }
 
-    protected LargeAlertDialog.LargeAlertInterface getLargeAlertInterface(){
+    protected LargeAlertDialog.LargeAlertInterface getLargeAlertInterface() {
         return new LargeAlertDialog.LargeAlertInterface() {
             @Override
             public void onActionButton() {

@@ -11,9 +11,6 @@ import java.io.Serializable;
  */
 public class AppointmentMetadataModel implements Serializable {
 
-    @SerializedName("labels")
-    @Expose
-    private AppointmentLabelDTO label = new AppointmentLabelDTO();
     @SerializedName("links")
     @Expose
     private LinksDTO links = new LinksDTO();
@@ -23,20 +20,6 @@ public class AppointmentMetadataModel implements Serializable {
     @SerializedName("data_models")
     @Expose
     private ConsentFormDataModelDTO dataModels = new ConsentFormDataModelDTO();
-
-    /**
-     * @return The label
-     */
-    public AppointmentLabelDTO getLabel() {
-        return label;
-    }
-
-    /**
-     * @param label The label
-     */
-    public void setLabel(AppointmentLabelDTO label) {
-        this.label = label;
-    }
 
     /**
      * @return The links
