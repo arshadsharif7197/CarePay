@@ -31,7 +31,7 @@
                 android:layout_width="@dimen/home_logo_width"
                 android:layout_height="@dimen/checkin_logo_height"
                 android:contentDescription="@string/home_logo"
-                android:src="@drawable/cp_logo" />
+                android:src="?practiceLogoDrawable" />
 
             <FrameLayout
                 android:layout_width="match_parent"

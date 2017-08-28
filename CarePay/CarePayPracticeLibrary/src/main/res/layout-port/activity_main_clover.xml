@@ -148,7 +148,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/home_logo_margin_top"
                 android:contentDescription="@string/home_logo"
-                android:src="@drawable/cp_logo" />
+                android:src="?practiceLogoDrawable" />
 
         </FrameLayout>
 
