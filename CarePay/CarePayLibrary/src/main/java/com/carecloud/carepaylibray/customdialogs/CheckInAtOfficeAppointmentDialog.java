@@ -22,9 +22,8 @@ public class CheckInAtOfficeAppointmentDialog extends BaseDoctorInfoDialog {
     /**
      * Constructor.
      *
-     * @param context           context
-     * @param appointmentDTO    appointment Item
-     * @param appointmentLabels Screen labels
+     * @param context        context
+     * @param appointmentDTO appointment Item
      */
     public CheckInAtOfficeAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
                                             Class nextActivity) {

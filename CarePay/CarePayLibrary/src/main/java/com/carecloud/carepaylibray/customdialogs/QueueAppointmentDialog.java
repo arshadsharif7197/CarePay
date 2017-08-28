@@ -22,9 +22,8 @@ public class QueueAppointmentDialog extends BaseDoctorInfoDialog {
     /**
      * Constructor.
      *
-     * @param context           context
-     * @param appointmentDTO    appointment item
-     * @param appointmentLabels screen labels
+     * @param context        context
+     * @param appointmentDTO appointment item
      */
     public QueueAppointmentDialog(Context context, AppointmentDTO appointmentDTO) {
         super(context, appointmentDTO, false);
