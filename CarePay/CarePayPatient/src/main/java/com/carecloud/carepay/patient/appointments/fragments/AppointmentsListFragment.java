@@ -26,7 +26,6 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.google.gson.Gson;
@@ -118,9 +117,8 @@ public class AppointmentsListFragment extends BaseAppointmentFragment implements
         String noAptMessageText = "";
 
         if (appointmentsResultModel != null) {
-            AppointmentLabelDTO labels = appointmentsResultModel.getMetadata().getLabel();
-            noAptMessageTitle = labels.getNoAppointmentsMessageTitle();
-            noAptMessageText = labels.getNoAppointmentsMessageText();
+            noAptMessageTitle = Label.getLabel("no_appointments_message_title");
+            noAptMessageText = Label.getLabel("no_appointments_message_text");
         }
 
         //Pull down to refresh

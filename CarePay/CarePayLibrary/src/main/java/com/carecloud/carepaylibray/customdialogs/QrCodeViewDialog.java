@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentMetadataModel;
@@ -39,7 +40,7 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
     private AppointmentMetadataModel appointmentMetadataModel;
     private QRCodeViewDialogListener callBack;
 
-    public interface QRCodeViewDialogListener{
+    public interface QRCodeViewDialogListener {
         void onGenerateQRCodeError(String errorMessage);
     }
 
@@ -96,7 +97,7 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
                     .getCheckinAtOffice(), qrCodeCallBack, getQueryParam(queryStrings));
         } else {
             /*Error in generating QR code*/
-            scanQRCodeTextView.setText(appointmentMetadataModel.getLabel().getQrCodeErrorMessage());
+            scanQRCodeTextView.setText(Label.getLabel("qr_code_error_message"));
             qrCodeProgressBar.setVisibility(View.GONE);
         }
     }
@@ -142,11 +143,11 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
 
         if (scanQRCodeDTO != null) {
             Picasso.with(context).load(scanQRCodeDTO.getQrCode()).into(qrCodeImageView);
-            scanQRCodeTextView.setText(appointmentMetadataModel.getLabel().getScanQRCodeHeading());
+            scanQRCodeTextView.setText(Label.getLabel("scan_qr_code_heading"));
             qrCodeProgressBar.setVisibility(View.GONE);
         } else {
             /*Error in generating QR code*/
-            scanQRCodeTextView.setText(appointmentMetadataModel.getLabel().getQrCodeErrorMessage());
+            scanQRCodeTextView.setText(Label.getLabel("qr_code_error_message"));
             qrCodeProgressBar.setVisibility(View.GONE);
         }
     }
