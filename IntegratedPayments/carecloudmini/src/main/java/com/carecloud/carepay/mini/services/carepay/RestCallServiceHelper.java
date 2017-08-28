@@ -101,7 +101,7 @@ public class RestCallServiceHelper {
                 if(response.isSuccessful()){
                     callback.onPostExecute(response.body());
                 }else{
-                    callback.onFailure(parseError(response, "data", "error"));
+                    callback.onFailure(parseError(response, "data", "error", "message"));
                 }
             }
 
@@ -128,7 +128,7 @@ public class RestCallServiceHelper {
                 if(response.isSuccessful()){
                     callback.onPostExecute(response.body());
                 }else{
-                    callback.onFailure(parseError(response, "data", "error"));
+                    callback.onFailure(parseError(response, "data", "error", "message"));
                 }
             }
 
