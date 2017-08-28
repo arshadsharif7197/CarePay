@@ -8,9 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
@@ -18,19 +18,17 @@ public class QueueAppointmentDialog extends BaseDoctorInfoDialog {
 
     private Context context;
     private LinearLayout mainLayout;
-    private AppointmentLabelDTO appointmentLabels;
 
     /**
      * Constructor.
-     * @param context context
-     * @param appointmentDTO appointment item
+     *
+     * @param context           context
+     * @param appointmentDTO    appointment item
      * @param appointmentLabels screen labels
      */
-    public QueueAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
-                                  AppointmentLabelDTO appointmentLabels) {
+    public QueueAppointmentDialog(Context context, AppointmentDTO appointmentDTO) {
         super(context, appointmentDTO, false);
         this.context = context;
-        this.appointmentLabels = appointmentLabels;
     }
 
     @Override
@@ -48,14 +46,14 @@ public class QueueAppointmentDialog extends BaseDoctorInfoDialog {
 
         CarePayTextView queueLabel = (CarePayTextView)
                 childActionView.findViewById(R.id.appointRequestQueueLabel);
-        queueLabel.setText(appointmentLabels.getAppointmentsQueueHeading());
+        queueLabel.setText(Label.getLabel("appointments_queue_heading"));
 
         CarePayTextView queueValue = (CarePayTextView)
                 childActionView.findViewById(R.id.appointRequestQueueTextView);
         queueValue.setText(StringUtil.getLabelForView("You are 3rd")); // Remove once available in endpoint
 
         Button checkoutNow = (Button) childActionView.findViewById(R.id.appointmentRequestCheckoutNow);
-        checkoutNow.setText(appointmentLabels.getAppointmentRequestCheckoutNow());
+        checkoutNow.setText(Label.getLabel("appointment_request_checkout_now"));
         checkoutNow.setVisibility(View.VISIBLE);
 
         mainLayout.addView(childActionView);
