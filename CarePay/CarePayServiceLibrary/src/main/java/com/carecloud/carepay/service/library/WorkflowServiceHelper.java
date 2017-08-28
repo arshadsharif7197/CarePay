@@ -351,21 +351,6 @@ public class WorkflowServiceHelper {
                         || (errorBodyString.toLowerCase().contains(TOKEN) && errorBodyString.toLowerCase().contains(REVOKED))) {
                     atomicAppRestart();
                 } else {
-//                    try {
-//                        JSONObject json = new JSONObject(errorBodyString);
-//                        if (json.has("exception")) {
-//                            JSONObject exceptionJson = json.getJSONObject("exception");
-//                            if (exceptionJson.has("body")) {
-//                                JSONObject bodyJson = exceptionJson.getJSONObject("body");
-//                                if (bodyJson.has("error")) {
-//                                    errorBodyString = bodyJson.getString("error");
-//                                }
-//                            }
-//                        }
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-
                     onFailure(parseError(message, errorBodyString, "message", "exception", "error"));
                 }
             }
