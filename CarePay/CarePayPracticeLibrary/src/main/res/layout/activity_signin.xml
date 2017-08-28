@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/dimen_20dp"
-            android:src="@drawable/cp_logo" />
+            android:src="?practiceLogoDrawable" />
     </RelativeLayout>
 
     <RelativeLayout

@@ -269,6 +269,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
                     } else {
                         findViewById(R.id.drop_down_area_view).setVisibility(View.GONE);
                     }
+
+                    undoAppointmentCheckin(appointmentId);
                     break;
                 //the drag and drop operation has concluded.
                 case DragEvent.ACTION_DRAG_ENDED:
@@ -330,6 +332,14 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
         getWorkflowServiceHelper().execute(transitionDTO, checkInAppointmentCallback, queryMap);
     }
 
+    private void undoAppointmentCheckin(String appointmentId){
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("appointment_id", appointmentId);
+
+        TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getConfirmAppointment();
+        getWorkflowServiceHelper().execute(transitionDTO, checkInAppointmentCallback, queryMap);
+    }
+
     private WorkflowServiceCallback checkInAppointmentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -349,6 +359,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
+            showErrorNotification(exceptionMessage);
             findViewById(R.id.drop_down_area_view).setVisibility(View.GONE);
         }
     };
