@@ -105,6 +105,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
 //        extra.putString(CarePayConstants.EXTRA_WORKFLOW, workflowDTO.toString());
         intent.putExtra(CarePayConstants.EXTRA_BUNDLE, extra);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
@@ -244,6 +245,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             DtoHelper.bundleDto(extra, presenter.getAppointmentPayload());
             Intent completeIntent = new Intent(this, CompleteCheckActivity.class);
             completeIntent.putExtra(CarePayConstants.EXTRA_BUNDLE, extra);
+            completeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(completeIntent);
         } else {
             setResult(CarePayConstants.HOME_PRESSED, intent);
