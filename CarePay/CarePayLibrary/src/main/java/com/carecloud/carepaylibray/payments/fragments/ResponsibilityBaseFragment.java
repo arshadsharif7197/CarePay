@@ -20,9 +20,8 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
-import com.carecloud.carepaylibray.payments.models.postmodel.ResponsibilityType;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -121,9 +120,9 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
     }
 
     protected void createPaymentModel(double payAmount){
-        PaymentPostModel postModel = paymentDTO.getPaymentPayload().getPaymentPostModel();
+        IntegratedPaymentPostModel postModel = paymentDTO.getPaymentPayload().getPaymentPostModel();
         if( postModel == null){
-            postModel = new PaymentPostModel();
+            postModel = new IntegratedPaymentPostModel();
         }
         postModel.setAmount(payAmount);
 
@@ -138,37 +137,69 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
                 }
                 payAmount = (double) Math.round((payAmount - itemAmount) * 100) / 100;
 
-                PaymentObject paymentObject = new PaymentObject();
-                paymentObject.setAmount(itemAmount);
+//                PaymentObject paymentObject = new PaymentObject();
+//                paymentObject.setAmount(itemAmount);
+//
+//                AppointmentDTO appointmentDTO = actionCallback.getAppointment();
+//                if(appointmentDTO != null){
+//                    paymentObject.setProviderID(appointmentDTO.getPayload().getProvider().getGuid());
+//                    paymentObject.setLocationID(appointmentDTO.getPayload().getLocation().getGuid());
+//                }
+//
+//                switch (responsibility.getType()){
+//                    case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
+//                        paymentObject.setResponsibilityType(ResponsibilityType.co_insurance);
+//                        break;
+//                    case PendingBalancePayloadDTO.DEDUCTIBLE_TYPE:
+//                        paymentObject.setResponsibilityType(ResponsibilityType.deductable);
+//                        break;
+//                    case PendingBalancePayloadDTO.CO_PAY_TYPE:
+//                    default:
+//                        paymentObject.setResponsibilityType(ResponsibilityType.co_pay);
+//                        break;
+//                }
+//                postModel.addPaymentMethod(paymentObject);
+
+                IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
+                paymentLineItem.setAmount(itemAmount);
 
                 AppointmentDTO appointmentDTO = actionCallback.getAppointment();
-                if(appointmentDTO != null){
-                    paymentObject.setProviderID(appointmentDTO.getPayload().getProvider().getGuid());
-                    paymentObject.setLocationID(appointmentDTO.getPayload().getLocation().getGuid());
+                if (appointmentDTO != null) {
+                    paymentLineItem.setProviderID(appointmentDTO.getPayload().getProvider().getGuid());
+                    paymentLineItem.setLocationID(appointmentDTO.getPayload().getLocation().getGuid());
                 }
 
                 switch (responsibility.getType()){
                     case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
-                        paymentObject.setResponsibilityType(ResponsibilityType.co_insurance);
+                        paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_COINSURANCE);
                         break;
                     case PendingBalancePayloadDTO.DEDUCTIBLE_TYPE:
-                        paymentObject.setResponsibilityType(ResponsibilityType.deductable);
+                        paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_DEDUCTABLE);
                         break;
                     case PendingBalancePayloadDTO.CO_PAY_TYPE:
                     default:
-                        paymentObject.setResponsibilityType(ResponsibilityType.co_pay);
+                        paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_COPAY);
                         break;
                 }
-                postModel.addPaymentMethod(paymentObject);
+
+                postModel.addLineItem(paymentLineItem);
+
             }
         }
 
         if(payAmount > 0){//payment is greater than any responsibility types
-            PaymentObject paymentObject = new PaymentObject();
-            paymentObject.setAmount(payAmount);
-            paymentObject.setDescription("Unapplied Amount");
+//            PaymentObject paymentObject = new PaymentObject();
+//            paymentObject.setAmount(payAmount);
+//            paymentObject.setDescription("Unapplied Amount");
+//
+//            postModel.addPaymentMethod(paymentObject);
 
-            postModel.addPaymentMethod(paymentObject);
+            IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
+            paymentLineItem.setAmount(payAmount);
+            paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_UNAPPLIED);
+            paymentLineItem.setDescription("Unapplied Amount");
+
+            postModel.addLineItem(paymentLineItem);
         }
 
         paymentDTO.getPaymentPayload().setPaymentPostModel(postModel);
