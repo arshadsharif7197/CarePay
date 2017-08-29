@@ -14,7 +14,6 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
-import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLabelsDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModePayloadDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSplashDTO;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -23,6 +22,7 @@ import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.squareup.picasso.Picasso;
 
@@ -65,16 +65,14 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
 
     private void initializeLabels() {
         if (patientModeSplashDTO != null) {
-            PatientModeLabelsDTO patientModeLabelsDTO = patientModeSplashDTO.getMetadata().getLabels();
             patientModePayloadDTO = patientModeSplashDTO.getPayload();
+            getStartedButton.setText(Label.getLabel("get_started_heading"));
 
-            if (patientModeLabelsDTO != null) {
-                getStartedButton.setText(patientModeLabelsDTO.getGetStartedHeading());
-            }
+            praticewelcomeText.setText(patientModeSplashDTO.getPayload().getPractice()
+                    .getWelcomeScreen().getMessage());
 
-            praticewelcomeText.setText(patientModeSplashDTO.getPayload().getPractice().getWelcomeScreen().getMessage());
-
-            String welcomeLogoUrl = patientModeSplashDTO.getPayload().getPractice().getWelcomeScreen().getWelcomePhoto();
+            String welcomeLogoUrl = patientModeSplashDTO.getPayload().getPractice()
+                    .getWelcomeScreen().getWelcomePhoto();
             Picasso.with(this).load(welcomeLogoUrl).into(practicelogo);
 
             if (patientModePayloadDTO != null) {
@@ -92,7 +90,8 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
                         }
                     }
                 }
-                ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.home_spinner_item, languages);
+                ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this,
+                        R.layout.home_spinner_item, languages);
                 spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 langSpinner.setAdapter(spinnerArrayAdapter);
                 if (defaultLangOption != null) { // this should be always true, as there's always a default option
