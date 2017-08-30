@@ -215,6 +215,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         }else{
             postModel.setCardData(creditCardModel);
         }
+        postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
 
         IntegratedPaymentMetadata postModelMetadata = postModel.getMetadata();
         postModelMetadata.setAppointmentId(callback.getAppointmentId());
