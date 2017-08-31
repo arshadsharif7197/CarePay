@@ -1,6 +1,6 @@
 package com.carecloud.carepaylibray.payments.models;
 
-import com.google.gson.JsonElement;
+import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -19,7 +19,13 @@ public class IntegratedPatientPaymentPayload {
     private List<IntegratedPatientPaymentLineItem> lineItems = new ArrayList<>();
 
     @SerializedName("papi_processing_errors")
-    private List<JsonElement> processingErrors = new ArrayList<>();
+    private List<ProcessingError> processingErrors = new ArrayList<>();
+
+    @SerializedName("payment_group_id")
+    private String paymentId;
+
+    @SerializedName("payment_method")
+    private PapiPaymentMethod paymentMethod;
 
     public double getAmount() {
         return amount;
@@ -37,11 +43,52 @@ public class IntegratedPatientPaymentPayload {
         this.lineItems = lineItems;
     }
 
-    public List<JsonElement> getProcessingErrors() {
+    public List<ProcessingError> getProcessingErrors() {
         return processingErrors;
     }
 
-    public void setProcessingErrors(List<JsonElement> processingErrors) {
+    public void setProcessingErrors(List<ProcessingError> processingErrors) {
         this.processingErrors = processingErrors;
+    }
+
+    public String getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(String paymentId) {
+        this.paymentId = paymentId;
+    }
+
+    public PapiPaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(PapiPaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public class ProcessingError {
+
+        @SerializedName("id")
+        private String id;
+
+        @SerializedName("error")
+        private String error;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getError() {
+            return error;
+        }
+
+        public void setError(String error) {
+            this.error = error;
+        }
     }
 }

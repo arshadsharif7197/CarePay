@@ -8,14 +8,13 @@ public class PatientPaymentsDTO {
 
     @SerializedName("payload")
     @Expose
-    private PatientPaymentPayload payload = new PatientPaymentPayload();
+    private IntegratedPatientPaymentPayload payload = new IntegratedPatientPaymentPayload();
 
-
-    public PatientPaymentPayload getPayload() {
+    public IntegratedPatientPaymentPayload getPayload() {
         return payload;
     }
 
-    public void setPayload(PatientPaymentPayload payload) {
+    public void setPayload(IntegratedPatientPaymentPayload payload) {
         this.payload = payload;
     }
 }
