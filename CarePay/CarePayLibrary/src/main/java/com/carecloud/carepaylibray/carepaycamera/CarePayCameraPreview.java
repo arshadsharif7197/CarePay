@@ -115,7 +115,6 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         if (!checkCameraHardware()) {
             return null;
         }
-
         try {
             if (currentCameraId == NO_DEFINED_CAMERA) {
                 currentCameraId = cameraType == CameraType.SCAN_DOC ? getBackFaceCamera() : getFrontFaceCamera();
@@ -180,7 +179,6 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
      *
      * @param canvas canvas
      */
-
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
@@ -228,7 +226,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     /**
      * Camera autofous
      */
-    public void safeAutoFocus() {
+    private void safeAutoFocus() {
         try {
             camera.autoFocus(autoFocusCB);
         } catch (RuntimeException re) {
@@ -258,6 +256,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
      *
      * @param holder serface holder
      */
+    @Override
     public void surfaceCreated(SurfaceHolder holder) {
         // The Surface has been created, now tell the camera where to draw the preview.
         try {
@@ -279,6 +278,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         }
     }
 
+    @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         // empty. Take care of releasing the Camera preview in your activity.
         surfaceCreated = false;
@@ -292,6 +292,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
      * @param width  width
      * @param height height
      */
+    @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         // If your preview can change or rotate, take care of those events here.
         // Make sure to stop the preview before resizing or reformatting it.
@@ -343,7 +344,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
      *
      * @param callback callback for captured bitmap
      */
-    public void takePicture(CarePayCameraCallback callback) {
+    void takePicture(CarePayCameraCallback callback) {
         this.carePayCameraCallback = callback;
         if (camera != null) {
             camera.takePicture(null, null, pictureCallback);
@@ -406,7 +407,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
      * @param angle  angle
      * @return rotated bitmap
      */
-    public Bitmap rotateBitmap(Bitmap source, float angle) {
+    private Bitmap rotateBitmap(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
@@ -491,8 +492,10 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
     public void stop() {
         if (camera != null) {
+            cameraSurfaceHolder.removeCallback(this);
             camera.stopPreview();
             camera.release();
+            camera = null;
         }
     }
 
