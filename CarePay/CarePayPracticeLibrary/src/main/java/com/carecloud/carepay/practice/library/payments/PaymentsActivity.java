@@ -431,7 +431,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        PatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload().get(0);
+        PatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
         if (payload.getPaymentExceptions() != null && !payload.getPaymentExceptions().isEmpty() && payload.getTotal() == 0D) {
             StringBuilder builder = new StringBuilder();
             for (PaymentExceptionDTO paymentException : payload.getPaymentExceptions()) {

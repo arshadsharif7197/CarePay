@@ -4,21 +4,18 @@ package com.carecloud.carepaylibray.payments.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class PatientPaymentsDTO {
 
     @SerializedName("payload")
     @Expose
-    private List<PatientPaymentPayload> payload = new ArrayList<>();
+    private PatientPaymentPayload payload = new PatientPaymentPayload();
 
-    public List<PatientPaymentPayload> getPayload() {
+
+    public PatientPaymentPayload getPayload() {
         return payload;
     }
 
-    public void setPayload(List<PatientPaymentPayload> payload) {
+    public void setPayload(PatientPaymentPayload payload) {
         this.payload = payload;
     }
-
 }

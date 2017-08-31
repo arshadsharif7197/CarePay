@@ -95,7 +95,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
         DTO dto = callback.getDto();
         selectedAppointment = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
         if (hasPayment) {
-            patientPaymentPayload = ((PaymentsModel) dto).getPaymentPayload().getPatientPayments().getPayload().get(0);
+            patientPaymentPayload = ((PaymentsModel) dto).getPaymentPayload().getPatientPayments().getPayload();
             userImageUrl = ((PaymentsModel) dto).getPaymentPayload().getPatientBalances().get(0)
                     .getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
         } else if (isAdHocForms) {

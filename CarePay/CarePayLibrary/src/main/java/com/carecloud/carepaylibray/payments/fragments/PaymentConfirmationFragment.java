@@ -67,7 +67,7 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
             String paymentPayload = args.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
             workflowDTO = gson.fromJson(paymentPayload, WorkflowDTO.class);
             paymentsModel = gson.fromJson(paymentPayload, PaymentsModel.class);
-            patientPaymentPayload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload().get(0);
+            patientPaymentPayload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
         }
         currencyFormatter = NumberFormat.getCurrencyInstance();
     }
