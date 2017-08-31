@@ -8,7 +8,7 @@ android {
         applicationId "com.carecloud.carepay.practice.clover"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 43
+        versionCode 45
         versionName "1.1.21"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
