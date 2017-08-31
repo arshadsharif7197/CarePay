@@ -395,6 +395,7 @@ public class CloverPaymentActivity extends BaseActivity {
             IntegratedPaymentCardData creditCardModel = getCreditCardModel(transactionInfo);
 
             postModel.setTransactionResponse(gson.fromJson(jsonString, JsonObject.class));
+            postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_CLOVER);
 
 //            for (PaymentObject paymentObject : postModel.getPaymentObjects()) {
 //                paymentObject.setType(PaymentType.credit_card);
