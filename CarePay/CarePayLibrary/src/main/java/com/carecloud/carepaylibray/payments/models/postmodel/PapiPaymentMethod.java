@@ -3,7 +3,7 @@ package com.carecloud.carepaylibray.payments.models.postmodel;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by lmenendez on 3/18/17.
+ * Created by lmenendez on 3/18/17
  */
 
 public class PapiPaymentMethod {
@@ -13,6 +13,9 @@ public class PapiPaymentMethod {
 
     @SerializedName("id")
     private String papiPaymentID;
+
+    @SerializedName("card_data")
+    private IntegratedPaymentCardData cardData;
 
     public PapiPaymentMethodType getPapiPaymentMethodType() {
         return papiPaymentMethodType;
@@ -37,5 +40,13 @@ public class PapiPaymentMethod {
     public boolean isValid(){
         return papiPaymentMethodType != null &&
                 getPapiPaymentID() != null;
+    }
+
+    public IntegratedPaymentCardData getCardData() {
+        return cardData;
+    }
+
+    public void setCardData(IntegratedPaymentCardData cardData) {
+        this.cardData = cardData;
     }
 }

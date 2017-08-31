@@ -39,7 +39,7 @@ public class IntegratedPaymentPostModel {
     private List<IntegratedPaymentLineItem> lineItems = new ArrayList<>();
 
     @SerializedName("payment_method")
-    private PapiPaymentMethod papiPaymentMethod;
+    private PapiPaymentMethod papiPaymentMethod = new PapiPaymentMethod();
 
     @SerializedName("card_data")
     private IntegratedPaymentCardData cardData;
