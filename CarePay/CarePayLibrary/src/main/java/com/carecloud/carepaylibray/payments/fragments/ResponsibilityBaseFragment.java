@@ -137,29 +137,6 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
                 }
                 payAmount = (double) Math.round((payAmount - itemAmount) * 100) / 100;
 
-//                PaymentObject paymentObject = new PaymentObject();
-//                paymentObject.setAmount(itemAmount);
-//
-//                AppointmentDTO appointmentDTO = actionCallback.getAppointment();
-//                if(appointmentDTO != null){
-//                    paymentObject.setProviderID(appointmentDTO.getPayload().getProvider().getGuid());
-//                    paymentObject.setLocationID(appointmentDTO.getPayload().getLocation().getGuid());
-//                }
-//
-//                switch (responsibility.getType()){
-//                    case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
-//                        paymentObject.setResponsibilityType(ResponsibilityType.co_insurance);
-//                        break;
-//                    case PendingBalancePayloadDTO.DEDUCTIBLE_TYPE:
-//                        paymentObject.setResponsibilityType(ResponsibilityType.deductable);
-//                        break;
-//                    case PendingBalancePayloadDTO.CO_PAY_TYPE:
-//                    default:
-//                        paymentObject.setResponsibilityType(ResponsibilityType.co_pay);
-//                        break;
-//                }
-//                postModel.addPaymentMethod(paymentObject);
-
                 IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
                 paymentLineItem.setAmount(itemAmount);
 
@@ -188,11 +165,6 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
         }
 
         if(payAmount > 0){//payment is greater than any responsibility types
-//            PaymentObject paymentObject = new PaymentObject();
-//            paymentObject.setAmount(payAmount);
-//            paymentObject.setDescription("Unapplied Amount");
-//
-//            postModel.addPaymentMethod(paymentObject);
 
             IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
             paymentLineItem.setAmount(payAmount);

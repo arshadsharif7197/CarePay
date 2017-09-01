@@ -42,14 +42,6 @@ public class CloverPaymentAdapter {
      * @param amount amount to pay
      */
     public void setCloverPayment(double amount){
-//        PaymentObject paymentObject = new PaymentObject();
-//        paymentObject.setAmount(amount);
-//
-//        PaymentPostModel paymentPostModel = new PaymentPostModel();
-//        paymentPostModel.getPaymentObjects().add(paymentObject);
-//        paymentPostModel.setAmount(amount);
-
-
         IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
         paymentLineItem.setAmount(amount);
         paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_UNAPPLIED);

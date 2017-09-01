@@ -298,20 +298,11 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
         postModel.setAmount(amount);
 
-//        PaymentObject paymentObject = new PaymentObject();
-//        paymentObject.setAmount(amount);
-//        paymentObject.setProviderID(appointmentRequestDTO.getAppointment().getProviderGuid());
-//        paymentObject.setLocationID(appointmentRequestDTO.getAppointment().getLocationGuid());
-//        paymentObject.setResponsibilityType(ResponsibilityType.prepayment);
-
         IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
         paymentLineItem.setAmount(amount);
         paymentLineItem.setProviderID(appointmentRequestDTO.getAppointment().getProviderGuid());
         paymentLineItem.setLocationID(appointmentRequestDTO.getAppointment().getLocationGuid());
         paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_PREPAYMENT);
-
-//        postModel.getPaymentObjects().add(paymentObject);
-//        postModel.setAppointmentRequestDTO(appointmentRequestDTO.getAppointment());
 
         postModel.addLineItem(paymentLineItem);
         postModel.getMetadata().setAppointmentRequestDTO(appointmentRequestDTO.getAppointment());

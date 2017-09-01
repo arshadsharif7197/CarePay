@@ -699,12 +699,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         }
 
         if(overPaymentAmount > 0){
-//            PaymentObject paymentObject = new PaymentObject();
-//            paymentObject.setAmount(overPaymentAmount);
-//            paymentObject.setDescription("Unapplied Amount");
-//
-//            postModel.addPaymentMethod(paymentObject);
-
             IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
             paymentLineItem.setAmount(overPaymentAmount);
             paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_UNAPPLIED);
@@ -721,21 +715,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         if(balanceItem.getBalance()>0){
             IntegratedPaymentLineItem lineItem = new IntegratedPaymentLineItem();
             lineItem.setDescription(balanceItem.getDescription());
-
-//            if(balanceItem.getResponsibilityType()!=null){
-//                //this is a responsibility item
-//                paymentObject.setResponsibilityType(balanceItem.getResponsibilityType());
-//            }else if(balanceItem.isNewCharge()){
-//                PaymentNewCharge paymentNewCharge = new PaymentNewCharge();
-//                paymentNewCharge.setChargeType(balanceItem.getId());
-//                paymentNewCharge.setAmount(balanceItem.getAmount());
-//                paymentObject.setPaymentNewCharge(paymentNewCharge);
-//            }else if(balanceItem.getId()!=null){
-//                PaymentApplication paymentApplication = new PaymentApplication();
-//                paymentApplication.setDebitTransactionID(balanceItem.getId());
-//                paymentObject.setPaymentApplication(paymentApplication);
-//            }
-
             lineItem.setAmount(balanceItem.getAmount());
             if(balanceItem.getResponsibilityType()!=null){
                 //this is a responsibility item
