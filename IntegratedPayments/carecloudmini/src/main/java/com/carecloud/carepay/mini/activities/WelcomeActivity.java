@@ -369,7 +369,7 @@ public class WelcomeActivity extends FullScreenActivity {
 
         @Override
         public void onPaymentConnectionFailure(String message) {
-            Log.d(TAG, message);
+            Log.d(TAG, message!=null?message:"Connection Failed");
             if(connectedDevice != null){
                 String paymentRequestId = connectedDevice.getPaymentRequestId();
                 releasePaymentRequest(paymentRequestId);
