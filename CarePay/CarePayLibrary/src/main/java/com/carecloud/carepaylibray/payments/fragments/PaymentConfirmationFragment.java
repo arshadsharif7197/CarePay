@@ -126,6 +126,11 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
     };
 
 
+    /**
+     * Calculate total of paid line items
+     * @param patientPaymentPayload payload
+     * @return total
+     */
     public static double getTotalPaid(IntegratedPatientPaymentPayload patientPaymentPayload){
         double total = 0D;
         for(IntegratedPatientPaymentLineItem lineItem : patientPaymentPayload.getLineItems()){
@@ -136,6 +141,11 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
         return total;
     }
 
+    /**
+     * Get Display label for payment method
+     * @param patientPaymentPayload payload
+     * @return label
+     */
     public static String getPaymentMethod(IntegratedPatientPaymentPayload patientPaymentPayload){
         switch (patientPaymentPayload.getPaymentMethod().getPaymentMethodType()){
             case PAYMENT_METHOD_ACCOUNT:

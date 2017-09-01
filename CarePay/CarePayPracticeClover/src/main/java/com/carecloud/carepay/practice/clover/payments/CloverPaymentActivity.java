@@ -355,14 +355,14 @@ public class CloverPaymentActivity extends BaseActivity {
             CloverPaymentDTO cloverPayment = gson.fromJson(jsonString, CloverPaymentDTO.class);
             CloverCardTransactionInfo transactionInfo = cloverPayment.getCloverCardTransactionInfo();
 
+            PapiPaymentMethod papiPaymentMethod = new PapiPaymentMethod();
+            papiPaymentMethod.setPaymentMethodType(PapiPaymentMethod.PAYMENT_METHOD_NEW_CARD);
+            papiPaymentMethod.setCardData(getCreditCardModel(transactionInfo));
+
             IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
             paymentLineItem.setAmount(amountDouble);
             paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_UNAPPLIED);
             paymentLineItem.setDescription("Unapplied Amount");
-
-            PapiPaymentMethod papiPaymentMethod = new PapiPaymentMethod();
-            papiPaymentMethod.setPaymentMethodType(PapiPaymentMethod.PAYMENT_METHOD_NEW_CARD);
-            papiPaymentMethod.setCardData(getCreditCardModel(transactionInfo));
 
             IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
             postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_CLOVER);
