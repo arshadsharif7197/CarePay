@@ -32,7 +32,6 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLi
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentMetadata;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
-import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethodType;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
@@ -197,24 +196,14 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
 
     private void processPayment(IntegratedPaymentPostModel postModel) {
         PapiPaymentMethod papiPaymentMethod = getPapiPaymentMethod();
-        IntegratedPaymentCardData creditCardModel = getCreditCardModel();
 
-//        for (PaymentObject paymentObject : postModel.getPaymentObjects()) {
-//            paymentObject.setType(PaymentType.credit_card);
-//            paymentObject.setExecution(PaymentExecution.papi);
-//
-//            if (papiPaymentMethod != null) {
-//                paymentObject.setPapiPaymentMethod(papiPaymentMethod);
-//            } else {
-//                paymentObject.setCreditCard(creditCardModel);
-//            }
-//        }
-
-        if(papiPaymentMethod != null){
-            postModel.setPapiPaymentMethod(papiPaymentMethod);
-        }else{
-            postModel.setCardData(creditCardModel);
+        if(papiPaymentMethod == null){
+            papiPaymentMethod = new PapiPaymentMethod();
+            papiPaymentMethod.setPaymentMethodType(PapiPaymentMethod.PAYMENT_METHOD_NEW_CARD);
+            papiPaymentMethod.setCardData(getCreditCardModel());
         }
+
+        postModel.setPapiPaymentMethod(papiPaymentMethod);
         postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
 
         IntegratedPaymentMetadata postModelMetadata = postModel.getMetadata();
@@ -229,22 +218,13 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     }
 
     private void processPayment() {
-//        PaymentObject paymentObject = new PaymentObject();
-//        paymentObject.setType(PaymentType.credit_card);
-//        paymentObject.setExecution(PaymentExecution.papi);
-//        paymentObject.setAmount(amountToMakePayment);
-//
-//        PapiPaymentMethod papiPaymentMethod = getPapiPaymentMethod();
-//        if (papiPaymentMethod != null) {
-//            paymentObject.setPapiPaymentMethod(papiPaymentMethod);
-//        } else {
-//            paymentObject.setCreditCard(getCreditCardModel());
-//        }
-//
-//        PaymentPostModel paymentPostModel = new PaymentPostModel();
-//        paymentPostModel.setAmount(amountToMakePayment);
-//        paymentPostModel.addPaymentMethod(paymentObject);
+        PapiPaymentMethod papiPaymentMethod = getPapiPaymentMethod();
 
+        if(papiPaymentMethod == null){
+            papiPaymentMethod = new PapiPaymentMethod();
+            papiPaymentMethod.setPaymentMethodType(PapiPaymentMethod.PAYMENT_METHOD_NEW_CARD);
+            papiPaymentMethod.setCardData(getCreditCardModel());
+        }
 
         IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
         paymentLineItem.setAmount(amountToMakePayment);
@@ -253,7 +233,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
 
         IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
         postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
-        postModel.setCardData(getCreditCardModel());
+        postModel.setPapiPaymentMethod(papiPaymentMethod);
         postModel.setAmount(amountToMakePayment);
         postModel.addLineItem(paymentLineItem);
 
@@ -301,11 +281,6 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         creditCardModel.setExpiryDate(creditCardPayload.getExpireDt().replaceAll("/", ""));
         creditCardModel.setNameOnCard(creditCardPayload.getNameOnCard());
         creditCardModel.setToken(creditCardPayload.getToken());
-//        creditCardModel.setCvv(creditCardPayload.getCvv());
-
-//        PaymentsCreditCardBillingInformationDTO billingInformation = new PaymentsCreditCardBillingInformationDTO();
-//        billingInformation.setSameAsPatient(true);
-//        creditCardModel.setBillingInformation(billingInformation);
 
         return creditCardModel;
     }
@@ -317,7 +292,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         }
 
         PapiPaymentMethod papiPaymentMethod = new PapiPaymentMethod();
-        papiPaymentMethod.setPapiPaymentMethodType(PapiPaymentMethodType.card);
+        papiPaymentMethod.setPaymentMethodType(PapiPaymentMethod.PAYMENT_METHOD_CARD);
         papiPaymentMethod.setPapiPaymentID(creditCardPayload.getCreditCardsId());
 
         return papiPaymentMethod;

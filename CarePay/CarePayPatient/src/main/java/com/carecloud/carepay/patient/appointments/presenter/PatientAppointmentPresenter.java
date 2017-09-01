@@ -45,8 +45,7 @@ import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
-import com.carecloud.carepaylibray.payments.models.PatientPaymentPayload;
-import com.carecloud.carepaylibray.payments.models.PaymentExceptionDTO;
+import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
@@ -532,11 +531,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        PatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-        if(payload.getPaymentExceptions()!=null && !payload.getPaymentExceptions().isEmpty() && payload.getTotal()==0D){
+        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
+        if(!payload.getProcessingErrors().isEmpty() && PaymentConfirmationFragment.getTotalPaid(payload)==0D){
             StringBuilder builder = new StringBuilder();
-            for(PaymentExceptionDTO paymentException : payload.getPaymentExceptions()){
-                builder.append(paymentException.getMessage());
+            for(IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()){
+                builder.append(processingError.getError());
                 builder.append("\n");
             }
             int last = builder.lastIndexOf("\n");

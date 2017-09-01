@@ -25,6 +25,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentCa
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentMetadata;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -157,14 +158,12 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
     }
 
     private void processPayment(IntegratedPaymentPostModel postModel) {
-        IntegratedPaymentCardData creditCardModel = getCreditCardModel();
+        PapiPaymentMethod papiPaymentMethod = new PapiPaymentMethod();
+        papiPaymentMethod.setPaymentMethodType(PapiPaymentMethod.PAYMENT_METHOD_NEW_CARD);
+        papiPaymentMethod.setCardData(getCreditCardModel());
+
         postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
-        postModel.setCardData(creditCardModel);
-//        for (PaymentObject paymentObject : postModel.getPaymentObjects()) {
-//            paymentObject.setType(PaymentType.credit_card);
-//            paymentObject.setExecution(PaymentExecution.papi);
-//            paymentObject.setCreditCard(creditCardModel);
-//        }
+        postModel.setPapiPaymentMethod(papiPaymentMethod);
 
         IntegratedPaymentMetadata integratedPaymentMetadata = postModel.getMetadata();
         integratedPaymentMetadata.setAppointmentId(callback.getAppointmentId());
@@ -178,24 +177,18 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
     }
 
     private void processPayment() {
-//        PaymentObject paymentObject = new PaymentObject();
-//        paymentObject.setType(PaymentType.credit_card);
-//        paymentObject.setExecution(PaymentExecution.papi);
-//        paymentObject.setAmount(amountToMakePayment);
-//        paymentObject.setCreditCard(getCreditCardModel());
-
-//        PaymentPostModel paymentPostModel = new PaymentPostModel();
-//        paymentPostModel.setAmount(amountToMakePayment);
-//        paymentPostModel.addPaymentMethod(paymentObject);
-
         IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
         paymentLineItem.setAmount(amountToMakePayment);
         paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_UNAPPLIED);
         paymentLineItem.setDescription("Unapplied Amount");
 
+        PapiPaymentMethod papiPaymentMethod = new PapiPaymentMethod();
+        papiPaymentMethod.setPaymentMethodType(PapiPaymentMethod.PAYMENT_METHOD_NEW_CARD);
+        papiPaymentMethod.setCardData(getCreditCardModel());
+
         IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
         postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
-        postModel.setCardData(getCreditCardModel());
+        postModel.setPapiPaymentMethod(papiPaymentMethod);
         postModel.setAmount(amountToMakePayment);
         postModel.addLineItem(paymentLineItem);
 
@@ -241,14 +234,12 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         creditCardModel.setExpiryDate(creditCardsPayloadDTO.getExpireDt().replaceAll("/", ""));
         creditCardModel.setNameOnCard(creditCardsPayloadDTO.getNameOnCard());
         creditCardModel.setToken(creditCardsPayloadDTO.getToken());
-//        creditCardModel.setCvv(creditCardsPayloadDTO.getCvv());
         creditCardModel.setSaveCard(saveCardOnFileCheckBox.isChecked());
         creditCardModel.setDefault(setAsDefaultCheckBox.isChecked());
 
         @IntegratedPaymentCardData.TokenizationService String tokenizationService = creditCardsPayloadDTO.getTokenizationService().toString();
         creditCardModel.setTokenizationService(tokenizationService);
 
-//        creditCardModel.setBillingInformation(billingInformationDTO);
         return creditCardModel;
     }
 

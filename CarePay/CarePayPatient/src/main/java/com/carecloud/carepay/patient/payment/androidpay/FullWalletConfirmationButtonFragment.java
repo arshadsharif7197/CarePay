@@ -39,6 +39,7 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.MerchantServiceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -465,14 +466,15 @@ public class FullWalletConfirmationButtonFragment extends BaseFragment
 
     private List<LineItem> getLineItems() {
         List<LineItem> list = new ArrayList<>();
-        list.add(LineItem.newBuilder()
-                .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
-                .setDescription(paymentsModel.getPaymentPayload().getPatientPayments().getPayload().getType())
-                .setQuantity("1")
-                .setUnitPrice(String.valueOf(paymentsModel.getPaymentPayload().getPatientPayments().getPayload().getTotal()))
-                .setTotalPrice(String.valueOf(paymentsModel.getPaymentPayload().getPatientPayments().getPayload().getTotal()))
-                .build());
-
+        for(IntegratedPaymentLineItem paymentLineItem :paymentsModel.getPaymentPayload().getPaymentPostModel().getLineItems()) {
+            list.add(LineItem.newBuilder()
+                    .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
+                    .setDescription(paymentLineItem.getDescription())
+                    .setQuantity("1")
+                    .setUnitPrice(String.valueOf(paymentLineItem.getAmount()))
+                    .setTotalPrice(String.valueOf(paymentLineItem.getAmount()))
+                    .build());
+        }
         return list;
     }
 

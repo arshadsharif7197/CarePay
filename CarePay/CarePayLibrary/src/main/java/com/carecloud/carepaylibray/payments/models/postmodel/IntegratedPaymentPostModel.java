@@ -41,9 +41,6 @@ public class IntegratedPaymentPostModel {
     @SerializedName("payment_method")
     private PapiPaymentMethod papiPaymentMethod = new PapiPaymentMethod();
 
-    @SerializedName("card_data")
-    private IntegratedPaymentCardData cardData;
-
     public double getAmount() {
         return amount;
     }
@@ -90,14 +87,6 @@ public class IntegratedPaymentPostModel {
 
     public void setPapiPaymentMethod(PapiPaymentMethod papiPaymentMethod) {
         this.papiPaymentMethod = papiPaymentMethod;
-    }
-
-    public IntegratedPaymentCardData getCardData() {
-        return cardData;
-    }
-
-    public void setCardData(IntegratedPaymentCardData cardData) {
-        this.cardData = cardData;
     }
 
     public boolean isPaymentModelValid(){

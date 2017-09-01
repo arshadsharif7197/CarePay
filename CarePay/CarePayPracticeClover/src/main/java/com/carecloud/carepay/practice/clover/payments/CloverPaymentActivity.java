@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentCa
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentMetadata;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
 import com.carecloud.carepaylibray.utils.EncryptionUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -354,24 +355,18 @@ public class CloverPaymentActivity extends BaseActivity {
             CloverPaymentDTO cloverPayment = gson.fromJson(jsonString, CloverPaymentDTO.class);
             CloverCardTransactionInfo transactionInfo = cloverPayment.getCloverCardTransactionInfo();
 
-//            PaymentObject paymentObject = new PaymentObject();
-//            paymentObject.setType(PaymentType.credit_card);
-//            paymentObject.setExecution(PaymentExecution.clover);
-//            paymentObject.setAmount(amountDouble);
-//            paymentObject.setCreditCard(getCreditCardModel(transactionInfo));
-//
-//            postModel = new PaymentPostModel();
-//            postModel.setAmount(amountDouble);
-//            postModel.addPaymentMethod(paymentObject);
-
             IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
             paymentLineItem.setAmount(amountDouble);
             paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_UNAPPLIED);
             paymentLineItem.setDescription("Unapplied Amount");
 
+            PapiPaymentMethod papiPaymentMethod = new PapiPaymentMethod();
+            papiPaymentMethod.setPaymentMethodType(PapiPaymentMethod.PAYMENT_METHOD_NEW_CARD);
+            papiPaymentMethod.setCardData(getCreditCardModel(transactionInfo));
+
             IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
             postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_CLOVER);
-            postModel.setCardData(getCreditCardModel(transactionInfo));
+            postModel.setPapiPaymentMethod(papiPaymentMethod);
             postModel.setAmount(amountDouble);
             postModel.addLineItem(paymentLineItem);
 
@@ -392,18 +387,15 @@ public class CloverPaymentActivity extends BaseActivity {
             String jsonString = payment.getJSONObject().toString();
             CloverPaymentDTO cloverPayment = gson.fromJson(jsonString, CloverPaymentDTO.class);
             CloverCardTransactionInfo transactionInfo = cloverPayment.getCloverCardTransactionInfo();
-            IntegratedPaymentCardData creditCardModel = getCreditCardModel(transactionInfo);
+
+            PapiPaymentMethod papiPaymentMethod = new PapiPaymentMethod();
+            papiPaymentMethod.setPaymentMethodType(PapiPaymentMethod.PAYMENT_METHOD_NEW_CARD);
+            papiPaymentMethod.setCardData(getCreditCardModel(transactionInfo));
 
             postModel.setTransactionResponse(gson.fromJson(jsonString, JsonObject.class));
             postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_CLOVER);
+            postModel.setPapiPaymentMethod(papiPaymentMethod);
 
-//            for (PaymentObject paymentObject : postModel.getPaymentObjects()) {
-//                paymentObject.setType(PaymentType.credit_card);
-//                paymentObject.setExecution(PaymentExecution.clover);
-//                paymentObject.setCreditCard(creditCardModel);
-//            }
-
-            postModel.setCardData(creditCardModel);
             IntegratedPaymentMetadata postModelMetadata = postModel.getMetadata();
             postModelMetadata.setAppointmentId(appointmentId);
 
@@ -446,10 +438,6 @@ public class CloverPaymentActivity extends BaseActivity {
             creditCardModel.setExpiryDate(dateFormat.format(calendar.getTime()));
             creditCardModel.setNameOnCard(patientBalance.getDemographics().getPayload().getPersonalDetails().getFullName());
         }
-
-//        PaymentsCreditCardBillingInformationDTO billingInformation = new PaymentsCreditCardBillingInformationDTO();
-//        billingInformation.setSameAsPatient(true);
-//        creditCardModel.setBillingInformation(billingInformation);
 
         return creditCardModel;
     }
@@ -562,23 +550,9 @@ public class CloverPaymentActivity extends BaseActivity {
 
     private void queuePayment(double amount, IntegratedPaymentPostModel postModel, String patientID, String practiceId, String practiceMgmt, String paymentJson, String errorMessage){
         if(postModel!=null){
-//            for (PaymentObject paymentObject : postModel.getPaymentObjects()) {
-//                if(paymentObject.getType() == null) {
-//                    paymentObject.setType(PaymentType.credit_card);
-//                }
-//                if(paymentObject.getExecution() == null) {
-//                    paymentObject.setExecution(PaymentExecution.clover);
-//                }
-//                if(paymentObject.getCreditCard() == null){
-//                    paymentObject.setCreditCard(new CreditCardModel());
-//                }
-//            }
 
             if(postModel.getExecution() == null){
                 postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_CLOVER);
-            }
-            if(postModel.getCardData() == null){
-                postModel.setCardData(new IntegratedPaymentCardData());
             }
 
             if(postModel.getTransactionResponse()==null){

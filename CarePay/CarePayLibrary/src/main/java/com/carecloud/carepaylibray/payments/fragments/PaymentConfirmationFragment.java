@@ -20,6 +20,10 @@ import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.google.gson.Gson;
 
+import static com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod.PAYMENT_METHOD_ACCOUNT;
+import static com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod.PAYMENT_METHOD_CARD;
+import static com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod.PAYMENT_METHOD_NEW_CARD;
+
 import java.text.NumberFormat;
 
 /**
@@ -133,10 +137,11 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
     }
 
     public static String getPaymentMethod(IntegratedPatientPaymentPayload patientPaymentPayload){
-        switch (patientPaymentPayload.getPaymentMethod().getPapiPaymentMethodType()){
-            case transactional_account:
+        switch (patientPaymentPayload.getPaymentMethod().getPaymentMethodType()){
+            case PAYMENT_METHOD_ACCOUNT:
                 return Label.getLabel("payment_method_account");
-            case card:
+            case PAYMENT_METHOD_CARD:
+            case PAYMENT_METHOD_NEW_CARD:
             default:
                 return Label.getLabel("payment_method_creditcard");
         }
