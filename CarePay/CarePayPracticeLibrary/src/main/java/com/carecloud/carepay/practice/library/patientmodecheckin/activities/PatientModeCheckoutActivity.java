@@ -45,10 +45,8 @@ import com.carecloud.carepaylibray.checkout.CheckOutFormFragment;
 import com.carecloud.carepaylibray.checkout.CheckOutInterface;
 import com.carecloud.carepaylibray.checkout.NextAppointmentFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
-import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -247,25 +245,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         paymentConfirmationWorkflow = workflowDTO;
-        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-        if(!payload.getProcessingErrors().isEmpty() && PaymentConfirmationFragment.getTotalPaid(payload)==0D){
-            StringBuilder builder = new StringBuilder();
-            for(IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()){
-                builder.append(processingError.getError());
-                builder.append("\n");
-            }
-            int last = builder.lastIndexOf("\n");
-            builder.replace(last, builder.length(), "");
-            showErrorNotification(builder.toString());
-        } else {
-            Bundle args = new Bundle();
-            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
-
-            PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
-            confirmationFragment.setArguments(args);
-            displayDialogFragment(confirmationFragment, false);
-        }
+        completePaymentProcess(workflowDTO);
     }
 
     @Override
