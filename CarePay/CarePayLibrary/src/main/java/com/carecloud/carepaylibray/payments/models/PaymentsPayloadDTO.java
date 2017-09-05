@@ -7,7 +7,7 @@ import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiAccountsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.MerchantServicesDTO;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -71,7 +71,7 @@ public class PaymentsPayloadDTO implements Serializable {
     private List<UserPracticeDTO> userPractices = new ArrayList<>();
     @SerializedName("payment_post_model")
     @Expose
-    private PaymentPostModel paymentPostModel;
+    private IntegratedPaymentPostModel paymentPostModel;
     @SerializedName("simple_charge_types")
     @Expose
     private List<SimpleChargeItem> simpleChargeItems = new ArrayList<>();
@@ -262,11 +262,11 @@ public class PaymentsPayloadDTO implements Serializable {
         this.userPractices = userPractices;
     }
 
-    public PaymentPostModel getPaymentPostModel() {
+    public IntegratedPaymentPostModel getPaymentPostModel() {
         return paymentPostModel;
     }
 
-    public void setPaymentPostModel(PaymentPostModel paymentPostModel) {
+    public void setPaymentPostModel(IntegratedPaymentPostModel paymentPostModel) {
         this.paymentPostModel = paymentPostModel;
     }
 

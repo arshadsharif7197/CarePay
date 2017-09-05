@@ -9,14 +9,20 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentCompletedInterface;
-import com.carecloud.carepaylibray.payments.models.PatientPaymentPayload;
+import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentLineItem;
+import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.google.gson.Gson;
+
+import static com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod.PAYMENT_METHOD_ACCOUNT;
+import static com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod.PAYMENT_METHOD_CARD;
+import static com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod.PAYMENT_METHOD_NEW_CARD;
 
 import java.text.NumberFormat;
 
@@ -29,7 +35,7 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
     private PaymentCompletedInterface callback;
     private PaymentsModel paymentsModel;
     private WorkflowDTO workflowDTO;
-    private PatientPaymentPayload patientPaymentPayload;
+    private IntegratedPatientPaymentPayload patientPaymentPayload;
 
     NumberFormat currencyFormatter;
 
@@ -67,7 +73,7 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
             String paymentPayload = args.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
             workflowDTO = gson.fromJson(paymentPayload, WorkflowDTO.class);
             paymentsModel = gson.fromJson(paymentPayload, PaymentsModel.class);
-            patientPaymentPayload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload().get(0);
+            patientPaymentPayload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
         }
         currencyFormatter = NumberFormat.getCurrencyInstance();
     }
@@ -88,24 +94,27 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
         }
 
         TextView type = (TextView) view.findViewById(R.id.payment_confirm_type_value);
-        type.setText(patientPaymentPayload.getType());
+        type.setText(Label.getLabel("payment_type_one_time"));
 
         TextView method = (TextView) view.findViewById(R.id.payment_confirm_method_value);
-        method.setText(patientPaymentPayload.getMethod());
+        method.setText(getPaymentMethod(patientPaymentPayload));
 
         TextView total = (TextView) view.findViewById(R.id.payment_confirm_total_value);
-        total.setText(currencyFormatter.format(patientPaymentPayload.getTotal()));
+        total.setText(currencyFormatter.format(getTotalPaid(patientPaymentPayload)));
 
         TextView confirmation = (TextView) view.findViewById(R.id.payment_confirm_value);
-        confirmation.setText(patientPaymentPayload.getConfirmation());
+        confirmation.setText(patientPaymentPayload.getPaymentId());
 
         DateUtil dateUtil = DateUtil.getInstance();
-        dateUtil.setDateRaw(patientPaymentPayload.getDate());
+//        dateUtil.setDateRaw(patientPaymentPayload.getDate());
         TextView date = (TextView) view.findViewById(R.id.payment_confirm_date);
         date.setText(dateUtil.toStringWithFormatMmSlashDdSlashYyyy());
 
         TextView practice = (TextView) view.findViewById(R.id.payment_confirm_practice_name);
         practice.setText(paymentsModel.getPaymentPayload().getUserPractices().get(0).getPracticeName());
+
+        //todo display possible errors
+
     }
 
     private View.OnClickListener dismissPopupListener = new View.OnClickListener() {
@@ -116,4 +125,35 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
         }
     };
 
+
+    /**
+     * Calculate total of paid line items
+     * @param patientPaymentPayload payload
+     * @return total
+     */
+    public static double getTotalPaid(IntegratedPatientPaymentPayload patientPaymentPayload){
+        double total = 0D;
+        for(IntegratedPatientPaymentLineItem lineItem : patientPaymentPayload.getLineItems()){
+            if(lineItem.isProcessed()){
+                total+=lineItem.getAmount();
+            }
+        }
+        return total;
+    }
+
+    /**
+     * Get Display label for payment method
+     * @param patientPaymentPayload payload
+     * @return label
+     */
+    public static String getPaymentMethod(IntegratedPatientPaymentPayload patientPaymentPayload){
+        switch (patientPaymentPayload.getPaymentMethod().getPaymentMethodType()){
+            case PAYMENT_METHOD_ACCOUNT:
+                return Label.getLabel("payment_method_account");
+            case PAYMENT_METHOD_CARD:
+            case PAYMENT_METHOD_NEW_CARD:
+            default:
+                return Label.getLabel("payment_method_creditcard");
+        }
+    }
 }

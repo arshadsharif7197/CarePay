@@ -25,7 +25,7 @@ public class PatientPaymentPayload {
     private String method;
     @SerializedName("total")
     @Expose
-    private Double total;
+    private double total;
     @SerializedName("paymentExceptions")
     @Expose
     private List<PaymentExceptionDTO> paymentExceptions;
@@ -63,11 +63,11 @@ public class PatientPaymentPayload {
         this.method = method;
     }
 
-    public Double getTotal() {
+    public double getTotal() {
         return total;
     }
 
-    public void setTotal(Double total) {
+    public void setTotal(double total) {
         this.total = total;
     }
 

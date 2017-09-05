@@ -6,10 +6,11 @@ import android.os.Bundle;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentMetadata;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItemMetadata;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -41,12 +42,19 @@ public class CloverPaymentAdapter {
      * @param amount amount to pay
      */
     public void setCloverPayment(double amount){
-        PaymentObject paymentObject = new PaymentObject();
-        paymentObject.setAmount(amount);
+        IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
+        paymentLineItem.setAmount(amount);
+        paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_UNAPPLIED);
+        paymentLineItem.setDescription("Unapplied Amount");
 
-        PaymentPostModel paymentPostModel = new PaymentPostModel();
-        paymentPostModel.getPaymentObjects().add(paymentObject);
+        IntegratedPaymentPostModel paymentPostModel = new IntegratedPaymentPostModel();
+        paymentPostModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
         paymentPostModel.setAmount(amount);
+        paymentPostModel.addLineItem(paymentLineItem);
+
+        IntegratedPaymentMetadata postModelMetadata = paymentPostModel.getMetadata();
+        postModelMetadata.setAppointmentId(appointmentId);
+
         setCloverPayment(paymentPostModel);
 
     }
@@ -55,7 +63,7 @@ public class CloverPaymentAdapter {
      * Set Applied Payment
      * @param postModel payment model for payment application
      */
-    public void setCloverPayment(PaymentPostModel postModel) {
+    public void setCloverPayment(IntegratedPaymentPostModel postModel) {
 
         Intent intent = new Intent();
         intent.setAction(CarePayConstants.CLOVER_PAYMENT_INTENT);
@@ -84,16 +92,16 @@ public class CloverPaymentAdapter {
         }
 
         List<PaymentLineItem> paymentLineItems = new ArrayList<>();
-        for (PaymentObject paymentObject : postModel.getPaymentObjects()) {
+        for (IntegratedPaymentLineItem lineItem : postModel.getLineItems()) {
             PaymentLineItem paymentLineItem = new PaymentLineItem();
-            paymentLineItem.setAmount(paymentObject.getAmount());
-            paymentLineItem.setDescription(paymentObject.getDescription());
+            paymentLineItem.setAmount(lineItem.getAmount());
+            paymentLineItem.setDescription(lineItem.getDescription());
 
             PaymentLineItemMetadata metadata = new PaymentLineItemMetadata();
             metadata.setPatientID(paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getMetadata().getPatientId());
             metadata.setPracticeID(paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getMetadata().getPracticeId());
-            metadata.setLocationID(paymentObject.getLocationID());
-            metadata.setProviderID(paymentObject.getProviderID());
+            metadata.setLocationID(lineItem.getLocationID());
+            metadata.setProviderID(lineItem.getProviderID());
             paymentLineItem.setMetadata(metadata);
 
             paymentLineItems.add(paymentLineItem);
