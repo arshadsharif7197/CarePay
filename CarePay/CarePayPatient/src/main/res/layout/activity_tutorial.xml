@@ -18,7 +18,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="25dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/logo_dark" />
+        android:src="@drawable/breeze_logo_dark" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/tutorial_view_pager"
