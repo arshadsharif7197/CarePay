@@ -23,7 +23,7 @@
         <item name="practiceBackgroundColor">@color/practice_mode_background</item>
         <item name="newsBackgroundColor">@color/dark_blue</item>
         <item name="practiceActionBarColor">@color/practice_mode_action_bar</item>
-        <item name="practiceLogoDrawable">@drawable/breeze_logo_practice</item>
+        <item name="practiceLogoDrawable">@drawable/breeze_logo_dark</item>
     </style>
 
     <style name="PatientModeActivity" parent="AppThemePractice">
