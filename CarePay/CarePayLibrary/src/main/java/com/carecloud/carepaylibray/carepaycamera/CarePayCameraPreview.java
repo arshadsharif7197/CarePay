@@ -347,7 +347,12 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     void takePicture(CarePayCameraCallback callback) {
         this.carePayCameraCallback = callback;
         if (camera != null) {
-            camera.takePicture(null, null, pictureCallback);
+            try {
+                camera.takePicture(null, null, pictureCallback);
+            } catch (Exception e) {
+                Log.e("BreezeCam", e.getMessage());
+            }
+
         } else {
             callback.onCaptureFail();
         }

@@ -5,13 +5,13 @@
         <layer-list>
             <item>
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/white"/>
-                    <corners android:topLeftRadius="10dp"/>
-                    <size android:height="@dimen/home_button_height" android:width="@dimen/home_button_width"/>
+                    <solid android:color="@color/white" />
+                    <corners android:bottomLeftRadius="@dimen/dimen_10dp" android:topLeftRadius="10dp" />
+                    <size android:width="@dimen/home_button_width" android:height="@dimen/home_button_height" />
                 </shape>
             </item>
             <item>
-                <nine-patch android:src="@drawable/coming_soon"/>
+                <nine-patch android:src="@drawable/coming_soon" />
             </item>
 
         </layer-list>
@@ -20,17 +20,15 @@
         <layer-list>
             <item>
                 <shape android:shape="rectangle">
-                    <corners android:topLeftRadius="10dp"/>
-                    <solid android:color="@color/home_button_pressed_shadow_margin"/>
+                    <corners android:bottomLeftRadius="@dimen/dimen_10dp" android:topLeftRadius="10dp" />
+                    <solid android:color="@color/home_button_pressed_shadow_margin" />
                 </shape>
             </item>
 
-            <item android:drawable="@drawable/home_hover_shadow_vd"
-                  android:top="2dp"
-                  android:left="3dp"/>
+            <item android:drawable="@drawable/home_hover_shadow_vd" android:left="3dp" android:top="2dp" />
         </layer-list>
     </item>
 
-    <item android:drawable="@drawable/top_left_rounded_background" />
+    <item android:drawable="@drawable/left_rounded_background" />
 
 </selector>

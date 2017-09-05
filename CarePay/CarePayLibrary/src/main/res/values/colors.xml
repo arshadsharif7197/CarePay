@@ -95,4 +95,5 @@
     <color name="myHealthRecyclerViewBackground">#FBFCFC</color>
     <color name="myHealthTextColor">#607D8B</color>
     <color name="providerTextColor">#546E7A</color>
+    <color name="newsBackgroundColor">#5F969E</color>
 </resources>

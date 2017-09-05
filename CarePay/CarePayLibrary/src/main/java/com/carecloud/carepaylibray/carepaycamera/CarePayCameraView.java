@@ -143,16 +143,20 @@ public class CarePayCameraView extends RelativeLayout {
     };
 
     /**
-     *
      * @param currentCameraId current camera Id
      */
     public void start(int currentCameraId) {
         carePayCameraPreview.start(currentCameraId);
         carePayCameraPreview.setVisibility(View.VISIBLE);
         flashButton.setEnabled(carePayCameraPreview.hasFlash());
+        buttonCapture.setEnabled(true);
     }
 
+    /**
+     * stop camera preview
+     */
     public void stop() {
+        buttonCapture.setEnabled(false);
         carePayCameraPreview.setVisibility(View.GONE);
         carePayCameraPreview.stop();
     }
