@@ -53,7 +53,7 @@ public class RestCallServiceHelper {
                 String idToken = applicationHelper.getAuthentication().getIdToken();
                 if (idToken != null) {
                     authHeaders.put(HEADER_KEY_AUTHORIZATION, idToken);
-                    authHeaders.put(HEADER_KEY_AUTH_TYPE, HEADER_VALUE_AUTH_TYPE_COGNITO);
+//                    authHeaders.put(HEADER_KEY_AUTH_TYPE, HEADER_VALUE_AUTH_TYPE_COGNITO);
                 }
             }
         }
