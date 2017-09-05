@@ -21,11 +21,11 @@ import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
-import com.carecloud.carepaylibray.payments.models.postmodel.CreditCardModel;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentType;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentCardData;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentMetadata;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -149,7 +149,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
 
 
     private void makePaymentCall() {
-        PaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
+        IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
         if (postModel != null && postModel.getAmount() > 0) {
             processPayment(postModel);
         } else {
@@ -157,13 +157,16 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         }
     }
 
-    private void processPayment(PaymentPostModel postModel) {
-        CreditCardModel creditCardModel = getCreditCardModel();
-        for (PaymentObject paymentObject : postModel.getPaymentObjects()) {
-            paymentObject.setType(PaymentType.credit_card);
-            paymentObject.setExecution(PaymentExecution.papi);
-            paymentObject.setCreditCard(creditCardModel);
-        }
+    private void processPayment(IntegratedPaymentPostModel postModel) {
+        PapiPaymentMethod papiPaymentMethod = new PapiPaymentMethod();
+        papiPaymentMethod.setPaymentMethodType(PapiPaymentMethod.PAYMENT_METHOD_NEW_CARD);
+        papiPaymentMethod.setCardData(getCreditCardModel());
+
+        postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
+        postModel.setPapiPaymentMethod(papiPaymentMethod);
+
+        IntegratedPaymentMetadata integratedPaymentMetadata = postModel.getMetadata();
+        integratedPaymentMetadata.setAppointmentId(callback.getAppointmentId());
 
         Gson gson = new Gson();
         if (postModel.isPaymentModelValid()) {
@@ -174,19 +177,27 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
     }
 
     private void processPayment() {
-        PaymentObject paymentObject = new PaymentObject();
-        paymentObject.setType(PaymentType.credit_card);
-        paymentObject.setExecution(PaymentExecution.papi);
-        paymentObject.setAmount(amountToMakePayment);
-        paymentObject.setCreditCard(getCreditCardModel());
+        IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
+        paymentLineItem.setAmount(amountToMakePayment);
+        paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_UNAPPLIED);
+        paymentLineItem.setDescription("Unapplied Amount");
 
-        PaymentPostModel paymentPostModel = new PaymentPostModel();
-        paymentPostModel.setAmount(amountToMakePayment);
-        paymentPostModel.addPaymentMethod(paymentObject);
+        PapiPaymentMethod papiPaymentMethod = new PapiPaymentMethod();
+        papiPaymentMethod.setPaymentMethodType(PapiPaymentMethod.PAYMENT_METHOD_NEW_CARD);
+        papiPaymentMethod.setCardData(getCreditCardModel());
+
+        IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
+        postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
+        postModel.setPapiPaymentMethod(papiPaymentMethod);
+        postModel.setAmount(amountToMakePayment);
+        postModel.addLineItem(paymentLineItem);
+
+        IntegratedPaymentMetadata postModelMetadata = postModel.getMetadata();
+        postModelMetadata.setAppointmentId(callback.getAppointmentId());
 
         Gson gson = new Gson();
-        if (paymentPostModel.isPaymentModelValid()) {
-            postPayment(gson.toJson(paymentPostModel));
+        if (postModel.isPaymentModelValid()) {
+            postPayment(gson.toJson(postModel));
         } else {
             Toast.makeText(getContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
         }
@@ -216,19 +227,19 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
 
     }
 
-    private CreditCardModel getCreditCardModel() {
-        CreditCardModel creditCardModel = new CreditCardModel();
+    private IntegratedPaymentCardData getCreditCardModel() {
+        IntegratedPaymentCardData creditCardModel = new IntegratedPaymentCardData();
         creditCardModel.setCardType(creditCardsPayloadDTO.getCardType());
         creditCardModel.setCardNumber(creditCardsPayloadDTO.getCardNumber());
         creditCardModel.setExpiryDate(creditCardsPayloadDTO.getExpireDt().replaceAll("/", ""));
         creditCardModel.setNameOnCard(creditCardsPayloadDTO.getNameOnCard());
         creditCardModel.setToken(creditCardsPayloadDTO.getToken());
-        creditCardModel.setCvv(creditCardsPayloadDTO.getCvv());
         creditCardModel.setSaveCard(saveCardOnFileCheckBox.isChecked());
         creditCardModel.setDefault(setAsDefaultCheckBox.isChecked());
-        creditCardModel.setTokenizationService(creditCardsPayloadDTO.getTokenizationService());
 
-        creditCardModel.setBillingInformation(billingInformationDTO);
+        @IntegratedPaymentCardData.TokenizationService String tokenizationService = creditCardsPayloadDTO.getTokenizationService().toString();
+        creditCardModel.setTokenizationService(tokenizationService);
+
         return creditCardModel;
     }
 

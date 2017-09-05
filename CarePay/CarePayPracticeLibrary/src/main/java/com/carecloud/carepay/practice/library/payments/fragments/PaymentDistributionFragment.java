@@ -35,10 +35,8 @@ import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
 import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentApplication;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentNewCharge;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.BounceHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -691,7 +689,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
     private void generatePaymentsModel(){
         hasPaymentError = false;
-        PaymentPostModel postModel = new PaymentPostModel();
+        IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
         postModel.setAmount( round(paymentAmount + chargesAmount));
         for(BalanceItemDTO balanceItemDTO : balanceItems){
             addPaymentObject(balanceItemDTO, postModel);
@@ -701,42 +699,51 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         }
 
         if(overPaymentAmount > 0){
-            PaymentObject paymentObject = new PaymentObject();
-            paymentObject.setAmount(overPaymentAmount);
-            paymentObject.setDescription("Unapplied Amount");
+            IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
+            paymentLineItem.setAmount(overPaymentAmount);
+            paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_UNAPPLIED);
+            paymentLineItem.setDescription("Unapplied Amount");
 
-            postModel.addPaymentMethod(paymentObject);
+            postModel.addLineItem(paymentLineItem);
         }
 
         paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
 
     }
 
-    private void addPaymentObject(BalanceItemDTO balanceItem, PaymentPostModel postModel){
+    private void addPaymentObject(BalanceItemDTO balanceItem, IntegratedPaymentPostModel postModel){
         if(balanceItem.getBalance()>0){
-            PaymentObject paymentObject = new PaymentObject();
-            paymentObject.setDescription(balanceItem.getDescription());
-
+            IntegratedPaymentLineItem lineItem = new IntegratedPaymentLineItem();
+            lineItem.setDescription(balanceItem.getDescription());
+            lineItem.setAmount(balanceItem.getAmount());
             if(balanceItem.getResponsibilityType()!=null){
                 //this is a responsibility item
-                paymentObject.setResponsibilityType(balanceItem.getResponsibilityType());
+                switch (balanceItem.getResponsibilityType()){
+                    case co_insurance:
+                        lineItem.setItemType(IntegratedPaymentLineItem.TYPE_COINSURANCE);
+                        break;
+                    case deductable:
+                        lineItem.setItemType(IntegratedPaymentLineItem.TYPE_DEDUCTABLE);
+                        break;
+                    case co_pay:
+                    default:
+                        lineItem.setItemType(IntegratedPaymentLineItem.TYPE_COPAY);
+                        break;
+                }
             }else if(balanceItem.isNewCharge()){
-                PaymentNewCharge paymentNewCharge = new PaymentNewCharge();
-                paymentNewCharge.setChargeType(balanceItem.getId());
-                paymentNewCharge.setAmount(balanceItem.getAmount());
-                paymentObject.setPaymentNewCharge(paymentNewCharge);
+                lineItem.setItemType(IntegratedPaymentLineItem.TYPE_NEWCHARGE);
+                lineItem.setId(balanceItem.getId().toString());
             }else if(balanceItem.getId()!=null){
-                PaymentApplication paymentApplication = new PaymentApplication();
-                paymentApplication.setDebitTransactionID(balanceItem.getId());
-                paymentObject.setPaymentApplication(paymentApplication);
+                lineItem.setItemType(IntegratedPaymentLineItem.TYPE_APPLICATION);
+                lineItem.setId(balanceItem.getId().toString());
             }
 
             if(balanceItem.getLocation()!=null){
-                paymentObject.setLocationID(balanceItem.getLocation().getGuid());
+                lineItem.setLocationID(balanceItem.getLocation().getGuid());
             }
 
             if(balanceItem.getProvider()!=null){
-                paymentObject.setProviderID(balanceItem.getProvider().getGuid());
+                lineItem.setProviderID(balanceItem.getProvider().getGuid());
             }
 
             double paymentAmount = balanceItem.getBalance();
@@ -744,9 +751,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
                 overPaymentAmount = round(overPaymentAmount + round(paymentAmount - balanceItem.getMaxAmount()));
                 paymentAmount = balanceItem.getMaxAmount();
             }
-            paymentObject.setAmount(paymentAmount);
+            lineItem.setAmount(paymentAmount);
 
-            postModel.addPaymentMethod(paymentObject);
+            postModel.addLineItem(lineItem);
         }else if(balanceItem.getBalance()<0){
             SystemUtil.showErrorToast(getContext(), Label.getLabel("negative_payment_amount_error"));
             hasPaymentError = true;

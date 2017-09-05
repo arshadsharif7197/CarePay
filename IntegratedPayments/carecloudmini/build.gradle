@@ -25,6 +25,7 @@ android {
             applicationId "com.carecloud.carepay.mini"
             buildConfigField 'String', 'X_API_KEY', '"jLA75b9L3I5r5lkuqMZQF2v41kyPBMLZ29OvGciV"'
             buildConfigField 'String', 'API_BASE_URL', '"https://payments.development.carecloud.com/"'
+//            buildConfigField 'String', 'API_BASE_URL', '"http://4cf539ac.ngrok.io/shamrock-payments/"'
         }
     }
 }
