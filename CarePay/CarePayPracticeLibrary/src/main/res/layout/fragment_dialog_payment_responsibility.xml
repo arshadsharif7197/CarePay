@@ -10,8 +10,7 @@
         android:id="@+id/profile_image_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dialog_header_height"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/rowLayout">
+        android:layout_alignParentTop="true">
 
         <ImageView
             android:id="@+id/profile_bg_image"
