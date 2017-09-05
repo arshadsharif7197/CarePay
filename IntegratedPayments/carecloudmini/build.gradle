@@ -25,6 +25,25 @@ android {
             applicationId "com.carecloud.carepay.mini"
             buildConfigField 'String', 'X_API_KEY', '"jLA75b9L3I5r5lkuqMZQF2v41kyPBMLZ29OvGciV"'
             buildConfigField 'String', 'API_BASE_URL', '"https://payments.development.carecloud.com/"'
+            buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream.development.carecloud.com:443"'
+        }
+        qa {
+            applicationId "com.carecloud.carepay.mini"
+            buildConfigField 'String', 'X_API_KEY', '"8RSwxNIMfv30WxgpTOuTza0fEvAFJJH07xDxgP4i"'
+            buildConfigField 'String', 'API_BASE_URL', '"https://payments.qa.carecloud.com/"'
+            buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream.development.carecloud.com:443"'
+        }
+        staging{
+            applicationId "com.carecloud.carepay.mini"
+            buildConfigField 'String', 'X_API_KEY', '"tbd"'
+            buildConfigField 'String', 'API_BASE_URL', '"https://payments-staging.carecloud.com/"'
+            buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream-staging.carecloud.com:443"'
+        }
+        production{
+            applicationId "com.carecloud.carepay.mini"
+            buildConfigField 'String', 'X_API_KEY', '"tbd"'
+            buildConfigField 'String', 'API_BASE_URL', '"https://payments.carecloud.com/"'
+            buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream.carecloud.com:443"'
         }
     }
 }
