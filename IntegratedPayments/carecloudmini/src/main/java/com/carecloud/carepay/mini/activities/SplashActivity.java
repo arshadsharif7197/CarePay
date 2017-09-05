@@ -42,6 +42,7 @@ public class SplashActivity extends FullScreenActivity {
                 Intent main = new Intent(SplashActivity.this, intentClass);
                 main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(main);
+                finish();
             }
         }, 1000);
     }
