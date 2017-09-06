@@ -67,7 +67,7 @@ public class ResponsibilityHeaderModel implements Serializable {
         headerModel.setHeaderFullTitle(patientModel.getFullName());
         headerModel.setHeaderShortTitle(patientModel.getShortName());
         headerModel.setHeaderPhotoUrl(patientModel.getProfilePhoto());
-        headerModel.setHeaderSubtitle(initializePatientProvider(paymentsModel));
+        headerModel.setHeaderSubtitle(null);
         return headerModel;
     }
 
