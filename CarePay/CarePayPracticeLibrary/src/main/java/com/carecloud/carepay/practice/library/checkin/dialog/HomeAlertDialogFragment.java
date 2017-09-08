@@ -40,14 +40,14 @@ public class HomeAlertDialogFragment extends BaseDialogFragment {
         Button yesButton = (Button) view.findViewById(R.id.button_right_action);
         yesButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 callback.onAcceptExit();
             }
         });
         Button noButton = (Button) view.findViewById(R.id.button_left_action);
         noButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 dismiss();
             }
         });
