@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:breeze="http://schemas.carecloud.com/breeze"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/reviewdemographicsPersonalContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
 
     <include layout="@layout/fragment_demographics_picture" />
 
     <include layout="@layout/fragment_demographic_name_section" />
 
-    <include layout="@layout/fragment_demographic_personal_section"/>
+    <include layout="@layout/fragment_demographic_personal_section" />
 
 </LinearLayout>
