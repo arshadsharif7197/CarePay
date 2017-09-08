@@ -93,8 +93,13 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     }
 
     @Override
-    public void onProviderSelected(AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
-        ResourcesPracticeDTO selectedResourcesPracticeDTO = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getPractice();
+    public void onProviderSelected(AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel, ResourcesToScheduleDTO resourcesToScheduleDTO) {
+        ResourcesPracticeDTO selectedResourcesPracticeDTO;
+        if(resourcesToScheduleDTO != null) {
+            selectedResourcesPracticeDTO = resourcesToScheduleDTO.getPractice();
+        }else{
+            selectedResourcesPracticeDTO = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getPractice();
+        }
         setPatientID(selectedResourcesPracticeDTO.getPracticeId());
         practiceId = selectedResourcesPracticeDTO.getPracticeId();
         practiceMgmt = selectedResourcesPracticeDTO.getPracticeMgmt();
