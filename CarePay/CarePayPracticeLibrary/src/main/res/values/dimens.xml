@@ -164,9 +164,9 @@
     <dimen name="home_button_width">282dp</dimen>
     <dimen name="home_button_height">250dp</dimen>
 
-    <dimen name="home_shadow_width">600dp</dimen>
+    <dimen name="home_shadow_width">800dp</dimen>
 
-    <dimen name="home_shadow_margin_top">-17dp</dimen>
+    <dimen name="home_shadow_margin_top">-7dp</dimen>
 
     <dimen name="home_settings_icon_width">30dp</dimen>
     <dimen name="home_settings_icon_height">30dp</dimen>

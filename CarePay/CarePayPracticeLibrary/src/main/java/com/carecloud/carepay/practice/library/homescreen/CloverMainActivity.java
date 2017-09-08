@@ -113,8 +113,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             modeSwitchImageView.setVisibility(View.GONE);
             homeLockImageView.setVisibility(View.VISIBLE);
             setNavigationBarVisibility();
-            findViewById(R.id.homeAppointmentsClickable).setBackground(ContextCompat
-                    .getDrawable(getContext(), R.drawable.home_button_selector));
             findViewById(R.id.homeCheckoutClickable).setVisibility(View.VISIBLE);
             checkinLabel.setText(Label.getLabel("checkin_button_patient_mode"));
         } else {
