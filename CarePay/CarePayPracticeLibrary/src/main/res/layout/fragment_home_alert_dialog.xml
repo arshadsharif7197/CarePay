@@ -88,7 +88,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22sp"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="No"
+                breeze:textKey="no"
                 tools:text="No" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
