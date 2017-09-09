@@ -187,8 +187,8 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     @Override
-    public void onPartialPaymentClicked(double owedAmount) {
-        new PartialPaymentDialog(getContext(), paymentsModel).show();
+    public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
+        new PartialPaymentDialog(getContext(), paymentsModel, selectedBalance).show();
     }
 
     @Override
