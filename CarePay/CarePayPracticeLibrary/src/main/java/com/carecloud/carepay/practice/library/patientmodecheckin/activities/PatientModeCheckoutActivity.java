@@ -250,6 +250,9 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     @Override
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
+        if (paymentsModel != null && !paymentsModel.getPaymentPayload().getUserPractices().isEmpty()) {
+            return paymentsModel.getPaymentPayload().getUserPractices().get(0);
+        }
         return null;
     }
 
