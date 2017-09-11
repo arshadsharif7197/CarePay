@@ -1,7 +1,6 @@
 package com.carecloud.carepay.practice.library.appointments.dialogs;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,7 +23,6 @@ import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringUtils;
@@ -163,33 +161,6 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
         TextView apptTime = (TextView) view.findViewById(R.id.appointment_start_time);
         apptTime.setTextColor(ContextCompat.getColor(getContext(), timeColor));
-
-    }
-
-    private void initializeHeaderBackgroundView() {
-        final ImageView imageView = (ImageView) view.findViewById(R.id.appointment_card_header_background);
-
-        Picasso.with(getActivity()).load(photoUrl).resize(510, 510).into(imageView, new Callback() {
-            @Override
-            public void onSuccess() {
-                imageView.setVisibility(View.VISIBLE);
-
-                if (isAdded()) {
-                    int trueHeaderColor = ContextCompat.getColor(getContext(), headerColor);
-                    headerView.setBackgroundColor(Color.argb(
-                            230,
-                            Color.red(trueHeaderColor),
-                            Color.green(trueHeaderColor),
-                            Color.blue(trueHeaderColor)
-                    ));
-                }
-            }
-
-            @Override
-            public void onError() {
-                headerView.setBackgroundResource(headerColor);
-            }
-        });
     }
 
     private void initializeProfilePhotoView() {
