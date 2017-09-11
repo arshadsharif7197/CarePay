@@ -278,51 +278,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         }
     }
 
-    private void showCancellationReasons(AppointmentDTO appointmentDTO, final AppointmentCancellationFee cancellationFee) {
-        new CancelReasonAppointmentDialog(getContext(), appointmentDTO, appointmentsResultModel,
-                new CancelReasonAppointmentDialog.CancelReasonAppointmentDialogListener() {
-                    @Override
-                    public void onCancelReasonAppointmentDialogCancelClicked(AppointmentDTO appointmentDTO,
-                                                                             int cancellationReason,
-                                                                             String cancellationReasonComment) {
-                        if (cancellationFee == null) {
-                            onCancelAppointment(appointmentDTO, cancellationReason, cancellationReasonComment);
-                        } else {
-                            IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
-                            postModel.setAmount(Double.parseDouble(cancellationFee.getAmount()));
-                            IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
-                            paymentLineItem.setAmount(Double.parseDouble(cancellationFee.getAmount()));
-                            paymentLineItem.setProviderID(appointmentDTO.getPayload().getProvider().getGuid());
-                            paymentLineItem.setLocationID(appointmentDTO.getPayload().getLocation().getGuid());
-                            paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_CANCELLATION);
-
-
-                            postModel.addLineItem(paymentLineItem);
-                            postModel.getMetadata().setAppointmentId(appointmentDTO.getPayload().getId());
-                            postModel.getMetadata().setCancellationReasonId(String.valueOf(cancellationReason));
-                            paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
-
-                            PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
-                                    .newInstance(paymentsModel, Double.parseDouble(cancellationFee.getAmount()));
-                            viewHandler.navigateToFragment(prepaymentFragment, true);
-                        }
-                    }
-                }).show();
-    }
-
-    private AppointmentCancellationFee getCancellationFee(AppointmentDTO appointmentDTO) {
-        if (appointmentsResultModel.getPayload()
-                .getAppointmentsSettings().get(0).shouldChargeCancellationFees()) {
-            for (AppointmentCancellationFee cancellationFee : appointmentsResultModel.getPayload()
-                    .getAppointmentsSettings().get(0).getCancellationFees()) {
-                if (appointmentDTO.getPayload().getVisitType().getId().equals(cancellationFee.getVisitType())) {
-                    return cancellationFee;
-                }
-            }
-        }
-        return null;
-    }
-
     @Override
     public void onCancelAppointment(AppointmentDTO appointmentDTO, int cancellationReason,
                                     String cancellationReasonComment) {
@@ -446,6 +401,51 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         AppointmentDetailDialog detailDialog = AppointmentDetailDialog.newInstance(appointmentDTO);
         viewHandler.displayDialogFragment(detailDialog, false);
 //        detailDialog.show(getSupportFragmentManager(), detailDialog.getClass().getName());
+    }
+
+    private void showCancellationReasons(AppointmentDTO appointmentDTO, final AppointmentCancellationFee cancellationFee) {
+        new CancelReasonAppointmentDialog(getContext(), appointmentDTO, appointmentsResultModel,
+                new CancelReasonAppointmentDialog.CancelReasonAppointmentDialogListener() {
+                    @Override
+                    public void onCancelReasonAppointmentDialogCancelClicked(AppointmentDTO appointmentDTO,
+                                                                             int cancellationReason,
+                                                                             String cancellationReasonComment) {
+                        if (cancellationFee == null) {
+                            onCancelAppointment(appointmentDTO, cancellationReason, cancellationReasonComment);
+                        } else {
+                            IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
+                            postModel.setAmount(Double.parseDouble(cancellationFee.getAmount()));
+                            IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
+                            paymentLineItem.setAmount(Double.parseDouble(cancellationFee.getAmount()));
+                            paymentLineItem.setProviderID(appointmentDTO.getPayload().getProvider().getGuid());
+                            paymentLineItem.setLocationID(appointmentDTO.getPayload().getLocation().getGuid());
+                            paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_CANCELLATION);
+
+
+                            postModel.addLineItem(paymentLineItem);
+                            postModel.getMetadata().setAppointmentId(appointmentDTO.getPayload().getId());
+                            postModel.getMetadata().setCancellationReasonId(String.valueOf(cancellationReason));
+                            paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
+
+                            PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
+                                    .newInstance(paymentsModel, Double.parseDouble(cancellationFee.getAmount()));
+                            viewHandler.navigateToFragment(prepaymentFragment, true);
+                        }
+                    }
+                }).show();
+    }
+
+    private AppointmentCancellationFee getCancellationFee(AppointmentDTO appointmentDTO) {
+        if (appointmentsResultModel.getPayload()
+                .getAppointmentsSettings().get(0).shouldChargeCancellationFees()) {
+            for (AppointmentCancellationFee cancellationFee : appointmentsResultModel.getPayload()
+                    .getAppointmentsSettings().get(0).getCancellationFees()) {
+                if (appointmentDTO.getPayload().getVisitType().getId().equals(cancellationFee.getVisitType())) {
+                    return cancellationFee;
+                }
+            }
+        }
+        return null;
     }
 
 

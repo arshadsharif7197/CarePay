@@ -64,7 +64,7 @@ public class CancelAppointmentFeeDialog extends Dialog {
         Button cancelAppointmentButton = (Button) findViewById(R.id.cancelAppointment);
         cancelAppointmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 callback.onCancelAppointmentFeeAccepted();
                 cancel();
             }
@@ -72,7 +72,7 @@ public class CancelAppointmentFeeDialog extends Dialog {
 
         findViewById(R.id.dialogCloseHeaderImageView).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 cancel();
             }
         });
