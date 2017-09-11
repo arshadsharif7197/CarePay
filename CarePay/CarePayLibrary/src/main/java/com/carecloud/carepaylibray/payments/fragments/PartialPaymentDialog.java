@@ -53,6 +53,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private double fullAmount = 0.00;
     private PaymentsModel paymentsDTO;
     private double minimumPayment;
+    private PendingBalanceDTO selectedBalance;
 
     private double insuranceCopay;
     private double patientBalance;
@@ -67,10 +68,11 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
      * @param context     context must implement PayNowClickListener
      * @param paymentsDTO payment model
      */
-    public PartialPaymentDialog(Context context, PaymentsModel paymentsDTO) {
+    public PartialPaymentDialog(Context context, PaymentsModel paymentsDTO, PendingBalanceDTO selectedBalance) {
         super(context);
         this.context = context;
         this.paymentsDTO = paymentsDTO;
+        this.selectedBalance = selectedBalance;
 
         try {
             if (context instanceof PaymentViewHandler) {
@@ -118,7 +120,10 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
 
         calculateFullAmount(partialPaymentTotalAmountTitle);
 
-        minimumPayment = getMinimumPayment(paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPracticeId());//todo fix this for multi-practice support
+        if(selectedBalance == null){
+            selectedBalance = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
+        }
+        minimumPayment = getMinimumPayment(selectedBalance.getMetadata().getPracticeId());
         if(minimumPayment > 0){
             TextView header = (TextView) findViewById(R.id.partialPaymentHeader);
             String headerText = Label.getLabel("payment_partial_minimum_amount") + NumberFormat.getCurrencyInstance().format(minimumPayment);
@@ -176,7 +181,6 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     @Override
     public void onTextChanged(CharSequence str, int start, int before, int count) {
         String amountEditText = amountText.getText().toString();
-        int selection = amountText.getSelectionStart();
         try {
             if (amountChangeFlag) {
                 // flag to avoid the onTextChanged listener call after setText manipulated number
@@ -233,10 +237,10 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
             e.printStackTrace();
         }
         // Calculating the remaining amount after entering partial payment amount
-        onPendingAmountValidation(amountEditText, payPartialButton, partialPaymentTotalAmountTitle, amountSymbol);
+        onPendingAmountValidation(amountEditText, payPartialButton, partialPaymentTotalAmountTitle);
     }
 
-    private void onPendingAmountValidation(String amountEditText, Button payPartialButton, TextView partialPaymentTotalAmountTitle, TextView amountSymbolTextView) {
+    private void onPendingAmountValidation(String amountEditText, Button payPartialButton, TextView partialPaymentTotalAmountTitle) {
         if (amountEditText != null && amountEditText.length() > 0) {
             if (amountEditText.length() == 1 && amountEditText.equalsIgnoreCase(".")) {
                 amountEditText = "0.";

@@ -136,7 +136,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
     }
 
     @Override
-    public void onPartialPaymentClicked(double owedAmount) {
+    public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
         PracticePartialPaymentDialogFragment dialog = PracticePartialPaymentDialogFragment
                 .newInstance(paymentResultModel, owedAmount);
         displayDialogFragment(dialog, false);
@@ -231,7 +231,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
 
     @Override
     public void onLeftActionTapped(PaymentsModel paymentsModel, double owedAmount) {
-        onPartialPaymentClicked(owedAmount);
+        onPartialPaymentClicked(owedAmount, null);
     }
 
     @Override
@@ -295,7 +295,6 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
                 String jsonPayload = data.getStringExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA);
                 if (jsonPayload != null) {
                     Gson gson = new Gson();
-//                    PaymentsModel paymentsModel = gson.fromJson(jsonPayload, PaymentsModel.class);
                     WorkflowDTO workflowDTO = gson.fromJson(jsonPayload, WorkflowDTO.class);
                     showPaymentConfirmation(workflowDTO);
                 }
@@ -303,7 +302,6 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
             }
             default:
                 //nothing
-                return;
         }
     }
 

@@ -3,7 +3,6 @@ package com.carecloud.carepay.practice.library.checkin.dialog;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +45,12 @@ public class HomeAlertDialogFragment extends BaseDialogFragment {
         });
         Button noButton = (Button) view.findViewById(R.id.button_left_action);
         noButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
+        view.findViewById(R.id.closeViewLayout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();
