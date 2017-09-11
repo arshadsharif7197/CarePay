@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
+import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentFeeDialog;
 import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentDateRangeFragment;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDialog;
@@ -22,6 +23,7 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentCancellationFee;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
@@ -65,7 +67,8 @@ import java.util.Map;
  * Created by lmenendez on 5/15/17
  */
 
-public class PatientAppointmentPresenter extends AppointmentPresenter implements PatientAppointmentNavigationCallback {
+public class PatientAppointmentPresenter extends AppointmentPresenter
+        implements PatientAppointmentNavigationCallback {
     private String patientId;
     private String practiceId;
     private String practiceMgmt;
@@ -75,7 +78,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     private AppointmentsSlotsDTO appointmentSlot;
 
 
-    public PatientAppointmentPresenter(AppointmentViewHandler viewHandler, AppointmentsResultModel appointmentsResultModel, PaymentsModel paymentsModel) {
+    public PatientAppointmentPresenter(AppointmentViewHandler viewHandler,
+                                       AppointmentsResultModel appointmentsResultModel,
+                                       PaymentsModel paymentsModel) {
         super(viewHandler, appointmentsResultModel, paymentsModel);
     }
 
@@ -93,18 +98,22 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     }
 
     @Override
-    public void onProviderSelected(AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
-        ResourcesPracticeDTO selectedResourcesPracticeDTO = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getPractice();
+    public void onProviderSelected(AppointmentResourcesDTO appointmentResourcesDTO,
+                                   AppointmentsResultModel appointmentsResultModel) {
+        ResourcesPracticeDTO selectedResourcesPracticeDTO = appointmentsResultModel.getPayload()
+                .getResourcesToSchedule().get(0).getPractice();
         setPatientID(selectedResourcesPracticeDTO.getPracticeId());
         practiceId = selectedResourcesPracticeDTO.getPracticeId();
         practiceMgmt = selectedResourcesPracticeDTO.getPracticeMgmt();
 
-        VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog.newInstance(appointmentResourcesDTO, appointmentsResultModel, getPracticeSettings());
+        VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog.newInstance(appointmentResourcesDTO,
+                appointmentsResultModel, getPracticeSettings());
         viewHandler.displayDialogFragment(dialog, true);
     }
 
     @Override
-    public void onVisitTypeSelected(VisitTypeDTO visitTypeDTO, AppointmentResourcesDTO appointmentResourcesDTO,
+    public void onVisitTypeSelected(VisitTypeDTO visitTypeDTO,
+                                    AppointmentResourcesDTO appointmentResourcesDTO,
                                     AppointmentsResultModel appointmentsResultModel) {
         selectedAppointmentResourcesDTO = appointmentResourcesDTO;
         selectedVisitTypeDTO = visitTypeDTO;
@@ -115,7 +124,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     }
 
     @Override
-    public void onDateRangeSelected(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource,
+    public void onDateRangeSelected(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO,
+                                    AppointmentResourcesItemDTO appointmentResource,
                                     AppointmentsResultModel appointmentsResultModel) {
         AvailableHoursFragment availableHoursFragment = AvailableHoursFragment
                 .newInstance(appointmentsResultModel, appointmentResource,
@@ -124,14 +134,17 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     }
 
     @Override
-    public void selectDateRange(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource, AppointmentsResultModel appointmentsResultModel) {
+    public void selectDateRange(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO,
+                                AppointmentResourcesItemDTO appointmentResource,
+                                AppointmentsResultModel appointmentsResultModel) {
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
         bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
         bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(appointmentResource));
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(visitTypeDTO));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(appointmentsResultModel));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE,
+                gson.toJson(appointmentsResultModel));
 
         AppointmentDateRangeFragment appointmentDateRangeFragment = new AppointmentDateRangeFragment();
         appointmentDateRangeFragment.setArguments(bundle);
@@ -158,13 +171,15 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
         resourcesToSchedule.getPractice().setPracticeMgmt(appointmentDTO.getMetadata().getPracticeMgmt());
         appointmentsResultModel.getPayload().getResourcesToSchedule().add(resourcesToSchedule);
 
-        AvailableHoursFragment availableHoursFragment = AvailableHoursFragment.newInstance(appointmentsResultModel, appointmentDTO);
+        AvailableHoursFragment availableHoursFragment = AvailableHoursFragment
+                .newInstance(appointmentsResultModel, appointmentDTO);
 
         viewHandler.navigateToFragment(availableHoursFragment, true);
     }
 
     @Override
-    public void onHoursAndLocationSelected(AppointmentsSlotsDTO appointmentsSlot, AppointmentAvailabilityDTO availabilityDTO) {
+    public void onHoursAndLocationSelected(AppointmentsSlotsDTO appointmentsSlot,
+                                           AppointmentAvailabilityDTO availabilityDTO) {
         ProviderDTO providersDTO;
         if (selectedAppointmentResourcesDTO != null) {
             providersDTO = selectedAppointmentResourcesDTO.getResource().getProvider();
@@ -217,12 +232,14 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
         appointment.getPatient().setId(patientId);
 
         double amount = selectedVisitTypeDTO.getAmount();
-        if(amount > 0 && paymentsModel != null){
+        if (amount > 0 && paymentsModel != null) {
             startPrepaymentProcess(scheduleAppointmentRequestDTO, appointmentSlot, amount);
-        }else {
+        } else {
             Gson gson = new Gson();
-            TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getMakeAppointment();
-            viewHandler.getWorkflowServiceHelper().execute(transitionDTO, getMakeAppointmentCallback, gson.toJson(scheduleAppointmentRequestDTO), queryMap);
+            TransitionDTO transitionDTO = appointmentsResultModel.getMetadata()
+                    .getTransitions().getMakeAppointment();
+            viewHandler.getWorkflowServiceHelper().execute(transitionDTO, getMakeAppointmentCallback,
+                    gson.toJson(scheduleAppointmentRequestDTO), queryMap);
         }
     }
 
@@ -237,17 +254,68 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     }
 
     @Override
-    public void onCancelAppointment(AppointmentDTO appointmentDTO) {
-        new CancelReasonAppointmentDialog(getContext(), appointmentDTO, appointmentsResultModel, new CancelReasonAppointmentDialog.CancelReasonAppointmentDialogListener() {
-            @Override
-            public void onCancelReasonAppointmentDialogCancelClicked(AppointmentDTO appointmentDTO, int cancellationReason, String cancellationReasonComment) {
-                onCancelAppointment(appointmentDTO, cancellationReason, cancellationReasonComment);
+    public void onCancelAppointment(final AppointmentDTO appointmentDTO) {
+        final AppointmentCancellationFee cancellationFee = getCancellationFee(appointmentDTO);
+        if (cancellationFee == null) {
+            showCancellationReasons(appointmentDTO, cancellationFee);
+        } else {
+            practiceId = appointmentDTO.getMetadata().getPracticeId();
+            practiceMgmt = appointmentDTO.getMetadata().getPracticeMgmt();
+            patientId = appointmentDTO.getMetadata().getPatientId();
+            new CancelAppointmentFeeDialog(getContext(), cancellationFee, new CancelAppointmentFeeDialog.CancelAppointmentFeeDialogListener() {
+                @Override
+                public void onCancelAppointmentFeeAccepted() {
+                    showCancellationReasons(appointmentDTO, cancellationFee);
+                }
+            }).show();
+        }
+    }
+
+    private void showCancellationReasons(AppointmentDTO appointmentDTO, final AppointmentCancellationFee cancellationFee) {
+        new CancelReasonAppointmentDialog(getContext(), appointmentDTO, appointmentsResultModel,
+                new CancelReasonAppointmentDialog.CancelReasonAppointmentDialogListener() {
+                    @Override
+                    public void onCancelReasonAppointmentDialogCancelClicked(AppointmentDTO appointmentDTO,
+                                                                             int cancellationReason,
+                                                                             String cancellationReasonComment) {
+                        if (cancellationFee == null) {
+                            onCancelAppointment(appointmentDTO, cancellationReason, cancellationReasonComment);
+                        } else {
+                            IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
+                            postModel.setAmount(Double.parseDouble(cancellationFee.getAmount()));
+                            IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
+                            paymentLineItem.setAmount(Double.parseDouble(cancellationFee.getAmount()));
+                            paymentLineItem.setProviderID(appointmentDTO.getPayload().getProvider().getGuid());
+                            paymentLineItem.setLocationID(appointmentDTO.getPayload().getLocation().getGuid());
+                            paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_CANCELLATION);
+
+
+                            postModel.addLineItem(paymentLineItem);
+                            postModel.getMetadata().setAppointmentId(appointmentDTO.getPayload().getId());
+                            postModel.getMetadata().setCancellationReasonId(String.valueOf(cancellationReason));
+                            paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
+
+                            PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
+                                    .newInstance(paymentsModel, Double.parseDouble(cancellationFee.getAmount()));
+                            viewHandler.navigateToFragment(prepaymentFragment, true);
+                        }
+                    }
+                }).show();
+    }
+
+    private AppointmentCancellationFee getCancellationFee(AppointmentDTO appointmentDTO) {
+        for (AppointmentCancellationFee cancellationFee : appointmentsResultModel.getPayload()
+                .getAppointmentsSettings().get(0).getCancellationFees()) {
+            if (appointmentDTO.getPayload().getVisitType().getId().equals(cancellationFee.getVisitType())) {
+                return cancellationFee;
             }
-        }).show();
+        }
+        return null;
     }
 
     @Override
-    public void onCancelAppointment(AppointmentDTO appointmentDTO, int cancellationReason, String cancellationReasonComment) {
+    public void onCancelAppointment(AppointmentDTO appointmentDTO, int cancellationReason,
+                                    String cancellationReasonComment) {
         Map<String, String> queries = new HashMap<>();
         queries.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
         queries.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
@@ -257,10 +325,12 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
         DataDTO data = appointmentsResultModel.getMetadata().getTransitions().getCancel().getData();
         JsonObject postBodyObj = new JsonObject();
         if (!StringUtil.isNullOrEmpty(cancellationReasonComment)) {
-            postBodyObj.addProperty(data.getCancellationComments().getName(), cancellationReasonComment);
+            postBodyObj.addProperty(data.getCancellationComments().getName() != null ?
+                    data.getCancellationComments().getName() : "cancellation_comments", cancellationReasonComment);
         }
         if (cancellationReason != -1) {
-            postBodyObj.addProperty(data.getCancellationReasonId().getName(), cancellationReason);
+            postBodyObj.addProperty(data.getCancellationReasonId().getName() != null ?
+                    data.getCancellationReasonId().getName() : "cancellation_reason_id", cancellationReason);
         }
 
         String body = postBodyObj.toString();
@@ -311,20 +381,23 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
             public void onFailure(String exceptionMessage) {
                 viewHandler.hideProgressDialog();
                 viewHandler.showErrorNotification(exceptionMessage);
-                Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+                Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error),
+                        exceptionMessage);
             }
         }, queries, header);
     }
 
     @Override
     public void onCheckInOfficeStarted(AppointmentDTO appointmentDTO) {
-        new QrCodeViewDialog(getContext(), appointmentDTO, appointmentsResultModel.getMetadata(), new QrCodeViewDialog.QRCodeViewDialogListener() {
-            @Override
-            public void onGenerateQRCodeError(String errorMessage) {
-                viewHandler.showErrorNotification(null);
-                Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), errorMessage);
-            }
-        }).show();
+        new QrCodeViewDialog(getContext(), appointmentDTO, appointmentsResultModel.getMetadata(),
+                new QrCodeViewDialog.QRCodeViewDialogListener() {
+                    @Override
+                    public void onGenerateQRCodeError(String errorMessage) {
+                        viewHandler.showErrorNotification(null);
+                        Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error),
+                                errorMessage);
+                    }
+                }).show();
     }
 
     @Override
@@ -346,10 +419,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
 
     @Override
     public AppointmentsSettingDTO getPracticeSettings() {
-        List<AppointmentsSettingDTO> appointmentsSettingsList = appointmentsResultModel.getPayload().getAppointmentsSettings();
-        if(practiceId != null){
-            for(AppointmentsSettingDTO appointmentsSettingDTO : appointmentsSettingsList){
-                if(appointmentsSettingDTO.getPracticeId().equals(practiceId)){
+        List<AppointmentsSettingDTO> appointmentsSettingsList = appointmentsResultModel
+                .getPayload().getAppointmentsSettings();
+        if (practiceId != null) {
+            for (AppointmentsSettingDTO appointmentsSettingDTO : appointmentsSettingsList) {
+                if (appointmentsSettingDTO.getPracticeId().equals(practiceId)) {
                     return appointmentsSettingDTO;
                 }
             }
@@ -395,7 +469,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
         public void onFailure(String exceptionMessage) {
             viewHandler.hideProgressDialog();
             viewHandler.showErrorNotification(exceptionMessage);
-            Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error),
+                    exceptionMessage);
         }
     };
 
@@ -415,7 +490,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
         public void onFailure(String exceptionMessage) {
             viewHandler.hideProgressDialog();
             viewHandler.showErrorNotification(exceptionMessage);
-            Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error),
+                    exceptionMessage);
         }
     };
 
@@ -435,14 +511,14 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
         public void onFailure(String exceptionMessage) {
             viewHandler.hideProgressDialog();
             viewHandler.showErrorNotification(exceptionMessage);
-//            SystemUtil.doDefaultFailureBehavior((BaseActivity) getContext(), exceptionMessage);
             onAppointmentUnconfirmed();
         }
     };
 
 
     @Override
-    public void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDTO, AppointmentsSlotsDTO appointmentSlot, double amount) {
+    public void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDTO,
+                                       AppointmentsSlotsDTO appointmentSlot, double amount) {
         this.appointmentSlot = appointmentSlot;
         IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
         postModel.setAmount(amount);
@@ -463,7 +539,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
 
     @Override
     public void onPaymentDismissed() {
-        onHoursAndLocationSelected(appointmentSlot, null);
+        if (appointmentDTO != null) {
+            onHoursAndLocationSelected(appointmentSlot, null);
+        }
     }
 
     @Override
@@ -480,7 +558,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
-        PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment.newInstance(paymentsModel, amount);
+        PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
+                .newInstance(paymentsModel, amount);
         viewHandler.navigateToFragment(prepaymentFragment, true);
     }
 
@@ -498,9 +577,12 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     }
 
     @Override
-    public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
-        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel, selectedPaymentMethod.getLabel(), amount);
+    public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount,
+                                      PaymentsModel paymentsModel) {
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
+                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel,
+                    selectedPaymentMethod.getLabel(), amount);
             viewHandler.navigateToFragment(fragment, true);
         } else {
             showAddCard(amount, paymentsModel);
@@ -522,17 +604,19 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-        if(!payload.getProcessingErrors().isEmpty() && PaymentConfirmationFragment.getTotalPaid(payload)==0D){
+        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload()
+                .getPatientPayments().getPayload();
+        if (!payload.getProcessingErrors().isEmpty()
+                && PaymentConfirmationFragment.getTotalPaid(payload) == 0D) {
             StringBuilder builder = new StringBuilder();
-            for(IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()){
+            for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
                 builder.append(processingError.getError());
                 builder.append("\n");
             }
             int last = builder.lastIndexOf("\n");
             builder.replace(last, builder.length(), "");
-            ((ISession)viewHandler.getContext()).showErrorNotification(builder.toString());
-        }else {
+            ((ISession) viewHandler.getContext()).showErrorNotification(builder.toString());
+        } else {
             Bundle args = new Bundle();
             args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
 
@@ -544,15 +628,16 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
 
     @Override
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
-        for (UserPracticeDTO userPracticeDTO : paymentsModel.getPaymentPayload().getUserPractices()){
-            if(userPracticeDTO.getPatientId()!=null && userPracticeDTO.getPatientId().equals(patientId)){
+        for (UserPracticeDTO userPracticeDTO : paymentsModel.getPaymentPayload().getUserPractices()) {
+            if (userPracticeDTO.getPatientId() != null && userPracticeDTO.getPatientId().equals(patientId)) {
                 return userPracticeDTO;
             }
         }
 
         UserPracticeDTO userPracticeDTO = new UserPracticeDTO();
-        for(ResourcesPracticeDTO resourcesPracticeDTO : appointmentsResultModel.getPayload().getUserPractices()){
-            if(resourcesPracticeDTO.getPracticeId().equals(practiceId)){
+        for (ResourcesPracticeDTO resourcesPracticeDTO : appointmentsResultModel
+                .getPayload().getUserPractices()) {
+            if (resourcesPracticeDTO.getPracticeId().equals(practiceId)) {
                 userPracticeDTO.setPracticeMgmt(resourcesPracticeDTO.getPracticeMgmt());
                 userPracticeDTO.setPracticeId(resourcesPracticeDTO.getPracticeId());
                 userPracticeDTO.setPracticeName(resourcesPracticeDTO.getPracticeName());
