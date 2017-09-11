@@ -102,9 +102,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                                    AppointmentsResultModel appointmentsResultModel,
                                    ResourcesToScheduleDTO resourcesToScheduleDTO) {
         ResourcesPracticeDTO selectedResourcesPracticeDTO;
-        if(resourcesToScheduleDTO != null) {
+        if (resourcesToScheduleDTO != null) {
             selectedResourcesPracticeDTO = resourcesToScheduleDTO.getPractice();
-        }else{
+        } else {
             selectedResourcesPracticeDTO = appointmentsResultModel.getPayload()
                     .getResourcesToSchedule().get(0).getPractice();
         }
@@ -268,12 +268,13 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             practiceId = appointmentDTO.getMetadata().getPracticeId();
             practiceMgmt = appointmentDTO.getMetadata().getPracticeMgmt();
             patientId = appointmentDTO.getMetadata().getPatientId();
-            new CancelAppointmentFeeDialog(getContext(), cancellationFee, new CancelAppointmentFeeDialog.CancelAppointmentFeeDialogListener() {
-                @Override
-                public void onCancelAppointmentFeeAccepted() {
-                    showCancellationReasons(appointmentDTO, cancellationFee);
-                }
-            }).show();
+            new CancelAppointmentFeeDialog(getContext(), cancellationFee,
+                    new CancelAppointmentFeeDialog.CancelAppointmentFeeDialogListener() {
+                        @Override
+                        public void onCancelAppointmentFeeAccepted() {
+                            showCancellationReasons(appointmentDTO, cancellationFee);
+                        }
+                    }).show();
         }
     }
 
@@ -310,10 +311,13 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     private AppointmentCancellationFee getCancellationFee(AppointmentDTO appointmentDTO) {
-        for (AppointmentCancellationFee cancellationFee : appointmentsResultModel.getPayload()
-                .getAppointmentsSettings().get(0).getCancellationFees()) {
-            if (appointmentDTO.getPayload().getVisitType().getId().equals(cancellationFee.getVisitType())) {
-                return cancellationFee;
+        if (appointmentsResultModel.getPayload()
+                .getAppointmentsSettings().get(0).shouldChargeCancellationFees()) {
+            for (AppointmentCancellationFee cancellationFee : appointmentsResultModel.getPayload()
+                    .getAppointmentsSettings().get(0).getCancellationFees()) {
+                if (appointmentDTO.getPayload().getVisitType().getId().equals(cancellationFee.getVisitType())) {
+                    return cancellationFee;
+                }
             }
         }
         return null;
