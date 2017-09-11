@@ -466,7 +466,8 @@ public class FullWalletConfirmationButtonFragment extends BaseFragment
 
     private List<LineItem> getLineItems() {
         List<LineItem> list = new ArrayList<>();
-        for(IntegratedPaymentLineItem paymentLineItem :paymentsModel.getPaymentPayload().getPaymentPostModel().getLineItems()) {
+        for(IntegratedPaymentLineItem paymentLineItem :paymentsModel.getPaymentPayload()
+                .getPaymentPostModel().getLineItems()) {
             list.add(LineItem.newBuilder()
                     .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
                     .setDescription(paymentLineItem.getDescription())

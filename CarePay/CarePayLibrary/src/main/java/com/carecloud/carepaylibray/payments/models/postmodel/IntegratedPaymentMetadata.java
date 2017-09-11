@@ -15,6 +15,9 @@ public class IntegratedPaymentMetadata {
     @SerializedName("appointment")
     private ScheduleAppointmentRequestDTO.Appointment appointmentRequestDTO;
 
+    @SerializedName("cancellation_reason_id")
+    private String cancellationReasonId;
+
     public String getAppointmentId() {
         return appointmentId;
     }
@@ -29,5 +32,13 @@ public class IntegratedPaymentMetadata {
 
     public void setAppointmentRequestDTO(ScheduleAppointmentRequestDTO.Appointment appointmentRequestDTO) {
         this.appointmentRequestDTO = appointmentRequestDTO;
+    }
+
+    public void setCancellationReasonId(String cancellationReasonId) {
+        this.cancellationReasonId = cancellationReasonId;
+    }
+
+    public String getCancellationReasonId() {
+        return cancellationReasonId;
     }
 }
