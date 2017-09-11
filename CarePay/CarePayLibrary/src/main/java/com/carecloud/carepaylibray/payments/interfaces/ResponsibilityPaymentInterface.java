@@ -23,7 +23,7 @@ public interface ResponsibilityPaymentInterface extends PaymentInterface {
      *
      * @param owedAmount the owed amount
      */
-    void onPartialPaymentClicked(double owedAmount);
+    void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance);
 
     @Nullable
     AppointmentDTO getAppointment();

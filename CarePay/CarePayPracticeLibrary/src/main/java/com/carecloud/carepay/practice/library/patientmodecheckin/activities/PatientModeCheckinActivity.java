@@ -204,7 +204,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onPartialPaymentClicked(double owedAmount) {
+    public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
         PracticePartialPaymentDialogFragment dialog = PracticePartialPaymentDialogFragment
                 .newInstance(paymentDTO, owedAmount);
         displayDialogFragment(dialog, false);
@@ -386,7 +386,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             }
             default:
                 //nothing
-                return;
         }
     }
 

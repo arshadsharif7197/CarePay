@@ -162,7 +162,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         makePartialPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionCallback.onPartialPaymentClicked(total);
+                actionCallback.onPartialPaymentClicked(total, selectedBalance);
             }
         });
 

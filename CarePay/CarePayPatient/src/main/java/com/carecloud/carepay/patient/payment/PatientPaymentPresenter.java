@@ -42,8 +42,8 @@ public class PatientPaymentPresenter extends PaymentPresenter {
     }
 
     @Override
-    public void onPartialPaymentClicked(double owedAmount) {
-        new PartialPaymentDialog(viewHandler.getContext(), paymentsModel).show();
+    public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
+        new PartialPaymentDialog(viewHandler.getContext(), paymentsModel, selectedBalance).show();
     }
 
     @Override

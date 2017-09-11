@@ -410,7 +410,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onPartialPaymentClicked(double owedAmount) {
+    public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
 
     }
 
@@ -581,7 +581,6 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
             }
             default:
                 //nothing
-                return;
         }
     }
 
@@ -607,15 +606,10 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
         while (iterator.hasNext()) {
             PatientBalanceDTO patientBalanceDTO = iterator.next();
             if (matchesBalanceDTO(patientBalanceDTO, updateBalance)) {
-                try {
-                    double pendingResponsibility = Double.parseDouble(updateBalance.getPendingRepsonsibility());
-                    patientBalanceDTO.setPendingRepsonsibility(updateBalance.getPendingRepsonsibility());
-                    patientBalanceDTO.setBalances(updateBalance.getBalances());
+                patientBalanceDTO.setPendingRepsonsibility(updateBalance.getPendingRepsonsibility());
+                patientBalanceDTO.setBalances(updateBalance.getBalances());
 
-                    break;
-                } catch (NumberFormatException nfe) {
-                    nfe.printStackTrace();
-                }
+                break;
             }
         }
 

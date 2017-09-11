@@ -93,8 +93,13 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
     }
 
     @Override
-    public void onProviderSelected(AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
-        ResourcesPracticeDTO selectedResourcesPracticeDTO = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getPractice();
+    public void onProviderSelected(AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel, ResourcesToScheduleDTO resourcesToScheduleDTO) {
+        ResourcesPracticeDTO selectedResourcesPracticeDTO;
+        if(resourcesToScheduleDTO != null) {
+            selectedResourcesPracticeDTO = resourcesToScheduleDTO.getPractice();
+        }else{
+            selectedResourcesPracticeDTO = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getPractice();
+        }
         setPatientID(selectedResourcesPracticeDTO.getPracticeId());
         practiceId = selectedResourcesPracticeDTO.getPracticeId();
         practiceMgmt = selectedResourcesPracticeDTO.getPracticeMgmt();
@@ -280,7 +285,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
         header.put("transition", "true");
 
         TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getCheckingIn();
-        viewHandler.getWorkflowServiceHelper().execute(transitionDTO, checkInCallback, queries, header);
+        viewHandler.getWorkflowServiceHelper().execute(transitionDTO, getCheckInCallback(appointmentDTO), queries, header);
     }
 
     @Override
@@ -399,25 +404,29 @@ public class PatientAppointmentPresenter extends AppointmentPresenter implements
         }
     };
 
-    private WorkflowServiceCallback checkInCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            viewHandler.showProgressDialog();
-        }
+    private WorkflowServiceCallback getCheckInCallback(final AppointmentDTO appointmentDTO) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                viewHandler.showProgressDialog();
+            }
 
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            viewHandler.hideProgressDialog();
-            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
-        }
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                viewHandler.hideProgressDialog();
+                Bundle info = new Bundle();
+                DtoHelper.bundleDto(info, appointmentDTO);
+                PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, info);
+            }
 
-        @Override
-        public void onFailure(String exceptionMessage) {
-            viewHandler.hideProgressDialog();
-            viewHandler.showErrorNotification(exceptionMessage);
-            Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
+            @Override
+            public void onFailure(String exceptionMessage) {
+                viewHandler.hideProgressDialog();
+                viewHandler.showErrorNotification(exceptionMessage);
+                Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            }
+        };
+    }
 
     private WorkflowServiceCallback getMakeAppointmentCallback = new WorkflowServiceCallback() {
         @Override

@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by jorge on 02/01/17.
+ * Created by jorge on 02/01/17
  */
 public class PatientPaymentHistoryFragment extends BaseFragment implements PaymentBalancesAdapter.OnBalanceListItemClickListener {
 
@@ -82,6 +82,7 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        noPaymentsLayout = view.findViewById(R.id.no_payment_layout);
         setUpRecyclerView(view);
     }
 
@@ -91,10 +92,7 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
 
         switch (sectionNumber) {
             case SECTION_PENDING: {
-                if (paymentsDTO.getPaymentPayload().getPatientBalances().size() > 0
-                        && paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().size() > 0
-                        && paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0)
-                        .getPayload().size() > 0) {
+                if (hasPayments()) {
                     PaymentBalancesAdapter paymentBalancesAdapter = new PaymentBalancesAdapter(
                             getActivity(), getPendingBalancesList(paymentsDTO), PatientPaymentHistoryFragment.this);
                     historyRecyclerView.setAdapter(paymentBalancesAdapter);
@@ -104,8 +102,7 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
                 break;
             }
             case SECTION_HISTORY: {
-                if (paymentsDTO.getPaymentPayload().getPatientHistory()
-                        .getPaymentsPatientCharges().getCharges().size() > 0) {
+                if (hasCharges()) {
                     PaymentHistoryAdapter historyAdapter = new PaymentHistoryAdapter(getActivity(), paymentsDTO);
                     historyRecyclerView.setAdapter(historyAdapter);
                 } else {
@@ -120,7 +117,6 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
     }
 
     private void showNoPaymentsLayout() {
-        noPaymentsLayout = getView().findViewById(R.id.no_payment_layout);
         noPaymentsLayout.setVisibility(View.VISIBLE);
     }
 
@@ -128,8 +124,6 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
     @Override
     public void onBalanceListItemClickListener(int position) {
         PaymentsBalancesItem selectedBalancesItem = getPendingBalancesList(paymentsDTO).get(position);
-//        PendingBalancePayloadDTO selectedBalance = paymentsDTO.getPaymentPayload().getPatientBalances()
-//                .get(0).getBalances().get(0).getPayload().get(position);
         callback.loadPaymentAmountScreen(selectedBalancesItem, paymentsDTO);
     }
 
@@ -147,6 +141,27 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
             }
         }
         return list;
+    }
+
+    private boolean hasCharges() {
+        return !paymentsDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges()
+                .getCharges().isEmpty();
+    }
+
+    private boolean hasPayments() {
+        if(!paymentsDTO.getPaymentPayload().getPatientBalances().isEmpty()){
+            for(PatientBalanceDTO patientBalanceDTO : paymentsDTO.getPaymentPayload().getPatientBalances()){
+                if(!patientBalanceDTO.getBalances().isEmpty()){
+                    for(PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()){
+                        if(!pendingBalanceDTO.getPayload().isEmpty()){
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
 }

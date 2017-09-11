@@ -19,6 +19,7 @@ import com.carecloud.carepay.practice.library.appointments.adapters.ProviderSear
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -142,7 +143,7 @@ public class PracticeChooseProviderDialog extends BaseDialogFragment
         @Override
         public void onClick(View view) {
             if(selectedProvider != null){
-                callback.onProviderSelected(selectedProvider, resourcesToScheduleModel);
+                callback.onProviderSelected(selectedProvider, resourcesToScheduleModel, getSelectedResourcesToSchedule(selectedProvider));
                 dismiss();
             }
         }
@@ -172,4 +173,17 @@ public class PracticeChooseProviderDialog extends BaseDialogFragment
         ProviderSearchAdapter searchAdapter = (ProviderSearchAdapter) searchRecycler.getAdapter();
         searchAdapter.setSelectedPractice(selectedProvider);
     }
+
+    private ResourcesToScheduleDTO getSelectedResourcesToSchedule(AppointmentResourcesDTO selectedResource){
+        List<ResourcesToScheduleDTO> resourcesToScheduleDTOList = resourcesToScheduleModel.getPayload().getResourcesToSchedule();
+        for(ResourcesToScheduleDTO resourcesToScheduleDTO : resourcesToScheduleDTOList){
+            for(AppointmentResourcesDTO appointmentResourcesDTO : resourcesToScheduleDTO.getResources()){
+                if(appointmentResourcesDTO == selectedResource){
+                    return resourcesToScheduleDTO;
+                }
+            }
+        }
+        return null;
+    }
+
 }

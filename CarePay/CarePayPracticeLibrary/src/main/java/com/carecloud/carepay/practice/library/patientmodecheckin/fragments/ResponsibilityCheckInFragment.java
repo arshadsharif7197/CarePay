@@ -138,15 +138,15 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
             }
         });
 
+
+        final PendingBalanceDTO selectedBalance = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
+        payPartialButton.setVisibility(isPartialPayAvailable(selectedBalance.getMetadata().getPracticeId(), total) ? View.VISIBLE : View.GONE);
         payPartialButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionCallback.onPartialPaymentClicked(total);
+                actionCallback.onPartialPaymentClicked(total, selectedBalance);
             }
         });
-
-        PendingBalanceDTO selectedBalance = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
-        payPartialButton.setVisibility(isPartialPayAvailable(selectedBalance.getMetadata().getPracticeId(), total) ? View.VISIBLE : View.GONE);
 
         return view;
     }

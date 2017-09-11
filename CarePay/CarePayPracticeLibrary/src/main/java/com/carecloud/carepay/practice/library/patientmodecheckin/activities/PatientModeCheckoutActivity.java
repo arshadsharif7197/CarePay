@@ -250,6 +250,9 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     @Override
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
+        if (paymentsModel != null && !paymentsModel.getPaymentPayload().getUserPractices().isEmpty()) {
+            return paymentsModel.getPaymentPayload().getUserPractices().get(0);
+        }
         return null;
     }
 
@@ -284,7 +287,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onPartialPaymentClicked(double owedAmount) {
+    public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
         PracticePartialPaymentDialogFragment dialog = PracticePartialPaymentDialogFragment
                 .newInstance(paymentsModel, owedAmount);
         displayDialogFragment(dialog, false);
@@ -438,7 +441,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             }
             default:
                 //nothing
-                return;
         }
     }
 
