@@ -72,7 +72,10 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             String paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
             paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
             if (paymentsModel != null) {
-                addressPayloadDTO = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getAddress();
+                if (!paymentsModel.getPaymentPayload().getPatientBalances().isEmpty()) {
+                    addressPayloadDTO = paymentsModel.getPaymentPayload().getPatientBalances().get(0)
+                            .getDemographics().getPayload().getAddress();
+                }
                 userPracticeDTO = callback.getPracticeInfo(paymentsModel);
             }
         }

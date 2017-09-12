@@ -12,6 +12,7 @@ import com.carecloud.carepay.patient.appointments.fragments.AvailableHoursFragme
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
+import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -19,6 +20,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.interfaces.AppointmentPrepaymentCallback;
 import com.carecloud.carepaylibray.appointments.interfaces.AvailableHoursInterface;
 import com.carecloud.carepaylibray.appointments.interfaces.DateRangeInterface;
 import com.carecloud.carepaylibray.appointments.interfaces.VisitTypeInterface;
@@ -28,6 +30,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.checkout.CheckOutFormFragment;
@@ -43,6 +46,7 @@ import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPaylo
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
@@ -51,7 +55,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AppointmentCheckoutActivity extends BasePatientActivity implements CheckOutInterface,
-        VisitTypeInterface, AvailableHoursInterface, DateRangeInterface, PaymentNavigationCallback {
+        VisitTypeInterface, AvailableHoursInterface, DateRangeInterface, PaymentNavigationCallback,
+        AppointmentPrepaymentCallback {
 
     private String appointmentId;
 
@@ -231,9 +236,9 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-        if(!payload.getProcessingErrors().isEmpty() && PaymentConfirmationFragment.getTotalPaid(payload)==0D){
+        if (!payload.getProcessingErrors().isEmpty() && PaymentConfirmationFragment.getTotalPaid(payload) == 0D) {
             StringBuilder builder = new StringBuilder();
-            for(IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()){
+            for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
                 builder.append(processingError.getError());
                 builder.append("\n");
             }
@@ -259,7 +264,12 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
                 return userPracticeDTO;
             }
         }
-        return null;
+
+        UserPracticeDTO userPracticeDTO = new UserPracticeDTO();
+        userPracticeDTO.setPracticeId(getAppointment().getMetadata().getPracticeId());
+        userPracticeDTO.setPracticeMgmt(getAppointment().getMetadata().getPracticeMgmt());
+        userPracticeDTO.setPatientId(patientId);
+        return userPracticeDTO;
     }
 
     @Nullable
@@ -271,9 +281,9 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     @Nullable
     @Override
     public AppointmentDTO getAppointment() {
-        if(appointmentsResultModel != null){
-            for(AppointmentDTO appointment : appointmentsResultModel.getPayload().getAppointments()){
-                if(appointment.getPayload().getId().equals(getAppointmentId())){
+        if (appointmentsResultModel != null) {
+            for (AppointmentDTO appointment : appointmentsResultModel.getPayload().getAppointments()) {
+                if (appointment.getPayload().getId().equals(getAppointmentId())) {
                     return appointment;
                 }
             }
@@ -292,8 +302,12 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     @Override
-    public void showAvailableHoursFragment(Date startDate, Date endDate, AppointmentsResultModel appointmentsResultModel, AppointmentResourcesItemDTO resourcesItemDTO, VisitTypeDTO visitTypeDTO) {
-        AvailableHoursFragment availableHoursFragment = AvailableHoursFragment.newInstance(appointmentsResultModel, resourcesItemDTO, startDate, endDate, visitTypeDTO);
+    public void showAvailableHoursFragment(Date startDate, Date endDate,
+                                           AppointmentsResultModel appointmentsResultModel,
+                                           AppointmentResourcesItemDTO resourcesItemDTO,
+                                           VisitTypeDTO visitTypeDTO) {
+        AvailableHoursFragment availableHoursFragment = AvailableHoursFragment
+                .newInstance(appointmentsResultModel, resourcesItemDTO, startDate, endDate, visitTypeDTO);
         addFragment(availableHoursFragment, true);
 
     }
@@ -306,6 +320,23 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     @Override
     public boolean shouldAllowNavigateBack() {
         return true;
+    }
+
+    @Override
+    public void showPrepaymentScreen(IntegratedPaymentPostModel postModel) {
+        paymentsModel = new PaymentsModel();
+        paymentsModel.getPaymentPayload().setPaymentSettings(appointmentsResultModel.getPayload()
+                .getPaymentSettings());
+        paymentsModel.getPaymentPayload().setMerchantServices(appointmentsResultModel.getPayload()
+                .getMerchantServices());
+        paymentsModel.getPaymentPayload().setPatientCreditCards(appointmentsResultModel.getPayload()
+                .getPatientCreditCards());
+        paymentsModel.getPaymentsMetadata().getPaymentsTransitions().setMakePayment(appointmentsResultModel
+                .getMetadata().getTransitions().getMakePayment());
+        paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
+        PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
+                .newInstance(paymentsModel, postModel.getAmount());
+        addFragment(prepaymentFragment, true);
     }
 
     WorkflowServiceCallback continueCallback = new WorkflowServiceCallback() {
@@ -327,4 +358,14 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
             Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+    @Override
+    public void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDTO, AppointmentsSlotsDTO appointmentSlot, double amount) {
+
+    }
+
+    @Override
+    public void onPaymentDismissed() {
+
+    }
 }

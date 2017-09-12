@@ -62,6 +62,10 @@ public class TransitionsDTO {
     @Expose
     private TransitionDTO adHocFormsPatientMode = new TransitionDTO();
 
+    @SerializedName("make_payment")
+    @Expose
+    private TransitionDTO makePayment = new TransitionDTO();
+
     /**
      * @return The checkingIn
      */
@@ -204,5 +208,13 @@ public class TransitionsDTO {
 
     public void setAdHocFormsPatientMode(TransitionDTO adHocFormsPatientMode) {
         this.adHocFormsPatientMode = adHocFormsPatientMode;
+    }
+
+    public TransitionDTO getMakePayment() {
+        return makePayment;
+    }
+
+    public void setMakePayment(TransitionDTO makePayment) {
+        this.makePayment = makePayment;
     }
 }

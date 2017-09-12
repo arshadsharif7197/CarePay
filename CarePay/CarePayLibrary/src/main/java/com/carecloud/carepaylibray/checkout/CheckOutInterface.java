@@ -5,6 +5,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemD
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 
 import java.util.Date;
 
@@ -21,4 +22,6 @@ public interface CheckOutInterface extends FragmentActivityInterface {
     void navigateToWorkflow(WorkflowDTO workflowDTO);
 
     boolean shouldAllowNavigateBack();
+
+    void showPrepaymentScreen(IntegratedPaymentPostModel postModel);
 }

@@ -21,6 +21,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewC
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePartialPaymentDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -50,6 +51,7 @@ import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -387,6 +389,13 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     @Override
     public boolean shouldAllowNavigateBack() {
         return getSupportFragmentManager().getBackStackEntryCount() > 0;
+    }
+
+    @Override
+    public void showPrepaymentScreen(IntegratedPaymentPostModel postModel) {
+        PracticePaymentMethodPrepaymentFragment prepaymentFragment = PracticePaymentMethodPrepaymentFragment
+                .newInstance(paymentsModel, postModel.getAmount());
+        displayDialogFragment(prepaymentFragment, true);
     }
 
     @Override

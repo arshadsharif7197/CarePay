@@ -27,7 +27,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment implements VisitTypeListAdapter.VisitTypeSelectionCallback {
+public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment
+        implements VisitTypeListAdapter.VisitTypeSelectionCallback {
 
     private VisitTypeInterface callback;
     private List<VisitTypeDTO> visitTypeList;
@@ -140,8 +141,10 @@ public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment imple
 
         // Load and display list
         RecyclerView visitTypeListView = (RecyclerView) view.findViewById(R.id.visitTypeList);
-        visitTypeListView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        visitTypeListView.setAdapter(new VisitTypeListAdapter(view.getContext(), visitTypeList, appointmentSettings.getPrePayments(), this));
+        visitTypeListView.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL, false));
+        visitTypeListView.setAdapter(new VisitTypeListAdapter(view.getContext(), visitTypeList,
+                appointmentSettings.getPrePayments(), this));
     }
 
     private void sortVisitTypeListByName() {
