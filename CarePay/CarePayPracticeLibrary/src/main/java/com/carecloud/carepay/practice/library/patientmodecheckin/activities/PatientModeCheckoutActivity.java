@@ -30,6 +30,7 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.interfaces.AppointmentPrepaymentCallback;
 import com.carecloud.carepaylibray.appointments.interfaces.AvailableHoursInterface;
 import com.carecloud.carepaylibray.appointments.interfaces.DateRangeInterface;
 import com.carecloud.carepaylibray.appointments.interfaces.VisitTypeInterface;
@@ -39,6 +40,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
@@ -67,7 +69,8 @@ import java.util.Map;
 
 public class PatientModeCheckoutActivity extends BasePracticeActivity implements CheckOutInterface, VisitTypeInterface,
         AvailableHoursInterface, DateRangeInterface, PaymentNavigationCallback,
-        PaymentMethodDialogInterface, DateRangePickerDialog.DateRangePickerDialogListener {
+        PaymentMethodDialogInterface, DateRangePickerDialog.DateRangePickerDialogListener,
+        AppointmentPrepaymentCallback {
 
     private AppointmentsResultModel appointmentsResultModel;
     private PaymentsModel paymentsModel;
@@ -393,6 +396,16 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     @Override
     public void showPrepaymentScreen(IntegratedPaymentPostModel postModel) {
+        paymentsModel = new PaymentsModel();
+        paymentsModel.getPaymentPayload().setPaymentSettings(appointmentsResultModel.getPayload()
+                .getPaymentSettings());
+        paymentsModel.getPaymentPayload().setMerchantServices(appointmentsResultModel.getPayload()
+                .getMerchantServices());
+        paymentsModel.getPaymentPayload().setPatientCreditCards(appointmentsResultModel.getPayload()
+                .getPatientCreditCards());
+        paymentsModel.getPaymentsMetadata().getPaymentsTransitions().setMakePayment(appointmentsResultModel
+                .getMetadata().getTransitions().getMakePayment());
+        paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
         PracticePaymentMethodPrepaymentFragment prepaymentFragment = PracticePaymentMethodPrepaymentFragment
                 .newInstance(paymentsModel, postModel.getAmount());
         displayDialogFragment(prepaymentFragment, true);
@@ -488,4 +501,13 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         return appointmentWorkflowDTO;
     }
 
+    @Override
+    public void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDTO, AppointmentsSlotsDTO appointmentSlot, double amount) {
+
+    }
+
+    @Override
+    public void onPaymentDismissed() {
+
+    }
 }
