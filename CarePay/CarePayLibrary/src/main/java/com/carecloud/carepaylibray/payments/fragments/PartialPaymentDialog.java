@@ -145,13 +145,11 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
                 toast.show();
                 return;
             }
-            if(minimumPayment > 0){
-                if(amount < minimumPayment){
-                    String errorMessage = Label.getLabel("payment_partial_minimum_error") + NumberFormat.getCurrencyInstance().format(minimumPayment);
-                    CustomMessageToast toast = new CustomMessageToast(context, errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
-                    toast.show();
-                    return;
-                }
+            if(minimumPayment > 0 && amount < minimumPayment){
+                String errorMessage = Label.getLabel("payment_partial_minimum_error") + NumberFormat.getCurrencyInstance().format(minimumPayment);
+                CustomMessageToast toast = new CustomMessageToast(context, errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
+                toast.show();
+                return;
             }
             onPaymentClick(amountText);
         }

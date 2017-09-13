@@ -78,6 +78,10 @@ public class PaymentsSettingsRegularPaymentsDTO {
         this.allowPartialPayments = allowPartialPayments;
     }
 
+    /**
+     * Get partial payment threshold as a double
+     * @return partial payment threshold or 0
+     */
     public double getPartialPaymentsThreshold() {
         try {
             return Double.parseDouble(partialPaymentsThreshold);
@@ -90,6 +94,10 @@ public class PaymentsSettingsRegularPaymentsDTO {
         this.partialPaymentsThreshold = String.valueOf(partialPaymentsThreshold);
     }
 
+    /**
+     * Get minimum partial payment as a double
+     * @return minimum partial payment or 0
+     */
     public double getMinimumPartialPaymentAmount() {
         try {
             return Double.parseDouble(minimumPartialPaymentAmount);
