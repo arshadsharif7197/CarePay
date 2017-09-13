@@ -26,9 +26,11 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentFragment;
+import com.carecloud.carepaylibray.appointments.models.AppointmentPayloadModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.google.gson.Gson;
 
@@ -144,11 +146,10 @@ public class ChooseProviderFragment extends BaseAppointmentFragment implements P
             Gson gson = new Gson();
             resourcesToScheduleModel = gson.fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
 
-            if (resourcesToScheduleModel != null && resourcesToScheduleModel.getPayload() != null
-                    && resourcesToScheduleModel.getPayload().getResourcesToSchedule() != null
-                    && resourcesToScheduleModel.getPayload().getResourcesToSchedule().size() > 0) {
+            if (resourcesToScheduleModel != null && !resourcesToScheduleModel.getPayload().getResourcesToSchedule().isEmpty()) {
 
-                resources = resourcesToScheduleModel.getPayload().getResourcesToSchedule().get(0).getResources();
+//                resources = resourcesToScheduleModel.getPayload().getResourcesToSchedule().get(0).getResources();
+                resources = getResourcesFromPayload(resourcesToScheduleModel.getPayload());
                 if (resources.size() > 0) {
                     Collections.sort(resources, new Comparator<AppointmentResourcesDTO>() {
                         @Override
@@ -197,6 +198,26 @@ public class ChooseProviderFragment extends BaseAppointmentFragment implements P
     @Override
     public void onProviderListItemClickListener(int position) {
         AppointmentResourcesDTO selectedResource = resources.get(position - 1);
-        callback.onProviderSelected(selectedResource, resourcesToScheduleModel);
+        callback.onProviderSelected(selectedResource, resourcesToScheduleModel, getSelectedResourcesToSchedule(selectedResource));
+    }
+
+    private List<AppointmentResourcesDTO> getResourcesFromPayload(AppointmentPayloadModel payloadModel){
+        List<AppointmentResourcesDTO> resources = new ArrayList<>();
+        for(ResourcesToScheduleDTO resourcesToScheduleDTO : payloadModel.getResourcesToSchedule()){
+            resources.addAll(resourcesToScheduleDTO.getResources());
+        }
+        return resources;
+    }
+
+    private ResourcesToScheduleDTO getSelectedResourcesToSchedule(AppointmentResourcesDTO selectedResource){
+        List<ResourcesToScheduleDTO> resourcesToScheduleDTOList = resourcesToScheduleModel.getPayload().getResourcesToSchedule();
+        for(ResourcesToScheduleDTO resourcesToScheduleDTO : resourcesToScheduleDTOList){
+            for(AppointmentResourcesDTO appointmentResourcesDTO : resourcesToScheduleDTO.getResources()){
+                if(appointmentResourcesDTO == selectedResource){
+                    return resourcesToScheduleDTO;
+                }
+            }
+        }
+        return null;
     }
 }

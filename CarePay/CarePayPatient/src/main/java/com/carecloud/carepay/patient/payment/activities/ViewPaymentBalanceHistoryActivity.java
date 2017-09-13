@@ -29,6 +29,7 @@ import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -80,15 +81,24 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     private boolean hasCharges() {
-        return paymentsDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges()
-                .getCharges().size() > 0;
+        return !paymentsDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges()
+                .getCharges().isEmpty();
     }
 
     private boolean hasPayments() {
-        return paymentsDTO.getPaymentPayload().getPatientBalances().size() > 0
-                && paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().size() > 0
-                && paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0)
-                .getPayload().size() > 0;
+        if(!paymentsDTO.getPaymentPayload().getPatientBalances().isEmpty()){
+            for(PatientBalanceDTO patientBalanceDTO : paymentsDTO.getPaymentPayload().getPatientBalances()){
+                if(!patientBalanceDTO.getBalances().isEmpty()){
+                    for(PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()){
+                        if(!pendingBalanceDTO.getPayload().isEmpty()){
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -182,8 +192,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void onPartialPaymentClicked(double owedAmount) {
-        new PartialPaymentDialog(this, paymentsDTO).show();
+    public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
+        new PartialPaymentDialog(this, paymentsDTO, selectedBalance).show();
     }
 
     @Override

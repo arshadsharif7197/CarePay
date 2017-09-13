@@ -106,20 +106,21 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void changeScreenMode(HomeScreenMode homeScreenMode) {
+        TextView checkinLabel = (TextView) findViewById(R.id.homeCheckinLabel);
         if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
             homeCheckInLl.setVisibility(View.GONE);
             homeAlertLinearLl.setVisibility(View.GONE);
             modeSwitchImageView.setVisibility(View.GONE);
             homeLockImageView.setVisibility(View.VISIBLE);
             setNavigationBarVisibility();
-            findViewById(R.id.homeAppointmentsClickable).setBackground(ContextCompat
-                    .getDrawable(getContext(), R.drawable.home_button_selector));
             findViewById(R.id.homeCheckoutClickable).setVisibility(View.VISIBLE);
+            checkinLabel.setText(Label.getLabel("checkin_button_patient_mode"));
         } else {
             homeCheckInLl.setVisibility(View.VISIBLE);
             homeAlertLinearLl.setVisibility(View.VISIBLE);
             modeSwitchImageView.setVisibility(View.VISIBLE);
             homeLockImageView.setVisibility(View.GONE);
+            checkinLabel.setText(Label.getLabel("checkin_button"));
 
             if (homeScreenDTO != null && homeScreenDTO.getPayload() != null) {
                 JsonObject payloadAsJsonObject = homeScreenDTO.getPayload();

@@ -12,25 +12,29 @@
         <item name="android:textViewStyle">@style/DefaultTextViewStyle</item>
 
         <!-- Hint color and labelMeta color in FALSE state -->
-        <item name="android:textColorHint">@color/payne_gray</item> <!-- hint color when no focus -->
+        <item name="android:textColorHint">@color/payne_gray
+        </item> <!-- hint color when no focus -->
 
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
-        <item name="colorControlNormal">@color/light_gray</item> <!-- color of the underlying bar when no focus -->
+        <item name="colorControlNormal">@color/light_gray
+        </item> <!-- color of the underlying bar when no focus -->
         <item name="colorControlActivated">@color/light_gray</item>
     </style>
 
     <style name="PracticeModeActivity" parent="AppThemePractice">
         <item name="practiceBackgroundColor">@color/practice_mode_background</item>
-        <item name="newsBackgroundColor">@color/dark_blue</item>
         <item name="practiceActionBarColor">@color/practice_mode_action_bar</item>
-        <item name="practiceLogoDrawable">@drawable/breeze_logo_practice</item>
+        <item name="practiceLogoDrawable">@drawable/breeze_logo_dark</item>
+        <item name="newsBackgroundColor">@drawable/news_background_practice_color</item>
+        <item name="homeButtonSelector">@drawable/home_button_selector_top_right</item>
     </style>
 
     <style name="PatientModeActivity" parent="AppThemePractice">
         <item name="practiceBackgroundColor">@drawable/screen_background</item>
-        <item name="newsBackgroundColor">@color/newsBackgroundColor</item>
         <item name="practiceActionBarColor">@color/patient_mode_action_bar</item>
         <item name="practiceLogoDrawable">@drawable/breeze_logo</item>
+        <item name="newsBackgroundColor">@drawable/news_background_patient_color</item>
+        <item name="homeButtonSelector">@drawable/home_button_selector</item>
     </style>
 
     <style name="ChangeModeDialogOptions">

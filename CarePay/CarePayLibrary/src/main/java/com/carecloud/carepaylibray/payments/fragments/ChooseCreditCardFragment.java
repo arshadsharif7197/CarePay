@@ -197,7 +197,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     private void processPayment(IntegratedPaymentPostModel postModel) {
         PapiPaymentMethod papiPaymentMethod = getPapiPaymentMethod();
 
-        if(papiPaymentMethod == null){
+        if (papiPaymentMethod == null) {
             papiPaymentMethod = new PapiPaymentMethod();
             papiPaymentMethod.setPaymentMethodType(PapiPaymentMethod.PAYMENT_METHOD_NEW_CARD);
             papiPaymentMethod.setCardData(getCreditCardModel());
@@ -207,7 +207,9 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
 
         IntegratedPaymentMetadata postModelMetadata = postModel.getMetadata();
-        postModelMetadata.setAppointmentId(callback.getAppointmentId());
+        if (callback.getAppointmentId() != null) {
+            postModelMetadata.setAppointmentId(callback.getAppointmentId());
+        }
 
         Gson gson = new Gson();
         if (postModel.isPaymentModelValid()) {
@@ -220,7 +222,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     private void processPayment() {
         PapiPaymentMethod papiPaymentMethod = getPapiPaymentMethod();
 
-        if(papiPaymentMethod == null){
+        if (papiPaymentMethod == null) {
             papiPaymentMethod = new PapiPaymentMethod();
             papiPaymentMethod.setPaymentMethodType(PapiPaymentMethod.PAYMENT_METHOD_NEW_CARD);
             papiPaymentMethod.setCardData(getCreditCardModel());
@@ -254,14 +256,14 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
             queries.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
             queries.put("practice_id", userPracticeDTO.getPracticeId());
             queries.put("patient_id", userPracticeDTO.getPatientId());
-            if (callback.getAppointmentId() != null) {
-                queries.put("appointment_id", callback.getAppointmentId());
-            }
         } else {
             PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
             queries.put("practice_mgmt", metadata.getPracticeMgmt());
             queries.put("practice_id", metadata.getPracticeId());
             queries.put("patient_id", metadata.getPatientId());
+        }
+        if (callback.getAppointmentId() != null) {
+            queries.put("appointment_id", callback.getAppointmentId());
         }
 
         Map<String, String> header = new HashMap<>();

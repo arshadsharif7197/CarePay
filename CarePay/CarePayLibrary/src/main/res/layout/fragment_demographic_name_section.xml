@@ -1,31 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:id="@+id/reviewdemographicsPersonalContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
         android:id="@+id/reviewdemogrFirstNameTextInput"
         style="@style/TextInputLayoutStyle"
         android:layout_marginTop="18dp"
-        app:hintTextAppearance="@style/FloatingLabelStyle"
-        app:customAssetFont="proxima_nova_regular">
+        app:customAssetFont="proxima_nova_regular"
+        app:hintTextAppearance="@style/FloatingLabelStyle">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
             android:id="@+id/reviewdemogrFirstNameEdit"
             style="@style/SigninSignupEditStyle"
-            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ "
+            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ "
             android:inputType="textPersonName"
             android:maxLength="100"
             android:nextFocusForward="@+id/reviewdemogrMiddleNameEdit"
-            breeze:hintKey="demographics_first_name"
-            app:customAssetFont="proxima_nova_regular"/>
+            app:customAssetFont="proxima_nova_regular"
+            breeze:hintKey="demographics_first_name" />
     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
 
@@ -36,19 +35,19 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/reviewdemogrMiddleNameTextInputLayout"
             style="@style/SigninSignupTextInputStyle"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
-            app:customAssetFont="proxima_nova_regular">
+            app:customAssetFont="proxima_nova_regular"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/reviewdemogrMiddleNameEdit"
                 style="@style/SigninSignupEditStyle"
-                android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ "
+                android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ "
                 android:imeOptions="actionNext"
                 android:inputType="textPersonName"
                 android:maxLength="100"
                 android:nextFocusForward="@+id/reviewdemogrsLastNameEdit"
-                breeze:hintKey="demographics_middle_name"
-                app:customAssetFont="proxima_nova_regular"/>
+                app:customAssetFont="proxima_nova_regular"
+                breeze:hintKey="demographics_middle_name" />
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -57,26 +56,26 @@
             style="@style/SignupRequireHintStyle"
             android:textAllCaps="true"
             android:textColor="@color/cadet_gray"
-            breeze:textKey="demographics_details_optional_hint"
-            app:customAssetFont="proxima_nova_regular"/>
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="demographics_details_optional_hint" />
     </FrameLayout>
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
         android:id="@+id/reviewdemogrLastNameTextInput"
         style="@style/SigninSignupTextInputStyle"
-        app:hintTextAppearance="@style/FloatingLabelStyle"
-        app:customAssetFont="proxima_nova_regular">
+        app:customAssetFont="proxima_nova_regular"
+        app:hintTextAppearance="@style/FloatingLabelStyle">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
             android:id="@+id/reviewdemogrLastNameEdit"
             style="@style/SigninSignupEditStyle"
-            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ "
+            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ "
             android:imeOptions="actionNext"
             android:inputType="textPersonName"
             android:maxLength="100"
             android:nextFocusForward="@+id/reviewdemogrEmailEdit"
-            breeze:hintKey="demographics_lirst_name"
-            app:customAssetFont="proxima_nova_regular"/>
+            app:customAssetFont="proxima_nova_regular"
+            breeze:hintKey="demographics_lirst_name" />
 
     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 

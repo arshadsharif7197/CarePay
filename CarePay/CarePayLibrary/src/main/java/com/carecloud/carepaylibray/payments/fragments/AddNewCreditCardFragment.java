@@ -210,14 +210,14 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             queries.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
             queries.put("practice_id", userPracticeDTO.getPracticeId());
             queries.put("patient_id", userPracticeDTO.getPatientId());
-            if (callback.getAppointmentId() != null) {
-                queries.put("appointment_id", callback.getAppointmentId());
-            }
         } else {
             PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
             queries.put("practice_mgmt", metadata.getPracticeMgmt());
             queries.put("practice_id", metadata.getPracticeId());
             queries.put("patient_id", metadata.getPatientId());
+        }
+        if (callback.getAppointmentId() != null) {
+            queries.put("appointment_id", callback.getAppointmentId());
         }
         Map<String, String> header = new HashMap<>();
         header.put("transition", "true");

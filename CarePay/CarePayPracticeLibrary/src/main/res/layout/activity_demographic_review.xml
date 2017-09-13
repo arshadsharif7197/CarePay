@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_patient_mode_checkin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,20 +18,20 @@
         <View
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dimen_3dp"
-            android:layout_alignStart="@+id/progress_layout"
             android:layout_alignEnd="@+id/progress_layout"
-            android:layout_marginStart="@dimen/dimen_44dp"
+            android:layout_alignStart="@+id/progress_layout"
             android:layout_marginEnd="@dimen/dimen_44dp"
+            android:layout_marginStart="@dimen/dimen_44dp"
             android:layout_marginTop="@dimen/dimen_10dp"
-            android:background="@color/light_gray"/>
+            android:background="@color/light_gray" />
 
 
         <LinearLayout
             android:id="@+id/progress_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_centerHorizontal="true">
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal">
 
             <include
                 android:id="@+id/checkin_flow_demographics"
@@ -66,17 +64,15 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             android:background="@drawable/bg_blue_border"
+            android:contentDescription="@string/content_description_check_in_home"
             android:minHeight="@dimen/dimen_10dp"
             android:padding="@dimen/dimen_10dp"
-            android:textSize="@dimen/text_size_16sp"
-            breeze:textKey="demographics_exit"
             android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_16sp"
             app:customAssetFont="gotham_rounded_medium"
-            android:contentDescription="@string/content_description_check_in_home"/>
+            breeze:textKey="demographics_exit" />
 
     </RelativeLayout>
-
-
 
     <FrameLayout
         android:id="@+id/root_layout"
