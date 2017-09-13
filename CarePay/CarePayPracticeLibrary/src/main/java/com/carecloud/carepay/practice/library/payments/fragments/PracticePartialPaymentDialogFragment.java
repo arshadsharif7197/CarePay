@@ -31,20 +31,20 @@ import java.util.List;
 public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDialogFragment {
 
     private PaymentsModel paymentsModel;
-    private double amount;
+    private double fullAmount;
     private PaymentNavigationCallback callback;
     private TextView pendingAmountTextView;
     private double minimumPayment;
 
     /**
      * @param paymentResultModel the payment model
-     * @param owedAmount         amount owed
+     * @param owedAmount         fullAmount owed
      * @return an instance of PracticePartialPaymentDialogFragment
      */
     public static PracticePartialPaymentDialogFragment newInstance(PaymentsModel paymentResultModel, double owedAmount) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentResultModel);
-        args.putDouble("amount", owedAmount);
+        args.putDouble("fullAmount", owedAmount);
         PracticePartialPaymentDialogFragment fragment = new PracticePartialPaymentDialogFragment();
         fragment.setArguments(args);
         return fragment;
@@ -65,7 +65,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
-        amount = arguments.getDouble("amount");
+        fullAmount = arguments.getDouble("fullAmount");
     }
 
     @Override
@@ -73,7 +73,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
         super.onViewCreated(view, icicle);
         pendingAmountTextView = (TextView) view.findViewById(R.id.pendingAmountTextView);
         pendingAmountTextView.setVisibility(View.VISIBLE);
-        updatePendingAmountText(amount);
+        updatePendingAmountText(fullAmount);
 
         minimumPayment = getMinimumPayment();
         if(minimumPayment > 0){
@@ -86,7 +86,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
     @Override
     protected void updateLayout() {
         double entry = StringUtil.isNullOrEmpty(numberStr) ? 0D : Double.parseDouble(numberStr);
-        updatePendingAmountText(amount - entry);
+        updatePendingAmountText(fullAmount - entry);
     }
 
     @Override
@@ -94,6 +94,12 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
         super.onClick(view);
         if ((view.getId() == R.id.enter_amount_button) && !StringUtil.isNullOrEmpty(numberStr)) {
             double amount = Double.parseDouble(numberStr);
+            if(amount > fullAmount){
+                String errorMessage = Label.getLabel("payment_partial_max_error") + NumberFormat.getCurrencyInstance().format(fullAmount);
+                CustomMessageToast toast = new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
+                toast.show();
+                return;
+            }
             if(minimumPayment > 0 && amount < minimumPayment){
                 String errorMessage = Label.getLabel("payment_partial_minimum_error") + NumberFormat.getCurrencyInstance().format(minimumPayment);
                 CustomMessageToast toast = new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
