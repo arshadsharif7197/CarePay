@@ -143,7 +143,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                     }
                 }
             } else if (paymentsModel != null) {
-                username = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getUsername();
+                username = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances()
+                        .get(0).getMetadata().getUsername();
             }
 
             if (username != null) {
@@ -222,14 +223,17 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onVisitTypeSelected(VisitTypeDTO visitTypeDTO, AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
+    public void onVisitTypeSelected(VisitTypeDTO visitTypeDTO,
+                                    AppointmentResourcesDTO appointmentResourcesDTO,
+                                    AppointmentsResultModel appointmentsResultModel) {
         this.visitTypeDTO = visitTypeDTO;
         this.appointmentResourcesDTO = appointmentResourcesDTO;
-        this.appointmentsResultModel = appointmentsResultModel;
+//        this.appointmentsResultModel = appointmentsResultModel;
         NextAppointmentFragment fragment = (NextAppointmentFragment) getSupportFragmentManager()
                 .findFragmentByTag(NextAppointmentFragment.class.getCanonicalName());
         if ((fragment != null) && fragment.setVisitType(visitTypeDTO)) {
-            showAvailableHoursFragment(null, null, appointmentsResultModel, appointmentResourcesDTO.getResource(), visitTypeDTO);
+            showAvailableHoursFragment(null, null, appointmentsResultModel,
+                    appointmentResourcesDTO.getResource(), visitTypeDTO);
         }
     }
 
@@ -239,12 +243,16 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onDateRangeSelected(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource, AppointmentsResultModel appointmentsResultModel) {
-        if (getSupportFragmentManager().findFragmentByTag(PracticeAvailableHoursDialogFragment.class.getCanonicalName()) != null) {
+    public void onDateRangeSelected(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO,
+                                    AppointmentResourcesItemDTO appointmentResource,
+                                    AppointmentsResultModel appointmentsResultModel) {
+        if (getSupportFragmentManager().findFragmentByTag(PracticeAvailableHoursDialogFragment.class
+                .getCanonicalName()) != null) {
             getSupportFragmentManager().popBackStack();//close select date fragment
             getSupportFragmentManager().popBackStack();//close available hours fragment
         }
-        showAvailableHoursFragment(startDate, endDate, appointmentsResultModel, appointmentResource, visitTypeDTO);
+        showAvailableHoursFragment(startDate, endDate, appointmentsResultModel,
+                appointmentResource, visitTypeDTO);
     }
 
     @Override
@@ -258,7 +266,12 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         if (paymentsModel != null && !paymentsModel.getPaymentPayload().getUserPractices().isEmpty()) {
             return paymentsModel.getPaymentPayload().getUserPractices().get(0);
         }
-        return null;
+
+        UserPracticeDTO userPracticeDTO = new UserPracticeDTO();
+        userPracticeDTO.setPracticeId(getAppointment().getMetadata().getPracticeId());
+        userPracticeDTO.setPracticeMgmt(getAppointment().getMetadata().getPracticeMgmt());
+        userPracticeDTO.setPatientId(getAppointment().getMetadata().getPatientId());
+        return userPracticeDTO;
     }
 
     @Nullable
@@ -270,9 +283,9 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     @Nullable
     @Override
     public AppointmentDTO getAppointment() {
-        if(appointmentsResultModel != null){
-            for(AppointmentDTO appointment : appointmentsResultModel.getPayload().getAppointments()){
-                if(appointment.getPayload().getId().equals(getAppointmentId())){
+        if (appointmentsResultModel != null) {
+            for (AppointmentDTO appointment : appointmentsResultModel.getPayload().getAppointments()) {
+                if (appointment.getPayload().getId().equals(getAppointmentId())) {
                     return appointment;
                 }
             }
@@ -308,7 +321,9 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void selectDateRange(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource, AppointmentsResultModel appointmentsResultModel) {
+    public void selectDateRange(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO,
+                                AppointmentResourcesItemDTO appointmentResource,
+                                AppointmentsResultModel appointmentsResultModel) {
         DateUtil dateUtil = DateUtil.getInstance().setToCurrent();
         DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
                 Label.getLabel("date_range_picker_dialog_title"),
@@ -353,14 +368,19 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void showAvailableHoursFragment(Date start, Date end, AppointmentsResultModel appointmentsResultModel, AppointmentResourcesItemDTO resourcesItemDTO, VisitTypeDTO visitTypeDTO) {
-        PracticeAvailableHoursDialogFragment fragment = PracticeAvailableHoursDialogFragment.newInstance(appointmentsResultModel, resourcesItemDTO, start, end, visitTypeDTO);
+    public void showAvailableHoursFragment(Date start, Date end,
+                                           AppointmentsResultModel appointmentsResultModel,
+                                           AppointmentResourcesItemDTO resourcesItemDTO,
+                                           VisitTypeDTO visitTypeDTO) {
+        PracticeAvailableHoursDialogFragment fragment = PracticeAvailableHoursDialogFragment
+                .newInstance(appointmentsResultModel, resourcesItemDTO, start, end, visitTypeDTO);
         fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
     }
 
     @Override
     public void showAllDone(WorkflowDTO workflowDTO) {
-        PracticeAppointmentDTO practiceAppointmentDTO = DtoHelper.getConvertedDTO(PracticeAppointmentDTO.class, workflowDTO);
+        PracticeAppointmentDTO practiceAppointmentDTO = DtoHelper
+                    .getConvertedDTO(PracticeAppointmentDTO.class, workflowDTO);
         if (practiceAppointmentDTO == null) {
             showErrorNotification("Error Checking-out Appointment");
             return;
@@ -379,9 +399,12 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
         }
 
-        appointmentsResultModel.getMetadata().getLinks().setPinpad(practiceAppointmentDTO.getMetadata().getLinks().getPinpad());
-        appointmentsResultModel.getMetadata().getTransitions().setPracticeMode(practiceAppointmentDTO.getMetadata().getTransitions().getPracticeMode());
-        extra.putString(CarePayConstants.EXTRA_APPOINTMENT_TRANSITIONS, DtoHelper.getStringDTO(appointmentsResultModel));
+        appointmentsResultModel.getMetadata().getLinks().setPinpad(practiceAppointmentDTO
+                .getMetadata().getLinks().getPinpad());
+        appointmentsResultModel.getMetadata().getTransitions()
+                .setPracticeMode(practiceAppointmentDTO.getMetadata().getTransitions().getPracticeMode());
+        extra.putString(CarePayConstants.EXTRA_APPOINTMENT_TRANSITIONS,
+                DtoHelper.getStringDTO(appointmentsResultModel));
         DtoHelper.bundleDto(extra, appointmentsResultModel.getPayload().getAppointments().get(0));
         extra.putBoolean("isCheckOut", true);
         Intent intent = new Intent(this, CompleteCheckActivity.class);
@@ -405,6 +428,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                 .getPatientCreditCards());
         paymentsModel.getPaymentsMetadata().getPaymentsTransitions().setMakePayment(appointmentsResultModel
                 .getMetadata().getTransitions().getMakePayment());
+        paymentsModel.getPaymentsMetadata().getPaymentsTransitions().setAddCreditCard(appointmentsResultModel
+                .getMetadata().getTransitions().getAddCreditCard());
         paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
         PracticePaymentMethodPrepaymentFragment prepaymentFragment = PracticePaymentMethodPrepaymentFragment
                 .newInstance(paymentsModel, postModel.getAmount());
@@ -421,7 +446,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     @Override
     public void onDateRangeCancelled() {
-        onDateRangeSelected(startDate, endDate, visitTypeDTO, appointmentResourcesDTO.getResource(), appointmentsResultModel);
+        onDateRangeSelected(startDate, endDate, visitTypeDTO, appointmentResourcesDTO.getResource(),
+                appointmentsResultModel);
     }
 
     WorkflowServiceCallback continueCallback = new WorkflowServiceCallback() {
@@ -485,16 +511,19 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     private WorkflowDTO getAppointmentWorkflowDto(WorkflowDTO workflowDTO) {
-        PracticeAppointmentDTO practiceAppointmentDTO = DtoHelper.getConvertedDTO(PracticeAppointmentDTO.class, workflowDTO);
+        PracticeAppointmentDTO practiceAppointmentDTO = DtoHelper
+                .getConvertedDTO(PracticeAppointmentDTO.class, workflowDTO);
         String id = practiceAppointmentDTO.getPayload().getPracticeAppointments().getPayload().getId();
         for (AppointmentDTO appointmentDTO : appointmentsResultModel.getPayload().getAppointments()) {
             if (appointmentDTO.getPayload().getId().equals(id)) {
-                appointmentDTO.setPayload(practiceAppointmentDTO.getPayload().getPracticeAppointments().getPayload());
+                appointmentDTO.setPayload(practiceAppointmentDTO.getPayload().getPracticeAppointments()
+                        .getPayload());
                 break;
             }
         }
         String appointmentWorkflowString = DtoHelper.getStringDTO(appointmentsResultModel);
-        WorkflowDTO appointmentWorkflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class, appointmentWorkflowString);
+        WorkflowDTO appointmentWorkflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class,
+                appointmentWorkflowString);
         if (appointmentWorkflowDTO != null) {
             appointmentWorkflowDTO.setState(workflowDTO.getState());
         }

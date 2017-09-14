@@ -21,6 +21,7 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.payments.adapter.CreditCardsListAdapter;
 import com.carecloud.carepaylibray.payments.interfaces.ChooseCreditCardInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
@@ -310,7 +311,13 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            callback.showPaymentConfirmation(workflowDTO);
+            String state = workflowDTO.getState();
+            if (NavigationStateConstants.PATIENT_FORM_CHECKOUT.equals(state)
+                    || NavigationStateConstants.PATIENT_PAY_CHECKOUT.equals(state)) {
+                callback.navigateToWorkflow(workflowDTO);
+            } else {
+                callback.showPaymentConfirmation(workflowDTO);
+            }
             if (getDialog() != null) {
                 dismiss();
             }
