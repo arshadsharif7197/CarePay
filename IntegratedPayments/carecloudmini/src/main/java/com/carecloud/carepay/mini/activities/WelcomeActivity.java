@@ -216,6 +216,8 @@ public class WelcomeActivity extends FullScreenActivity {
                 updateConnectedDevice();
                 if(paymentRequestId != null) {
                     DevicePayment.releasePaymentRequest(WelcomeActivity.this, paymentRequestId);
+                    disconnectDevice();
+                    connectDevice();
                 }
             }
         });
@@ -235,7 +237,7 @@ public class WelcomeActivity extends FullScreenActivity {
 
         @Override
         public void onFailure(String errorMessage) {
-            updateMessage(errorMessage);
+            Log.d(TAG, errorMessage);
 
             handler.postDelayed(new Runnable() {
                 @Override
