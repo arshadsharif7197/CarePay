@@ -164,7 +164,16 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler {
      * @param activity The activity
      */
     public static void showSoftKeyboard(Activity activity) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        showSoftKeyboard((Context)activity);
+    }
+
+    /**
+     * Shows the soft keyboard
+     *
+     * @param context context
+     */
+    public static void showSoftKeyboard(Context context) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
