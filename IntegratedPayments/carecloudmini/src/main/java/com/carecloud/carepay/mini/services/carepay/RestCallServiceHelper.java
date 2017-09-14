@@ -53,18 +53,22 @@ public class RestCallServiceHelper {
                 String idToken = applicationHelper.getAuthentication().getIdToken();
                 if (idToken != null) {
                     authHeaders.put(HEADER_KEY_AUTHORIZATION, idToken);
-                    authHeaders.put(HEADER_KEY_AUTH_TYPE, HEADER_VALUE_AUTH_TYPE_COGNITO);
+//                    authHeaders.put(HEADER_KEY_AUTH_TYPE, HEADER_VALUE_AUTH_TYPE_COGNITO);
                 }
             }
         }
         return authHeaders;
     }
 
+    /**
+     * Merge required headers with any custom headers provided. Custom headers will take priority
+     * @param customHeaders custom headers to add
+     * @return full list of http headers
+     */
     private Map<String, String> getFullHeaders(Map<String, String > customHeaders){
         Map <String, String> fullHeaders = getAuthHeaders();
         if(customHeaders != null) {
-            customHeaders.putAll(fullHeaders);
-            return customHeaders;
+            fullHeaders.putAll(customHeaders);
         }
         return fullHeaders;
     }

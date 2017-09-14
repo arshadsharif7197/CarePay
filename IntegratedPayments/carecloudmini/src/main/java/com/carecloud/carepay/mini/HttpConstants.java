@@ -28,6 +28,8 @@ public class HttpConstants {
         return deviceInformation;
     }
 
+    private static String environment;
+
     public static void setDeviceInformation(DeviceIdentifierDTO deviceInformation) {
         HttpConstants.deviceInformation = deviceInformation;
     }
@@ -63,5 +65,13 @@ public class HttpConstants {
 
     public static void setUseUnifiedAuth(boolean useUnifiedAuth) {
         HttpConstants.useUnifiedAuth = useUnifiedAuth;
+    }
+
+    public static String getEnvironment() {
+        return environment;
+    }
+
+    public static void setEnvironment(String environment) {
+        HttpConstants.environment = environment;
     }
 }

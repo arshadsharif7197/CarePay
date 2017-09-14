@@ -14,6 +14,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
@@ -208,9 +209,14 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
 
     @Override
     public void showErrorNotification(String errorMessage) {
-        ISession session = (ISession) getActivity();
-        if (null != session) {
-            session.showErrorNotification(errorMessage);
+        if(getDialog() != null){
+            CustomMessageToast toast = new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
+            toast.show();
+        }else {
+            ISession session = (ISession) getActivity();
+            if (null != session) {
+                session.showErrorNotification(errorMessage);
+            }
         }
     }
 

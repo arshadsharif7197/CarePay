@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.mini.HttpConstants;
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
 import com.carecloud.carepay.mini.models.queue.QueuePaymentRecord;
@@ -65,6 +66,8 @@ public class WelcomeActivity extends FullScreenActivity {
         setPracticeDetails();
 
         message = (TextView) findViewById(R.id.welcome_message);
+        TextView environment = (TextView) findViewById(R.id.environment_label);
+        environment.setText(HttpConstants.getEnvironment());
     }
 
     @Override

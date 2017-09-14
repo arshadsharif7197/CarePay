@@ -362,7 +362,8 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
         PaymentsSettingsRegularPaymentsDTO regularPaymentsDTO = paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments();
         if(regularPaymentsDTO.isAllowPartialPayments()){
             double minBalance = regularPaymentsDTO.getPartialPaymentsThreshold();
-            return balance >= minBalance;
+            double minPayment = regularPaymentsDTO.getMinimumPartialPaymentAmount();
+            return balance >= minBalance && balance >= minPayment;
         }
 
         return false;
