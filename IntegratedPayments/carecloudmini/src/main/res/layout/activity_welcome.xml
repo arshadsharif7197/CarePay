@@ -109,4 +109,12 @@
 
     </LinearLayout>
 
+    <com.carecloud.carepay.mini.views.CarePayTextView
+        android:id="@+id/environment_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/dp_20"
+        tools:text="Development"
+        android:textColor="@color/white"/>
 </FrameLayout>
