@@ -18,7 +18,7 @@ public class IntegratedPatientPaymentPayload {
     @SerializedName("line_items")
     private List<IntegratedPatientPaymentLineItem> lineItems = new ArrayList<>();
 
-    @SerializedName("papi_processing_errors")
+    @SerializedName("papi_errors")
     private List<ProcessingError> processingErrors = new ArrayList<>();
 
     @SerializedName("payment_group_id")
