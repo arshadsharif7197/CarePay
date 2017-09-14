@@ -39,6 +39,8 @@ import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
 import com.google.gson.Gson;
 
+import java.util.List;
+
 /**
  * Created by jorge on 29/12/16
  */
@@ -238,7 +240,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
         PaymentsModel updatePaymentModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        paymentsDTO.getPaymentPayload().setPatientBalances(updatePaymentModel.getPaymentPayload().getPatientBalances());
+        updateBalances(updatePaymentModel.getPaymentPayload().getPatientBalances());
         initFragments();
     }
 
@@ -338,5 +340,18 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         pendingBalanceDTO.setMetadata(selectedBalancesItem.getMetadata());
         pendingBalanceDTO.getPayload().add(selectedBalancesItem.getBalance());
         this.selectedBalancesItem = pendingBalanceDTO;
+    }
+
+    private void updateBalances(List<PatientBalanceDTO> updatedBalances){
+        for(PatientBalanceDTO existingBalance : paymentsDTO.getPaymentPayload().getPatientBalances()){
+            for(PatientBalanceDTO updatedBalance : updatedBalances){
+                if(existingBalance.getDemographics().getMetadata().getPracticeId().equals(updatedBalance.getDemographics().getMetadata().getPracticeId())){
+                    existingBalance.setBalances(updatedBalance.getBalances());
+                    existingBalance.setPayload(updatedBalance.getPayload());
+                    existingBalance.setPendingRepsonsibility(updatedBalance.getPendingRepsonsibility());
+                    existingBalance.setUnappliedCredit(updatedBalance.getUnappliedCredit());
+                }
+            }
+        }
     }
 }
