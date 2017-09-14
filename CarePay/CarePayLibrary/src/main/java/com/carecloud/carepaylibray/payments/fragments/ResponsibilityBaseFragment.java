@@ -203,7 +203,8 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
                 if (practiceId.equals(payloadSettingsDTO.getMetadata().getPracticeId())) {
                     if (payloadSettingsDTO.getPayload().getRegularPayments().isAllowPartialPayments()) {
                         double minBalance = payloadSettingsDTO.getPayload().getRegularPayments().getPartialPaymentsThreshold();
-                        return total >= minBalance;
+                        double minPayment = payloadSettingsDTO.getPayload().getRegularPayments().getMinimumPartialPaymentAmount();
+                        return total >= minBalance && total >= minPayment;
                     }
 
                     return false;

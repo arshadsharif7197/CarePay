@@ -138,14 +138,18 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
             SystemUtil.hideSoftKeyboard(context, view);
             cancel();
         } else if (viewId == R.id.payPartialButton) {
-            if(minimumPayment > 0){
-                double amount = Double.parseDouble(amountText.getText().toString());
-                if(amount < minimumPayment){
-                    String errorMessage = Label.getLabel("payment_partial_minimum_error") + NumberFormat.getCurrencyInstance().format(minimumPayment);
-                    CustomMessageToast toast = new CustomMessageToast(context, errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
-                    toast.show();
-                    return;
-                }
+            double amount = Double.parseDouble(amountText.getText().toString());
+            if(amount > fullAmount){
+                String errorMessage = Label.getLabel("payment_partial_max_error") + NumberFormat.getCurrencyInstance().format(fullAmount);
+                CustomMessageToast toast = new CustomMessageToast(context, errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
+                toast.show();
+                return;
+            }
+            if(minimumPayment > 0 && amount < minimumPayment){
+                String errorMessage = Label.getLabel("payment_partial_minimum_error") + NumberFormat.getCurrencyInstance().format(minimumPayment);
+                CustomMessageToast toast = new CustomMessageToast(context, errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
+                toast.show();
+                return;
             }
             onPaymentClick(amountText);
         }
