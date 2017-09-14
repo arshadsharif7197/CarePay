@@ -3,6 +3,7 @@ package com.carecloud.carepay.mini;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
+import android.util.Log;
 
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
 import com.carecloud.carepay.mini.models.response.Authentication;
@@ -35,6 +36,8 @@ public class MiniApplication extends MultiDexApplication implements ApplicationH
         ShamrockSdk.init(BuildConfig.X_API_KEY, BuildConfig.DEEPSTREAM_URL, BuildConfig.API_BASE_URL);
         setHttpConstants();
         Picasso.setSingletonInstance(PicassoHelper.getPicassoInstance(this));
+
+        setThreadHandler();
     }
 
     @Override
@@ -90,6 +93,15 @@ public class MiniApplication extends MultiDexApplication implements ApplicationH
             applicationPreferences = new ApplicationPreferences(this);
             restHelper = new RestCallServiceHelper(this);
         }
+    }
+
+    private void setThreadHandler(){
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread thread, Throwable throwable) {
+                Log.e("Background thread error", throwable.getLocalizedMessage());
+            }
+        });
     }
 }
 
