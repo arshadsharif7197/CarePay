@@ -129,6 +129,8 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
             String headerText = Label.getLabel("payment_partial_minimum_amount") + NumberFormat.getCurrencyInstance().format(minimumPayment);
             header.setText(headerText);
         }
+        SystemUtil.showSoftKeyboard(context);
+        amountText.requestFocus();
     }
 
     @Override
@@ -277,7 +279,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
 
     private void calculateFullAmount(TextView partialPaymentTotalAmountTitle) {
         if (paymentsDTO != null && !paymentsDTO.getPaymentPayload().getPatientBalances().isEmpty()) {
-            List<PendingBalancePayloadDTO> paymentList = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
+            List<PendingBalancePayloadDTO> paymentList = selectedBalance.getPayload();
 
             if (paymentList != null && paymentList.size() > 0) {
                 for (PendingBalancePayloadDTO payment : paymentList) {
