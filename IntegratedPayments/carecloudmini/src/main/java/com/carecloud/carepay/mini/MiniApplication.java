@@ -54,6 +54,7 @@ public class MiniApplication extends MultiDexApplication implements ApplicationH
         HttpConstants.setDeviceInformation(deviceIdentifierDTO);
         HttpConstants.setApiStartKey(BuildConfig.X_API_KEY);
         HttpConstants.setApiBaseUrl(BuildConfig.API_BASE_URL);
+        HttpConstants.setEnvironment(BuildConfig.ENVIRONMENT);
     }
 
     private void updatePicassoHelper(){
