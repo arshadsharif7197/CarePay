@@ -343,13 +343,14 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     private void updateBalances(List<PatientBalanceDTO> updatedBalances){
-        for(PatientBalanceDTO existingBalance : paymentsDTO.getPaymentPayload().getPatientBalances()){
-            for(PatientBalanceDTO updatedBalance : updatedBalances){
-                if(existingBalance.getDemographics().getMetadata().getPracticeId().equals(updatedBalance.getDemographics().getMetadata().getPracticeId())){
-                    existingBalance.setBalances(updatedBalance.getBalances());
-                    existingBalance.setPayload(updatedBalance.getPayload());
-                    existingBalance.setPendingRepsonsibility(updatedBalance.getPendingRepsonsibility());
-                    existingBalance.setUnappliedCredit(updatedBalance.getUnappliedCredit());
+        for(PatientBalanceDTO existingManagementBalance : paymentsDTO.getPaymentPayload().getPatientBalances()){
+            for(PendingBalanceDTO existingBalance : existingManagementBalance.getBalances()){
+                for(PatientBalanceDTO updatedManagementBalance : updatedBalances){
+                    for(PendingBalanceDTO updatedBalance : updatedManagementBalance.getBalances()){
+                        if(existingBalance.getMetadata().getPracticeId().equals(updatedBalance.getMetadata().getPracticeId())){
+                            existingBalance.setPayload(updatedBalance.getPayload());
+                        }
+                    }
                 }
             }
         }
