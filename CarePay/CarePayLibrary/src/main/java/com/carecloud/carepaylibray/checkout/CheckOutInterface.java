@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.checkout;
 
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.appointments.interfaces.AppointmentPrepaymentCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
@@ -13,7 +14,7 @@ import java.util.Date;
  * @author pjohnson on 30/05/17.
  */
 
-public interface CheckOutInterface extends FragmentActivityInterface {
+public interface CheckOutInterface extends AppointmentPrepaymentCallback, FragmentActivityInterface {
 
     void showAvailableHoursFragment(Date startDate, Date endDate, AppointmentsResultModel appointmentsResultModel, AppointmentResourcesItemDTO resourcesItemDTO, VisitTypeDTO visitTypeDTO);
 
@@ -22,6 +23,4 @@ public interface CheckOutInterface extends FragmentActivityInterface {
     void navigateToWorkflow(WorkflowDTO workflowDTO);
 
     boolean shouldAllowNavigateBack();
-
-    void showPrepaymentScreen(IntegratedPaymentPostModel postModel);
 }

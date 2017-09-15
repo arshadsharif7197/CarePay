@@ -22,7 +22,6 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsPrePaymentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
@@ -38,7 +37,6 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -232,17 +230,8 @@ public class NextAppointmentFragment extends BaseFragment {
         appointment.setComments("");
         appointment.getPatient().setId(selectedAppointment.getMetadata().getPatientId());
 
-        if (visitType.getAmount()>0) {
-            IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
-            postModel.setAmount(visitType.getAmount());
-            IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
-            paymentLineItem.setAmount(visitType.getAmount());
-            paymentLineItem.setProviderID(appointmentResourceDTO.getResource().getProvider().getGuid());
-            paymentLineItem.setLocationID(appointmentSlot.getLocation().getGuid());
-            paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_PREPAYMENT);
-            postModel.addLineItem(paymentLineItem);
-            postModel.getMetadata().setAppointmentRequestDTO(scheduleAppointmentRequestDTO.getAppointment());
-            callback.showPrepaymentScreen(postModel);
+        if (visitType.getAmount() > 0) {
+            callback.startPrepaymentProcess(scheduleAppointmentRequestDTO, appointmentSlot, visitType.getAmount());
         } else {
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("practice_mgmt", selectedAppointment.getMetadata().getPracticeMgmt());
@@ -436,11 +425,7 @@ public class NextAppointmentFragment extends BaseFragment {
             }
         }
         if (appointmentsSettingsList.isEmpty()) {
-            if (!appointmentsResultModel.getPayload().getAppointmentsSettings().isEmpty()) {
-                return appointmentsResultModel.getPayload().getAppointmentsSettings().get(0);
-            } else {
-                return new AppointmentsSettingDTO();
-            }
+            return new AppointmentsSettingDTO();
         }
         return appointmentsSettingsList.get(0);
     }

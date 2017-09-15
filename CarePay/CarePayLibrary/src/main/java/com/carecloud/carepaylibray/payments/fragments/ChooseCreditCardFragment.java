@@ -311,13 +311,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            String state = workflowDTO.getState();
-            if (NavigationStateConstants.PATIENT_FORM_CHECKOUT.equals(state)
-                    || NavigationStateConstants.PATIENT_PAY_CHECKOUT.equals(state)) {
-                callback.navigateToWorkflow(workflowDTO);
-            } else {
-                callback.showPaymentConfirmation(workflowDTO);
-            }
+            callback.showPaymentConfirmation(workflowDTO);
             if (getDialog() != null) {
                 dismiss();
             }

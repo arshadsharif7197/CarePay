@@ -53,6 +53,7 @@ import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -257,8 +258,14 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
-        paymentConfirmationWorkflow = workflowDTO;
-        completePaymentProcess(workflowDTO);
+        String state = workflowDTO.getState();
+        if (NavigationStateConstants.PATIENT_FORM_CHECKOUT.equals(state)
+                || NavigationStateConstants.PATIENT_PAY_CHECKOUT.equals(state)) {
+            navigateToWorkflow(workflowDTO);
+        } else {
+            paymentConfirmationWorkflow = workflowDTO;
+            completePaymentProcess(workflowDTO);
+        }
     }
 
     @Override
@@ -380,7 +387,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     @Override
     public void showAllDone(WorkflowDTO workflowDTO) {
         PracticeAppointmentDTO practiceAppointmentDTO = DtoHelper
-                    .getConvertedDTO(PracticeAppointmentDTO.class, workflowDTO);
+                .getConvertedDTO(PracticeAppointmentDTO.class, workflowDTO);
         if (practiceAppointmentDTO == null) {
             showErrorNotification("Error Checking-out Appointment");
             return;
@@ -415,25 +422,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     @Override
     public boolean shouldAllowNavigateBack() {
         return getSupportFragmentManager().getBackStackEntryCount() > 0;
-    }
-
-    @Override
-    public void showPrepaymentScreen(IntegratedPaymentPostModel postModel) {
-        paymentsModel = new PaymentsModel();
-        paymentsModel.getPaymentPayload().setPaymentSettings(appointmentsResultModel.getPayload()
-                .getPaymentSettings());
-        paymentsModel.getPaymentPayload().setMerchantServices(appointmentsResultModel.getPayload()
-                .getMerchantServices());
-        paymentsModel.getPaymentPayload().setPatientCreditCards(appointmentsResultModel.getPayload()
-                .getPatientCreditCards());
-        paymentsModel.getPaymentsMetadata().getPaymentsTransitions().setMakePayment(appointmentsResultModel
-                .getMetadata().getTransitions().getMakePayment());
-        paymentsModel.getPaymentsMetadata().getPaymentsTransitions().setAddCreditCard(appointmentsResultModel
-                .getMetadata().getTransitions().getAddCreditCard());
-        paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
-        PracticePaymentMethodPrepaymentFragment prepaymentFragment = PracticePaymentMethodPrepaymentFragment
-                .newInstance(paymentsModel, postModel.getAmount());
-        displayDialogFragment(prepaymentFragment, true);
     }
 
     @Override
@@ -531,8 +519,33 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDTO, AppointmentsSlotsDTO appointmentSlot, double amount) {
+    public void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDTO,
+                                       AppointmentsSlotsDTO appointmentSlot, double amount) {
+        IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
+        postModel.setAmount(amount);
+        IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
+        paymentLineItem.setAmount(amount);
+        paymentLineItem.setProviderID(appointmentRequestDTO.getAppointment().getProviderGuid());
+        paymentLineItem.setLocationID(appointmentSlot.getLocation().getGuid());
+        paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_PREPAYMENT);
+        postModel.addLineItem(paymentLineItem);
+        postModel.getMetadata().setAppointmentRequestDTO(appointmentRequestDTO.getAppointment());
 
+        paymentsModel = new PaymentsModel();
+        paymentsModel.getPaymentPayload().setPaymentSettings(appointmentsResultModel.getPayload()
+                .getPaymentSettings());
+        paymentsModel.getPaymentPayload().setMerchantServices(appointmentsResultModel.getPayload()
+                .getMerchantServices());
+        paymentsModel.getPaymentPayload().setPatientCreditCards(appointmentsResultModel.getPayload()
+                .getPatientCreditCards());
+        paymentsModel.getPaymentsMetadata().getPaymentsTransitions().setMakePayment(appointmentsResultModel
+                .getMetadata().getTransitions().getMakePayment());
+        paymentsModel.getPaymentsMetadata().getPaymentsTransitions().setAddCreditCard(appointmentsResultModel
+                .getMetadata().getTransitions().getAddCreditCard());
+        paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
+        PracticePaymentMethodPrepaymentFragment prepaymentFragment = PracticePaymentMethodPrepaymentFragment
+                .newInstance(paymentsModel, amount);
+        displayDialogFragment(prepaymentFragment, true);
     }
 
     @Override
