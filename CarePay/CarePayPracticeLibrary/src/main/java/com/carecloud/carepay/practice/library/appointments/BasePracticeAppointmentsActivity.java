@@ -320,7 +320,8 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
-        PracticePaymentMethodPrepaymentFragment prepaymentFragment = PracticePaymentMethodPrepaymentFragment.newInstance(paymentsModel, amount);
+        PracticePaymentMethodPrepaymentFragment prepaymentFragment = PracticePaymentMethodPrepaymentFragment
+                .newInstance(paymentsModel, amount);
         displayDialogFragment(prepaymentFragment, true);
     }
 

@@ -25,16 +25,18 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -122,7 +124,7 @@ public class NextAppointmentFragment extends BaseFragment {
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(Label.getLabel("next_appointment_toolbar_title"));
 
-        if(!callback.shouldAllowNavigateBack()){
+        if (!callback.shouldAllowNavigateBack()) {
             toolbar.setNavigationIcon(null);
             toolbar.setNavigationOnClickListener(null);
         }
@@ -167,7 +169,7 @@ public class NextAppointmentFragment extends BaseFragment {
             public void onClick(View view) {
                 Date start = null;
                 Date end = null;
-                if(appointmentSlot!=null){
+                if (appointmentSlot != null) {
                     start = DateUtil.getInstance().setDateRaw(appointmentSlot.getStartTime()).getDate();
                     end = DateUtil.getInstance().setDateRaw(appointmentSlot.getEndTime()).getDate();
                 }
@@ -214,37 +216,38 @@ public class NextAppointmentFragment extends BaseFragment {
     }
 
     private void scheduleAppointment() {
-        Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("practice_mgmt", selectedAppointment.getMetadata().getPracticeMgmt());
-        queryMap.put("practice_id", selectedAppointment.getMetadata().getPracticeId());
-        queryMap.put("appointment_id", selectedAppointment.getMetadata().getAppointmentId());
-        queryMap.put("patient_id", selectedAppointment.getMetadata().getPatientId());
+        ScheduleAppointmentRequestDTO scheduleAppointmentRequestDTO = new ScheduleAppointmentRequestDTO();
+        ScheduleAppointmentRequestDTO.Appointment appointment = scheduleAppointmentRequestDTO.getAppointment();
+        appointment.setStartTime(appointmentSlot.getStartTime());
+        appointment.setEndTime(appointmentSlot.getEndTime());
+        appointment.setLocationId(appointmentSlot.getLocation().getId());
+        appointment.setLocationGuid(appointmentSlot.getLocation().getGuid());
+        appointment.setProviderId(appointmentResourceDTO.getResource().getProvider().getId());
+        appointment.setProviderGuid(appointmentResourceDTO.getResource().getProvider().getGuid());
+        appointment.setVisitReasonId(visitType.getId());
+        appointment.setResourceId(appointmentResourceDTO.getResource().getId());
+        appointment.setComplaint(visitType.getName());
+        appointment.setComments("");
+        appointment.getPatient().setId(selectedAppointment.getMetadata().getPatientId());
 
-        JsonObject patientJSONObj = new JsonObject();
-        patientJSONObj.addProperty("id", selectedAppointment.getMetadata().getPatientId());
+        if (visitType.getAmount() > 0) {
+            callback.startPrepaymentProcess(scheduleAppointmentRequestDTO, appointmentSlot, visitType.getAmount());
+        } else {
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("practice_mgmt", selectedAppointment.getMetadata().getPracticeMgmt());
+            queryMap.put("practice_id", selectedAppointment.getMetadata().getPracticeId());
+            queryMap.put("appointment_id", selectedAppointment.getMetadata().getAppointmentId());
+            queryMap.put("patient_id", selectedAppointment.getMetadata().getPatientId());
 
-        JsonObject appointmentJSONObj = new JsonObject();
-        appointmentJSONObj.addProperty("start_time", appointmentSlot.getStartTime());
-        appointmentJSONObj.addProperty("end_time", appointmentSlot.getEndTime());
-        appointmentJSONObj.addProperty("appointment_status_id", "5");
-        appointmentJSONObj.addProperty("location_id", appointmentSlot.getLocation().getId());
-        appointmentJSONObj.addProperty("provider_id", appointmentResourceDTO.getResource().getProvider().getId());
-        appointmentJSONObj.addProperty("resource_id", appointmentResourceDTO.getResource().getId());
-        appointmentJSONObj.addProperty("visit_reason_id", visitType.getId());
-        appointmentJSONObj.addProperty("chief_complaint", visitType.getName());
-        appointmentJSONObj.addProperty("comments", "");
+            Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
+            header.put("transition", "true");
 
-        appointmentJSONObj.add("patient", patientJSONObj);
-
-        JsonObject makeAppointmentJSONObj = new JsonObject();
-        makeAppointmentJSONObj.add("appointment", appointmentJSONObj);
-
-        Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
-        header.put("transition", "true");
-
-        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getMakeAppointment();
-        getWorkflowServiceHelper().execute(transitionDTO, makeAppointmentCallback,
-                makeAppointmentJSONObj.toString(), queryMap, header);
+            TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions()
+                    .getMakeAppointment();
+            Gson gson = new Gson();
+            getWorkflowServiceHelper().execute(transitionDTO, makeAppointmentCallback,
+                    gson.toJson(scheduleAppointmentRequestDTO), queryMap, header);
+        }
     }
 
     private WorkflowServiceCallback makeAppointmentCallback = new WorkflowServiceCallback() {
@@ -320,12 +323,16 @@ public class NextAppointmentFragment extends BaseFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             Gson gson = new Gson();
+            List<AppointmentsSettingDTO> appointmentsSettingDTOs = appointmentsResultModel
+                    .getPayload().getAppointmentsSettings();
             String resourcesToScheduleString = gson.toJson(workflowDTO);
             appointmentsResultModel = gson.fromJson(resourcesToScheduleString,
                     AppointmentsResultModel.class);
+            appointmentsResultModel.getPayload().setAppointmentsSettings(appointmentsSettingDTOs);
             appointmentResourceDTO = getResourceFromModel(appointmentsResultModel, selectedAppointment);
 
-            VisitTypeFragmentDialog fragmentDialog = VisitTypeFragmentDialog.newInstance(appointmentResourceDTO, appointmentsResultModel, getPracticeSettings());
+            VisitTypeFragmentDialog fragmentDialog = VisitTypeFragmentDialog
+                    .newInstance(appointmentResourceDTO, appointmentsResultModel, getPracticeSettings());
             callback.displayDialogFragment(fragmentDialog, false);
         }
 
@@ -399,9 +406,9 @@ public class NextAppointmentFragment extends BaseFragment {
         return dateUtil.getDateAsDayMonthDayOrdinal();
     }
 
-    private void setDefaultMessage(){
+    private void setDefaultMessage() {
         String label = Label.getLabel("next_appointment_default_provider_message");
-        if(label.contains("%s")){//check if its "format-able"
+        if (label.contains("%s")) {//check if its "format-able"
             label = String.format(label, selectedAppointment.getPayload().getProvider().getName());
         }
         providerMessage.setText(label);
@@ -410,14 +417,14 @@ public class NextAppointmentFragment extends BaseFragment {
     private AppointmentsSettingDTO getPracticeSettings() {
         List<AppointmentsSettingDTO> appointmentsSettingsList = appointmentsResultModel.getPayload().getAppointmentsSettings();
         String practiceId = selectedAppointment.getMetadata().getPracticeId();
-        if(practiceId != null){
-            for(AppointmentsSettingDTO appointmentsSettingDTO : appointmentsSettingsList){
-                if(appointmentsSettingDTO.getPracticeId().equals(practiceId)){
+        if (practiceId != null) {
+            for (AppointmentsSettingDTO appointmentsSettingDTO : appointmentsSettingsList) {
+                if (appointmentsSettingDTO.getPracticeId().equals(practiceId)) {
                     return appointmentsSettingDTO;
                 }
             }
         }
-        if(appointmentsSettingsList.isEmpty()){
+        if (appointmentsSettingsList.isEmpty()) {
             return new AppointmentsSettingDTO();
         }
         return appointmentsSettingsList.get(0);

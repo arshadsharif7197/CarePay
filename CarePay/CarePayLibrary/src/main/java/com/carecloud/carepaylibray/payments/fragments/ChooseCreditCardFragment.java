@@ -21,6 +21,7 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.payments.adapter.CreditCardsListAdapter;
 import com.carecloud.carepaylibray.payments.interfaces.ChooseCreditCardInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
@@ -207,7 +208,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
 
         IntegratedPaymentMetadata postModelMetadata = postModel.getMetadata();
-        if (callback.getAppointmentId() != null) {
+        if (callback.getAppointmentId() != null && postModelMetadata.getAppointmentRequestDTO() == null) {
             postModelMetadata.setAppointmentId(callback.getAppointmentId());
         }
 
@@ -256,7 +257,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
             queries.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
             queries.put("practice_id", userPracticeDTO.getPracticeId());
             queries.put("patient_id", userPracticeDTO.getPatientId());
-        } else {
+        } else if (!paymentsModel.getPaymentPayload().getPatientBalances().isEmpty()) {
             PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
             queries.put("practice_mgmt", metadata.getPracticeMgmt());
             queries.put("practice_id", metadata.getPracticeId());

@@ -578,6 +578,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     @Override
+    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
+        PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+    }
+
+    @Override
     public void onPaymentPlanAction(PaymentsModel paymentsModel) {
         PaymentPlanFragment fragment = new PaymentPlanFragment();
 
