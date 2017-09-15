@@ -218,81 +218,47 @@ public class NextAppointmentFragment extends BaseFragment {
     }
 
     private void scheduleAppointment() {
-        AppointmentsPrePaymentDTO prePaymentDTO = getPrepaymentFromVisitType(appointmentsResultModel
-                .getPayload().getAppointmentsSettings().get(0), visitType);
-        if (prePaymentDTO == null) {
+        ScheduleAppointmentRequestDTO scheduleAppointmentRequestDTO = new ScheduleAppointmentRequestDTO();
+        ScheduleAppointmentRequestDTO.Appointment appointment = scheduleAppointmentRequestDTO.getAppointment();
+        appointment.setStartTime(appointmentSlot.getStartTime());
+        appointment.setEndTime(appointmentSlot.getEndTime());
+        appointment.setLocationId(appointmentSlot.getLocation().getId());
+        appointment.setLocationGuid(appointmentSlot.getLocation().getGuid());
+        appointment.setProviderId(appointmentResourceDTO.getResource().getProvider().getId());
+        appointment.setProviderGuid(appointmentResourceDTO.getResource().getProvider().getGuid());
+        appointment.setVisitReasonId(visitType.getId());
+        appointment.setResourceId(appointmentResourceDTO.getResource().getId());
+        appointment.setComplaint(visitType.getName());
+        appointment.setComments("");
+        appointment.getPatient().setId(selectedAppointment.getMetadata().getPatientId());
+
+        if (visitType.getAmount()>0) {
+            IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
+            postModel.setAmount(visitType.getAmount());
+            IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
+            paymentLineItem.setAmount(visitType.getAmount());
+            paymentLineItem.setProviderID(appointmentResourceDTO.getResource().getProvider().getGuid());
+            paymentLineItem.setLocationID(appointmentSlot.getLocation().getGuid());
+            paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_PREPAYMENT);
+            postModel.addLineItem(paymentLineItem);
+            postModel.getMetadata().setAppointmentRequestDTO(scheduleAppointmentRequestDTO.getAppointment());
+            callback.showPrepaymentScreen(postModel);
+        } else {
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("practice_mgmt", selectedAppointment.getMetadata().getPracticeMgmt());
             queryMap.put("practice_id", selectedAppointment.getMetadata().getPracticeId());
             queryMap.put("appointment_id", selectedAppointment.getMetadata().getAppointmentId());
             queryMap.put("patient_id", selectedAppointment.getMetadata().getPatientId());
 
-            JsonObject patientJSONObj = new JsonObject();
-            patientJSONObj.addProperty("id", selectedAppointment.getMetadata().getPatientId());
-
-            JsonObject appointmentJSONObj = new JsonObject();
-            appointmentJSONObj.addProperty("start_time", appointmentSlot.getStartTime());
-            appointmentJSONObj.addProperty("end_time", appointmentSlot.getEndTime());
-            appointmentJSONObj.addProperty("appointment_status_id", "5");
-            appointmentJSONObj.addProperty("location_id", appointmentSlot.getLocation().getId());
-            appointmentJSONObj.addProperty("provider_id", appointmentResourceDTO.getResource().getProvider().getId());
-            appointmentJSONObj.addProperty("resource_id", appointmentResourceDTO.getResource().getId());
-            appointmentJSONObj.addProperty("visit_reason_id", visitType.getId());
-            appointmentJSONObj.addProperty("chief_complaint", visitType.getName());
-            appointmentJSONObj.addProperty("comments", "");
-
-            appointmentJSONObj.add("patient", patientJSONObj);
-
-            JsonObject makeAppointmentJSONObj = new JsonObject();
-            makeAppointmentJSONObj.add("appointment", appointmentJSONObj);
-
             Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
             header.put("transition", "true");
 
             TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions()
                     .getMakeAppointment();
+            Gson gson = new Gson();
             getWorkflowServiceHelper().execute(transitionDTO, makeAppointmentCallback,
-                    makeAppointmentJSONObj.toString(), queryMap, header);
-        } else {
-
-            IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
-            postModel.setAmount(prePaymentDTO.getAmount());
-            IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
-            paymentLineItem.setAmount(prePaymentDTO.getAmount());
-            paymentLineItem.setProviderID(appointmentResourceDTO.getResource().getProvider().getGuid());
-            paymentLineItem.setLocationID(appointmentSlot.getLocation().getGuid());
-            paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_PREPAYMENT);
-            postModel.addLineItem(paymentLineItem);
-
-            ScheduleAppointmentRequestDTO scheduleAppointmentRequestDTO = new ScheduleAppointmentRequestDTO();
-            ScheduleAppointmentRequestDTO.Appointment appointment = scheduleAppointmentRequestDTO.getAppointment();
-            appointment.setStartTime(appointmentSlot.getStartTime());
-            appointment.setEndTime(appointmentSlot.getEndTime());
-            appointment.setLocationId(appointmentSlot.getLocation().getId());
-            appointment.setLocationGuid(appointmentSlot.getLocation().getGuid());
-            appointment.setProviderId(appointmentResourceDTO.getResource().getProvider().getId());
-            appointment.setProviderGuid(appointmentResourceDTO.getResource().getProvider().getGuid());
-            appointment.setVisitReasonId(visitType.getId());
-            appointment.setResourceId(appointmentResourceDTO.getResource().getId());
-            appointment.setComplaint(visitType.getName());
-            appointment.setComments("");
-
-            appointment.getPatient().setId(selectedAppointment.getMetadata().getPatientId());
-
-
-            postModel.getMetadata().setAppointmentRequestDTO(scheduleAppointmentRequestDTO.getAppointment());
-            callback.showPrepaymentScreen(postModel);
+                    gson.toJson(scheduleAppointmentRequestDTO), queryMap, header);
         }
-    }
-
-    private AppointmentsPrePaymentDTO getPrepaymentFromVisitType(AppointmentsSettingDTO appointmentsSettingDTO,
-                                                                 VisitTypeDTO visitType) {
-        for (AppointmentsPrePaymentDTO appointmentsPrePaymentDTO : appointmentsSettingDTO.getPrePayments()) {
-            if (visitType.getId().equals(appointmentsPrePaymentDTO.getVisitType())) {
-                return appointmentsPrePaymentDTO;
-            }
-        }
-        return null;
     }
 
     private WorkflowServiceCallback makeAppointmentCallback = new WorkflowServiceCallback() {
