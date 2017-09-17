@@ -343,10 +343,10 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     private void updateBalances(List<PatientBalanceDTO> updatedBalances){
-        for(PatientBalanceDTO existingManagementBalance : paymentsDTO.getPaymentPayload().getPatientBalances()){
-            for(PendingBalanceDTO existingBalance : existingManagementBalance.getBalances()){
-                for(PatientBalanceDTO updatedManagementBalance : updatedBalances){
-                    for(PendingBalanceDTO updatedBalance : updatedManagementBalance.getBalances()){
+        for(PatientBalanceDTO updatedManagementBalance : updatedBalances){//should contain just 1 element
+            for(PendingBalanceDTO updatedBalance : updatedManagementBalance.getBalances()){//should contain just 1 element - the updated balance that was just paid
+                for(PatientBalanceDTO existingManagementBalance : paymentsDTO.getPaymentPayload().getPatientBalances()){//should contain only 1 element until another PM is supported
+                    for(PendingBalanceDTO existingBalance : existingManagementBalance.getBalances()){//can contain multiple balances in multi practice mode, otherwise just 1
                         if(existingBalance.getMetadata().getPracticeId().equals(updatedBalance.getMetadata().getPracticeId())){
                             existingBalance.setPayload(updatedBalance.getPayload());
                         }
