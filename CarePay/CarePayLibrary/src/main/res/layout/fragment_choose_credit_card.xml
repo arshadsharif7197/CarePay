@@ -31,6 +31,7 @@
             android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
             android:background="@drawable/button_blue_border"
             android:textColor="@color/colorPrimary"
+            android:textAllCaps="true"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="payment_add_new_credit_card_button" />
 
@@ -42,6 +43,7 @@
             android:layout_above="@id/addNewCardButton"
             android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
             android:background="@drawable/button_selector_green"
+            android:textAllCaps="true"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="demographics_pay_button_text" />
     </RelativeLayout>

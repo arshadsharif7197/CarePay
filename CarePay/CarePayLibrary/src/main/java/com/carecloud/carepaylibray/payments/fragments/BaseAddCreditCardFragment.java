@@ -529,6 +529,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         } else {
             useProfileAddressCheckBox.setChecked(false);
             useProfileAddressCheckBox.setEnabled(false);
+            useProfileAddressCheckBox.setVisibility(View.GONE);
             setAddressFieldsEnabled(true);
         }
     }

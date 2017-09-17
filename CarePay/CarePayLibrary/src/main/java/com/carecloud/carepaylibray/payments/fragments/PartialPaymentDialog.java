@@ -153,6 +153,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
                 toast.show();
                 return;
             }
+            SystemUtil.hideSoftKeyboard(context, view);
             onPaymentClick(amountText);
         }
     }
