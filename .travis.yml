@@ -47,3 +47,13 @@ branches:
     - master
     - QA
     - development
+deploy:
+  skip_cleanup: true
+  provider: testfairy
+  api-key: 4afa2bed1de9c13c9630949f5a74aa6c881d0724
+  app-file: $PATIENT_APP
+  keystore-file: ./release-keystore.jks
+  storepass: carecloud123
+  alias: carecloudkey
+  on:
+    branch: development

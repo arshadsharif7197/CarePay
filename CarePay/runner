@@ -24,6 +24,8 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "development"
     echo "${green}*** BUILDING DEVELOPMENT PATIENT APK ***${reset}"
     ./gradlew :CarePayPatient:assembleDevelopment --profile --configure-on-demand
 
+    PATIENT_APP=$TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/CarePayPatient-development-release.apk
+
     echo "${green}*** DEPLOYING DEVELOPMENT PATIENT APK TO AWS ***${reset}"
     AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk s3://automation-zeus/ --recursive
 
@@ -72,6 +74,9 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [[ "$COMMIT_MESSAGES" =~ clover.*app
     ./gradlew :CarePayPatient:compileProductionReleaseSources --profile --configure-on-demand
     echo "${green}*** Practice App Compile Check ***${reset}"
     ./gradlew :CarePayPracticeTablet:compileProductionReleaseSources --profile --configure-on-demand
+elif [ "$TRAVIS_PULL_REQUEST" != "false" ] && [[ "$COMMIT_MESSAGES" =~ carepay ]]; then
+    echo "${yellow}*** Skipping APK Build ***${reset}"
+    echo "${yellow}*** Skipping Compile Check ***${reset}"
 else
     echo "${yellow}*** Skipping APK Build ***${reset}"
     echo "${green}*** Practice App Compile Check ***${reset}"
