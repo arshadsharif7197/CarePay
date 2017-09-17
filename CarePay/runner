@@ -5,7 +5,6 @@ reset=$(tput sgr0)
 
 COMMIT_RANGE=$(echo $TRAVIS_COMMIT_RANGE | sed 's/\.\.\./\.\./g')
 COMMIT_MESSAGES=$(echo $(git log $COMMIT_RANGE --pretty=format:%s))
-DEV_BUILD=false
 
 shopt -s nocasematch
 #####################################################################################
@@ -25,11 +24,11 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "development"
     echo "${green}*** BUILDING DEVELOPMENT PATIENT APK ***${reset}"
     ./gradlew :CarePayPatient:assembleDevelopment --profile --configure-on-demand
 
+    PATIENT_APP=$TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/CarePayPatient-development-release.apk
+
     echo "${green}*** DEPLOYING DEVELOPMENT PATIENT APK TO AWS ***${reset}"
     AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk s3://automation-zeus/ --recursive
 
-    PATIENT_APP=$TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/CarePayPatient-development-release.apk
-    DEV_BUILD=true
 elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "QA" ]]; then
 
     echo "${green}*** DELETING QA APKS FROM AWS ***${reset}"
