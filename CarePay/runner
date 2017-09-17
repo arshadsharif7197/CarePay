@@ -75,7 +75,7 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [[ "$COMMIT_MESSAGES" =~ clover.*app
     ./gradlew :CarePayPatient:compileProductionReleaseSources --profile --configure-on-demand
     echo "${green}*** Practice App Compile Check ***${reset}"
     ./gradlew :CarePayPracticeTablet:compileProductionReleaseSources --profile --configure-on-demand
-elif [ "TRAVIS_PULL_REQUEST" != "false"] && [[ "$COMMIT_MESSAGES" =~ carepay]]; then
+elif [ "$TRAVIS_PULL_REQUEST" != "false" ] && [[ "$COMMIT_MESSAGES" =~ carepay ]]; then
     echo "${yellow}*** Skipping APK Build ***${reset}"
     echo "${yellow}*** Skipping Compile Check ***${reset}"
 else
