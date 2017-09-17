@@ -56,4 +56,4 @@ deploy:
   storepass: carecloud123
   alias: carecloudkey
   on:
-    condition: $DEV_BUILD = true
+    branch: development
