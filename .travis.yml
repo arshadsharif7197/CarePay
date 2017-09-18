@@ -47,6 +47,7 @@ branches:
     - master
     - QA
     - development
+    - TRAVIS-DEPLOY
 #deploy:
 #  skip_cleanup: true
 #  provider: testfairy
