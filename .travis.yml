@@ -1,9 +1,6 @@
 sudo: required
 #notifications:
 #  slack: carecloud:L7A13CxiKvd3xBm1XEZsOIsW
-env:
-  global:
-    - PATIENT_APP=""
 git:
   depth: 999999
   submodules: true
@@ -44,7 +41,7 @@ android:
 script:
    - jdk_switcher use oraclejdk8
    - cd /home/travis/build/CareCloud/shamrock_android/CarePay
-   - . /runner
+   - ./runner
 branches:
   only: 
     - master
@@ -55,7 +52,7 @@ deploy:
   skip_cleanup: true
   provider: testfairy
   api-key: 4afa2bed1de9c13c9630949f5a74aa6c881d0724
-  app-file: ${PATIENT_APP}
+  app-file: ./release/dev/patient_app.apk
   keystore-file: ./release-keystore.jks
   storepass: carecloud123
   alias: carecloudkey
