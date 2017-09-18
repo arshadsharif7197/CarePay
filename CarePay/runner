@@ -62,11 +62,12 @@ elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "master" ]]
     AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk s3://automation-zeus/ --recursive
 
 elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "TRAVIS-DEPLOY" ]]; then
-    
+    echo "${green}*** Patient Apk: ${PATIENT_APP} ***${reset}"
+   
     echo "${green}*** BUILDING DEVELOPMENT PATIENT APK ***${reset}"
     ./gradlew :CarePayPatient:assembleDevelopment --profile --configure-on-demand
 
-    PATIENT_APP=$(echo $(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/*release*.apk) )
+    export PATIENT_APP=$(echo $(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/*release*.apk) )
 
     echo "${green}*** Patient Apk: ${PATIENT_APP} ***${reset}"
    

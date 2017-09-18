@@ -60,4 +60,4 @@ deploy:
   storepass: carecloud123
   alias: carecloudkey
   on:
-    condition: "$PATIENT_APP"
+    condition: " ! -z $PATIENT_APP "
