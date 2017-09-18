@@ -58,7 +58,7 @@ deploy:
   provider: testfairy
   api-key: 4afa2bed1de9c13c9630949f5a74aa6c881d0724
   app-file: $TRAVIS_BUILD_DIR/release/dev/patient_app.apk
-  keystore-file: ./release-keystore.jks
+  keystore-file: /home/travis/build/CareCloud/shamrock_android/CarePay/release-keystore.jks
   storepass: carecloud123
   alias: carecloudkey
   on:
