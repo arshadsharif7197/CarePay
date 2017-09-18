@@ -69,8 +69,8 @@ elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "TRAVIS-DEP
 
     echo "${green}*** Copying Patient Apk for deploy ***${reset}"
 
-    mkdir -p /release/dev
-    cp $PATIENT_APP ./release/dev/patient_app.apk
+    mkdir -p $TRAVIS_BUILD_DIR/release/dev
+    cp $PATIENT_APP $TRAVIS_BUILD_DIR/release/dev/patient_app.apk
    
 fi
 
