@@ -60,4 +60,4 @@ deploy:
   storepass: carecloud123
   alias: carecloudkey
   on:
-    condition: " ! -z $PATIENT_APP "
+    branch: TRAVIS-DEPLOY
