@@ -7,6 +7,7 @@ git:
 language: android
 jdk:
   - oraclejdk8
+  - oraclejdk7
 licenses:
  - android-sdk-preview-license-.+
  - android-sdk-license-.+
@@ -42,6 +43,7 @@ script:
    - jdk_switcher use oraclejdk8
    - cd /home/travis/build/CareCloud/shamrock_android/CarePay
    - ./runner
+   - jdk_switcher use oraclejdk7
 branches:
   only: 
     - master
