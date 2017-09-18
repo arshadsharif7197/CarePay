@@ -44,7 +44,7 @@ android:
 script:
    - jdk_switcher use oraclejdk8
    - cd /home/travis/build/CareCloud/shamrock_android/CarePay
-   - ./runner
+   - . /runner
 branches:
   only: 
     - master
