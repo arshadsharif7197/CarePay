@@ -44,7 +44,7 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class WelcomeActivity extends FullScreenActivity {
     private static final String TAG = WelcomeActivity.class.getName();
     private static final int MAX_RETRIES = 2;
-    private static final int CONNECTION_RETRY_DELAY = 1000 * 5;
+    private static final int CONNECTION_RETRY_DELAY = 1000 * 3;
     private static final int PAYMENT_COMPLETE_RESET = 1000 * 3;
     private static final int POST_RETRY_DELAY = 1000 * 10;
 
@@ -55,6 +55,7 @@ public class WelcomeActivity extends FullScreenActivity {
     private Device connectedDevice;
 
     private int paymentAttempt = 0;
+    private boolean isDisconnecting = false;
 
     @Override
     protected void onCreate(Bundle icicle){
@@ -149,6 +150,7 @@ public class WelcomeActivity extends FullScreenActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                isDisconnecting = false;
                 String id = applicationHelper.getApplicationPreferences().getDeviceId();
                 DeviceConnection.connect(WelcomeActivity.this, id, connectionCallback, connectionActionCallback);
             }
@@ -159,8 +161,24 @@ public class WelcomeActivity extends FullScreenActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                String id = applicationHelper.getApplicationPreferences().getDeviceId();
-                DeviceConnection.disconnect(WelcomeActivity.this, id);
+                if(!isDisconnecting) {
+                    isDisconnecting = true;
+                    String id = applicationHelper.getApplicationPreferences().getDeviceId();
+                    DeviceConnection.disconnect(WelcomeActivity.this, id, null);
+                }
+            }
+        });
+    }
+
+    private void reconnectDevice(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(!isDisconnecting) {
+                    isDisconnecting = true;
+                    String id = applicationHelper.getApplicationPreferences().getDeviceId();
+                    DeviceConnection.disconnect(WelcomeActivity.this, id, connectionCallback);
+                }
             }
         });
     }
@@ -223,19 +241,33 @@ public class WelcomeActivity extends FullScreenActivity {
 
     private ConnectionCallback connectionCallback = new ConnectionCallback() {
         @Override
-        public void onPreExecute() {
+        public void startDeviceConnection() {
             updateMessage(getString(R.string.welcome_connecting));
         }
 
         @Override
-        public void onPostExecute(Device device) {
+        public void onDeviceConnected(Device device) {
             updateMessage(getString(R.string.welcome_waiting));
             connectedDevice = device;
         }
 
         @Override
-        public void onFailure(String errorMessage) {
+        public void onConnectionFailure(String errorMessage) {
             Log.d(TAG, errorMessage);
+
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    connectDevice();
+                }
+            }, CONNECTION_RETRY_DELAY);
+        }
+
+        @Override
+        public void onDeviceDisconnected(Device device) {
+            //reconnect if disconnected
+            Log.d(TAG, "Device Disconnected");
+            isDisconnecting = false;
 
             handler.postDelayed(new Runnable() {
                 @Override
@@ -462,8 +494,7 @@ public class WelcomeActivity extends FullScreenActivity {
     private void resetDevice(String paymentRequestId){
         releasePaymentRequest(paymentRequestId);
         paymentAttempt = 0;
-        disconnectDevice();
-        connectDevice();
+//        reconnectDevice();
     }
 
 }
