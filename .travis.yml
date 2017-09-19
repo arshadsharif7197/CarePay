@@ -42,9 +42,7 @@ script:
    - jdk_switcher use oraclejdk8
    - cd /home/travis/build/CareCloud/shamrock_android/CarePay
    - ./runner
-   - jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ./release-keystore.jks -storepass carecloud123 -keypass carecloud123 $TRAVIS_BUILD_DIR/release/dev/patient_app.apk carecloudkey
-   - jarsigner -verify $TRAVIS_BUILD_DIR/release/dev/patient_app.apk
-   - curl https://upload.testfairy.com/api/upload -F api_key=4afa2bed1de9c13c9630949f5a74aa6c881d0724 -F file=@$TRAVIS_BUILD_DIR/release/dev/patient_app.apk
+   - ./testfairy $TRAVIS_BUILD_DIR/release/dev/patient_app.apk
 branches:
   only: 
     - master
