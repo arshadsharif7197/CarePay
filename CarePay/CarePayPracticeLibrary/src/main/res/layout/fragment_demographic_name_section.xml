@@ -20,7 +20,7 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
             android:id="@+id/reviewdemogrFirstNameEdit"
             style="@style/DemographicsReviewEditTextStyle"
-            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ "
+            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ "
             android:inputType="textPersonName"
             android:maxLength="100"
             android:nextFocusForward="@+id/reviewdemogrMiddleNameEdit"
@@ -42,7 +42,7 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/reviewdemogrMiddleNameEdit"
                 style="@style/DemographicsReviewEditTextStyle"
-                android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ "
+                android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ "
                 android:imeOptions="actionNext"
                 android:inputType="textPersonName"
                 android:maxLength="100"
@@ -70,7 +70,7 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
             android:id="@+id/reviewdemogrLastNameEdit"
             style="@style/DemographicsReviewEditTextStyle"
-            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ "
+            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ "
             android:imeOptions="actionNext"
             android:inputType="textPersonName"
             android:maxLength="100"

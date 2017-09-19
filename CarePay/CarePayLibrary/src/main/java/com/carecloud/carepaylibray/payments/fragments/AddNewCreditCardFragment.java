@@ -169,7 +169,9 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         postModel.setPapiPaymentMethod(papiPaymentMethod);
 
         IntegratedPaymentMetadata integratedPaymentMetadata = postModel.getMetadata();
-        integratedPaymentMetadata.setAppointmentId(callback.getAppointmentId());
+        if (callback.getAppointmentId() != null && integratedPaymentMetadata.getAppointmentRequestDTO() == null) {
+            integratedPaymentMetadata.setAppointmentId(callback.getAppointmentId());
+        }
 
         Gson gson = new Gson();
         if (postModel.isPaymentModelValid()) {
