@@ -49,9 +49,9 @@ branches:
     - QA
     - development
     - TRAVIS-DEPLOY
-before_deploy:
-  - jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ./release-keystore.jks -storepass carecloud123 -keypass carecloud123 $TRAVIS_BUILD_DIR/release/dev/patient_app.apk carecloudkey
-  - jarsigner -verify $TRAVIS_BUILD_DIR/release/dev/patient_app.apk
+#before_deploy:
+#  - jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ./release-keystore.jks -storepass carecloud123 -keypass carecloud123 $TRAVIS_BUILD_DIR/release/dev/patient_app.apk carecloudkey
+#  - jarsigner -verify $TRAVIS_BUILD_DIR/release/dev/patient_app.apk
 deploy:
   skip_cleanup: true
   provider: testfairy
