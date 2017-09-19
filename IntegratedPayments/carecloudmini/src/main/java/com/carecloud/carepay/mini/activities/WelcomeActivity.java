@@ -170,6 +170,10 @@ public class WelcomeActivity extends FullScreenActivity {
         });
     }
 
+    /**
+     * This can be used to disconnect the device and expect that it will trigger a reconnect once the disconnect is complete
+     * not currently being used in this implementation
+     */
     private void reconnectDevice(){
         runOnUiThread(new Runnable() {
             @Override
