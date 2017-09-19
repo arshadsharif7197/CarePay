@@ -80,12 +80,13 @@ public class PaymentsSettingsRegularPaymentsDTO {
 
     /**
      * Get partial payment threshold as a double
+     *
      * @return partial payment threshold or 0
      */
     public double getPartialPaymentsThreshold() {
         try {
             return Double.parseDouble(partialPaymentsThreshold);
-        }catch (NumberFormatException nfe){
+        } catch (Exception nfe) {
             return 0D;
         }
     }
@@ -96,12 +97,13 @@ public class PaymentsSettingsRegularPaymentsDTO {
 
     /**
      * Get minimum partial payment as a double
+     *
      * @return minimum partial payment or 0
      */
     public double getMinimumPartialPaymentAmount() {
         try {
             return Double.parseDouble(minimumPartialPaymentAmount);
-        }catch (NumberFormatException nfe){
+        } catch (Exception nfe) {
             return 0D;
         }
     }
