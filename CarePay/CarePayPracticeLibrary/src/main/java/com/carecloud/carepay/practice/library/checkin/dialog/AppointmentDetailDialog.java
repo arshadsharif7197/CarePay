@@ -643,13 +643,15 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
     }
 
     private boolean canSendPage(){
-        String userId = pendingBalanceDTO.getMetadata().getUserId();
-        String checkUserId;
-        for(PatientBalanceDTO patientBalanceDTO : checkInDTO.getPayload().getPatientBalances()){
-            checkUserId = patientBalanceDTO.getDemographics().getMetadata().getUserId();
-            if(userId.equals(checkUserId)){
-                pushUserId = checkUserId;
-                return patientBalanceDTO.getDemographics().getPayload().getNotificationOptions().hasPushNotification();
+        if(pendingBalanceDTO != null) {
+            String userId = pendingBalanceDTO.getMetadata().getUserId();
+            String checkUserId;
+            for (PatientBalanceDTO patientBalanceDTO : checkInDTO.getPayload().getPatientBalances()) {
+                checkUserId = patientBalanceDTO.getDemographics().getMetadata().getUserId();
+                if (userId.equals(checkUserId)) {
+                    pushUserId = checkUserId;
+                    return patientBalanceDTO.getDemographics().getPayload().getNotificationOptions().hasPushNotification();
+                }
             }
         }
         return false;
