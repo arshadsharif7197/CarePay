@@ -25,7 +25,7 @@ before_install:
   - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
   - ./CarePay/gradlew dependencies || true
   - chmod +x ./CarePay/runner
-  - chmod +x ./CarePay/testfairy
+#  - chmod +x ./CarePay/testfairy
   - pip install --user awscli
 android:
   components:
@@ -42,8 +42,8 @@ android:
 script:
    - jdk_switcher use oraclejdk8
    - cd /home/travis/build/CareCloud/shamrock_android/CarePay
-   - ./runner
-   - ./testfairy $TRAVIS_BUILD_DIR/release/dev/patient_app.apk
+   - ./runner testfairy
+#   - ./testfairy $TRAVIS_BUILD_DIR/release/dev/patient_app.apk
 branches:
   only: 
     - master

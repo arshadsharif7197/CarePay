@@ -6,6 +6,8 @@ reset=$(tput sgr0)
 COMMIT_RANGE=$(echo $TRAVIS_COMMIT_RANGE | sed 's/\.\.\./\.\./g')
 COMMIT_MESSAGES=$(echo $(git log $COMMIT_RANGE --pretty=format:%s))
 
+DEPLOY_SCRIPT=$1
+
 shopt -s nocasematch
 #####################################################################################
 ########## CHECKS TO SEE IF BUILD IS TRIGGERED FROM PULL REQUEST ####################
@@ -65,12 +67,12 @@ elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "TRAVIS-DEP
     echo "${green}*** BUILDING DEVELOPMENT PATIENT APK ***${reset}"
     ./gradlew :CarePayPatient:assembleDevelopment --profile --configure-on-demand
 
-    export PATIENT_APP=$(echo $(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/*release*.apk) )
+    PATIENT_APP=$(echo $(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/*release*.apk) )
 
     echo "${green}*** Copying Patient Apk for deploy ***${reset}"
 
-    mkdir -p $TRAVIS_BUILD_DIR/release/dev
-    cp $PATIENT_APP $TRAVIS_BUILD_DIR/release/dev/patient_app.apk
+#    mkdir -p $TRAVIS_BUILD_DIR/release/dev
+#    cp $PATIENT_APP $TRAVIS_BUILD_DIR/release/dev/patient_app.apk
    
 fi
 
@@ -96,3 +98,19 @@ elif ["$TRAVIS_PULL_REQUEST" != "false" ]; then
     echo "${green}*** Patient App Compile Check ***${reset}"
     ./gradlew :CarePayPatient:compileProductionReleaseSources --profile --configure-on-demand
 fi
+
+
+########### TEST FAIRY DEPLOY ###########
+if [[ $DEPLOY_SCRIPT == "testfairy" ]]; then
+
+    if [[ $PATIENT_APP ]]; then
+      chmod +x ./$DEPLOY_SCRIPT
+      ./$DEPLOY_SCRIPT $PATIENT_APP
+    fi
+
+    if [[ $PRACTICE_APP ]]; then
+      chmod +x ./$DEPLOY_SCRIPT
+       ./$DEPLOY_SCRIPT $PRACTICE_APP
+    fi
+fi
+#########################################
