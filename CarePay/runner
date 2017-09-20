@@ -20,13 +20,15 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "development"
     echo "${green}*** BUILDING DEVELOPMENT PRACTICE APK ***${reset}"
     ./gradlew :CarePayPracticeTablet:assembleDevelopment --profile --configure-on-demand
 
+    PRACTICE_APP=$(echo $(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/*practice*release*.apk) )
+
     echo "${green}*** DEPLOYING DEVELOPMENT PRACTICE APK TO AWS ***${reset}"
     AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk s3://automation-zeus/ --recursive
 
     echo "${green}*** BUILDING DEVELOPMENT PATIENT APK ***${reset}"
     ./gradlew :CarePayPatient:assembleDevelopment --profile --configure-on-demand
 
-    PATIENT_APP=$TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/*release*.apk
+    PATIENT_APP=$(echo $(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/*patient*release*.apk) )
 
     echo "${green}*** DEPLOYING DEVELOPMENT PATIENT APK TO AWS ***${reset}"
     AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk s3://automation-zeus/ --recursive
@@ -67,13 +69,7 @@ elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "TRAVIS-DEP
     echo "${green}*** BUILDING DEVELOPMENT PATIENT APK ***${reset}"
     ./gradlew :CarePayPatient:assembleDevelopment --profile --configure-on-demand
 
-    PATIENT_APP=$(echo $(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/*release*.apk) )
-
-    echo "${green}*** Copying Patient Apk for deploy ***${reset}"
-
-#    mkdir -p $TRAVIS_BUILD_DIR/release/dev
-#    cp $PATIENT_APP $TRAVIS_BUILD_DIR/release/dev/patient_app.apk
-   
+    PATIENT_APP=$(echo $(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/*patient*release*.apk) )
 fi
 
 #####################################################################################
@@ -102,15 +98,18 @@ fi
 
 ########### TEST FAIRY DEPLOY ###########
 if [[ $DEPLOY_SCRIPT == "testfairy" ]]; then
+    echo "${green}*** Deploying via TestFairy ***${reset}"
 
     if [[ $PATIENT_APP ]]; then
-      chmod +x ./$DEPLOY_SCRIPT
-      ./$DEPLOY_SCRIPT $PATIENT_APP
+        echo "${green}*** Deploy Patient App Build ***${reset}"
+        chmod +x ./$DEPLOY_SCRIPT
+        ./$DEPLOY_SCRIPT $PATIENT_APP
     fi
 
     if [[ $PRACTICE_APP ]]; then
-      chmod +x ./$DEPLOY_SCRIPT
-       ./$DEPLOY_SCRIPT $PRACTICE_APP
+        echo "${green}*** Deploy Patient App Build ***${reset}"
+        chmod +x ./$DEPLOY_SCRIPT
+        ./$DEPLOY_SCRIPT $PRACTICE_APP
     fi
 fi
 #########################################
