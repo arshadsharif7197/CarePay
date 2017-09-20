@@ -69,7 +69,7 @@ elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "TRAVIS-DEP
     echo "${green}*** BUILDING DEVELOPMENT PATIENT APK ***${reset}"
     ./gradlew :CarePayPatient:assembleDevelopment --profile --configure-on-demand
 
-    PATIENT_APP=$(echo $(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/*patient*release*.apk) )
+    PATIENT_APP=$(echo $(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/ | grep '/.*patient.*release.*\.apk/i') )
 fi
 
 #####################################################################################
