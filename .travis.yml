@@ -1,6 +1,6 @@
 sudo: required
-#notifications:
-#  slack: carecloud:L7A13CxiKvd3xBm1XEZsOIsW
+notifications:
+  slack: carecloud:L7A13CxiKvd3xBm1XEZsOIsW
 git:
   depth: 999999
   submodules: true
@@ -47,4 +47,3 @@ branches:
     - master
     - QA
     - development
-    - TRAVIS-DEPLOY
