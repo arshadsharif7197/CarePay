@@ -33,7 +33,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
-import com.carecloud.carepaylibray.appointments.models.ResourcesPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
@@ -101,7 +100,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     public void onProviderSelected(AppointmentResourcesDTO appointmentResourcesDTO,
                                    AppointmentsResultModel appointmentsResultModel,
                                    ResourcesToScheduleDTO resourcesToScheduleDTO) {
-        ResourcesPracticeDTO selectedResourcesPracticeDTO;
+        UserPracticeDTO selectedResourcesPracticeDTO;
         if (resourcesToScheduleDTO != null) {
             selectedResourcesPracticeDTO = resourcesToScheduleDTO.getPractice();
         } else {
@@ -654,7 +653,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         }
 
         UserPracticeDTO userPracticeDTO = new UserPracticeDTO();
-        for (ResourcesPracticeDTO resourcesPracticeDTO : appointmentsResultModel
+        for (UserPracticeDTO resourcesPracticeDTO : appointmentsResultModel
                 .getPayload().getUserPractices()) {
             if (resourcesPracticeDTO.getPracticeId().equals(practiceId)) {
                 userPracticeDTO.setPracticeMgmt(resourcesPracticeDTO.getPracticeMgmt());
