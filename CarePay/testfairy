@@ -13,4 +13,4 @@ echo "${yellow}*** Verifying $APK_FILE ***${reset}"
 jarsigner -verify APK_FILE
 
 echo "${green}*** Begin uploading $APK_FILE to TestFairy ***${reset}"
-curl https://upload.testfairy.com/api/upload -F api_key=4afa2bed1de9c13c9630949f5a74aa6c881d0724 -F file=@APK_FILE
+curl https://upload.testfairy.com/api/upload -F api_key=4afa2bed1de9c13c9630949f5a74aa6c881d0724 -F file=@$APK_FILE
