@@ -31,6 +31,6 @@
         </layer-list>
     </item>
 
-    <item android:drawable="@drawable/top_right_rounded_background" />
+    <item android:drawable="@drawable/right_principal_rounded_background" />
 
 </selector>

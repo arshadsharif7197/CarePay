@@ -18,5 +18,8 @@
 
     <attr name="keepStatusBar" format="boolean"/>
     <attr name="practiceBackgroundColor" format="reference|color" />
+    <attr name="newsBackgroundColor" format="reference|color" />
+    <attr name="homeButtonSelector" format="reference|color" />
     <attr name="practiceActionBarColor" format="reference|color" />
+    <attr name="practiceLogoDrawable" format="reference"/>
 </resources>

@@ -32,7 +32,7 @@ public class MiniApplication extends MultiDexApplication implements ApplicationH
         super.onCreate();
 
         SugarContext.init(this);
-        ShamrockSdk.init(BuildConfig.X_API_KEY);
+        ShamrockSdk.init(BuildConfig.X_API_KEY, BuildConfig.DEEPSTREAM_URL, BuildConfig.API_BASE_URL);
         setHttpConstants();
         Picasso.setSingletonInstance(PicassoHelper.getPicassoInstance(this));
     }
@@ -51,6 +51,7 @@ public class MiniApplication extends MultiDexApplication implements ApplicationH
         HttpConstants.setDeviceInformation(deviceIdentifierDTO);
         HttpConstants.setApiStartKey(BuildConfig.X_API_KEY);
         HttpConstants.setApiBaseUrl(BuildConfig.API_BASE_URL);
+        HttpConstants.setEnvironment(BuildConfig.ENVIRONMENT);
     }
 
     private void updatePicassoHelper(){
@@ -91,5 +92,6 @@ public class MiniApplication extends MultiDexApplication implements ApplicationH
             restHelper = new RestCallServiceHelper(this);
         }
     }
+
 }
 

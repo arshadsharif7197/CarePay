@@ -28,8 +28,8 @@ import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
-import com.carecloud.carepaylibray.payments.models.PatientPaymentPayload;
-import com.carecloud.carepaylibray.payments.models.PaymentExceptionDTO;
+import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -38,6 +38,8 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
 import com.google.gson.Gson;
+
+import java.util.List;
 
 /**
  * Created by jorge on 29/12/16
@@ -81,15 +83,24 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     private boolean hasCharges() {
-        return paymentsDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges()
-                .getCharges().size() > 0;
+        return !paymentsDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges()
+                .getCharges().isEmpty();
     }
 
     private boolean hasPayments() {
-        return paymentsDTO.getPaymentPayload().getPatientBalances().size() > 0
-                && paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().size() > 0
-                && paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0)
-                .getPayload().size() > 0;
+        if(!paymentsDTO.getPaymentPayload().getPatientBalances().isEmpty()){
+            for(PatientBalanceDTO patientBalanceDTO : paymentsDTO.getPaymentPayload().getPatientBalances()){
+                if(!patientBalanceDTO.getBalances().isEmpty()){
+                    for(PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()){
+                        if(!pendingBalanceDTO.getPayload().isEmpty()){
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -183,8 +194,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void onPartialPaymentClicked(double owedAmount) {
-        new PartialPaymentDialog(this, paymentsDTO).show();
+    public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
+        new PartialPaymentDialog(this, paymentsDTO, selectedBalance).show();
     }
 
     @Override
@@ -229,7 +240,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
         PaymentsModel updatePaymentModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        paymentsDTO.getPaymentPayload().setPatientBalances(updatePaymentModel.getPaymentPayload().getPatientBalances());
+        updateBalances(updatePaymentModel.getPaymentPayload().getPatientBalances());
         initFragments();
     }
 
@@ -271,13 +282,11 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        PatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments()
-                .getPayload().get(0);
-        if (payload.getPaymentExceptions() != null && !payload.getPaymentExceptions().isEmpty()
-                && payload.getTotal() == 0D) {
+        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
+        if(!payload.getProcessingErrors().isEmpty() && PaymentConfirmationFragment.getTotalPaid(payload)==0D){
             StringBuilder builder = new StringBuilder();
-            for (PaymentExceptionDTO paymentException : payload.getPaymentExceptions()) {
-                builder.append(paymentException.getMessage());
+            for(IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()){
+                builder.append(processingError.getError());
                 builder.append("\n");
             }
             int last = builder.lastIndexOf("\n");
@@ -331,5 +340,19 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         pendingBalanceDTO.setMetadata(selectedBalancesItem.getMetadata());
         pendingBalanceDTO.getPayload().add(selectedBalancesItem.getBalance());
         this.selectedBalancesItem = pendingBalanceDTO;
+    }
+
+    private void updateBalances(List<PatientBalanceDTO> updatedBalances){
+        for(PatientBalanceDTO updatedManagementBalance : updatedBalances){//should contain just 1 element
+            for(PendingBalanceDTO updatedBalance : updatedManagementBalance.getBalances()){//should contain just 1 element - the updated balance that was just paid
+                for(PatientBalanceDTO existingManagementBalance : paymentsDTO.getPaymentPayload().getPatientBalances()){//should contain only 1 element until another PM is supported
+                    for(PendingBalanceDTO existingBalance : existingManagementBalance.getBalances()){//can contain multiple balances in multi practice mode, otherwise just 1
+                        if(existingBalance.getMetadata().getPracticeId().equals(updatedBalance.getMetadata().getPracticeId())){
+                            existingBalance.setPayload(updatedBalance.getPayload());
+                        }
+                    }
+                }
+            }
+        }
     }
 }

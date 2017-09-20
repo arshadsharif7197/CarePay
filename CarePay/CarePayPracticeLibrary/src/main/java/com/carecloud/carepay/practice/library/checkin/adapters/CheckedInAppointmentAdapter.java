@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.CardViewPatient;
-import com.carecloud.carepay.practice.library.checkin.PracticeModePracticeCheckInActivity;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.customcomponent.AppointmentStatusCardView;
@@ -29,10 +28,15 @@ import java.util.Map;
 
 public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInAppointmentAdapter.CartViewHolder> {
 
+    public interface CheckinItemCallback{
+        void onCheckInItemClick(AppointmentsPayloadDTO appointmentsPayloadDTO, boolean isWaitingRoom);
+    }
+
     private Context context;
     private List<CardViewPatient> allPatients;
     private List<CardViewPatient> filteredPatients;
     private MapFilterModel filterModel;
+    private CheckinItemCallback callback;
 
     private boolean isWaitingRoom;
 
@@ -42,10 +46,11 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
      * @param context    context
      * @param checkInDTO checkIn DTO
      */
-    public CheckedInAppointmentAdapter(Context context, CheckInDTO checkInDTO, boolean isWaitingRoom) {
+    public CheckedInAppointmentAdapter(Context context, CheckInDTO checkInDTO, CheckinItemCallback callback, boolean isWaitingRoom) {
 
         this.context = context;
         this.isWaitingRoom = isWaitingRoom;
+        this.callback = callback;
         loadPatients(checkInDTO);
     }
 
@@ -139,7 +144,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
      * @return created view
      */
     public CheckedInAppointmentAdapter.CartViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.checked_in_list_item_layout, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.checked_in_list_item_layout, parent, false);
         return new CartViewHolder(view);
     }
 
@@ -235,7 +240,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
 
         @Override
         public void onClick(View view) {
-            ((PracticeModePracticeCheckInActivity) context).onCheckInItemClick((AppointmentsPayloadDTO) view.getTag(), isWaitingRoom);
+            callback.onCheckInItemClick((AppointmentsPayloadDTO) view.getTag(), isWaitingRoom);
         }
     }
 }

@@ -47,9 +47,8 @@ import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
+import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PatientPaymentPayload;
-import com.carecloud.carepaylibray.payments.models.PaymentExceptionDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -67,7 +66,10 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
-public class PracticeModePracticeCheckInActivity extends BasePracticeActivity implements FilterDialog.FilterDialogListener, PracticePaymentNavigationCallback, AppointmentDetailDialog.AppointmentDialogCallback {
+public class PracticeModeCheckInActivity extends BasePracticeActivity implements FilterDialog.FilterDialogListener,
+        PracticePaymentNavigationCallback,
+        AppointmentDetailDialog.AppointmentDialogCallback,
+        CheckedInAppointmentAdapter.CheckinItemCallback{
 
 
     private RecyclerView checkinginRecyclerView;
@@ -108,13 +110,13 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
         checkinginRecyclerView = (RecyclerView) findViewById(R.id.checkinginRecyclerView);
         checkinginRecyclerView.setHasFixedSize(true);
         checkinginRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        checkinginRecyclerView.setLayoutManager(new LinearLayoutManager(PracticeModePracticeCheckInActivity.this));
+        checkinginRecyclerView.setLayoutManager(new LinearLayoutManager(PracticeModeCheckInActivity.this));
         checkinginRecyclerView.setOnDragListener(onCheckingInListDragListener);
 
         waitingRoomRecyclerView = (RecyclerView) findViewById(R.id.waitingRoomRecyclerView);
         waitingRoomRecyclerView.setHasFixedSize(true);
         waitingRoomRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        waitingRoomRecyclerView.setLayoutManager(new LinearLayoutManager(PracticeModePracticeCheckInActivity.this));
+        waitingRoomRecyclerView.setLayoutManager(new LinearLayoutManager(PracticeModeCheckInActivity.this));
         waitingRoomRecyclerView.setOnDragListener(onWaitListDragListener);
 
         filterOnTextView.setVisibility(View.GONE);
@@ -186,10 +188,10 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     }
 
     private void setAdapter() {
-        checkedInAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, false);
+        checkedInAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this, false);
         checkinginRecyclerView.setAdapter(checkedInAdapter);
 
-        waitingRoomAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, true);
+        waitingRoomAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this, true);
         waitingRoomRecyclerView.setAdapter(waitingRoomAdapter);
 
         applyFilter();
@@ -266,6 +268,8 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
                     } else {
                         findViewById(R.id.drop_down_area_view).setVisibility(View.GONE);
                     }
+
+                    undoAppointmentCheckin(appointmentId);
                     break;
                 //the drag and drop operation has concluded.
                 case DragEvent.ACTION_DRAG_ENDED:
@@ -327,6 +331,14 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
         getWorkflowServiceHelper().execute(transitionDTO, checkInAppointmentCallback, queryMap);
     }
 
+    private void undoAppointmentCheckin(String appointmentId){
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("appointment_id", appointmentId);
+
+        TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getConfirmAppointment();
+        getWorkflowServiceHelper().execute(transitionDTO, checkInAppointmentCallback, queryMap);
+    }
+
     private WorkflowServiceCallback checkInAppointmentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -346,6 +358,7 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
+            showErrorNotification(exceptionMessage);
             findViewById(R.id.drop_down_area_view).setVisibility(View.GONE);
         }
     };
@@ -376,6 +389,7 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
      *
      * @param appointmentPayloadDTO the appointment payload dto
      */
+    @Override
     public void onCheckInItemClick(AppointmentsPayloadDTO appointmentPayloadDTO, boolean isWaitingRoom) {
         AppointmentDetailDialog dialog = new AppointmentDetailDialog(getContext(),
                 checkInDTO, getPatientBalanceDTOs(appointmentPayloadDTO.getPatient().getPatientId()),
@@ -396,7 +410,7 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     }
 
     @Override
-    public void onPartialPaymentClicked(double owedAmount) {
+    public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
 
     }
 
@@ -428,11 +442,11 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        PatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload().get(0);
-        if(payload.getPaymentExceptions()!=null && !payload.getPaymentExceptions().isEmpty() && payload.getTotal()==0D){
+        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
+        if(!payload.getProcessingErrors().isEmpty() && PaymentConfirmationFragment.getTotalPaid(payload)==0D){
             StringBuilder builder = new StringBuilder();
-            for(PaymentExceptionDTO paymentException : payload.getPaymentExceptions()){
-                builder.append(paymentException.getMessage());
+            for(IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()){
+                builder.append(processingError.getError());
                 builder.append("\n");
             }
             int last = builder.lastIndexOf("\n");
@@ -567,7 +581,6 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
             }
             default:
                 //nothing
-                return;
         }
     }
 
@@ -593,15 +606,10 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
         while (iterator.hasNext()) {
             PatientBalanceDTO patientBalanceDTO = iterator.next();
             if (matchesBalanceDTO(patientBalanceDTO, updateBalance)) {
-                try {
-                    double pendingResponsibility = Double.parseDouble(updateBalance.getPendingRepsonsibility());
-                    patientBalanceDTO.setPendingRepsonsibility(updateBalance.getPendingRepsonsibility());
-                    patientBalanceDTO.setBalances(updateBalance.getBalances());
+                patientBalanceDTO.setPendingRepsonsibility(updateBalance.getPendingRepsonsibility());
+                patientBalanceDTO.setBalances(updateBalance.getBalances());
 
-                    break;
-                } catch (NumberFormatException nfe) {
-                    nfe.printStackTrace();
-                }
+                break;
             }
         }
 

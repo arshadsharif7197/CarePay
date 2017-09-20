@@ -259,7 +259,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     @Override
     public void medicationSubmitFail(String message) {
         if (demographicsView != null) {
-            demographicsView.showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            demographicsView.showErrorNotification(message);
             Log.e(demographicsView.getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), message);
         }
     }
@@ -279,26 +279,26 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     @Override
     public int getTotalSteps() {
         int countSteps = 0;
-        for(int i=0; i<MAX_STEPS; i++){
-            countSteps += hasStep(i+1);
+        for (int i = 0; i < MAX_STEPS; i++) {
+            countSteps += hasStep(i + 1);
         }
         return countSteps;
     }
 
     @Override
     public int hasStep(int step) {
-        switch (step){
+        switch (step) {
             case PERSONAL_INFO:
             case ADDRESS:
             case DEMOGRAPHICS:
                 return 1;
             case IDENTITY:
-                if(demographicDTO.getPayload().getCheckinSettings().shouldShowIdentityDocs()) {
+                if (demographicDTO.getPayload().getCheckinSettings().shouldShowIdentityDocs()) {
                     return 1;
                 }
                 return 0;
             case INSURANCE:
-                if(demographicDTO.getPayload().getCheckinSettings().shouldShowHealthInsurance()){
+                if (demographicDTO.getPayload().getCheckinSettings().shouldShowHealthInsurance()) {
                     return 1;
                 }
                 return 0;
@@ -379,7 +379,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     protected CheckInDemographicsBaseFragment getDemographicFragment(int step) {
-        if(hasStep(step)!=1){
+        if (hasStep(step) != 1) {
             return getDemographicFragment(++step);
         }
         switch (step) {

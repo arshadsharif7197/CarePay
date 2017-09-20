@@ -9,10 +9,6 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class CheckInMetadataDTO {
-
-    @SerializedName("labels")
-    @Expose
-    private CheckInLabelDTO label = new CheckInLabelDTO();
     @SerializedName("links")
     @Expose
     private LinksDTO links = new LinksDTO();
@@ -21,66 +17,36 @@ public class CheckInMetadataDTO {
     private CheckInTransitionsDTO transitions = new CheckInTransitionsDTO();
 
     /**
-     *
-     * @return
-     * The label
-     */
-    public CheckInLabelDTO getLabel() {
-        if (null == label) {
-            return new CheckInLabelDTO();
-        }
-
-        return label;
-    }
-
-    /**
-     *
-     * @param label
-     * The label
-     */
-    public void setLabel(CheckInLabelDTO label) {
-        this.label = label;
-    }
-
-    /**
-     *
-     * @return
-     * The links
+     * @return The links
      */
     public LinksDTO getLinks() {
         return links;
     }
 
     /**
-     *
-     * @param links
-     * The links
+     * @param links The links
      */
     public void setLinks(LinksDTO links) {
         this.links = links;
     }
 
     /**
-     *
-     * @return
-     * The transitions
+     * @return The transitions
      */
     public CheckInTransitionsDTO getTransitions() {
         return transitions;
     }
 
     /**
-     *
-     * @param transitions
-     * The transitions
+     * @param transitions The transitions
      */
     public void setTransitions(CheckInTransitionsDTO transitions) {
         this.transitions = transitions;
     }
 
 
-    public Boolean hasAssistEnabled(){
-        return false ;
+    public Boolean hasAssistEnabled() {
+        return false;
     }
 
 

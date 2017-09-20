@@ -22,7 +22,8 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
-import com.carecloud.carepaylibray.payments.models.PatientPaymentPayload;
+import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
+import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -44,7 +45,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
     private AppointmentDTO selectedAppointment;
     private String userImageUrl;
     private CheckCompleteInterface callback;
-    private PatientPaymentPayload patientPaymentPayload;
+    private IntegratedPatientPaymentPayload patientPaymentPayload;
     private List<String> filledForms;
 
     private
@@ -95,7 +96,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
         DTO dto = callback.getDto();
         selectedAppointment = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
         if (hasPayment) {
-            patientPaymentPayload = ((PaymentsModel) dto).getPaymentPayload().getPatientPayments().getPayload().get(0);
+            patientPaymentPayload = ((PaymentsModel) dto).getPaymentPayload().getPatientPayments().getPayload();
             userImageUrl = ((PaymentsModel) dto).getPaymentPayload().getPatientBalances().get(0)
                     .getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
         } else if (isAdHocForms) {
@@ -179,17 +180,19 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
 
         TextView paymentTypeTextView = (TextView) view.findViewById(R.id.paymentTypeTextView);
         if (hasPayment) {
-            paymentTypeTextView.setText(patientPaymentPayload.getType());
+            paymentTypeTextView.setText(Label.getLabel("payment_type_one_time"));
 
             TextView paymentMethodTextView = (TextView) view.findViewById(R.id.paymentMethodTextView);
-            paymentMethodTextView.setText(patientPaymentPayload.getMethod());
+            paymentMethodTextView.setText(PaymentConfirmationFragment.getPaymentMethod(patientPaymentPayload));
 
             TextView confirmationNumberTextView = (TextView) view.findViewById(R.id.confirmationNumberTextView);
-            confirmationNumberTextView.setText(patientPaymentPayload.getConfirmation());
+            confirmationNumberTextView.setText(patientPaymentPayload.getPaymentId());
 
             NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
             TextView totalPaidTextView = (TextView) view.findViewById(R.id.totalPaidTextView);
-            totalPaidTextView.setText(currencyFormatter.format(patientPaymentPayload.getTotal()));
+            totalPaidTextView.setText(currencyFormatter.format(PaymentConfirmationFragment.getTotalPaid(patientPaymentPayload)));
+
+            //todo display possible errors
 
         } else if (isAdHocForms) {
             setUpForAdHocForms(view);

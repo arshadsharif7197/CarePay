@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.mini.HttpConstants;
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
 import com.carecloud.carepay.mini.models.queue.QueuePaymentRecord;
@@ -32,6 +33,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 /**
@@ -40,10 +43,10 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class WelcomeActivity extends FullScreenActivity {
     private static final String TAG = WelcomeActivity.class.getName();
-    private static final int MAX_RETRIES = 3;
-    private static final int CONNECTION_RETRY_DELAY = 1000 * 5;
+    private static final int MAX_RETRIES = 2;
+    private static final int CONNECTION_RETRY_DELAY = 1000 * 3;
     private static final int PAYMENT_COMPLETE_RESET = 1000 * 3;
-    private static final int POST_RETRY_DELAY = 1000 * 30;
+    private static final int POST_RETRY_DELAY = 1000 * 10;
 
     private ApplicationHelper applicationHelper;
     private TextView message;
@@ -52,6 +55,7 @@ public class WelcomeActivity extends FullScreenActivity {
     private Device connectedDevice;
 
     private int paymentAttempt = 0;
+    private boolean isDisconnecting = false;
 
     @Override
     protected void onCreate(Bundle icicle){
@@ -63,6 +67,8 @@ public class WelcomeActivity extends FullScreenActivity {
         setPracticeDetails();
 
         message = (TextView) findViewById(R.id.welcome_message);
+        TextView environment = (TextView) findViewById(R.id.environment_label);
+        environment.setText(HttpConstants.getEnvironment());
     }
 
     @Override
@@ -108,8 +114,9 @@ public class WelcomeActivity extends FullScreenActivity {
             case Defs.IMAGE_STYLE_PRACTICE_LOGO: {
                 practiceLogoLayout.setVisibility(View.VISIBLE);
                 String imageUrl = selectedPractice.getPracticePhoto();
+                File photoFile = new File(imageUrl);
                 Picasso.with(this)
-                        .load(imageUrl)
+                        .load(photoFile)
                         .resize(400, 400)
                         .centerCrop()
                         .transform(new CropCircleTransformation())
@@ -122,7 +129,12 @@ public class WelcomeActivity extends FullScreenActivity {
                 carecloudLogoLayout.setVisibility(View.VISIBLE);
                 break;
             }
+
         }
+
+        Log.d(TAG, selectedPractice.toString());
+        Log.d(TAG, "Device Name: " + getApplicationHelper().getApplicationPreferences().getDeviceName());
+        Log.d(TAG, "Location Id: " + getApplicationHelper().getApplicationPreferences().getLocationId());
 
         View settings = findViewById(R.id.button_settings);
         settings.setOnClickListener(new View.OnClickListener() {
@@ -138,6 +150,7 @@ public class WelcomeActivity extends FullScreenActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                isDisconnecting = false;
                 String id = applicationHelper.getApplicationPreferences().getDeviceId();
                 DeviceConnection.connect(WelcomeActivity.this, id, connectionCallback, connectionActionCallback);
             }
@@ -148,8 +161,28 @@ public class WelcomeActivity extends FullScreenActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                String id = applicationHelper.getApplicationPreferences().getDeviceId();
-                DeviceConnection.disconnect(WelcomeActivity.this, id);
+                if(!isDisconnecting) {
+                    isDisconnecting = true;
+                    String id = applicationHelper.getApplicationPreferences().getDeviceId();
+                    DeviceConnection.disconnect(WelcomeActivity.this, id, null);
+                }
+            }
+        });
+    }
+
+    /**
+     * This can be used to disconnect the device and expect that it will trigger a reconnect once the disconnect is complete
+     * not currently being used in this implementation
+     */
+    private void reconnectDevice(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(!isDisconnecting) {
+                    isDisconnecting = true;
+                    String id = applicationHelper.getApplicationPreferences().getDeviceId();
+                    DeviceConnection.disconnect(WelcomeActivity.this, id, connectionCallback);
+                }
             }
         });
     }
@@ -212,19 +245,33 @@ public class WelcomeActivity extends FullScreenActivity {
 
     private ConnectionCallback connectionCallback = new ConnectionCallback() {
         @Override
-        public void onPreExecute() {
+        public void startDeviceConnection() {
             updateMessage(getString(R.string.welcome_connecting));
         }
 
         @Override
-        public void onPostExecute(Device device) {
+        public void onDeviceConnected(Device device) {
             updateMessage(getString(R.string.welcome_waiting));
             connectedDevice = device;
         }
 
         @Override
-        public void onFailure(String errorMessage) {
-            updateMessage(errorMessage);
+        public void onConnectionFailure(String errorMessage) {
+            Log.d(TAG, errorMessage);
+
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    connectDevice();
+                }
+            }, CONNECTION_RETRY_DELAY);
+        }
+
+        @Override
+        public void onDeviceDisconnected(Device device) {
+            //reconnect if disconnected
+            Log.d(TAG, "Device Disconnected");
+            isDisconnecting = false;
 
             handler.postDelayed(new Runnable() {
                 @Override
@@ -361,7 +408,7 @@ public class WelcomeActivity extends FullScreenActivity {
 
         @Override
         public void onPaymentConnectionFailure(String message) {
-            Log.d(TAG, message);
+            Log.d(TAG, message!=null?message:"Connection Failed");
             if(connectedDevice != null){
                 String paymentRequestId = connectedDevice.getPaymentRequestId();
                 releasePaymentRequest(paymentRequestId);
@@ -409,6 +456,8 @@ public class WelcomeActivity extends FullScreenActivity {
                     }
                 }, PAYMENT_COMPLETE_RESET);
 
+                //this will clean up any pending requests that may have been queued since now we have been able to successfully process a request
+                launchQueueService();
             }
 
             @Override
@@ -428,14 +477,18 @@ public class WelcomeActivity extends FullScreenActivity {
                         queuePaymentRecord.setPaymentRequestId(paymentRequestId);
                         queuePaymentRecord.save();
 
-                        Intent queueService = new Intent(WelcomeActivity.this, QueueUploadService.class);
-                        startService(queueService);
+                        launchQueueService();
                     }
                     resetDevice(paymentRequestId);
                     updateMessage(getString(R.string.welcome_waiting));
                 }
             }
         };
+    }
+
+    private void launchQueueService(){
+        Intent queueService = new Intent(this, QueueUploadService.class);
+        startService(queueService);
     }
 
     private boolean shouldRetry(String errorMessage){
@@ -445,6 +498,7 @@ public class WelcomeActivity extends FullScreenActivity {
     private void resetDevice(String paymentRequestId){
         releasePaymentRequest(paymentRequestId);
         paymentAttempt = 0;
+//        reconnectDevice();
     }
 
 }

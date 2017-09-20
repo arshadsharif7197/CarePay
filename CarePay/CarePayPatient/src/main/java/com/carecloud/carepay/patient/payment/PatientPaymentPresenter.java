@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
 import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
@@ -16,8 +17,7 @@ import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
-import com.carecloud.carepaylibray.payments.models.PatientPaymentPayload;
-import com.carecloud.carepaylibray.payments.models.PaymentExceptionDTO;
+import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -43,13 +43,18 @@ public class PatientPaymentPresenter extends PaymentPresenter {
     }
 
     @Override
-    public void onPartialPaymentClicked(double owedAmount) {
-        new PartialPaymentDialog(viewHandler.getContext(), paymentsModel).show();
+    public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
+        new PartialPaymentDialog(viewHandler.getContext(), paymentsModel, selectedBalance).show();
     }
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         viewHandler.navigateToFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount), true);
+    }
+
+    @Override
+    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
+        PatientNavigationHelper.navigateToWorkflow(viewHandler.getContext(), workflowDTO);
     }
 
     @Override
@@ -86,8 +91,8 @@ public class PatientPaymentPresenter extends PaymentPresenter {
 
     @Override
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
-        for (UserPracticeDTO userPracticeDTO : paymentsModel.getPaymentPayload().getUserPractices()){
-            if(userPracticeDTO.getPatientId()!=null && userPracticeDTO.getPatientId().equals(patientId)){
+        for (UserPracticeDTO userPracticeDTO : paymentsModel.getPaymentPayload().getUserPractices()) {
+            if (userPracticeDTO.getPatientId() != null && userPracticeDTO.getPatientId().equals(patientId)) {
                 return userPracticeDTO;
             }
         }
@@ -122,17 +127,17 @@ public class PatientPaymentPresenter extends PaymentPresenter {
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        PatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload().get(0);
-        if(payload.getPaymentExceptions()!=null && !payload.getPaymentExceptions().isEmpty() && payload.getTotal()==0D){
+        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
+        if (!payload.getProcessingErrors().isEmpty() && PaymentConfirmationFragment.getTotalPaid(payload) == 0D) {
             StringBuilder builder = new StringBuilder();
-            for(PaymentExceptionDTO paymentException : payload.getPaymentExceptions()){
-                builder.append(paymentException.getMessage());
+            for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
+                builder.append(processingError.getError());
                 builder.append("\n");
             }
             int last = builder.lastIndexOf("\n");
             builder.replace(last, builder.length(), "");
-            ((ISession)viewHandler.getContext()).showErrorNotification(builder.toString());
-        }else {
+            ((ISession) viewHandler.getContext()).showErrorNotification(builder.toString());
+        } else {
             Bundle args = new Bundle();
             args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
 

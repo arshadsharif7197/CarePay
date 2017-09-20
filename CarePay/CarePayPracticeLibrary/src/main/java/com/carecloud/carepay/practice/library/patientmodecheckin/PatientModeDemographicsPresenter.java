@@ -1,7 +1,9 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 
+import com.carecloud.carepay.practice.library.checkin.dialog.HomeAlertDialogFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.models.PatientModeCheckinDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -25,37 +27,38 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
 
     /**
      * Default Constructor
-     * @param demographicsView demographics View
+     *
+     * @param demographicsView   demographics View
      * @param savedInstanceState bundle
-     * @param session application session
+     * @param session            application session
      */
-    public PatientModeDemographicsPresenter(DemographicsView demographicsView, Bundle savedInstanceState, ISession session){
+    public PatientModeDemographicsPresenter(DemographicsView demographicsView, Bundle savedInstanceState, ISession session) {
         super(demographicsView, savedInstanceState, true);
         this.session = session;
         this.demographicsView = demographicsView;
 
-        if(savedInstanceState!=null){
+        if (savedInstanceState != null) {
             shouldHandleHomeButton = savedInstanceState.getBoolean(KEY_HANDLE_HOME, false);
         }
 
         String username = null;
-        if(session.getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE){
+        if (session.getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
             //need to switch to PatientMode
             session.getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
             shouldHandleHomeButton = true;
-        }else{
+        } else {
             username = session.getAppAuthorizationHelper().getPatientUser();
         }
 
         patientModeCheckinDTO = demographicsView.getConvertedDTO(PatientModeCheckinDTO.class);
-        if(patientModeCheckinDTO != null) {
-            if(patientModeCheckinDTO.getPayload().getCheckinModeDTO().getMetadata().getUsername() != null) {
+        if (patientModeCheckinDTO != null) {
+            if (patientModeCheckinDTO.getPayload().getCheckinModeDTO().getMetadata().getUsername() != null) {
                 username = patientModeCheckinDTO.getPayload().getCheckinModeDTO().getMetadata().getUsername();
                 session.getAppAuthorizationHelper().setUser(username);
             }
         }
 
-        if(username == null){
+        if (username == null) {
             //bail out of this
             demographicsView.showErrorNotification("Error creating patient log-in");
             exitToPatientHome();
@@ -73,23 +76,37 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
 
     /**
      * Callback if Presenter will handle the home button
+     *
      * @return true if Presenter will handle home button
      */
-    public boolean handleHomeButtonClick(){
-        if(shouldHandleHomeButton){
-            exitToPatientHome();
+    public boolean handleHomeButtonClick() {
+        if (shouldHandleHomeButton) {
+            showHomeAlertDialog();
             return true;
         }
         return false;
     }
 
+    private void showHomeAlertDialog() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment.newInstance();
+        homeAlertDialogFragment.setCallback(new HomeAlertDialogFragment.HomeAlertInterface() {
+            @Override
+            public void onAcceptExit() {
+                exitToPatientHome();
+            }
+        });
+        String tag = homeAlertDialogFragment.getClass().getName();
+        homeAlertDialogFragment.show(ft, tag);
+    }
+
     @Override
-    protected boolean shouldPreventBackNav(){
+    protected boolean shouldPreventBackNav() {
         return getCurrentStep() == 1;
     }
 
-    private void exitToPatientHome(){
-        if(patientModeCheckinDTO != null){
+    private void exitToPatientHome() {
+        if (patientModeCheckinDTO != null) {
             TransitionDTO transitionDTO = patientModeCheckinDTO.getMetaData().getTransitions().getPatientHome();
             session.getWorkflowServiceHelper().execute(transitionDTO, new WorkflowServiceCallback() {
                 @Override

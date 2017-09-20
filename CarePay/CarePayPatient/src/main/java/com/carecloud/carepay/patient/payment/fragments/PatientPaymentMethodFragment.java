@@ -125,10 +125,8 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     }
 
     private void disconnectGoogleAPI() {
-
         googleApiClient.stopAutoManage(getActivity());
         googleApiClient.disconnect();
-
     }
 
     @Override

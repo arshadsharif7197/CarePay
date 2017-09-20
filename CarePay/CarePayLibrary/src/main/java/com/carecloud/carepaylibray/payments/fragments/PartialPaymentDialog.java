@@ -28,9 +28,8 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
-import com.carecloud.carepaylibray.payments.models.postmodel.ResponsibilityType;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -54,6 +53,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private double fullAmount = 0.00;
     private PaymentsModel paymentsDTO;
     private double minimumPayment;
+    private PendingBalanceDTO selectedBalance;
 
     private double insuranceCopay;
     private double patientBalance;
@@ -68,10 +68,11 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
      * @param context     context must implement PayNowClickListener
      * @param paymentsDTO payment model
      */
-    public PartialPaymentDialog(Context context, PaymentsModel paymentsDTO) {
+    public PartialPaymentDialog(Context context, PaymentsModel paymentsDTO, PendingBalanceDTO selectedBalance) {
         super(context);
         this.context = context;
         this.paymentsDTO = paymentsDTO;
+        this.selectedBalance = selectedBalance;
 
         try {
             if (context instanceof PaymentViewHandler) {
@@ -119,12 +120,17 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
 
         calculateFullAmount(partialPaymentTotalAmountTitle);
 
-        minimumPayment = getMinimumPayment(paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPracticeId());
+        if(selectedBalance == null){
+            selectedBalance = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
+        }
+        minimumPayment = getMinimumPayment(selectedBalance.getMetadata().getPracticeId());
         if(minimumPayment > 0){
             TextView header = (TextView) findViewById(R.id.partialPaymentHeader);
             String headerText = Label.getLabel("payment_partial_minimum_amount") + NumberFormat.getCurrencyInstance().format(minimumPayment);
             header.setText(headerText);
         }
+        SystemUtil.showSoftKeyboard(context);
+        amountText.requestFocus();
     }
 
     @Override
@@ -134,15 +140,20 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
             SystemUtil.hideSoftKeyboard(context, view);
             cancel();
         } else if (viewId == R.id.payPartialButton) {
-            if(minimumPayment > 0){
-                double amount = Double.parseDouble(amountText.getText().toString());
-                if(amount < minimumPayment){
-                    String errorMessage = Label.getLabel("payment_partial_minimum_error") + NumberFormat.getCurrencyInstance().format(minimumPayment);
-                    CustomMessageToast toast = new CustomMessageToast(context, errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
-                    toast.show();
-                    return;
-                }
+            double amount = Double.parseDouble(amountText.getText().toString());
+            if(amount > fullAmount){
+                String errorMessage = Label.getLabel("payment_partial_max_error") + NumberFormat.getCurrencyInstance().format(fullAmount);
+                CustomMessageToast toast = new CustomMessageToast(context, errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
+                toast.show();
+                return;
             }
+            if(minimumPayment > 0 && amount < minimumPayment){
+                String errorMessage = Label.getLabel("payment_partial_minimum_error") + NumberFormat.getCurrencyInstance().format(minimumPayment);
+                CustomMessageToast toast = new CustomMessageToast(context, errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
+                toast.show();
+                return;
+            }
+            SystemUtil.hideSoftKeyboard(context, view);
             onPaymentClick(amountText);
         }
     }
@@ -177,7 +188,6 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     @Override
     public void onTextChanged(CharSequence str, int start, int before, int count) {
         String amountEditText = amountText.getText().toString();
-        int selection = amountText.getSelectionStart();
         try {
             if (amountChangeFlag) {
                 // flag to avoid the onTextChanged listener call after setText manipulated number
@@ -234,10 +244,10 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
             e.printStackTrace();
         }
         // Calculating the remaining amount after entering partial payment amount
-        onPendingAmountValidation(amountEditText, payPartialButton, partialPaymentTotalAmountTitle, amountSymbol);
+        onPendingAmountValidation(amountEditText, payPartialButton, partialPaymentTotalAmountTitle);
     }
 
-    private void onPendingAmountValidation(String amountEditText, Button payPartialButton, TextView partialPaymentTotalAmountTitle, TextView amountSymbolTextView) {
+    private void onPendingAmountValidation(String amountEditText, Button payPartialButton, TextView partialPaymentTotalAmountTitle) {
         if (amountEditText != null && amountEditText.length() > 0) {
             if (amountEditText.length() == 1 && amountEditText.equalsIgnoreCase(".")) {
                 amountEditText = "0.";
@@ -270,7 +280,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
 
     private void calculateFullAmount(TextView partialPaymentTotalAmountTitle) {
         if (paymentsDTO != null && !paymentsDTO.getPaymentPayload().getPatientBalances().isEmpty()) {
-            List<PendingBalancePayloadDTO> paymentList = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
+            List<PendingBalancePayloadDTO> paymentList = selectedBalance.getPayload();
 
             if (paymentList != null && paymentList.size() > 0) {
                 for (PendingBalancePayloadDTO payment : paymentList) {
@@ -288,9 +298,9 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     }
 
     private void createPaymentModel(double payAmount) {
-        PaymentPostModel postModel = paymentsDTO.getPaymentPayload().getPaymentPostModel();
+        IntegratedPaymentPostModel postModel = paymentsDTO.getPaymentPayload().getPaymentPostModel();
         if (postModel == null) {
-            postModel = new PaymentPostModel();
+            postModel = new IntegratedPaymentPostModel();
         }
         postModel.setAmount(payAmount);
 
@@ -305,37 +315,41 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
                 }
                 payAmount = (double) Math.round((payAmount - itemAmount) * 100) / 100;
 
-                PaymentObject paymentObject = new PaymentObject();
-                paymentObject.setAmount(itemAmount);
+                IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
+                paymentLineItem.setAmount(itemAmount);
 
                 AppointmentDTO appointmentDTO = payListener.getAppointment();
                 if (appointmentDTO != null) {
-                    paymentObject.setProviderID(appointmentDTO.getPayload().getProvider().getGuid());
-                    paymentObject.setLocationID(appointmentDTO.getPayload().getLocation().getGuid());
+                    paymentLineItem.setProviderID(appointmentDTO.getPayload().getProvider().getGuid());
+                    paymentLineItem.setLocationID(appointmentDTO.getPayload().getLocation().getGuid());
                 }
 
-                switch (responsibility.getType()) {
+                switch (responsibility.getType()){
                     case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
-                        paymentObject.setResponsibilityType(ResponsibilityType.co_insurance);
+                        paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_COINSURANCE);
                         break;
                     case PendingBalancePayloadDTO.DEDUCTIBLE_TYPE:
-                        paymentObject.setResponsibilityType(ResponsibilityType.deductable);
+                        paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_DEDUCTABLE);
                         break;
                     case PendingBalancePayloadDTO.CO_PAY_TYPE:
                     default:
-                        paymentObject.setResponsibilityType(ResponsibilityType.co_pay);
+                        paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_COPAY);
                         break;
                 }
-                postModel.addPaymentMethod(paymentObject);
+
+                postModel.addLineItem(paymentLineItem);
+
             }
         }
 
         if (payAmount > 0) {//payment is greater than any responsibility types
-            PaymentObject paymentObject = new PaymentObject();
-            paymentObject.setAmount(payAmount);
-            paymentObject.setDescription("Unapplied Amount");
 
-            postModel.addPaymentMethod(paymentObject);
+            IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
+            paymentLineItem.setAmount(payAmount);
+            paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_UNAPPLIED);
+            paymentLineItem.setDescription("Unapplied Amount");
+
+            postModel.addLineItem(paymentLineItem);
         }
 
         paymentsDTO.getPaymentPayload().setPaymentPostModel(postModel);

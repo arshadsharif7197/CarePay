@@ -15,6 +15,7 @@ import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
@@ -35,7 +36,6 @@ public class PaymentActivity extends BasePatientActivity implements PaymentViewH
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
         paymentsDTO = getConvertedDTO(PaymentsModel.class);
-
         initPresenter();
 
         presenter.startPaymentProcess(paymentsDTO);
@@ -51,7 +51,15 @@ public class PaymentActivity extends BasePatientActivity implements PaymentViewH
     }
 
     private void initPresenter(){
-        String defaultPatientId = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPatientId();
+        Bundle info = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
+        AppointmentDTO appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, info);
+
+        String defaultPatientId;
+        if(appointmentDTO != null){
+            defaultPatientId = appointmentDTO.getMetadata().getPatientId();
+        }else {
+            defaultPatientId = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPatientId();
+        }
         this.presenter = new PatientPaymentPresenter(this, paymentsDTO, defaultPatientId);
     }
 
@@ -67,9 +75,9 @@ public class PaymentActivity extends BasePatientActivity implements PaymentViewH
      * a {@link MaskedWallet} object is attached to the Intent. The Confirmation Activity is
      * then launched, providing it with the {@link MaskedWallet} object.
      *
-     * @param //requestCode The code that was set in the Masked Wallet Request
-     * @param //resultCode  The result of the request execution
-     * @param //data        Intent carrying the results
+     * @param requestCode The code that was set in the Masked Wallet Request
+     * @param resultCode  The result of the request execution
+     * @param data        Intent carrying the results
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

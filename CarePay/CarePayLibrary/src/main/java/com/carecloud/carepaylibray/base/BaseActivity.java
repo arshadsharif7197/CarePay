@@ -160,9 +160,13 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             if (null == errorNotification) {
 
                 if (!StringUtil.isNullOrEmpty(errorMessage)) {
-                    errorNotification = new CustomPopupNotification(getContext(), getCurrentFocus(), getWindow(), errorMessage, CustomPopupNotification.TYPE_ERROR_NOTIFICATION, errorNotificationSwipeListener());
+                    errorNotification = new CustomPopupNotification(getContext(), getCurrentFocus(),
+                            getWindow(), errorMessage, CustomPopupNotification.TYPE_ERROR_NOTIFICATION,
+                            errorNotificationSwipeListener());
                 } else {
-                    errorNotification = new CustomPopupNotification(getContext(), getCurrentFocus(), getWindow(), CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE, CustomPopupNotification.TYPE_ERROR_NOTIFICATION, errorNotificationSwipeListener());
+                    errorNotification = new CustomPopupNotification(getContext(), getCurrentFocus(),
+                            getWindow(), CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE,
+                            CustomPopupNotification.TYPE_ERROR_NOTIFICATION, errorNotificationSwipeListener());
                 }
 
             }
@@ -183,7 +187,8 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             public void onSwipe(String swipeDirection) {
                 hideErrorNotification();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    getWindow().setStatusBarColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+                    getWindow().setStatusBarColor(ContextCompat.getColor(getContext(),
+                            R.color.colorPrimaryDark));
                 }
             }
         };

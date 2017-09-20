@@ -16,10 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentFragment;
 import com.carecloud.carepaylibray.appointments.interfaces.DateRangeInterface;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
@@ -226,8 +226,8 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
                         long diff = newEndDate.getTime() - newStartDate.getTime();
                         long numOfDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
                         if (numOfDays >= 93) {
-                            AppointmentLabelDTO label = resourcesToScheduleDTO.getMetadata().getLabel();
-                            Toast.makeText(getActivity(), label.getAddAppointmentMaxDateRangeMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), Label.getLabel("add_appointment_max_date_range_message"),
+                                    Toast.LENGTH_LONG).show();
                             acceptableRange = false;
                         }
                     }
@@ -267,7 +267,7 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
     View.OnClickListener applyButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if(newEndDate == null){
+            if (newEndDate == null) {
                 newEndDate = newStartDate;
             }
             callback.onDateRangeSelected(newStartDate, newEndDate, selectedVisitTypeDTO, selectedResourcesDTO, resourcesToScheduleDTO);

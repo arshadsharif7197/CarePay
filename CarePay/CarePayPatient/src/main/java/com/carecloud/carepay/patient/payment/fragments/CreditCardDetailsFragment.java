@@ -238,8 +238,10 @@ public class CreditCardDetailsFragment extends BaseFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             try {
-                DemographicsSettingsDTO removeCreditCardResponseDTO = DtoHelper.getConvertedDTO(DemographicsSettingsDTO.class, workflowDTO);
-                demographicsSettingsDTO.getPayload().setPatientCreditCards(removeCreditCardResponseDTO.getPayload().getPatientCreditCards());
+                DemographicsSettingsDTO removeCreditCardResponseDTO = DtoHelper
+                        .getConvertedDTO(DemographicsSettingsDTO.class, workflowDTO);
+                demographicsSettingsDTO.getPayload()
+                        .setPatientCreditCards(removeCreditCardResponseDTO.getPayload().getPatientCreditCards());
                 callback.onCreditCardOperation(demographicsSettingsDTO);
                 SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
                 getActivity().onBackPressed();
@@ -253,7 +255,7 @@ public class CreditCardDetailsFragment extends BaseFragment {
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
             Log.e(TAG, "Credit Card onFailure" + exceptionMessage);
         }
     };

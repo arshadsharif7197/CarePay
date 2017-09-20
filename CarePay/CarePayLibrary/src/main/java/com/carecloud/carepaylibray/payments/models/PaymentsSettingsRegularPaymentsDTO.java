@@ -19,10 +19,10 @@ public class PaymentsSettingsRegularPaymentsDTO {
     private boolean allowPartialPayments;
     @SerializedName("partial_payments_threshold")
     @Expose
-    private transient double partialPaymentsThreshold;
+    private String partialPaymentsThreshold;
     @SerializedName("minimum_partial_payment_amount")
     @Expose
-    private transient double minimumPartialPaymentAmount;
+    private String minimumPartialPaymentAmount;
 
     /**
      * Gets payment methods.
@@ -78,19 +78,37 @@ public class PaymentsSettingsRegularPaymentsDTO {
         this.allowPartialPayments = allowPartialPayments;
     }
 
+    /**
+     * Get partial payment threshold as a double
+     *
+     * @return partial payment threshold or 0
+     */
     public double getPartialPaymentsThreshold() {
-        return partialPaymentsThreshold;
+        try {
+            return Double.parseDouble(partialPaymentsThreshold);
+        } catch (Exception nfe) {
+            return 0D;
+        }
     }
 
     public void setPartialPaymentsThreshold(double partialPaymentsThreshold) {
-        this.partialPaymentsThreshold = partialPaymentsThreshold;
+        this.partialPaymentsThreshold = String.valueOf(partialPaymentsThreshold);
     }
 
+    /**
+     * Get minimum partial payment as a double
+     *
+     * @return minimum partial payment or 0
+     */
     public double getMinimumPartialPaymentAmount() {
-        return minimumPartialPaymentAmount;
+        try {
+            return Double.parseDouble(minimumPartialPaymentAmount);
+        } catch (Exception nfe) {
+            return 0D;
+        }
     }
 
     public void setMinimumPartialPaymentAmount(double minimumPartialPaymentAmount) {
-        this.minimumPartialPaymentAmount = minimumPartialPaymentAmount;
+        this.minimumPartialPaymentAmount = String.valueOf(minimumPartialPaymentAmount);
     }
 }

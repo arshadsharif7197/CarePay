@@ -26,7 +26,7 @@ public class DemographicPayloadResponseDTO extends DemographicsSettingsPayloadDT
     private List<AppointmentDTO> appointmentpayloaddto = new ArrayList<>();
     @SerializedName("checkin_settings")
     @Expose
-    private transient CheckinSettingsDTO checkinSettings = new CheckinSettingsDTO();
+    private CheckinSettingsDTO checkinSettings = new CheckinSettingsDTO();
 
     public DemographicPayloadInfoDTO getDemographics() {
         return demographics;

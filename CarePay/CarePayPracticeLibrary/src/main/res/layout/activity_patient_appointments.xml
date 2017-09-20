@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/dimen_34dp"
             android:scaleType="fitXY"
-            android:src="@drawable/cp_logo" />
+            android:src="?practiceLogoDrawable" />
     </LinearLayout>
 
     <FrameLayout

@@ -8,8 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppointmentsSettingDTO implements Serializable
-{
+public class AppointmentsSettingDTO implements Serializable {
     @SerializedName("checkin")
     @Expose
     private AppointmentsCheckinDTO checkin = new AppointmentsCheckinDTO();
@@ -18,13 +17,19 @@ public class AppointmentsSettingDTO implements Serializable
     private AppointmentsRequestsDTO requests = new AppointmentsRequestsDTO();
     @SerializedName("pre_payments")
     @Expose
-    private transient List<AppointmentsPrePaymentDTO> prePayments = new ArrayList<>();
+    private List<AppointmentsPrePaymentDTO> prePayments = new ArrayList<>();
+    @SerializedName("cancellation_fees")
+    @Expose
+    private List<AppointmentCancellationFee> cancellationFees = new ArrayList<>();
     @SerializedName("practice_id")
     @Expose
     private String practiceId;
     @SerializedName("practice_mgmt")
     @Expose
     private String practiceManagement;
+    @SerializedName("charge_cancellation_fees")
+    @Expose
+    private boolean chargeCancellationFees;
 
     public AppointmentsCheckinDTO getCheckin() {
         return checkin;
@@ -64,5 +69,21 @@ public class AppointmentsSettingDTO implements Serializable
 
     public void setPracticeManagement(String practiceManagement) {
         this.practiceManagement = practiceManagement;
+    }
+
+    public List<AppointmentCancellationFee> getCancellationFees() {
+        return cancellationFees;
+    }
+
+    public void setCancellationFees(List<AppointmentCancellationFee> cancellationFees) {
+        this.cancellationFees = cancellationFees;
+    }
+
+    public boolean shouldChargeCancellationFees() {
+        return chargeCancellationFees;
+    }
+
+    public void setChargeCancellationFees(boolean chargeCancellationFees) {
+        this.chargeCancellationFees = chargeCancellationFees;
     }
 }

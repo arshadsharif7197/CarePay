@@ -39,6 +39,7 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.MerchantServiceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -196,9 +197,9 @@ public class FullWalletConfirmationButtonFragment extends BaseFragment
             Gson gson = new Gson();
             String paymentsDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
 
-           // intent.putExtra(PaymentConstants.EXTRA_AMOUNT, amount);
+            // intent.putExtra(PaymentConstants.EXTRA_AMOUNT, amount);
 
-           // paymentsDTOString = arguments.getString(CarePayConstants.EXTRA_AMOUNT);
+            // paymentsDTOString = arguments.getString(CarePayConstants.EXTRA_AMOUNT);
             intakePaymentModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
             paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
         }
@@ -465,16 +466,16 @@ public class FullWalletConfirmationButtonFragment extends BaseFragment
 
     private List<LineItem> getLineItems() {
         List<LineItem> list = new ArrayList<>();
-        for (int i = 0; i < paymentsModel.getPaymentPayload().getPatientPayments().getPayload().size(); i++) {
+        for(IntegratedPaymentLineItem paymentLineItem :paymentsModel.getPaymentPayload()
+                .getPaymentPostModel().getLineItems()) {
             list.add(LineItem.newBuilder()
                     .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
-                    .setDescription(paymentsModel.getPaymentPayload().getPatientPayments().getPayload().get(i).getType())
+                    .setDescription(paymentLineItem.getDescription())
                     .setQuantity("1")
-                    .setUnitPrice(paymentsModel.getPaymentPayload().getPatientPayments().getPayload().get(i).getTotal().toString())
-                    .setTotalPrice(paymentsModel.getPaymentPayload().getPatientPayments().getPayload().get(i).getTotal().toString())
+                    .setUnitPrice(String.valueOf(paymentLineItem.getAmount()))
+                    .setTotalPrice(String.valueOf(paymentLineItem.getAmount()))
                     .build());
         }
-
         return list;
     }
 

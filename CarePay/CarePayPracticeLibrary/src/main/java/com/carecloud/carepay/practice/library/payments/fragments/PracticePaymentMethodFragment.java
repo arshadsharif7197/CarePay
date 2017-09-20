@@ -13,7 +13,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
@@ -75,7 +75,7 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
 
     protected void handleSwipeCard() {
         CloverPaymentAdapter cloverPaymentAdapter = new CloverPaymentAdapter(getActivity(), paymentsModel, callback.getAppointmentId());
-        PaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
+        IntegratedPaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
         if (paymentPostModel == null) {
             cloverPaymentAdapter.setCloverPayment(amountToMakePayment);
         } else {

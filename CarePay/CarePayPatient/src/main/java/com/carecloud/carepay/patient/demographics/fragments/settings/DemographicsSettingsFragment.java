@@ -263,7 +263,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
             pushNotificationCheckBox.setChecked(demographicsSettingsDTO.getPayload()
                     .getDemographicSettingsNotificationDTO().getPayload().isPush());
             emailNotificationCheckBox.setChecked(demographicsSettingsDTO.getPayload()
