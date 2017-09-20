@@ -263,7 +263,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     public void onCancelAppointment(final AppointmentDTO appointmentDTO) {
         final AppointmentCancellationFee cancellationFee = getCancellationFee(appointmentDTO);
         if (cancellationFee == null) {
-            showCancellationReasons(appointmentDTO, cancellationFee);
+            showCancellationReasons(appointmentDTO, null);
         } else {
             practiceId = appointmentDTO.getMetadata().getPracticeId();
             practiceMgmt = appointmentDTO.getMetadata().getPracticeMgmt();
@@ -436,10 +436,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     private AppointmentCancellationFee getCancellationFee(AppointmentDTO appointmentDTO) {
-        if (appointmentsResultModel.getPayload()
-                .getAppointmentsSettings().get(0).shouldChargeCancellationFees()) {
-            for (AppointmentCancellationFee cancellationFee : appointmentsResultModel.getPayload()
-                    .getAppointmentsSettings().get(0).getCancellationFees()) {
+        AppointmentsSettingDTO practiceSettings = getPracticeSettings();
+        if (practiceSettings.shouldChargeCancellationFees()) {
+            for (AppointmentCancellationFee cancellationFee : practiceSettings.getCancellationFees()) {
                 if (appointmentDTO.getPayload().getVisitType().getId().equals(cancellationFee.getVisitType())) {
                     return cancellationFee;
                 }
