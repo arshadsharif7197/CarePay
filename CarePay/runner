@@ -1,10 +1,13 @@
 #!/bin/bash
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
+red=$(tput setaf 1)
 reset=$(tput sgr0)
 
 COMMIT_RANGE=$(echo $TRAVIS_COMMIT_RANGE | sed 's/\.\.\./\.\./g')
 COMMIT_MESSAGES=$(echo $(git log $COMMIT_RANGE --pretty=format:%s))
+
+DEPLOY_SCRIPT=$1
 
 shopt -s nocasematch
 #####################################################################################
@@ -18,13 +21,15 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "development"
     echo "${green}*** BUILDING DEVELOPMENT PRACTICE APK ***${reset}"
     ./gradlew :CarePayPracticeTablet:assembleDevelopment --profile --configure-on-demand
 
+    PRACTICE_APP=$(echo $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/$(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/ | grep -i '.*practice.*release.*\.apk') )
+
     echo "${green}*** DEPLOYING DEVELOPMENT PRACTICE APK TO AWS ***${reset}"
     AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk s3://automation-zeus/ --recursive
 
     echo "${green}*** BUILDING DEVELOPMENT PATIENT APK ***${reset}"
     ./gradlew :CarePayPatient:assembleDevelopment --profile --configure-on-demand
 
-    PATIENT_APP=$TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/*release*.apk
+    PATIENT_APP=$(echo $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/$(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/ | grep -i '.*patient.*release.*\.apk') )
 
     echo "${green}*** DEPLOYING DEVELOPMENT PATIENT APK TO AWS ***${reset}"
     AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk s3://automation-zeus/ --recursive
@@ -77,10 +82,35 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [[ "$COMMIT_MESSAGES" =~ clover.*app
 elif [ "$TRAVIS_PULL_REQUEST" != "false" ] && [[ "$COMMIT_MESSAGES" =~ carepay ]]; then
     echo "${yellow}*** Skipping APK Build ***${reset}"
     echo "${yellow}*** Skipping Compile Check ***${reset}"
-else
+elif [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
     echo "${yellow}*** Skipping APK Build ***${reset}"
     echo "${green}*** Practice App Compile Check ***${reset}"
     ./gradlew :CarePayPracticeTablet:compileProductionReleaseSources --profile --configure-on-demand
     echo "${green}*** Patient App Compile Check ***${reset}"
     ./gradlew :CarePayPatient:compileProductionReleaseSources --profile --configure-on-demand
 fi
+
+
+########### TEST FAIRY DEPLOY ###########
+if [[ $DEPLOY_SCRIPT == "testfairy" ]]; then
+    echo "${green}*** Deploying via TestFairy ***${reset}"
+
+    if [[ $PATIENT_APP ]]; then
+        echo "${green}*** Deploy Patient App Build ***${reset}"
+        chmod +x ./$DEPLOY_SCRIPT
+        ./$DEPLOY_SCRIPT $PATIENT_APP
+    else
+        echo
+        echo "${red}*** No Patient App Build to Deploy ***${reset}"
+    fi
+
+    if [[ $PRACTICE_APP ]]; then
+        echo "${green}*** Deploy Practice App Build ***${reset}"
+        chmod +x ./$DEPLOY_SCRIPT
+        ./$DEPLOY_SCRIPT $PRACTICE_APP
+    else
+        echo
+        echo "${red}*** No Practice App Build to Deploy ***${reset}"
+    fi
+fi
+#########################################
