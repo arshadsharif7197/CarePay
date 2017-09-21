@@ -502,6 +502,7 @@ public class WorkflowServiceHelper {
     private void atomicAppRestart() {
         if (applicationMode != null) {
             applicationMode.clearUserPracticeDTO();
+            applicationMode.setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
         }
         Intent intent = new Intent();
         intent.setAction("com.carecloud.carepay.restart");
