@@ -18,6 +18,8 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.platform.AndroidPlatform;
+import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -149,6 +151,9 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
                 callback = logoutWorkflowCallback;
                 headersMap.put("x-api-key", HttpConstants.getApiStartKey());
                 headersMap.put("transition", "true");
+
+                queryMap.put("device_token", ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences()
+                        .getString(CarePayConstants.FCM_TOKEN, null));
                 break;
             default:
                 drawer.closeDrawer(GravityCompat.START);
