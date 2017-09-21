@@ -6,12 +6,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -472,18 +472,28 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             PracticeHomeScreenPayloadDTO practiceHomePayloadDTO = gson.fromJson(payloadAsJsonObject,
                     PracticeHomeScreenPayloadDTO.class);
             List<HomeScreenOfficeNewsDTO> officeNews = practiceHomePayloadDTO.getOfficeNews();
+            if (officeNews.size() > 0) {
+                RecyclerView newsList = (RecyclerView) findViewById(R.id.office_news_list);
+                newsList.setVisibility(View.VISIBLE);
+                findViewById(R.id.office_news_header).setVisibility(View.VISIBLE);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(CloverMainActivity.this,
+                        LinearLayoutManager.HORIZONTAL, false);
+                DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(newsList.getContext(),
+                        layoutManager.getOrientation());
+                newsList.setLayoutManager(layoutManager);
+                newsList.addItemDecoration(dividerItemDecoration);
 
-            RecyclerView newsList = (RecyclerView) findViewById(R.id.office_news_list);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(CloverMainActivity.this,
-                    LinearLayoutManager.HORIZONTAL, false);
-            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(newsList.getContext(),
-                    layoutManager.getOrientation());
-            newsList.setLayoutManager(layoutManager);
-            newsList.addItemDecoration(dividerItemDecoration);
+                OfficeNewsListAdapter adapter = new OfficeNewsListAdapter(CloverMainActivity.this,
+                        officeNews, officeNewsClickedListener);
+                newsList.setAdapter(adapter);
+            } else {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                params.gravity = Gravity.CENTER;
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.layoutContainer);
+                linearLayout.setLayoutParams(params);
+            }
 
-            OfficeNewsListAdapter adapter = new OfficeNewsListAdapter(CloverMainActivity.this,
-                    officeNews, officeNewsClickedListener);
-            newsList.setAdapter(adapter);
 
         }
 
