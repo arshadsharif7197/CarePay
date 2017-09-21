@@ -28,9 +28,6 @@ import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.JsonObject;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -196,18 +193,8 @@ public class ResetPasswordFragment extends BaseFragment {
 
         @Override
         public void onFailure(String exceptionMessage)  {
-            listener.showErrorToast(StringUtil.capitalize(exceptionMessage));
+            listener.showErrorToast(exceptionMessage);
             hideProgressDialog();
-//            try {
-//                JSONObject json = new JSONObject(exceptionMessage);
-//                String message = json.getJSONObject("message").getString("error");
-//                if ( message != null ) {
-//                    listener.showErrorToast(StringUtil.capitalize(message));
-//                }
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//                listener.showErrorToast(exceptionMessage);
-//            }
         }
     };
 
