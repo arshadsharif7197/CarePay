@@ -1,6 +1,7 @@
 
 package com.carecloud.carepaylibray.appointments.models;
 
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.MerchantServicesDTO;
@@ -69,7 +70,7 @@ public class AppointmentPayloadModel implements Serializable {
     private List<ConsentFormUserResponseDTO> patientFormsFilled = new ArrayList<>();
     @Expose
     @SerializedName("user_practices")
-    private List<ResourcesPracticeDTO> userPractices = new ArrayList<>();
+    private List<UserPracticeDTO> userPractices = new ArrayList<>();
     @Expose
     @SerializedName("filled_forms")
     private List<String> filledForms = new ArrayList<>();
@@ -281,11 +282,11 @@ public class AppointmentPayloadModel implements Serializable {
         this.patientFormsFilled = patientFormsFilled;
     }
 
-    public List<ResourcesPracticeDTO> getUserPractices() {
+    public List<UserPracticeDTO> getUserPractices() {
         return userPractices;
     }
 
-    public void setUserPractices(List<ResourcesPracticeDTO> userPractices) {
+    public void setUserPractices(List<UserPracticeDTO> userPractices) {
         this.userPractices = userPractices;
     }
 

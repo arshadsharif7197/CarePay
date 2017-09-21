@@ -37,7 +37,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
     private static TransitionDTO transitionProfile;
     private static TransitionDTO transitionAppointments;
     private static TransitionDTO transitionLogout;
-    private static TransitionDTO transitionNotifications;
+    protected static TransitionDTO transitionNotifications;
     private static TransitionDTO transitionMyHealth;
 
     protected ActionBarDrawerToggle toggle;
@@ -302,7 +302,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         }
     };
 
-    private WorkflowServiceCallback notificationsWorkflowCallback = new WorkflowServiceCallback() {
+    protected WorkflowServiceCallback notificationsWorkflowCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();
