@@ -472,7 +472,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             PracticeHomeScreenPayloadDTO practiceHomePayloadDTO = gson.fromJson(payloadAsJsonObject,
                     PracticeHomeScreenPayloadDTO.class);
             List<HomeScreenOfficeNewsDTO> officeNews = practiceHomePayloadDTO.getOfficeNews();
-            if (officeNews.size() > 0) {
+            if (!officeNews.isEmpty()) {
                 RecyclerView newsList = (RecyclerView) findViewById(R.id.office_news_list);
                 newsList.setVisibility(View.VISIBLE);
                 findViewById(R.id.office_news_header).setVisibility(View.VISIBLE);
