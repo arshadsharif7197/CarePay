@@ -390,7 +390,7 @@ public class WorkflowServiceHelper {
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
-                    onFailure(parseError(response.message(), errorBodyString, "message", "data", "error"));
+                    onFailure(parseError(response.message(), errorBodyString, "message", "data", "error", "exception"));
                 } else {
                     onFailure("");
                 }
