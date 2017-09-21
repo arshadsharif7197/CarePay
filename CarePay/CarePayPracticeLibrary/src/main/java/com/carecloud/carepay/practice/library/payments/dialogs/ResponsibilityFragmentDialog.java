@@ -36,8 +36,6 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
-
 public class ResponsibilityFragmentDialog extends BaseDialogFragment implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
 
     private String leftLabel;
@@ -173,13 +171,13 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
                         }
                     });
 
-            ImageView bgImage = (ImageView) view.findViewById(R.id.profile_bg_image);
-
-
-            Picasso.with(getContext()).load(photoUrl)
-                    .fit()
-                    .transform(new RoundedCornersTransformation(10, 0, RoundedCornersTransformation.CornerType.TOP))
-                    .into(bgImage);
+//            ImageView bgImage = (ImageView) view.findViewById(R.id.profile_bg_image);
+//
+//
+//            Picasso.with(getContext()).load(photoUrl)
+//                    .fit()
+//                    .transform(new RoundedCornersTransformation(10, 0, RoundedCornersTransformation.CornerType.TOP))
+//                    .into(bgImage);
 
             profilePhoto.setVisibility(View.VISIBLE);
         }

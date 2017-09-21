@@ -10,7 +10,8 @@
         android:id="@+id/profile_image_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dialog_header_height"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
 
         <ImageView
             android:id="@+id/profile_bg_image"
@@ -21,8 +22,7 @@
             android:id="@+id/payment_responsibility_header"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dialog_header_height"
-            android:alpha="0.9"
-            android:background="@drawable/patient_mode_dialog_header_bg"
+            android:background="@drawable/practice_mode_dialog_header_bg"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
@@ -77,7 +77,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/profile_image_layout"
-        android:background="@color/cardview_header_bg"
+        android:background="@color/popup_background"
         android:gravity="center"
         android:paddingBottom="@dimen/dimen_19dp"
         android:paddingTop="@dimen/dimen_19dp"

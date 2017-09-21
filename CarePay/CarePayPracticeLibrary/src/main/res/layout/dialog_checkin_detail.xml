@@ -61,7 +61,7 @@
                 android:id="@+id/payment_responsibility_header"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dialog_header_height"
-                android:background="@drawable/dialog_header_dark_blue"
+                android:background="@drawable/practice_mode_dialog_header_bg"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 

@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_gravity="center"
-            android:background="@drawable/appointment_dialog_header_bg"
+            android:background="@drawable/patient_mode_dialog_header_bg"
             android:gravity="center"
             android:padding="@dimen/dimen_10dp"
             android:textColor="@color/white"
