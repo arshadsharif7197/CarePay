@@ -274,7 +274,7 @@
                     <EditText
                         android:id="@+id/addressEditTextId"
                         style="@style/SigninSignupEditStyle"
-                        android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
+                        android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ0123456789 "
                         android:imeOptions="actionNext"
                         android:inputType="textPostalAddress"
                         android:maxLength="50"
@@ -296,7 +296,7 @@
                         <EditText
                             android:id="@+id/addressEditText2Id"
                             style="@style/SigninSignupEditStyle"
-                            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
+                            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ0123456789 "
                             android:imeOptions="actionNext"
                             android:inputType="textPostalAddress"
                             android:maxLength="50"

@@ -289,7 +289,7 @@
                         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                             android:id="@+id/addressEditTextId"
                             style="@style/PaymentAddCreditCardInputStyle"
-                            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
+                            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ0123456789 "
                             android:imeOptions="actionNext"
                             android:inputType="textPostalAddress"
                             android:maxLength="256"
@@ -324,7 +324,7 @@
                             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                                 android:id="@+id/addressEditText2Id"
                                 style="@style/PaymentAddCreditCardInputStyle"
-                                android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
+                                android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ0123456789 "
                                 android:imeOptions="actionNext"
                                 android:inputType="textPostalAddress"
                                 android:maxLength="256"
