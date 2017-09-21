@@ -56,7 +56,9 @@ public class ApplicationPreferences {
     private Boolean navigateToAppointments;
     private Boolean isTutorialShown;
     private String photoUrl;
-    private @Defs.AppointmentNavigationTypeDef Integer navigationOption;
+    private
+    @Defs.AppointmentNavigationTypeDef
+    Integer navigationOption;
 
     public ApplicationPreferences(Context context) {
         this.context = context;
@@ -80,19 +82,23 @@ public class ApplicationPreferences {
 
     /**
      * Set the selected Appointment Navigation Option & Store in Shared Pref
+     *
      * @param navigationOption valid navigationOption
      */
-    public void setAppointmentNavigationOption(@Defs.AppointmentNavigationTypeDef int navigationOption){
+    public void setAppointmentNavigationOption(@Defs.AppointmentNavigationTypeDef int navigationOption) {
         this.navigationOption = navigationOption;
         writeIntegerToSharedPref(PREFERENCE_APPOINTMENT_NAVIGATION_OPTION, navigationOption);
     }
 
     /**
      * Get the last selected Appointment Navigation Option
+     *
      * @return selected navigation option
      */
-    public @Defs.AppointmentNavigationTypeDef int getAppointmentNavigationOption(){
-        if(navigationOption == null){
+    public
+    @Defs.AppointmentNavigationTypeDef
+    int getAppointmentNavigationOption() {
+        if (navigationOption == null) {
             @Defs.AppointmentNavigationTypeDef int savedNavigationOption = readIntFromSharedPref(PREFERENCE_APPOINTMENT_NAVIGATION_OPTION);
             this.navigationOption = savedNavigationOption;
         }
@@ -281,7 +287,7 @@ public class ApplicationPreferences {
      * @param object object to save
      */
     public void writeObjectToSharedPreference(String key, Object object) {
-        writeStringToSharedPref(key, new Gson().toJson(object));
+        writeStringToSharedPref(key, object != null ? new Gson().toJson(object) : null);
     }
 
     /**
@@ -321,11 +327,11 @@ public class ApplicationPreferences {
         return getSharedPreferences().getStringSet(key, null);
     }
 
-    private int readIntFromSharedPref(String key){
+    private int readIntFromSharedPref(String key) {
         return readIntFromSharedPref(key, -1);
     }
 
-    private int readIntFromSharedPref(String key, int defaultValue){
+    private int readIntFromSharedPref(String key, int defaultValue) {
         return getSharedPreferences().getInt(key, defaultValue);
     }
 
