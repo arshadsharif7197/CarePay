@@ -399,7 +399,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     public void displayAppointmentDetails(AppointmentDTO appointmentDTO) {
         AppointmentDetailDialog detailDialog = AppointmentDetailDialog.newInstance(appointmentDTO);
         viewHandler.displayDialogFragment(detailDialog, false);
-//        detailDialog.show(getSupportFragmentManager(), detailDialog.getClass().getName());
     }
 
     private void showCancellationReasons(AppointmentDTO appointmentDTO, final AppointmentCancellationFee cancellationFee) {
