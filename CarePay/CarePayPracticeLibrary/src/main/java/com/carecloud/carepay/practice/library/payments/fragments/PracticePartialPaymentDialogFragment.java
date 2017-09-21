@@ -122,6 +122,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
             postModel = new IntegratedPaymentPostModel();
         }
         postModel.setAmount(payAmount);
+        postModel.getLineItems().clear();
 
         List<PendingBalancePayloadDTO> responsibilityTypes = getPendingResponsibilityTypes();
         for (PendingBalancePayloadDTO responsibility : responsibilityTypes) {
