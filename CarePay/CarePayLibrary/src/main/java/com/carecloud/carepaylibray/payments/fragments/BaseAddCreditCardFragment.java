@@ -33,7 +33,7 @@ import com.carecloud.carepaylibray.demographicsettings.models.MerchantServiceMet
 import com.carecloud.carepaylibray.demographicsettings.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
+import com.carecloud.carepaylibray.payments.models.CreditCardBillingInformationDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.TokenizationService;
 import com.carecloud.carepaylibray.payments.utils.CardPattern;
@@ -96,7 +96,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     protected DemographicAddressPayloadDTO addressPayloadDTO;
     private List<DemographicsSettingsPapiAccountsDTO> papiAccountsDTO;
     protected PaymentCreditCardsPayloadDTO creditCardsPayloadDTO;
-    protected PaymentsCreditCardBillingInformationDTO billingInformationDTO;
+    protected CreditCardBillingInformationDTO billingInformationDTO;
     protected IAuthoriseCreditCardResponse authoriseCreditCardResponseCallback;
     protected List<MerchantServicesDTO> merchantServicesList;
 
@@ -444,7 +444,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
 
     private void setDTOs() {
         creditCardsPayloadDTO = new PaymentCreditCardsPayloadDTO();
-        billingInformationDTO = new PaymentsCreditCardBillingInformationDTO();
+        billingInformationDTO = new CreditCardBillingInformationDTO();
         billingInformationDTO.setSameAsPatient(useProfileAddressCheckBox.isChecked());
         creditCardsPayloadDTO.setCardNumber(getLastFour());
         creditCardsPayloadDTO.setNameOnCard(nameOnCardEditText.getText().toString().trim());
