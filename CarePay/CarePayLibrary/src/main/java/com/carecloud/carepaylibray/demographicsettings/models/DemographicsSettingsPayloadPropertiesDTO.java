@@ -1,11 +1,12 @@
 package com.carecloud.carepaylibray.demographicsettings.models;
 
 
+import com.carecloud.carepaylibray.payments.models.CreditCardBillingInformationDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by harshal_patil on 1/5/2017.
+ * Created by harshal_patil on 1/5/2017
  */
 public class DemographicsSettingsPayloadPropertiesDTO {
 
@@ -47,7 +48,7 @@ public class DemographicsSettingsPayloadPropertiesDTO {
     private String paymentProfileId;
     @SerializedName("billing_information")
     @Expose
-    private DemographicsSettingsBillingInformationDTO billingInformation = new DemographicsSettingsBillingInformationDTO();
+    private CreditCardBillingInformationDTO billingInformation = new CreditCardBillingInformationDTO();
 
     public String getCardType() {
         return cardType;
@@ -113,11 +114,11 @@ public class DemographicsSettingsPayloadPropertiesDTO {
         this.token = token;
     }
 
-    public DemographicsSettingsBillingInformationDTO getBillingInformation() {
+    public CreditCardBillingInformationDTO getBillingInformation() {
         return billingInformation;
     }
 
-    public void setBillingInformation(DemographicsSettingsBillingInformationDTO billingInformation) {
+    public void setBillingInformation(CreditCardBillingInformationDTO billingInformation) {
         this.billingInformation = billingInformation;
     }
 

@@ -1,6 +1,6 @@
 package com.carecloud.carepaylibray.payments.models.postmodel;
 
-import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
+import com.carecloud.carepaylibray.payments.models.CreditCardBillingInformationDTO;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -37,7 +37,7 @@ public class CreditCardModel {
     private boolean isDefault;
 
     @SerializedName("billing_information")
-    private PaymentsCreditCardBillingInformationDTO billingInformation;
+    private CreditCardBillingInformationDTO billingInformation;
 
 
     public String getCardType() {
@@ -96,11 +96,11 @@ public class CreditCardModel {
         this.cvv = cvv;
     }
 
-    public PaymentsCreditCardBillingInformationDTO getBillingInformation() {
+    public CreditCardBillingInformationDTO getBillingInformation() {
         return billingInformation;
     }
 
-    public void setBillingInformation(PaymentsCreditCardBillingInformationDTO billingInformation) {
+    public void setBillingInformation(CreditCardBillingInformationDTO billingInformation) {
         this.billingInformation = billingInformation;
     }
 
