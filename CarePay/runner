@@ -21,7 +21,7 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "development"
     echo "${green}*** BUILDING DEVELOPMENT PRACTICE APK ***${reset}"
     ./gradlew :CarePayPracticeTablet:assembleDevelopment --profile --configure-on-demand
 
-    PRACTICE_APP=$(echo $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/$(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/ | grep -i '.*practice.*release.*\.apk') )
+    PRACTICE_APP=$(echo $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/$(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk/ | grep -i '.*practice.*release.*\.apk') )
 
     echo "${green}*** DEPLOYING DEVELOPMENT PRACTICE APK TO AWS ***${reset}"
     AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk s3://automation-zeus/ --recursive

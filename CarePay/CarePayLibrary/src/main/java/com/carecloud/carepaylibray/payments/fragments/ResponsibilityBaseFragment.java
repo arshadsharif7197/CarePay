@@ -125,6 +125,7 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
             postModel = new IntegratedPaymentPostModel();
         }
         postModel.setAmount(payAmount);
+        postModel.getLineItems().clear();
 
         List<PendingBalancePayloadDTO> responsibilityTypes = getPendingResponsibilityTypes();
         for (PendingBalancePayloadDTO responsibility : responsibilityTypes) {
