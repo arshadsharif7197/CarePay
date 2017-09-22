@@ -98,7 +98,6 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
                     getActivity().onBackPressed();
                 }
             });
-            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         }
     }
 

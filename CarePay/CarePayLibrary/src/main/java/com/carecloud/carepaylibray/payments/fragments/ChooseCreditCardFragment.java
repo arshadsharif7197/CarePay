@@ -3,7 +3,6 @@ package com.carecloud.carepaylibray.payments.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -22,7 +21,6 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
-import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.payments.adapter.CreditCardsListAdapter;
 import com.carecloud.carepaylibray.payments.interfaces.ChooseCreditCardInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
@@ -148,7 +146,6 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
                         getActivity().onBackPressed();
                     }
                 });
-                ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
             } else {
                 View close = view.findViewById(R.id.closeViewLayout);
                 if (close != null) {

@@ -10,7 +10,7 @@ import com.newrelic.agent.android.NewRelic;
 public abstract class BasePatientActivity extends BaseActivity {
 
     @Override
-    protected void onCreate(Bundle icicle){
+    protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         NewRelic.setInteractionName(getClass().getName());
         Log.d("New Relic", getClass().getName());
@@ -22,9 +22,8 @@ public abstract class BasePatientActivity extends BaseActivity {
     }
 
     /**
-     *
      * @param workflowDTO the workflow
-     * @param info a bundle with extra info
+     * @param info        a bundle with extra info
      */
     public void navigateToWorkflow(WorkflowDTO workflowDTO, Bundle info) {
         PatientNavigationHelper.navigateToWorkflow(this, workflowDTO, info);

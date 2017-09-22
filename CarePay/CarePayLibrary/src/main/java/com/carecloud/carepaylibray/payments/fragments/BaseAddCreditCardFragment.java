@@ -324,7 +324,6 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
                         getActivity().onBackPressed();
                     }
                 });
-                ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
             } else {
                 View close = view.findViewById(R.id.closeViewLayout);
                 if (close != null) {
