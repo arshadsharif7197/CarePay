@@ -35,8 +35,10 @@ import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.media.MediaResultListener;
+import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -309,8 +311,21 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
-        getIntent().putExtra(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
-        completePaymentProcess(workflowDTO);
+        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
+        if (!payload.getProcessingErrors().isEmpty() && PaymentConfirmationFragment.getTotalPaid(payload) == 0D) {
+            StringBuilder builder = new StringBuilder();
+            for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
+                builder.append(processingError.getError());
+                builder.append("\n");
+            }
+            int last = builder.lastIndexOf("\n");
+            builder.replace(last, builder.length(), "");
+            showErrorNotification(builder.toString());
+        } else {
+            getIntent().putExtra(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
+            completePaymentProcess(workflowDTO);
+        }
     }
 
     @Override
