@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -32,8 +33,8 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.MerchantServiceMetadataDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
-import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.CreditCardBillingInformationDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.TokenizationService;
 import com.carecloud.carepaylibray.payments.utils.CardPattern;
@@ -323,6 +324,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
                         getActivity().onBackPressed();
                     }
                 });
+                ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
             } else {
                 View close = view.findViewById(R.id.closeViewLayout);
                 if (close != null) {
@@ -547,13 +549,13 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
                 .getHintFocusChangeListener(address2TextInput, null));
         zipCodeEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(zipCodeTextInput, new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (!hasFocus) { // for SmartyStreets
-                    getCityAndState(zipCodeEditText.getText().toString());
-                }
-            }
-        }));
+                    @Override
+                    public void onFocusChange(View view, boolean hasFocus) {
+                        if (!hasFocus) { // for SmartyStreets
+                            getCityAndState(zipCodeEditText.getText().toString());
+                        }
+                    }
+                }));
         cityEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(cityTextInput, null));
         stateAutoCompleteTextView.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(stateTextInput, null));

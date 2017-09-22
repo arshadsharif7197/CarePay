@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
@@ -26,13 +29,11 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class ReviewDemographicsActivity extends BasePatientActivity implements DemographicsView, PaymentViewHandler {
-    private static final String KEY_PAYMENT_DTO = "KEY_PAYMENT_DTO";
 
+    private static final String KEY_PAYMENT_DTO = "KEY_PAYMENT_DTO";
     private DemographicsPresenter demographicsPresenter;
     private PatientPaymentPresenter paymentPresenter;
-
     private String paymentWorkflow;
-
     private MediaResultListener resultListener;
 
     @Override
@@ -41,10 +42,25 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         setContentView(R.layout.activity_demographic_review);
 
         demographicsPresenter = new DemographicsPresenterImpl(this, savedInstanceState, false);
-        if(savedInstanceState!=null && savedInstanceState.containsKey(KEY_PAYMENT_DTO)){
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_PAYMENT_DTO)) {
             paymentWorkflow = savedInstanceState.getString(KEY_PAYMENT_DTO);
             initPaymentPresenter(paymentWorkflow);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.check_in_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.exitFlow) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -54,7 +70,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     }
 
     @Override
-    public void onSaveInstanceState(Bundle icicle){
+    public void onSaveInstanceState(Bundle icicle) {
         demographicsPresenter.onSaveInstanceState(icicle);
         icicle.putString(KEY_PAYMENT_DTO, paymentWorkflow);
         super.onSaveInstanceState(icicle);
@@ -104,6 +120,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
     /**
      * Start the Payment portion of check-in
+     *
      * @param workflowJson workflow string
      */
     public void getPaymentInformation(String workflowJson) {
@@ -112,9 +129,10 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         paymentPresenter.startPaymentProcess(paymentsModel);
     }
 
-    private PaymentsModel initPaymentPresenter(String workflowJson){
+    private PaymentsModel initPaymentPresenter(String workflowJson) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowJson);
-        String patientID = demographicsPresenter.getDemographicDTO().getPayload().getDemographics().getMetadata().getPatientId();
+        String patientID = demographicsPresenter.getDemographicDTO().getPayload().getDemographics()
+                .getMetadata().getPatientId();
         paymentPresenter = new PatientPaymentPresenter(this, paymentsModel, patientID);
         return paymentsModel;
     }
@@ -139,7 +157,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultListener!=null){
+        if (resultListener != null) {
             resultListener.handleActivityResult(requestCode, resultCode, data);
         }
     }
@@ -156,7 +174,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
     @Override
     public void exitPaymentProcess(boolean cancelled) {
-        if(getCallingActivity()!=null){
+        if (getCallingActivity() != null) {
             setResult(cancelled ? RESULT_CANCELED : RESULT_OK);
         }
         finish();
@@ -165,7 +183,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     @Nullable
     @Override
     public String getAppointmentId() {
-        if(demographicsPresenter != null){
+        if (demographicsPresenter != null) {
             return demographicsPresenter.getAppointmentId();
         }
         return null;
@@ -174,7 +192,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     @Nullable
     @Override
     public AppointmentDTO getAppointment() {
-        if(demographicsPresenter != null){
+        if (demographicsPresenter != null) {
             return demographicsPresenter.getAppointment();
         }
         return null;
@@ -184,7 +202,8 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     public void onBackPressed() {
         try {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            BaseCheckinFragment fragment = (BaseCheckinFragment) fragmentManager.findFragmentById(R.id.root_layout);
+            BaseCheckinFragment fragment = (BaseCheckinFragment) fragmentManager
+                    .findFragmentById(R.id.root_layout);
             if (fragment == null || !fragment.navigateBack()) {
                 super.onBackPressed();
             }

@@ -5,11 +5,15 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -85,6 +89,11 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     };
 
     @Override
+    public void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_review_demographic_base, container, false);
         stepProgressBar = (StepProgressBar) view.findViewById(R.id.stepProgressBarCheckin);
@@ -112,6 +121,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             return;
         }
         toolbar.setTitle("");
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         if (!preventNavBack) {
             toolbar.setNavigationIcon(R.drawable.icn_nav_back);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
