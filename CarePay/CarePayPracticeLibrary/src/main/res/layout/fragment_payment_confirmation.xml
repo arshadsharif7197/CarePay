@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/dialog_header_dark_blue"
+            android:background="@drawable/practice_mode_dialog_header_bg"
             android:paddingTop="@dimen/dimen_10dp"
             android:paddingStart="@dimen/dimen_10dp"
             android:paddingEnd="@dimen/dimen_10dp"
