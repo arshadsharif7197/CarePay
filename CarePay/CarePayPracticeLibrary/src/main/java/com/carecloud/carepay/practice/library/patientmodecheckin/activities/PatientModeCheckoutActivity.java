@@ -78,6 +78,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     private AppointmentsResultModel appointmentsResultModel;
     private PaymentsModel paymentsModel;
     private String appointmentId;
+    private AppointmentDTO selectedAppointment;
 
     private Date startDate;
     private Date endDate;
@@ -305,14 +306,15 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     @Nullable
     @Override
     public AppointmentDTO getAppointment() {
-        if (appointmentsResultModel != null) {
+        if (selectedAppointment == null && appointmentsResultModel != null) {
             for (AppointmentDTO appointment : appointmentsResultModel.getPayload().getAppointments()) {
                 if (appointment.getPayload().getId().equals(getAppointmentId())) {
-                    return appointment;
+                    selectedAppointment = appointment;
+                    return selectedAppointment;
                 }
             }
         }
-        return null;
+        return selectedAppointment;
     }
 
     @Override
