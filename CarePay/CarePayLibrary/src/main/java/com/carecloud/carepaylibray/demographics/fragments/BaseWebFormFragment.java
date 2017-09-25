@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -70,7 +71,8 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_web_form, container, false);
     }
 
@@ -124,6 +126,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
             return;
         }
         toolbar.setTitle("");
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_nav_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -199,10 +202,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
     protected abstract void validateForm();
 
     protected void validateForm(String function) {
-
         webView.loadUrl("javascript:window." + function + "()");
-
-
     }
 
     protected void loadFormUrl(String formString, String function) {

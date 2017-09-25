@@ -124,7 +124,8 @@ public class PatientNavigationHelper {
                     ((ReviewDemographicsActivity) context).getPaymentInformation(workflowDTO.toString());
                     return;
                 }
-                intent = new Intent(context, accessPaymentsBalances ? ViewPaymentBalanceHistoryActivity.class : PaymentActivity.class);
+                intent = new Intent(context, accessPaymentsBalances ? ViewPaymentBalanceHistoryActivity.class
+                        : PaymentActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
