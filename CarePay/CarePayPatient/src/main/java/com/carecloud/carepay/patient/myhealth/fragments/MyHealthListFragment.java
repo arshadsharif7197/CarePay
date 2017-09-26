@@ -23,7 +23,6 @@ import com.carecloud.carepay.patient.myhealth.dtos.AssertionDto;
 import com.carecloud.carepay.patient.myhealth.dtos.LabDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MedicationDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
-import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthDataInterface;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
@@ -35,7 +34,7 @@ import java.util.List;
  * @author pjohnson on 19/07/17.
  */
 
-public class MyHealthListFragment extends BaseFragment implements MyHealthDataInterface {
+public class MyHealthListFragment extends BaseFragment {
     public static final int LABS = 100;
     public static final int MEDICATIONS = 101;
     public static final int ALLERGIES = 102;
@@ -114,7 +113,7 @@ public class MyHealthListFragment extends BaseFragment implements MyHealthDataIn
                         .getProviders().getProviders();
                 CareTeamRecyclerViewAdapter careTeamAdapter = new CareTeamRecyclerViewAdapter(
                         providers, providers.size());
-                careTeamAdapter.setCallback(this);
+                careTeamAdapter.setCallback(callback);
                 recyclerView.setAdapter(careTeamAdapter);
                 title.setText(Label.getLabel("my_health_list_care_team_title"));
                 break;
@@ -131,13 +130,13 @@ public class MyHealthListFragment extends BaseFragment implements MyHealthDataIn
                         .getAllergies().getAllergies();
                 AllergiesRecyclerViewAdapter allergiesAdapter = new AllergiesRecyclerViewAdapter(
                         allergies, allergies.size());
-                allergiesAdapter.setCallback(this);
+                allergiesAdapter.setCallback(callback);
                 recyclerView.setAdapter(allergiesAdapter);
                 fab.setVisibility(View.VISIBLE);
                 fab.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        addAllergy();
+                        callback.addAllergy();
                     }
                 });
                 title.setText(Label.getLabel("my_health_list_allergy_title"));
@@ -147,13 +146,13 @@ public class MyHealthListFragment extends BaseFragment implements MyHealthDataIn
                         .getMedications().getMedications();
                 MedicationsRecyclerViewAdapter medicationsAdapter = new MedicationsRecyclerViewAdapter(
                         medications, medications.size());
-                medicationsAdapter.setCallback(this);
+                medicationsAdapter.setCallback(callback);
                 recyclerView.setAdapter(medicationsAdapter);
                 fab.setVisibility(View.VISIBLE);
                 fab.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        addMedication();
+                        callback.addMedication();
                     }
                 });
                 title.setText(Label.getLabel("my_health_list_medication_title"));
@@ -162,7 +161,7 @@ public class MyHealthListFragment extends BaseFragment implements MyHealthDataIn
                 List<LabDto> labs = myHealthDto.getPayload().getMyHealthData().getLabs().getLabs();
                 LabsRecyclerViewAdapter labsAdapter = new LabsRecyclerViewAdapter(
                         labs, labs.size());
-                labsAdapter.setCallback(this);
+                labsAdapter.setCallback(callback);
                 recyclerView.setAdapter(labsAdapter);
                 title.setText(Label.getLabel("my_health_list_lab_title"));
                 break;
@@ -177,38 +176,4 @@ public class MyHealthListFragment extends BaseFragment implements MyHealthDataIn
         callback.displayToolbar(false, null);
     }
 
-    @Override
-    public void onSeeAllFullMedicalRecordClicked() {
-
-    }
-
-    @Override
-    public void onProviderClicked(ProviderDTO provider) {
-        callback.onProviderClicked(provider);
-    }
-
-    @Override
-    public void onAllergyClicked(AllergyDto allergy) {
-        callback.onAllergyClicked(allergy);
-    }
-
-    @Override
-    public void addAllergy() {
-        callback.addAllergy();
-    }
-
-    @Override
-    public void onMedicationClicked(MedicationDto medication) {
-        callback.onMedicationClicked(medication);
-    }
-
-    @Override
-    public void addMedication() {
-        callback.addMedication();
-    }
-
-    @Override
-    public void onLabClicked(LabDto lab) {
-        callback.onLabClicked(lab);
-    }
 }
