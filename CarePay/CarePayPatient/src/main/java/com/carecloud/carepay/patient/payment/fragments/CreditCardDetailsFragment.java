@@ -137,16 +137,20 @@ public class CreditCardDetailsFragment extends BaseFragment {
             TextView stateValue = (TextView) view.findViewById(R.id.stateValue);
 
             CreditCardBillingInformationDTO billingInformationDTO = creditCardsPayloadDTO.getPayload().getBillingInformation();
-            if(billingInformationDTO.getSameAsPatient()==null || billingInformationDTO.getSameAsPatient()){
+            if(StringUtil.isNullOrEmpty(billingInformationDTO.getLine1()) && billingInformationDTO.getSameAsPatient()){
                 DemographicAddressPayloadDTO addressDTO = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getAddress();
-                String fullAddress = addressDTO.getAddress1() + (!StringUtil.isNullOrEmpty(addressDTO.getAddress2())?addressDTO.getAddress2():"");
-                addressValue.setText(fullAddress);
+                if(!StringUtil.isNullOrEmpty(addressDTO.getAddress1())) {
+                    String fullAddress = addressDTO.getAddress1() + (!StringUtil.isNullOrEmpty(addressDTO.getAddress2()) ? addressDTO.getAddress2() : "");
+                    addressValue.setText(fullAddress);
+                }
                 zipcodeValue.setText(addressDTO.getZipcode());
                 cityValue.setText(addressDTO.getCity());
                 stateValue.setText(addressDTO.getState());
             }else {
-                String fullAddress = billingInformationDTO.getLine1() + (!StringUtil.isNullOrEmpty(billingInformationDTO.getLine2())?billingInformationDTO.getLine2():"");
-                addressValue.setText(fullAddress);
+                if(!StringUtil.isNullOrEmpty(billingInformationDTO.getLine1())) {
+                    String fullAddress = billingInformationDTO.getLine1() + (!StringUtil.isNullOrEmpty(billingInformationDTO.getLine2()) ? billingInformationDTO.getLine2() : "");
+                    addressValue.setText(fullAddress);
+                }
                 zipcodeValue.setText(billingInformationDTO.getZip());
                 cityValue.setText(billingInformationDTO.getCity());
                 stateValue.setText(billingInformationDTO.getState());
