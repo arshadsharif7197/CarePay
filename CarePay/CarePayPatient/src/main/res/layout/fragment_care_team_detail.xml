@@ -402,7 +402,7 @@
                 android:paddingStart="@dimen/dimen_20dp"
                 android:paddingTop="@dimen/dimen_10dp"
                 android:textColor="@color/colorPrimary"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_size_14"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="my_health_download_medical_record_button_label"
                 tools:text="DOWNLOAD MEDICAL RECORD" />
