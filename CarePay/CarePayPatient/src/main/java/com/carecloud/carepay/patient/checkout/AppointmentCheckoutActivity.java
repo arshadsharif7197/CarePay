@@ -60,6 +60,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         AppointmentPrepaymentCallback {
 
     private String appointmentId;
+    private AppointmentDTO selectedAppointment;
 
     private AppointmentsResultModel appointmentsResultModel;
     private PaymentsModel paymentsModel;
@@ -288,14 +289,15 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     @Nullable
     @Override
     public AppointmentDTO getAppointment() {
-        if (appointmentsResultModel != null) {
+        if(selectedAppointment == null && appointmentsResultModel != null){
             for (AppointmentDTO appointment : appointmentsResultModel.getPayload().getAppointments()) {
                 if (appointment.getPayload().getId().equals(getAppointmentId())) {
-                    return appointment;
+                    selectedAppointment = appointment;
+                    return selectedAppointment;
                 }
             }
         }
-        return null;
+        return selectedAppointment;
     }
 
     @Override

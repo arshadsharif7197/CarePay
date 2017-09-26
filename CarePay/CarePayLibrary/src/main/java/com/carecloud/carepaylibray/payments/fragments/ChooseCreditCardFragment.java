@@ -262,7 +262,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
             queries.put("practice_id", metadata.getPracticeId());
             queries.put("patient_id", metadata.getPatientId());
         }
-        if (callback.getAppointmentId() != null) {
+        if (paymentsModel.getPaymentPayload().getPaymentPostModel().getMetadata().getAppointmentRequestDTO() == null && callback.getAppointmentId() != null) {
             queries.put("appointment_id", callback.getAppointmentId());
         }
 
