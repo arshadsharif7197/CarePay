@@ -315,7 +315,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
         DialogFragment fragment = new PracticeAddNewCreditCardFragment();
         fragment.setArguments(args);
-        displayDialogFragment(fragment, true);
+        displayDialogFragment(fragment, false);
     }
 
     @Override
