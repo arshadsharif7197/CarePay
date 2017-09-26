@@ -84,7 +84,7 @@ public class CareTeamRecyclerViewAdapter extends RecyclerView.Adapter<CareTeamRe
             holder.myHealthActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    callback.onSeeAllFullMedicalRecordClicked();
+                    callback.onSeeAllFullMedicalRecordClicked(null);
                 }
             });
         }

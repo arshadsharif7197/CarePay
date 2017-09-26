@@ -147,7 +147,7 @@ public class CareTeamDetailFragment extends BaseFragment {
                         .setPositiveButton(Label.getLabel("my_health_confirm_download_button_label"),
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        callback.onSeeAllFullMedicalRecordClicked();
+                                        callback.onSeeAllFullMedicalRecordClicked(provider);
                                     }
                                 })
                         .setNegativeButton(Label.getLabel("my_health_cancel"),
