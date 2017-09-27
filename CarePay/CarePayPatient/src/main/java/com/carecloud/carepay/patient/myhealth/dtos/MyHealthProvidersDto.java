@@ -1,6 +1,5 @@
 package com.carecloud.carepay.patient.myhealth.dtos;
 
-import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -14,13 +13,13 @@ public class MyHealthProvidersDto {
 
     @Expose
     @SerializedName("providers")
-    private List<ProviderDTO> providers = new ArrayList<>();
+    private List<MyHealthProviderDto> providers = new ArrayList<>();
 
-    public List<ProviderDTO> getProviders() {
+    public List<MyHealthProviderDto> getProviders() {
         return providers;
     }
 
-    public void setProviders(List<ProviderDTO> providers) {
+    public void setProviders(List<MyHealthProviderDto> providers) {
         this.providers = providers;
     }
 }

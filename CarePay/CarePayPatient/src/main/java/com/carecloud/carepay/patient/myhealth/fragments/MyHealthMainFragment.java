@@ -21,8 +21,8 @@ import com.carecloud.carepay.patient.myhealth.dtos.AssertionDto;
 import com.carecloud.carepay.patient.myhealth.dtos.LabDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MedicationDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
+import com.carecloud.carepay.patient.myhealth.dtos.MyHealthProviderDto;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
-import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 
 import java.util.List;
@@ -222,7 +222,7 @@ public class MyHealthMainFragment extends BaseFragment {
     }
 
     private void setUpCareTeamRecyclerView(View view) {
-        List<ProviderDTO> providers = myHealthDto
+        List<MyHealthProviderDto> providers = myHealthDto
                 .getPayload().getMyHealthData().getProviders().getProviders();
         if (providers.isEmpty()) {
             view.findViewById(R.id.careTeamContainer).setVisibility(View.GONE);
