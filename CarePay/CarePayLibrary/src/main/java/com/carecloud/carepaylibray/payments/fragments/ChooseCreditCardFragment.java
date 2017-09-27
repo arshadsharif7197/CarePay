@@ -339,7 +339,6 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         selectedCreditCard = position;
         CreditCardsListAdapter creditCardsListAdapter = (CreditCardsListAdapter) creditCardsRecyclerView.getAdapter();
         creditCardsListAdapter.setSelectedItem(position);
-        creditCardsListAdapter.notifyDataSetChanged();
         nextButton.setEnabled(true);
     }
 
