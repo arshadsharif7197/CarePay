@@ -42,7 +42,7 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -72,9 +72,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
+                    android:contentDescription="@string/content_description_lock_icon"
                     android:src="@drawable/icn_lock_patient"
-                    android:visibility="gone"
-                    android:contentDescription="@string/content_description_lock_icon"/>
+                    android:visibility="gone" />
 
                 <FrameLayout
                     android:layout_width="0dp"
@@ -86,7 +86,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:background="@drawable/bg_blue_overlay"
+                    android:background="@drawable/dark_blue_overlay"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -95,17 +95,17 @@
                         style="@style/HomeScreenAlertStyle"
                         android:paddingEnd="@dimen/home_alert_text_padding_end"
                         android:paddingStart="@dimen/home_alert_text_padding_start"
+                        app:customAssetFont="gotham_rounded_medium"
                         breeze:textKey="checkingin_notifications"
-                        tools:text="Checking In"
-                        app:customAssetFont="gotham_rounded_medium" />
+                        tools:text="Checking In" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/checkedInCounterTextview"
                         style="@style/HomeScreenAlertStyle"
                         android:background="@drawable/queue_counter_background"
                         android:gravity="center"
-                        android:text="0"
-                        app:customAssetFont="gotham_rounded_medium" />
+                        app:customAssetFont="gotham_rounded_medium"
+                        tools:text="0" />
 
                 </LinearLayout>
 
@@ -115,7 +115,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginStart="@dimen/home_alert_margin_start"
-                    android:background="@drawable/bg_blue_overlay"
+                    android:background="@drawable/dark_blue_overlay"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -124,9 +124,9 @@
                         style="@style/HomeScreenAlertStyle"
                         android:paddingEnd="@dimen/home_alert_text_padding_end"
                         android:paddingStart="@dimen/home_alert_text_padding_start"
-                        tools:text="Alerts"
+                        app:customAssetFont="gotham_rounded_medium"
                         breeze:textKey="alerts"
-                        app:customAssetFont="gotham_rounded_medium" />
+                        tools:text="Alerts" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/alertTextView"
@@ -134,8 +134,8 @@
                         android:layout_width="wrap_content"
                         android:background="@drawable/alert_counter_background"
                         android:gravity="center"
-                        android:text="0"
-                        app:customAssetFont="gotham_rounded_medium" />
+                        app:customAssetFont="gotham_rounded_medium"
+                        tools:text="0" />
 
                 </LinearLayout>
 
@@ -153,247 +153,162 @@
         </FrameLayout>
 
         <LinearLayout
-            android:id="@+id/mainLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
+            android:id="@+id/layoutContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="@dimen/dimen_50dp"
+            android:layout_marginStart="@dimen/dimen_50dp"
+            android:layout_marginTop="@dimen/dimen_200dp"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+            <RelativeLayout
+                android:id="@+id/homeCheckinClickable"
+                android:layout_width="@dimen/home_button_width"
+                android:layout_height="@dimen/home_button_height"
+                android:layout_marginEnd="1dp"
+                android:background="@drawable/home_button_selector_top_left"
+                android:clickable="true"
+                android:padding="@dimen/dimen_40dp">
 
-                <LinearLayout
-                    android:id="@+id/homeCheckinClickable"
-                    android:layout_width="@dimen/home_button_width"
-                    android:layout_height="@dimen/home_button_height"
-                    android:layout_marginEnd="1dp"
-                    android:background="@drawable/home_button_selector_top_left"
-                    android:clickable="true"
-                    android:orientation="vertical">
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/homeCheckinLabel"
+                    style="@style/HomeButtonTextStyle"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:contentDescription="@string/content_description_check_in"
+                    app:customAssetFont="gotham_rounded_book"
+                    breeze:textKey="checkin_button"
+                    tools:text="@string/home_icon_check_in" />
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
+                <ImageView
+                    style="@style/HomeButtonIconStyle"
+                    android:layout_above="@id/homeCheckinLabel"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="@dimen/dimen_30dp"
+                    android:contentDescription="@string/home_icon_check_in"
+                    android:src="@drawable/icn_check_in_selector" />
+            </RelativeLayout>
 
-                    <ImageView
-                        style="@style/HomeButtonIconStyle"
-                        android:contentDescription="@string/home_icon_check_in"
-                        android:src="@drawable/icn_check_in_selector" />
+            <RelativeLayout
+                android:id="@+id/homePaymentsClickable"
+                android:layout_width="@dimen/home_button_width"
+                android:layout_height="@dimen/home_button_height"
+                android:layout_marginEnd="1dp"
+                android:background="@drawable/home_button_selector"
+                android:clickable="true"
+                android:padding="@dimen/dimen_40dp">
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight=".30" />
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/homePaymentsLabel"
+                    style="@style/HomeButtonTextStyle"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    app:customAssetFont="gotham_rounded_book"
+                    breeze:textKey="payments_button"
+                    tools:text="Payments" />
 
-                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                        android:id="@+id/homeCheckinLabel"
-                        style="@style/HomeButtonTextStyle"
-                        tools:text="@string/home_icon_check_in"
-                        breeze:textKey="checkin_button"
-                        app:customAssetFont="gotham_rounded_book" />
+                <ImageView
+                    style="@style/HomeButtonIconStyle"
+                    android:layout_above="@id/homePaymentsLabel"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="@dimen/dimen_30dp"
+                    android:contentDescription="Payments"
+                    android:src="@drawable/icn_payments_selector" />
+            </RelativeLayout>
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight=".26" />
-                </LinearLayout>
+            <RelativeLayout
+                android:id="@+id/homeAppointmentsClickable"
+                android:layout_width="@dimen/home_button_width"
+                android:layout_height="@dimen/home_button_height"
+                android:background="?homeButtonSelector"
+                android:clickable="true"
+                android:padding="@dimen/dimen_40dp">
 
-                <LinearLayout
-                    android:id="@+id/homePaymentsClickable"
-                    android:layout_width="@dimen/home_button_width"
-                    android:layout_height="@dimen/home_button_height"
-                    android:layout_marginEnd="1dp"
-                    android:background="@drawable/home_button_selector"
-                    android:clickable="true"
-                    android:orientation="vertical">
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/homeAppointmentsLabel"
+                    style="@style/HomeButtonTextStyle"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    app:customAssetFont="gotham_rounded_book"
+                    breeze:textKey="appointments_button"
+                    tools:text="Appointment" />
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
+                <ImageView
+                    style="@style/HomeButtonIconStyle"
+                    android:layout_above="@id/homeAppointmentsLabel"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="@dimen/dimen_30dp"
+                    android:contentDescription="Appointments"
+                    android:src="@drawable/icn_appointements_selector" />
+            </RelativeLayout>
 
-                    <ImageView
-                        style="@style/HomeButtonIconStyle"
-                        android:contentDescription="Payments"
-                        android:src="@drawable/icn_payments_selector" />
+            <RelativeLayout
+                android:id="@+id/homeCheckoutClickable"
+                android:layout_width="@dimen/home_button_width"
+                android:layout_height="@dimen/home_button_height"
+                android:layout_marginEnd="1dp"
+                android:layout_marginStart="1dp"
+                android:background="@drawable/home_button_selector_top_right"
+                android:clickable="true"
+                android:padding="@dimen/dimen_40dp"
+                android:visibility="gone">
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight=".30" />
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/homeCheckoutLabel"
+                    style="@style/HomeButtonTextStyle"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    app:customAssetFont="gotham_rounded_book"
+                    breeze:textKey="checkout_button"
+                    tools:text="Check-Out" />
 
-                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                        android:id="@+id/homePaymentsLabel"
-                        style="@style/HomeButtonTextStyle"
-                        tools:text="Payments"
-                        breeze:textKey="payments_button"
-                        app:customAssetFont="gotham_rounded_book" />
+                <ImageView
+                    style="@style/HomeButtonIconStyle"
+                    android:layout_above="@id/homeCheckoutLabel"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="@dimen/dimen_30dp"
+                    android:contentDescription="Check-Out"
+                    android:src="@drawable/icn_checkout_selector" />
+            </RelativeLayout>
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight=".26" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/homeAppointmentsClickable"
-                    android:layout_width="@dimen/home_button_width"
-                    android:layout_height="@dimen/home_button_height"
-                    android:background="@drawable/home_button_selector_top_right"
-                    android:clickable="true"
-                    android:orientation="vertical">
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <ImageView
-                        style="@style/HomeButtonIconStyle"
-                        android:contentDescription="Appointments"
-                        android:src="@drawable/icn_appointements_selector" />
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight=".30" />
-
-                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                        android:id="@+id/homeAppointmentsLabel"
-                        style="@style/HomeButtonTextStyle"
-                        tools:text="Appointment"
-                        breeze:textKey="appointments_button"
-                        app:customAssetFont="gotham_rounded_book" />
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight=".26" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:id="@+id/homeCheckoutClickable"
-                    android:layout_width="@dimen/home_button_width"
-                    android:layout_height="@dimen/home_button_height"
-                    android:layout_marginEnd="1dp"
-                    android:background="@drawable/home_button_selector_bottom_left"
-                    android:clickable="true"
-                    android:orientation="vertical">
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <ImageView
-                        style="@style/HomeButtonIconStyle"
-                        android:contentDescription="Check-Out"
-                        android:src="@drawable/icn_checkout_selector" />
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight=".30" />
-
-                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                        android:id="@+id/homeCheckoutLabel"
-                        style="@style/HomeButtonTextStyle"
-                        tools:text="Check-Out"
-                        breeze:textKey="checkout_button"
-                        app:customAssetFont="gotham_rounded_book" />
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight=".26" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/homeShopClickable"
-                    android:layout_width="@dimen/home_button_width"
-                    android:layout_height="@dimen/home_button_height"
-                    android:layout_marginEnd="1dp"
-                    android:background="@drawable/home_button_selector"
-                    android:clickable="true"
-                    android:orientation="vertical">
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <ImageView
-                        style="@style/HomeButtonIconStyle"
-                        android:contentDescription="Shop"
-                        android:src="@drawable/icn_retail_selector" />
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight=".30" />
-
-                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                        android:id="@+id/homeShopLabel"
-                        style="@style/HomeButtonTextStyle"
-                        tools:text="Shop"
-                        breeze:textKey="shop_button"
-                        app:customAssetFont="gotham_rounded_book" />
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight=".26" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/homeNewsClickable"
-                    android:layout_width="@dimen/home_button_width"
-                    android:layout_height="@dimen/home_button_height"
-                    android:background="@drawable/home_button_selector_bottom_right"
-                    android:clickable="true"
-                    android:orientation="vertical"
-                    android:paddingEnd="@dimen/dimen_28dp"
-                    android:paddingStart="@dimen/dimen_28dp"
-                    android:paddingTop="@dimen/dimen_20dp">
-
-                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                        android:id="@+id/office_news_header"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/popup_background"
-                        android:textSize="@dimen/text_size_24sp"
-                        tools:text="Office News"
-                        breeze:textKey="officenews_button"
-                        app:customAssetFont="gotham_rounded_medium" />
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/office_news_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="@dimen/home_shadow_width"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/home_shadow_margin_top"
-                android:contentDescription="Shadow"
-                android:src="@drawable/home_shadow" />
         </LinearLayout>
-    </LinearLayout>
+
+        <ImageView
+            android:id="@+id/shadow"
+            android:layout_width="@dimen/home_shadow_width"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layoutContainer"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/home_shadow_margin_top"
+            android:contentDescription="Shadow"
+            android:src="@drawable/home_shadow" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/office_news_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/shadow"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/soft_sky"
+            android:textSize="@dimen/text_size_26sp"
+            android:visibility="gone"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="officenews_button"
+            tools:text="Office News" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/office_news_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/office_news_header"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:background="?newsBackgroundColor"
+            android:paddingBottom="@dimen/dimen_20dp"
+            android:paddingTop="@dimen/dimen_20dp"
+            android:visibility="gone" />
+    </RelativeLayout>
 
 </FrameLayout>

@@ -16,9 +16,9 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
+import com.carecloud.carepay.patient.myhealth.dtos.MyHealthProviderDto;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -32,7 +32,7 @@ import com.squareup.picasso.Picasso;
 public class CareTeamDetailFragment extends BaseFragment {
 
     private MyHealthInterface callback;
-    private ProviderDTO provider;
+    private MyHealthProviderDto provider;
 
     public CareTeamDetailFragment() {
 
@@ -72,9 +72,9 @@ public class CareTeamDetailFragment extends BaseFragment {
         provider = getProvider(getArguments().getInt("providerId"));
     }
 
-    private ProviderDTO getProvider(int providerId) {
+    private MyHealthProviderDto getProvider(int providerId) {
         MyHealthDto myHealthDto = (MyHealthDto) callback.getDto();
-        for (ProviderDTO provider : myHealthDto.getPayload().getMyHealthData().getProviders().getProviders()) {
+        for (MyHealthProviderDto provider : myHealthDto.getPayload().getMyHealthData().getProviders().getProviders()) {
             if (providerId == provider.getId()) {
                 return provider;
             }
