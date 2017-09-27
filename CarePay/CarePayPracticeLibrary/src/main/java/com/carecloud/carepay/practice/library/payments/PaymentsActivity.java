@@ -540,6 +540,11 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         entryFragment.show(getSupportFragmentManager(), entryFragment.getClass().getSimpleName());
     }
 
+    @Override
+    public void showPaymentHistory(PaymentsModel paymentsModel) {
+
+    }
+
 
     @Override
     public void onDetailCancelClicked(PaymentsModel paymentsModel) {

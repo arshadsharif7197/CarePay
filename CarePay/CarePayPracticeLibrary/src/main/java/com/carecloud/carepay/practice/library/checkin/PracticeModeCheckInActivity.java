@@ -562,6 +562,11 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
         entryFragment.show(getSupportFragmentManager(), entryFragment.getClass().getSimpleName());
     }
 
+    @Override
+    public void showPaymentHistory(PaymentsModel paymentsModel) {
+        //not implemented in patient mode
+    }
+
 
     @Override
     protected void processExternalPayment(PaymentExecution execution, Intent data) {

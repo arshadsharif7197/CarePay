@@ -226,8 +226,8 @@
     <dimen name="responsibility_list_margin">80dp</dimen>
 
     <dimen name="dimen_72dp">72dp</dimen>
-    <dimen name="payment_distibution_dialog_height">540dp</dimen>
-    <dimen name="payment_distribution_dialog_width">800dp</dimen>
+    <dimen name="payment_distibution_dialog_height">600dp</dimen>
+    <dimen name="payment_distribution_dialog_width">860dp</dimen>
 
     <dimen name="popup_picker_width">300dp</dimen>
     <dimen name="popup_picker_height">200dp</dimen>
