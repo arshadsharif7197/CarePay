@@ -221,7 +221,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             queries.put("practice_id", metadata.getPracticeId());
             queries.put("patient_id", metadata.getPatientId());
         }
-        if (paymentsModel.getPaymentPayload().getPaymentPostModel().getMetadata().getAppointmentRequestDTO() == null && callback.getAppointmentId() != null) {
+        if (callback.getAppointmentId() != null) {
             queries.put("appointment_id", callback.getAppointmentId());
         }
         Map<String, String> header = new HashMap<>();
