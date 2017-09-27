@@ -398,6 +398,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     @Override
     public void displayAppointmentDetails(AppointmentDTO appointmentDTO) {
         AppointmentDetailDialog detailDialog = AppointmentDetailDialog.newInstance(appointmentDTO);
+        practiceId = appointmentDTO.getMetadata().getPracticeId();
+        practiceMgmt = appointmentDTO.getMetadata().getPracticeMgmt();
+        patientId = appointmentDTO.getMetadata().getPatientId();
         viewHandler.displayDialogFragment(detailDialog, false);
     }
 
