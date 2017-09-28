@@ -216,8 +216,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             navigateToAppointments();
         } else if (viewId == R.id.homeCheckoutClickable) {
             checkOut();
-        } else if (viewId == R.id.homeNewsClickable) {
-//            getNews();
         } else if (viewId == R.id.homeLockIcon) {
             unlockPracticeMode();
         }
