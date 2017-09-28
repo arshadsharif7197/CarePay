@@ -1,6 +1,6 @@
 package com.carecloud.carepay.patient.messages.models;
 
-import com.carecloud.carepay.patient.base.PagingDto;
+import com.carecloud.carepaylibray.base.models.PagingDto;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
