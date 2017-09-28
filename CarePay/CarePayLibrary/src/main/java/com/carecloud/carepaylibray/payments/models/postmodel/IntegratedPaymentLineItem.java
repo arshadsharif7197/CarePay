@@ -16,7 +16,7 @@ public class IntegratedPaymentLineItem {
     public static final String TYPE_COINSURANCE = "co_insurance";
     public static final String TYPE_DEDUCTABLE = "deductable";
     public static final String TYPE_PREPAYMENT = "prepayment";
-    public static final String TYPE_CANCELLATION = "appointment_cancellation";
+    public static final String TYPE_CANCELLATION = "cancel_fee";
     public static final String TYPE_NEWCHARGE = "new_debit";
     public static final String TYPE_APPLICATION = "debit_application";
     public static final String TYPE_UNAPPLIED = "unapplied";
