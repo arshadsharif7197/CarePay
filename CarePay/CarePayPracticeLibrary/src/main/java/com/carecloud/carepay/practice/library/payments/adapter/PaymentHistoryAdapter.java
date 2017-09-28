@@ -74,8 +74,10 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
         if(totalPaid == 0 && !item.getPayload().getProcessingErrors().isEmpty()){
             holder.transactionAmount.setText(currencyFormatter.format(amount));
             holder.transactionFlag.setText(Label.getLabel("payment_failed"));
+            holder.transactionFlag.setVisibility(View.VISIBLE);
         }else {
             holder.transactionAmount.setText(currencyFormatter.format(totalPaid));
+            holder.transactionFlag.setVisibility(View.GONE);
         }
 
 
