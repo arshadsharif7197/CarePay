@@ -68,7 +68,16 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
         holder.transactionTime.setText(dateInstance.getTime12Hour().concat(","));
 
         holder.transactionPaymentType.setText(getPaymentMethod(item.getPayload().getPapiPaymentMethod()));
-        holder.transactionAmount.setText(currencyFormatter.format(item.getPayload().getTotalPaid()));
+
+        double totalPaid = item.getPayload().getTotalPaid();
+        double amount = item.getPayload().getAmount();
+        if(totalPaid == 0 && !item.getPayload().getProcessingErrors().isEmpty()){
+            holder.transactionAmount.setText(currencyFormatter.format(amount));
+            holder.transactionFlag.setText(Label.getLabel("payment_failed"));
+        }else {
+            holder.transactionAmount.setText(currencyFormatter.format(totalPaid));
+        }
+
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,6 +147,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
         TextView transactionTime;
         TextView transactionPaymentType;
         TextView transactionAmount;
+        TextView transactionFlag;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -145,6 +155,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
             transactionTime = (TextView) itemView.findViewById(R.id.transaction_time);
             transactionPaymentType = (TextView) itemView.findViewById(R.id.transaction_payment_type);
             transactionAmount = (TextView) itemView.findViewById(R.id.transaction_total);
+            transactionFlag = (TextView) itemView.findViewById(R.id.transaction_flag);
         }
     }
 }

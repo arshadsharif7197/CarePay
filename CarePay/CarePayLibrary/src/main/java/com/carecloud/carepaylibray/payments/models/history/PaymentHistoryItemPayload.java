@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.payments.models.history;
 import android.support.annotation.StringDef;
 
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentLineItem;
+import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.google.gson.JsonObject;
@@ -61,6 +62,9 @@ public class PaymentHistoryItemPayload {
 
     @SerializedName("state")
     private @PaymentRequestState String state;
+
+    @SerializedName("papi_errors")
+    private List<IntegratedPatientPaymentPayload.ProcessingError> processingErrors = new ArrayList<>();
 
     @SerializedName("payment_group_id")
     private String paymentGroupId;
@@ -196,6 +200,15 @@ public class PaymentHistoryItemPayload {
     public void setDate(String date) {
         this.date = date;
     }
+
+    public List<IntegratedPatientPaymentPayload.ProcessingError> getProcessingErrors() {
+        return processingErrors;
+    }
+
+    public void setProcessingErrors(List<IntegratedPatientPaymentPayload.ProcessingError> processingErrors) {
+        this.processingErrors = processingErrors;
+    }
+
 
     /**
      * Calculate total of paid line items
