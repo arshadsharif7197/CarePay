@@ -204,9 +204,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
         if (patient.isCheckedIn) {
             patient.isCheckedIn = false;
             patient.isPending = true;
-
             applyFilter();
-
             return true;
         }
 
@@ -214,9 +212,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
             patient.isCheckedIn = true;
             patient.isPending = false;
             patient.isCheckingIn = false;
-
             applyFilter();
-
             return true;
         }
 
