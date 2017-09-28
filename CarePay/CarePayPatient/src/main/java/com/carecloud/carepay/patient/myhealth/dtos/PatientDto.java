@@ -35,6 +35,8 @@ public class PatientDto {
     private String profilePhoto;
     @SerializedName("practice")
     private String practice;
+    @SerializedName("business_entity")
+    private BusinessEntity businessEntity = new BusinessEntity();
 
     public Integer getId() {
         return id;
@@ -138,5 +140,13 @@ public class PatientDto {
 
     public void setPractice(String practice) {
         this.practice = practice;
+    }
+
+    public BusinessEntity getBusinessEntity() {
+        return businessEntity;
+    }
+
+    public void setBusinessEntity(BusinessEntity businessEntity) {
+        this.businessEntity = businessEntity;
     }
 }

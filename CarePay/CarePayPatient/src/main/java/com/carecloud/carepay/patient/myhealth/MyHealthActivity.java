@@ -21,6 +21,7 @@ import com.carecloud.carepay.patient.myhealth.dtos.AllergyDto;
 import com.carecloud.carepay.patient.myhealth.dtos.LabDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MedicationDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
+import com.carecloud.carepay.patient.myhealth.dtos.MyHealthProviderDto;
 import com.carecloud.carepay.patient.myhealth.dtos.PatientDto;
 import com.carecloud.carepay.patient.myhealth.fragments.AllergyDetailFragment;
 import com.carecloud.carepay.patient.myhealth.fragments.CareTeamDetailFragment;
@@ -46,7 +47,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     private static final int MY_PERMISSIONS_MR_REQUEST_WRITE_EXTERNAL_STORAGE = 11;
     private LabDto selectedLab;
 
-    private ProviderDTO selectedRecordProvider;
+    private MyHealthProviderDto selectedRecordProvider;
 
     @Override
     protected void onCreate(Bundle icicle) {
@@ -115,7 +116,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
 
     @SuppressLint("NewApi")
     @Override
-    public void onSeeAllFullMedicalRecordClicked(ProviderDTO provider) {
+    public void onSeeAllFullMedicalRecordClicked(MyHealthProviderDto provider) {
         selectedRecordProvider = provider;
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PermissionChecker.PERMISSION_GRANTED && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
@@ -196,14 +197,14 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
         }
     }
 
-    private PatientDto getPatientDto(ProviderDTO providerDTO){
+    private PatientDto getPatientDto(MyHealthProviderDto providerDTO){
         PatientDto selectedPatient = null;
         if(providerDTO == null){
             selectedPatient = myHealthDto.getPayload().getMyHealthData()
                     .getPatient().getPatients().get(0);
         }else {
             for (PatientDto patientDto : myHealthDto.getPayload().getMyHealthData().getPatient().getPatients()) {
-                if (patientDto.getPractice().equals(providerDTO.getPractice())) {
+                if (patientDto.getBusinessEntity().getGuid().equals(providerDTO.getBusinessEntity().getGuid())) {
                     return patientDto;
                 }
             }
