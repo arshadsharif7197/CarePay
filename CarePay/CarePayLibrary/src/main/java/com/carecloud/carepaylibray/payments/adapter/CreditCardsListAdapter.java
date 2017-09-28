@@ -49,7 +49,11 @@ public class CreditCardsListAdapter extends RecyclerView.Adapter<CreditCardsList
      * @param position position in list
      */
     public void setSelectedItem(int position){
+        boolean shouldRefresh = selectedItem != -1 && selectedItem != position;
         this.selectedItem = position;
+        if(shouldRefresh){
+            notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -67,6 +71,10 @@ public class CreditCardsListAdapter extends RecyclerView.Adapter<CreditCardsList
 
         if(creditCardInfo.isDefault()){
             holder.defaultCardText.setVisibility(View.VISIBLE);
+            if(selectedItem == -1) {
+                setSelectedItem(position);
+                callback.onCreditCardItemSelected(position);
+            }
         }else {
             holder.defaultCardText.setVisibility(View.GONE);
         }

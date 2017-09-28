@@ -1,9 +1,9 @@
 package com.carecloud.carepay.patient.myhealth.interfaces;
 
 import com.carecloud.carepay.patient.myhealth.dtos.AllergyDto;
-import com.carecloud.carepay.patient.myhealth.dtos.AssertionDto;
 import com.carecloud.carepay.patient.myhealth.dtos.LabDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MedicationDto;
+import com.carecloud.carepay.patient.myhealth.dtos.MyHealthProviderDto;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 
 /**
@@ -12,7 +12,7 @@ import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 
 public interface MyHealthDataInterface {
 
-    void onSeeAllFullMedicalRecordClicked();
+    void onSeeAllFullMedicalRecordClicked(MyHealthProviderDto provider);
 
     void onProviderClicked(ProviderDTO provider);
 

@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.myhealth.dtos.MyHealthProviderDto;
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthMainFragment;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthDataInterface;
 import com.carecloud.carepay.service.library.label.Label;
@@ -26,11 +27,11 @@ import java.util.List;
 public class CareTeamRecyclerViewAdapter extends RecyclerView.Adapter<CareTeamRecyclerViewAdapter.ViewHolder> {
 
 
-    private final List<ProviderDTO> providers;
+    private final List<MyHealthProviderDto> providers;
     private final int maxItems;
     private MyHealthDataInterface callback;
 
-    public CareTeamRecyclerViewAdapter(List<ProviderDTO> providers, int maxItems) {
+    public CareTeamRecyclerViewAdapter(List<MyHealthProviderDto> providers, int maxItems) {
         this.providers = providers;
         this.maxItems = maxItems;
     }
@@ -84,7 +85,7 @@ public class CareTeamRecyclerViewAdapter extends RecyclerView.Adapter<CareTeamRe
             holder.myHealthActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    callback.onSeeAllFullMedicalRecordClicked();
+                    callback.onSeeAllFullMedicalRecordClicked(null);
                 }
             });
         }

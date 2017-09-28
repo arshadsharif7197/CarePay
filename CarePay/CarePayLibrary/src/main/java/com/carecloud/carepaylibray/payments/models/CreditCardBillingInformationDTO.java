@@ -11,7 +11,7 @@ public class CreditCardBillingInformationDTO {
 
         @SerializedName("same_as_patient")
         @Expose
-        private Boolean sameAsPatient;
+        private boolean sameAsPatient;
         @SerializedName("line1")
         @Expose
         private String line1;
@@ -36,7 +36,7 @@ public class CreditCardBillingInformationDTO {
          * @return
          * The sameAsPatient
          */
-        public Boolean getSameAsPatient() {
+        public boolean getSameAsPatient() {
             return sameAsPatient;
         }
 
@@ -45,7 +45,7 @@ public class CreditCardBillingInformationDTO {
          * @param sameAsPatient
          * The same_as_patient
          */
-        public void setSameAsPatient(Boolean sameAsPatient) {
+        public void setSameAsPatient(boolean sameAsPatient) {
             this.sameAsPatient = sameAsPatient;
         }
 

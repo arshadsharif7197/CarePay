@@ -11,12 +11,12 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -216,8 +216,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             navigateToAppointments();
         } else if (viewId == R.id.homeCheckoutClickable) {
             checkOut();
-        } else if (viewId == R.id.homeNewsClickable) {
-//            getNews();
         } else if (viewId == R.id.homeLockIcon) {
             unlockPracticeMode();
         }
@@ -487,11 +485,18 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                         officeNews, officeNewsClickedListener);
                 newsList.setAdapter(adapter);
             } else {
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                params.gravity = Gravity.CENTER;
-                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.layoutContainer);
-                linearLayout.setLayoutParams(params);
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+                View layoutContainer = findViewById(R.id.layoutContainer);
+                layoutContainer.setLayoutParams(params);
+
+                RelativeLayout.LayoutParams shadowParams = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                shadowParams.addRule(RelativeLayout.BELOW, R.id.layoutContainer);
+                shadowParams.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
+                View shadowImage = findViewById(R.id.shadow);
+                shadowImage.setLayoutParams(shadowParams);
             }
 
 

@@ -21,6 +21,7 @@ import com.carecloud.carepay.patient.myhealth.dtos.AllergyDto;
 import com.carecloud.carepay.patient.myhealth.dtos.LabDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MedicationDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
+import com.carecloud.carepay.patient.myhealth.dtos.MyHealthProviderDto;
 import com.carecloud.carepay.patient.myhealth.dtos.PatientDto;
 import com.carecloud.carepay.patient.myhealth.fragments.AllergyDetailFragment;
 import com.carecloud.carepay.patient.myhealth.fragments.CareTeamDetailFragment;
@@ -45,6 +46,8 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     private static final int MY_PERMISSIONS_LAB_REQUEST_WRITE_EXTERNAL_STORAGE = 10;
     private static final int MY_PERMISSIONS_MR_REQUEST_WRITE_EXTERNAL_STORAGE = 11;
     private LabDto selectedLab;
+
+    private MyHealthProviderDto selectedRecordProvider;
 
     @Override
     protected void onCreate(Bundle icicle) {
@@ -113,7 +116,8 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
 
     @SuppressLint("NewApi")
     @Override
-    public void onSeeAllFullMedicalRecordClicked() {
+    public void onSeeAllFullMedicalRecordClicked(MyHealthProviderDto provider) {
+        selectedRecordProvider = provider;
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PermissionChecker.PERMISSION_GRANTED && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
@@ -182,12 +186,30 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
 
     private void prepareMedicalRecordPdf() {
         TransitionDTO transitionDTO = myHealthDto.getMetadata().getLinks().getMedicalRecord();
-        PatientDto patientDto = myHealthDto.getPayload().getMyHealthData()
-                .getPatient().getPatients().get(0);
-        String url = String.format("%s?%s=%s", transitionDTO.getUrl(), "patient_id",
-                String.valueOf(patientDto.getId()));
+        PatientDto patientDto = getPatientDto(selectedRecordProvider);
+        if(patientDto != null) {
+            String url = String.format("%s?%s=%s", transitionDTO.getUrl(), "patient_id",
+                    String.valueOf(patientDto.getId()));
 
-        downloadPdf(url, patientDto.getFullName(), ".pdf", "Medical Record");
+            downloadPdf(url, patientDto.getFullName(), ".pdf", "Medical Record");
+        }else{
+            showErrorNotification("Unable to find Patient Record");
+        }
+    }
+
+    private PatientDto getPatientDto(MyHealthProviderDto providerDTO){
+        PatientDto selectedPatient = null;
+        if(providerDTO == null){
+            selectedPatient = myHealthDto.getPayload().getMyHealthData()
+                    .getPatient().getPatients().get(0);
+        }else {
+            for (PatientDto patientDto : myHealthDto.getPayload().getMyHealthData().getPatient().getPatients()) {
+                if (patientDto.getBusinessEntity().getGuid().equals(providerDTO.getBusinessEntity().getGuid())) {
+                    return patientDto;
+                }
+            }
+        }
+        return selectedPatient;
     }
 
     private void prepareLabPdf(final LabDto lab) {

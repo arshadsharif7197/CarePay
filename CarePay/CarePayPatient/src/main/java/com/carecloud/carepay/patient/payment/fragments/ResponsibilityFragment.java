@@ -99,7 +99,6 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
             }
         });
         toolbar.setTitle("");
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         getPaymentLabels();
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         if (getArguments().getString("title") != null) {
