@@ -190,7 +190,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
 
             NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
             TextView totalPaidTextView = (TextView) view.findViewById(R.id.totalPaidTextView);
-            totalPaidTextView.setText(currencyFormatter.format(PaymentConfirmationFragment.getTotalPaid(patientPaymentPayload)));
+            totalPaidTextView.setText(currencyFormatter.format(patientPaymentPayload.getTotalPaid()));
 
             //todo display possible errors
 

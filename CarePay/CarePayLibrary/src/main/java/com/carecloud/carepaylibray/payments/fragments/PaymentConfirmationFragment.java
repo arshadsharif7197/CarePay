@@ -13,7 +13,6 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentCompletedInterface;
-import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
@@ -100,7 +99,7 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
         method.setText(getPaymentMethod(patientPaymentPayload));
 
         TextView total = (TextView) view.findViewById(R.id.payment_confirm_total_value);
-        total.setText(currencyFormatter.format(getTotalPaid(patientPaymentPayload)));
+        total.setText(currencyFormatter.format(patientPaymentPayload.getTotalPaid()));
 
         TextView confirmation = (TextView) view.findViewById(R.id.payment_confirm_value);
         confirmation.setText(patientPaymentPayload.getPaymentId());
@@ -125,21 +124,6 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
         }
     };
 
-
-    /**
-     * Calculate total of paid line items
-     * @param patientPaymentPayload payload
-     * @return total
-     */
-    public static double getTotalPaid(IntegratedPatientPaymentPayload patientPaymentPayload){
-        double total = 0D;
-        for(IntegratedPatientPaymentLineItem lineItem : patientPaymentPayload.getLineItems()){
-            if(lineItem.isProcessed()){
-                total+=lineItem.getAmount();
-            }
-        }
-        return total;
-    }
 
     /**
      * Get Display label for payment method
