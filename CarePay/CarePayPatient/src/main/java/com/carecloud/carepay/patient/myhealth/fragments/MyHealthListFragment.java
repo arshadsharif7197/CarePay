@@ -23,9 +23,9 @@ import com.carecloud.carepay.patient.myhealth.dtos.AssertionDto;
 import com.carecloud.carepay.patient.myhealth.dtos.LabDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MedicationDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
+import com.carecloud.carepay.patient.myhealth.dtos.MyHealthProviderDto;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 
 import java.util.List;
@@ -109,7 +109,7 @@ public class MyHealthListFragment extends BaseFragment {
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         switch (type) {
             case CARE_TEAM:
-                List<ProviderDTO> providers = myHealthDto.getPayload().getMyHealthData()
+                List<MyHealthProviderDto> providers = myHealthDto.getPayload().getMyHealthData()
                         .getProviders().getProviders();
                 CareTeamRecyclerViewAdapter careTeamAdapter = new CareTeamRecyclerViewAdapter(
                         providers, providers.size());

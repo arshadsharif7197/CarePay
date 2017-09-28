@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +17,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -135,6 +136,22 @@ public class UpdateNameFragment extends DemographicsBaseSettingsFragment {
             middleName.addTextChangedListener(getValidateEmptyTextWatcher(middleNameLayout));
             View middleNameOptional = view.findViewById(R.id.reviewdemogrMiddleNameOptionalLabel);
             middleNameOptional.setVisibility(View.GONE);
+        } else {
+            middleName.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    checkIfEnableButton();
+                }
+            });
         }
 
     }
