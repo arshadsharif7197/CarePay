@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentHistoryAdapter;
+import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentHistoryCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -38,13 +39,9 @@ import java.util.Map;
  */
 
 public class PaymentHistoryFragment extends BaseDialogFragment implements PaymentHistoryAdapter.HistoryItemClickListener {
-    public interface PaymentHistoryDialogInterface{
-        void onDismissPaymentHistory(PaymentsModel paymentsModel);
-    }
-
     private static final int BOTTOM_ROW_OFFSET = 2;
 
-    private PaymentHistoryDialogInterface callback;
+    private PracticePaymentHistoryCallback callback;
     private PaymentsModel paymentsModel;
     private Paging paging;
     private List<PaymentHistoryItem> paymentHistory = new ArrayList<>();
@@ -70,9 +67,9 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
     public void onAttach(Context context){
         super.onAttach(context);
         try{
-            callback = (PaymentHistoryDialogInterface) context;
+            callback = (PracticePaymentHistoryCallback) context;
         }catch (ClassCastException cce){
-            throw new ClassCastException("Attached context must implement PaymentHistoryDialogInterface");
+            throw new ClassCastException("Attached context must implement PracticePaymentHistoryCallback");
         }
     }
 
@@ -157,7 +154,7 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
 
     @Override
     public void onHistoryItemClicked(PaymentHistoryItem item) {
-
+        callback.displayHistoryItemDetails(item);
     }
 
     private boolean hasMorePages(){

@@ -23,6 +23,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.AddPaymentItemF
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionEntryFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PaymentHistoryDetailFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentHistoryFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
@@ -47,6 +48,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
+import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -64,8 +66,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class PaymentsActivity extends BasePracticeActivity implements FilterDialog.FilterDialogListener,
-        PracticePaymentNavigationCallback, DateRangePickerDialog.DateRangePickerDialogListener,
-        PaymentHistoryFragment.PaymentHistoryDialogInterface {
+        PracticePaymentNavigationCallback, DateRangePickerDialog.DateRangePickerDialogListener {
 
     private PaymentsModel paymentsModel;
     private FilterModel filter;
@@ -544,13 +545,6 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void showPaymentHistory(PaymentsModel paymentsModel) {
-        PaymentHistoryFragment fragment = PaymentHistoryFragment.newInstance(paymentsModel);
-        displayDialogFragment(fragment, false);
-    }
-
-
-    @Override
     public void onDetailCancelClicked(PaymentsModel paymentsModel) {
         startPaymentProcess(paymentsModel);
     }
@@ -565,12 +559,25 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
+    public void showPaymentHistory(PaymentsModel paymentsModel) {
+        PaymentHistoryFragment fragment = PaymentHistoryFragment.newInstance(paymentsModel);
+        displayDialogFragment(fragment, false);
+    }
+
+
+    @Override
     public void onDismissPaymentHistory(PaymentsModel paymentsModel) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
         if (fragment != null) {
             fragment.showDialog();
         }
+    }
+
+    @Override
+    public void displayHistoryItemDetails(PaymentHistoryItem item) {
+        PaymentHistoryDetailFragment fragment = PaymentHistoryDetailFragment.newInstance(item);
+        displayDialogFragment(fragment, true);
     }
 
     private View.OnClickListener selectDateRange = new View.OnClickListener() {
