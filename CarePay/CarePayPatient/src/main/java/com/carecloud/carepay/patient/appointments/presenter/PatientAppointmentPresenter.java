@@ -626,7 +626,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload()
                 .getPatientPayments().getPayload();
         if (!payload.getProcessingErrors().isEmpty()
-                && PaymentConfirmationFragment.getTotalPaid(payload) == 0D) {
+                && payload.getTotalPaid() == 0D) {
             StringBuilder builder = new StringBuilder();
             for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
                 builder.append(processingError.getError());

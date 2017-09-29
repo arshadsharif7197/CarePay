@@ -53,7 +53,6 @@ import java.util.List;
 public class PaymentDistributionFragment extends BaseDialogFragment implements PaymentDistributionAdapter.PaymentDistributionCallback, PopupPickerAdapter.PopupPickCallback,
         AddPaymentItemFragment.AddItemCallback, PaymentDistributionEntryFragment.PaymentDistributionAmountCallback, BounceHelper.BounceHelperListener {
 
-    private TextView patientName;
     private TextView balance;
     private TextView paymentTotal;
     private TextView unapplied;
@@ -127,7 +126,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
         setupButtons(view);
 
-        patientName = (TextView) view.findViewById(R.id.patient_name);
         balance = (TextView) view.findViewById(R.id.balance_value);
         unapplied = (TextView) view.findViewById(R.id.unapplied_value);
 
@@ -226,6 +224,15 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             @Override
             public void onClick(View view) {
                 callback.showAmountEntry(PaymentDistributionFragment.this, null, null);
+            }
+        });
+
+        View historyButton = view.findViewById(R.id.button_history);
+        historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.showPaymentHistory(paymentsModel);
+                hideDialog();
             }
         });
 

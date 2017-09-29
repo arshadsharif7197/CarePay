@@ -23,6 +23,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.AddPaymentItemF
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionEntryFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PaymentHistoryFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
@@ -62,7 +63,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-public class PaymentsActivity extends BasePracticeActivity implements FilterDialog.FilterDialogListener, PracticePaymentNavigationCallback, DateRangePickerDialog.DateRangePickerDialogListener {
+public class PaymentsActivity extends BasePracticeActivity implements FilterDialog.FilterDialogListener,
+        PracticePaymentNavigationCallback, DateRangePickerDialog.DateRangePickerDialogListener,
+        PaymentHistoryFragment.PaymentHistoryDialogInterface {
 
     private PaymentsModel paymentsModel;
     private FilterModel filter;
@@ -431,7 +434,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-        if(!payload.getProcessingErrors().isEmpty() && PaymentConfirmationFragment.getTotalPaid(payload)==0D){
+        if(!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid()==0D){
             StringBuilder builder = new StringBuilder();
             for(IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()){
                 builder.append(processingError.getError());
@@ -540,6 +543,12 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         entryFragment.show(getSupportFragmentManager(), entryFragment.getClass().getSimpleName());
     }
 
+    @Override
+    public void showPaymentHistory(PaymentsModel paymentsModel) {
+        PaymentHistoryFragment fragment = PaymentHistoryFragment.newInstance(paymentsModel);
+        displayDialogFragment(fragment, false);
+    }
+
 
     @Override
     public void onDetailCancelClicked(PaymentsModel paymentsModel) {
@@ -548,6 +557,15 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
+        if (fragment != null) {
+            fragment.showDialog();
+        }
+    }
+
+    @Override
+    public void onDismissPaymentHistory(PaymentsModel paymentsModel) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
         if (fragment != null) {
