@@ -485,18 +485,18 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                         officeNews, officeNewsClickedListener);
                 newsList.setAdapter(adapter);
             } else {
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-                View layoutContainer = findViewById(R.id.layoutContainer);
-                layoutContainer.setLayoutParams(params);
-
-                RelativeLayout.LayoutParams shadowParams = new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                shadowParams.addRule(RelativeLayout.BELOW, R.id.layoutContainer);
-                shadowParams.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
-                View shadowImage = findViewById(R.id.shadow);
-                shadowImage.setLayoutParams(shadowParams);
+//                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+//                        RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+//                params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+//                View layoutContainer = findViewById(R.id.layoutContainer);
+//                layoutContainer.setLayoutParams(params);
+//
+//                RelativeLayout.LayoutParams shadowParams = new RelativeLayout.LayoutParams(
+//                        RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+//                shadowParams.addRule(RelativeLayout.BELOW, R.id.layoutContainer);
+//                shadowParams.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
+//                View shadowImage = findViewById(R.id.shadow);
+//                shadowImage.setLayoutParams(shadowParams);
             }
 
 
