@@ -52,6 +52,11 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
     private RecyclerView historyRecycler;
     private boolean isPaging = false;
 
+    /**
+     * Create instance of PaymentHistoryFragment
+     * @param paymentsModel payment model
+     * @return new instance of PaymentHistoryFragment
+     */
     public static PaymentHistoryFragment newInstance(PaymentsModel paymentsModel){
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);

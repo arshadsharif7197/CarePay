@@ -38,6 +38,12 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
     private boolean isLoading = false;
 
+    /**
+     * Constructor
+     * @param context context
+     * @param paymentHistoryItems list of history items
+     * @param callback callback
+     */
     public PaymentHistoryAdapter(Context context, List<PaymentHistoryItem> paymentHistoryItems, HistoryItemClickListener callback){
         this.context = context;
         this.paymentHistoryItems = paymentHistoryItems;
