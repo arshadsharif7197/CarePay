@@ -21,21 +21,38 @@ import java.util.List;
 
 public class PaymentsPayloadDTO implements Serializable {
 
-    @SerializedName("intake_forms")
+
+    @SerializedName("providers")
     @Expose
-    private PaymentsPayloadIntakeFormsDTO intakeForms = new PaymentsPayloadIntakeFormsDTO();
+    private List<ProviderDTO> providers = new ArrayList<>();
+    @SerializedName("locations")
+    @Expose
+    private List<LocationDTO> locations = new ArrayList<>();
+    @SerializedName("patient_balances")
+    @Expose
+    private List<PatientBalanceDTO> patientBalances = new ArrayList<>();
+    @SerializedName(value = "user_practices", alternate = "practice_information")
+    @Expose
+    private List<UserPracticeDTO> userPractices = new ArrayList<>();
     @SerializedName("payment_settings")
     @Expose
     private List<PaymentsPayloadSettingsDTO> paymentSettings = new ArrayList<>();
+    @SerializedName("merchant_services")
+    @Expose
+    private List<MerchantServicesDTO> merchantServices = new ArrayList<>();
+    @SerializedName("patient_credit_cards")
+    @Expose
+    private List<PaymentsPatientsCreditCardsPayloadListDTO> patientCreditCards = new ArrayList<>();
+
+    @SerializedName("intake_forms")
+    @Expose
+    private PaymentsPayloadIntakeFormsDTO intakeForms = new PaymentsPayloadIntakeFormsDTO();
     @SerializedName("patient_payment_plans")
     @Expose
     private PaymentsPatientsPlansDTO patientPaymentPlans = new PaymentsPatientsPlansDTO();
     @SerializedName("patient_history")
     @Expose
     private PaymentsPatientHistoryDTO patientHistory = new PaymentsPatientHistoryDTO();
-    @SerializedName("patient_credit_cards")
-    @Expose
-    private List<PaymentsPatientsCreditCardsPayloadListDTO> patientCreditCards = new ArrayList<>();
     @SerializedName("provider_index")
     @Expose
     private List<ProviderIndexDTO> providerIndex = new ArrayList<>();
@@ -45,15 +62,6 @@ public class PaymentsPayloadDTO implements Serializable {
     @SerializedName("in_office_counts")
     @Expose
     private Integer inOfficeCounts;
-    @SerializedName("patient_balances")
-    @Expose
-    private List<PatientBalanceDTO> patientBalances = new ArrayList<>();
-    @SerializedName("providers")
-    @Expose
-    private List<ProviderDTO> providers = new ArrayList<>();
-    @SerializedName("locations")
-    @Expose
-    private List<LocationDTO> locations = new ArrayList<>();
     @SerializedName("patient_payments")
     @Expose
     private PatientPaymentsDTO patientPayments = new PatientPaymentsDTO();
@@ -63,12 +71,6 @@ public class PaymentsPayloadDTO implements Serializable {
     @SerializedName("papi_accounts")
     @Expose
     private List<DemographicsSettingsPapiAccountsDTO> papiAccounts = new ArrayList<>();
-    @SerializedName("merchant_services")
-    @Expose
-    private List<MerchantServicesDTO> merchantServices = new ArrayList<>();
-    @SerializedName(value = "user_practices", alternate = "practice_information")
-    @Expose
-    private List<UserPracticeDTO> userPractices = new ArrayList<>();
     @SerializedName("payment_post_model")
     @Expose
     private IntegratedPaymentPostModel paymentPostModel;

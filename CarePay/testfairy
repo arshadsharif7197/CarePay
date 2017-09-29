@@ -1,0 +1,20 @@
+#!/bin/bash
+
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+reset=$(tput sgr0)
+
+APK_FILE=$1
+
+echo "${yellow}*** Signing $APK_FILE ***${reset}"
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ./release-keystore.jks -storepass carecloud123 -keypass carecloud123 $APK_FILE carecloudkey
+
+echo "${yellow}*** Verifying $APK_FILE ***${reset}"
+jarsigner -verify $APK_FILE
+
+echo "${green}*** Begin uploading $APK_FILE to TestFairy ***${reset}"
+curl https://upload.testfairy.com/api/upload \
+    -F api_key=4afa2bed1de9c13c9630949f5a74aa6c881d0724 \
+    -F file=@$APK_FILE \
+    -F testers_groups='Development-notify' \
+    -F notify='on'

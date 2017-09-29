@@ -390,7 +390,7 @@ public class WorkflowServiceHelper {
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
-                    onFailure(parseError(response.message(), errorBodyString, "message", "data", "error"));
+                    onFailure(parseError(response.message(), errorBodyString, "message", "data", "error", "exception"));
                 } else {
                     onFailure("");
                 }
@@ -407,7 +407,7 @@ public class WorkflowServiceHelper {
                     // Re-try failed request with increased attempt count
                     executeRequest(transitionDTO, callback, jsonBody, queryMap, headers, attemptCount + 1);
                 } else {
-                    callback.onFailure(errorMessage);
+                    callback.onFailure(""+errorMessage);
                 }
             }
         });
@@ -434,7 +434,7 @@ public class WorkflowServiceHelper {
 
             @Override
             public void onLoginFailure(String exceptionMessage) {
-                callback.onFailure(exceptionMessage);
+                callback.onFailure(""+exceptionMessage);
             }
         };
     }
@@ -478,7 +478,7 @@ public class WorkflowServiceHelper {
 
             @Override
             public void onFailure(String exceptionMessage) {
-                callback.onFailure(exceptionMessage);
+                callback.onFailure(""+exceptionMessage);
             }
         };
     }
@@ -502,6 +502,7 @@ public class WorkflowServiceHelper {
     private void atomicAppRestart() {
         if (applicationMode != null) {
             applicationMode.clearUserPracticeDTO();
+            applicationMode.setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
         }
         Intent intent = new Intent();
         intent.setAction("com.carecloud.carepay.restart");

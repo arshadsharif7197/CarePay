@@ -9,6 +9,23 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class UserPracticeDTO {
+
+    @SerializedName("practice_mgmt")
+    @Expose
+    private String practiceMgmt;
+    @SerializedName("practice_id")
+    @Expose
+    private String practiceId;
+    @SerializedName("practice_name")
+    @Expose
+    private String practiceName;
+    @SerializedName("practice_photo")
+    @Expose
+    private String practicePhoto;
+    @SerializedName("practice_phone")
+    @Expose
+    private String practicePhone;
+
     @SerializedName("prefix")
     @Expose
     private String prefix;
@@ -18,21 +35,9 @@ public class UserPracticeDTO {
     @SerializedName("patient_id")
     @Expose
     private String patientId;
-    @SerializedName("practice_mgmt")
-    @Expose
-    private String practiceMgmt;
-    @SerializedName("practice_id")
-    @Expose
-    private String practiceId;
     @SerializedName("username")
     @Expose
     private String userName;
-    @SerializedName("practice_name")
-    @Expose
-    private String practiceName;
-    @SerializedName("practice_photo")
-    @Expose
-    private String practicePhoto;
 
     /**
      * @return The prefix
@@ -120,5 +125,13 @@ public class UserPracticeDTO {
 
     public void setPatientId(String patientId) {
         this.patientId = patientId;
+    }
+
+    public String getPracticePhone() {
+        return practicePhone;
+    }
+
+    public void setPracticePhone(String practicePhone) {
+        this.practicePhone = practicePhone;
     }
 }

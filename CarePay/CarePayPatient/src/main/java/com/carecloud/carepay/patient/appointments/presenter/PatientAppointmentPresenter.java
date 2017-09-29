@@ -33,7 +33,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
-import com.carecloud.carepaylibray.appointments.models.ResourcesPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
@@ -101,7 +100,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     public void onProviderSelected(AppointmentResourcesDTO appointmentResourcesDTO,
                                    AppointmentsResultModel appointmentsResultModel,
                                    ResourcesToScheduleDTO resourcesToScheduleDTO) {
-        ResourcesPracticeDTO selectedResourcesPracticeDTO;
+        UserPracticeDTO selectedResourcesPracticeDTO;
         if (resourcesToScheduleDTO != null) {
             selectedResourcesPracticeDTO = resourcesToScheduleDTO.getPractice();
         } else {
@@ -263,7 +262,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     public void onCancelAppointment(final AppointmentDTO appointmentDTO) {
         final AppointmentCancellationFee cancellationFee = getCancellationFee(appointmentDTO);
         if (cancellationFee == null) {
-            showCancellationReasons(appointmentDTO, cancellationFee);
+            showCancellationReasons(appointmentDTO, null);
         } else {
             practiceId = appointmentDTO.getMetadata().getPracticeId();
             practiceMgmt = appointmentDTO.getMetadata().getPracticeMgmt();
@@ -398,9 +397,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void displayAppointmentDetails(AppointmentDTO appointmentDTO) {
+        practiceId = appointmentDTO.getMetadata().getPracticeId();
+        practiceMgmt = appointmentDTO.getMetadata().getPracticeMgmt();
+        patientId = appointmentDTO.getMetadata().getPatientId();
         AppointmentDetailDialog detailDialog = AppointmentDetailDialog.newInstance(appointmentDTO);
         viewHandler.displayDialogFragment(detailDialog, false);
-//        detailDialog.show(getSupportFragmentManager(), detailDialog.getClass().getName());
     }
 
     private void showCancellationReasons(AppointmentDTO appointmentDTO, final AppointmentCancellationFee cancellationFee) {
@@ -436,10 +437,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     private AppointmentCancellationFee getCancellationFee(AppointmentDTO appointmentDTO) {
-        if (appointmentsResultModel.getPayload()
-                .getAppointmentsSettings().get(0).shouldChargeCancellationFees()) {
-            for (AppointmentCancellationFee cancellationFee : appointmentsResultModel.getPayload()
-                    .getAppointmentsSettings().get(0).getCancellationFees()) {
+        AppointmentsSettingDTO practiceSettings = getPracticeSettings();
+        if (practiceSettings.shouldChargeCancellationFees()) {
+            for (AppointmentCancellationFee cancellationFee : practiceSettings.getCancellationFees()) {
                 if (appointmentDTO.getPayload().getVisitType().getId().equals(cancellationFee.getVisitType())) {
                     return cancellationFee;
                 }
@@ -654,7 +654,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         }
 
         UserPracticeDTO userPracticeDTO = new UserPracticeDTO();
-        for (ResourcesPracticeDTO resourcesPracticeDTO : appointmentsResultModel
+        for (UserPracticeDTO resourcesPracticeDTO : appointmentsResultModel
                 .getPayload().getUserPractices()) {
             if (resourcesPracticeDTO.getPracticeId().equals(practiceId)) {
                 userPracticeDTO.setPracticeMgmt(resourcesPracticeDTO.getPracticeMgmt());

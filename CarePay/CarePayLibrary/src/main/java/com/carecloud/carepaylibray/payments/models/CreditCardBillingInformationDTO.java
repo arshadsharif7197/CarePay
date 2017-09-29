@@ -4,14 +4,14 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by Rahul on 11/30/16.
+ * Created by Rahul on 11/30/16
  */
 
-public class PaymentsCreditCardBillingInformationDTO {
+public class CreditCardBillingInformationDTO {
 
         @SerializedName("same_as_patient")
         @Expose
-        private Boolean sameAsPatient;
+        private boolean sameAsPatient;
         @SerializedName("line1")
         @Expose
         private String line1;
@@ -36,7 +36,7 @@ public class PaymentsCreditCardBillingInformationDTO {
          * @return
          * The sameAsPatient
          */
-        public Boolean getSameAsPatient() {
+        public boolean getSameAsPatient() {
             return sameAsPatient;
         }
 
@@ -45,7 +45,7 @@ public class PaymentsCreditCardBillingInformationDTO {
          * @param sameAsPatient
          * The same_as_patient
          */
-        public void setSameAsPatient(Boolean sameAsPatient) {
+        public void setSameAsPatient(boolean sameAsPatient) {
             this.sameAsPatient = sameAsPatient;
         }
 

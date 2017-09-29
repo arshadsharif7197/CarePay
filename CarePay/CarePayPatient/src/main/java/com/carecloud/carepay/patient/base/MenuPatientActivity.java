@@ -18,9 +18,14 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.platform.AndroidPlatform;
+import com.carecloud.carepay.service.library.platform.Platform;
+import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
+import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -37,7 +42,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
     private static TransitionDTO transitionProfile;
     private static TransitionDTO transitionAppointments;
     private static TransitionDTO transitionLogout;
-    private static TransitionDTO transitionNotifications;
+    protected static TransitionDTO transitionNotifications;
     private static TransitionDTO transitionMyHealth;
 
     protected ActionBarDrawerToggle toggle;
@@ -112,6 +117,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         TransitionDTO transition;
         Map<String, String> headersMap = new HashMap<>();
         Map<String, String> queryMap = new HashMap<>();
+        String payload = null;
 
         int id = item.getItemId();
         switch (id) {
@@ -149,6 +155,15 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
                 callback = logoutWorkflowCallback;
                 headersMap.put("x-api-key", HttpConstants.getApiStartKey());
                 headersMap.put("transition", "true");
+
+                UnifiedSignInUser user = new UnifiedSignInUser();
+                user.setEmail(getApplicationPreferences().getUserId());
+                user.setDeviceToken(((AndroidPlatform) Platform.get()).openDefaultSharedPreferences()
+                        .getString(CarePayConstants.FCM_TOKEN, null));
+                UnifiedSignInDTO signInDTO = new UnifiedSignInDTO();
+                signInDTO.setUser(user);
+
+                payload = new Gson().toJson(signInDTO);
                 break;
             default:
                 drawer.closeDrawer(GravityCompat.START);
@@ -160,7 +175,11 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
             return false;
         }
 
-        if (headersMap.isEmpty()) {
+        if(payload != null){
+            //do transition with payload
+            getWorkflowServiceHelper().execute(transition, callback, payload, queryMap, headersMap);
+        }
+        else if (headersMap.isEmpty()) {
             //do regular transition
             getWorkflowServiceHelper().execute(transition, callback, queryMap);
         } else {
@@ -302,7 +321,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         }
     };
 
-    private WorkflowServiceCallback notificationsWorkflowCallback = new WorkflowServiceCallback() {
+    protected WorkflowServiceCallback notificationsWorkflowCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();

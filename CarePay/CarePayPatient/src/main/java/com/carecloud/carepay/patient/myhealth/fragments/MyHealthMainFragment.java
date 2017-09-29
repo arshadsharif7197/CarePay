@@ -1,16 +1,8 @@
 package com.carecloud.carepay.patient.myhealth.fragments;
 
-import android.Manifest;
-import android.app.DownloadManager;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.PermissionChecker;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,10 +21,8 @@ import com.carecloud.carepay.patient.myhealth.dtos.AssertionDto;
 import com.carecloud.carepay.patient.myhealth.dtos.LabDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MedicationDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
-import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthDataInterface;
+import com.carecloud.carepay.patient.myhealth.dtos.MyHealthProviderDto;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 
 import java.util.List;
@@ -41,7 +31,7 @@ import java.util.List;
  * @author pjohnson on 18/07/17.
  */
 
-public class MyHealthMainFragment extends BaseFragment implements MyHealthDataInterface {
+public class MyHealthMainFragment extends BaseFragment {
 
     private MyHealthInterface callback;
     private MyHealthDto myHealthDto;
@@ -111,7 +101,7 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
             RecyclerView labsRecyclerView = (RecyclerView) view.findViewById(R.id.labsRecyclerView);
             labsRecyclerView.setLayoutManager(linearLayout);
             LabsRecyclerViewAdapter labsAdapter = new LabsRecyclerViewAdapter(labs, MAX_ITEMS_TO_SHOW);
-            labsAdapter.setCallback(this);
+            labsAdapter.setCallback(callback);
             labsRecyclerView.setAdapter(labsAdapter);
             TextView seeAll = (TextView) view.findViewById(R.id.labsSeeAllTextView);
             if (labs.size() <= MAX_ITEMS_TO_SHOW) {
@@ -145,7 +135,7 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
             medicationsRecyclerView.setLayoutManager(linearLayout);
             MedicationsRecyclerViewAdapter medicationsAdapter = new MedicationsRecyclerViewAdapter(
                     medications, MAX_ITEMS_TO_SHOW);
-            medicationsAdapter.setCallback(this);
+            medicationsAdapter.setCallback(callback);
             medicationsRecyclerView.setAdapter(medicationsAdapter);
 
             TextView seeAll = (TextView) view.findViewById(R.id.medicationsSeeAllTextView);
@@ -180,7 +170,7 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
             allergiesRecyclerView.setLayoutManager(linearLayout);
             AllergiesRecyclerViewAdapter allergiesAdapter = new AllergiesRecyclerViewAdapter(allergies,
                     MAX_ITEMS_TO_SHOW);
-            allergiesAdapter.setCallback(this);
+            allergiesAdapter.setCallback(callback);
             allergiesRecyclerView.setAdapter(allergiesAdapter);
 
             TextView seeAll = (TextView) view.findViewById(R.id.allergiesSeeAllTextView);
@@ -232,7 +222,7 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
     }
 
     private void setUpCareTeamRecyclerView(View view) {
-        List<ProviderDTO> providers = myHealthDto
+        List<MyHealthProviderDto> providers = myHealthDto
                 .getPayload().getMyHealthData().getProviders().getProviders();
         if (providers.isEmpty()) {
             view.findViewById(R.id.careTeamContainer).setVisibility(View.GONE);
@@ -249,7 +239,7 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
             careTeamRecyclerView.setLayoutManager(linearLayout);
             CareTeamRecyclerViewAdapter careTeamAdapter = new CareTeamRecyclerViewAdapter(
                     providers, MAX_ITEMS_TO_SHOW);
-            careTeamAdapter.setCallback(this);
+            careTeamAdapter.setCallback(callback);
             careTeamRecyclerView.setAdapter(careTeamAdapter);
 
             TextView seeAll = (TextView) view.findViewById(R.id.careTeamSeeAllTextView);
@@ -266,38 +256,4 @@ public class MyHealthMainFragment extends BaseFragment implements MyHealthDataIn
         }
     }
 
-    @Override
-    public void onSeeAllFullMedicalRecordClicked() {
-
-    }
-
-    @Override
-    public void onProviderClicked(ProviderDTO provider) {
-        callback.onProviderClicked(provider);
-    }
-
-    @Override
-    public void onAllergyClicked(AllergyDto allergy) {
-        callback.onAllergyClicked(allergy);
-    }
-
-    @Override
-    public void addAllergy() {
-        callback.addAllergy();
-    }
-
-    @Override
-    public void onMedicationClicked(MedicationDto medication) {
-        callback.onMedicationClicked(medication);
-    }
-
-    @Override
-    public void addMedication() {
-        callback.addMedication();
-    }
-
-    @Override
-    public void onLabClicked(final LabDto lab) {
-        callback.onLabClicked(lab);
-    }
 }

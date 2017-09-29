@@ -55,7 +55,7 @@
                     <EditText
                         android:id="@+id/adddemoFirstNameEdit"
                         style="@style/SigninSignupEditStyle"
-                        android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ"
+                        android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ"
                         android:inputType="textPersonName"
                         android:nextFocusForward="@+id/reviewdemogrMiddleNameEdit" />
                 </android.support.design.widget.TextInputLayout>
@@ -73,7 +73,7 @@
                         <EditText
                             android:id="@+id/adddemoMiddleNameEdit"
                             style="@style/SigninSignupEditStyle"
-                            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ"
+                            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ"
                             android:imeOptions="actionNext"
                             android:inputType="textPersonName"
                             android:nextFocusForward="@+id/reviewdemogrsLastNameEdit" />
@@ -94,7 +94,7 @@
                     <EditText
                         android:id="@+id/adddemoLastNameEdit"
                         style="@style/SigninSignupEditStyle"
-                        android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ"
+                        android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ"
                         android:imeOptions="actionNext"
                         android:inputType="textPersonName"
                         android:nextFocusForward="@+id/reviewdemogrEmailEdit" />
@@ -269,7 +269,7 @@
                         <EditText
                             android:id="@+id/adddemoAddress1Edit"
                             style="@style/SigninSignupEditStyle"
-                            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
+                            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ0123456789 "
                             android:imeOptions="actionNext"
                             android:inputType="textPostalAddress"
                             android:nextFocusForward="@+id/addressEditText2Id"
@@ -289,7 +289,7 @@
                             <EditText
                                 android:id="@+id/adddemoAddress2Edit"
                                 style="@style/SigninSignupEditStyle"
-                                android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
+                                android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ0123456789 "
                                 android:imeOptions="actionNext"
                                 android:inputType="textPostalAddress"
                                 android:nextFocusForward="@+id/zipCodeId" />

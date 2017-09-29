@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
@@ -113,15 +113,15 @@
     </FrameLayout>
 
     <LinearLayout
+        android:id="@+id/layoutContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="@dimen/dimen_50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="@dimen/dimen_100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="@dimen/dimen_50dp"
+        android:layout_marginStart="@dimen/dimen_50dp"
+        android:layout_marginTop="@dimen/dimen_200dp"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:weightSum="12">
+        android:orientation="horizontal">
 
         <RelativeLayout
             android:id="@+id/homeCheckinClickable"
@@ -197,8 +197,8 @@
 
             <ImageView
                 style="@style/HomeButtonIconStyle"
-                android:layout_centerHorizontal="true"
                 android:layout_above="@id/homeAppointmentsLabel"
+                android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/dimen_30dp"
                 android:contentDescription="Appointments"
                 android:src="@drawable/icn_appointements_selector" />
@@ -226,8 +226,8 @@
 
             <ImageView
                 style="@style/HomeButtonIconStyle"
-                android:layout_centerHorizontal="true"
                 android:layout_above="@id/homeCheckoutLabel"
+                android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/dimen_30dp"
                 android:contentDescription="Check-Out"
                 android:src="@drawable/icn_checkout_selector" />
@@ -236,9 +236,11 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/shadow"
         android:layout_width="@dimen/home_shadow_width"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_below="@id/layoutContainer"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/home_shadow_margin_top"
         android:contentDescription="Shadow"
         android:src="@drawable/home_shadow" />
@@ -247,9 +249,11 @@
         android:id="@+id/office_news_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_below="@id/shadow"
+        android:layout_centerHorizontal="true"
         android:textColor="@color/soft_sky"
         android:textSize="@dimen/text_size_26sp"
+        android:visibility="gone"
         app:customAssetFont="gotham_rounded_medium"
         breeze:textKey="officenews_button"
         tools:text="Office News" />
@@ -258,10 +262,12 @@
         android:id="@+id/office_news_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_below="@id/office_news_header"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/dimen_20dp"
         android:background="?newsBackgroundColor"
         android:paddingBottom="@dimen/dimen_20dp"
-        android:paddingTop="@dimen/dimen_20dp" />
+        android:paddingTop="@dimen/dimen_20dp"
+        android:visibility="gone" />
 
-</LinearLayout>
+</RelativeLayout>

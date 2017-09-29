@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -216,8 +216,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             navigateToAppointments();
         } else if (viewId == R.id.homeCheckoutClickable) {
             checkOut();
-        } else if (viewId == R.id.homeNewsClickable) {
-//            getNews();
         } else if (viewId == R.id.homeLockIcon) {
             unlockPracticeMode();
         }
@@ -472,18 +470,35 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             PracticeHomeScreenPayloadDTO practiceHomePayloadDTO = gson.fromJson(payloadAsJsonObject,
                     PracticeHomeScreenPayloadDTO.class);
             List<HomeScreenOfficeNewsDTO> officeNews = practiceHomePayloadDTO.getOfficeNews();
+            if (!officeNews.isEmpty()) {
+                RecyclerView newsList = (RecyclerView) findViewById(R.id.office_news_list);
+                newsList.setVisibility(View.VISIBLE);
+                findViewById(R.id.office_news_header).setVisibility(View.VISIBLE);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(CloverMainActivity.this,
+                        LinearLayoutManager.HORIZONTAL, false);
+                DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(newsList.getContext(),
+                        layoutManager.getOrientation());
+                newsList.setLayoutManager(layoutManager);
+                newsList.addItemDecoration(dividerItemDecoration);
 
-            RecyclerView newsList = (RecyclerView) findViewById(R.id.office_news_list);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(CloverMainActivity.this,
-                    LinearLayoutManager.HORIZONTAL, false);
-            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(newsList.getContext(),
-                    layoutManager.getOrientation());
-            newsList.setLayoutManager(layoutManager);
-            newsList.addItemDecoration(dividerItemDecoration);
+                OfficeNewsListAdapter adapter = new OfficeNewsListAdapter(CloverMainActivity.this,
+                        officeNews, officeNewsClickedListener);
+                newsList.setAdapter(adapter);
+            } else {
+//                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+//                        RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+//                params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+//                View layoutContainer = findViewById(R.id.layoutContainer);
+//                layoutContainer.setLayoutParams(params);
+//
+//                RelativeLayout.LayoutParams shadowParams = new RelativeLayout.LayoutParams(
+//                        RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+//                shadowParams.addRule(RelativeLayout.BELOW, R.id.layoutContainer);
+//                shadowParams.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
+//                View shadowImage = findViewById(R.id.shadow);
+//                shadowImage.setLayoutParams(shadowParams);
+            }
 
-            OfficeNewsListAdapter adapter = new OfficeNewsListAdapter(CloverMainActivity.this,
-                    officeNews, officeNewsClickedListener);
-            newsList.setAdapter(adapter);
 
         }
 
