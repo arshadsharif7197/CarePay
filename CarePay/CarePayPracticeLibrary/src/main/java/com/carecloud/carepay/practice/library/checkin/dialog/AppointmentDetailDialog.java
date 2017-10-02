@@ -212,24 +212,35 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
      * for setting values to UI Component from DTO .
      */
     private void onSetValuesFromDTO() {
-        if (theRoom== CheckedInAppointmentAdapter.CHECKING_IN) {
+        String title = "";
+        if (theRoom == CheckedInAppointmentAdapter.CHECKING_IN) {
             demographicsCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_demographics"));
             consentFormsCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_consent_forms"));
             medicationsCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_medications"));
             intakeCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_intake"));
             responsibilityCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_responsibility"));
-        } else {
+            title = Label.getLabel("practice_checkin_checking_in");
+        } else if (theRoom == CheckedInAppointmentAdapter.CHECKED_IN) {
             checkboxLayout.setVisibility(View.INVISIBLE);
             checkBoxes.add(demographicsCheckbox);
             checkBoxes.add(consentFormsCheckbox);
             checkBoxes.add(intakeCheckbox);
             checkBoxes.add(responsibilityCheckbox);
             medicationsCheckbox.setVisibility(View.GONE);
+            title = Label.getLabel("practice_checkin_checked_in");
+        } else if (theRoom == CheckedInAppointmentAdapter.CHECKING_OUT) {
+            demographicsCheckbox.setText(Label.getLabel("next_appointment_title"));
+            consentFormsCheckbox.setVisibility(View.INVISIBLE);
+            medicationsCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_consent_forms"));
+            intakeCheckbox.setVisibility(View.INVISIBLE);
+            responsibilityCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_payment"));
+            title = Label.getLabel("practice_checkin_checking_out");
+        } else if (theRoom == CheckedInAppointmentAdapter.CHECKED_OUT) {
+            checkboxLayout.setVisibility(View.INVISIBLE);
+            title = Label.getLabel("practice_checkin_checked_out");
         }
 
-        checkingInLabel.setText(theRoom== CheckedInAppointmentAdapter.CHECKING_IN ?
-                Label.getLabel("practice_checkin_detail_dialog_waiting_room") :
-                Label.getLabel("practice_checkin_detail_dialog_checking_in"));
+        checkingInLabel.setText(title);
 
         balanceValueLabel.setText(StringUtil.getFormattedBalanceAmount(getPatientBalance()));
         patientNameLabel.setText(StringUtil.getFormatedLabal(context, appointmentPayloadDTO.getPatient().getFullName()));
@@ -334,21 +345,27 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
             Map<String, String> querymap;
             WorkflowServiceCallback callback;
 
-            if (theRoom== CheckedInAppointmentAdapter.CHECKING_IN) {
-                queryStringObject = checkInDTO.getMetadata().getLinks().getQueueStatus().getQueryString();
-                queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
-                querymap = getQueueQueryParam(queryStrings);
-                transition = checkInDTO.getMetadata().getLinks().getQueueStatus();
-                callback = getQueueCallBack;
-            } else {
+            if (theRoom == CheckedInAppointmentAdapter.CHECKING_IN) {
                 queryStringObject = checkInDTO.getMetadata().getLinks().getCheckinStatus().getQueryString();
                 queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
                 querymap = getStatusQueryParam(queryStrings);
                 transition = checkInDTO.getMetadata().getLinks().getCheckinStatus();
                 callback = getStatusCallBack;
-            }
 
-            ((ISession) context).getWorkflowServiceHelper().execute(transition, callback, querymap);
+                ((ISession) context).getWorkflowServiceHelper().execute(transition, callback, querymap);
+            } else if (theRoom == CheckedInAppointmentAdapter.CHECKED_IN) {
+                queryStringObject = checkInDTO.getMetadata().getLinks().getQueueStatus().getQueryString();
+                queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
+                querymap = getQueueQueryParam(queryStrings);
+                transition = checkInDTO.getMetadata().getLinks().getQueueStatus();
+                callback = getQueueCallBack;
+
+                ((ISession) context).getWorkflowServiceHelper().execute(transition, callback, querymap);
+            } else if (theRoom == CheckedInAppointmentAdapter.CHECKING_OUT) {
+
+            } else if (theRoom == CheckedInAppointmentAdapter.CHECKED_OUT) {
+
+            }
         }
     }
 
@@ -645,7 +662,8 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                 checkUserId = patientBalanceDTO.getDemographics().getMetadata().getUserId();
                 if (userId.equals(checkUserId)) {
                     pushUserId = checkUserId;
-                    return patientBalanceDTO.getDemographics().getPayload().getNotificationOptions().hasPushNotification();
+                    return patientBalanceDTO.getDemographics().getPayload().getNotificationOptions()
+                            .hasPushNotification();
                 }
             }
         }
