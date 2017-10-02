@@ -31,6 +31,7 @@ public class CardViewPatient {
     public Boolean isCheckedIn;
     public Boolean isCheckingIn;
     public Boolean isPending;
+    public Boolean isCheckingOut;
     public Boolean isCheckedOut;
     int headCount;
 
@@ -47,6 +48,8 @@ public class CardViewPatient {
         this.isRequested = false;
         this.isCheckedIn = false;
         this.isCheckingIn = false;
+        this.isCheckingOut = false;
+        this.isCheckedOut = false;
         this.isPending = false;
     }
 
@@ -83,6 +86,7 @@ public class CardViewPatient {
             code.equalsIgnoreCase(CarePayConstants.IN_PROGRESS_OUT_ROOM);
         this.isCheckingIn = code.equalsIgnoreCase(CarePayConstants.CHECKING_IN);
         this.isPending = code.equalsIgnoreCase(CarePayConstants.PENDING);
+        this.isCheckingOut = code.equalsIgnoreCase(CarePayConstants.CHECKING_OUT);
         this.isCheckedOut = code.equalsIgnoreCase(CarePayConstants.CHECKED_OUT) ||
                 code.equalsIgnoreCase(CarePayConstants.BILLED) ||
                 code.equalsIgnoreCase(CarePayConstants.MANUALLY_BILLED);
