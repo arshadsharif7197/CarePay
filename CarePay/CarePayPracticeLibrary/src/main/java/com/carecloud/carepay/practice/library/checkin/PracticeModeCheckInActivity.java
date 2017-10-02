@@ -455,7 +455,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
      * On check in item click.
      *
      * @param appointmentPayloadDTO the appointment payload dto
-     * @param theRoom
+     * @param theRoom               the room
      */
     @Override
     public void onCheckInItemClick(AppointmentsPayloadDTO appointmentPayloadDTO, int theRoom) {
@@ -522,7 +522,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
             builder.replace(last, builder.length(), "");
             new CustomMessageToast(this, builder.toString(), CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
             onDismissPaymentMethodDialog(paymentsModel);
-        }else {
+        } else {
             Bundle args = new Bundle();
             args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
 

@@ -291,7 +291,6 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
     /**
      * Sets hour label background.
-     * <p>
      * If the appointment start time has passed curent time, then show the appointment time label background in red.
      * If the appointment start time is in future, then show the appointment time label background in green.
      */
@@ -362,9 +361,9 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
                 ((ISession) context).getWorkflowServiceHelper().execute(transition, callback, querymap);
             } else if (theRoom == CheckedInAppointmentAdapter.CHECKING_OUT) {
-
+                //TODO: will do in a next ticket
             } else if (theRoom == CheckedInAppointmentAdapter.CHECKED_OUT) {
-
+                //TODO: will do in a next ticket
             }
         }
     }
