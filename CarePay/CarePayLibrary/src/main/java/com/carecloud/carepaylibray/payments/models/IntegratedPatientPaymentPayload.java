@@ -84,6 +84,11 @@ public class IntegratedPatientPaymentPayload {
      */
     public double getTotalPaid(){
         double total = 0D;
+
+        if(getMetadata().isExternallyProcessed()){
+            return amount;
+        }
+
         for(IntegratedPatientPaymentLineItem lineItem : getLineItems()){
             if(lineItem.isProcessed()){
                 total+=lineItem.getAmount();
