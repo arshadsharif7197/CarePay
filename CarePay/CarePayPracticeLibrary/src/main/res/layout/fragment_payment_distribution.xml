@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -57,17 +58,26 @@
             android:padding="@dimen/dimen_8dp">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/patient_name"
-                android:layout_width="0dp"
+                android:id="@+id/button_history"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="@dimen/dimen_8dp"
-                android:layout_marginStart="@dimen/dimen_8dp"
-                android:layout_weight="1"
-                android:gravity="start"
+                android:layout_margin="@dimen/dimen_8dp"
+                android:background="@drawable/bg_white_border_trans"
+                android:paddingTop="@dimen/dimen_8dp"
+                android:paddingBottom="@dimen/dimen_8dp"
+                android:paddingStart="@dimen/dimen_20dp"
+                android:paddingEnd="@dimen/dimen_20dp"
+                tools:text="History"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_28sp"
-                app:customAssetFont="proxima_nova_regular"/>
+                android:textSize="@dimen/text_size_16sp"
+                breeze:textKey="payment_history"
+                app:customAssetFont="proxima_nova_semi_bold"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -90,6 +100,7 @@
                         android:layout_gravity="center_vertical"
                         android:textColor="@color/light_gray"
                         android:textSize="@dimen/text_size_16sp"
+                        tools:text="Unapplied Credit"
                         breeze:textKey="payment_total_unapplied"
                         app:customAssetFont="proxima_nova_regular"/>
 
@@ -111,6 +122,7 @@
                         android:layout_marginStart="@dimen/dimen_8dp"
                         android:textColor="@color/light_gray_dialog"
                         android:textSize="@dimen/text_size_16sp"
+                        tools:text="$999.99"
                         app:customAssetFont="proxima_nova_semi_bold"/>
 
                     <View
@@ -135,6 +147,7 @@
                         android:layout_gravity="center_vertical"
                         android:textColor="@color/light_gray"
                         android:textSize="@dimen/text_size_16sp"
+                        tools:text="Balance Owed"
                         breeze:textKey="payment_balance_owed_label"
                         app:customAssetFont="proxima_nova_regular"/>
 
@@ -156,6 +169,7 @@
                         android:layout_marginStart="@dimen/dimen_8dp"
                         android:textColor="@color/light_gray_dialog"
                         android:textSize="@dimen/text_size_16sp"
+                        tools:text="$999.99"
                         app:customAssetFont="proxima_nova_semi_bold"/>
 
                     <View
@@ -182,6 +196,7 @@
                         android:layout_marginStart="@dimen/dimen_8dp"
                         android:textColor="@color/light_gray"
                         android:textSize="@dimen/text_size_16sp"
+                        tools:text="Total Being Paid"
                         breeze:textKey="payment_total_paid_label"
                         app:customAssetFont="proxima_nova_regular"/>
 
@@ -205,7 +220,7 @@
                         android:paddingBottom="@dimen/dimen_8dp"
                         android:paddingStart="@dimen/dimen_20dp"
                         android:paddingEnd="@dimen/dimen_20dp"
-                        android:text="$325.00"
+                        tools:text="$325.00"
                         android:textColor="@color/emerald"
                         android:textSize="@dimen/text_size_16sp"
                         app:customAssetFont="proxima_nova_semi_bold"/>
@@ -279,7 +294,7 @@
                         style="@style/BreezeButtonStyleDark"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right"
+                        android:layout_gravity="end"
                         android:background="@drawable/blue_border_rounded_button_selector"
                         android:paddingEnd="@dimen/dimen_20dp"
                         android:paddingStart="@dimen/dimen_20dp"

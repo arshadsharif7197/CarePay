@@ -67,6 +67,20 @@ public class IntegratedPatientPaymentPayload {
         this.paymentMethod = paymentMethod;
     }
 
+    /**
+     * Calculate total of paid line items
+     * @return total
+     */
+    public double getTotalPaid(){
+        double total = 0D;
+        for(IntegratedPatientPaymentLineItem lineItem : getLineItems()){
+            if(lineItem.isProcessed()){
+                total+=lineItem.getAmount();
+            }
+        }
+        return total;
+    }
+
     public class ProcessingError {
 
         @SerializedName("id")

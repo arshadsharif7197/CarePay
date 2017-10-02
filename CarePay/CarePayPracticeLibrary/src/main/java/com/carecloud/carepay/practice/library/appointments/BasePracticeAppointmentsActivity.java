@@ -356,7 +356,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-        if(!payload.getProcessingErrors().isEmpty() && PaymentConfirmationFragment.getTotalPaid(payload)==0D){
+        if(!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid()==0D){
             StringBuilder builder = new StringBuilder();
             for(IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()){
                 builder.append(processingError.getError());

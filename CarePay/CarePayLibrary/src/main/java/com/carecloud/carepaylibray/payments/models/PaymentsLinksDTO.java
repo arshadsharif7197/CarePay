@@ -34,6 +34,9 @@ public class PaymentsLinksDTO {
     @SerializedName("find_patient")
     @Expose
     private TransitionDTO findPatient = new TransitionDTO();
+    @SerializedName("payment_summary")
+    @Expose
+    private TransitionDTO paymentTransactionHistory = new TransitionDTO();
 
     /**
      * 
@@ -185,5 +188,13 @@ public class PaymentsLinksDTO {
 
     public void setFindPatient(TransitionDTO findPatient) {
         this.findPatient = findPatient;
+    }
+
+    public TransitionDTO getPaymentTransactionHistory() {
+        return paymentTransactionHistory;
+    }
+
+    public void setPaymentTransactionHistory(TransitionDTO paymentTransactionHistory) {
+        this.paymentTransactionHistory = paymentTransactionHistory;
     }
 }
