@@ -28,6 +28,8 @@ import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDial
 import com.carecloud.carepay.practice.library.payments.fragments.AddPaymentItemFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionEntryFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PaymentHistoryDetailFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PaymentHistoryFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
@@ -53,6 +55,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
+import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -563,12 +566,6 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void showPaymentHistory(PaymentsModel paymentsModel) {
-        //not implemented in patient mode
-    }
-
-
-    @Override
     protected void processExternalPayment(PaymentExecution execution, Intent data) {
         switch (execution) {
             case clover: {
@@ -641,4 +638,27 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
             fragment.showDialog();
         }
     }
+
+    @Override
+    public void showPaymentHistory(PaymentsModel paymentsModel) {
+        PaymentHistoryFragment fragment = PaymentHistoryFragment.newInstance(paymentsModel);
+        displayDialogFragment(fragment, false);
+    }
+
+
+    @Override
+    public void onDismissPaymentHistory(PaymentsModel paymentsModel) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
+        if (fragment != null) {
+            fragment.showDialog();
+        }
+    }
+
+    @Override
+    public void displayHistoryItemDetails(PaymentHistoryItem item) {
+        PaymentHistoryDetailFragment fragment = PaymentHistoryDetailFragment.newInstance(item);
+        displayDialogFragment(fragment, true);
+    }
+
 }
