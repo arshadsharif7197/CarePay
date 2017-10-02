@@ -74,20 +74,26 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
 
     private RecyclerView checkingInRecyclerView;
-    private RecyclerView waitingRoomRecyclerView;
+    private RecyclerView checkedInRecyclerView;
+    private RecyclerView checkingOutRecyclerView;
+    private RecyclerView checkedOutRecyclerView;
 
     private FilterModel filter;
 
     CheckInDTO checkInDTO;
 
+    CheckedInAppointmentAdapter checkingInAdapter;
     CheckedInAppointmentAdapter checkedInAdapter;
-    CheckedInAppointmentAdapter waitingRoomAdapter;
+    CheckedInAppointmentAdapter checkingOutAdapter;
+    CheckedInAppointmentAdapter checkedOutAdapter;
 
     CarePayTextView goBackTextView;
     CarePayTextView filterOnTextView;
     CarePayTextView filterTextView;
     CarePayTextView checkingInCounterTextView;
     CarePayTextView waitingCounterTextView;
+    CarePayTextView checkingOutCounterTextView;
+    CarePayTextView checkedOutCounterTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +114,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         filterTextView = (CarePayTextView) findViewById(R.id.filterTextView);
         checkingInCounterTextView = (CarePayTextView) findViewById(R.id.checkingInCounterTextview);
         waitingCounterTextView = (CarePayTextView) findViewById(R.id.waitingCounterTextview);
+        checkingOutCounterTextView = (CarePayTextView) findViewById(R.id.checkingOutCounterTextview);
+        checkedOutCounterTextView = (CarePayTextView) findViewById(R.id.checkedOutCounterTextview);
 
         checkingInRecyclerView = (RecyclerView) findViewById(R.id.checkinginRecyclerView);
         checkingInRecyclerView.setHasFixedSize(true);
@@ -115,11 +123,22 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         checkingInRecyclerView.setLayoutManager(new LinearLayoutManager(PracticeModeCheckInActivity.this));
         checkingInRecyclerView.setOnDragListener(onCheckingInListDragListener);
 
-        waitingRoomRecyclerView = (RecyclerView) findViewById(R.id.waitingRoomRecyclerView);
-        waitingRoomRecyclerView.setHasFixedSize(true);
-        waitingRoomRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        waitingRoomRecyclerView.setLayoutManager(new LinearLayoutManager(PracticeModeCheckInActivity.this));
-        waitingRoomRecyclerView.setOnDragListener(onWaitListDragListener);
+        checkedInRecyclerView = (RecyclerView) findViewById(R.id.waitingRoomRecyclerView);
+        checkedInRecyclerView.setHasFixedSize(true);
+        checkedInRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        checkedInRecyclerView.setLayoutManager(new LinearLayoutManager(PracticeModeCheckInActivity.this));
+        checkedInRecyclerView.setOnDragListener(onWaitListDragListener);
+
+        checkingOutRecyclerView = (RecyclerView) findViewById(R.id.checkingOutRecyclerView);
+        checkingOutRecyclerView.setHasFixedSize(true);
+        checkingOutRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        checkingOutRecyclerView.setLayoutManager(new LinearLayoutManager(PracticeModeCheckInActivity.this));
+
+        checkedOutRecyclerView = (RecyclerView) findViewById(R.id.checkedOutRecyclerView);
+        checkedOutRecyclerView.setHasFixedSize(true);
+        checkedOutRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        checkedOutRecyclerView.setLayoutManager(new LinearLayoutManager(PracticeModeCheckInActivity.this));
+
 
         filterOnTextView.setVisibility(View.GONE);
         filterTextView.setVisibility(View.VISIBLE);
@@ -136,7 +155,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                 // send a broadcast
                 Intent intent = new Intent();
                 intent.setAction("NEW_CHECKEDIN_NOTIFICATION");
-                intent.putExtra("appointments_checking_in", "" + checkedInAdapter.getItemCount());
+                intent.putExtra("appointments_checking_in", "" + checkingInAdapter.getItemCount());
                 sendBroadcast(intent);
                 onBackPressed();
             }
@@ -193,11 +212,21 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     }
 
     private void setAdapter() {
-        checkedInAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this, false);
-        checkingInRecyclerView.setAdapter(checkedInAdapter);
+        checkingInAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this,
+                CheckedInAppointmentAdapter.CHECKING_IN);
+        checkingInRecyclerView.setAdapter(checkingInAdapter);
 
-        waitingRoomAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this, true);
-        waitingRoomRecyclerView.setAdapter(waitingRoomAdapter);
+        checkedInAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this,
+                CheckedInAppointmentAdapter.CHECKED_IN);
+        checkedInRecyclerView.setAdapter(checkedInAdapter);
+
+        checkingOutAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this,
+                CheckedInAppointmentAdapter.CHECKING_OUT);
+        checkingOutRecyclerView.setAdapter(checkingOutAdapter);
+
+        checkedOutAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this,
+                CheckedInAppointmentAdapter.CHECKED_OUT);
+        checkedOutRecyclerView.setAdapter(checkedOutAdapter);
 
         applyFilter();
     }
@@ -261,9 +290,9 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                 //signal for the start of a drag and drop operation.
                 case DragEvent.ACTION_DRAG_STARTED:
                     // do nothing
-                    if (waitingRoomAdapter.getAppointmentById(appointmentId, true) == null) {
+                    if (checkedInAdapter.getAppointmentById(appointmentId, true) == null) {
                         findViewById(R.id.drop_down_area_view).setVisibility(View.VISIBLE);
-                    }else{
+                    } else {
                         findViewById(R.id.drop_down_checking_area_view).setVisibility(View.VISIBLE);
                     }
                     break;
@@ -275,8 +304,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                     break;
                 //drag shadow has been released,the drag point is within the bounding box of the View
                 case DragEvent.ACTION_DROP:
-                    if (waitingRoomAdapter.flipAppointmentById(appointmentId, true)) {
-                        checkedInAdapter.flipAppointmentById(appointmentId, false);
+                    if (checkedInAdapter.flipAppointmentById(appointmentId, true)) {
+                        checkingInAdapter.flipAppointmentById(appointmentId, false);
                         applyFilter();
 
                         ((TextView) findViewById(R.id.drop__checking_here_icon)).setText(Label
@@ -317,8 +346,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                 //drag shadow has been released,the drag point is within the bounding box of the View
                 case DragEvent.ACTION_DROP:
                     String appointmentId = dragEvent.getClipDescription().getLabel().toString();
-                    if (checkedInAdapter.flipAppointmentById(appointmentId, true)) {
-                        waitingRoomAdapter.flipAppointmentById(appointmentId, false);
+                    if (checkingInAdapter.flipAppointmentById(appointmentId, true)) {
+                        checkedInAdapter.flipAppointmentById(appointmentId, false);
 
                         applyFilter();
 
@@ -327,7 +356,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                         ((TextView) findViewById(R.id.drop_here_icon))
                                 .setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icn_check, 0, 0);
                         onCheckInAppointment(appointmentId);
-                    }else{
+                    } else {
                         findViewById(R.id.drop_down_checking_area_view).setVisibility(View.GONE);
                     }
                     break;
@@ -396,10 +425,14 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void applyFilter() {
+        checkingInAdapter.applyFilter(filter);
         checkedInAdapter.applyFilter(filter);
-        waitingRoomAdapter.applyFilter(filter);
-        checkingInCounterTextView.setText(String.valueOf(checkedInAdapter.getItemCount()));
-        waitingCounterTextView.setText(String.valueOf(waitingRoomAdapter.getItemCount()));
+        checkingOutAdapter.applyFilter(filter);
+        checkedOutAdapter.applyFilter(filter);
+        checkingInCounterTextView.setText(String.valueOf(checkingInAdapter.getItemCount()));
+        waitingCounterTextView.setText(String.valueOf(checkedInAdapter.getItemCount()));
+        checkingOutCounterTextView.setText(String.valueOf(checkingOutAdapter.getItemCount()));
+        checkedOutCounterTextView.setText(String.valueOf(checkedOutAdapter.getItemCount()));
     }
 
     private PendingBalanceDTO getPatientBalanceDTOs(String patientId) {
@@ -418,12 +451,13 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
      * On check in item click.
      *
      * @param appointmentPayloadDTO the appointment payload dto
+     * @param theRoom
      */
     @Override
-    public void onCheckInItemClick(AppointmentsPayloadDTO appointmentPayloadDTO, boolean isWaitingRoom) {
+    public void onCheckInItemClick(AppointmentsPayloadDTO appointmentPayloadDTO, int theRoom) {
         AppointmentDetailDialog dialog = new AppointmentDetailDialog(getContext(),
                 checkInDTO, getPatientBalanceDTOs(appointmentPayloadDTO.getPatient().getPatientId()),
-                appointmentPayloadDTO, isWaitingRoom, this);
+                appointmentPayloadDTO, theRoom, this);
         dialog.setOwnerActivity(this);
         dialog.show();
     }

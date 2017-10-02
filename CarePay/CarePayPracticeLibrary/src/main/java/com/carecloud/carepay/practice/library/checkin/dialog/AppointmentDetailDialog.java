@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.checkin.adapters.CheckedInAppointmentAdapter;
 import com.carecloud.carepay.practice.library.checkin.adapters.PagePickerAdapter;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusDataPayloadValueDTO;
@@ -75,7 +76,6 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
     private CarePayTextView hourLabel;
     private CarePayTextView patientNameLabel;
     private CarePayTextView doctorNameLabel;
-    private CarePayTextView balanceTextLabel;
     private CarePayTextView balanceValueLabel;
     private CheckBox demographicsCheckbox;
     private CheckBox consentFormsCheckbox;
@@ -92,7 +92,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
     private View queueTextLayout;
     private TextView queueText;
 
-    private boolean isWaitingRoom;
+    private int theRoom;
     private Vector<CheckBox> checkBoxes = new Vector<>();
 
     private ISession sessionHandler;
@@ -111,13 +111,13 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
      * @param context context
      */
     public AppointmentDetailDialog(Context context, CheckInDTO checkInDTO, PendingBalanceDTO pendingBalanceDTO,
-                                   AppointmentsPayloadDTO payloadDTO, boolean isWaitingRoom, AppointmentDialogCallback callback) {
+                                   AppointmentsPayloadDTO payloadDTO, int theRoom, AppointmentDialogCallback callback) {
         super(context);
         this.context = context;
         this.checkInDTO = checkInDTO;
         this.pendingBalanceDTO = pendingBalanceDTO;
         this.appointmentPayloadDTO = payloadDTO;
-        this.isWaitingRoom = isWaitingRoom;
+        this.theRoom = theRoom;
         this.callback = callback;
         this.handler = new Handler();
         setHandlersAndListeners();
@@ -165,7 +165,6 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         hourLabel = (CarePayTextView) findViewById(R.id.hourLabel);
         patientNameLabel = (CarePayTextView) findViewById(R.id.patientNameLabel);
         doctorNameLabel = (CarePayTextView) findViewById(R.id.doctorNameLabel);
-        balanceTextLabel = (CarePayTextView) findViewById(R.id.balanceTextLabel);
         balanceValueLabel = (CarePayTextView) findViewById(R.id.balanceValueLabel);
 
         demographicsCheckbox = (CheckBox) findViewById(R.id.demographicsCheckbox);
@@ -194,9 +193,9 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         pickerWindow.flipPopup(true);
         pickerWindow.setAdapter(new PagePickerAdapter(context, checkInDTO.getPayload().getPageMessages(), this));
 
-        if(!canSendPage()){
+        if (!canSendPage()) {
             pageButton.setEnabled(false);
-        }else{
+        } else {
             View mainView = findViewById(R.id.dialog_checkin_main);
             mainView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -213,7 +212,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
      * for setting values to UI Component from DTO .
      */
     private void onSetValuesFromDTO() {
-        if (!isWaitingRoom) {
+        if (theRoom== CheckedInAppointmentAdapter.CHECKING_IN) {
             demographicsCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_demographics"));
             consentFormsCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_consent_forms"));
             medicationsCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_medications"));
@@ -228,7 +227,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
             medicationsCheckbox.setVisibility(View.GONE);
         }
 
-        checkingInLabel.setText(isWaitingRoom ?
+        checkingInLabel.setText(theRoom== CheckedInAppointmentAdapter.CHECKING_IN ?
                 Label.getLabel("practice_checkin_detail_dialog_waiting_room") :
                 Label.getLabel("practice_checkin_detail_dialog_checking_in"));
 
@@ -281,10 +280,9 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
     /**
      * Sets hour label background.
-     *
+     * <p>
      * If the appointment start time has passed curent time, then show the appointment time label background in red.
      * If the appointment start time is in future, then show the appointment time label background in green.
-     *
      */
     private void setHourLabelBackground(Date appointmentDateTime) {
 
@@ -317,7 +315,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
     private View.OnClickListener pageActionListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            int offset = view.getWidth()/2-pickerWindow.getWidth()/2;
+            int offset = view.getWidth() / 2 - pickerWindow.getWidth() / 2;
             pickerWindow.showAsDropDown(view, offset, 10);
         }
     };
@@ -336,7 +334,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
             Map<String, String> querymap;
             WorkflowServiceCallback callback;
 
-            if (isWaitingRoom) {
+            if (theRoom== CheckedInAppointmentAdapter.CHECKING_IN) {
                 queryStringObject = checkInDTO.getMetadata().getLinks().getQueueStatus().getQueryString();
                 queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
                 querymap = getQueueQueryParam(queryStrings);
@@ -428,24 +426,23 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         QueueDTO placeInQueue = findPlaceInQueue(queueList, appointmentPayloadDTO.getId(), queueMap);
 
         String[] sufixes = getOrdinalSufix();
-        if(placeInQueue!=null){
-            String place = ordinal(placeInQueue.getRank(), sufixes)+" "+Label.getLabel("practice_checkin_detail_dialog_in_queue");
+        if (placeInQueue != null) {
+            String place = ordinal(placeInQueue.getRank(), sufixes) + " " + Label.getLabel("practice_checkin_detail_dialog_in_queue");
             int rank = placeInQueue.getRank();
-            switch (rank){
-                case 1:
-                {
+            switch (rank) {
+                case 1: {
                     //show single place in queue
                     queueTextLayout.setVisibility(View.VISIBLE);
                     checkboxLayout.setVisibility(View.GONE);
                     queueText.setText(place);
                     break;
                 }
-                case 2:{
+                case 2: {
                     queueTextLayout.setVisibility(View.GONE);
                     checkboxLayout.setVisibility(View.VISIBLE);
 
                     //current user
-                    CheckBox checkBox =  checkBoxes.get(3);
+                    CheckBox checkBox = checkBoxes.get(3);
                     checkBox.setChecked(true);
                     checkBox.setText(place);
                     checkBox.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
@@ -453,7 +450,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                     //first user
                     checkBox = checkBoxes.get(0);
                     placeInQueue = queueMap.get(1);
-                    place = ordinal(1, sufixes)+"\n"+placeInQueue.getFirstName();
+                    place = ordinal(1, sufixes) + "\n" + placeInQueue.getFirstName();
                     checkBox.setText(place);
 
                     //hide other checkboxes
@@ -461,13 +458,12 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                     checkBoxes.get(2).setVisibility(View.GONE);
                     break;
                 }
-                case 3:
-                {
+                case 3: {
                     queueTextLayout.setVisibility(View.GONE);
                     checkboxLayout.setVisibility(View.VISIBLE);
 
                     //current user
-                    CheckBox checkBox =  checkBoxes.get(3);
+                    CheckBox checkBox = checkBoxes.get(3);
                     checkBox.setChecked(true);
                     checkBox.setText(place);
                     checkBox.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
@@ -475,13 +471,13 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                     //first user
                     checkBox = checkBoxes.get(0);
                     placeInQueue = queueMap.get(1);
-                    place = ordinal(1, sufixes)+"\n"+placeInQueue.getFirstName();
+                    place = ordinal(1, sufixes) + "\n" + placeInQueue.getFirstName();
                     checkBox.setText(place);
 
                     //second user
                     checkBox = checkBoxes.get(1);
                     placeInQueue = queueMap.get(2);
-                    place = ordinal(2, sufixes)+"\n"+placeInQueue.getFirstName();
+                    place = ordinal(2, sufixes) + "\n" + placeInQueue.getFirstName();
                     checkBox.setText(place);
 
 
@@ -491,22 +487,21 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                     break;
                 }
 
-                default:
-                {
+                default: {
                     //show checkbox bar
                     queueTextLayout.setVisibility(View.GONE);
                     checkboxLayout.setVisibility(View.VISIBLE);
                     int counter = 3;
-                    CheckBox checkBox =  checkBoxes.get(counter);
+                    CheckBox checkBox = checkBoxes.get(counter);
                     checkBox.setChecked(true);
                     checkBox.setText(place);
                     checkBox.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
 
                     counter--;
                     rank--;
-                    while (counter > -1){
+                    while (counter > -1) {
                         placeInQueue = queueMap.get(rank);
-                        place = ordinal(rank, sufixes)+"\n"+placeInQueue.getFirstName();
+                        place = ordinal(rank, sufixes) + "\n" + placeInQueue.getFirstName();
                         checkBox = checkBoxes.get(counter);
                         checkBox.setText(place);
 
@@ -539,41 +534,41 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                 final boolean paymentComplete = payloadValueDTO.getRespsonsibility()
                         .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED);
 
-                if(demographicsComplete){
+                if (demographicsComplete) {
                     demographicsCheckbox.setChecked(true);
-                }else{
+                } else {
                     demographicsCheckbox.setChecked(false);
                     demographicsCheckbox.setSelected(true);
                 }
-                if(consentComplete){
+                if (consentComplete) {
                     consentFormsCheckbox.setChecked(true);
-                }else{
+                } else {
                     consentFormsCheckbox.setChecked(false);
-                    if(demographicsComplete){
+                    if (demographicsComplete) {
                         consentFormsCheckbox.setSelected(true);
                     }
                 }
-                if(medicationsComplete){
+                if (medicationsComplete) {
                     medicationsCheckbox.setChecked(true);
-                }else{
+                } else {
                     medicationsCheckbox.setChecked(false);
-                    if(consentComplete){
+                    if (consentComplete) {
                         medicationsCheckbox.setSelected(true);
                     }
                 }
-                if(intakeComplete){
+                if (intakeComplete) {
                     intakeCheckbox.setChecked(true);
-                }else{
+                } else {
                     intakeCheckbox.setChecked(false);
-                    if(medicationsComplete){
+                    if (medicationsComplete) {
                         intakeCheckbox.setSelected(true);
                     }
                 }
-                if(paymentComplete) {
+                if (paymentComplete) {
                     responsibilityCheckbox.setChecked(true);
-                }else{
+                } else {
                     responsibilityCheckbox.setChecked(false);
-                    if(intakeComplete){
+                    if (intakeComplete) {
                         responsibilityCheckbox.setSelected(true);
                     }
                 }
@@ -600,18 +595,18 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         return new String[]{th, st, nd, rd, th, th, th, th, th, th};
     }
 
-    private QueueDTO findPlaceInQueue(List<QueueDTO> queueDTOList, String appointmentId, Map<Integer, QueueDTO> placeMap){
+    private QueueDTO findPlaceInQueue(List<QueueDTO> queueDTOList, String appointmentId, Map<Integer, QueueDTO> placeMap) {
         QueueDTO patientQueueDTO = null;
-        for(QueueDTO queueDTO: queueDTOList){
+        for (QueueDTO queueDTO : queueDTOList) {
             placeMap.put(queueDTO.getRank(), queueDTO);
-            if(queueDTO.getAppointmentId().equals(appointmentId)){
+            if (queueDTO.getAppointmentId().equals(appointmentId)) {
                 patientQueueDTO = queueDTO;
             }
         }
         return patientQueueDTO;
     }
 
-    private void updatePageOptions(final WorkflowDTO workflowDTO){
+    private void updatePageOptions(final WorkflowDTO workflowDTO) {
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -642,8 +637,8 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
     }
 
-    private boolean canSendPage(){
-        if(pendingBalanceDTO != null) {
+    private boolean canSendPage() {
+        if (pendingBalanceDTO != null) {
             String userId = pendingBalanceDTO.getMetadata().getUserId();
             String checkUserId;
             for (PatientBalanceDTO patientBalanceDTO : checkInDTO.getPayload().getPatientBalances()) {

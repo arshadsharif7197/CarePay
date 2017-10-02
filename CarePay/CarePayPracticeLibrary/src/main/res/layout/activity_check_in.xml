@@ -115,7 +115,7 @@
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     app:customAssetFont="gotham_rounded_medium"
-                    breeze:textKey="practice_checkin_detail_dialog_checking_in" />
+                    breeze:textKey="practice_checkin_checking_in" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/checkingInCounterTextview"
@@ -182,7 +182,7 @@
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     app:customAssetFont="gotham_rounded_medium"
-                    breeze:textKey="practice_checkin_waiting_room" />
+                    breeze:textKey="practice_checkin_checked_in" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/waitingCounterTextview"
@@ -247,7 +247,7 @@
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     app:customAssetFont="gotham_rounded_medium"
-                    breeze:textKey="practice_checkin_detail_dialog_checking_out" />
+                    breeze:textKey="practice_checkin_checking_out" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/checkingOutCounterTextview"
@@ -287,7 +287,7 @@
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     app:customAssetFont="gotham_rounded_medium"
-                    breeze:textKey="practice_checkin_detail_dialog_checked_out" />
+                    breeze:textKey="practice_checkin_checked_out" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/checkedOutCounterTextview"
