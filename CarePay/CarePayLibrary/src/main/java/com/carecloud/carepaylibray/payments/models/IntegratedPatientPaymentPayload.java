@@ -27,6 +27,9 @@ public class IntegratedPatientPaymentPayload {
     @SerializedName("payment_method")
     private PapiPaymentMethod paymentMethod;
 
+    @SerializedName("metadata")
+    private IntegratedPatientPaymentMetadata metadata;
+
     public double getAmount() {
         return amount;
     }
@@ -65,6 +68,14 @@ public class IntegratedPatientPaymentPayload {
 
     public void setPaymentMethod(PapiPaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    public IntegratedPatientPaymentMetadata getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(IntegratedPatientPaymentMetadata metadata) {
+        this.metadata = metadata;
     }
 
     public class ProcessingError {

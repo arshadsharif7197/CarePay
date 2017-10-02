@@ -133,6 +133,11 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
      */
     public static double getTotalPaid(IntegratedPatientPaymentPayload patientPaymentPayload){
         double total = 0D;
+
+        if(patientPaymentPayload.getMetadata().isExternallyProcessed()){
+            return patientPaymentPayload.getAmount();
+        }
+
         for(IntegratedPatientPaymentLineItem lineItem : patientPaymentPayload.getLineItems()){
             if(lineItem.isProcessed()){
                 total+=lineItem.getAmount();
