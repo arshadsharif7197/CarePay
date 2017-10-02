@@ -27,6 +27,9 @@ public class IntegratedPatientPaymentPayload {
     @SerializedName("payment_method")
     private PapiPaymentMethod paymentMethod;
 
+    @SerializedName("metadata")
+    private IntegratedPatientPaymentMetadata metadata;
+
     public double getAmount() {
         return amount;
     }
@@ -67,12 +70,25 @@ public class IntegratedPatientPaymentPayload {
         this.paymentMethod = paymentMethod;
     }
 
+    public IntegratedPatientPaymentMetadata getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(IntegratedPatientPaymentMetadata metadata) {
+        this.metadata = metadata;
+    }
+
     /**
      * Calculate total of paid line items
      * @return total
      */
     public double getTotalPaid(){
         double total = 0D;
+
+        if(getMetadata().isExternallyProcessed()){
+            return amount;
+        }
+
         for(IntegratedPatientPaymentLineItem lineItem : getLineItems()){
             if(lineItem.isProcessed()){
                 total+=lineItem.getAmount();
