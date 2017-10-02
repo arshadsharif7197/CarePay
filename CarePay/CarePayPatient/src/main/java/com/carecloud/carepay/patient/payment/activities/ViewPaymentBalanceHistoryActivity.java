@@ -54,14 +54,6 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public Bundle bundle;
     private String toolBarTitle;
 
-    public static boolean isPaymentDone() {
-        return isPaymentDone;
-    }
-
-    public static void setIsPaymentDone(boolean isPaymentDone) {
-        ViewPaymentBalanceHistoryActivity.isPaymentDone = isPaymentDone;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,8 +75,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     private boolean hasCharges() {
-        return !paymentsDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges()
-                .getCharges().isEmpty();
+        return !paymentsDTO.getPaymentPayload().getTransactionHistory().getPaymentHistoryList().isEmpty();
     }
 
     private boolean hasPayments() {

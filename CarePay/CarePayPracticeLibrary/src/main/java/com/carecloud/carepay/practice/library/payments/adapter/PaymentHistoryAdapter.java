@@ -54,7 +54,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         if(viewType == VIEW_TYPE_LOADING){
-            view = LayoutInflater.from(context).inflate(R.layout.item_transaction_history_loading, parent, false);
+            view = LayoutInflater.from(context).inflate(R.layout.item_loading, parent, false);
         }else {
             view = LayoutInflater.from(context).inflate(R.layout.item_transaction_history, parent, false);
         }
