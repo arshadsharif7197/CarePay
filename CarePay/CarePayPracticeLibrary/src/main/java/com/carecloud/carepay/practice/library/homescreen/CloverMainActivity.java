@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -117,7 +116,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             checkinLabel.setText(Label.getLabel("checkin_button_patient_mode"));
         } else {
             homeCheckInLl.setVisibility(View.VISIBLE);
-            homeAlertLinearLl.setVisibility(View.VISIBLE);
+            homeAlertLinearLl.setVisibility(View.GONE);//// TODO: 10/3/17 this is temporary until alerts is ready to use
             modeSwitchImageView.setVisibility(View.VISIBLE);
             homeLockImageView.setVisibility(View.GONE);
             checkinLabel.setText(Label.getLabel("checkin_button"));
