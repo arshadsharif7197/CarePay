@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.payment.adapters.PaymentDetailsListAdapter;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -24,8 +23,8 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.payments.models.PaymentDetailsItemDTO;
-import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
 import java.util.ArrayList;
@@ -133,7 +132,6 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ((ISession) context).hideProgressDialog();
-            ViewPaymentBalanceHistoryActivity.setIsPaymentDone(true);
             PatientNavigationHelper.setAccessPaymentsBalances(true);
             PatientNavigationHelper.navigateToWorkflow(context, workflowDTO);
         }

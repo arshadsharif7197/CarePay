@@ -5,9 +5,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
@@ -62,15 +62,15 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private CarePayTextView shortName;
-        private CarePayTextView locationName;
-        private CarePayTextView amount;
+        private TextView shortName;
+        private TextView locationName;
+        private TextView amount;
 
         ViewHolder(View itemView) {
             super(itemView);
-            locationName = (CarePayTextView) itemView.findViewById(com.carecloud.carepaylibrary.R.id.balancesLocation);
-            amount = (CarePayTextView) itemView.findViewById(com.carecloud.carepaylibrary.R.id.balancesTotalAmount);
-            shortName = (CarePayTextView) itemView.findViewById(com.carecloud.carepaylibrary.R.id.balancesAvatarTextView);
+            locationName = (TextView) itemView.findViewById(R.id.balancesLocation);
+            amount = (TextView) itemView.findViewById(R.id.balancesTotalAmount);
+            shortName = (TextView) itemView.findViewById(R.id.balancesAvatarTextView);
         }
     }
 
