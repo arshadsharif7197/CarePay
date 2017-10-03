@@ -274,10 +274,13 @@ public class WorkflowServiceHelper {
                                  final Call<WorkflowDTO> call) {
 
         call.enqueue(new Callback<WorkflowDTO>() {
+            boolean shouldRetryRequest = false;
+            final String retryErrorCodes = "403|408|409";
             @Override
             public void onResponse(Call<WorkflowDTO> call, Response<WorkflowDTO> response) {
                 callStack.remove(call);
                 try {
+                    shouldRetryRequest = retryErrorCodes.contains(String.valueOf(response.code())) || response.code() > 422;
                     switch (response.code()) {
                         case STATUS_CODE_OK:
                             onResponseOk(response);
@@ -289,7 +292,7 @@ public class WorkflowServiceHelper {
                             onResponseBadRequest(response);
                             break;
                         case STATUS_CODE_UNPROCESSABLE_ENTITY:
-                            onValidationError(response);
+                            onFailure(response);
                             break;
                         default:
                             onFailure(response);
@@ -398,12 +401,13 @@ public class WorkflowServiceHelper {
 
             @Override
             public void onFailure(Call<WorkflowDTO> call, Throwable throwable) {
+                shouldRetryRequest = true;
                 callStack.remove(call);
                 onFailure(throwable.getMessage());
             }
 
             void onFailure(String errorMessage) {
-                if (attemptCount < 2) {
+                if (attemptCount < 2 && shouldRetryRequest) {
                     // Re-try failed request with increased attempt count
                     executeRequest(transitionDTO, callback, jsonBody, queryMap, headers, attemptCount + 1);
                 } else {
