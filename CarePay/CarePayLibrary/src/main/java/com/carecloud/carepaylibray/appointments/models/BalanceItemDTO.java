@@ -1,11 +1,11 @@
 package com.carecloud.carepaylibray.appointments.models;
 
-import com.carecloud.carepaylibray.payments.models.postmodel.ResponsibilityType;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by jorge on 30/12/16.
+ * Created by jorge on 30/12/16
  */
 
 public class BalanceItemDTO {
@@ -53,7 +53,7 @@ public class BalanceItemDTO {
     private String description;
     @SerializedName("responsibility_type")
     @Expose
-    private ResponsibilityType responsibilityType;
+    private @IntegratedPaymentLineItem.LineItemType String responsibilityType;
     @SerializedName("new_charge")
     @Expose
     private boolean newCharge = false;
@@ -173,11 +173,11 @@ public class BalanceItemDTO {
         this.description = description;
     }
 
-    public ResponsibilityType getResponsibilityType() {
+    public @IntegratedPaymentLineItem.LineItemType String getResponsibilityType() {
         return responsibilityType;
     }
 
-    public void setResponsibilityType(ResponsibilityType responsibilityType) {
+    public void setResponsibilityType(@IntegratedPaymentLineItem.LineItemType String responsibilityType) {
         this.responsibilityType = responsibilityType;
     }
 

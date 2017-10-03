@@ -420,8 +420,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         }
     }
 
-    private void modifyLineItem(BalanceItemDTO updateBalanceItem, ProviderDTO updateProvider, LocationDTO updateLocation, Double updateAmount){
-        BalanceItemDTO balanceItem = updateBalanceItem;
+    private void modifyLineItem(BalanceItemDTO balanceItem, ProviderDTO updateProvider, LocationDTO updateLocation, Double updateAmount){
         if(updateAmount!=null){
             double difference;
             double currentAmount = balanceItem.getBalance();
@@ -725,18 +724,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             lineItem.setAmount(balanceItem.getAmount());
             if(balanceItem.getResponsibilityType()!=null){
                 //this is a responsibility item
-                switch (balanceItem.getResponsibilityType()){
-                    case co_insurance:
-                        lineItem.setItemType(IntegratedPaymentLineItem.TYPE_COINSURANCE);
-                        break;
-                    case deductable:
-                        lineItem.setItemType(IntegratedPaymentLineItem.TYPE_DEDUCTABLE);
-                        break;
-                    case co_pay:
-                    default:
-                        lineItem.setItemType(IntegratedPaymentLineItem.TYPE_COPAY);
-                        break;
-                }
+                lineItem.setItemType(balanceItem.getResponsibilityType());
             }else if(balanceItem.isNewCharge()){
                 lineItem.setItemType(IntegratedPaymentLineItem.TYPE_NEWCHARGE);
                 lineItem.setId(balanceItem.getId().toString());
