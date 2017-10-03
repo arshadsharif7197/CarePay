@@ -82,6 +82,7 @@ public class PaymentBalanceHistoryFragment extends BaseFragment {
     private void setTabTitle(TabLayout.Tab tab, String title){
         TextView textView = (TextView) tab.getCustomView().findViewById(R.id.tab_title);
         textView.setText(title);
+
     }
 
     @Override
