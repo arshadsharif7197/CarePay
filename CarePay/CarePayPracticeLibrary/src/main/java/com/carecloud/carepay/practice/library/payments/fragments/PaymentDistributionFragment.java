@@ -63,6 +63,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     private View newChargesLayout;
     private RecyclerView newChargesRecycler;
     private Button payButton;
+    private View emptyBalanceLayout;
 
     private BounceHelper balanceViewSwipeHelper;
     private BounceHelper chargeViewSwipeHelper;
@@ -153,6 +154,10 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         ItemTouchHelper chargesTouchHelper = new ItemTouchHelper(chargeViewSwipeHelper);
         chargesTouchHelper.attachToRecyclerView(newChargesRecycler);
 
+        emptyBalanceLayout = view.findViewById(R.id.empty_balance_layout);
+        TextView emptyMessage = (TextView) view.findViewById(R.id.no_payment_message);
+        emptyMessage.setText(Label.getLabel("payment_balance_empty_payment_screen"));
+
         setInitialValues(view);
         setAdapter();
         setupPickerWindows();
@@ -187,13 +192,16 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             }
         });
 
-        Button addButton = (Button) view.findViewById(R.id.add_item_button);
-        addButton.setOnClickListener(new View.OnClickListener() {
+        View addButton = view.findViewById(R.id.add_item_button);
+        View addButtonEmpty = view.findViewById(R.id.add_item_button_empty);
+        View.OnClickListener addItem = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 callback.lookupChargeItem(paymentsModel.getPaymentPayload().getSimpleChargeItems(), PaymentDistributionFragment.this);
             }
-        });
+        };
+        addButton.setOnClickListener(addItem);
+        addButtonEmpty.setOnClickListener(addItem);
 
         Button leftButton = (Button) view.findViewById(R.id.payment_left_button);
         leftButton.setOnClickListener(new View.OnClickListener() {
@@ -293,6 +301,17 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             PaymentDistributionAdapter adapter = (PaymentDistributionAdapter) newChargesRecycler.getAdapter();
             adapter.setBalanceItems(chargeItems);
             adapter.notifyDataSetChanged();
+        }
+
+        if(balanceItems.isEmpty() && chargeItems.isEmpty()){
+            emptyBalanceLayout.setVisibility(View.VISIBLE);
+        }else{
+            if(balanceItems.isEmpty()){
+                balanceDetailsRecycler.setVisibility(View.GONE);
+            }else{
+                balanceDetailsRecycler.setVisibility(View.VISIBLE);
+            }
+            emptyBalanceLayout.setVisibility(View.GONE);
         }
     }
 

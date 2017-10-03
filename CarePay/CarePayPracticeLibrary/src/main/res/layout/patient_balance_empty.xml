@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:padding="@dimen/dimen_40dp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/icn_empty_state_payments" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/no_payment_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/no_apt_message_title_margin_top"
+        android:gravity="center"
+        android:textColor="@color/Feldgrau"
+        android:textSize="@dimen/text_size_26sp"
+        tools:text="No patient balance at this time"
+        app:customAssetFont="gotham_rounded_medium"
+        breeze:textKey="payment_balance_empty_title" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/no_payment_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/no_apt_message_desc_margin_top"
+        android:gravity="center"
+        android:textColor="@color/pastel_blue"
+        android:textSize="@dimen/text_size_19sp"
+        tools:text="Use the button to create an appointment."
+        app:customAssetFont="gotham_rounded_book"/>
+
+</LinearLayout>
