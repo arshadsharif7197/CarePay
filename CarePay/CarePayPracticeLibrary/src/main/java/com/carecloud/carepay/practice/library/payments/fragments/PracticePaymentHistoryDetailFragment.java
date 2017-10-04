@@ -1,0 +1,106 @@
+package com.carecloud.carepay.practice.library.payments.fragments;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentHistoryCallback;
+import com.carecloud.carepaylibray.payments.fragments.PaymentHistoryDetailFragment;
+import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
+import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
+
+import java.text.NumberFormat;
+
+/**
+ * Created by lmenendez on 9/29/17
+ */
+
+public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFragment {
+
+    private PracticePaymentHistoryCallback callback;
+
+    /**
+     * Get new instance of PracticePaymentHistoryDetailFragment
+     * @param historyItem history item
+     * @return new instance of PracticePaymentHistoryDetailFragment
+     */
+    public static PracticePaymentHistoryDetailFragment newInstance(PaymentHistoryItem historyItem){
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, historyItem);
+
+        PracticePaymentHistoryDetailFragment fragment = new PracticePaymentHistoryDetailFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    protected void attachCallback(Context context){
+        try{
+            callback = (PracticePaymentHistoryCallback) context;
+        }catch (ClassCastException cce){
+            throw new ClassCastException("Attached context must implememnt PracticePaymentHistoryCallback");
+        }
+    }
+
+    @Override
+    protected void initItemsRecycler(RecyclerView recycler) {
+        itemsRecycler = recycler;
+        setAdapter();
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
+        return inflater.inflate(R.layout.fragment_payment_history_details, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle icicle){
+        View closeButton = view.findViewById(R.id.closeViewLayout);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
+
+        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(historyItem.getPayload().getDate());
+
+        TextView transactionDate = (TextView) view.findViewById(R.id.transaction_date);
+        transactionDate.setText(dateUtil.getDateAsMonthLiteralDayOrdinalYear());
+
+        TextView transactionTime = (TextView) view.findViewById(R.id.transaction_time);
+        transactionTime.setText(dateUtil.getTime12Hour());
+
+        TextView transactionNumber = (TextView) view.findViewById(R.id.transaction_number);
+        transactionNumber.setText(historyItem.getPayload().getConfirmation());
+
+        TextView transactionType = (TextView) view.findViewById(R.id.transaction_payment_type);
+        transactionType.setText(getPaymentMethod(historyItem.getPayload().getPapiPaymentMethod()));
+
+        TextView transactionTotal = (TextView) view.findViewById(R.id.transaction_total);
+        transactionTotal.setText(NumberFormat.getCurrencyInstance().format(totalPaid));
+
+        RecyclerView itemsRecycler = (RecyclerView) view.findViewById(R.id.items_recycler);
+        itemsRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        initItemsRecycler(itemsRecycler);
+
+        final NestedScrollView scrollView = (NestedScrollView) view.findViewById(R.id.scrollView);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                scrollView.scrollTo(0,0);
+            }
+        }, 100);
+    }
+
+}
