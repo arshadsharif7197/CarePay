@@ -30,6 +30,12 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
     private PaymentFragmentActivityInterface callback;
     private UserPracticeDTO userPracticeDTO;
 
+    /**
+     * Get new instance of PaymentHistoryDetailDialogFragment
+     * @param historyItem history item
+     * @param userPracticeDTO user practice info
+     * @return new PaymentHistoryDetailDialogFragment
+     */
     public static PaymentHistoryDetailDialogFragment newInstance(PaymentHistoryItem historyItem, UserPracticeDTO userPracticeDTO){
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, historyItem);
