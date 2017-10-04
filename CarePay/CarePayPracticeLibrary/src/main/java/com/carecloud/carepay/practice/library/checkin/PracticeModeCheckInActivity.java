@@ -131,7 +131,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         checkedInRecyclerView.setHasFixedSize(true);
         checkedInRecyclerView.setItemAnimator(new DefaultItemAnimator());
         checkedInRecyclerView.setLayoutManager(new LinearLayoutManager(PracticeModeCheckInActivity.this));
-        checkedInRecyclerView.setOnDragListener(onWaitListDragListener);
+        checkedInRecyclerView.setOnDragListener(onCheckedInListDragListener);
 
         checkingOutRecyclerView = (RecyclerView) findViewById(R.id.checkingOutRecyclerView);
         checkingOutRecyclerView.setHasFixedSize(true);
@@ -333,7 +333,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         }
     };
 
-    View.OnDragListener onWaitListDragListener = new View.OnDragListener() {
+    View.OnDragListener onCheckedInListDragListener = new View.OnDragListener() {
         @Override
         public boolean onDrag(View view, DragEvent dragEvent) {
             switch (dragEvent.getAction()) {
