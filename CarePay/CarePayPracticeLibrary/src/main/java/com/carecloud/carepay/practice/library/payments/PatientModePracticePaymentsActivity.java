@@ -131,7 +131,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newClinicHeader(paymentsModel);
         ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
                 .newInstance(paymentsModel, showPartial ? Label.getLabel("payment_partial_payment_text") : null,
-                        Label.getLabel("payment_details_pay_now"), headerModel);
+                        Label.getLabel("payment_details_pay_now"), null, headerModel);
         displayDialogFragment(dialog, false);
     }
 

@@ -85,67 +85,25 @@
         android:textSize="@dimen/text_size_24sp"
         app:customAssetFont="proxima_nova_semi_bold" />
 
-    <LinearLayout
-        android:id="@+id/rowLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:paddingEnd="@dimen/list_apt_padding_right"
-        android:paddingStart="@dimen/list_apt_padding_right"
-        android:layout_below="@id/payment_responsibility_balance"
-        android:visibility="gone"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="@dimen/dimen_14dp">
-
-
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/itemNameLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:textAlignment="viewStart"
-                android:textColor="@color/textview_default_textcolor"
-                android:textSize="@dimen/textview_default_textsize"
-                app:customAssetFont="proxima_nova_regular" />
-
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/itemAmountLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textAlignment="textEnd"
-                android:textColor="@color/textview_default_textcolor"
-                android:textSize="@dimen/textview_textsize"
-                android:textStyle="bold"
-                app:customAssetFont="proxima_nova_semi_bold" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginBottom="3dp"
-            android:background="@color/divider_color" />
-
-    </LinearLayout>
-
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/payment_responsibility_balance_details"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/payment_responsibility_footer"
-        android:layout_below="@id/rowLayout"
-        android:background="@color/white"
-        android:paddingTop="@dimen/dimen_30dp" />
+        android:layout_below="@id/payment_responsibility_balance"
+        android:background="@color/white">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/payment_responsibility_balance_details"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:paddingTop="@dimen/dimen_30dp" />
+
+        <include layout="@layout/patient_balance_empty"
+                 android:id="@+id/empty_balance_layout"
+                 android:visibility="gone" />
+
+    </FrameLayout>
 
     <View
         android:layout_width="match_parent"

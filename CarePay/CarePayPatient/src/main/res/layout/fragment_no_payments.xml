@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="@dimen/dimen_30dp">
 
         <ImageView
             android:id="@+id/no_apt_placeholder_icon"
@@ -27,7 +28,7 @@
             android:layout_marginTop="@dimen/no_apt_message_title_margin_top"
             android:gravity="center"
             android:textColor="@color/textview_default_textcolor"
-            android:textSize="21sp"
+            android:textSize="@dimen/text_size_21"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="no_payment_title" />
 
@@ -40,7 +41,7 @@
             android:layout_marginTop="@dimen/no_apt_message_desc_margin_top"
             android:gravity="center"
             android:textColor="@color/optionl_gray"
-            android:textSize="13sp"
+            android:textSize="@dimen/text_size_13"
             app:customAssetFont="proxima_nova_regular"
             breeze:textKey="no_payment_description" />
 
