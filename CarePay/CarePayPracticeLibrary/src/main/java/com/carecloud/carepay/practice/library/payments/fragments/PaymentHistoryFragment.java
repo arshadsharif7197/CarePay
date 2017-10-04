@@ -127,7 +127,7 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
             }
         });
 
-        historyRecycler = (RecyclerView) view.findViewById(R.id.payment_list_recycler);
+        historyRecycler = (RecyclerView) view.findViewById(R.id.history_recycler_view);
         historyRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         historyRecycler.addOnScrollListener(historyScrollListener);
         setAdapter();
