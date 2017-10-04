@@ -58,6 +58,7 @@
         </FrameLayout>
 
         <android.support.v4.widget.NestedScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -274,7 +275,8 @@
                 android:textAllCaps="false"
                 tools:text="Refund"
                 breeze:textKey="payment_history_refund"
-                app:customAssetFont="gotham_rounded_medium"/>
+                app:customAssetFont="gotham_rounded_medium"
+                android:enabled="false"/>
 
         </FrameLayout>
     </LinearLayout>

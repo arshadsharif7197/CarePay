@@ -185,6 +185,6 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
 
     @Override
     public void onHistoryItemClicked(PaymentHistoryItem item) {
-        //todo
+        callback.displayPaymentHistoryDetails(item);
     }
 }
