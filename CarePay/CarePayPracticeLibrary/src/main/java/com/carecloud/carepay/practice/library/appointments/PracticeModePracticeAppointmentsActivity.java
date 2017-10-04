@@ -517,6 +517,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(paymentsModel);
         ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
                 .newInstance(paymentsModel, null, Label.getLabel("create_appointment_label"),
+                        Label.getLabel("payment_balance_empty_appointment_screen"),
                         headerModel);
         dialog.show(getSupportFragmentManager(), tag);
     }
