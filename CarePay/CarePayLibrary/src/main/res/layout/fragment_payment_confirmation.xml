@@ -48,8 +48,9 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/payment_confirm_value"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:layout_marginStart="@dimen/dimen_5dp"
                 android:textColor="@color/white"
                 android:textSize="@dimen/confirmationNumberTextSize"
