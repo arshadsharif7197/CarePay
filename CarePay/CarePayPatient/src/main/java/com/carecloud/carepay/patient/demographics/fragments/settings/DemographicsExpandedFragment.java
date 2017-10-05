@@ -56,6 +56,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
     private DemographicsOption selectedContactMethod = new DemographicsOption();
     private DemographicsOption selectedMaritalStatus = new DemographicsOption();
     private DemographicsOption selectedEmploymentStatus = new DemographicsOption();
+    private DemographicsOption selectedEmployer = new DemographicsOption();
     private DemographicsOption selectedEmergencyContactRelationship = new DemographicsOption();
     private DemographicsOption selectedReferralSource = new DemographicsOption();
 
@@ -279,6 +280,21 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         initSelectableInput(chooseEmploymentStatus, selectedEmploymentStatus, employmentStatus, personalInfoSection.getProperties().getEmploymentStatus().isRequired()?null:employmentStatusOptional);
 
 
+        View employerLayout = view.findViewById(com.carecloud.carepaylibrary.R.id.employerDemographicsLayout);
+        TextView chooseEmployer = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.chooseEmployer);
+        View employerOptional = view.findViewById(com.carecloud.carepaylibrary.R.id.employerOptional);
+        setVisibility(employerLayout, personalInfoSection.getProperties().getEmployer().isDisplayed());
+        chooseEmployer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.displaySearchEmployer();
+            }
+        });
+        String employer = demographicPayload.getPersonalDetails().getEmployer();
+        initSelectableInput(chooseEmployer, selectedEmployer, employer,
+                personalInfoSection.getProperties().getEmployer().isRequired() ? null : employerOptional);
+
+
         View emergencyContactRelationshipLayout = view.findViewById(R.id.emergencyContactRelationshipDemographicsLayout);
         TextView chooseEmergencyContactRelationship = (TextView) view.findViewById(R.id.chooseEmergencyContactRelationship);
         View emergencyContactRelationshipOptional = view.findViewById(R.id.emergencyContactRelationshipOptional);
@@ -361,6 +377,10 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         }
         if(dataModel.getDemographic().getPersonalDetails().getProperties().getEmploymentStatus().isRequired()
                 && StringUtil.isNullOrEmpty(selectedEmploymentStatus.getName())){
+            return false;
+        }
+        if (dataModel.getDemographic().getPersonalDetails().getProperties().getEmployer().isRequired()
+                && StringUtil.isNullOrEmpty(selectedEmployer.getName())) {
             return false;
         }
         if(dataModel.getDemographic().getPersonalDetails().getProperties().getEmergencyContactRelationship().isRequired()
@@ -460,6 +480,11 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         String employmentStatus = selectedEmploymentStatus.getName();
         if (!StringUtil.isNullOrEmpty(employmentStatus)) {
             patientModel.setEmploymentStatus(employmentStatus);
+        }
+
+        String employer = selectedEmployer.getName();
+        if (!StringUtil.isNullOrEmpty(employmentStatus)) {
+            patientModel.setEmployer(employer);
         }
 
         String emergencyContactRelationship = selectedEmergencyContactRelationship.getName();

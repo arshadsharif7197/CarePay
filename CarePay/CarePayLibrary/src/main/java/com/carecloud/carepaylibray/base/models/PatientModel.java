@@ -96,6 +96,10 @@ public class PatientModel {
     @Expose
     private String employmentStatus;
 
+    @SerializedName("employer")
+    @Expose
+    private String employer;
+
     @SerializedName("ec_relationship_type")
     @Expose
     private String emergencyContactRelationship;
@@ -282,6 +286,14 @@ public class PatientModel {
 
     public void setEmploymentStatus(String employmentStatus) {
         this.employmentStatus = employmentStatus;
+    }
+
+    public String getEmployer() {
+        return employer;
+    }
+
+    public void setEmployer(String employer) {
+        this.employer = employer;
     }
 
     public String getEmergencyContactRelationship() {

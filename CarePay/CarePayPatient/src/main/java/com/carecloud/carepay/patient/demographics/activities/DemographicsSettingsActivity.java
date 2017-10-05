@@ -8,16 +8,20 @@ import android.view.View;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.patient.demographics.dto.EmployerDto;
+import com.carecloud.carepay.patient.demographics.fragments.settings.AddEmployerFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.ChangePasswordFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsExpandedFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsInformationFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsSettingsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.EditProfileFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.HelpFragment;
+import com.carecloud.carepay.patient.demographics.fragments.settings.SearchEmployerFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.SettingsDocumentsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.SupportFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.UpdateEmailFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.UpdateNameFragment;
+import com.carecloud.carepay.patient.demographics.interfaces.AddNewEmployerInterface;
 import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
 import com.carecloud.carepay.patient.payment.fragments.CreditCardDetailsFragment;
 import com.carecloud.carepay.patient.payment.fragments.CreditCardListFragment;
@@ -34,7 +38,8 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
  * Main activity for Settings workflow
  */
 public class DemographicsSettingsActivity extends BasePatientActivity implements
-        DemographicsSettingsFragmentListener, InsuranceEditDialog.InsuranceEditDialogListener {
+        DemographicsSettingsFragmentListener, InsuranceEditDialog.InsuranceEditDialogListener,
+        AddNewEmployerInterface {
 
     DemographicsSettingsDTO demographicsSettingsDTO;
 
@@ -84,6 +89,18 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
                     .loadCreditCardsList(demographicsSettingsDTO);
         }
         this.demographicsSettingsDTO = demographicsSettingsDTO;
+    }
+
+    @Override
+    public void displaySearchEmployer() {
+        SearchEmployerFragment fragment = SearchEmployerFragment.newInstance();
+        addFragment(fragment, true);
+    }
+
+    @Override
+    public void displayAddEmployerFragment() {
+        AddEmployerFragment fragment = AddEmployerFragment.newInstance();
+        addFragment(fragment, true);
     }
 
     @Override
@@ -195,5 +212,11 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
 
     public void addFragment(Fragment fragment, boolean addToBackStack) {
         addFragment(R.id.activity_demographics_settings, fragment, addToBackStack);
+    }
+
+    @Override
+    public void addEmployer(EmployerDto employer) {
+        getSupportFragmentManager().popBackStack();
+        getSupportFragmentManager().popBackStack();
     }
 }

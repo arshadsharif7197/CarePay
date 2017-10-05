@@ -29,7 +29,7 @@ import java.util.Map;
 public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInAppointmentAdapter.CartViewHolder> {
 
     public interface CheckinItemCallback {
-        void onCheckInItemClick(AppointmentsPayloadDTO appointmentsPayloadDTO, int isWaitingRoom);
+        void onCheckInItemClick(AppointmentsPayloadDTO appointmentsPayloadDTO, int theRoom);
     }
 
     private Context context;
@@ -168,12 +168,6 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
         holder.appointmentStatusCartView.setWaitingRoom(patient.isCheckedIn);
         holder.appointmentStatusCartView.setShortName(patient.initials);
         holder.itemView.setContentDescription(patient.name);
-//        holder.appointmentStatusCartView.containerLayout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                callback.onCheckInItemClick((AppointmentsPayloadDTO) patient.raw, theRoom);
-//            }
-//        });
     }
 
     @Override

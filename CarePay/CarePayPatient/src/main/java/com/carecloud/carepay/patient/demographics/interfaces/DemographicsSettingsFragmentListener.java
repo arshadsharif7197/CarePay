@@ -37,4 +37,8 @@ public interface DemographicsSettingsFragmentListener extends FragmentActivityIn
     void showSupportFragment();
 
     void onCreditCardOperation(DemographicsSettingsDTO demographicsSettingsDTO);
+
+    void displaySearchEmployer();
+
+    void displayAddEmployerFragment();
 }

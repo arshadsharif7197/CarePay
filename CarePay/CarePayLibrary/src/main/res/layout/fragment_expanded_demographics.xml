@@ -441,6 +441,50 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/employerDemographicsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
+            android:orientation="horizontal">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                style="@style/DemographicsDocsLabelStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                tools:text="Employment Status"
+                breeze:textKey="demographics_employer"
+                app:customAssetFont="proxima_nova_regular"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/employerOptional"
+                style="@style/DemographicsOptionalLabelStyle"
+                tools:text="Optional"
+                breeze:textKey="demographics_details_optional_hint"
+                app:customAssetFont="proxima_nova_semi_bold"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/chooseEmployer"
+                style="@style/DemographicsDocsClickableTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:gravity="end"
+                tools:text="Choose"
+                app:customAssetFont="proxima_nova_regular"/>
+
+        </LinearLayout>
+
+        <View
+            style="@style/Consent_Form_View_Style"
+            android:layout_width="match_parent" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/emergencyContactRelationshipDemographicsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
