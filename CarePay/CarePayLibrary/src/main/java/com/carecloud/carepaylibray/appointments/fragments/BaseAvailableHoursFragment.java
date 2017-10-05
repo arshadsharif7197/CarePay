@@ -414,6 +414,9 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
                 }
             }
         }
+        if(appointmentsResultModel.getPayload().getResourcesToSchedule().isEmpty()){
+            return new ResourcesToScheduleDTO();
+        }
         return appointmentsResultModel.getPayload().getResourcesToSchedule().get(0);
     }
 
