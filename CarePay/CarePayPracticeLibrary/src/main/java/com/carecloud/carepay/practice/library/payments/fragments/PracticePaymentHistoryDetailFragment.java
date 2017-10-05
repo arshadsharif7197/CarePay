@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.NestedScrollView;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentHistoryCallback;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.payments.fragments.PaymentHistoryDetailFragment;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -101,6 +103,21 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
                 scrollView.scrollTo(0,0);
             }
         }, 100);
+
+        View refundButton = view.findViewById(R.id.refund_button);
+        if(historyItem.getPayload().getMetadata().isExternallyProcessed()){
+            refundButton.setEnabled(true);
+            refundButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent();
+                    intent.setAction(CarePayConstants.CLOVER_REFUND_INTENT);
+                    intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, historyItem.getPayload().getAmount());
+                    intent.putExtra("transaction_id", historyItem.getPayload().getLineItems().get(0).getTransactionId());
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
 }
