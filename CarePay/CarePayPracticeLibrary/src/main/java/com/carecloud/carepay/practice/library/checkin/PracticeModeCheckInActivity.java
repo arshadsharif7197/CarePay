@@ -28,6 +28,8 @@ import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDial
 import com.carecloud.carepay.practice.library.payments.fragments.AddPaymentItemFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionEntryFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentHistoryDetailFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PaymentHistoryFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
@@ -54,6 +56,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
+import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -67,33 +70,41 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
-public class PracticeModeCheckInActivity extends BasePracticeActivity implements FilterDialog.FilterDialogListener,
+public class PracticeModeCheckInActivity extends BasePracticeActivity
+        implements FilterDialog.FilterDialogListener,
         PracticePaymentNavigationCallback,
         AppointmentDetailDialog.AppointmentDialogCallback,
-        CheckedInAppointmentAdapter.CheckinItemCallback{
+        CheckedInAppointmentAdapter.CheckinItemCallback {
 
 
-    private RecyclerView checkinginRecyclerView;
-    private RecyclerView waitingRoomRecyclerView;
+    private RecyclerView checkingInRecyclerView;
+    private RecyclerView checkedInRecyclerView;
+    private RecyclerView checkingOutRecyclerView;
+    private RecyclerView checkedOutRecyclerView;
 
     private FilterModel filter;
 
     CheckInDTO checkInDTO;
 
+    CheckedInAppointmentAdapter checkingInAdapter;
     CheckedInAppointmentAdapter checkedInAdapter;
-    CheckedInAppointmentAdapter waitingRoomAdapter;
+    CheckedInAppointmentAdapter checkingOutAdapter;
+    CheckedInAppointmentAdapter checkedOutAdapter;
 
-    CarePayTextView goBackTextview;
+    CarePayTextView goBackTextView;
     CarePayTextView filterOnTextView;
     CarePayTextView filterTextView;
-    CarePayTextView checkingInCounterTextview;
-    CarePayTextView waitingCounterTextview;
+    CarePayTextView checkingInCounterTextView;
+    CarePayTextView waitingCounterTextView;
+    CarePayTextView checkingOutCounterTextView;
+    CarePayTextView checkedOutCounterTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         checkInDTO = getConvertedDTO(CheckInDTO.class);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_check_in);
         filter = new FilterModel();
         initializationView();
@@ -102,28 +113,41 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
     }
 
     private void initializationView() {
-        goBackTextview = (CarePayTextView) findViewById(R.id.goBackTextview);
+        goBackTextView = (CarePayTextView) findViewById(R.id.goBackTextview);
         filterOnTextView = (CarePayTextView) findViewById(R.id.filterOnTextView);
         filterTextView = (CarePayTextView) findViewById(R.id.filterTextView);
-        checkingInCounterTextview = (CarePayTextView) findViewById(R.id.checkingInCounterTextview);
-        waitingCounterTextview = (CarePayTextView) findViewById(R.id.waitingCounterTextview);
+        checkingInCounterTextView = (CarePayTextView) findViewById(R.id.checkingInCounterTextview);
+        waitingCounterTextView = (CarePayTextView) findViewById(R.id.waitingCounterTextview);
+        checkingOutCounterTextView = (CarePayTextView) findViewById(R.id.checkingOutCounterTextview);
+        checkedOutCounterTextView = (CarePayTextView) findViewById(R.id.checkedOutCounterTextview);
 
-        checkinginRecyclerView = (RecyclerView) findViewById(R.id.checkinginRecyclerView);
-        checkinginRecyclerView.setHasFixedSize(true);
-        checkinginRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        checkinginRecyclerView.setLayoutManager(new LinearLayoutManager(PracticeModeCheckInActivity.this));
-        checkinginRecyclerView.setOnDragListener(onCheckingInListDragListener);
+        checkingInRecyclerView = (RecyclerView) findViewById(R.id.checkinginRecyclerView);
+        checkingInRecyclerView.setHasFixedSize(true);
+        checkingInRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        checkingInRecyclerView.setLayoutManager(new LinearLayoutManager(PracticeModeCheckInActivity.this));
+        checkingInRecyclerView.setOnDragListener(onCheckingInListDragListener);
 
-        waitingRoomRecyclerView = (RecyclerView) findViewById(R.id.waitingRoomRecyclerView);
-        waitingRoomRecyclerView.setHasFixedSize(true);
-        waitingRoomRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        waitingRoomRecyclerView.setLayoutManager(new LinearLayoutManager(PracticeModeCheckInActivity.this));
-        waitingRoomRecyclerView.setOnDragListener(onWaitListDragListener);
+        checkedInRecyclerView = (RecyclerView) findViewById(R.id.waitingRoomRecyclerView);
+        checkedInRecyclerView.setHasFixedSize(true);
+        checkedInRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        checkedInRecyclerView.setLayoutManager(new LinearLayoutManager(PracticeModeCheckInActivity.this));
+        checkedInRecyclerView.setOnDragListener(onCheckedInListDragListener);
+
+        checkingOutRecyclerView = (RecyclerView) findViewById(R.id.checkingOutRecyclerView);
+        checkingOutRecyclerView.setHasFixedSize(true);
+        checkingOutRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        checkingOutRecyclerView.setLayoutManager(new LinearLayoutManager(PracticeModeCheckInActivity.this));
+
+        checkedOutRecyclerView = (RecyclerView) findViewById(R.id.checkedOutRecyclerView);
+        checkedOutRecyclerView.setHasFixedSize(true);
+        checkedOutRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        checkedOutRecyclerView.setLayoutManager(new LinearLayoutManager(PracticeModeCheckInActivity.this));
+
 
         filterOnTextView.setVisibility(View.GONE);
         filterTextView.setVisibility(View.VISIBLE);
 
-        goBackTextview.setOnClickListener(onGoBackButtonClick());
+        goBackTextView.setOnClickListener(onGoBackButtonClick());
         findViewById(R.id.filterLayout).setOnClickListener(onFilterIconClick());
     }
 
@@ -135,7 +159,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
                 // send a broadcast
                 Intent intent = new Intent();
                 intent.setAction("NEW_CHECKEDIN_NOTIFICATION");
-                intent.putExtra("appointments_checking_in", "" + checkedInAdapter.getItemCount());
+                intent.putExtra("appointments_checking_in", "" + checkingInAdapter.getItemCount());
                 sendBroadcast(intent);
                 onBackPressed();
             }
@@ -163,7 +187,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
         ArrayList<FilterDataDTO> locations = new ArrayList<>();
         ArrayList<FilterDataDTO> patients = new ArrayList<>();
 
-        Map<String, String> photoMap = PracticeUtil.getProfilePhotoMap(checkInDTO.getPayload().getPatientBalances());
+        Map<String, String> photoMap = PracticeUtil.getProfilePhotoMap(checkInDTO.getPayload()
+                .getPatientBalances());
 
         CheckInPayloadDTO payload = checkInDTO.getPayload();
         if (null == payload) {
@@ -172,8 +197,10 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
 
         String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
         String userId = getApplicationMode().getUserPracticeDTO().getUserId();
-        Set<String> providersSavedFilteredIds = getApplicationPreferences().getSelectedProvidersIds(practiceId, userId);
-        Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
+        Set<String> providersSavedFilteredIds = getApplicationPreferences()
+                .getSelectedProvidersIds(practiceId, userId);
+        Set<String> locationsSavedFilteredIds = getApplicationPreferences()
+                .getSelectedLocationsIds(practiceId, userId);
 
         List<AppointmentDTO> appointments = payload.getAppointments();
         for (AppointmentDTO appointmentDTO : appointments) {
@@ -189,11 +216,21 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
     }
 
     private void setAdapter() {
-        checkedInAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this, false);
-        checkinginRecyclerView.setAdapter(checkedInAdapter);
+        checkingInAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this,
+                CheckedInAppointmentAdapter.CHECKING_IN);
+        checkingInRecyclerView.setAdapter(checkingInAdapter);
 
-        waitingRoomAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this, true);
-        waitingRoomRecyclerView.setAdapter(waitingRoomAdapter);
+        checkedInAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this,
+                CheckedInAppointmentAdapter.CHECKED_IN);
+        checkedInRecyclerView.setAdapter(checkedInAdapter);
+
+        checkingOutAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this,
+                CheckedInAppointmentAdapter.CHECKING_OUT);
+        checkingOutRecyclerView.setAdapter(checkingOutAdapter);
+
+        checkedOutAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this,
+                CheckedInAppointmentAdapter.CHECKED_OUT);
+        checkedOutRecyclerView.setAdapter(checkedOutAdapter);
 
         applyFilter();
     }
@@ -203,18 +240,23 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
                                          Set<String> locationsSavedFilteredIds) {
         FilterDataDTO filterDataDTO;
         LocationDTO locationDTO = appointmentPayloadDTO.getLocation();
-        filterDataDTO = new FilterDataDTO(locationDTO.getId(), locationDTO.getName(), FilterDataDTO.FilterDataType.LOCATION);
+        filterDataDTO = new FilterDataDTO(locationDTO.getId(), locationDTO.getName(),
+                FilterDataDTO.FilterDataType.LOCATION);
         if (locationsList.indexOf(filterDataDTO) < 0) {
-            if ((locationsSavedFilteredIds != null) && locationsSavedFilteredIds.contains(String.valueOf(locationDTO.getId()))) {
+            if ((locationsSavedFilteredIds != null) && locationsSavedFilteredIds
+                    .contains(String.valueOf(locationDTO.getId()))) {
                 filterDataDTO.setChecked(true);
             }
             locationsList.add(filterDataDTO);
         }
     }
 
-    private void addPatientOnFilterList(ArrayList<FilterDataDTO> patients, AppointmentsPayloadDTO appointmentPayloadDTO, Map<String, String> photoMap) {
+    private void addPatientOnFilterList(ArrayList<FilterDataDTO> patients,
+                                        AppointmentsPayloadDTO appointmentPayloadDTO,
+                                        Map<String, String> photoMap) {
         PatientModel patientDTO = appointmentPayloadDTO.getPatient();
-        FilterDataDTO filterDataDTO = new FilterDataDTO(patientDTO.getPatientId(), patientDTO.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
+        FilterDataDTO filterDataDTO = new FilterDataDTO(patientDTO.getPatientId(),
+                patientDTO.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
         if (patients.indexOf(filterDataDTO) < 0) {
             patients.add(filterDataDTO);
         } else {
@@ -230,9 +272,11 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
                                                  AppointmentsPayloadDTO appointmentPayloadDTO,
                                                  Set<String> selectedProvidersIds) {
         ProviderDTO providerDTO = appointmentPayloadDTO.getProvider();
-        FilterDataDTO filterDataDTO = new FilterDataDTO(providerDTO.getId(), providerDTO.getName(), FilterDataDTO.FilterDataType.PROVIDER);
+        FilterDataDTO filterDataDTO = new FilterDataDTO(providerDTO.getId(), providerDTO.getName(),
+                FilterDataDTO.FilterDataType.PROVIDER);
         if (doctors.indexOf(filterDataDTO) < 0) {
-            if ((selectedProvidersIds != null) && selectedProvidersIds.contains(String.valueOf(providerDTO.getId()))) {
+            if ((selectedProvidersIds != null) && selectedProvidersIds
+                    .contains(String.valueOf(providerDTO.getId()))) {
                 filterDataDTO.setChecked(true);
             }
             doctors.add(filterDataDTO);
@@ -250,8 +294,10 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
                 //signal for the start of a drag and drop operation.
                 case DragEvent.ACTION_DRAG_STARTED:
                     // do nothing
-                    if (waitingRoomAdapter.getAppointmentById(appointmentId, true) == null) {
+                    if (checkedInAdapter.getAppointmentById(appointmentId, true) == null) {
                         findViewById(R.id.drop_down_area_view).setVisibility(View.VISIBLE);
+                    } else {
+                        findViewById(R.id.drop_down_checking_area_view).setVisibility(View.VISIBLE);
                     }
                     break;
                 //the drag point has entered the bounding box of the View
@@ -262,15 +308,19 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
                     break;
                 //drag shadow has been released,the drag point is within the bounding box of the View
                 case DragEvent.ACTION_DROP:
-                    if (waitingRoomAdapter.flipAppointmentById(appointmentId, true)) {
-                        checkedInAdapter.flipAppointmentById(appointmentId, false);
-
+                    if (checkedInAdapter.flipAppointmentById(appointmentId, true)) {
+                        checkingInAdapter.flipAppointmentById(appointmentId, false);
                         applyFilter();
+
+                        ((TextView) findViewById(R.id.drop__checking_here_icon)).setText(Label
+                                .getLabel("practice_checkin_success_label"));
+                        ((TextView) findViewById(R.id.drop__checking_here_icon))
+                                .setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icn_check, 0, 0);
+                        undoAppointmentCheckin(appointmentId);
                     } else {
                         findViewById(R.id.drop_down_area_view).setVisibility(View.GONE);
                     }
 
-                    undoAppointmentCheckin(appointmentId);
                     break;
                 //the drag and drop operation has concluded.
                 case DragEvent.ACTION_DRAG_ENDED:
@@ -283,7 +333,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
         }
     };
 
-    View.OnDragListener onWaitListDragListener = new View.OnDragListener() {
+    View.OnDragListener onCheckedInListDragListener = new View.OnDragListener() {
         @Override
         public boolean onDrag(View view, DragEvent dragEvent) {
             switch (dragEvent.getAction()) {
@@ -300,14 +350,18 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
                 //drag shadow has been released,the drag point is within the bounding box of the View
                 case DragEvent.ACTION_DROP:
                     String appointmentId = dragEvent.getClipDescription().getLabel().toString();
-                    if (checkedInAdapter.flipAppointmentById(appointmentId, true)) {
-                        waitingRoomAdapter.flipAppointmentById(appointmentId, false);
+                    if (checkingInAdapter.flipAppointmentById(appointmentId, true)) {
+                        checkedInAdapter.flipAppointmentById(appointmentId, false);
 
                         applyFilter();
 
-                        ((TextView) findViewById(R.id.drop_here_icon)).setText(Label.getLabel("practice_checkin_success_label"));
-                        ((TextView) findViewById(R.id.drop_here_icon)).setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icn_check, 0, 0);
+                        ((TextView) findViewById(R.id.drop_here_icon)).setText(Label
+                                .getLabel("practice_checkin_success_label"));
+                        ((TextView) findViewById(R.id.drop_here_icon))
+                                .setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icn_check, 0, 0);
                         onCheckInAppointment(appointmentId);
+                    } else {
+                        findViewById(R.id.drop_down_checking_area_view).setVisibility(View.GONE);
                     }
                     break;
                 //the drag and drop operation has concluded.
@@ -323,19 +377,21 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
 
     private void onCheckInAppointment(String patientId) {
         Map<String, String> queryMap = new HashMap<>();
-        if (checkInDTO.getPayload().getAppointments() != null && checkInDTO.getPayload().getAppointments().size() > 0) {
-            queryMap.put("practice_mgmt", checkInDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt());
-            queryMap.put("practice_id", checkInDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId());
+        if (checkInDTO.getPayload().getAppointments() != null
+                && checkInDTO.getPayload().getAppointments().size() > 0) {
+            queryMap.put("practice_mgmt", checkInDTO.getPayload().getAppointments()
+                    .get(0).getMetadata().getPracticeMgmt());
+            queryMap.put("practice_id", checkInDTO.getPayload().getAppointments()
+                    .get(0).getMetadata().getPracticeId());
         }
         queryMap.put("appointment_id", patientId);
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getCheckinAppointment();
         getWorkflowServiceHelper().execute(transitionDTO, checkInAppointmentCallback, queryMap);
     }
 
-    private void undoAppointmentCheckin(String appointmentId){
+    private void undoAppointmentCheckin(String appointmentId) {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("appointment_id", appointmentId);
-
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getConfirmAppointment();
         getWorkflowServiceHelper().execute(transitionDTO, checkInAppointmentCallback, queryMap);
     }
@@ -350,10 +406,16 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             findViewById(R.id.drop_down_area_view).setVisibility(View.GONE);
-
+            findViewById(R.id.drop_down_checking_area_view).setVisibility(View.GONE);
             // Reset to original state
-            ((TextView) findViewById(R.id.drop_here_icon)).setText(Label.getLabel("practice_checkin_drop_here_label"));
-            ((TextView) findViewById(R.id.drop_here_icon)).setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icn_drop_here, 0, 0);
+            ((TextView) findViewById(R.id.drop_here_icon)).setText(Label
+                    .getLabel("practice_checkin_drop_here_label"));
+            ((TextView) findViewById(R.id.drop_here_icon))
+                    .setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icn_drop_here, 0, 0);
+            ((TextView) findViewById(R.id.drop__checking_here_icon)).setText(Label
+                    .getLabel("practice_checkin_drop_here_label"));
+            ((TextView) findViewById(R.id.drop__checking_here_icon))
+                    .setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icn_drop_here, 0, 0);
         }
 
         @Override
@@ -361,16 +423,20 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
             hideProgressDialog();
             showErrorNotification(exceptionMessage);
             findViewById(R.id.drop_down_area_view).setVisibility(View.GONE);
+            findViewById(R.id.drop_down_checking_area_view).setVisibility(View.GONE);
         }
     };
 
     @Override
     public void applyFilter() {
+        checkingInAdapter.applyFilter(filter);
         checkedInAdapter.applyFilter(filter);
-        waitingRoomAdapter.applyFilter(filter);
-
-        checkingInCounterTextview.setText(String.valueOf(checkedInAdapter.getItemCount()));
-        waitingCounterTextview.setText(String.valueOf(waitingRoomAdapter.getItemCount()));
+        checkingOutAdapter.applyFilter(filter);
+        checkedOutAdapter.applyFilter(filter);
+        checkingInCounterTextView.setText(String.valueOf(checkingInAdapter.getItemCount()));
+        waitingCounterTextView.setText(String.valueOf(checkedInAdapter.getItemCount()));
+        checkingOutCounterTextView.setText(String.valueOf(checkingOutAdapter.getItemCount()));
+        checkedOutCounterTextView.setText(String.valueOf(checkedOutAdapter.getItemCount()));
     }
 
     private PendingBalanceDTO getPatientBalanceDTOs(String patientId) {
@@ -389,12 +455,13 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
      * On check in item click.
      *
      * @param appointmentPayloadDTO the appointment payload dto
+     * @param theRoom               the room
      */
     @Override
-    public void onCheckInItemClick(AppointmentsPayloadDTO appointmentPayloadDTO, boolean isWaitingRoom) {
+    public void onCheckInItemClick(AppointmentsPayloadDTO appointmentPayloadDTO, int theRoom) {
         AppointmentDetailDialog dialog = new AppointmentDetailDialog(getContext(),
                 checkInDTO, getPatientBalanceDTOs(appointmentPayloadDTO.getPatient().getPatientId()),
-                appointmentPayloadDTO, isWaitingRoom, this);
+                appointmentPayloadDTO, theRoom, this);
         dialog.setOwnerActivity(this);
         dialog.show();
     }
@@ -423,8 +490,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
-//        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
+    public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod,
+                                      double amount, PaymentsModel paymentsModel) {
         if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
                 && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel,
@@ -443,10 +510,11 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-        if(!payload.getProcessingErrors().isEmpty() && PaymentConfirmationFragment.getTotalPaid(payload)==0D){
+        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload()
+                .getPatientPayments().getPayload();
+        if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
             StringBuilder builder = new StringBuilder();
-            for(IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()){
+            for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
                 builder.append(processingError.getError());
                 builder.append("\n");
             }
@@ -454,7 +522,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
             builder.replace(last, builder.length(), "");
             new CustomMessageToast(this, builder.toString(), CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
             onDismissPaymentMethodDialog(paymentsModel);
-        }else {
+        } else {
             Bundle args = new Bundle();
             args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
 
@@ -473,7 +541,6 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
         DialogFragment fragment = new PracticeAddNewCreditCardFragment();
         fragment.setArguments(args);
-//        navigateToFragment(fragment, true);
         fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
 
     }
@@ -491,7 +558,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
 
     private void showPaymentDistributionFragment(UpdatePatientBalancesDTO updatePatientBalance) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
+        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager
+                .findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
         if (fragment != null) {
             fragment.dismiss();
         }
@@ -505,7 +573,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
 
     @Override
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
-        if(paymentsModel!=null && !paymentsModel.getPaymentPayload().getUserPractices().isEmpty()){
+        if (paymentsModel != null && !paymentsModel.getPaymentPayload().getUserPractices().isEmpty()) {
             return paymentsModel.getPaymentPayload().getUserPractices().get(0);
         }
         return null;
@@ -531,12 +599,12 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
 
     @Override
     public void onFailure(String errorMessage) {
-        showErrorNotification(null); // Show default error
+        showErrorNotification(errorMessage); // Show default error
     }
 
     @Override
-    public void lookupChargeItem(List<SimpleChargeItem> simpleChargeItems, AddPaymentItemFragment.AddItemCallback callback) {
-
+    public void lookupChargeItem(List<SimpleChargeItem> simpleChargeItems,
+                                 AddPaymentItemFragment.AddItemCallback callback) {
         Bundle args = new Bundle();
         Gson gson = new Gson();
         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(simpleChargeItems));
@@ -551,7 +619,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void showAmountEntry(PaymentDistributionEntryFragment.PaymentDistributionAmountCallback callback, BalanceItemDTO balanceItem, SimpleChargeItem chargeItem) {
+    public void showAmountEntry(PaymentDistributionEntryFragment.PaymentDistributionAmountCallback callback,
+                                BalanceItemDTO balanceItem, SimpleChargeItem chargeItem) {
         PaymentDistributionEntryFragment entryFragment = new PaymentDistributionEntryFragment();
         if (balanceItem != null) {
             entryFragment.setBalanceItem(balanceItem);
@@ -564,7 +633,6 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
         entryFragment.show(getSupportFragmentManager(), entryFragment.getClass().getSimpleName());
     }
 
-
     @Override
     protected void processExternalPayment(PaymentExecution execution, Intent data) {
         switch (execution) {
@@ -572,12 +640,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
                 String jsonPayload = data.getStringExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA);
                 if (jsonPayload != null) {
                     Gson gson = new Gson();
-
-//                    PaymentsModel paymentsModel = gson.fromJson(jsonPayload, PaymentsModel.class);
                     WorkflowDTO workflowDTO = gson.fromJson(jsonPayload, WorkflowDTO.class);
                     showPaymentConfirmation(workflowDTO);
-
-
                 }
                 break;
             }
@@ -604,7 +668,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
     }
 
     private void updatePatientBalance(UpdatePatientBalancesDTO updateBalance) {
-        ListIterator<PatientBalanceDTO> iterator = checkInDTO.getPayload().getPatientBalances().listIterator();
+        ListIterator<PatientBalanceDTO> iterator = checkInDTO.getPayload()
+                .getPatientBalances().listIterator();
         while (iterator.hasNext()) {
             PatientBalanceDTO patientBalanceDTO = iterator.next();
             if (matchesBalanceDTO(patientBalanceDTO, updateBalance)) {
@@ -614,14 +679,16 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
                 break;
             }
         }
-
         //reload list data
         setAdapter();
     }
 
-    private boolean matchesBalanceDTO(PatientBalanceDTO paymentsPatientBalance, UpdatePatientBalancesDTO updateBalance) {
-        return paymentsPatientBalance.getDemographics().getMetadata().getUserId().equals(updateBalance.getDemographics().getMetadata().getUserId()) &&
-                paymentsPatientBalance.getBalances().get(0).getMetadata().getPatientId().equals(updateBalance.getBalances().get(0).getMetadata().getPatientId());
+    private boolean matchesBalanceDTO(PatientBalanceDTO paymentsPatientBalance,
+                                      UpdatePatientBalancesDTO updateBalance) {
+        return paymentsPatientBalance.getDemographics().getMetadata().getUserId()
+                .equals(updateBalance.getDemographics().getMetadata().getUserId())
+                && paymentsPatientBalance.getBalances().get(0).getMetadata().getPatientId()
+                .equals(updateBalance.getBalances().get(0).getMetadata().getPatientId());
     }
 
 
@@ -633,9 +700,33 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity implements
     @Override
     public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
         FragmentManager fragmentManager = getSupportFragmentManager();
+        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager
+                .findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
+        if (fragment != null) {
+            fragment.showDialog();
+        }
+    }
+
+    @Override
+    public void showPaymentHistory(PaymentsModel paymentsModel) {
+        PaymentHistoryFragment fragment = PaymentHistoryFragment.newInstance(paymentsModel);
+        displayDialogFragment(fragment, false);
+    }
+
+
+    @Override
+    public void onDismissPaymentHistory(PaymentsModel paymentsModel) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
         PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
         if (fragment != null) {
             fragment.showDialog();
         }
     }
+
+    @Override
+    public void displayHistoryItemDetails(PaymentHistoryItem item) {
+        PracticePaymentHistoryDetailFragment fragment = PracticePaymentHistoryDetailFragment.newInstance(item);
+        displayDialogFragment(fragment, true);
+    }
+
 }

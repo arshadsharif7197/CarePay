@@ -66,6 +66,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     private PaymentsModel paymentsModel;
 
     private boolean shouldAddBackStack = false;
+    private boolean paymentStarted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +110,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     private void showResponsibilityFragment() {
+        paymentStarted = true;
         replaceFragment(ResponsibilityFragment
                 .newInstance(paymentsModel, null, true,
                         Label.getLabel("checkout_responsibility_title")), shouldAddBackStack);
@@ -237,13 +239,13 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         String state = workflowDTO.getState();
-        if (NavigationStateConstants.PATIENT_FORM_CHECKOUT.equals(state)
-                || NavigationStateConstants.PATIENT_PAY_CHECKOUT.equals(state)) {
+        if (NavigationStateConstants.PATIENT_FORM_CHECKOUT.equals(state)||
+                (NavigationStateConstants.PATIENT_PAY_CHECKOUT.equals(state) && !paymentStarted)) {
             navigateToWorkflow(workflowDTO);
         } else {
             PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-            if (!payload.getProcessingErrors().isEmpty() && PaymentConfirmationFragment.getTotalPaid(payload) == 0D) {
+            if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
                 StringBuilder builder = new StringBuilder();
                 for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
                     builder.append(processingError.getError());
@@ -302,8 +304,23 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     @Override
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
-        PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO,
-                getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO));
+        if(paymentStarted){
+            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            UserPracticeDTO userPracticeDTO = getPracticeInfo(paymentsModel);
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
+            queryMap.put("practice_id", userPracticeDTO.getPracticeId());
+            queryMap.put("appointment_id", appointmentId);
+            queryMap.put("patient_id", userPracticeDTO.getPatientId());
+            Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
+            header.put("transition", "true");
+
+            TransitionDTO continueTransition = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getContinueTransition();
+            getWorkflowServiceHelper().execute(continueTransition, continueCallback, queryMap, header);
+        }else {
+            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO,
+                    getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO));
+        }
     }
 
     @Override
@@ -339,8 +356,9 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            paymentStarted = false;
             hideProgressDialog();
-            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO));
         }
 
         @Override
@@ -384,4 +402,5 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     public void onPaymentDismissed() {
 
     }
+
 }

@@ -19,9 +19,7 @@ import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.checkin.dtos.QRCodeScanResultDTO;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseActivity;
@@ -117,7 +115,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         @Override
         public void onClick(View view) {
             /*To implement click event for Scan QR Code*/
-            scanQR();
+            launchScanningActivity();
         }
     };
 
@@ -156,24 +154,6 @@ public class HowToCheckInActivity extends BasePracticeActivity {
             onBackPressed();
         }
     };
-
-
-    /**
-     * Start QR code scanner base on the device
-     * if device is clover start CloverQRScannerActivity from clover application
-     * CloverQRScannerActivity used clover sdk for QR scanner
-     * for any other devices implement com.google.zxing.client.android.SCAN
-     */
-    public void scanQR() {
-        if (HttpConstants.getDeviceInformation().getDeviceType().equals("Clover")) {
-            Intent intent = new Intent();
-            intent.setAction("com.carecloud.carepay.practice.clover.qrscanner.CloverQRScannerActivity");
-            //startActivity(intent);
-            startActivityForResult(intent, QR_SCAN_REQUEST_CODE);
-        } else {
-            launchActivity();
-        }
-    }
 
     /**
      * on ActivityResult method
@@ -273,7 +253,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     /**
      * Launch activity for scanning qr code if permission is granted
      */
-    public void launchActivity() {
+    public void launchScanningActivity() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
 

@@ -42,6 +42,7 @@ public class PaymentDistributionEntryFragment extends PartialPaymentBaseDialogFr
             header.setText(chargeItem.getDescription());
             if (chargeItem.getAmount() > 0) {
                 amountTextView.setText(currencyFormat.format(chargeItem.getAmount()));
+                numberStr = String.valueOf(chargeItem.getAmount());
             }
         }
     }

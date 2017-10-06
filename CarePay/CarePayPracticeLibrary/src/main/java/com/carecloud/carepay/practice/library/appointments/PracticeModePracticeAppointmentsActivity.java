@@ -471,7 +471,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(null);
+            showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
 
             updateOnSuccess = false;
@@ -517,6 +517,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(paymentsModel);
         ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
                 .newInstance(paymentsModel, null, Label.getLabel("create_appointment_label"),
+                        Label.getLabel("payment_balance_empty_appointment_screen"),
                         headerModel);
         dialog.show(getSupportFragmentManager(), tag);
     }

@@ -13,7 +13,6 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAvailableHoursDialogFragment;
 import com.carecloud.carepay.practice.library.appointments.dtos.PracticeAppointmentDTO;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
-import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckOutFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
@@ -48,7 +47,6 @@ import com.carecloud.carepaylibray.checkout.CheckOutFormFragment;
 import com.carecloud.carepaylibray.checkout.CheckOutInterface;
 import com.carecloud.carepaylibray.checkout.NextAppointmentFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
-import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
@@ -79,6 +77,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     private PaymentsModel paymentsModel;
     private String appointmentId;
     private AppointmentDTO selectedAppointment;
+    private AppointmentsResultModel resourcesToSchedule;
 
     private Date startDate;
     private Date endDate;
@@ -88,6 +87,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     private boolean shouldAddBackStack = false;
 
     private WorkflowDTO paymentConfirmationWorkflow;
+    private boolean paymentStarted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,6 +166,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     private void showResponsibilityFragment() {
+        paymentStarted = true;
         ResponsibilityCheckOutFragment responsibilityFragment = new ResponsibilityCheckOutFragment();
         Bundle bundle = new Bundle();
         DtoHelper.bundleDto(bundle, paymentsModel);
@@ -243,7 +244,22 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     @Override
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
-        showAllDone(workflowDTO);
+        if(paymentStarted){
+            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            UserPracticeDTO userPracticeDTO = getPracticeInfo(paymentsModel);
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
+            queryMap.put("practice_id", userPracticeDTO.getPracticeId());
+            queryMap.put("appointment_id", appointmentId);
+            queryMap.put("patient_id", userPracticeDTO.getPatientId());
+            Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
+            header.put("transition", "true");
+
+            TransitionDTO continueTransition = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getContinueTransition();
+            getWorkflowServiceHelper().execute(continueTransition, continueCallback, queryMap, header);
+        }else {
+            showAllDone(workflowDTO);
+        }
     }
 
     @Override
@@ -262,13 +278,13 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         String state = workflowDTO.getState();
-        if (NavigationStateConstants.PATIENT_FORM_CHECKOUT.equals(state)
-                || NavigationStateConstants.PATIENT_PAY_CHECKOUT.equals(state)) {
+        if (NavigationStateConstants.PATIENT_FORM_CHECKOUT.equals(state)||
+                (NavigationStateConstants.PATIENT_PAY_CHECKOUT.equals(state) && !paymentStarted)) {
             navigateToWorkflow(workflowDTO);
         } else {
             PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-            if (!payload.getProcessingErrors().isEmpty() && PaymentConfirmationFragment.getTotalPaid(payload) == 0D) {
+            if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
                 StringBuilder builder = new StringBuilder();
                 for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
                     builder.append(processingError.getError());
@@ -347,7 +363,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     @Override
     public void selectDateRange(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO,
                                 AppointmentResourcesItemDTO appointmentResource,
-                                AppointmentsResultModel appointmentsResultModel) {
+                                AppointmentsResultModel resourcesToSchedule) {
+        this.resourcesToSchedule = resourcesToSchedule;
         DateUtil dateUtil = DateUtil.getInstance().setToCurrent();
         DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
                 Label.getLabel("date_range_picker_dialog_title"),
@@ -452,7 +469,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     @Override
     public void onDateRangeCancelled() {
         onDateRangeSelected(startDate, endDate, visitTypeDTO, appointmentResourcesDTO.getResource(),
-                appointmentsResultModel);
+                resourcesToSchedule);
     }
 
     WorkflowServiceCallback continueCallback = new WorkflowServiceCallback() {
@@ -463,8 +480,9 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            paymentStarted = false;
             hideProgressDialog();
-            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            completePaymentProcess(workflowDTO);
         }
 
         @Override

@@ -78,6 +78,25 @@ public class IntegratedPatientPaymentPayload {
         this.metadata = metadata;
     }
 
+    /**
+     * Calculate total of paid line items
+     * @return total
+     */
+    public double getTotalPaid(){
+        double total = 0D;
+
+        if(getMetadata().isExternallyProcessed()){
+            return amount;
+        }
+
+        for(IntegratedPatientPaymentLineItem lineItem : getLineItems()){
+            if(lineItem.isProcessed()){
+                total+=lineItem.getAmount();
+            }
+        }
+        return total;
+    }
+
     public class ProcessingError {
 
         @SerializedName("id")

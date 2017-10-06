@@ -12,6 +12,7 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.ConfirmationActivity;
+import com.carecloud.carepay.patient.payment.dialogs.PaymentHistoryDetailDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.NoPaymentsFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment;
@@ -34,6 +35,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
@@ -53,14 +55,6 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     public Bundle bundle;
     private String toolBarTitle;
-
-    public static boolean isPaymentDone() {
-        return isPaymentDone;
-    }
-
-    public static void setIsPaymentDone(boolean isPaymentDone) {
-        ViewPaymentBalanceHistoryActivity.isPaymentDone = isPaymentDone;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,8 +77,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     private boolean hasCharges() {
-        return !paymentsDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges()
-                .getCharges().isEmpty();
+        return !paymentsDTO.getPaymentPayload().getTransactionHistory().getPaymentHistoryList().isEmpty();
     }
 
     private boolean hasPayments() {
@@ -283,7 +276,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-        if(!payload.getProcessingErrors().isEmpty() && PaymentConfirmationFragment.getTotalPaid(payload)==0D){
+        if(!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid()==0D){
             StringBuilder builder = new StringBuilder();
             for(IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()){
                 builder.append(processingError.getError());
@@ -331,6 +324,13 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
+    public void displayPaymentHistoryDetails(PaymentHistoryItem paymentHistoryItem) {
+        selectedUserPractice = getUserPracticeById(paymentHistoryItem.getMetadata().getPracticeId());
+        PaymentHistoryDetailDialogFragment fragment = PaymentHistoryDetailDialogFragment.newInstance(paymentHistoryItem, selectedUserPractice);
+        displayDialogFragment(fragment, false);
+    }
+
+    @Override
     public void onDetailCancelClicked(PaymentsModel paymentsModel) {
         loadPaymentAmountScreen(null, paymentsModel);
     }
@@ -354,5 +354,14 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                 }
             }
         }
+    }
+
+    private UserPracticeDTO getUserPracticeById(String practiceId){
+        for(UserPracticeDTO userPracticeDTO : paymentsDTO.getPaymentPayload().getUserPractices()){
+            if(userPracticeDTO.getPracticeId().equals(practiceId)){
+                return userPracticeDTO;
+            }
+        }
+        return null;
     }
 }

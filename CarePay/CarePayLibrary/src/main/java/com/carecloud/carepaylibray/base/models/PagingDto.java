@@ -1,6 +1,5 @@
-package com.carecloud.carepay.patient.base;
+package com.carecloud.carepaylibray.base.models;
 
-import com.carecloud.carepay.patient.messages.models.Paging;
 import com.google.gson.annotations.SerializedName;
 
 /**

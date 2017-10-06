@@ -3,7 +3,7 @@ package com.carecloud.carepaylibray.payments.models.postmodel;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by lmenendez on 2/21/17.
+ * Created by lmenendez on 2/21/17
  */
 
 public class PaymentObject {
@@ -33,7 +33,7 @@ public class PaymentObject {
     private String bankAccountToken;
 
     @SerializedName("responsibility_type")
-    private ResponsibilityType responsibilityType;
+    private String responsibilityType;
 
     @SerializedName("application")
     private PaymentApplication paymentApplication;
@@ -100,11 +100,11 @@ public class PaymentObject {
         this.locationID = locationID;
     }
 
-    public ResponsibilityType getResponsibilityType() {
+    public String getResponsibilityType() {
         return responsibilityType;
     }
 
-    public void setResponsibilityType(ResponsibilityType responsibilityType) {
+    public void setResponsibilityType(String responsibilityType) {
         this.responsibilityType = responsibilityType;
     }
 

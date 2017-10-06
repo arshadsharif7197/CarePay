@@ -2,6 +2,7 @@ package com.carecloud.carepay.practice.library.checkin.dtos;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Jahirul Bhuiyan on 10/27/2016.
  */
@@ -13,6 +14,9 @@ public class AppointmentCountsDTO {
     @SerializedName("Checked-In")
     @Expose
     private Integer checkedIn;
+    @SerializedName("Checked-Out")
+    @Expose
+    private Integer checkedOut;
     @SerializedName("Cancelled")
     @Expose
     private Integer cancelled;
@@ -22,6 +26,9 @@ public class AppointmentCountsDTO {
     @SerializedName("Checking-In")
     @Expose
     private Integer checkingIn;
+    @SerializedName("Checking-Out")
+    @Expose
+    private Integer checkingOut;
 
     public Integer getCancelled() {
         return cancelled;
@@ -32,74 +39,74 @@ public class AppointmentCountsDTO {
     }
 
     /**
-     *
-     * @return
-     * The requested
+     * @return The requested
      */
     public Integer getRequested() {
         return requested;
     }
 
     /**
-     *
-     * @param requested
-     * The Requested
+     * @param requested The Requested
      */
     public void setRequested(Integer requested) {
         this.requested = requested;
     }
 
     /**
-     *
-     * @return
-     * The checkingIn
+     * @return The checkingIn
      */
     public Integer getCheckingIn() {
         return checkingIn;
     }
 
     /**
-     *
-     * @param checkingIn
-     * The checkingIn
+     * @param checkingIn The checkingIn
      */
     public void setCheckingIn(Integer checkingIn) {
         this.checkingIn = checkingIn;
     }
 
     /**
-     *
-     * @return
-     * The pending
+     * @return The pending
      */
     public Integer getPending() {
         return pending;
     }
 
     /**
-     *
-     * @param pending
-     * The Pending
+     * @param pending The Pending
      */
     public void setPending(Integer pending) {
         this.pending = pending;
     }
 
     /**
-     *
-     * @return
-     * The checkedIn
+     * @return The checkedIn
      */
     public Integer getCheckedIn() {
         return checkedIn;
     }
 
     /**
-     *
-     * @param checkedIn
-     * The Checked-In
+     * @param checkedIn The Checked-In
      */
     public void setCheckedIn(Integer checkedIn) {
         this.checkedIn = checkedIn;
+    }
+
+    public Integer getCheckedOut() {
+        return checkedOut;
+    }
+
+    public void setCheckedOut(Integer checkedOut) {
+        this.checkedOut = checkedOut;
+    }
+
+    public Integer getCheckingOut() {
+        return checkingOut;
+    }
+
+    public void setCheckingOut(Integer checkingOut) {
+        this.checkingOut = checkingOut;
     }
 }

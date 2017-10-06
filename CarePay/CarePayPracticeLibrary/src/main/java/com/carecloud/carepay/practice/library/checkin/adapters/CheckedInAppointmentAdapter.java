@@ -28,8 +28,8 @@ import java.util.Map;
 
 public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInAppointmentAdapter.CartViewHolder> {
 
-    public interface CheckinItemCallback{
-        void onCheckInItemClick(AppointmentsPayloadDTO appointmentsPayloadDTO, boolean isWaitingRoom);
+    public interface CheckinItemCallback {
+        void onCheckInItemClick(AppointmentsPayloadDTO appointmentsPayloadDTO, int isWaitingRoom);
     }
 
     private Context context;
@@ -38,7 +38,12 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
     private MapFilterModel filterModel;
     private CheckinItemCallback callback;
 
-    private boolean isWaitingRoom;
+    public static int CHECKING_IN = 0;
+    public static int CHECKED_IN = 1;
+    public static int CHECKING_OUT = 2;
+    public static int CHECKED_OUT = 3;
+
+    private int theRoom;
 
     /**
      * Constructor.
@@ -46,10 +51,12 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
      * @param context    context
      * @param checkInDTO checkIn DTO
      */
-    public CheckedInAppointmentAdapter(Context context, CheckInDTO checkInDTO, CheckinItemCallback callback, boolean isWaitingRoom) {
+    public CheckedInAppointmentAdapter(Context context, CheckInDTO checkInDTO,
+                                       CheckinItemCallback callback,
+                                       int room) {
 
         this.context = context;
-        this.isWaitingRoom = isWaitingRoom;
+        this.theRoom = room;
         this.callback = callback;
         loadPatients(checkInDTO);
     }
@@ -118,19 +125,19 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
             }
 
             // Filter other statuses
-            if (!patient.isPending && !patient.isCheckingIn && !patient.isCheckedIn) {
+            if (!patient.isPending && !patient.isCheckingIn && !patient.isCheckedIn
+                    && !patient.isCheckedOut && !patient.isCheckingOut) {
                 continue;
             }
 
-            if (isWaitingRoom) {
-                if (!patient.isCheckedIn) {
-                    continue;
-                }
-            } else if (patient.isCheckedIn) {
-                continue;
+            if ((theRoom == CHECKING_IN && patient.isCheckingIn)
+                    || (theRoom == CHECKED_IN && patient.isCheckedIn)
+                    || (theRoom == CHECKING_OUT && patient.isCheckingOut)
+                    || (theRoom == CHECKED_OUT && patient.isCheckedOut)) {
+
+                filteredPatients.add(patient);
             }
 
-            filteredPatients.add(patient);
         }
 
         notifyDataSetChanged();
@@ -149,7 +156,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
     }
 
     @Override
-    public void onBindViewHolder(CheckedInAppointmentAdapter.CartViewHolder holder, final int position) {
+    public void onBindViewHolder(final CheckedInAppointmentAdapter.CartViewHolder holder, final int position) {
         final CardViewPatient patient = filteredPatients.get(position);
         holder.appointmentStatusCartView.setPatientName(patient.name);
         holder.appointmentStatusCartView.setAppointmentId(patient.appointmentId);
@@ -158,9 +165,15 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
         holder.appointmentStatusCartView.setProviderName(patient.providerName);
         holder.appointmentStatusCartView.setAppointmentTime(patient.appointmentStartTime);
         holder.appointmentStatusCartView.setTag(patient.raw);
-        holder.appointmentStatusCartView.setWaitingRoom(isWaitingRoom);
+        holder.appointmentStatusCartView.setWaitingRoom(patient.isCheckedIn);
         holder.appointmentStatusCartView.setShortName(patient.initials);
         holder.itemView.setContentDescription(patient.name);
+//        holder.appointmentStatusCartView.containerLayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                callback.onCheckInItemClick((AppointmentsPayloadDTO) patient.raw, theRoom);
+//            }
+//        });
     }
 
     @Override
@@ -203,10 +216,9 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
 
         if (patient.isCheckedIn) {
             patient.isCheckedIn = false;
-            patient.isPending = true;
-
+            patient.isPending = false;
+            patient.isCheckingIn = true;
             applyFilter();
-
             return true;
         }
 
@@ -214,9 +226,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
             patient.isCheckedIn = true;
             patient.isPending = false;
             patient.isCheckingIn = false;
-
             applyFilter();
-
             return true;
         }
 
@@ -240,7 +250,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
 
         @Override
         public void onClick(View view) {
-            callback.onCheckInItemClick((AppointmentsPayloadDTO) view.getTag(), isWaitingRoom);
+            callback.onCheckInItemClick((AppointmentsPayloadDTO) view.getTag(), theRoom);
         }
     }
 }

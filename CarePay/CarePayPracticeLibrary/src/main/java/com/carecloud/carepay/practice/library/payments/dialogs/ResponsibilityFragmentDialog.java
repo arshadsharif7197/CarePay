@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -37,9 +36,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ResponsibilityFragmentDialog extends BaseDialogFragment implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
+    private static final String KEY_LEFT_BUTTON = "leftLabel";
+    private static final String KEY_RIGHT_BUTTON = "rightLabel";
+    private static final String KEY_EMPTY_MESSAGE = "messageLabel";
 
     private String leftLabel;
     private String rightLabel;
+    private String emptyMessage;
     private PaymentsModel paymentsModel;
     private PatientBalanceDTO patientBalance;
     private PayResponsibilityCallback callback;
@@ -80,14 +83,17 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
      * @return new instance of a ResponsibilityFragmentDialog
      */
     public static ResponsibilityFragmentDialog newInstance(PaymentsModel paymentsModel,
-                                                           String leftLabel, String rightLabel,
+                                                           String leftLabel,
+                                                           String rightLabel,
+                                                           String emptyMessage,
                                                            ResponsibilityHeaderModel headerModel) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, headerModel);
-        args.putString("leftLabel", leftLabel);
-        args.putString("rightLabel", rightLabel);
+        args.putString(KEY_LEFT_BUTTON, leftLabel);
+        args.putString(KEY_RIGHT_BUTTON, rightLabel);
+        args.putString(KEY_EMPTY_MESSAGE, emptyMessage);
 
         ResponsibilityFragmentDialog dialog = new ResponsibilityFragmentDialog();
         dialog.setArguments(args);
@@ -102,8 +108,9 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
         paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
         headerModel = DtoHelper.getConvertedDTO(ResponsibilityHeaderModel.class, arguments);
         patientBalance = paymentsModel.getPaymentPayload().getPatientBalances().get(0);
-        leftLabel = arguments.getString("leftLabel");
-        rightLabel = arguments.getString("rightLabel");
+        leftLabel = arguments.getString(KEY_LEFT_BUTTON);
+        rightLabel = arguments.getString(KEY_RIGHT_BUTTON);
+        emptyMessage = arguments.getString(KEY_EMPTY_MESSAGE);
         handleException();
     }
 
@@ -187,20 +194,16 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
 
     private void initializeBody(View view) {
         if (null != patientBalance && null != patientBalance.getBalances() && !patientBalance.getBalances().isEmpty()) {
-            LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.rowLayout);
+            View noBalancePlaceholder = view.findViewById(R.id.empty_balance_layout);
             List<PendingBalanceDTO> balances = patientBalance.getBalances();
             initializeOwedAmount(balances);
             if (owedAmount > 0) {
                 initializePaymentLines(view, balances);
-                linearLayout.setVisibility(View.GONE);
+                noBalancePlaceholder.setVisibility(View.GONE);
             } else{
-                linearLayout.setVisibility(View.VISIBLE);
-                TextView paymentDetailLabel =(TextView) view.findViewById(R.id.itemNameLabel);
-                TextView paymentDetailAmount =(TextView) view.findViewById(R.id.itemAmountLabel);
-
-                paymentDetailLabel.setText(Label.getLabel("payment_details_patient_balance_label"));
-                paymentDetailAmount.setText("$0.00");
-
+                noBalancePlaceholder.setVisibility(View.VISIBLE);
+                TextView message =(TextView) view.findViewById(R.id.no_payment_message);
+                message.setText(emptyMessage);
             }
         }
 
@@ -281,6 +284,9 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
     }
 
     private void createPaymentModel(double payAmount){
+        if(payInfoCallback == null){
+            return;
+        }
         IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
         if( postModel == null){
             postModel = new IntegratedPaymentPostModel();

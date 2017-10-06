@@ -28,7 +28,6 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
-import com.carecloud.carepay.patient.payment.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -676,9 +675,11 @@ public class FullWalletConfirmationButtonFragment extends BaseFragment
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             Gson gson = new Gson();
-            PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(getActivity(),
-                    gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
-            receiptDialog.show();
+//            PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(getActivity(),
+//                    gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
+//            receiptDialog.show();
+            //todo show confirmation
+
         }
 
         @Override

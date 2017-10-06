@@ -1,11 +1,11 @@
 package com.carecloud.carepaylibray.payments.models;
 
-import com.carecloud.carepaylibray.payments.models.postmodel.ResponsibilityType;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by lmenendez on 3/20/17.
+ * Created by lmenendez on 3/20/17
  */
 
 public class SimpleChargeItem {
@@ -20,7 +20,7 @@ public class SimpleChargeItem {
     private String description;
     @SerializedName("responsibility_type")
     @Expose
-    private ResponsibilityType responsibilityType;
+    private @IntegratedPaymentLineItem.LineItemType String responsibilityType;
 
     public double getAmount() {
         return amount;
@@ -46,11 +46,11 @@ public class SimpleChargeItem {
         this.description = description;
     }
 
-    public ResponsibilityType getResponsibilityType() {
+    public @IntegratedPaymentLineItem.LineItemType String getResponsibilityType() {
         return responsibilityType;
     }
 
-    public void setResponsibilityType(ResponsibilityType responsibilityType) {
+    public void setResponsibilityType(@IntegratedPaymentLineItem.LineItemType String responsibilityType) {
         this.responsibilityType = responsibilityType;
     }
 }

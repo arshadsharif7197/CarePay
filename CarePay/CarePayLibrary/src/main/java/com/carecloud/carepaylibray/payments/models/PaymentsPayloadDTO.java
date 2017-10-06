@@ -7,6 +7,7 @@ import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiAccountsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.MerchantServicesDTO;
+import com.carecloud.carepaylibray.payments.models.history.PaymentsTransactionHistory;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -43,7 +44,6 @@ public class PaymentsPayloadDTO implements Serializable {
     @SerializedName("patient_credit_cards")
     @Expose
     private List<PaymentsPatientsCreditCardsPayloadListDTO> patientCreditCards = new ArrayList<>();
-
     @SerializedName("intake_forms")
     @Expose
     private PaymentsPayloadIntakeFormsDTO intakeForms = new PaymentsPayloadIntakeFormsDTO();
@@ -77,6 +77,9 @@ public class PaymentsPayloadDTO implements Serializable {
     @SerializedName("simple_charge_types")
     @Expose
     private List<SimpleChargeItem> simpleChargeItems = new ArrayList<>();
+    @SerializedName("transactions")
+    @Expose
+    private PaymentsTransactionHistory transactionHistory = new PaymentsTransactionHistory();
 
     public List<PatientModel> getPatients() {
         return patients;
@@ -278,5 +281,13 @@ public class PaymentsPayloadDTO implements Serializable {
 
     public void setSimpleChargeItems(List<SimpleChargeItem> simpleChargeItems) {
         this.simpleChargeItems = simpleChargeItems;
+    }
+
+    public PaymentsTransactionHistory getTransactionHistory() {
+        return transactionHistory;
+    }
+
+    public void setTransactionHistory(PaymentsTransactionHistory transactionHistory) {
+        this.transactionHistory = transactionHistory;
     }
 }

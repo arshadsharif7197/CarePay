@@ -131,7 +131,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newClinicHeader(paymentsModel);
         ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
                 .newInstance(paymentsModel, showPartial ? Label.getLabel("payment_partial_payment_text") : null,
-                        Label.getLabel("payment_details_pay_now"), headerModel);
+                        Label.getLabel("payment_details_pay_now"), null, headerModel);
         displayDialogFragment(dialog, false);
     }
 
@@ -168,7 +168,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-        if(!payload.getProcessingErrors().isEmpty() && PaymentConfirmationFragment.getTotalPaid(payload)==0D){
+        if(!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid()==0D){
             StringBuilder builder = new StringBuilder();
             for(IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()){
                 builder.append(processingError.getError());
