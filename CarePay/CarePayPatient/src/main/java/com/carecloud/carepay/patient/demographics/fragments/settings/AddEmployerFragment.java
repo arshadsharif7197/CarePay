@@ -17,11 +17,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepaylibray.demographics.dtos.payload.AddressDto;
-import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
-import com.carecloud.carepay.patient.demographics.interfaces.AddNewEmployerInterface;
+import com.carecloud.carepaylibray.demographics.EmployerInterface;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.demographics.dtos.payload.AddressDto;
+import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 
 /**
@@ -31,7 +31,7 @@ import com.carecloud.carepaylibray.utils.AddressUtil;
 public class AddEmployerFragment extends BaseFragment {
 
 
-    private AddNewEmployerInterface callback;
+    private EmployerInterface callback;
     private String state;
 
     public static AddEmployerFragment newInstance() {
@@ -42,10 +42,10 @@ public class AddEmployerFragment extends BaseFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (AddNewEmployerInterface) context;
+            callback = (EmployerInterface) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement AddNewEmployerInterface");
+                    + " must implement EmployerInterface");
         }
     }
 
@@ -126,6 +126,7 @@ public class AddEmployerFragment extends BaseFragment {
                 EmployerDto employer = new EmployerDto();
                 employer.setName(employerNameEditText.getText().toString());
                 employer.setAddress(address);
+                getFragmentManager().popBackStack();
                 callback.addEmployer(employer);
             }
         });

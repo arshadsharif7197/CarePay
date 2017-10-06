@@ -280,28 +280,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         String employmentStatus = demographicPayload.getPersonalDetails().getEmploymentStatus();
         initSelectableInput(chooseEmploymentStatus, selectedEmploymentStatus, employmentStatus, personalInfoSection.getProperties().getEmploymentStatus().isRequired() ? null : employmentStatusOptional);
 
-
-        View employerLayout = view.findViewById(R.id.employerDemographicsLayout);
-        TextView chooseEmployer = (TextView) view.findViewById(R.id.chooseEmployer);
-        View employerOptional = view.findViewById(R.id.employerOptional);
-        setVisibility(employerLayout, personalInfoSection.getProperties().getEmployer().isDisplayed());
-        chooseEmployer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callback.displaySearchEmployer();
-            }
-        });
-        EmployerDto employer = demographicPayload.getPersonalDetails().getEmployer();
-        if (employer == null) {
-            if (!personalInfoSection.getProperties().getEmployer().isRequired()) {
-                employerOptional.setVisibility(View.VISIBLE);
-            }
-            String value = Label.getLabel("demographics_choose");
-            chooseEmployer.setText(value);
-        } else {
-            selectedEmployer = employer;
-            chooseEmployer.setText(employer.getName());
-        }
+        setUpEmployer(view, demographicPayload, personalInfoSection);
 
 
         View emergencyContactRelationshipLayout = view.findViewById(R.id.emergencyContactRelationshipDemographicsLayout);
@@ -326,6 +305,36 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                         Label.getLabel("demographics_referral_source")));
         String referralSource = demographicPayload.getPersonalDetails().getReferralSource();
         initSelectableInput(chooseReferralSource, selectedReferralSource, referralSource, personalInfoSection.getProperties().getReferralSource().isRequired() ? null : referralSourceOptional);
+    }
+
+    private void setUpEmployer(View view, DemographicPayloadDTO demographicPayload, DemographicsPersonalSection personalInfoSection) {
+        View employerLayout = view.findViewById(R.id.employerDemographicsLayout);
+        View employerOptional = view.findViewById(R.id.employerOptional);
+        setVisibility(employerLayout, personalInfoSection.getProperties().getEmployer().isDisplayed());
+        final EmployerDto employer = demographicPayload.getPersonalDetails().getEmployer();
+        TextView chooseEmployer = (TextView) view.findViewById(R.id.chooseEmployer);
+        if (employer == null) {
+            if (!personalInfoSection.getProperties().getEmployer().isRequired()) {
+                employerOptional.setVisibility(View.VISIBLE);
+            }
+            String value = Label.getLabel("demographics_choose");
+            chooseEmployer.setText(value);
+            chooseEmployer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callback.displaySearchEmployer();
+                }
+            });
+        } else {
+            selectedEmployer = employer;
+            chooseEmployer.setText(employer.getName());
+            chooseEmployer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callback.displayEmployerDetail(employer);
+                }
+            });
+        }
     }
 
     @Override
@@ -550,14 +559,12 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         }
     };
 
-
     public void setEmployer(EmployerDto employer) {
         this.selectedEmployer = employer;
-        View employerOptional = getView().findViewById(R.id.employerOptional);
-        employerOptional.setVisibility(View.GONE);
         demographicsSettingsDTO.getPayload().getDemographics().getPayload()
                 .getPersonalDetails().setEmployer(employer);
-        TextView chooseEmployer = (TextView) getView().findViewById(R.id.chooseEmployer);
-        chooseEmployer.setText(employer.getName());
+        setUpEmployer(getView(), demographicsSettingsDTO.getPayload().getDemographics().getPayload(),
+                demographicsSettingsDTO.getMetadata().getNewDataModel()
+                        .getDemographic().getPersonalDetails());
     }
 }

@@ -14,13 +14,13 @@ import com.carecloud.carepay.patient.demographics.fragments.settings.Demographic
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsInformationFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsSettingsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.EditProfileFragment;
+import com.carecloud.carepay.patient.demographics.fragments.settings.EmployerDetailFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.HelpFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.SearchEmployerFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.SettingsDocumentsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.SupportFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.UpdateEmailFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.UpdateNameFragment;
-import com.carecloud.carepay.patient.demographics.interfaces.AddNewEmployerInterface;
 import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
 import com.carecloud.carepay.patient.payment.fragments.CreditCardDetailsFragment;
 import com.carecloud.carepay.patient.payment.fragments.CreditCardListFragment;
@@ -38,8 +38,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
  * Main activity for Settings workflow
  */
 public class DemographicsSettingsActivity extends BasePatientActivity implements
-        DemographicsSettingsFragmentListener, InsuranceEditDialog.InsuranceEditDialogListener,
-        AddNewEmployerInterface {
+        DemographicsSettingsFragmentListener, InsuranceEditDialog.InsuranceEditDialogListener {
 
     DemographicsSettingsDTO demographicsSettingsDTO;
 
@@ -67,7 +66,10 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         }
-        return item.getItemId() != R.id.action_remove_credit_card;
+        if (item.getItemId() == R.id.action_remove_credit_card || item.getItemId() == R.id.deleteEmployer) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -94,6 +96,12 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     @Override
     public void displaySearchEmployer() {
         SearchEmployerFragment fragment = SearchEmployerFragment.newInstance();
+        addFragment(fragment, true);
+    }
+
+    @Override
+    public void displayEmployerDetail(EmployerDto employer) {
+        EmployerDetailFragment fragment = EmployerDetailFragment.newInstance(employer);
         addFragment(fragment, true);
     }
 
@@ -224,11 +232,17 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         demographicsSettingsDTO.getPayload().getDemographics().getPayload()
                 .getPersonalDetails().setEmployer(employer);
         getSupportFragmentManager().popBackStack();
-        getSupportFragmentManager().popBackStack();
         getSupportFragmentManager().executePendingTransactions();
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.activity_demographics_settings);
         if (fragment instanceof DemographicsExpandedFragment) {
             ((DemographicsExpandedFragment) fragment).setEmployer(employer);
+        } else {
+            getSupportFragmentManager().popBackStack();
+            getSupportFragmentManager().executePendingTransactions();
+            fragment = getSupportFragmentManager().findFragmentById(R.id.activity_demographics_settings);
+            if (fragment instanceof DemographicsExpandedFragment) {
+                ((DemographicsExpandedFragment) fragment).setEmployer(employer);
+            }
         }
     }
 }

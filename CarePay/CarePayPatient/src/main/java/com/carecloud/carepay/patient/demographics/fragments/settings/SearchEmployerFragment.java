@@ -14,13 +14,15 @@ import android.widget.Button;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.demographics.adapters.EmployerRecyclerViewAdapter;
-import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
+import com.carecloud.carepaylibray.demographics.EmployerInterface;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.HashMap;
@@ -30,9 +32,10 @@ import java.util.Map;
  * @author pjohnson on 4/10/17.
  */
 
-public class SearchEmployerFragment extends BaseFragment {
+public class SearchEmployerFragment extends BaseFragment
+        implements EmployerRecyclerViewAdapter.EmployerAdapterInterface {
 
-    private DemographicsSettingsFragmentListener callback;
+    private EmployerInterface callback;
     private DemographicsSettingsDTO demographicsSettingsDTO;
     private EmployerRecyclerViewAdapter adapter;
 
@@ -44,10 +47,10 @@ public class SearchEmployerFragment extends BaseFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (DemographicsSettingsFragmentListener) context;
+            callback = (EmployerInterface) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement DemographicsSettingsFragmentListener");
+                    + " must implement EmployerInterface");
         }
     }
 
@@ -110,6 +113,7 @@ public class SearchEmployerFragment extends BaseFragment {
         RecyclerView employerRecyclerView = (RecyclerView) view.findViewById(R.id.employerRecyclerView);
         employerRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new EmployerRecyclerViewAdapter();
+        adapter.setCallback(this);
         employerRecyclerView.setAdapter(adapter);
 
     }
@@ -136,12 +140,21 @@ public class SearchEmployerFragment extends BaseFragment {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-
+            DemographicsSettingsDTO dto = DtoHelper
+                    .getConvertedDTO(DemographicsSettingsDTO.class, workflowDTO);
+            adapter.setData(dto.getPayload().getEmployers().getEmployersData());
+            adapter.notifyDataSetChanged();
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-
+//            showErrorNotification(exceptionMessage);
         }
     };
+
+    @Override
+    public void onEmployerClicked(EmployerDto employer) {
+        SystemUtil.hideSoftKeyboard(getActivity());
+        callback.addEmployer(employer);
+    }
 }
