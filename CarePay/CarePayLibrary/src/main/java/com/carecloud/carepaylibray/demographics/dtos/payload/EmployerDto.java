@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.demographics.dto;
+package com.carecloud.carepaylibray.demographics.dtos.payload;
 
 /**
  * @author pjohnson on 5/10/17.

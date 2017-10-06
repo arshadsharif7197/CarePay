@@ -18,6 +18,7 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.Demograp
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -45,9 +46,9 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
     private DemographicsOption selectedContactMethod = new DemographicsOption();
     private DemographicsOption selectedMaritalStatus = new DemographicsOption();
     private DemographicsOption selectedEmploymentStatus = new DemographicsOption();
-    private DemographicsOption selectedEmployer = new DemographicsOption();
     private DemographicsOption selectedEmergencyContactRelationship = new DemographicsOption();
     private DemographicsOption selectedReferralSource = new DemographicsOption();
+    private EmployerDto selectedEmployer = new EmployerDto();
 
 
     @Override
@@ -292,17 +293,27 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
         initSelectableInput(chooseEmploymentStatus, selectedEmploymentStatus, employmentStatus, personalInfoSection.getProperties().getEmploymentStatus().isRequired() ? null : employmentStatusOptional);
 
 
-        View employerLayout = view.findViewById(R.id.employerDemographicsLayout);
-        TextView chooseEmployer = (TextView) view.findViewById(R.id.chooseEmployer);
-        View employerOptional = view.findViewById(R.id.employerOptional);
+        View employerLayout = view.findViewById(com.carecloud.carepaylibrary.R.id.employerDemographicsLayout);
+        TextView chooseEmployer = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.chooseEmployer);
+        View employerOptional = view.findViewById(com.carecloud.carepaylibrary.R.id.employerOptional);
         setVisibility(employerLayout, personalInfoSection.getProperties().getEmployer().isDisplayed());
-        chooseEmployer.setOnClickListener(
-                getSelectOptionsListener(personalInfoSection.getProperties().getEmployer().getOptions(),
-                        getDefaultOnOptionsSelectedListener(chooseEmployer, selectedEmployer, employerOptional),
-                        Label.getLabel("demographics_employer")));
-        String employer = demographicPayload.getPersonalDetails().getEmployer();
-        initSelectableInput(chooseEmployer, selectedEmployer, employer,
-                personalInfoSection.getProperties().getEmployer().isRequired() ? null : employerOptional);
+        chooseEmployer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                callback.displaySearchEmployer();
+            }
+        });
+        EmployerDto employer = demographicPayload.getPersonalDetails().getEmployer();
+        if (employer == null) {
+            if (!personalInfoSection.getProperties().getEmployer().isRequired()) {
+                employerOptional.setVisibility(View.VISIBLE);
+            }
+            String value = Label.getLabel("demographics_choose");
+            chooseEmployer.setText(value);
+        } else {
+            selectedEmployer = employer;
+            chooseEmployer.setText(employer.getName());
+        }
 
 
         View emergencyContactRelationshipLayout = view.findViewById(R.id.emergencyContactRelationshipDemographicsLayout);
@@ -424,9 +435,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
             demographicPersDetailsPayloadDTO.setEmploymentStatus(employmentStatus);
         }
 
-        String employer = selectedEmployer.getName();
-        if (!StringUtil.isNullOrEmpty(employmentStatus)) {
-            demographicPersDetailsPayloadDTO.setEmployer(employer);
+        if (!StringUtil.isNullOrEmpty(selectedEmployer.getName())) {
+            demographicPersDetailsPayloadDTO.setEmployer(selectedEmployer);
         }
 
         String emergencyContactRelationship = selectedEmergencyContactRelationship.getName();

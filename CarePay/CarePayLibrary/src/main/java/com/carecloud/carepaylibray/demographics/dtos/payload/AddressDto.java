@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.demographics.dto;
+package com.carecloud.carepaylibray.demographics.dtos.payload;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

@@ -1,7 +1,7 @@
 package com.carecloud.carepay.patient.demographics.interfaces;
 
 
-import com.carecloud.carepay.patient.demographics.dto.EmployerDto;
+import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 
 /**

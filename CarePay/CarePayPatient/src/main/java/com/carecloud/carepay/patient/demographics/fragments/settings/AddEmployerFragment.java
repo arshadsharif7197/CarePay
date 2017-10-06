@@ -17,8 +17,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.demographics.dto.AddressDto;
-import com.carecloud.carepay.patient.demographics.dto.EmployerDto;
+import com.carecloud.carepaylibray.demographics.dtos.payload.AddressDto;
+import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
 import com.carecloud.carepay.patient.demographics.interfaces.AddNewEmployerInterface;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
@@ -55,7 +55,8 @@ public class AddEmployerFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_add_employer, container, false);
     }
 

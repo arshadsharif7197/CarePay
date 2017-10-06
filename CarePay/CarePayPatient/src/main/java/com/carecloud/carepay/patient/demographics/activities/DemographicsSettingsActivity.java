@@ -8,7 +8,6 @@ import android.view.View;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
-import com.carecloud.carepay.patient.demographics.dto.EmployerDto;
 import com.carecloud.carepay.patient.demographics.fragments.settings.AddEmployerFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.ChangePasswordFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsExpandedFragment;
@@ -28,6 +27,7 @@ import com.carecloud.carepay.patient.payment.fragments.CreditCardListFragment;
 import com.carecloud.carepay.patient.payment.fragments.SettingAddCreditCardFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
@@ -129,7 +129,8 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
 
     @Override
     public void displayDemographicsFragment() {
-        DemographicsInformationFragment demographicsInformationFragment = DemographicsInformationFragment.newInstance();
+        DemographicsInformationFragment demographicsInformationFragment =
+                DemographicsInformationFragment.newInstance();
         replaceFragment(demographicsInformationFragment, true);
     }
 
@@ -147,7 +148,8 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
 
     @Override
     public void editInsurance(DemographicDTO demographicDTO, int editedIndex) {
-        InsuranceEditDialog insuranceEditDialog = InsuranceEditDialog.newInstance(demographicDTO, editedIndex, false);
+        InsuranceEditDialog insuranceEditDialog = InsuranceEditDialog
+                .newInstance(demographicDTO, editedIndex, false);
 
         replaceFragment(insuranceEditDialog, true);
     }
@@ -166,8 +168,10 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     }
 
     @Override
-    public void displayCreditCardDetailsFragment(DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO) {
-        CreditCardDetailsFragment creditCardDetailsFragment = CreditCardDetailsFragment.newInstance(creditCardsPayloadDTO);
+    public void displayCreditCardDetailsFragment(DemographicsSettingsCreditCardsPayloadDTO
+                                                         creditCardsPayloadDTO) {
+        CreditCardDetailsFragment creditCardDetailsFragment = CreditCardDetailsFragment
+                .newInstance(creditCardsPayloadDTO);
         replaceFragment(creditCardDetailsFragment, true);
     }
 
@@ -200,7 +204,8 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
 
         // Update Health Insurance Fragment
         String tag = SettingsDocumentsFragment.class.getName();
-        SettingsDocumentsFragment settingsDocumentsFragment = (SettingsDocumentsFragment) fm.findFragmentByTag(tag);
+        SettingsDocumentsFragment settingsDocumentsFragment =
+                (SettingsDocumentsFragment) fm.findFragmentByTag(tag);
 
         settingsDocumentsFragment.updateInsuranceList(demographicDTO);
     }
@@ -216,7 +221,14 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
 
     @Override
     public void addEmployer(EmployerDto employer) {
+        demographicsSettingsDTO.getPayload().getDemographics().getPayload()
+                .getPersonalDetails().setEmployer(employer);
         getSupportFragmentManager().popBackStack();
         getSupportFragmentManager().popBackStack();
+        getSupportFragmentManager().executePendingTransactions();
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.activity_demographics_settings);
+        if (fragment instanceof DemographicsExpandedFragment) {
+            ((DemographicsExpandedFragment) fragment).setEmployer(employer);
+        }
     }
 }
