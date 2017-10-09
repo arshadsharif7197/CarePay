@@ -12,6 +12,7 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.ConfirmationActivity;
+import com.carecloud.carepay.patient.payment.dialogs.PaymentHistoryDetailDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.NoPaymentsFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment;
@@ -34,6 +35,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
@@ -322,6 +324,13 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
+    public void displayPaymentHistoryDetails(PaymentHistoryItem paymentHistoryItem) {
+        selectedUserPractice = getUserPracticeById(paymentHistoryItem.getMetadata().getPracticeId());
+        PaymentHistoryDetailDialogFragment fragment = PaymentHistoryDetailDialogFragment.newInstance(paymentHistoryItem, selectedUserPractice);
+        displayDialogFragment(fragment, false);
+    }
+
+    @Override
     public void onDetailCancelClicked(PaymentsModel paymentsModel) {
         loadPaymentAmountScreen(null, paymentsModel);
     }
@@ -345,5 +354,14 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                 }
             }
         }
+    }
+
+    private UserPracticeDTO getUserPracticeById(String practiceId){
+        for(UserPracticeDTO userPracticeDTO : paymentsDTO.getPaymentPayload().getUserPractices()){
+            if(userPracticeDTO.getPracticeId().equals(practiceId)){
+                return userPracticeDTO;
+            }
+        }
+        return null;
     }
 }

@@ -286,7 +286,8 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         View emergencyContactRelationshipLayout = view.findViewById(R.id.emergencyContactRelationshipDemographicsLayout);
         TextView chooseEmergencyContactRelationship = (TextView) view.findViewById(R.id.chooseEmergencyContactRelationship);
         View emergencyContactRelationshipOptional = view.findViewById(R.id.emergencyContactRelationshipOptional);
-        setVisibility(emergencyContactRelationshipLayout, personalInfoSection.getProperties().getEmergencyContactRelationship().isDisplayed());
+//        setVisibility(emergencyContactRelationshipLayout, personalInfoSection.getProperties().getEmergencyContactRelationship().isDisplayed());
+        setVisibility(emergencyContactRelationshipLayout, false);//todo re-enable this when ready
         chooseEmergencyContactRelationship.setOnClickListener(
                 getSelectOptionsListener(personalInfoSection.getProperties().getEmergencyContactRelationship().getOptions(),
                         getDefaultOnOptionsSelectedListener(chooseEmergencyContactRelationship, selectedEmergencyContactRelationship, emergencyContactRelationshipOptional),
