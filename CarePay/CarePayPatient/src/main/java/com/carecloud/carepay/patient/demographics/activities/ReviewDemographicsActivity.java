@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.patient.demographics.fragments.ConfirmExitDialogFragment;
 import com.carecloud.carepay.patient.payment.PatientPaymentPresenter;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -29,7 +30,8 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class ReviewDemographicsActivity extends BasePatientActivity implements DemographicsView,
-        PaymentViewHandler {
+        PaymentViewHandler, ConfirmExitDialogFragment.ExitConfirmationCallback {
+
 
     private static final String KEY_PAYMENT_DTO = "KEY_PAYMENT_DTO";
     private DemographicsPresenter demographicsPresenter;
@@ -59,7 +61,8 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.exitFlow) {
-            finish();
+            displayDialogFragment(new ConfirmExitDialogFragment(), false);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -213,4 +216,10 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
             super.onBackPressed();
         }
     }
+
+    @Override
+    public void onExit() {
+        finish();
+    }
+
 }

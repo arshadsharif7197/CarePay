@@ -2,10 +2,12 @@ package com.carecloud.carepay.patient.payment.fragments;
 
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +55,8 @@ public class PaymentBalanceHistoryFragment extends BaseFragment {
         tabs.setTabTextColors(Color.LTGRAY, Color.WHITE);
         tabs.setupWithViewPager(viewPager);
 
+        setShadow(tabs);
+
         PaymentsSectionsPagerAdapter adapter = new PaymentsSectionsPagerAdapter(getChildFragmentManager());
         PatientPendingPaymentFragment pendingPaymentsFragment = new PatientPendingPaymentFragment();
         PatientPaymentHistoryFragment paymentHistoryFragment = new PatientPaymentHistoryFragment();
@@ -79,6 +83,12 @@ public class PaymentBalanceHistoryFragment extends BaseFragment {
 
     }
 
+    private void setShadow(View view){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            view.setElevation(getResources().getDimension(R.dimen.respons_toolbar_elevation));
+        }
+    }
+
     private void setTabTitle(TabLayout.Tab tab, String title){
         TextView textView = (TextView) tab.getCustomView().findViewById(R.id.tab_title);
         textView.setText(title);
@@ -89,7 +99,14 @@ public class PaymentBalanceHistoryFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         if (getActivity() instanceof ViewPaymentBalanceHistoryActivity) {
-            ((ViewPaymentBalanceHistoryActivity) this.getActivity()).displayToolbar(true, null);
+            ViewPaymentBalanceHistoryActivity activity = (ViewPaymentBalanceHistoryActivity) this.getActivity();
+            activity.displayToolbar(true, null);
+
+            ActionBar supportActionBar = activity.getSupportActionBar();
+            if(supportActionBar != null){
+                supportActionBar.setElevation(0);
+            }
+
         }
     }
 
