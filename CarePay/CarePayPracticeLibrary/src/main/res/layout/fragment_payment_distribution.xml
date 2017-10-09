@@ -365,7 +365,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:background="@drawable/patient_mode_dialog_body_bg"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -385,10 +385,11 @@
                     android:layout_marginBottom="@dimen/dimen_40dp"
                     android:layout_gravity="center"
                     android:background="@drawable/blue_border_rounded_button_selector"
-                    android:paddingEnd="@dimen/dimen_20dp"
-                    android:paddingStart="@dimen/dimen_20dp"
+                    android:paddingEnd="@dimen/dimen_60dp"
+                    android:paddingStart="@dimen/dimen_60dp"
                     android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/text_size_22"
+                    tools:text="Add Item"
                     breeze:textKey="payment_add_item"
                     app:customAssetFont="gotham_rounded_medium"/>
 
