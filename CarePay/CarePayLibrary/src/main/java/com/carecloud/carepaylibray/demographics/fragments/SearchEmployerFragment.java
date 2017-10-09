@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.demographics.fragments.settings;
+package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,14 +12,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.demographics.adapters.EmployerRecyclerViewAdapter;
-import com.carecloud.carepaylibray.demographics.EmployerInterface;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.demographics.DemographicsView;
+import com.carecloud.carepaylibray.demographics.EmployerInterface;
+import com.carecloud.carepaylibray.demographics.adapters.EmployerRecyclerViewAdapter;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -36,8 +38,8 @@ public class SearchEmployerFragment extends BaseFragment
         implements EmployerRecyclerViewAdapter.EmployerAdapterInterface {
 
     private EmployerInterface callback;
-    private DemographicsSettingsDTO demographicsSettingsDTO;
     private EmployerRecyclerViewAdapter adapter;
+    private TransitionDTO searchEmployersTransition;
 
     public static SearchEmployerFragment newInstance() {
         return new SearchEmployerFragment();
@@ -47,7 +49,11 @@ public class SearchEmployerFragment extends BaseFragment
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (EmployerInterface) context;
+            if (context instanceof DemographicsView) {
+                callback = ((DemographicsView) context).getPresenter();
+            } else {
+                callback = (EmployerInterface) context;
+            }
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement EmployerInterface");
@@ -57,8 +63,13 @@ public class SearchEmployerFragment extends BaseFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
-//        dataModel = demographicsSettingsDTO.getMetadata().getNewDataModel();
+        if (callback.getDto() instanceof DemographicsSettingsDTO) {
+            DemographicsSettingsDTO demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
+            searchEmployersTransition = demographicsSettingsDTO.getMetadata().getLinks().getSearchEmployers();
+        } else {
+            DemographicDTO dto = (DemographicDTO) callback.getDto();
+            searchEmployersTransition = dto.getMetadata().getLinks().getSearchEmployers();
+        }
     }
 
     @Override
@@ -72,6 +83,13 @@ public class SearchEmployerFragment extends BaseFragment
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarLayout);
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
         callback.setToolbar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SystemUtil.hideSoftKeyboard(getActivity());
+                getActivity().onBackPressed();
+            }
+        });
         setUpUi(view);
 
     }
@@ -119,8 +137,6 @@ public class SearchEmployerFragment extends BaseFragment
     }
 
     private void searchEmployers(String query) {
-        TransitionDTO searchEmployersTransition = demographicsSettingsDTO.getMetadata().getLinks()
-                .getSearchEmployers();
         Map<String, String> queryMap = new HashMap<>();
 
         queryMap.put("practice_mgmt", "carecloud");

@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.demographics.fragments.settings;
+package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -16,7 +16,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.R;
+import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.EmployerInterface;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
@@ -30,7 +31,6 @@ import com.carecloud.carepaylibray.utils.AddressUtil;
 
 public class AddEmployerFragment extends BaseFragment {
 
-
     private EmployerInterface callback;
     private String state;
 
@@ -42,7 +42,11 @@ public class AddEmployerFragment extends BaseFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (EmployerInterface) context;
+            if (context instanceof DemographicsView) {
+                callback = ((DemographicsView) context).getPresenter();
+            } else {
+                callback = (EmployerInterface) context;
+            }
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement EmployerInterface");

@@ -8,15 +8,15 @@ import android.view.View;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
-import com.carecloud.carepay.patient.demographics.fragments.settings.AddEmployerFragment;
+import com.carecloud.carepaylibray.demographics.fragments.AddEmployerFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.ChangePasswordFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsExpandedFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsInformationFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsSettingsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.EditProfileFragment;
-import com.carecloud.carepay.patient.demographics.fragments.settings.EmployerDetailFragment;
+import com.carecloud.carepaylibray.demographics.fragments.EmployerDetailFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.HelpFragment;
-import com.carecloud.carepay.patient.demographics.fragments.settings.SearchEmployerFragment;
+import com.carecloud.carepaylibray.demographics.fragments.SearchEmployerFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.SettingsDocumentsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.SupportFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.UpdateEmailFragment;

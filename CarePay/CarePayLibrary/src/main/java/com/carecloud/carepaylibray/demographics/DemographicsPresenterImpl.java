@@ -2,10 +2,14 @@ package com.carecloud.carepaylibray.demographics;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -13,16 +17,22 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
+import com.carecloud.carepaylibray.demographics.fragments.AddEmployerFragment;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.EmployerDetailFragment;
 import com.carecloud.carepaylibray.demographics.fragments.FormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.IntakeFormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
+import com.carecloud.carepaylibray.demographics.fragments.SearchEmployerFragment;
+import com.carecloud.carepaylibray.demographics.interfaces.EmployerFragmentInterface;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearchFragment;
 import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
@@ -404,5 +414,96 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
     protected boolean shouldPreventBackNav() {
         return false;
+    }
+
+
+    @Override
+    public DTO getDto() {
+        return demographicDTO;
+    }
+
+    @Override
+    public void replaceFragment(Fragment fragment, boolean addToBackStack) {
+        navigateToFragment(fragment, addToBackStack);
+    }
+
+    @Override
+    public void addFragment(Fragment fragment, boolean addToBackStack) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if (addToBackStack) {
+            ft.addToBackStack(null);
+        }
+        ft.add(R.id.root_layout, fragment).commit();
+    }
+
+    @Override
+    public void showErrorToast(String exceptionMessage) {
+        demographicsView.showErrorNotification(exceptionMessage);
+    }
+
+    @Override
+    public void setToolbar(Toolbar toolbar) {
+        ((AppCompatActivity) demographicsView.getContext()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) demographicsView.getContext()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity) demographicsView.getContext()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        if (toolbar != null) {
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((AppCompatActivity) demographicsView.getContext()).onBackPressed();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void showSuccessToast(String successMessage) {
+        /** NOT USED **/
+    }
+
+    @Override
+    public void setActionBarTitle(String title) {
+        /** NOT USED **/
+    }
+
+    @Override
+    public void displayDialogFragment(DialogFragment fragment, boolean addToBackStack) {
+        /** NOT USED **/
+    }
+
+    @Override
+    public void addEmployer(EmployerDto employer) {
+        getSupportFragmentManager().popBackStack();
+        getSupportFragmentManager().executePendingTransactions();
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
+        if (fragment instanceof EmployerFragmentInterface) {
+            ((EmployerFragmentInterface) fragment).setEmployer(employer);
+        } else {
+            getSupportFragmentManager().popBackStack();
+            getSupportFragmentManager().executePendingTransactions();
+            fragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
+            if (fragment instanceof EmployerFragmentInterface) {
+                ((EmployerFragmentInterface) fragment).setEmployer(employer);
+            }
+        }
+    }
+
+    @Override
+    public void displayAddEmployerFragment() {
+        AddEmployerFragment fragment = AddEmployerFragment.newInstance();
+        addFragment(fragment, true);
+    }
+
+    @Override
+    public void displaySearchEmployer() {
+        SearchEmployerFragment fragment = SearchEmployerFragment.newInstance();
+        addFragment(fragment, true);
+    }
+
+    @Override
+    public void displayEmployerDetail(EmployerDto employer) {
+        EmployerDetailFragment fragment = EmployerDetailFragment.newInstance(employer);
+        addFragment(fragment, true);
     }
 }

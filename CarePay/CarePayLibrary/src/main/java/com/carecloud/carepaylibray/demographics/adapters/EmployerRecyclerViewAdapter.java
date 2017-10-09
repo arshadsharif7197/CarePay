@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.demographics.adapters;
+package com.carecloud.carepaylibray.demographics.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,8 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.demographics.fragments.settings.SearchEmployerFragment;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
 import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerWrapperDto;
 

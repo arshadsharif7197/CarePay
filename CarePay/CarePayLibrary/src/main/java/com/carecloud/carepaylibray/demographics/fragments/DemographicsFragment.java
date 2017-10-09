@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.demographics.DemographicsView;
+import com.carecloud.carepaylibray.demographics.EmployerInterface;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
@@ -19,6 +22,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadD
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
+import com.carecloud.carepaylibray.demographics.interfaces.EmployerFragmentInterface;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -29,10 +33,12 @@ import com.carecloud.carepaylibray.utils.ValidationHelper;
 /**
  * A simple {@link CheckInDemographicsBaseFragment} subclass.
  */
-public class DemographicsFragment extends CheckInDemographicsBaseFragment {
+public class DemographicsFragment extends CheckInDemographicsBaseFragment
+        implements EmployerFragmentInterface {
 
     private DemographicDTO demographicDTO;
     private DemographicDataModel dataModel;
+    private EmployerInterface callback;
 
     private PatientModel demographicPersDetailsPayloadDTO;
 
@@ -50,6 +56,21 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
     private DemographicsOption selectedReferralSource = new DemographicsOption();
     private EmployerDto selectedEmployer = new EmployerDto();
 
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            if (context instanceof DemographicsView) {
+                callback = ((DemographicsView) context).getPresenter();
+            } else {
+                callback = (EmployerInterface) context;
+            }
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement EmployerInterface");
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -292,29 +313,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
         String employmentStatus = demographicPayload.getPersonalDetails().getEmploymentStatus();
         initSelectableInput(chooseEmploymentStatus, selectedEmploymentStatus, employmentStatus, personalInfoSection.getProperties().getEmploymentStatus().isRequired() ? null : employmentStatusOptional);
 
-
-        View employerLayout = view.findViewById(com.carecloud.carepaylibrary.R.id.employerDemographicsLayout);
-        TextView chooseEmployer = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.chooseEmployer);
-        View employerOptional = view.findViewById(com.carecloud.carepaylibrary.R.id.employerOptional);
-        setVisibility(employerLayout, personalInfoSection.getProperties().getEmployer().isDisplayed());
-        chooseEmployer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                callback.displaySearchEmployer();
-            }
-        });
-        EmployerDto employer = demographicPayload.getPersonalDetails().getEmployer();
-        if (employer == null) {
-            if (!personalInfoSection.getProperties().getEmployer().isRequired()) {
-                employerOptional.setVisibility(View.VISIBLE);
-            }
-            String value = Label.getLabel("demographics_choose");
-            chooseEmployer.setText(value);
-        } else {
-            selectedEmployer = employer;
-            chooseEmployer.setText(employer.getName());
-        }
-
+        setUpEmployer(view, demographicPayload, personalInfoSection);
 
         View emergencyContactRelationshipLayout = view.findViewById(R.id.emergencyContactRelationshipDemographicsLayout);
         TextView chooseEmergencyContactRelationship = (TextView) view.findViewById(R.id.chooseEmergencyContactRelationship);
@@ -339,6 +338,36 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
         String referralSource = demographicPayload.getPersonalDetails().getReferralSource();
         initSelectableInput(chooseReferralSource, selectedReferralSource, referralSource, personalInfoSection.getProperties().getReferralSource().isRequired() ? null : referralSourceOptional);
 
+    }
+
+    private void setUpEmployer(View view, DemographicPayloadDTO demographicPayload, DemographicsPersonalSection personalInfoSection) {
+        View employerLayout = view.findViewById(R.id.employerDemographicsLayout);
+        View employerOptional = view.findViewById(R.id.employerOptional);
+        setVisibility(employerLayout, personalInfoSection.getProperties().getEmployer().isDisplayed());
+        final EmployerDto employer = demographicPayload.getPersonalDetails().getEmployer();
+        TextView chooseEmployer = (TextView) view.findViewById(R.id.chooseEmployer);
+        if (employer == null) {
+            if (!personalInfoSection.getProperties().getEmployer().isRequired()) {
+                employerOptional.setVisibility(View.VISIBLE);
+            }
+            String value = Label.getLabel("demographics_choose");
+            chooseEmployer.setText(value);
+            chooseEmployer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callback.displaySearchEmployer();
+                }
+            });
+        } else {
+            selectedEmployer = employer;
+            chooseEmployer.setText(employer.getName());
+            chooseEmployer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callback.displayEmployerDetail(employer);
+                }
+            });
+        }
     }
 
 
@@ -435,7 +464,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
             demographicPersDetailsPayloadDTO.setEmploymentStatus(employmentStatus);
         }
 
-        if (!StringUtil.isNullOrEmpty(selectedEmployer.getName())) {
+        if (selectedEmployer != null && !StringUtil.isNullOrEmpty(selectedEmployer.getName())) {
             demographicPersDetailsPayloadDTO.setEmployer(selectedEmployer);
         }
 
@@ -558,5 +587,15 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
     @Override
     protected int getContentId() {
         return R.layout.fragment_review_demographic_demographics;
+    }
+
+    @Override
+    public void setEmployer(EmployerDto employer) {
+        this.selectedEmployer = employer;
+        demographicDTO.getPayload().getDemographics().getPayload()
+                .getPersonalDetails().setEmployer(employer);
+        setUpEmployer(getView(), demographicDTO.getPayload().getDemographics().getPayload(),
+                demographicDTO.getMetadata().getNewDataModel()
+                        .getDemographic().getPersonalDetails());
     }
 }

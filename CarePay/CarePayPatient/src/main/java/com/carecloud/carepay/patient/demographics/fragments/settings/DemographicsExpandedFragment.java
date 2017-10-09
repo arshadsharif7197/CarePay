@@ -28,6 +28,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadD
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
+import com.carecloud.carepaylibray.demographics.interfaces.EmployerFragmentInterface;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -42,7 +43,8 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragment {
+public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragment
+        implements EmployerFragmentInterface {
 
     private DemographicsSettingsDTO demographicsSettingsDTO;
     private DemographicDataModel dataModel;
@@ -500,7 +502,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
             patientModel.setEmploymentStatus(employmentStatus);
         }
 
-        if (!StringUtil.isNullOrEmpty(selectedEmployer.getName())) {
+        if (selectedEmployer != null && !StringUtil.isNullOrEmpty(selectedEmployer.getName())) {
             patientModel.setEmployer(selectedEmployer);
         }
 
@@ -560,6 +562,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         }
     };
 
+    @Override
     public void setEmployer(EmployerDto employer) {
         this.selectedEmployer = employer;
         demographicsSettingsDTO.getPayload().getDemographics().getPayload()
