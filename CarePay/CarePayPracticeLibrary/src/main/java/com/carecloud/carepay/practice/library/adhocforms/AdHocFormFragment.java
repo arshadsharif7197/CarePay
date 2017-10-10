@@ -77,6 +77,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
         nextButton.setText(Label.getLabel("adhoc_sign_form_button_label"));
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         if (toolbar != null) {
+            toolbar.setNavigationIcon(null);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -91,6 +92,12 @@ public class AdHocFormFragment extends BaseWebFormFragment {
     protected void displayNextForm() {
         int displayedFormsIndex = getDisplayedFormsIndex();
         if (getDisplayedFormsIndex() < getTotalForms()) {
+            Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbar_layout);
+            if (getDisplayedFormsIndex()==0){
+                toolbar.setNavigationIcon(null);
+            }else{
+                toolbar.setNavigationIcon(R.drawable.icn_nav_back);
+            }
             PracticeForm practiceForm = formsList.get(displayedFormsIndex);
             JsonObject payload = practiceForm.getPayload();
             JsonObject userResponse = null;
