@@ -180,11 +180,17 @@ public class FilterDialog extends PopupWindow
         clearFiltersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final Set<String> lastLocationFilter = getFilteredLocationsIds();
                 clearSearchImageView.performClick();
                 filterModel.clear();
                 saveFilter();
+                doctorsLocationsAdapter = new CustomFilterListAdapter(filterModel, FilterDialog.this);
                 filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
-                callBack.applyFilter();
+                if(lastLocationFilter.isEmpty()) {
+                    callBack.applyFilter();
+                }else{
+                    callBack.refreshData();
+                }
             }
         });
     }

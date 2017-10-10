@@ -340,12 +340,25 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
             PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
             transitionDTO = transitionsDTO.getPracticePayments();
+
+            String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
+            String userId = getApplicationMode().getUserPracticeDTO().getUserId();
+            Set<String> providersSavedFilteredIds = getApplicationPreferences().getSelectedProvidersIds(practiceId, userId);
+            Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
+
+            Map<String, String> queryMap = new HashMap<>();
+            if(locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()){
+                queryMap.put("location_ids", StringUtil.getListAsCommaDelimitedString(locationsSavedFilteredIds));
+            }
+            getWorkflowServiceHelper().interrupt();
+            getWorkflowServiceHelper().execute(transitionDTO, commonTransitionCallback, queryMap);
+
         } else {
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
             transitionDTO = transitionsDTO.getPatientPayments();
+            getWorkflowServiceHelper().interrupt();
+            getWorkflowServiceHelper().execute(transitionDTO, commonTransitionCallback);
         }
-        getWorkflowServiceHelper().interrupt();
-        getWorkflowServiceHelper().execute(transitionDTO, commonTransitionCallback);
     }
 
     private void navigateToCheckIn() {
