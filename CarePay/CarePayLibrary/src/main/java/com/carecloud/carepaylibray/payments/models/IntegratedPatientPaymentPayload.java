@@ -24,6 +24,9 @@ public class IntegratedPatientPaymentPayload {
     @SerializedName("payment_group_id")
     private String paymentId;
 
+    @SerializedName("confirmation")
+    private String confirmation;
+
     @SerializedName("payment_method")
     private PapiPaymentMethod paymentMethod;
 
@@ -77,6 +80,15 @@ public class IntegratedPatientPaymentPayload {
     public void setMetadata(IntegratedPatientPaymentMetadata metadata) {
         this.metadata = metadata;
     }
+
+    public String getConfirmation() {
+        return confirmation;
+    }
+
+    public void setConfirmation(String confirmation) {
+        this.confirmation = confirmation;
+    }
+
 
     /**
      * Calculate total of paid line items

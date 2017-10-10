@@ -7,7 +7,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/transparent_apt"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:paddingStart="@dimen/dimen_20dp"
+    android:paddingEnd="@dimen/dimen_20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -85,8 +88,8 @@
                     android:gravity="center"
                     android:textSize="@dimen/text_size_20"
                     android:textColor="@color/colorPrimary"
-                    android:paddingTop="@dimen/dimen_14dp"
-                    android:paddingBottom="@dimen/dimen_14dp"
+                    android:paddingTop="@dimen/dimen_20dp"
+                    android:paddingBottom="@dimen/dimen_20dp"
                     android:paddingStart="@dimen/dimen_14dp"
                     android:paddingEnd="@dimen/dimen_14dp"
                     tools:text="CareCloud Clinic"
@@ -125,7 +128,7 @@
                     android:textColor="@color/textview_default_textcolor"
                     android:textSize="@dimen/text_size_14"
                     tools:text="dveervev-vvever-evever-evverv--veve"
-                    app:customAssetFont="proxima_nova_regular"/>
+                    app:customAssetFont="proxima_nova_semi_bold"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
