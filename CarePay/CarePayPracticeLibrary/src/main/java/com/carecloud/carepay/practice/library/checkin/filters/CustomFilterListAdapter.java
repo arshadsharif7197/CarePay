@@ -42,7 +42,7 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
         /**
          * Called upon a filter change.
          */
-        void onFilterChanged();
+        void onFilterChanged(FilterDataDTO filterDataDTO);
     }
 
     /**
@@ -132,30 +132,53 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
         private CheckBox checkBox;
         private ImageView selectedItemImageView;
         private FilterDataDTO filterDataDTO;
+        private boolean skipCallback = false;
 
         ViewHolderFilterableDataItem(View view) {
             super(view);
             checkBox = (CheckBox) view.findViewById(R.id.patientItemCheckBox);
-            selectedItemImageView = (ImageView) view.findViewById(R.id.selectedItemImageView);
             checkBox.setOnCheckedChangeListener(onCheckedChangeListener);
+            selectedItemImageView = (ImageView) view.findViewById(R.id.selectedItemImageView);
         }
 
         CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 filterDataDTO.setChecked(isChecked);
+                //underlying filter model not always being updated.. need to add this to ensure the filter model object is updated
+                int index = -1;
+                switch (filterDataDTO.getFilterDataType()){
+                    case LOCATION:
+                        index = filterModel.getLocations().indexOf(filterDataDTO);
+                        if(index > -1) {
+                            filterModel.getLocations().get(index).setChecked(isChecked);
+                        }
+                        break;
+                    case PROVIDER:
+                        index = filterModel.getDoctors().indexOf(filterDataDTO);
+                        if(index > -1) {
+                            filterModel.getDoctors().get(index).setChecked(isChecked);
+                        }
+                        break;
+                    default:
+                }
+
                 if (filterDataDTO.isChecked()) {
                     selectedItemImageView.setVisibility(View.VISIBLE);
                 } else {
                     selectedItemImageView.setVisibility(View.GONE);
                 }
-                callback.onFilterChanged();
+                if(!skipCallback) {
+                    callback.onFilterChanged(filterDataDTO);
+                }
+                skipCallback = false;
             }
         };
 
         void setFilterDataDTO(FilterDataDTO filterDataDTO) {
             this.filterDataDTO = filterDataDTO;
             checkBox.setText(filterDataDTO.getDisplayText());
+            skipCallback = (!checkBox.isChecked() && filterDataDTO.isChecked()) || (checkBox.isChecked() && !filterDataDTO.isChecked());//non user interaction check changes
             checkBox.setChecked(filterDataDTO.isChecked());
             if (filterDataDTO.isChecked()) {
                 selectedItemImageView.setVisibility(View.VISIBLE);

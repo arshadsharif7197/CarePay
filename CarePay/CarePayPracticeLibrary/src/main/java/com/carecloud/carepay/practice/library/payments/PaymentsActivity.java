@@ -309,6 +309,11 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         patientListView.applyFilter(filter);
     }
 
+    @Override
+    public void refreshData() {
+        //TODO
+    }
+
 
     @Override
     protected void processExternalPayment(PaymentExecution execution, Intent data) {

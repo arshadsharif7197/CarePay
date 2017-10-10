@@ -52,6 +52,7 @@ public class FilterDialog extends PopupWindow
 
     public interface FilterDialogListener {
         void applyFilter();
+        void refreshData();
     }
 
     /**
@@ -193,8 +194,14 @@ public class FilterDialog extends PopupWindow
     }
 
     @Override
-    public void onFilterChanged() {
-        applyFilter();
+    public void onFilterChanged(FilterDataDTO filterDataDTO) {
+        switch (filterDataDTO.getFilterDataType()){
+            case LOCATION:
+                applyFilterAndRefresh();
+                break;
+            default:
+                applyFilter();
+        }
     }
 
     @Override
@@ -207,6 +214,12 @@ public class FilterDialog extends PopupWindow
         clearFiltersButton.setVisibility(View.VISIBLE);
         callBack.applyFilter();
         saveFilter();
+    }
+
+    private void applyFilterAndRefresh(){
+        clearFiltersButton.setVisibility(View.VISIBLE);
+        saveFilter();
+        callBack.refreshData();
     }
 
     private void saveFilter() {
