@@ -186,7 +186,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
             paymentMethodTextView.setText(PaymentConfirmationFragment.getPaymentMethod(patientPaymentPayload));
 
             TextView confirmationNumberTextView = (TextView) view.findViewById(R.id.confirmationNumberTextView);
-            confirmationNumberTextView.setText(patientPaymentPayload.getPaymentId());
+            confirmationNumberTextView.setText(patientPaymentPayload.getConfirmation());
 
             NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
             TextView totalPaidTextView = (TextView) view.findViewById(R.id.totalPaidTextView);

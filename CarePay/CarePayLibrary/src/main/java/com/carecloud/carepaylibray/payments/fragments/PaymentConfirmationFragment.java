@@ -102,7 +102,7 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
         total.setText(currencyFormatter.format(patientPaymentPayload.getTotalPaid()));
 
         TextView confirmation = (TextView) view.findViewById(R.id.payment_confirm_value);
-        confirmation.setText(patientPaymentPayload.getPaymentId());
+        confirmation.setText(patientPaymentPayload.getConfirmation());
 
         DateUtil dateUtil = DateUtil.getInstance();
 //        dateUtil.setDateRaw(patientPaymentPayload.getDate());
