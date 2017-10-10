@@ -52,6 +52,7 @@ public class FilterDialog extends PopupWindow
 
     public interface FilterDialogListener {
         void applyFilter();
+
         void refreshData();
     }
 
