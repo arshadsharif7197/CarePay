@@ -95,8 +95,11 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
             }
         });
 
+        //Todo remove this... using it just to easily identify clover transactions in the list
         if(item.getPayload().getMetadata().isExternallyProcessed()){
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.light_gray));
+            holder.transactionAmount.setTextColor(ContextCompat.getColor(context, R.color.emerald));
+        }else{
+            holder.transactionAmount.setTextColor(ContextCompat.getColor(context, R.color.textview_default_textcolor));
         }
     }
 
