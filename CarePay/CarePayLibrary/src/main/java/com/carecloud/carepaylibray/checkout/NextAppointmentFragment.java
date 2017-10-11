@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,14 +25,12 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
-import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
-import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -52,13 +49,15 @@ import java.util.Map;
  * Use the {@link NextAppointmentFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NextAppointmentFragment extends BaseFragment {
+public class NextAppointmentFragment extends BaseFragment implements NextAppointmentFragmentInterface {
 
     private CheckOutInterface callback;
     private AppointmentsResultModel appointmentsResultModel;
     private AppointmentDTO selectedAppointment;
-    private EditText visitTypeTextView;
+    private ProviderDTO selectedProvider;
+    private TextView visitTypeTextView;
     private TextView visitTimeTextView;
+    private TextView chooseProviderTextView;
     private TextView providerMessage;
     private VisitTypeDTO visitType;
     private AppointmentResourcesDTO appointmentResourceDTO;
@@ -105,6 +104,7 @@ public class NextAppointmentFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         appointmentsResultModel = (AppointmentsResultModel) callback.getDto();
         selectedAppointment = getAppointmentSelected();
+        selectedProvider = selectedAppointment.getPayload().getProvider();
     }
 
     @Override
@@ -133,29 +133,7 @@ public class NextAppointmentFragment extends BaseFragment {
     }
 
     private void setUpUi(View view) {
-        final ImageView providerPicImageView = (ImageView) view.findViewById(R.id.providerPicImageView);
-        final TextView providerInitials = (TextView) view.findViewById(R.id.providerInitials);
-        providerInitials.setText(StringUtil.getShortName(selectedAppointment.getPayload()
-                .getProvider().getName()));
-        Picasso.with(getContext()).load(selectedAppointment.getPayload().getProvider().getPhoto())
-                .centerCrop()
-                .transform(new CircleImageTransform())
-                .into(providerPicImageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        providerPicImageView.setVisibility(View.VISIBLE);
-                        providerInitials.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onError() {
-                        providerPicImageView.setVisibility(View.GONE);
-                        providerInitials.setVisibility(View.VISIBLE);
-                    }
-                });
-
-        providerMessage = (TextView) findViewById(R.id.providerMessage);
-        setDefaultMessage();
+        setUpProviderMessage(view, selectedProvider);
 
         Button scheduleLaterButton = (Button) view.findViewById(R.id.scheduleLaterButton);
         scheduleLaterButton.setOnClickListener(new View.OnClickListener() {
@@ -173,7 +151,18 @@ public class NextAppointmentFragment extends BaseFragment {
             }
         });
 
-        visitTypeTextView = (EditText) view.findViewById(R.id.visitTypeTextView);
+        chooseProviderTextView = (TextView) view.findViewById(R.id.providerTextView);
+        chooseProviderTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showChooseProviderFragment();
+            }
+        });
+        if (selectedProvider != null) {
+            chooseProviderTextView.setText(selectedProvider.getFullName());
+        }
+
+        visitTypeTextView = (TextView) view.findViewById(R.id.visitTypeTextView);
         visitTypeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -195,6 +184,35 @@ public class NextAppointmentFragment extends BaseFragment {
                         appointmentResourceDTO.getResource(), visitType);
             }
         });
+    }
+
+    private void setUpProviderMessage(View view, ProviderDTO provider) {
+        final ImageView providerPicImageView = (ImageView) view.findViewById(R.id.providerPicImageView);
+        final TextView providerInitials = (TextView) view.findViewById(R.id.providerInitials);
+        providerInitials.setText(StringUtil.getShortName(provider.getName()));
+        Picasso.with(getContext()).load(provider.getPhoto())
+                .centerCrop()
+                .transform(new CircleImageTransform())
+                .into(providerPicImageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        providerPicImageView.setVisibility(View.VISIBLE);
+                        providerInitials.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        providerPicImageView.setVisibility(View.GONE);
+                        providerInitials.setVisibility(View.VISIBLE);
+                    }
+                });
+
+        providerMessage = (TextView) findViewById(R.id.providerMessage);
+        setDefaultMessage();
+    }
+
+    private void showChooseProviderFragment() {
+        callback.showChooseProviderFragment();
     }
 
     private void showVisitTypeFragment() {
@@ -379,6 +397,7 @@ public class NextAppointmentFragment extends BaseFragment {
     /**
      * @param visitTypeDTO the visit type
      */
+    @Override
     public boolean setVisitType(VisitTypeDTO visitTypeDTO) {
         visitType = visitTypeDTO;
         visitTypeTextView.setText(visitTypeDTO.getName());
@@ -395,9 +414,20 @@ public class NextAppointmentFragment extends BaseFragment {
         return shouldOpenHoursFragment;
     }
 
+    @Override
+    public void setSelectedProvider(ProviderDTO provider) {
+        selectedProvider = provider;
+        if (selectedProvider != null) {
+            chooseProviderTextView.setText(selectedProvider.getFullName());
+            setUpProviderMessage(getView(), selectedProvider);
+            showVisitTypeFragment();
+        }
+    }
+
     /**
      * @param appointmentsSlot the location and time of the appointment
      */
+    @Override
     public void setLocationAndTime(AppointmentsSlotsDTO appointmentsSlot) {
         this.appointmentSlot = appointmentsSlot;
         String nextAppointmentDate = getNextAppointmentDate(appointmentsSlot.getStartTime());

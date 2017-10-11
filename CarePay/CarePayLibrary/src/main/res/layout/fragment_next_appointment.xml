@@ -13,11 +13,15 @@
 
     <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/scheduleLaterButton"
-        style="@style/SigninNewAccountButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/dimen_10dp"
         android:layout_marginEnd="@dimen/dimen_10dp"
         android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:background="@drawable/button_default_background"
+        android:textColor="@color/colorPrimary"
         app:customAssetFont="gotham_rounded_bold"
         breeze:textKey="schedule_appointment_later_button_label"
         tools:text="Schedule Later" />
