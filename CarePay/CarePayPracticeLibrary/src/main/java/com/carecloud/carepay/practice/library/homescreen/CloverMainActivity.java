@@ -315,7 +315,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
             String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
             String userId = getApplicationMode().getUserPracticeDTO().getUserId();
-            Set<String> providersSavedFilteredIds = getApplicationPreferences().getSelectedProvidersIds(practiceId, userId);
             Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
 
             if(locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()){
@@ -343,7 +342,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
             String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
             String userId = getApplicationMode().getUserPracticeDTO().getUserId();
-            Set<String> providersSavedFilteredIds = getApplicationPreferences().getSelectedProvidersIds(practiceId, userId);
             Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
 
             Map<String, String> queryMap = new HashMap<>();
@@ -375,7 +373,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
             String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
             String userId = getApplicationMode().getUserPracticeDTO().getUserId();
-            Set<String> providersSavedFilteredIds = getApplicationPreferences().getSelectedProvidersIds(practiceId, userId);
             Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
 
             if(locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()){
