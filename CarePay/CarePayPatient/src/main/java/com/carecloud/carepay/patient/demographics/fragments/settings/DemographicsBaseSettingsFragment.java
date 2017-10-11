@@ -46,7 +46,8 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
         return StringUtil.isNullOrEmpty(editText.getText().toString());
     }
 
-    protected void initSelectableInput(TextView textView, DemographicsOption storeOption, String value, View optional){
+    protected void initSelectableInput(TextView textView, DemographicsOption storeOption,
+                                       String value, View optional){
         storeOption.setName(value);
         storeOption.setLabel(value);
 
@@ -163,7 +164,9 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
         }
     };
 
-    protected OnOptionSelectedListener getDefaultOnOptionsSelectedListener(final TextView textView, final DemographicsOption storeOption, final View optional){
+    protected OnOptionSelectedListener getDefaultOnOptionsSelectedListener(final TextView textView,
+                                                                           final DemographicsOption storeOption,
+                                                                           final View optional){
         return new OnOptionSelectedListener() {
             @Override
             public void onOptionSelected(DemographicsOption option) {
@@ -182,7 +185,9 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
     }
 
 
-    protected View.OnClickListener getSelectOptionsListener(final List<DemographicsOption> options, final OnOptionSelectedListener listener, final String title) {
+    protected View.OnClickListener getSelectOptionsListener(final List<DemographicsOption> options,
+                                                            final OnOptionSelectedListener listener,
+                                                            final String title) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -228,7 +233,8 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
         AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long row) {
-                DemographicsOption selectedOption = (DemographicsOption) adapterView.getAdapter().getItem(position);
+                DemographicsOption selectedOption = (DemographicsOption) adapterView.getAdapter()
+                        .getItem(position);
                 if (listener != null) {
                     listener.onOptionSelected(selectedOption);
                 }

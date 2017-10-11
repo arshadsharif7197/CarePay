@@ -309,6 +309,11 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         patientListView.applyFilter(filter);
     }
 
+    @Override
+    public void refreshData() {
+        onRangeSelected(startDate, endDate);
+    }
+
 
     @Override
     protected void processExternalPayment(PaymentExecution execution, Intent data) {
@@ -604,6 +609,14 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("start_date", getFormattedDate(start));
         queryMap.put("end_date", getFormattedDate(end));
+
+        String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
+        String userId = getApplicationMode().getUserPracticeDTO().getUserId();
+        Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
+
+        if(locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()){
+            queryMap.put("location_ids", StringUtil.getListAsCommaDelimitedString(locationsSavedFilteredIds));
+        }
 
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getPracticePayments();
         getWorkflowServiceHelper().execute(transitionDTO, getChangeDateCallback(start, end), queryMap);
