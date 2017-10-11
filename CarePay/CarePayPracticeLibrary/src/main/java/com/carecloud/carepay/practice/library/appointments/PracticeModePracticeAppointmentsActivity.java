@@ -106,7 +106,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         count = String.format(Locale.getDefault(), "%1s", patientListView.getSizeFilteredPendingPatients());
         setTextViewById(R.id.practice_pending_count, count);
 
-        count = String.format(Locale.getDefault(), "%d %s", patientListView.getSizeFilteredPendingPatients(), Label.getLabel("pending_appointments_label"));
+        count = String.format(Locale.getDefault(), "%d %s", patientListView.getSizeFilteredPendingPatients(),
+                Label.getLabel("pending_appointments_label"));
         setTextViewById(R.id.activity_practice_appointments_show_pending_appointments_label, count);
 
         if (null != startDate && null != endDate) {
@@ -167,7 +168,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     private void initializeShowAllAppointments() {
-        findViewById(R.id.activity_practice_appointments_show_all_appointments_label).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.activity_practice_appointments_show_all_appointments_label)
+                .setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showViewById(R.id.activity_practice_appointments_show_pending_appointments_label);
@@ -183,7 +185,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     private void initializeShowPendingAppointments() {
-        findViewById(R.id.activity_practice_appointments_show_pending_appointments_label).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.activity_practice_appointments_show_pending_appointments_label)
+                .setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showViewById(R.id.activity_practice_appointments_show_all_appointments_label);
@@ -203,7 +206,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         ArrayList<FilterDataDTO> locations = new ArrayList<>();
         ArrayList<FilterDataDTO> patients = new ArrayList<>();
 
-        Map<String, String> photoMap = PracticeUtil.getProfilePhotoMap(checkInDTO.getPayload().getPatientBalances());
+        Map<String, String> photoMap = PracticeUtil
+                .getProfilePhotoMap(checkInDTO.getPayload().getPatientBalances());
 
         CheckInPayloadDTO payload = checkInDTO.getPayload();
         if (null == payload) {
@@ -211,8 +215,10 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         }
         String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
         String userId = getApplicationMode().getUserPracticeDTO().getUserId();
-        Set<String> providersSavedFilteredIds = getApplicationPreferences().getSelectedProvidersIds(practiceId, userId);
-        Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
+        Set<String> providersSavedFilteredIds = getApplicationPreferences()
+                .getSelectedProvidersIds(practiceId, userId);
+        Set<String> locationsSavedFilteredIds = getApplicationPreferences()
+                .getSelectedLocationsIds(practiceId, userId);
 
         List<AppointmentDTO> appointments = payload.getAppointments();
         for (AppointmentDTO appointmentDTO : appointments) {
@@ -231,9 +237,11 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                                                  AppointmentsPayloadDTO appointmentPayloadDTO,
                                                  Set<String> selectedProvidersIds) {
         ProviderDTO providerDTO = appointmentPayloadDTO.getProvider();
-        FilterDataDTO filterDataDTO = new FilterDataDTO(providerDTO.getId(), providerDTO.getName(), FilterDataDTO.FilterDataType.PROVIDER);
+        FilterDataDTO filterDataDTO = new FilterDataDTO(providerDTO.getId(), providerDTO.getName(),
+                FilterDataDTO.FilterDataType.PROVIDER);
         if (doctors.indexOf(filterDataDTO) < 0) {
-            if ((selectedProvidersIds != null) && selectedProvidersIds.contains(String.valueOf(providerDTO.getId()))) {
+            if ((selectedProvidersIds != null)
+                    && selectedProvidersIds.contains(String.valueOf(providerDTO.getId()))) {
                 filterDataDTO.setChecked(true);
             }
             doctors.add(filterDataDTO);
@@ -244,18 +252,23 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                                          AppointmentsPayloadDTO appointmentPayloadDTO,
                                          Set<String> selectedLocationsIds) {
         LocationDTO locationDTO = appointmentPayloadDTO.getLocation();
-        FilterDataDTO filterDataDTO = new FilterDataDTO(locationDTO.getId(), locationDTO.getName(), FilterDataDTO.FilterDataType.LOCATION);
+        FilterDataDTO filterDataDTO = new FilterDataDTO(locationDTO.getId(), locationDTO.getName(),
+                FilterDataDTO.FilterDataType.LOCATION);
         if (locations.indexOf(filterDataDTO) < 0) {
-            if ((selectedLocationsIds != null) && selectedLocationsIds.contains(String.valueOf(locationDTO.getId()))) {
+            if ((selectedLocationsIds != null)
+                    && selectedLocationsIds.contains(String.valueOf(locationDTO.getId()))) {
                 filterDataDTO.setChecked(true);
             }
             locations.add(filterDataDTO);
         }
     }
 
-    private void addPatientOnFilterList(ArrayList<FilterDataDTO> patients, AppointmentsPayloadDTO appointmentPayloadDTO, Map<String, String> photoMap) {
+    private void addPatientOnFilterList(ArrayList<FilterDataDTO> patients,
+                                        AppointmentsPayloadDTO appointmentPayloadDTO,
+                                        Map<String, String> photoMap) {
         PatientModel patientDTO = appointmentPayloadDTO.getPatient();
-        FilterDataDTO filterDataDTO = new FilterDataDTO(patientDTO.getPatientId(), patientDTO.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
+        FilterDataDTO filterDataDTO = new FilterDataDTO(patientDTO.getPatientId(),
+                patientDTO.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
         if (patients.indexOf(filterDataDTO) < 0) {
             patients.add(filterDataDTO);
         } else {
@@ -274,25 +287,26 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     private void initializePracticeSelectDateRange() {
-        findViewById(R.id.activity_practice_appointments_change_date_range_label).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        findViewById(R.id.activity_practice_appointments_change_date_range_label)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
 
-                DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
-                        Label.getLabel("date_range_picker_dialog_title"),
-                        Label.getLabel("date_range_picker_dialog_close"),
-                        true,
-                        startDate,
-                        endDate,
-                        DateRangePickerDialog.getPreviousSixMonthCalendar(),
-                        DateRangePickerDialog.getNextSixMonthCalendar(),
-                        PracticeModePracticeAppointmentsActivity.this
-                );
-                displayDialogFragment(dialog, false);
+                        DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
+                                Label.getLabel("date_range_picker_dialog_title"),
+                                Label.getLabel("date_range_picker_dialog_close"),
+                                true,
+                                startDate,
+                                endDate,
+                                DateRangePickerDialog.getPreviousSixMonthCalendar(),
+                                DateRangePickerDialog.getNextSixMonthCalendar(),
+                                PracticeModePracticeAppointmentsActivity.this
+                        );
+                        displayDialogFragment(dialog, false);
 
-                wasCalledFromThisClass = true;
-            }
-        });
+                        wasCalledFromThisClass = true;
+                    }
+                });
     }
 
     @Override
@@ -324,12 +338,11 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             @Override
             public void onClick(View view) {
                 needsToConfirmAppointmentCreation = needsConfirmation;
-
                 TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getFindPatient();
-
                 FindPatientDialog findPatientDialog = new FindPatientDialog(getContext(),
                         transitionDTO,
-                        Label.getLabel(needsConfirmation ? "practice_checkin_filter_find_patient_by_name" : "practice_filter_find_patient_first"));
+                        Label.getLabel(needsConfirmation ? "practice_checkin_filter_find_patient_by_name"
+                                : "practice_filter_find_patient_first"));
                 findPatientDialog.setClickedListener(getFindPatientDialogListener());
                 findPatientDialog.show();
             }
@@ -341,7 +354,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             @Override
             public void onItemClicked(PatientModel patient) {
                 setPatientId(patient.getPatientId());
-
                 if (needsToConfirmAppointmentCreation) {
                     getPatientBalances(patient);
                 } else {
@@ -391,8 +403,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
-
+            PaymentsModel patientDetails = DtoHelper
+                    .getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
             showResponsibilityFragment(patientDetails);
         }
 
@@ -441,7 +453,9 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         transitionAppointment(transitionDTO, appointmentDTO, false);
     }
 
-    private void transitionAppointment(TransitionDTO transitionDTO, AppointmentDTO appointmentDTO, boolean updateOnSuccess) {
+    private void transitionAppointment(TransitionDTO transitionDTO,
+                                       AppointmentDTO appointmentDTO,
+                                       boolean updateOnSuccess) {
         this.updateOnSuccess = updateOnSuccess;
 
         Map<String, String> queryMap = new HashMap<>();
@@ -483,13 +497,15 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                 return;
             }
 
-            PracticeAppointmentDTO practiceAppointmentDTO = DtoHelper.getConvertedDTO(PracticeAppointmentDTO.class, workflowDTO);
+            PracticeAppointmentDTO practiceAppointmentDTO = DtoHelper
+                    .getConvertedDTO(PracticeAppointmentDTO.class, workflowDTO);
             AppointmentDTO newAppointmentDTO = practiceAppointmentDTO.getPayload().getPracticeAppointments();
 
             List<AppointmentDTO> appointments = payload.getAppointments();
             for (int i = 0; i < appointments.size(); i++) {
                 AppointmentDTO oldAppointmentDTO = appointments.get(i);
-                if (oldAppointmentDTO.getPayload().getId().equalsIgnoreCase(newAppointmentDTO.getPayload().getId())) {
+                if (oldAppointmentDTO.getPayload().getId()
+                        .equalsIgnoreCase(newAppointmentDTO.getPayload().getId())) {
 
                     appointments.remove(i);
 
@@ -569,8 +585,9 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         } else if (appointmentPayloadDTO.isAppointmentOver()) {
             //TODO Add future logic
         } else {
-            CancelAppointmentConfirmDialogFragment dialogFragment = CancelAppointmentConfirmDialogFragment.newInstance(appointmentDTO);
-            dialogFragment.show(getSupportFragmentManager(), dialogFragment.getClass().getName());
+            CancelAppointmentConfirmDialogFragment fragment = CancelAppointmentConfirmDialogFragment
+                    .newInstance(appointmentDTO);
+            fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
         }
     }
 
@@ -641,10 +658,10 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("appointment_id", appointmentDTO.getPayload().getId());
-
-        TransitionDTO checkinPatientTransition = checkInDTO.getMetadata().getTransitions().getCheckinPatientMode();
-
-        getWorkflowServiceHelper().execute(checkinPatientTransition, getPatientModeCallback(appointmentDTO), queryMap);
+        TransitionDTO checkinPatientTransition = checkInDTO.getMetadata()
+                .getTransitions().getCheckinPatientMode();
+        getWorkflowServiceHelper().execute(checkinPatientTransition,
+                getPatientModeCallback(appointmentDTO), queryMap);
     }
 
     private void launchPatientModeCheckout(AppointmentDTO appointmentDTO) {

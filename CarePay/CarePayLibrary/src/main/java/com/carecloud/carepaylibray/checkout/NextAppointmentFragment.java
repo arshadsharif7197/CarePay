@@ -418,6 +418,7 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
     public void setSelectedProvider(ProviderDTO provider) {
         selectedProvider = provider;
         if (selectedProvider != null) {
+            selectedAppointment.getPayload().setProvider(provider);
             chooseProviderTextView.setText(selectedProvider.getFullName());
             setUpProviderMessage(getView(), selectedProvider);
             showVisitTypeFragment();
