@@ -21,7 +21,7 @@ import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.EmployerInterface;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.demographics.dtos.payload.AddressDto;
+import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerAddressDto;
 import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 
@@ -121,7 +121,7 @@ public class AddEmployerFragment extends BaseFragment {
         addEmployerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddressDto address = new AddressDto();
+                EmployerAddressDto address = new EmployerAddressDto();
                 address.setAddress1(address1EditText.getText().toString());
                 address.setAddress2(address2EditText.getText().toString());
                 address.setCity(cityEditText.getText().toString());

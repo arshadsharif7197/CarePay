@@ -1,13 +1,21 @@
 package com.carecloud.carepaylibray.demographics.dtos.payload;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * @author pjohnson on 5/10/17.
  */
 
 public class EmployerDto {
 
+    @Expose
+    @SerializedName("name")
     private String name;
-    private AddressDto address;
+
+    @Expose
+    @SerializedName("address")
+    private EmployerAddressDto address;
 
     public String getName() {
         return name;
@@ -17,11 +25,11 @@ public class EmployerDto {
         this.name = name;
     }
 
-    public AddressDto getAddress() {
+    public EmployerAddressDto getAddress() {
         return address;
     }
 
-    public void setAddress(AddressDto address) {
+    public void setAddress(EmployerAddressDto address) {
         this.address = address;
     }
 }

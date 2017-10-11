@@ -7,7 +7,8 @@ import com.google.gson.annotations.SerializedName;
  * @author pjohnson on 5/10/17.
  */
 
-public class AddressDto {
+public class EmployerAddressDto {
+
     @SerializedName("phone")
     @Expose
     private String phone;

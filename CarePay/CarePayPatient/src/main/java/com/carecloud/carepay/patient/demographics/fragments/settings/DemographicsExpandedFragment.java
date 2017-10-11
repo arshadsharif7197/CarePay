@@ -329,6 +329,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 }
             });
         } else {
+            employerOptional.setVisibility(View.GONE);
             selectedEmployer = employer;
             chooseEmployer.setText(employer.getName());
             chooseEmployer.setOnClickListener(new View.OnClickListener() {

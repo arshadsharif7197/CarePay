@@ -11,6 +11,7 @@ import java.util.List;
  */
 
 public class EmployersDto {
+
     @Expose
     @SerializedName("data")
     private List<EmployerWrapperDto> employersData = new ArrayList<>();

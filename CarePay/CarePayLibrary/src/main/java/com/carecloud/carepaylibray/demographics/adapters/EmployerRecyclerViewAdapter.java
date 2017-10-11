@@ -10,6 +10,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
 import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerWrapperDto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ import java.util.List;
 public class EmployerRecyclerViewAdapter extends RecyclerView
         .Adapter<EmployerRecyclerViewAdapter.ViewHolder> {
 
-    private List<EmployerWrapperDto> employers;
+    private List<EmployerWrapperDto> employers = new ArrayList<>();
     private EmployerAdapterInterface callback;
 
 
@@ -51,7 +52,7 @@ public class EmployerRecyclerViewAdapter extends RecyclerView
 
     @Override
     public int getItemCount() {
-        return employers != null ? employers.size() : 0;
+        return employers.size();
     }
 
     public void setData(List<EmployerWrapperDto> data) {
@@ -82,7 +83,7 @@ public class EmployerRecyclerViewAdapter extends RecyclerView
         }
     }
 
-    public interface EmployerAdapterInterface{
+    public interface EmployerAdapterInterface {
         void onEmployerClicked(EmployerDto employer);
     }
 }

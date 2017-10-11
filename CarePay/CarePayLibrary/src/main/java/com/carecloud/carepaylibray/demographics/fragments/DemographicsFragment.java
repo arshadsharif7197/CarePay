@@ -58,13 +58,10 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void attachCallback(Context context) {
         try {
             if (context instanceof DemographicsView) {
                 callback = ((DemographicsView) context).getPresenter();
-            } else {
-                callback = (EmployerInterface) context;
             }
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
@@ -557,6 +554,10 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         }
         if (dataModel.getDemographic().getPersonalDetails().getProperties().getReferralSource().isRequired()
                 && StringUtil.isNullOrEmpty(selectedReferralSource.getName())) {
+            return false;
+        }
+        if (dataModel.getDemographic().getPersonalDetails().getProperties().getEmployer().isRequired()
+                && (selectedEmployer == null || StringUtil.isNullOrEmpty(selectedEmployer.getName()))) {
             return false;
         }
 
