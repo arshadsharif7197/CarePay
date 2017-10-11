@@ -29,7 +29,9 @@ import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-public class ReviewDemographicsActivity extends BasePatientActivity implements DemographicsView, PaymentViewHandler, ConfirmExitDialogFragment.ExitConfirmationCallback {
+public class ReviewDemographicsActivity extends BasePatientActivity implements DemographicsView,
+        PaymentViewHandler, ConfirmExitDialogFragment.ExitConfirmationCallback {
+
 
     private static final String KEY_PAYMENT_DTO = "KEY_PAYMENT_DTO";
     private DemographicsPresenter demographicsPresenter;
@@ -219,4 +221,5 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     public void onExit() {
         finish();
     }
+
 }

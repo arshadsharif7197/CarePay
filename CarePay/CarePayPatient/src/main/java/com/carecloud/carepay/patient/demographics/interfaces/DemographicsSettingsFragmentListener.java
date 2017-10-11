@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.demographics.interfaces;
 
+import com.carecloud.carepaylibray.demographics.EmployerInterface;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
@@ -9,7 +10,7 @@ import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
  * @author pjohnson on 2/05/17.
  */
 
-public interface DemographicsSettingsFragmentListener extends FragmentActivityInterface {
+public interface DemographicsSettingsFragmentListener extends FragmentActivityInterface, EmployerInterface {
     void displayEditProfileFragment();
 
     void displayUpdateEmailFragment();

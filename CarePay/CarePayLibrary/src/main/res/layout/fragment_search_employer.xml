@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <include
+        android:id="@+id/toolbarLayout"
+        layout="@layout/search_toolbar" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        android:id="@+id/addNewEmployerButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/dimen_20dp"
+        android:background="@drawable/button_default_background"
+        android:textColor="@color/colorPrimary"
+        app:customAssetFont="gotham_rounded_medium"
+        breeze:textKey="search_employer_add_new_employer_button_label" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/employerRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/addNewEmployerButton"
+        android:layout_below="@id/toolbarLayout" />
+
+</RelativeLayout>
