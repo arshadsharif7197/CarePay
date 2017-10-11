@@ -1,29 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<android.support.v7.widget.Toolbar
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/search_toolbar"
-    android:padding="0dp"
+    style="@style/SearchToolbarStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    style="@style/SearchToolbarStyle"
+    android:padding="0dp"
     app:contentInsetLeft="0dp"
     app:contentInsetStart="0dp"
     app:contentInsetStartWithNavigation="0dp">
 
     <FrameLayout
+        android:id="@+id/search_edit_frame"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/search_edit_frame">
+        android:layout_height="wrap_content">
 
         <com.carecloud.carepaylibray.customcomponents.CarePaySearchView
+            android:id="@+id/search_entry_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/search_entry_view"
-            app:iconifiedByDefault="false"
             android:theme="@style/SearchViewStyleLight"
-            app:customAssetFont="proxima_nova_regular"/>
+            app:customAssetFont="proxima_nova_regular"
+            app:iconifiedByDefault="false" />
 
     </FrameLayout>
 </android.support.v7.widget.Toolbar>
