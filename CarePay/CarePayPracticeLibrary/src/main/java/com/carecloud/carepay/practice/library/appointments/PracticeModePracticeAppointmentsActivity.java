@@ -170,35 +170,35 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private void initializeShowAllAppointments() {
         findViewById(R.id.activity_practice_appointments_show_all_appointments_label)
                 .setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showViewById(R.id.activity_practice_appointments_show_pending_appointments_label);
-                showViewById(R.id.practice_patient_count);
-                showViewById(R.id.practice_patient_count_label);
-                hideViewById(R.id.activity_practice_appointments_show_all_appointments_label);
-                disappearViewById(R.id.practice_pending_count);
-                disappearViewById(R.id.practice_pending_count_label);
-                filter.setFilteringByPending(false);
-                applyFilter();
-            }
-        });
+                    @Override
+                    public void onClick(View view) {
+                        showViewById(R.id.activity_practice_appointments_show_pending_appointments_label);
+                        showViewById(R.id.practice_patient_count);
+                        showViewById(R.id.practice_patient_count_label);
+                        hideViewById(R.id.activity_practice_appointments_show_all_appointments_label);
+                        disappearViewById(R.id.practice_pending_count);
+                        disappearViewById(R.id.practice_pending_count_label);
+                        filter.setFilteringByPending(false);
+                        applyFilter();
+                    }
+                });
     }
 
     private void initializeShowPendingAppointments() {
         findViewById(R.id.activity_practice_appointments_show_pending_appointments_label)
                 .setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showViewById(R.id.activity_practice_appointments_show_all_appointments_label);
-                showViewById(R.id.practice_pending_count);
-                showViewById(R.id.practice_pending_count_label);
-                hideViewById(R.id.activity_practice_appointments_show_pending_appointments_label);
-                disappearViewById(R.id.practice_patient_count);
-                disappearViewById(R.id.practice_patient_count_label);
-                filter.setFilteringByPending(true);
-                applyFilter();
-            }
-        });
+                    @Override
+                    public void onClick(View view) {
+                        showViewById(R.id.activity_practice_appointments_show_all_appointments_label);
+                        showViewById(R.id.practice_pending_count);
+                        showViewById(R.id.practice_pending_count_label);
+                        hideViewById(R.id.activity_practice_appointments_show_pending_appointments_label);
+                        disappearViewById(R.id.practice_patient_count);
+                        disappearViewById(R.id.practice_patient_count_label);
+                        filter.setFilteringByPending(true);
+                        applyFilter();
+                    }
+                });
     }
 
     private void populateLists() {
@@ -229,54 +229,29 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         filter.setPatients(patients);
     }
 
-//<<<<<<< HEAD
-//    private void addProviderOnProviderFilterList(ArrayList<FilterDataDTO> doctors,
-//                                                 AppointmentsPayloadDTO appointmentPayloadDTO,
-//                                                 Set<String> selectedProvidersIds) {
-//        ProviderDTO providerDTO = appointmentPayloadDTO.getProvider();
-//        FilterDataDTO filterDataDTO = new FilterDataDTO(providerDTO.getId(), providerDTO.getName(),
-//                FilterDataDTO.FilterDataType.PROVIDER);
-//        if (doctors.indexOf(filterDataDTO) < 0) {
-//            if ((selectedProvidersIds != null)
-//                    && selectedProvidersIds.contains(String.valueOf(providerDTO.getId()))) {
-//                filterDataDTO.setChecked(true);
-//=======
-    private ArrayList<FilterDataDTO> getFilterLocations(Set<String> selectedLocationsIds){
+    private ArrayList<FilterDataDTO> getFilterLocations(Set<String> selectedLocationsIds) {
         ArrayList<FilterDataDTO> locations = new ArrayList<>();
-        for(LocationDTO locationDTO : checkInDTO.getPayload().getLocations()){
+        for (LocationDTO locationDTO : checkInDTO.getPayload().getLocations()) {
             FilterDataDTO filterLocation = new FilterDataDTO(locationDTO.getId(), locationDTO.getName(),
                     FilterDataDTO.FilterDataType.LOCATION);
-            if(selectedLocationsIds != null
-                    && selectedLocationsIds.contains(String.valueOf(filterLocation.getId()))){
+            if (selectedLocationsIds != null
+                    && selectedLocationsIds.contains(String.valueOf(filterLocation.getId()))) {
                 filterLocation.setChecked(true);
-//>>>>>>> development
+
             }
             locations.add(filterLocation);
         }
         return locations;
     }
 
-//<<<<<<< HEAD
-//    private void addLocationOnFilterList(ArrayList<FilterDataDTO> locations,
-//                                         AppointmentsPayloadDTO appointmentPayloadDTO,
-//                                         Set<String> selectedLocationsIds) {
-//        LocationDTO locationDTO = appointmentPayloadDTO.getLocation();
-//        FilterDataDTO filterDataDTO = new FilterDataDTO(locationDTO.getId(), locationDTO.getName(),
-//                FilterDataDTO.FilterDataType.LOCATION);
-//        if (locations.indexOf(filterDataDTO) < 0) {
-//            if ((selectedLocationsIds != null)
-//                    && selectedLocationsIds.contains(String.valueOf(locationDTO.getId()))) {
-//                filterDataDTO.setChecked(true);
-//=======
-    private ArrayList<FilterDataDTO> getFilterProviders(Set<String> selectedProvidersIds){
+    private ArrayList<FilterDataDTO> getFilterProviders(Set<String> selectedProvidersIds) {
         ArrayList<FilterDataDTO> providers = new ArrayList<>();
-        for(ProviderDTO providerDTO : checkInDTO.getPayload().getProviders()){
+        for (ProviderDTO providerDTO : checkInDTO.getPayload().getProviders()) {
             FilterDataDTO filterProvider = new FilterDataDTO(providerDTO.getId(), providerDTO.getName(),
                     FilterDataDTO.FilterDataType.PROVIDER);
-            if(selectedProvidersIds != null && selectedProvidersIds
-                    .contains(String.valueOf(filterProvider.getId()))){
+            if (selectedProvidersIds != null && selectedProvidersIds
+                    .contains(String.valueOf(filterProvider.getId()))) {
                 filterProvider.setChecked(true);
-//>>>>>>> development
             }
             providers.add(filterProvider);
         }
@@ -573,7 +548,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         String userId = getApplicationMode().getUserPracticeDTO().getUserId();
         Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
 
-        if(locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()){
+        if (locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()) {
             queryMap.put("location_ids", StringUtil.getListAsCommaDelimitedString(locationsSavedFilteredIds));
         }
 
