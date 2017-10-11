@@ -6,11 +6,6 @@
               android:fitsSystemWindows="true"
               android:orientation="vertical">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -27,15 +22,13 @@
                     android:id="@+id/toolbar_title"
                     style="@style/ResponsibilityToolbarTextStyle"
                     app:customAssetFont="gotham_rounded_medium"
-                    android:layout_width="wrap_content"
-                    android:layout_weight="0.7"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:gravity="start" />
 
             </LinearLayout>
 
         </android.support.v7.widget.Toolbar>
-
-    </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
         android:layout_width="match_parent"

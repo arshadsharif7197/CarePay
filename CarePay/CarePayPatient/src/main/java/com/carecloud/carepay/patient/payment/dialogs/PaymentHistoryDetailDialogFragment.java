@@ -74,6 +74,9 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
         TextView transactionDate = (TextView) view.findViewById(R.id.transaction_date);
         transactionDate.setText(dateUtil.getDateAsMonthLiteralDayOrdinalYear());
 
+        TextView transactionType = (TextView) view.findViewById(R.id.transaction_type);
+        transactionType.setText(getPaymentMethod(historyItem.getPayload().getPapiPaymentMethod()));
+
         TextView transactionNumber = (TextView) view.findViewById(R.id.transaction_number);
         transactionNumber.setText(historyItem.getPayload().getConfirmation());
 

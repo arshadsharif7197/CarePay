@@ -16,4 +16,11 @@
     <string name="msg_field_message_subject">subject</string>
     <string name="msg_field_participant_id">participants[][id]</string>
     <string name="msg_field_participant_name">participants[][name]</string>
+    <string name="msg_field_participant_type">partcipants[][type]</string>
+    <string name="msg_field_linked_id">linked_data[id]</string>
+    <string name="msg_field_linked_type">linked_data[type]</string>
+    <string name="msg_field_type_value_patient">patient</string>
+    <string name="msg_field_type_value_provider">provider</string>
+    <string name="msg_query_source">source</string>
+    <string name="msg_query_source_value">desktop:patientPortal:messaging:sendMessage</string>
 </resources>

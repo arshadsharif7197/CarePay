@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.base.models;
 
+import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
@@ -95,6 +96,10 @@ public class PatientModel {
     @SerializedName("employment_status")
     @Expose
     private String employmentStatus;
+
+    @SerializedName("employer")
+    @Expose
+    private EmployerDto employer;
 
     @SerializedName("ec_relationship_type")
     @Expose
@@ -282,6 +287,14 @@ public class PatientModel {
 
     public void setEmploymentStatus(String employmentStatus) {
         this.employmentStatus = employmentStatus;
+    }
+
+    public EmployerDto getEmployer() {
+        return employer;
+    }
+
+    public void setEmployer(EmployerDto employer) {
+        this.employer = employer;
     }
 
     public String getEmergencyContactRelationship() {

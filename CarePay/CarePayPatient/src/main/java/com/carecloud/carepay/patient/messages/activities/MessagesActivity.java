@@ -114,7 +114,6 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
         fieldMap.put(getString(R.string.msg_field_participant_id), userId);
         fieldMap.put(getString(R.string.msg_field_participant_name), lookupName(thread, userId));
 
-
         restCallServiceHelper.executeRequest(RestDef.POST,
                 HttpConstants.getMessagingBaseUrl(),
                 postReplyCallback,
@@ -130,16 +129,22 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
     public void postNewMessage(ProviderContact provider, String subject, String message) {
         Map<String, String> fieldMap = new HashMap<>();
         fieldMap.put(getString(R.string.msg_field_message_text), message);
+        fieldMap.put(getString(R.string.msg_field_message_subject), subject);
         fieldMap.put(getString(R.string.msg_field_participant_id), provider.getId());
         fieldMap.put(getString(R.string.msg_field_participant_name), provider.getName());
-        fieldMap.put(getString(R.string.msg_field_message_subject), subject);
+        fieldMap.put(getString(R.string.msg_field_participant_type), getString(R.string.msg_field_type_value_provider));
+        fieldMap.put(getString(R.string.msg_field_linked_id), provider.getPatientId());
+        fieldMap.put(getString(R.string.msg_field_linked_type), getString(R.string.msg_field_type_value_patient));
+
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put(getString(R.string.msg_query_source), getString(R.string.msg_query_source_value));
 
         restCallServiceHelper.executeRequest(RestDef.POST,
                 HttpConstants.getMessagingBaseUrl(),
                 postNewMessageCallback,
                 true,
                 getString(R.string.msg_auth_token_key),
-                null,
+                queryMap,
                 null,
                 fieldMap,
                 getString(R.string.msg_path_message));
