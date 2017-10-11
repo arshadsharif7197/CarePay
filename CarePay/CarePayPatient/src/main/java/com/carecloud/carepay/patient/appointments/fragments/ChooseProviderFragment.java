@@ -52,7 +52,11 @@ public class ChooseProviderFragment extends BaseAppointmentFragment
 
     private ProviderInterface callback;
 
-
+    /**
+     *
+     * @param appointmentsResultModel the model
+     * @return a new instance of ChooseProviderFragment
+     */
     public static ChooseProviderFragment newInstance(AppointmentsResultModel appointmentsResultModel) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, appointmentsResultModel);

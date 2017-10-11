@@ -138,6 +138,10 @@ public class ProviderDTO {
         this.suffix = suffix;
     }
 
+    /**
+     *
+     * @return the first name plus the last name if fullName is empty
+     */
     public String getFullName() {
         if (!SystemUtil.isNotEmptyString(fullName)) {
             fullName = firstName + " " + lastName;

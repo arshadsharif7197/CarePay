@@ -154,7 +154,7 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
         chooseProviderTextView = (TextView) view.findViewById(R.id.providerTextView);
         chooseProviderTextView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 showChooseProviderFragment();
             }
         });

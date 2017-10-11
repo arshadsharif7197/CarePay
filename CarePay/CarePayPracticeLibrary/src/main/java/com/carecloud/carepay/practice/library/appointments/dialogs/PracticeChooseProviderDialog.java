@@ -42,6 +42,13 @@ public class PracticeChooseProviderDialog extends BaseDialogFragment
     private String continueButtonLabel;
     private String titleLabel;
 
+    /**
+     *
+     * @param appointmentsResultModel the model
+     * @param titleLabel the title label
+     * @param continueButtonLabel the button label
+     * @return a new instance of PracticeChooseProviderDialog
+     */
     public static PracticeChooseProviderDialog newInstance(AppointmentsResultModel appointmentsResultModel,
                                                            String titleLabel,
                                                            String continueButtonLabel) {
