@@ -42,6 +42,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -49,6 +50,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class CloverMainActivity extends BasePracticeActivity implements View.OnClickListener {
 
@@ -300,29 +302,33 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
 
     private void navigateToAppointments() {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
+        queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
+
         JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
         Gson gson = new Gson();
+        TransitionDTO transitionDTO = null;
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
-            queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
-
             PracticeHomeScreenTransitionsDTO transitionsDTO = DtoHelper.getConvertedDTO(PracticeHomeScreenTransitionsDTO.class, transitionsAsJsonObject);
-            TransitionDTO transitionDTO = transitionsDTO.getPracticeAppointments();
-            getWorkflowServiceHelper().interrupt();
-            getWorkflowServiceHelper().execute(transitionDTO, checkInCallback, queryMap);
+            transitionDTO = transitionsDTO.getPracticeAppointments();
 
-        } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
+            String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
+            String userId = getApplicationMode().getUserPracticeDTO().getUserId();
+            Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
+
+            if(locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()){
+                queryMap.put("location_ids", StringUtil.getListAsCommaDelimitedString(locationsSavedFilteredIds));
+            }
+
+        } else {
             getApplicationPreferences().setAppointmentNavigationOption(Defs.NAVIGATE_APPOINTMENT);
-            Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
-            queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
 
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
-            TransitionDTO transitionDTO = transitionsDTO.getPatientAppointments();
-            getWorkflowServiceHelper().interrupt();
-            getWorkflowServiceHelper().execute(transitionDTO, checkInCallback, queryMap);
+            transitionDTO = transitionsDTO.getPatientAppointments();
         }
+        getWorkflowServiceHelper().interrupt();
+        getWorkflowServiceHelper().execute(transitionDTO, checkInCallback, queryMap);
     }
 
     private void navigateToPayments() {
@@ -333,29 +339,51 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
             PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
             transitionDTO = transitionsDTO.getPracticePayments();
+
+            String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
+            String userId = getApplicationMode().getUserPracticeDTO().getUserId();
+            Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
+
+            Map<String, String> queryMap = new HashMap<>();
+            if(locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()){
+                queryMap.put("location_ids", StringUtil.getListAsCommaDelimitedString(locationsSavedFilteredIds));
+            }
+            getWorkflowServiceHelper().interrupt();
+            getWorkflowServiceHelper().execute(transitionDTO, commonTransitionCallback, queryMap);
+
         } else {
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
             transitionDTO = transitionsDTO.getPatientPayments();
+            getWorkflowServiceHelper().interrupt();
+            getWorkflowServiceHelper().execute(transitionDTO, commonTransitionCallback);
         }
-        getWorkflowServiceHelper().interrupt();
-        getWorkflowServiceHelper().execute(transitionDTO, commonTransitionCallback);
     }
 
     private void navigateToCheckIn() {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
+        queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
+
         JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
         Gson gson = new Gson();
         TransitionDTO transitionDTO;
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
             PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
             transitionDTO = transitionsDTO.getPracticeCheckin();
+
+            String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
+            String userId = getApplicationMode().getUserPracticeDTO().getUserId();
+            Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
+
+            if(locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()){
+                queryMap.put("location_ids", StringUtil.getListAsCommaDelimitedString(locationsSavedFilteredIds));
+            }
+
         } else {
             getApplicationPreferences().setAppointmentNavigationOption(Defs.NAVIGATE_CHECKIN);
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
             transitionDTO = transitionsDTO.getPatientCheckin();
         }
-        Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
-        queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
 
         getWorkflowServiceHelper().interrupt();
         getWorkflowServiceHelper().execute(transitionDTO, checkInCallback, queryMap);
