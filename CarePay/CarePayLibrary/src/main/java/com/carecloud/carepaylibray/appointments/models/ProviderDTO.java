@@ -1,6 +1,7 @@
 
 package com.carecloud.carepaylibray.appointments.models;
 
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -137,7 +138,14 @@ public class ProviderDTO {
         this.suffix = suffix;
     }
 
+    /**
+     *
+     * @return the first name plus the last name if fullName is empty
+     */
     public String getFullName() {
+        if (!SystemUtil.isNotEmptyString(fullName)) {
+            fullName = firstName + " " + lastName;
+        }
         return fullName;
     }
 

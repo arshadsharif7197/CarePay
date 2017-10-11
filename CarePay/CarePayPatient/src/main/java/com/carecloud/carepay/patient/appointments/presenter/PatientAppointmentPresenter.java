@@ -85,15 +85,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void newAppointment() {
-        Bundle args = new Bundle();
-        Gson gson = new Gson();
-
-        args.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(appointmentsResultModel));
-
-        ChooseProviderFragment chooseProviderFragment = new ChooseProviderFragment();
-        chooseProviderFragment.setArguments(args);
-
-        viewHandler.navigateToFragment(chooseProviderFragment, true);
+        ChooseProviderFragment fragment = ChooseProviderFragment.newInstance(appointmentsResultModel);
+        viewHandler.navigateToFragment(fragment, true);
     }
 
     @Override

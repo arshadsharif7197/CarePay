@@ -25,13 +25,12 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
-import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
-import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -50,13 +49,15 @@ import java.util.Map;
  * Use the {@link NextAppointmentFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NextAppointmentFragment extends BaseFragment {
+public class NextAppointmentFragment extends BaseFragment implements NextAppointmentFragmentInterface {
 
     private CheckOutInterface callback;
     private AppointmentsResultModel appointmentsResultModel;
     private AppointmentDTO selectedAppointment;
+    private ProviderDTO selectedProvider;
     private TextView visitTypeTextView;
     private TextView visitTimeTextView;
+    private TextView chooseProviderTextView;
     private TextView providerMessage;
     private VisitTypeDTO visitType;
     private AppointmentResourcesDTO appointmentResourceDTO;
@@ -103,6 +104,7 @@ public class NextAppointmentFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         appointmentsResultModel = (AppointmentsResultModel) callback.getDto();
         selectedAppointment = getAppointmentSelected();
+        selectedProvider = selectedAppointment.getPayload().getProvider();
     }
 
     @Override
@@ -131,29 +133,34 @@ public class NextAppointmentFragment extends BaseFragment {
     }
 
     private void setUpUi(View view) {
-        final ImageView providerPicImageView = (ImageView) view.findViewById(R.id.providerPicImageView);
-        final TextView providerInitials = (TextView) view.findViewById(R.id.providerInitials);
-        providerInitials.setText(StringUtil.getShortName(selectedAppointment.getPayload()
-                .getProvider().getName()));
-        Picasso.with(getContext()).load(selectedAppointment.getPayload().getProvider().getPhoto())
-                .centerCrop()
-                .transform(new CircleImageTransform())
-                .into(providerPicImageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        providerPicImageView.setVisibility(View.VISIBLE);
-                        providerInitials.setVisibility(View.GONE);
-                    }
+        setUpProviderMessage(view, selectedProvider);
 
-                    @Override
-                    public void onError() {
-                        providerPicImageView.setVisibility(View.GONE);
-                        providerInitials.setVisibility(View.VISIBLE);
-                    }
-                });
+        Button scheduleLaterButton = (Button) view.findViewById(R.id.scheduleLaterButton);
+        scheduleLaterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                scheduleAppointmentLater();
+            }
+        });
 
-        providerMessage = (TextView) findViewById(R.id.providerMessage);
-        setDefaultMessage();
+        scheduleAppointmentButton = (Button) getView().findViewById(R.id.scheduleAppointmentButton);
+        scheduleAppointmentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                scheduleAppointment();
+            }
+        });
+
+        chooseProviderTextView = (TextView) view.findViewById(R.id.providerTextView);
+        chooseProviderTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showChooseProviderFragment();
+            }
+        });
+        if (selectedProvider != null) {
+            chooseProviderTextView.setText(selectedProvider.getFullName());
+        }
 
         visitTypeTextView = (TextView) view.findViewById(R.id.visitTypeTextView);
         visitTypeTextView.setOnClickListener(new View.OnClickListener() {
@@ -173,32 +180,47 @@ public class NextAppointmentFragment extends BaseFragment {
                     start = DateUtil.getInstance().setDateRaw(appointmentSlot.getStartTime()).getDate();
                     end = DateUtil.getInstance().setDateRaw(appointmentSlot.getEndTime()).getDate();
                 }
-                callback.showAvailableHoursFragment(start, end, appointmentsResultModel, appointmentResourceDTO.getResource(), visitType);
+                callback.showAvailableHoursFragment(start, end, appointmentsResultModel,
+                        appointmentResourceDTO.getResource(), visitType);
             }
         });
+    }
 
-        Button scheduleLaterButton = (Button) view.findViewById(R.id.scheduleLaterButton);
-        scheduleLaterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                scheduleAppointmentLater();
-            }
-        });
+    private void setUpProviderMessage(View view, ProviderDTO provider) {
+        final ImageView providerPicImageView = (ImageView) view.findViewById(R.id.providerPicImageView);
+        final TextView providerInitials = (TextView) view.findViewById(R.id.providerInitials);
+        providerInitials.setText(StringUtil.getShortName(provider.getName()));
+        Picasso.with(getContext()).load(provider.getPhoto())
+                .centerCrop()
+                .transform(new CircleImageTransform())
+                .into(providerPicImageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        providerPicImageView.setVisibility(View.VISIBLE);
+                        providerInitials.setVisibility(View.GONE);
+                    }
 
-        scheduleAppointmentButton = (Button) getView().findViewById(R.id.scheduleAppointmentButton);
-        scheduleAppointmentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                scheduleAppointment();
-            }
-        });
+                    @Override
+                    public void onError() {
+                        providerPicImageView.setVisibility(View.GONE);
+                        providerInitials.setVisibility(View.VISIBLE);
+                    }
+                });
+
+        providerMessage = (TextView) findViewById(R.id.providerMessage);
+        setDefaultMessage();
+    }
+
+    private void showChooseProviderFragment() {
+        callback.showChooseProviderFragment();
     }
 
     private void showVisitTypeFragment() {
         Map<String, String> queries = new HashMap<>();
         queries.put("practice_mgmt", selectedAppointment.getMetadata().getPracticeMgmt());
         queries.put("practice_id", selectedAppointment.getMetadata().getPracticeId());
-        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getLinks().getResourcesToSchedule();
+        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata()
+                .getLinks().getResourcesToSchedule();
         Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
         getWorkflowServiceHelper().execute(transitionDTO, resourcesToScheduleCallback, queries, header);
     }
@@ -211,13 +233,15 @@ public class NextAppointmentFragment extends BaseFragment {
         queryMap.put("patient_id", selectedAppointment.getMetadata().getPatientId());
         Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
         header.put("transition", "true");
-        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getContinueTransition();
+        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata()
+                .getTransitions().getContinueTransition();
         getWorkflowServiceHelper().execute(transitionDTO, continueCallback, queryMap, header);
     }
 
     private void scheduleAppointment() {
         ScheduleAppointmentRequestDTO scheduleAppointmentRequestDTO = new ScheduleAppointmentRequestDTO();
-        ScheduleAppointmentRequestDTO.Appointment appointment = scheduleAppointmentRequestDTO.getAppointment();
+        ScheduleAppointmentRequestDTO.Appointment appointment = scheduleAppointmentRequestDTO
+                .getAppointment();
         appointment.setStartTime(appointmentSlot.getStartTime());
         appointment.setEndTime(appointmentSlot.getEndTime());
         appointment.setLocationId(appointmentSlot.getLocation().getId());
@@ -231,7 +255,8 @@ public class NextAppointmentFragment extends BaseFragment {
         appointment.getPatient().setId(selectedAppointment.getMetadata().getPatientId());
 
         if (visitType.getAmount() > 0) {
-            callback.startPrepaymentProcess(scheduleAppointmentRequestDTO, appointmentSlot, visitType.getAmount());
+            callback.startPrepaymentProcess(scheduleAppointmentRequestDTO, appointmentSlot,
+                    visitType.getAmount());
         } else {
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("practice_mgmt", selectedAppointment.getMetadata().getPracticeMgmt());
@@ -261,7 +286,8 @@ public class NextAppointmentFragment extends BaseFragment {
             hideProgressDialog();
             onAppointmentRequestSuccess();
             String state = workflowDTO.getState();
-            if (NavigationStateConstants.APPOINTMENTS.equals(state) || NavigationStateConstants.PATIENT_HOME.equals(state)) {
+            if (NavigationStateConstants.APPOINTMENTS.equals(state)
+                    || NavigationStateConstants.PATIENT_HOME.equals(state)) {
                 callback.showAllDone(workflowDTO);
             } else {
                 callback.navigateToWorkflow(workflowDTO);
@@ -294,7 +320,8 @@ public class NextAppointmentFragment extends BaseFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             String state = workflowDTO.getState();
-            if (NavigationStateConstants.APPOINTMENTS.equals(state) || NavigationStateConstants.PATIENT_HOME.equals(state)) {
+            if (NavigationStateConstants.APPOINTMENTS.equals(state)
+                    || NavigationStateConstants.PATIENT_HOME.equals(state)) {
                 callback.showAllDone(workflowDTO);
             } else {
                 callback.navigateToWorkflow(workflowDTO);
@@ -310,7 +337,7 @@ public class NextAppointmentFragment extends BaseFragment {
     private void onFailureCallback(String exceptionMessage) {
         hideProgressDialog();
         showErrorNotification(exceptionMessage);
-        Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
+        Log.e("Server Error", exceptionMessage);
     }
 
     WorkflowServiceCallback resourcesToScheduleCallback = new WorkflowServiceCallback() {
@@ -370,6 +397,7 @@ public class NextAppointmentFragment extends BaseFragment {
     /**
      * @param visitTypeDTO the visit type
      */
+    @Override
     public boolean setVisitType(VisitTypeDTO visitTypeDTO) {
         visitType = visitTypeDTO;
         visitTypeTextView.setText(visitTypeDTO.getName());
@@ -386,9 +414,21 @@ public class NextAppointmentFragment extends BaseFragment {
         return shouldOpenHoursFragment;
     }
 
+    @Override
+    public void setSelectedProvider(ProviderDTO provider) {
+        selectedProvider = provider;
+        if (selectedProvider != null) {
+            selectedAppointment.getPayload().setProvider(provider);
+            chooseProviderTextView.setText(selectedProvider.getFullName());
+            setUpProviderMessage(getView(), selectedProvider);
+            showVisitTypeFragment();
+        }
+    }
+
     /**
      * @param appointmentsSlot the location and time of the appointment
      */
+    @Override
     public void setLocationAndTime(AppointmentsSlotsDTO appointmentsSlot) {
         this.appointmentSlot = appointmentsSlot;
         String nextAppointmentDate = getNextAppointmentDate(appointmentsSlot.getStartTime());
@@ -415,7 +455,8 @@ public class NextAppointmentFragment extends BaseFragment {
     }
 
     private AppointmentsSettingDTO getPracticeSettings() {
-        List<AppointmentsSettingDTO> appointmentsSettingsList = appointmentsResultModel.getPayload().getAppointmentsSettings();
+        List<AppointmentsSettingDTO> appointmentsSettingsList = appointmentsResultModel
+                .getPayload().getAppointmentsSettings();
         String practiceId = selectedAppointment.getMetadata().getPracticeId();
         if (practiceId != null) {
             for (AppointmentsSettingDTO appointmentsSettingDTO : appointmentsSettingsList) {

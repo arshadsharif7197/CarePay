@@ -57,7 +57,8 @@ import java.util.Map;
  */
 
 public abstract class BasePracticeAppointmentsActivity extends BasePracticeActivity
-        implements AppointmentNavigationCallback, AppointmentPrepaymentCallback, PaymentMethodDialogInterface,
+        implements AppointmentNavigationCallback, AppointmentPrepaymentCallback,
+        PaymentMethodDialogInterface,
         DateRangePickerDialog.DateRangePickerDialogListener {
 
     private Date startDate;
@@ -86,14 +87,16 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     public void showAppointmentConfirmation() {
 
         if (isVisible()) {
-            SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_request_success_message_HTML"));
+            SystemUtil.showSuccessToast(getContext(),
+                    Label.getLabel("appointment_request_success_message_HTML"));
         }
 
         onAppointmentRequestSuccess();
     }
 
     @Override
-    public void onHoursAndLocationSelected(AppointmentsSlotsDTO appointmentsSlot, AppointmentAvailabilityDTO availabilityDTO) {
+    public void onHoursAndLocationSelected(AppointmentsSlotsDTO appointmentsSlot,
+                                           AppointmentAvailabilityDTO availabilityDTO) {
         // Call Request appointment Summary dialog from here
         String cancelString = Label.getLabel("available_hours_back");
         new PracticeRequestAppointmentDialog(
@@ -116,7 +119,8 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     @Override
     public void onDateRangeCancelled() {
-        onDateRangeSelected(startDate, endDate, visitTypeDTO, appointmentResourcesDTO.getResource(), resourcesToSchedule);
+        onDateRangeSelected(startDate, endDate, visitTypeDTO, appointmentResourcesDTO.getResource(),
+                resourcesToSchedule);
     }
 
     @Override
@@ -144,7 +148,8 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
             startPrepaymentProcess(scheduleAppointmentRequestDTO, appointmentSlot, amount);
         }else {
             Gson gson = new Gson();
-            getWorkflowServiceHelper().execute(getMakeAppointmentTransition(), getMakeAppointmentCallback, gson.toJson(scheduleAppointmentRequestDTO), queryMap);
+            getWorkflowServiceHelper().execute(getMakeAppointmentTransition(),
+                    getMakeAppointmentCallback, gson.toJson(scheduleAppointmentRequestDTO), queryMap);
         }
     }
 
@@ -178,7 +183,8 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     @Override
     public void newAppointment() {
-        getWorkflowServiceHelper().execute(getLinks().getResourcesToSchedule(), scheduleResourcesCallback, null, null, null);
+        getWorkflowServiceHelper().execute(getLinks().getResourcesToSchedule(),
+                scheduleResourcesCallback, null, null, null);
     }
 
     @Override
@@ -187,7 +193,9 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     }
 
     @Override
-    public void onProviderSelected(AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel, ResourcesToScheduleDTO resourcesToScheduleDTO) {
+    public void onProviderSelected(AppointmentResourcesDTO appointmentResourcesDTO,
+                                   AppointmentsResultModel appointmentsResultModel,
+                                   ResourcesToScheduleDTO resourcesToScheduleDTO) {
         resourcesToSchedule = appointmentsResultModel;
         String tag = VisitTypeFragmentDialog.class.getSimpleName();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -197,7 +205,8 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         }
         ft.addToBackStack(null);
 
-        VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog.newInstance(appointmentResourcesDTO, appointmentsResultModel, getAppointmentsSettings());
+        VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog
+                .newInstance(appointmentResourcesDTO, appointmentsResultModel, getAppointmentsSettings());
         dialog.show(ft, tag);
     }
 
@@ -207,21 +216,31 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
      * @param visitTypeDTO selected visit type from dialog
      */
     @Override
-    public void onVisitTypeSelected(VisitTypeDTO visitTypeDTO, AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
+    public void onVisitTypeSelected(VisitTypeDTO visitTypeDTO,
+                                    AppointmentResourcesDTO appointmentResourcesDTO,
+                                    AppointmentsResultModel appointmentsResultModel) {
         this.appointmentResourcesDTO = appointmentResourcesDTO;
         this.visitTypeDTO = visitTypeDTO;
-        PracticeAvailableHoursDialogFragment fragment = PracticeAvailableHoursDialogFragment.newInstance(appointmentsResultModel, appointmentResourcesDTO.getResource(), null, null, visitTypeDTO);
+        PracticeAvailableHoursDialogFragment fragment = PracticeAvailableHoursDialogFragment
+                .newInstance(appointmentsResultModel, appointmentResourcesDTO.getResource(),
+                        null, null, visitTypeDTO);
         displayDialogFragment(fragment, true);
     }
 
     @Override
-    public void onDateRangeSelected(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource, AppointmentsResultModel appointmentsResultModel) {
-        PracticeAvailableHoursDialogFragment fragment = PracticeAvailableHoursDialogFragment.newInstance(appointmentsResultModel, appointmentResourcesDTO.getResource(), startDate, endDate, visitTypeDTO);
+    public void onDateRangeSelected(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO,
+                                    AppointmentResourcesItemDTO appointmentResource,
+                                    AppointmentsResultModel appointmentsResultModel) {
+        PracticeAvailableHoursDialogFragment fragment = PracticeAvailableHoursDialogFragment
+                .newInstance(appointmentsResultModel, appointmentResourcesDTO.getResource(),
+                        startDate, endDate, visitTypeDTO);
         fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
     }
 
     @Override
-    public void selectDateRange(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource, AppointmentsResultModel appointmentsResultModel) {
+    public void selectDateRange(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO,
+                                AppointmentResourcesItemDTO appointmentResource,
+                                AppointmentsResultModel appointmentsResultModel) {
         DateUtil dateUtil = DateUtil.getInstance().setToCurrent();
         DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
                 Label.getLabel("date_range_picker_dialog_title"),
@@ -246,19 +265,16 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            AppointmentsResultModel resourcesToScheduleModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+            AppointmentsResultModel resourcesToScheduleModel = DtoHelper
+                    .getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
 
             if (resourcesToScheduleModel != null && resourcesToScheduleModel.getPayload() != null
                     && resourcesToScheduleModel.getPayload().getResourcesToSchedule() != null
                     && resourcesToScheduleModel.getPayload().getResourcesToSchedule().size() > 0) {
-
-                Bundle bundle = new Bundle();
-                bundle.putString("titleLabel", Label.getLabel("practice_list_select_a_provider"));
-                bundle.putString("continueButtonLabel", Label.getLabel("practice_list_continue"));
-                DtoHelper.bundleDto(bundle, resourcesToScheduleModel);
-
-                PracticeChooseProviderDialog fragment = new PracticeChooseProviderDialog();
-                fragment.setArguments(bundle);
+                PracticeChooseProviderDialog fragment = PracticeChooseProviderDialog
+                        .newInstance(resourcesToScheduleModel,
+                                Label.getLabel("practice_list_select_a_provider"),
+                                Label.getLabel("practice_list_continue"));
                 fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
             }
         }
@@ -274,7 +290,8 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     protected abstract LinksDTO getLinks();
 
     private AppointmentsSettingDTO getAppointmentsSettings(){
-        List<AppointmentsSettingDTO> appointmentsSettingDTOList = appointmentsResultModel.getPayload().getAppointmentsSettings();
+        List<AppointmentsSettingDTO> appointmentsSettingDTOList = appointmentsResultModel
+                .getPayload().getAppointmentsSettings();
         if(!appointmentsSettingDTOList.isEmpty()){
             return appointmentsSettingDTOList.get(0);
         }
@@ -282,7 +299,8 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     }
 
     @Override
-    public void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDTO, AppointmentsSlotsDTO appointmentSlot, double amount) {
+    public void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDTO,
+                                       AppointmentsSlotsDTO appointmentSlot, double amount) {
         this.appointmentSlot = appointmentSlot;
         IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
         postModel.setAmount(amount);
@@ -331,9 +349,12 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     }
 
     @Override
-    public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
-        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel, selectedPaymentMethod.getLabel(), amount);
+    public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount,
+                                      PaymentsModel paymentsModel) {
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
+                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            DialogFragment fragment = PracticeChooseCreditCardFragment
+                    .newInstance(paymentsModel, selectedPaymentMethod.getLabel(), amount);
             displayDialogFragment(fragment, false);
         } else {
             showAddCard(amount, paymentsModel);
@@ -355,10 +376,12 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
+        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload()
+                .getPatientPayments().getPayload();
         if(!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid()==0D){
             StringBuilder builder = new StringBuilder();
-            for(IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()){
+            for(IntegratedPatientPaymentPayload.ProcessingError processingError
+                    : payload.getProcessingErrors()){
                 builder.append(processingError.getError());
                 builder.append("\n");
             }
