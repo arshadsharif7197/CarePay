@@ -334,7 +334,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
             chooseEmployer.setText(employer.getName());
             chooseEmployer.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View view) {
                     callback.displayEmployerDetail(employer);
                 }
             });

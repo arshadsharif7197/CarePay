@@ -59,6 +59,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
     @Override
     public void attachCallback(Context context) {
+        super.attachCallback(context);
         try {
             if (context instanceof DemographicsView) {
                 callback = ((DemographicsView) context).getPresenter();
