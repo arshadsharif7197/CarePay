@@ -28,10 +28,10 @@ import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDial
 import com.carecloud.carepay.practice.library.payments.fragments.AddPaymentItemFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionEntryFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentHistoryDetailFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentHistoryFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentHistoryDetailFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentNavigationCallback;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
@@ -59,6 +59,7 @@ import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
@@ -183,8 +184,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     }
 
     private void populateLists() {
-        ArrayList<FilterDataDTO> providers = new ArrayList<>();
-        ArrayList<FilterDataDTO> locations = new ArrayList<>();
+//        ArrayList<FilterDataDTO> providers = new ArrayList<>();
         ArrayList<FilterDataDTO> patients = new ArrayList<>();
 
         Map<String, String> photoMap = PracticeUtil.getProfilePhotoMap(checkInDTO.getPayload()
@@ -205,15 +205,39 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         List<AppointmentDTO> appointments = payload.getAppointments();
         for (AppointmentDTO appointmentDTO : appointments) {
             AppointmentsPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
-            addProviderOnProviderFilterList(providers, appointmentPayloadDTO, providersSavedFilteredIds);
-            addLocationOnFilterList(locations, appointmentPayloadDTO, locationsSavedFilteredIds);
+//            addProviderOnProviderFilterList(providers, appointmentPayloadDTO, providersSavedFilteredIds);
             addPatientOnFilterList(patients, appointmentPayloadDTO, photoMap);
         }
 
-        filter.setDoctors(providers);
-        filter.setLocations(locations);
+        filter.setDoctors(getFilterProviders(providersSavedFilteredIds));
+        filter.setLocations(getFilterLocations(locationsSavedFilteredIds));
         filter.setPatients(patients);
     }
+
+    private ArrayList<FilterDataDTO> getFilterLocations(Set<String> selectedLocationsIds){
+        ArrayList<FilterDataDTO> locations = new ArrayList<>();
+        for(LocationDTO locationDTO : checkInDTO.getPayload().getLocations()){
+            FilterDataDTO filterLocation = new FilterDataDTO(locationDTO.getId(), locationDTO.getName(), FilterDataDTO.FilterDataType.LOCATION);
+            if(selectedLocationsIds != null && selectedLocationsIds.contains(String.valueOf(filterLocation.getId()))){
+                filterLocation.setChecked(true);
+            }
+            locations.add(filterLocation);
+        }
+        return locations;
+    }
+
+    private ArrayList<FilterDataDTO> getFilterProviders(Set<String> selectedProvidersIds){
+        ArrayList<FilterDataDTO> providers = new ArrayList<>();
+        for(ProviderDTO providerDTO : checkInDTO.getPayload().getProviders()){
+            FilterDataDTO filterProvider = new FilterDataDTO(providerDTO.getId(), providerDTO.getName(), FilterDataDTO.FilterDataType.PROVIDER);
+            if(selectedProvidersIds != null && selectedProvidersIds.contains(String.valueOf(filterProvider.getId()))){
+                filterProvider.setChecked(true);
+            }
+            providers.add(filterProvider);
+        }
+        return providers;
+    }
+
 
     private void setAdapter() {
         checkingInAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this,
@@ -233,22 +257,6 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         checkedOutRecyclerView.setAdapter(checkedOutAdapter);
 
         applyFilter();
-    }
-
-    private void addLocationOnFilterList(ArrayList<FilterDataDTO> locationsList,
-                                         AppointmentsPayloadDTO appointmentPayloadDTO,
-                                         Set<String> locationsSavedFilteredIds) {
-        FilterDataDTO filterDataDTO;
-        LocationDTO locationDTO = appointmentPayloadDTO.getLocation();
-        filterDataDTO = new FilterDataDTO(locationDTO.getId(), locationDTO.getName(),
-                FilterDataDTO.FilterDataType.LOCATION);
-        if (locationsList.indexOf(filterDataDTO) < 0) {
-            if ((locationsSavedFilteredIds != null) && locationsSavedFilteredIds
-                    .contains(String.valueOf(locationDTO.getId()))) {
-                filterDataDTO.setChecked(true);
-            }
-            locationsList.add(filterDataDTO);
-        }
     }
 
     private void addPatientOnFilterList(ArrayList<FilterDataDTO> patients,
@@ -437,6 +445,11 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         waitingCounterTextView.setText(String.valueOf(checkedInAdapter.getItemCount()));
         checkingOutCounterTextView.setText(String.valueOf(checkingOutAdapter.getItemCount()));
         checkedOutCounterTextView.setText(String.valueOf(checkedOutAdapter.getItemCount()));
+    }
+
+    @Override
+    public void refreshData() {
+        refreshLists();
     }
 
     private PendingBalanceDTO getPatientBalanceDTOs(String patientId) {
@@ -728,5 +741,45 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         PracticePaymentHistoryDetailFragment fragment = PracticePaymentHistoryDetailFragment.newInstance(item);
         displayDialogFragment(fragment, true);
     }
+
+    private void refreshLists(){
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
+        queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
+
+        String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
+        String userId = getApplicationMode().getUserPracticeDTO().getUserId();
+        Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
+
+        if(locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()){
+            queryMap.put("location_ids", StringUtil.getListAsCommaDelimitedString(locationsSavedFilteredIds));
+        }
+
+        TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getPracticeAppointments();
+        getWorkflowServiceHelper().execute(transitionDTO, refreshListCallback, queryMap);
+
+    }
+
+    private WorkflowServiceCallback refreshListCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            checkInDTO = DtoHelper.getConvertedDTO(CheckInDTO.class, workflowDTO);
+            populateLists();
+            setAdapter();
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+        }
+    };
+
 
 }
