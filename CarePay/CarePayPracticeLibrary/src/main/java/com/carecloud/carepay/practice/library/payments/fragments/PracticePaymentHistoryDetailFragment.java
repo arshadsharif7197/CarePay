@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentHistoryCallback;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibray.payments.fragments.PaymentHistoryDetailFragment;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
@@ -109,8 +110,9 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
             }
         }, 100);
 
+        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
         View refundButton = view.findViewById(R.id.refund_button);
-        refundButton.setEnabled(historyItem.getPayload().getMetadata().isExternallyProcessed());//todo remove this, just for testing exclusively clover refunds
+        refundButton.setEnabled(isCloverDevice && historyItem.getPayload().getMetadata().isExternallyProcessed());//todo remove this, just for testing exclusively clover refunds
         refundButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
