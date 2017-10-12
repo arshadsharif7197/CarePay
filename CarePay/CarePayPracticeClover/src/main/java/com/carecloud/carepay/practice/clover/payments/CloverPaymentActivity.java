@@ -267,7 +267,7 @@ public class CloverPaymentActivity extends BaseActivity {
         protected final void onPostExecute(Order order) {
             if (order == null) {
                 setResult(RESULT_CANCELED);
-                SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.payment_cancelled));
+                SystemUtil.showErrorToast(CloverPaymentActivity.this, Label.getLabel("clover_payment_canceled"));
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {

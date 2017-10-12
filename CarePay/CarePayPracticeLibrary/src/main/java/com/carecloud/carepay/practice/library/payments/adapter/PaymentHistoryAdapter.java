@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.payments.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
@@ -37,6 +40,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
     private HistoryItemClickListener callback;
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
     private boolean isLoading = false;
+    boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
 
     /**
      * Constructor
@@ -93,6 +97,13 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
                 callback.onHistoryItemClicked(item);
             }
         });
+
+        //Todo remove this... using it just to easily identify clover transactions in the list
+        if(isCloverDevice && item.getPayload().getMetadata().isExternallyProcessed()){
+            holder.transactionAmount.setTextColor(ContextCompat.getColor(context, R.color.emerald));
+        }else{
+            holder.transactionAmount.setTextColor(ContextCompat.getColor(context, R.color.textview_default_textcolor));
+        }
     }
 
     @Override

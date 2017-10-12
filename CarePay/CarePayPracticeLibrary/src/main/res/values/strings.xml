@@ -7,14 +7,6 @@
     <string name="not_defined">Not Defined</string>
     <string name="no_account">There is no Clover account.</string>
 
-    <string name="empty_inventory">Please add an item to the inventory before attempting to take orders.</string>
-
-    <string name="payment_successful">Payment Succeeded for Order: %1$s</string>
-
-    <string name="payment_cancelled">Payment Cancelled</string>
-
-    <string name="amount_required">Valid amount is required</string>
-
     <string name="forgotpassword">Forgot password</string>
 
     <string name="home_icon_check_in">Check-in</string>
