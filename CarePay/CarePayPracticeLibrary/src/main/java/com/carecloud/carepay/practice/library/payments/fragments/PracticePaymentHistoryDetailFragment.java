@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.NestedScrollView;
@@ -13,12 +14,19 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentHistoryCallback;
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibray.payments.fragments.PaymentHistoryDetailFragment;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.google.gson.Gson;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lmenendez on 9/29/17
@@ -101,6 +109,42 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
                 scrollView.scrollTo(0,0);
             }
         }, 100);
+
+        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
+        View refundButton = view.findViewById(R.id.refund_button);
+        refundButton.setEnabled(isCloverDevice && historyItem.getPayload().getMetadata().isExternallyProcessed());//todo remove this, just for testing exclusively clover refunds
+        refundButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                processRefund();
+            }
+        });
+
     }
 
+    private void processRefund(){
+        if(historyItem.getPayload().getMetadata().isExternallyProcessed()){
+            Intent intent = new Intent();
+            intent.setAction(CarePayConstants.CLOVER_REFUND_INTENT);
+            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, historyItem.getPayload().getAmount());
+
+            Gson gson = new Gson();
+            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(getPaymentLineItems()));
+            startActivity(intent);
+        }
+    }
+
+
+    private List<PaymentLineItem> getPaymentLineItems(){
+        List<PaymentLineItem> paymentLineItems = new ArrayList<>();
+        for (IntegratedPaymentLineItem lineItem : historyItem.getPayload().getLineItems()) {
+            PaymentLineItem paymentLineItem = new PaymentLineItem();
+            paymentLineItem.setAmount(lineItem.getAmount());
+            paymentLineItem.setDescription(lineItem.getDescription());
+
+            paymentLineItems.add(paymentLineItem);
+
+        }
+        return paymentLineItems;
+    }
 }
