@@ -212,6 +212,12 @@ public class DemographicsSettingsFragment extends BaseFragment {
                 .getPayload().getPersonalDetails();
         String firstName = demographicsPersonalDetails.getFirstName();
         String lastName = demographicsPersonalDetails.getLastName();
+        if(firstName == null){
+            firstName = "";
+        }
+        if(lastName == null){
+            lastName = "";
+        }
         return (StringUtil.capitalize(firstName + " " + lastName));
     }
 
