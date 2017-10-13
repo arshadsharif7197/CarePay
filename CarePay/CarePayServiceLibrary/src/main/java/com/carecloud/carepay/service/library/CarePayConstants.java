@@ -113,6 +113,7 @@ public class CarePayConstants {
     //Clover Constants
     public static final String CLOVER_DEVICE = "Clover";
     public static final String CLOVER_PAYMENT_INTENT = "com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity";
+    public static final String CLOVER_REFUND_INTENT = "com.carecloud.carepay.practice.clover.payments.CloverRefundActivity";
     public static final int CLOVER_PAYMENT_INTENT_REQUEST_CODE = 0x37;
     public static final String CLOVER_PAYMENT_AMOUNT = "clover_payment_amount";
     public static final String CLOVER_PAYMENT_METADATA = "clover_payment_metadata";
@@ -146,5 +147,9 @@ public class CarePayConstants {
 
     //AdHoc
     public static final String ADHOC_FORMS = "adhocForms";
+
+    //Patient Mode Login
+    public static final String LOGIN_OPTION_QR = "login_option_qr";
+    public static final String LOGIN_OPTION_SEARCH = "login_option_search";
 
 }

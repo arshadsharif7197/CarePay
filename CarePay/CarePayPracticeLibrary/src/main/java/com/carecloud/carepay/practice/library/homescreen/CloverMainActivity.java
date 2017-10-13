@@ -33,6 +33,7 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.PatientHomeScreenT
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenPayloadDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenTransitionsDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLinksDTO;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.Defs;
@@ -445,7 +446,15 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            ;
+            if(homeScreenMode == HomeScreenMode.PATIENT_HOME){
+                Bundle extra = new Bundle();
+                extra.putBoolean(CarePayConstants.LOGIN_OPTION_QR, getApplicationPreferences().getAppointmentNavigationOption() != Defs.NAVIGATE_APPOINTMENT);
+                extra.putBoolean(CarePayConstants.LOGIN_OPTION_SEARCH, true);
+                PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, extra);
+            }else {
+                PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            }
         }
 
         @Override
@@ -556,7 +565,14 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            if(homeScreenMode == HomeScreenMode.PATIENT_HOME){
+                Bundle extra = new Bundle();
+                extra.putBoolean(CarePayConstants.LOGIN_OPTION_QR, false);
+                extra.putBoolean(CarePayConstants.LOGIN_OPTION_SEARCH, true);
+                PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, extra);
+            }else {
+                PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            }
         }
 
         @Override
