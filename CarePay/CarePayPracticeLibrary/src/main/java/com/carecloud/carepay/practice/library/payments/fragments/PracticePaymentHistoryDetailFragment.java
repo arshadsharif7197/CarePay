@@ -81,7 +81,7 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
             }
         });
 
-        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(historyItem.getPayload().getDate());
+        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(historyItem.getPayload().getDate()).shiftDateToGMT();
 
         TextView transactionDate = (TextView) view.findViewById(R.id.transaction_date);
         transactionDate.setText(dateUtil.getDateAsMonthLiteralDayOrdinalYear());
