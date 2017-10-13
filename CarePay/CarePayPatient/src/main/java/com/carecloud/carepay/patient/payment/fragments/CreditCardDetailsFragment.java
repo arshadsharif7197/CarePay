@@ -164,8 +164,10 @@ public class CreditCardDetailsFragment extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.setting_credit_card, menu);
-        menu.getItem(0).setTitle(Label.getLabel("edit_credit_card_remove_label"));
+        if(!creditCardsPayloadDTO.getPayload().isDefault()) {
+            inflater.inflate(R.menu.setting_credit_card, menu);
+            menu.getItem(0).setTitle(Label.getLabel("edit_credit_card_remove_label"));
+        }
         super.onCreateOptionsMenu(menu, inflater);
     }
 
