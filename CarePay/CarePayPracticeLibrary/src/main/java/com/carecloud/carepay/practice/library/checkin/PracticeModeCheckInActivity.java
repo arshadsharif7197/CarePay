@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.checkin;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -85,6 +86,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     private FilterModel filter;
 
+    private Handler handler;
+
     CheckInDTO checkInDTO;
 
     CheckedInAppointmentAdapter checkingInAdapter;
@@ -103,6 +106,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        handler = new Handler();
         checkInDTO = getConvertedDTO(CheckInDTO.class);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -111,6 +115,12 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         initializationView();
         populateLists();
         setAdapter();
+    }
+
+    @Override
+    protected void onDestroy(){
+        handler.removeCallbacksAndMessages(null);
+        super.onDestroy();
     }
 
     private void initializationView() {
@@ -240,19 +250,19 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
 
     private void setAdapter() {
-        checkingInAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this,
+        checkingInAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this, handler,
                 CheckedInAppointmentAdapter.CHECKING_IN);
         checkingInRecyclerView.setAdapter(checkingInAdapter);
 
-        checkedInAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this,
+        checkedInAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this, handler,
                 CheckedInAppointmentAdapter.CHECKED_IN);
         checkedInRecyclerView.setAdapter(checkedInAdapter);
 
-        checkingOutAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this,
+        checkingOutAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this, handler,
                 CheckedInAppointmentAdapter.CHECKING_OUT);
         checkingOutRecyclerView.setAdapter(checkingOutAdapter);
 
-        checkedOutAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this,
+        checkedOutAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this, handler,
                 CheckedInAppointmentAdapter.CHECKED_OUT);
         checkedOutRecyclerView.setAdapter(checkedOutAdapter);
 

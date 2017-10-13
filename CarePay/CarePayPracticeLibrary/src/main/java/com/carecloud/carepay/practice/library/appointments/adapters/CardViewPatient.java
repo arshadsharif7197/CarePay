@@ -2,6 +2,7 @@ package com.carecloud.carepay.practice.library.appointments.adapters;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
+import com.carecloud.carepaylibray.appointments.models.CheckinStatusDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
@@ -33,6 +34,8 @@ public class CardViewPatient {
     public Boolean isPending;
     public Boolean isCheckingOut;
     public Boolean isCheckedOut;
+    public CheckinStatusDTO checkinStatus;
+    public Date lastUpdate;
     int headCount;
 
     CardViewPatient(Object raw, String id, ProviderIndexDTO provider, LocationIndexDTO location, Double balance, PatientModel dto) {
@@ -90,6 +93,8 @@ public class CardViewPatient {
         this.isCheckedOut = code.equalsIgnoreCase(CarePayConstants.CHECKED_OUT) ||
                 code.equalsIgnoreCase(CarePayConstants.BILLED) ||
                 code.equalsIgnoreCase(CarePayConstants.MANUALLY_BILLED);
+        this.checkinStatus = dto.getAppointmentStatus().getCheckinStatusDTO();
+        this.lastUpdate = DateUtil.getInstance().setDateRaw(dto.getAppointmentStatus().getLastUpdated()).shiftDateToGMT().getDate();
     }
 
     /**

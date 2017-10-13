@@ -19,8 +19,6 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.adapters.CheckedInAppointmentAdapter;
 import com.carecloud.carepay.practice.library.checkin.adapters.PagePickerAdapter;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusDataPayloadValueDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueryStrings;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerWindow;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -29,6 +27,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
+import com.carecloud.carepaylibray.appointments.models.CheckinStatusDTO;
 import com.carecloud.carepaylibray.appointments.models.QueueDTO;
 import com.carecloud.carepaylibray.appointments.models.QueueStatusPayloadDTO;
 import com.carecloud.carepaylibray.base.ISession;
@@ -146,8 +145,8 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         setCancelable(true);
 
-        callGetCheckInStatusAPI(); //API call for getting check-in status
         onInitialization();
+        callGetCheckInStatusAPI(); //API call for getting check-in status
         onSetValuesFromDTO();
 //        onSettingStyle();
 
@@ -345,13 +344,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
             WorkflowServiceCallback callback;
 
             if (theRoom == CheckedInAppointmentAdapter.CHECKING_IN) {
-                queryStringObject = checkInDTO.getMetadata().getLinks().getCheckinStatus().getQueryString();
-                queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
-                querymap = getStatusQueryParam(queryStrings);
-                transition = checkInDTO.getMetadata().getLinks().getCheckinStatus();
-                callback = getStatusCallBack;
-
-                ((ISession) context).getWorkflowServiceHelper().execute(transition, callback, querymap);
+                updateCheckinStatus();
             } else if (theRoom == CheckedInAppointmentAdapter.CHECKED_IN) {
                 queryStringObject = checkInDTO.getMetadata().getLinks().getQueueStatus().getQueryString();
                 queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
@@ -361,7 +354,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
                 ((ISession) context).getWorkflowServiceHelper().execute(transition, callback, querymap);
             } else if (theRoom == CheckedInAppointmentAdapter.CHECKING_OUT) {
-                //TODO: will do in a next ticket
+                updateCheckoutStatus();
             } else if (theRoom == CheckedInAppointmentAdapter.CHECKED_OUT) {
                 //TODO: will do in a next ticket
             }
@@ -381,37 +374,6 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
         return queryMap;
     }
-
-    /**
-     * @param queryStrings the query strings for the status url
-     * @return queryMap
-     */
-    private Map<String, String> getStatusQueryParam(QueryStrings queryStrings) {
-        Map<String, String> queryMap = new HashMap<>();
-        if (appointmentPayloadDTO != null) {
-            queryMap.put(queryStrings.getAppointmentId().getName(), appointmentPayloadDTO.getId());
-        }
-
-        return queryMap;
-    }
-
-    private WorkflowServiceCallback getStatusCallBack = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            updatePageOptions(workflowDTO);
-            updateCheckinStatus(workflowDTO);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            callback.onFailure(exceptionMessage);
-            Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
 
     private WorkflowServiceCallback getQueueCallBack = new WorkflowServiceCallback() {
         @Override
@@ -529,71 +491,91 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         }
     }
 
-    /**
-     * @param workflowDTO workflow model returned by server.
-     */
-    private void updateCheckinStatus(WorkflowDTO workflowDTO) {
-        try {
-            CheckInStatusPayloadDTO checkInStatusPayloadDTO = workflowDTO.getPayload(CheckInStatusPayloadDTO.class);
 
-            if (checkInStatusPayloadDTO != null) {
-                CheckInStatusDataPayloadValueDTO payloadValueDTO = checkInStatusPayloadDTO
-                        .getCheckInStatusData().getPayload();
-                final boolean demographicsComplete = payloadValueDTO.getDemographicsVerifyComplete()
-                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED);
-                final boolean consentComplete = payloadValueDTO.getConsentFormsComplete()
-                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED);
-                final boolean medicationsComplete = payloadValueDTO.getMedicationsComplete()
-                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED);
-                final boolean intakeComplete = payloadValueDTO.getIntakeFormsComplete()
-                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED);
-                final boolean paymentComplete = payloadValueDTO.getRespsonsibility()
-                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED);
+    private void updateCheckinStatus() {
+        CheckinStatusDTO checkinStatusDTO = appointmentPayloadDTO.getAppointmentStatus().getCheckinStatusDTO();
+        final boolean demographicsComplete = CarePayConstants.APPOINTMENTS_STATUS_COMPLETED
+                .equalsIgnoreCase(checkinStatusDTO.getDemographicsStatus());
+        final boolean consentComplete = CarePayConstants.APPOINTMENTS_STATUS_COMPLETED
+                .equalsIgnoreCase(checkinStatusDTO.getConsentFormsStatus());
+        final boolean medicationsComplete = CarePayConstants.APPOINTMENTS_STATUS_COMPLETED
+                .equalsIgnoreCase(checkinStatusDTO.getMedicationsStatus());
+        final boolean intakeComplete = CarePayConstants.APPOINTMENTS_STATUS_COMPLETED
+                .equalsIgnoreCase(checkinStatusDTO.getIntakeStatus());
 
-                if (demographicsComplete) {
-                    demographicsCheckbox.setChecked(true);
-                } else {
-                    demographicsCheckbox.setChecked(false);
-                    demographicsCheckbox.setSelected(true);
-                }
-                if (consentComplete) {
-                    consentFormsCheckbox.setChecked(true);
-                } else {
-                    consentFormsCheckbox.setChecked(false);
-                    if (demographicsComplete) {
-                        consentFormsCheckbox.setSelected(true);
-                    }
-                }
-                if (medicationsComplete) {
-                    medicationsCheckbox.setChecked(true);
-                } else {
-                    medicationsCheckbox.setChecked(false);
-                    if (consentComplete) {
-                        medicationsCheckbox.setSelected(true);
-                    }
-                }
-                if (intakeComplete) {
-                    intakeCheckbox.setChecked(true);
-                } else {
-                    intakeCheckbox.setChecked(false);
-                    if (medicationsComplete) {
-                        intakeCheckbox.setSelected(true);
-                    }
-                }
-                if (paymentComplete) {
-                    responsibilityCheckbox.setChecked(true);
-                } else {
-                    responsibilityCheckbox.setChecked(false);
-                    if (intakeComplete) {
-                        responsibilityCheckbox.setSelected(true);
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            callback.onFailure(ex.getMessage());
-            Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), ex.getMessage());
+        if (demographicsComplete) {
+            demographicsCheckbox.setChecked(true);
+        } else {
+            demographicsCheckbox.setChecked(false);
+            demographicsCheckbox.setSelected(true);
         }
+        if (consentComplete) {
+            consentFormsCheckbox.setChecked(true);
+        } else {
+            consentFormsCheckbox.setChecked(false);
+            if (demographicsComplete) {
+                consentFormsCheckbox.setSelected(true);
+            }
+        }
+        if (medicationsComplete) {
+            medicationsCheckbox.setChecked(true);
+        } else {
+            medicationsCheckbox.setChecked(false);
+            if (consentComplete) {
+                medicationsCheckbox.setSelected(true);
+            }
+        }
+        if (intakeComplete) {
+            intakeCheckbox.setChecked(true);
+        } else {
+            intakeCheckbox.setChecked(false);
+            if (medicationsComplete) {
+                intakeCheckbox.setSelected(true);
+            }
+        }
+
+        //checking in will never display payment as completed because by this point it will be considered checked in
+        responsibilityCheckbox.setChecked(false);
+        if (intakeComplete) {
+            responsibilityCheckbox.setSelected(true);
+        }
+
     }
+
+    private void updateCheckoutStatus() {
+        CheckinStatusDTO checkinStatusDTO = appointmentPayloadDTO.getAppointmentStatus().getCheckinStatusDTO();
+        final boolean appointmentsComplete = CarePayConstants.APPOINTMENTS_STATUS_COMPLETED
+                .equalsIgnoreCase(checkinStatusDTO.getCheckoutAppointmentStatus());
+        final boolean formsComplete = CarePayConstants.APPOINTMENTS_STATUS_COMPLETED
+                .equalsIgnoreCase(checkinStatusDTO.getCheckoutFormsStatus());
+        final boolean paymentComplete = CarePayConstants.APPOINTMENTS_STATUS_COMPLETED
+                .equalsIgnoreCase(checkinStatusDTO.getCheckoutPaymentStatus());
+
+        if (appointmentsComplete) {
+            demographicsCheckbox.setChecked(true);
+        } else {
+            demographicsCheckbox.setChecked(false);
+            demographicsCheckbox.setSelected(true);
+        }
+        if (formsComplete) {
+            medicationsCheckbox.setChecked(true);
+        } else {
+            medicationsCheckbox.setChecked(false);
+            if (appointmentsComplete) {
+                medicationsCheckbox.setSelected(true);
+            }
+        }
+        if (paymentComplete) {
+            responsibilityCheckbox.setChecked(true);
+        } else {
+            responsibilityCheckbox.setChecked(false);
+            if (formsComplete) {
+                responsibilityCheckbox.setSelected(true);
+            }
+        }
+
+    }
+
 
     private double getPatientBalance() {
         if (pendingBalanceDTO != null && !pendingBalanceDTO.getPayload().isEmpty()) {

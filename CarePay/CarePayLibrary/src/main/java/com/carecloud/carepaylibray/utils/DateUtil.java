@@ -944,6 +944,47 @@ public class DateUtil {
         return TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
     }
 
+
+    /**
+     * Get readable time elapsed between two dates in format: hh:MM:SS
+     * @param date1 date
+     * @param date2 date
+     * @return readable string;
+     */
+    public static String getTimeElapsed(Date date1, Date date2){
+        long differenceInMilli = Math.abs(date1.getTime() - date2.getTime());
+
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+
+        final long elapsedHours = differenceInMilli / hoursInMilli;
+        differenceInMilli = differenceInMilli % hoursInMilli;
+
+        final long elapsedMinutes = differenceInMilli / minutesInMilli;
+        differenceInMilli = differenceInMilli & minutesInMilli;
+
+        final long elapsedSeconds = differenceInMilli / secondsInMilli;
+
+        StringBuilder builder = new StringBuilder();
+        if(elapsedHours > 0){
+            builder.append(elapsedHours);
+            builder.append(':');
+        }
+        if(elapsedMinutes > 10){
+            builder.append(elapsedMinutes);
+        }else{
+            builder.append('0');
+            builder.append(elapsedMinutes);
+        }
+        builder.append(':');
+        if(elapsedSeconds < 10){
+            builder.append('0');
+        }
+        builder.append(elapsedSeconds);
+        return builder.toString();
+    }
+
     /**
      *
      * @param rawDate a string containing the date

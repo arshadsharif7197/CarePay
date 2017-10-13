@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_rounded_border"
+    android:padding="@dimen/dimen_5dp"
+    android:minHeight="90dp"
+    android:layout_marginBottom="@dimen/dimen_10dp">
+
+    <ProgressBar
+        android:id="@+id/progress_indicator"
+        android:layout_width="@dimen/dimen_10dp"
+        android:layout_height="match_parent"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:indeterminate="false"
+        android:progressDrawable="@drawable/queue_checkin_progress_background"
+        android:max="6"
+        android:progress="3"/>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/dimen_16dp">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/patient_short_name"
+            android:layout_width="@dimen/profile_pic_size"
+            android:layout_height="@dimen/profile_pic_size"
+            android:layout_gravity="center"
+            android:background="@drawable/round_list_tv"
+            android:src="@drawable/icn_placeholder_user_profile_png"
+            android:textColor="@color/lightSlateGray"
+            android:textSize="@dimen/text_size_24sp"
+            app:customAssetFont="gotham_rounded_medium"/>
+
+        <ImageView
+            android:id="@+id/patient_pic_image_view"
+            android:layout_width="@dimen/profile_pic_size"
+            android:layout_height="@dimen/profile_pic_size"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginEnd="@dimen/dimen_5dp">
+
+        <com.carecloud.carepaylibray.customcomponents.AutoResizeTextView
+            android:id="@+id/patient_name_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_25dp"
+            android:maxLines="1"
+            android:gravity="start|center_vertical"
+            android:textColor="@color/textview_default_textcolor"
+            android:textSize="@dimen/text_size_22"
+            tools:text="Helen Johnson"
+            app:customAssetFont="proxima_nova_semi_bold"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/provider_name_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textColor="@color/optional_gray"
+            android:textSize="@dimen/text_size_17"
+            tools:text="Dr. Joshua Wellington"
+            app:customAssetFont="proxima_nova_semi_bold"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/infoTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:textColor="@color/lightSlateGray"
+                android:textSize="@dimen/text_size_14"
+                tools:text="- Payment"
+                app:customAssetFont="proxima_nova_regular"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/timeElapsedTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end|bottom"
+                android:textColor="@color/optional_gray"
+                android:textSize="@dimen/text_size_11"
+                tools:text="00:30"
+                app:customAssetFont="proxima_nova_regular"/>
+
+        </LinearLayout>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/timeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:textColor="@color/emerald"
+            android:textSize="@dimen/text_size_19sp"
+            tools:text="10:20 AM"
+            app:customAssetFont="proxima_nova_semi_bold"/>
+    </LinearLayout>
+
+</LinearLayout>
