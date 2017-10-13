@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -528,7 +527,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
             stateAutoCompleteTextView.getOnFocusChangeListener().onFocusChange(stateAutoCompleteTextView,
                     !StringUtil.isNullOrEmpty(addressPayloadDTO.getState()));
         } else {
-            useProfileAddressCheckBox.setChecked(false);
+//            useProfileAddressCheckBox.setChecked(false);
             useProfileAddressCheckBox.setEnabled(false);
             useProfileAddressCheckBox.setVisibility(View.GONE);
             setAddressFieldsEnabled(true);
