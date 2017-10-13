@@ -5,7 +5,6 @@ import android.content.ClipDescription;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
-import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -67,24 +66,20 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
     private int theRoom;
     private static final String minutesElapsedLabel = Label.getLabel("practice_checkin_minutes_elapsed");
 
-    private Handler handler;
-
     /**
      * Constructor
      * @param context context
      * @param checkInDTO checkInDTO
      * @param callback select card callback
-     * @param handler handler
      * @param room room
      */
     public CheckedInAppointmentAdapter(Context context, CheckInDTO checkInDTO,
-                                       CheckinItemCallback callback, Handler handler,
+                                       CheckinItemCallback callback,
                                        int room) {
 
         this.context = context;
         this.theRoom = room;
         this.callback = callback;
-        this.handler = handler;
         loadPatients(checkInDTO);
     }
 
@@ -219,9 +214,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
                 holder.itemView.setOnLongClickListener(holder);
                 holder.appointmentTime.setTextColor(ContextCompat.getColor(context, R.color.emerald));
                 holder.progressIndicator.setProgressDrawable(ContextCompat.getDrawable(context, R.drawable.queue_checkin_progress_background));
-
                 holder.elapsedTime.setText(DateUtil.getTimeElapsed(patient.lastUpdate, new Date()));
-                scheduleSecondsElapsedRefresh(holder, patient);
 
                 statusView = getLastCheckinProgress(patient.checkinStatus);
                 holder.progressIndicator.setMax(MAX_CHECKIN_PROGRESS);
@@ -234,14 +227,11 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
                 holder.progressIndicator.setMax(MAX_CHECKIN_PROGRESS);
                 holder.progressIndicator.setProgress(MAX_CHECKIN_PROGRESS);
                 holder.additionalInfo.setText(patient.balance);
-
                 holder.elapsedTime.setText(getFormattedMinutesElapsed(DateUtil.getMinutesElapsed(patient.lastUpdate, new Date())));
-                scheduleMinutesElapsedRefresh(holder, patient);
                 break;
             case CHECKING_OUT:
                 holder.progressIndicator.setProgressDrawable(ContextCompat.getDrawable(context, R.drawable.queue_checkout_progress_background));
                 holder.elapsedTime.setText(DateUtil.getTimeElapsed(patient.lastUpdate, new Date()));
-                scheduleSecondsElapsedRefresh(holder, patient);
 
                 statusView = getLastCheckoutProgress(patient.checkinStatus);
                 holder.progressIndicator.setMax(MAX_CHECKOUT_PROGRESS);
@@ -319,27 +309,6 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
         }
 
         return false;
-    }
-
-    private void scheduleSecondsElapsedRefresh(final CartViewHolder holder, final CardViewPatient patient){
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                holder.elapsedTime.setText(DateUtil.getTimeElapsed(patient.lastUpdate, new Date()));
-                scheduleSecondsElapsedRefresh(holder, patient);
-            }
-        }, 1000 * 10);
-    }
-
-    private void scheduleMinutesElapsedRefresh(final CartViewHolder holder, final CardViewPatient patient){
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                long minutes = DateUtil.getMinutesElapsed(patient.lastUpdate, new Date());
-                holder.elapsedTime.setText(getFormattedMinutesElapsed(minutes));
-                scheduleMinutesElapsedRefresh(holder, patient);
-            }
-        }, 1000 * 60);
     }
 
     private static String getFormattedMinutesElapsed(long minutes){

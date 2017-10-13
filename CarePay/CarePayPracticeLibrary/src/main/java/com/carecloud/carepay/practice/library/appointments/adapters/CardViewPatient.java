@@ -94,7 +94,7 @@ public class CardViewPatient {
                 code.equalsIgnoreCase(CarePayConstants.BILLED) ||
                 code.equalsIgnoreCase(CarePayConstants.MANUALLY_BILLED);
         this.checkinStatus = dto.getAppointmentStatus().getCheckinStatusDTO();
-        this.lastUpdate = DateUtil.getInstance().setDateRaw(dto.getAppointmentStatus().getLastUpdated()).shiftDateToGMT().getDate();
+        this.lastUpdate = DateUtil.getInstance().setDateRaw(dto.getAppointmentStatus().getLastUpdated().replaceAll("\\.\\d\\d\\dZ", "-00:00")).getDate();
     }
 
     /**

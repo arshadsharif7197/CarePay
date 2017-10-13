@@ -250,24 +250,65 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
 
     private void setAdapter() {
-        checkingInAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this, handler,
+        handler.removeCallbacksAndMessages(null);
+
+        checkingInAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this,
                 CheckedInAppointmentAdapter.CHECKING_IN);
         checkingInRecyclerView.setAdapter(checkingInAdapter);
 
-        checkedInAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this, handler,
+        checkedInAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this,
                 CheckedInAppointmentAdapter.CHECKED_IN);
         checkedInRecyclerView.setAdapter(checkedInAdapter);
 
-        checkingOutAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this, handler,
+        checkingOutAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this,
                 CheckedInAppointmentAdapter.CHECKING_OUT);
         checkingOutRecyclerView.setAdapter(checkingOutAdapter);
 
-        checkedOutAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this, handler,
+        checkedOutAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this,
                 CheckedInAppointmentAdapter.CHECKED_OUT);
         checkedOutRecyclerView.setAdapter(checkedOutAdapter);
 
         applyFilter();
+        scheduleCheckingInOutRefresh();
+        scheduleCheckedInRefresh();
+        scheduleAllLanesRefresh();
     }
+
+    private void scheduleCheckingInOutRefresh(){
+        handler.postDelayed(refreshCheckingInOutTime, 1000 * 5);
+    }
+
+    private Runnable refreshCheckingInOutTime = new Runnable() {
+        @Override
+        public void run() {
+            checkingInAdapter.notifyDataSetChanged();
+            checkingOutAdapter.notifyDataSetChanged();
+            scheduleCheckingInOutRefresh();
+        }
+    };
+
+    private void scheduleCheckedInRefresh(){
+        handler.postDelayed(refreshCheckedInTime, 1000 * 30);
+    }
+
+    private Runnable refreshCheckedInTime = new Runnable() {
+        @Override
+        public void run() {
+            checkedInAdapter.notifyDataSetChanged();
+            scheduleCheckedInRefresh();
+        }
+    };
+
+    private void scheduleAllLanesRefresh(){
+        handler.postDelayed(refreshAllLanes, 1000 * 60 * 3);
+    }
+
+    private Runnable refreshAllLanes = new Runnable() {
+        @Override
+        public void run() {
+            refreshLists(false);
+        }
+    };
 
     private void addPatientOnFilterList(ArrayList<FilterDataDTO> patients,
                                         AppointmentsPayloadDTO appointmentPayloadDTO,
@@ -459,7 +500,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void refreshData() {
-        refreshLists();
+        refreshLists(true);
     }
 
     private PendingBalanceDTO getPatientBalanceDTOs(String patientId) {
@@ -752,7 +793,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         displayDialogFragment(fragment, true);
     }
 
-    private void refreshLists(){
+    private void refreshLists(boolean isBlocking){
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
         queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
@@ -766,30 +807,35 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         }
 
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getPracticeAppointments();
-        getWorkflowServiceHelper().execute(transitionDTO, refreshListCallback, queryMap);
+        getWorkflowServiceHelper().execute(transitionDTO, getRefreshListCallback(isBlocking), queryMap);
 
     }
 
-    private WorkflowServiceCallback refreshListCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
+    private WorkflowServiceCallback getRefreshListCallback(final boolean isBlocking) {
 
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            checkInDTO = DtoHelper.getConvertedDTO(CheckInDTO.class, workflowDTO);
-            populateLists();
-            setAdapter();
-        }
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                if(isBlocking) {
+                    showProgressDialog();
+                }
+            }
 
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            showErrorNotification(exceptionMessage);
-        }
-    };
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                checkInDTO = DtoHelper.getConvertedDTO(CheckInDTO.class, workflowDTO);
+                populateLists();
+                setAdapter();
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+            }
+        };
+    }
 
 
 }
