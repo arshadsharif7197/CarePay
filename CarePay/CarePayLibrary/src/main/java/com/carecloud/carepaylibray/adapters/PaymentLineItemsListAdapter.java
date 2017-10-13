@@ -51,7 +51,7 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
         final PendingBalancePayloadDTO paymentLineItem = detailsList.get(position);;
         holder.paymentDetailLabel.setText(paymentLineItem.getType());
         holder.paymentDetailAmount.setText(StringUtil.getFormattedBalanceAmount(paymentLineItem.getAmount()));
-        if (paymentLineItem.getDetails().size() > 1) {
+        if (paymentLineItem.getDetails().size() > 1 && callback != null) {
             holder.lineItemNameLabelDetails.setText(Label.getLabel("payment_responsibility_details"));
             holder.lineItemNameLabelDetails.setVisibility(View.VISIBLE);
             holder.lineItemNameLabelDetails.setOnClickListener(new View.OnClickListener() {
