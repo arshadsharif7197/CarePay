@@ -945,6 +945,12 @@ public class DateUtil {
     }
 
 
+    public static long getSecondsElapsed(Date date1, Date date2){
+        long differenceInMilli = Math.abs(date1.getTime() - date2.getTime());
+
+        return TimeUnit.MILLISECONDS.toSeconds(differenceInMilli);
+    }
+
     /**
      * Get readable time elapsed between two dates in format: hh:MM:SS
      * @param date1 date
@@ -993,6 +999,19 @@ public class DateUtil {
     public static String getHoursFormatted(String rawDate){
         Date date = getInstance().setDateRaw(rawDate).getDate();
         return DateFormat.format(FORMAT_HOURS_AM_PM, date).toString();
+    }
+
+    public static String getContextualTimeElapsed(Date date1, Date date2){
+        long hoursElapsed = getHoursElapsed(date1, date2);
+        if(hoursElapsed > 0){
+            return hoursElapsed + Label.getLabel("label_hours_ago");
+        }
+        long minutesElapsed = getMinutesElapsed(date1, date2);
+        if(minutesElapsed > 0){
+            return minutesElapsed + Label.getLabel("label_minutes_ago");
+        }
+        long secondsElapsed = getSecondsElapsed(date1, date2);
+        return secondsElapsed + Label.getLabel("label_seconds_ago");
     }
 
     /**

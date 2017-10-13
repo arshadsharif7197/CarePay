@@ -227,7 +227,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
                 holder.progressIndicator.setMax(MAX_CHECKIN_PROGRESS);
                 holder.progressIndicator.setProgress(MAX_CHECKIN_PROGRESS);
                 holder.additionalInfo.setText(patient.balance);
-                holder.elapsedTime.setText(getFormattedMinutesElapsed(DateUtil.getMinutesElapsed(patient.lastUpdate, new Date())));
+                holder.elapsedTime.setText(getFormattedTimeElapsed(DateUtil.getContextualTimeElapsed(patient.lastUpdate, new Date())));
                 break;
             case CHECKING_OUT:
                 holder.progressIndicator.setProgressDrawable(ContextCompat.getDrawable(context, R.drawable.queue_checkout_progress_background));
@@ -311,9 +311,9 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
         return false;
     }
 
-    private static String getFormattedMinutesElapsed(long minutes){
+    private static String getFormattedTimeElapsed(String timeElapsed){
         try{
-            return String.format(minutesElapsedLabel, minutes);
+            return String.format(minutesElapsedLabel, timeElapsed);
         }catch (IllegalFormatException ife){
             return null;
         }

@@ -94,9 +94,8 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/timeElapsedTextView"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:gravity="end|bottom"
                 android:textColor="@color/optional_gray"
                 android:textSize="@dimen/text_size_11"
