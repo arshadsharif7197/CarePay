@@ -10,7 +10,6 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,10 +18,12 @@ import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.checkin.dtos.QRCodeScanResultDTO;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.qrcodescanner.ScannerQRActivity;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -49,6 +50,9 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     private static final int QR_RESULT_CODE_TABLET = 1;
     private static final int CAMERA_PERMISSION = 1;
 
+    private boolean showQROption = true;
+    private boolean showSearchOption = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,8 +60,14 @@ public class HowToCheckInActivity extends BasePracticeActivity {
 
         setContentView(R.layout.activity_how_to_check_in);
 
-        /*Initialise views*/
+        Bundle extraInfo = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
+        if(extraInfo != null) {
+            showQROption = extraInfo.getBoolean(CarePayConstants.LOGIN_OPTION_QR, true);
+            showSearchOption = extraInfo.getBoolean(CarePayConstants.LOGIN_OPTION_SEARCH, true);
+        }
+
         initViews();
+
     }
 
     /**
@@ -70,16 +80,18 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         TextView howToCheckInTextView = (TextView) findViewById(R.id.howToCheckInTextView);
         howToCheckInTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.white));
 
-        Button carePayLoginButton = (Button) findViewById(R.id.carePayLoginButton);
+        View carePayLoginButton = findViewById(R.id.carePayLoginButton);
         carePayLoginButton.setOnClickListener(carePayLoginButtonListener);
 
-        Button scanQRCodeButton = (Button) findViewById(R.id.scanQRCodeButton);
+        View scanQRCodeButton = findViewById(R.id.scanQRCodeButton);
         scanQRCodeButton.setOnClickListener(scanQRCodeButtonListener);
+        scanQRCodeButton.setVisibility(showQROption ? View.VISIBLE : View.GONE);
 
-        Button manualSearchButton = (Button) findViewById(R.id.manualSearchButton);
+        View manualSearchButton = findViewById(R.id.manualSearchButton);
         manualSearchButton.setOnClickListener(manualSearchButtonListener);
+        manualSearchButton.setVisibility(showSearchOption ? View.VISIBLE : View.GONE);
 
-        ImageView homeImageView = (ImageView) findViewById(R.id.homeImageView);
+        View homeImageView = findViewById(R.id.homeImageView);
         homeImageView.setOnClickListener(homeImageViewListener);
     }
 
