@@ -944,6 +944,53 @@ public class DateUtil {
         return TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
     }
 
+
+    public static long getSecondsElapsed(Date date1, Date date2){
+        long differenceInMilli = Math.abs(date1.getTime() - date2.getTime());
+
+        return TimeUnit.MILLISECONDS.toSeconds(differenceInMilli);
+    }
+
+    /**
+     * Get readable time elapsed between two dates in format: hh:MM:SS
+     * @param date1 date
+     * @param date2 date
+     * @return readable string;
+     */
+    public static String getTimeElapsed(Date date1, Date date2){
+        long differenceInMilli = Math.abs(date1.getTime() - date2.getTime());
+
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+
+        final long elapsedHours = differenceInMilli / hoursInMilli;
+        differenceInMilli = differenceInMilli % hoursInMilli;
+
+        final long elapsedMinutes = differenceInMilli / minutesInMilli;
+        differenceInMilli = differenceInMilli & minutesInMilli;
+
+        final long elapsedSeconds = differenceInMilli / secondsInMilli;
+
+        StringBuilder builder = new StringBuilder();
+        if(elapsedHours > 0){
+            builder.append(elapsedHours);
+            builder.append(':');
+        }
+        if(elapsedMinutes > 10){
+            builder.append(elapsedMinutes);
+        }else{
+            builder.append('0');
+            builder.append(elapsedMinutes);
+        }
+        builder.append(':');
+        if(elapsedSeconds < 10){
+            builder.append('0');
+        }
+        builder.append(elapsedSeconds);
+        return builder.toString();
+    }
+
     /**
      *
      * @param rawDate a string containing the date
@@ -952,6 +999,19 @@ public class DateUtil {
     public static String getHoursFormatted(String rawDate){
         Date date = getInstance().setDateRaw(rawDate).getDate();
         return DateFormat.format(FORMAT_HOURS_AM_PM, date).toString();
+    }
+
+    public static String getContextualTimeElapsed(Date date1, Date date2){
+        long hoursElapsed = getHoursElapsed(date1, date2);
+        if(hoursElapsed > 0){
+            return hoursElapsed + Label.getLabel("label_hours_ago");
+        }
+        long minutesElapsed = getMinutesElapsed(date1, date2);
+        if(minutesElapsed > 0){
+            return minutesElapsed + Label.getLabel("label_minutes_ago");
+        }
+        long secondsElapsed = getSecondsElapsed(date1, date2);
+        return secondsElapsed + Label.getLabel("label_seconds_ago");
     }
 
     /**

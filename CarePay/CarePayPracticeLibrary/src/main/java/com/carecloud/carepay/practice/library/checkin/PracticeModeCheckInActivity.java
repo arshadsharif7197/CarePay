@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.checkin;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -85,6 +86,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     private FilterModel filter;
 
+    private Handler handler;
+
     CheckInDTO checkInDTO;
 
     CheckedInAppointmentAdapter checkingInAdapter;
@@ -103,6 +106,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        handler = new Handler();
         checkInDTO = getConvertedDTO(CheckInDTO.class);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -111,6 +115,12 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         initializationView();
         populateLists();
         setAdapter();
+    }
+
+    @Override
+    protected void onDestroy(){
+        handler.removeCallbacksAndMessages(null);
+        super.onDestroy();
     }
 
     private void initializationView() {
@@ -240,6 +250,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
 
     private void setAdapter() {
+        handler.removeCallbacksAndMessages(null);
+
         checkingInAdapter = new CheckedInAppointmentAdapter(getContext(), checkInDTO, this,
                 CheckedInAppointmentAdapter.CHECKING_IN);
         checkingInRecyclerView.setAdapter(checkingInAdapter);
@@ -257,7 +269,46 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         checkedOutRecyclerView.setAdapter(checkedOutAdapter);
 
         applyFilter();
+        scheduleCheckingInOutRefresh();
+        scheduleCheckedInRefresh();
+        scheduleAllLanesRefresh();
     }
+
+    private void scheduleCheckingInOutRefresh(){
+        handler.postDelayed(refreshCheckingInOutTime, 1000 * 5);
+    }
+
+    private Runnable refreshCheckingInOutTime = new Runnable() {
+        @Override
+        public void run() {
+            checkingInAdapter.notifyDataSetChanged();
+            checkingOutAdapter.notifyDataSetChanged();
+            scheduleCheckingInOutRefresh();
+        }
+    };
+
+    private void scheduleCheckedInRefresh(){
+        handler.postDelayed(refreshCheckedInTime, 1000 * 30);
+    }
+
+    private Runnable refreshCheckedInTime = new Runnable() {
+        @Override
+        public void run() {
+            checkedInAdapter.notifyDataSetChanged();
+            scheduleCheckedInRefresh();
+        }
+    };
+
+    private void scheduleAllLanesRefresh(){
+        handler.postDelayed(refreshAllLanes, 1000 * 60 * 3);
+    }
+
+    private Runnable refreshAllLanes = new Runnable() {
+        @Override
+        public void run() {
+            refreshLists(false);
+        }
+    };
 
     private void addPatientOnFilterList(ArrayList<FilterDataDTO> patients,
                                         AppointmentsPayloadDTO appointmentPayloadDTO,
@@ -449,7 +500,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void refreshData() {
-        refreshLists();
+        refreshLists(true);
     }
 
     private PendingBalanceDTO getPatientBalanceDTOs(String patientId) {
@@ -742,7 +793,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         displayDialogFragment(fragment, true);
     }
 
-    private void refreshLists(){
+    private void refreshLists(boolean isBlocking){
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
         queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
@@ -756,30 +807,35 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         }
 
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getPracticeAppointments();
-        getWorkflowServiceHelper().execute(transitionDTO, refreshListCallback, queryMap);
+        getWorkflowServiceHelper().execute(transitionDTO, getRefreshListCallback(isBlocking), queryMap);
 
     }
 
-    private WorkflowServiceCallback refreshListCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
+    private WorkflowServiceCallback getRefreshListCallback(final boolean isBlocking) {
 
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            checkInDTO = DtoHelper.getConvertedDTO(CheckInDTO.class, workflowDTO);
-            populateLists();
-            setAdapter();
-        }
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                if(isBlocking) {
+                    showProgressDialog();
+                }
+            }
 
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            showErrorNotification(exceptionMessage);
-        }
-    };
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                checkInDTO = DtoHelper.getConvertedDTO(CheckInDTO.class, workflowDTO);
+                populateLists();
+                setAdapter();
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+            }
+        };
+    }
 
 
 }
