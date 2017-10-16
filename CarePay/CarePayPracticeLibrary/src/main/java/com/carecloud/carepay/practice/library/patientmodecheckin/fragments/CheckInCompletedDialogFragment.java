@@ -94,21 +94,23 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
         hasPayment = getArguments().getBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, false);
         isAdHocForms = getArguments().getBoolean(CarePayConstants.ADHOC_FORMS, false);
         DTO dto = callback.getDto();
-        selectedAppointment = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
-        if (hasPayment) {
-            patientPaymentPayload = ((PaymentsModel) dto).getPaymentPayload().getPatientPayments().getPayload();
-            userImageUrl = ((PaymentsModel) dto).getPaymentPayload().getPatientBalances().get(0)
-                    .getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
-        } else if (isAdHocForms) {
-            selectedAppointment = ((AppointmentsResultModel) dto).getPayload().getAppointments().get(0);
-            filledForms = ((AppointmentsResultModel) dto).getPayload().getFilledForms();
-        } else {
-            if (selectedAppointment == null) {
-                selectedAppointment = ((AppointmentsResultModel) dto).getPayload().getAppointments().get(0);
-            }
-            if (!((AppointmentsResultModel) dto).getPayload().getPatientBalances().isEmpty()) {
-                userImageUrl = ((AppointmentsResultModel) dto).getPayload().getPatientBalances().get(0)
+        if(dto != null) {
+            selectedAppointment = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
+            if (hasPayment) {
+                patientPaymentPayload = ((PaymentsModel) dto).getPaymentPayload().getPatientPayments().getPayload();
+                userImageUrl = ((PaymentsModel) dto).getPaymentPayload().getPatientBalances().get(0)
                         .getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
+            } else if (isAdHocForms) {
+                selectedAppointment = ((AppointmentsResultModel) dto).getPayload().getAppointments().get(0);
+                filledForms = ((AppointmentsResultModel) dto).getPayload().getFilledForms();
+            } else {
+                if (selectedAppointment == null) {
+                    selectedAppointment = ((AppointmentsResultModel) dto).getPayload().getAppointments().get(0);
+                }
+                if (!((AppointmentsResultModel) dto).getPayload().getPatientBalances().isEmpty()) {
+                    userImageUrl = ((AppointmentsResultModel) dto).getPayload().getPatientBalances().get(0)
+                            .getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
+                }
             }
         }
         appointmentNavigationType = getApplicationPreferences().getAppointmentNavigationOption();
