@@ -30,7 +30,7 @@ public class LocationsFragment extends RegistrationFragment implements Locations
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
         String selectedPractice = getApplicationHelper().getApplicationPreferences().getPracticeId();
-        locations = callback.getPreRegisterDataModel().getPracticeById(selectedPractice).getLocationsDTOList();
+        locations = callback.getPreRegisterDataModel().getPracticeById(selectedPractice).getSortedLocations();
 
     }
 

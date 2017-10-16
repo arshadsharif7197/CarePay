@@ -3,6 +3,8 @@ package com.carecloud.carepay.mini.models.response;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -34,5 +36,25 @@ public class PreRegisterDataModel {
             }
         }
         return null;
+    }
+
+    /**
+     * Get list of practices sorted alphabetically by practice name
+     * @return practice list
+     */
+    public List<UserPracticeDTO> getSortedPractices(){
+        Collections.sort(userPracticeDTOList, new Comparator<UserPracticeDTO>() {
+            @Override
+            public int compare(UserPracticeDTO practice1, UserPracticeDTO practice2) {
+                if(practice1.getPracticeName() == null){
+                    practice1.setPracticeName("");
+                }
+                if(practice2.getPracticeName() == null){
+                    practice2.setPracticeName("");
+                }
+                return practice1.getPracticeName().compareTo(practice2.getPracticeName());
+            }
+        });
+        return userPracticeDTOList;
     }
 }
