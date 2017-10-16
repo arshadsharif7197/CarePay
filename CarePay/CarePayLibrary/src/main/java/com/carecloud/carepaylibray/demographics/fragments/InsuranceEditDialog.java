@@ -483,6 +483,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                     .toString().trim());
             demographicInsurancePayloadDTO.setPolicyDateOfBirthHolder(policyBirthDateHolder.getText()
                     .toString().trim());
+            demographicInsurancePayloadDTO.setGender(selectedGenderTextView.getText()
+                    .toString().trim());
 
             setupImageBase64();
 
