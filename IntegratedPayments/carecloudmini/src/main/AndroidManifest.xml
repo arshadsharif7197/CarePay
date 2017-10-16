@@ -36,6 +36,11 @@
             android:name=".activities.WelcomeActivity"
             android:screenOrientation="sensorLandscape" />
 
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:screenOrientation="sensorLandscape"
+            android:windowSoftInputMode="stateUnchanged"/>
+
         <service android:name=".services.QueueUploadService" />
 
     </application>

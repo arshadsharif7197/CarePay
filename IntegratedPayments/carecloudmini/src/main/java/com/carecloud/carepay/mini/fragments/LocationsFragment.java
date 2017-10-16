@@ -83,7 +83,11 @@ public class LocationsFragment extends RegistrationFragment implements Locations
             return;
         }
         getApplicationHelper().getApplicationPreferences().setLocationId(selectedLocationId);
-        callback.replaceFragment(new DeviceFragment(), true);
+        if(isSettingsActivity()){
+            callback.replaceFragment(new SettingsFragment(), false);
+        }else {
+            callback.replaceFragment(new DeviceFragment(), true);
+        }
     }
 
     @Override

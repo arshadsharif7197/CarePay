@@ -7,8 +7,30 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal">
 
-    <include layout="@layout/toolbar_registration_progress"
-             android:id="@+id/registration_toolbar"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/toolbar_registration_titleonly"
+                 android:id="@+id/registration_toolbar"/>
+
+        <ImageView
+            android:id="@+id/button_exit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/close_blue"
+            android:layout_margin="@dimen/dp_20"
+            android:layout_gravity="top|start"/>
+
+        <!--<com.electapps.fontviews.FontButton-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginEnd="@dimen/dp_20"-->
+            <!--style="@style/ButtonRoundedOutlineSmall"-->
+            <!--android:text="@string/settings_sign_out"-->
+            <!--android:layout_gravity="center_vertical|end"-->
+            <!--app:customFont="gotham_rounded_medium.otf"/>-->
+
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="@dimen/content_width_center"
@@ -59,7 +81,6 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/registration_login_password_hint"
                 android:inputType="textPassword"
-                android:imeOptions="actionDone"
                 app:customFont="gotham_rounded_light.otf"/>
 
         </LinearLayout>
@@ -73,7 +94,8 @@
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:visibility="gone">
 
                 <com.carecloud.carepay.mini.views.CarePayButton
                     android:id="@+id/button_back"
@@ -85,15 +107,15 @@
 
             </FrameLayout>
 
-            <View
-                android:id="@+id/button_spacer"
-                android:layout_width="@dimen/dp_10"
-                android:layout_height="match_parent"/>
-
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
+
+                <View
+                    android:id="@+id/button_spacer"
+                    android:layout_width="@dimen/dp_10"
+                    android:layout_height="0dp"/>
 
                 <com.carecloud.carepay.mini.views.CarePayButton
                     android:id="@+id/button_login"
