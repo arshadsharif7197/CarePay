@@ -477,8 +477,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                 demographicDTO.getPayload().getDemographics().getPayload().getInsurances()
                         .add(demographicInsurancePayloadDTO);
             } else {
-                demographicInsurancePayloadDTO = demographicDTO.getPayload().getDemographics().
-                        getPayload().getInsurances().get(editedIndex);
+                demographicInsurancePayloadDTO = demographicDTO.getPayload().getDemographics()
+                        .getPayload().getInsurances().get(editedIndex);
             }
 
             demographicInsurancePayloadDTO.setInsuranceProvider(selectedProviderOption.getName());
