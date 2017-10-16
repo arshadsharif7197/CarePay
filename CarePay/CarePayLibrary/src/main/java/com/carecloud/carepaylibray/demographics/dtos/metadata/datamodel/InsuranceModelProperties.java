@@ -37,6 +37,10 @@ public class InsuranceModelProperties {
     @Expose
     private DemographicsField policyHolder;
 
+    @SerializedName("policy_holder_gender")
+    @Expose
+    private DemographicsField policyHolderGender;
+
     public DemographicsInsuranceField getInsuranceProvider() {
         return insuranceProvider;
     }
@@ -91,5 +95,13 @@ public class InsuranceModelProperties {
 
     public void setPolicyHolder(DemographicsField policyHolder) {
         this.policyHolder = policyHolder;
+    }
+
+    public DemographicsField getPolicyHolderGender() {
+        return policyHolderGender;
+    }
+
+    public void setPolicyHolderGender(DemographicsField policyHolderGender) {
+        this.policyHolderGender = policyHolderGender;
     }
 }
