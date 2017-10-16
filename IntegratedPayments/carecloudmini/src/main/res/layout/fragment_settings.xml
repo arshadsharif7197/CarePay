@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dp_20"
             style="@style/ButtonRoundedOutlineSmall"
-            android:text="@string/settings_sign_out"
+            android:text="@string/settings_exit"
             android:layout_gravity="center_vertical|end"
             app:customFont="gotham_rounded_medium.otf"/>
 
