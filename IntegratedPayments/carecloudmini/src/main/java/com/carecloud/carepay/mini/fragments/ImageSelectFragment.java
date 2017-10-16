@@ -143,7 +143,12 @@ public class ImageSelectFragment extends RegistrationFragment {
 
     private void setSelectedImageStyle(){
         getApplicationHelper().getApplicationPreferences().setImageStyle(selectedImageStyle);
-        callback.replaceFragment(new ReviewInfoFragment(), true);
+
+        if(isSettingsActivity()){
+            callback.replaceFragment(new SettingsFragment(), false);
+        }else {
+            callback.replaceFragment(new ReviewInfoFragment(), true);
+        }
     }
 
     private View.OnClickListener getChoiceClickListener(@Defs.ImageStyles final int imageStyle, final View selectionIcon){

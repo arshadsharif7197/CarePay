@@ -172,7 +172,8 @@ public class WelcomeActivity extends FullScreenActivity {
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toggleCustomerMode();
+                Intent intent = new Intent(WelcomeActivity.this, SettingsActivity.class);
+                startActivity(intent);
             }
         });
 

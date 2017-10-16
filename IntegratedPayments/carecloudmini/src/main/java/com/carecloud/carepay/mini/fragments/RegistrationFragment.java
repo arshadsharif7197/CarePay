@@ -8,6 +8,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.mini.R;
+import com.carecloud.carepay.mini.activities.SettingsActivity;
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
 import com.carecloud.carepay.mini.interfaces.RegistrationNavigationCallback;
 import com.carecloud.carepay.mini.services.carepay.RestCallServiceHelper;
@@ -43,6 +44,11 @@ public abstract class RegistrationFragment extends Fragment {
         TextView progressText = (TextView) toolbar.findViewById(R.id.progress_text);
         progressText.setText(String.format(getString(R.string.registration_progress_text), registrationProgress.getProgress(), registrationProgress.getMax()));
 
+        if(isSettingsActivity()){
+            registrationProgress.setVisibility(View.GONE);
+            progressText.setVisibility(View.GONE);
+        }
+
     }
 
 
@@ -52,5 +58,9 @@ public abstract class RegistrationFragment extends Fragment {
 
     protected RestCallServiceHelper getRestHelper(){
         return getApplicationHelper().getRestHelper();
+    }
+
+    protected boolean isSettingsActivity(){
+        return getActivity() instanceof SettingsActivity;
     }
 }
