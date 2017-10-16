@@ -177,6 +177,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_1dp"
+        android:layout_marginBottom="@dimen/dimen_5dp"
         android:background="@color/gray_divider" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
@@ -220,6 +221,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:paddingBottom="@dimen/dimen_15dp"
         android:paddingTop="@dimen/dimen_15dp">
 
@@ -251,7 +253,94 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_1dp"
+        android:layout_marginBottom="@dimen/dimen_5dp"
         android:background="@color/gray_divider" />
+
+    <FrameLayout
+        android:id="@+id/dateOfBirthContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+            android:id="@+id/health_insurance_policy_birth_date_holder_layout"
+            style="@style/SigninSignupTextInputStyle"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                android:id="@+id/health_insurance_policy_birth_date_holder"
+                style="@style/SigninSignupEditStyle"
+                android:digits="0123456789/"
+                android:imeOptions="actionNext"
+                android:inputType="date"
+                android:maxLength="10"
+                android:nextFocusForward="@+id/revewidemoPhoneNumberEdit"
+                app:customAssetFont="proxima_nova_regular"
+                breeze:hintKey="demographics_review_date_of_birth" />
+
+        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/dobformatlabel"
+            style="@style/SignupRequireHintStyle"
+            android:textColor="@color/cadet_gray"
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="demographics_details_dob_hint" />
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/genderContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dimen_15dp"
+        android:paddingTop="@dimen/dimen_15dp"
+        android:visibility="gone">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            style="@style/DemographicsDocsLabelStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="demographics_review_gender"
+            tools:text="Gender" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/chooseGenderTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:gravity="end"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_16"
+            app:customAssetFont="proxima_nova_semi_bold"
+            breeze:textKey="demographics_choose"
+            tools:text="Male" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/genderOptional"
+            style="@style/DemographicsRequiredLabelStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/dimen_5dp"
+            android:layout_toStartOf="@id/chooseGenderTextView"
+            app:customAssetFont="proxima_nova_semi_bold"
+            breeze:textKey="demographics_required"
+            tools:text="demographics_required" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:layout_marginBottom="@dimen/dimen_5dp"
+        android:background="@color/gray_divider"
+        android:visibility="gone" />
+
 
     <LinearLayout
         android:layout_width="match_parent"

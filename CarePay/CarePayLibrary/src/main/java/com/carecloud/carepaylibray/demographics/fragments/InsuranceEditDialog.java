@@ -40,10 +40,14 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter;
 import com.carecloud.carepaylibray.media.MediaScannerPresenter;
 import com.carecloud.carepaylibray.media.MediaViewInterface;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.marcok.stepprogressbar.StepProgressBar;
+
+import java.util.Iterator;
+import java.util.List;
 
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
@@ -51,9 +55,6 @@ import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAd
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_FRONT_DTO;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_BACK;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_FRONT;
-
-import java.util.Iterator;
-import java.util.List;
 
 public class InsuranceEditDialog extends BaseDialogFragment implements MediaViewInterface {
 
@@ -72,8 +73,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private TextInputLayout groupNumberInput;
     private TextInputLayout policyFirstNameHolderInput;
     private TextInputLayout policyLastNameHolderInput;
+    private TextInputLayout policyBirthDateHolderInput;
     private EditText policyFirstNameHolder;
     private EditText policyLastNameHolder;
+    private EditText policyBirthDateHolder;
     private EditText cardNumber;
     private EditText groupNumber;
     private Button saveInsuranceButton;
@@ -82,10 +85,15 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private TextView selectedPlanTextView;
     private TextView selectedTypeTextView;
     private TextView selectedRelationshipTextView;
+    private TextView selectedGenderTextView;
+    private TextView genderRequired;
     private EditText otherProviderEditText;
 
+    private View dateOfBirthContainer;
+    private View genderContainer;
     private boolean hadInsurance;
     private boolean isPatientMode;
+    private boolean isDataHolderSelf;
 
     private DemographicInsurancePhotoDTO frontInsurancePhotoDTO;
     private DemographicInsurancePhotoDTO backInsurancePhotoDTO;
@@ -100,6 +108,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private DemographicsOption selectedPlanOption = new DemographicsOption();
     private DemographicsOption selectedTypeOption = new DemographicsOption();
     private DemographicsOption selectedRelationshipOption = new DemographicsOption();
+    private DemographicsOption selectedGenderOption = new DemographicsOption();
 
 
     public interface InsuranceEditDialogListener {
@@ -278,6 +287,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         selectedPlanTextView = (TextView) findViewById(R.id.health_insurance_choose_plans);
         selectedTypeTextView = (TextView) findViewById(R.id.health_insurance_types);
         selectedRelationshipTextView = (TextView) findViewById(R.id.health_insurance_relationship);
+        selectedGenderTextView = (TextView) findViewById(R.id.chooseGenderTextView);
+        genderRequired = (TextView) findViewById(R.id.genderOptional);
 
         cardNumberInput = (TextInputLayout) findViewById(R.id.health_insurance_card_number_layout);
         cardNumber = (EditText) findViewById(R.id.health_insurance_card_number);
@@ -286,10 +297,17 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         groupNumberInput = (TextInputLayout) findViewById(R.id.health_insurance_group_number_layout);
         groupNumber = (EditText) findViewById(R.id.health_insurance_group_number);
 
-        policyFirstNameHolderInput = (TextInputLayout) findViewById(R.id.health_insurance_policy_first_name_holder_layout);
+        policyFirstNameHolderInput = (TextInputLayout)
+                findViewById(R.id.health_insurance_policy_first_name_holder_layout);
         policyFirstNameHolder = (EditText) findViewById(R.id.health_insurance_policy_first_name_holder);
-        policyLastNameHolderInput = (TextInputLayout) findViewById(R.id.health_insurance_policy_last_name_holder_layout);
+        policyLastNameHolderInput = (TextInputLayout)
+                findViewById(R.id.health_insurance_policy_last_name_holder_layout);
         policyLastNameHolder = (EditText) findViewById(R.id.health_insurance_policy_last_name_holder);
+        policyBirthDateHolderInput = (TextInputLayout)
+                findViewById(R.id.health_insurance_policy_birth_date_holder_layout);
+        policyBirthDateHolder = (EditText) findViewById(R.id.health_insurance_policy_birth_date_holder);
+        dateOfBirthContainer = findViewById(R.id.dateOfBirthContainer);
+        genderContainer = findViewById(R.id.genderContainer);
 
         setTextListeners();
         setChangeFocusListeners();
@@ -303,8 +321,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         }
 
         getInsuranceDropdownLists();
-        defaultType = demographicDTO.getMetadata().getNewDataModel().getDemographic().getInsurances().getProperties().getItems()
-                .getInsuranceModel().getInsuranceModelProperties().getInsuranceType().getOptions().get(0).getName();
+        defaultType = demographicDTO.getMetadata().getNewDataModel().getDemographic()
+                .getInsurances().getProperties().getItems()
+                .getInsuranceModel().getInsuranceModelProperties().getInsuranceType()
+                .getOptions().get(0).getName();
 
         if (editedIndex == NEW_INSURANCE) {
             ((Button) findViewById(R.id.demogrDocsFrontScanButton)).setText(
@@ -323,8 +343,15 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                 findViewById(R.id.check_in_demographics_left_button).setOnClickListener(getNoInsuranceListener());
                 saveInsuranceButton.setText(Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
             }
+            selectedRelationshipOption = demographicDTO.getMetadata().getNewDataModel().getDemographic()
+                    .getInsurances().getProperties().getItems()
+                    .getInsuranceModel().getInsuranceModelProperties().getRelationship()
+                    .getOptions().get(0);
+            selectedRelationshipTextView.setText(selectedRelationshipOption.getLabel());
+            isDataHolderSelf = true;
         } else {
-            DemographicInsurancePayloadDTO demographicInsurancePayload = demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex);
+            DemographicInsurancePayloadDTO demographicInsurancePayload = demographicDTO.getPayload()
+                    .getDemographics().getPayload().getInsurances().get(editedIndex);
             initInsuranceData(demographicInsurancePayload);
 
             findViewById(R.id.remove_insurance_entry).setOnClickListener(removeButtonListener);
@@ -359,14 +386,27 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         String selectedRelationship = demographicInsurancePayload.getRelationship();
         selectedRelationshipTextView.setText(selectedRelationship);
         selectedRelationshipOption.setName(selectedRelationship);
-        selectedRelationshipOption.setName(selectedRelationship);
+        selectedRelationshipOption.setLabel(selectedRelationship);
+        isDataHolderSelf = selectedRelationshipOption.getLabel().toLowerCase().equals("self");
+        manageBoDAndGenderVisibility(isDataHolderSelf);
+
+        String selectedGender = demographicInsurancePayload.getGender();
+        if (selectedGender == null) {
+            selectedGenderTextView.setText(Label.getLabel("demographics_choose"));
+        } else {
+            selectedGenderTextView.setText(selectedGender);
+            selectedGenderOption.setName(selectedGender);
+            selectedGenderOption.setLabel(selectedGender);
+        }
 
         cardNumber.setText(demographicInsurancePayload.getInsuranceMemberId());
-        if (!StringUtil.isNullOrEmpty(demographicInsurancePayload.getInsuranceMemberId()) && cardNumber.getOnFocusChangeListener() != null) {
+        if (!StringUtil.isNullOrEmpty(demographicInsurancePayload.getInsuranceMemberId())
+                && cardNumber.getOnFocusChangeListener() != null) {
             cardNumber.getOnFocusChangeListener().onFocusChange(cardNumber, false);
         }
         groupNumber.setText(demographicInsurancePayload.getInsuranceGroupId());
-        if (!StringUtil.isNullOrEmpty(demographicInsurancePayload.getInsuranceGroupId()) && groupNumber.getOnFocusChangeListener() != null) {
+        if (!StringUtil.isNullOrEmpty(demographicInsurancePayload.getInsuranceGroupId())
+                && groupNumber.getOnFocusChangeListener() != null) {
             groupNumber.getOnFocusChangeListener().onFocusChange(groupNumber, false);
         }
 
@@ -382,14 +422,23 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             policyLastNameHolder.getOnFocusChangeListener().onFocusChange(policyLastNameHolder, false);
         }
 
+        policyBirthDateHolder.setText(demographicInsurancePayload.getPolicyDateOfBirthHolder());
+        if (!StringUtil.isNullOrEmpty(demographicInsurancePayload.getPolicyDateOfBirthHolder())
+                && policyBirthDateHolder.getOnFocusChangeListener() != null) {
+            policyBirthDateHolder.getOnFocusChangeListener().onFocusChange(policyBirthDateHolder, false);
+        }
+
         String title = selectedProvider + (selectedPlan != null ? " " + selectedPlan : "");
         ((TextView) findViewById(R.id.toolbar_title)).setText(title);
 
     }
 
     private void setProviderOptionsPlans() {
-        InsuranceModelProperties insuranceModelProperties = demographicDTO.getMetadata().getNewDataModel().getDemographic().getInsurances().getProperties().getItems().getInsuranceModel().getInsuranceModelProperties();
-        for (DemographicsInsuranceOption insuranceOption : insuranceModelProperties.getInsuranceProvider().getOptions()) {
+        InsuranceModelProperties insuranceModelProperties = demographicDTO.getMetadata()
+                .getNewDataModel().getDemographic().getInsurances().getProperties().getItems()
+                .getInsuranceModel().getInsuranceModelProperties();
+        for (DemographicsInsuranceOption insuranceOption : insuranceModelProperties
+                .getInsuranceProvider().getOptions()) {
             if (insuranceOption.getName().equals(selectedProviderOption.getName())) {
                 selectedProviderOption.setPayerPlans(insuranceOption.getPayerPlans());
             }
@@ -400,7 +449,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         @Override
         public void onClick(View saveChanges) {
             if (editedIndex != NEW_INSURANCE) {
-                demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex).setDeleted(true);
+                demographicDTO.getPayload().getDemographics().getPayload().getInsurances()
+                        .get(editedIndex).setDeleted(true);
             }
             closeDialog();
         }
@@ -424,14 +474,17 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             DemographicInsurancePayloadDTO demographicInsurancePayloadDTO;
             if (editedIndex == NEW_INSURANCE) {
                 demographicInsurancePayloadDTO = new DemographicInsurancePayloadDTO();
-                demographicDTO.getPayload().getDemographics().getPayload().getInsurances().add(demographicInsurancePayloadDTO);
+                demographicDTO.getPayload().getDemographics().getPayload().getInsurances()
+                        .add(demographicInsurancePayloadDTO);
             } else {
-                demographicInsurancePayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex);
+                demographicInsurancePayloadDTO = demographicDTO.getPayload().getDemographics()
+                        .getPayload().getInsurances().get(editedIndex);
             }
 
             demographicInsurancePayloadDTO.setInsuranceProvider(selectedProviderOption.getName());
             demographicInsurancePayloadDTO.setInsurancePlan(selectedPlanOption.getName());
-            demographicInsurancePayloadDTO.setInsuranceType(selectedTypeOption.getName() != null ? selectedTypeOption.getName() : defaultType);
+            demographicInsurancePayloadDTO.setInsuranceType(selectedTypeOption.getName() != null
+                    ? selectedTypeOption.getName() : defaultType);
 
             demographicInsurancePayloadDTO.setInsuranceMemberId(cardNumber.getText().toString().trim());
             demographicInsurancePayloadDTO.setInsuranceGroupId(groupNumber.getText().toString().trim());
@@ -440,6 +493,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             demographicInsurancePayloadDTO.setPolicyFirstNameHolder(policyFirstNameHolder.getText()
                     .toString().trim());
             demographicInsurancePayloadDTO.setPolicyLastNameHolder(policyLastNameHolder.getText()
+                    .toString().trim());
+            demographicInsurancePayloadDTO.setPolicyDateOfBirthHolder(policyBirthDateHolder.getText()
+                    .toString().trim());
+            demographicInsurancePayloadDTO.setGender(selectedGenderTextView.getText()
                     .toString().trim());
 
             setupImageBase64();
@@ -470,7 +527,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private void initializeScanArea(View view) {
         mediaScannerPresenter = new MediaScannerPresenter(getContext(), this,
                 CarePayCameraPreview.CameraType.SCAN_DOC);
-        documentScannerAdapter = new DocumentScannerAdapter(getContext(), view, mediaScannerPresenter, getApplicationMode().getApplicationType());
+        documentScannerAdapter = new DocumentScannerAdapter(getContext(), view, mediaScannerPresenter,
+                getApplicationMode().getApplicationType());
 
 
         View lastCaptureView = view.findViewById(MediaScannerPresenter.captureViewId);
@@ -490,7 +548,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             }
             documentScannerAdapter.setInsuranceDocumentsFromData(payloadDTO);
         } else if (editedIndex != NEW_INSURANCE) {
-            documentScannerAdapter.setInsuranceDocumentsFromData(demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex));
+            documentScannerAdapter.setInsuranceDocumentsFromData(demographicDTO.getPayload()
+                    .getDemographics().getPayload().getInsurances().get(editedIndex));
         }
 
     }
@@ -505,11 +564,14 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
     @Override
     public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
-        return mediaScannerPresenter != null && mediaScannerPresenter.handleActivityResult(requestCode, resultCode, data);
+        return mediaScannerPresenter != null && mediaScannerPresenter
+                .handleActivityResult(requestCode, resultCode, data);
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         handleRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
@@ -561,7 +623,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
 
     private void getInsuranceDropdownLists() {
-        InsuranceModelProperties insuranceModelProperties = demographicDTO.getMetadata().getNewDataModel().getDemographic().getInsurances().getProperties().getItems().getInsuranceModel().getInsuranceModelProperties();
+        InsuranceModelProperties insuranceModelProperties = demographicDTO.getMetadata()
+                .getNewDataModel().getDemographic().getInsurances().getProperties().getItems()
+                .getInsuranceModel().getInsuranceModelProperties();
         OnSelectionChangeCallback selectProviderCallback = new OnSelectionChangeCallback() {
             @Override
             public void onSelectionChange(DemographicsOption demographicsOption) {
@@ -573,8 +637,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                     selectedPlanOption = new DemographicsOption();
                     selectedPlanTextView.setText(Label.getLabel("demographics_choose"));
                     selectedPlanTextView.setOnClickListener(
-                            getSelectOptionsListener(((DemographicsInsuranceOption) demographicsOption).getPayerPlans(),
-                                    getDefaultOnOptionsSelectedListener(selectedPlanTextView, selectedPlanOption, null),
+                            getSelectOptionsListener(((DemographicsInsuranceOption) demographicsOption)
+                                            .getPayerPlans(),
+                                    getDefaultOnOptionsSelectedListener(selectedPlanTextView,
+                                            selectedPlanOption, null),
                                     Label.getLabel("demographics_documents_title_select_plan")));
                 }
 
@@ -596,7 +662,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
         selectedProviderTextView.setOnClickListener(
                 getSelectOptionsListener(insuranceModelProperties.getInsuranceProvider().getOptions(),
-                        getDefaultOnOptionsSelectedListener(selectedProviderTextView, selectedProviderOption, selectProviderCallback),
+                        getDefaultOnOptionsSelectedListener(selectedProviderTextView,
+                                selectedProviderOption, selectProviderCallback),
                         Label.getLabel("demographics_documents_title_select_provider")));
 
         selectedPlanTextView.setOnClickListener(
@@ -612,18 +679,81 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
         selectedRelationshipTextView.setOnClickListener(
                 getSelectOptionsListener(insuranceModelProperties.getRelationship().getOptions(),
-                        getDefaultOnOptionsSelectedListener(selectedRelationshipTextView, selectedRelationshipOption, null),
+                        getDefaultOnOptionsSelectedListener(selectedRelationshipTextView,
+                                selectedRelationshipOption, new OnSelectionChangeCallback() {
+                                    @Override
+                                    public void onSelectionChange(DemographicsOption demographicsOption) {
+                                        if (demographicsOption.getLabel().toLowerCase().equals("self")) {
+                                            isDataHolderSelf = true;
+                                            manageBoDAndGenderVisibility(isDataHolderSelf);
+                                            policyFirstNameHolderInput.setError(null);
+                                            policyFirstNameHolderInput.setErrorEnabled(false);
+                                            policyLastNameHolderInput.setError(null);
+                                            policyLastNameHolderInput.setErrorEnabled(false);
+                                        } else {
+                                            isDataHolderSelf = false;
+                                            manageBoDAndGenderVisibility(isDataHolderSelf);
+                                        }
+                                        validateForm();
+                                    }
+                                }),
                         Label.getLabel("demographics_insurance_relationship_label")));
 
+
+        selectedGenderTextView.setOnClickListener(
+                getSelectOptionsListener(insuranceModelProperties.getPolicyHolderGender().getOptions(),
+                        getDefaultOnOptionsSelectedListener(selectedGenderTextView,
+                                selectedGenderOption, new OnSelectionChangeCallback() {
+                                    @Override
+                                    public void onSelectionChange(DemographicsOption demographicsOption) {
+                                        genderRequired.setVisibility(View.GONE);
+                                    }
+                                }),
+                        Label.getLabel("demographics_review_gender")));
+
+    }
+
+    private void manageBoDAndGenderVisibility(boolean isDataHolderSelf) {
+        dateOfBirthContainer.setVisibility(isDataHolderSelf ? View.GONE : View.VISIBLE);
+        genderContainer.setVisibility(isDataHolderSelf ? View.GONE : View.VISIBLE);
+        findViewById(R.id.divider).setVisibility(isDataHolderSelf ? View.GONE : View.VISIBLE);
     }
 
 
     private void setTextListeners() {
-        String defaultError = Label.getLabel("demographics_required_field_msg");
+        final String defaultError = Label.getLabel("demographics_required_field_msg");
         cardNumber.addTextChangedListener(getValidInputTextWatcher(cardNumberInput, false, defaultError));
         groupNumber.addTextChangedListener(getValidInputTextWatcher(groupNumberInput, false, defaultError));
-        policyFirstNameHolder.addTextChangedListener(getValidInputTextWatcher(policyFirstNameHolderInput, false, defaultError));
-        policyLastNameHolder.addTextChangedListener(getValidInputTextWatcher(policyLastNameHolderInput, false, defaultError));
+        policyFirstNameHolder.addTextChangedListener(getValidInputTextWatcher(policyFirstNameHolderInput,
+                false, defaultError));
+        policyLastNameHolder.addTextChangedListener(getValidInputTextWatcher(policyLastNameHolderInput,
+                false, defaultError));
+        policyBirthDateHolder.addTextChangedListener(dateInputFormatter);
+        policyBirthDateHolder.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (StringUtil.isNullOrEmpty(editable.toString())
+                        && dateOfBirthContainer.getVisibility() == View.VISIBLE) {
+                    policyBirthDateHolderInput.setErrorEnabled(true);
+                    policyBirthDateHolderInput.setError(defaultError);
+
+                } else {
+                    policyBirthDateHolderInput.setError(null);
+                    policyBirthDateHolderInput.setErrorEnabled(false);
+                }
+                validateForm();
+            }
+        });
 
         otherProviderEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -655,6 +785,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                 .getHintFocusChangeListener(policyFirstNameHolderInput, null));
         policyLastNameHolder.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(policyLastNameHolderInput, null));
+        policyBirthDateHolder.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(policyBirthDateHolderInput, null));
     }
 
     private void setActionListeners() {
@@ -662,9 +794,12 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         groupNumber.setOnEditorActionListener(getEditorActionListener(policyFirstNameHolder));
         policyFirstNameHolder.setOnEditorActionListener(getEditorActionListener(policyLastNameHolder));
         policyLastNameHolder.setOnEditorActionListener(getEditorActionListener(null));
+        policyBirthDateHolder.setOnEditorActionListener(getEditorActionListener(null));
     }
 
-    private TextWatcher getValidInputTextWatcher(final TextInputLayout inputLayout, final boolean requiredField, final String errorMessage) {
+    private TextWatcher getValidInputTextWatcher(final TextInputLayout inputLayout,
+                                                 final boolean requiredField,
+                                                 final String errorMessage) {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
@@ -726,11 +861,41 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         if (StringUtil.isNullOrEmpty(selectedProviderOption.getName())) {
             isValid = false;
         }
+
+        if (!isDataHolderSelf) {
+            if (StringUtil.isNullOrEmpty(policyFirstNameHolder.getText().toString().trim())) {
+                policyFirstNameHolderInput.setErrorEnabled(true);
+                policyFirstNameHolderInput.setError(Label.getLabel("demographics_required_field_msg"));
+                isValid = false;
+            }
+            if (StringUtil.isNullOrEmpty(policyLastNameHolder.getText().toString().trim())) {
+                policyLastNameHolderInput.setErrorEnabled(true);
+                policyLastNameHolderInput.setError(Label.getLabel("demographics_required_field_msg"));
+                isValid = false;
+            }
+            if (StringUtil.isNullOrEmpty(policyBirthDateHolder.getText().toString().trim())) {
+                policyBirthDateHolderInput.setErrorEnabled(true);
+                policyBirthDateHolderInput.setError(Label.getLabel("demographics_required_field_msg"));
+                isValid = false;
+            }
+            if (!StringUtil.isNullOrEmpty(policyBirthDateHolder.getText().toString().trim()) &&
+                    !DateUtil.isValidateStringDateOfBirth(policyBirthDateHolder.getText().toString().trim())) {
+                policyBirthDateHolderInput.setErrorEnabled(true);
+                policyBirthDateHolderInput.setError(Label.getLabel("demographics_date_validation_msg"));
+                isValid = false;
+            }
+            if (StringUtil.isNullOrEmpty(selectedGenderOption.getName())) {
+                genderRequired.setVisibility(View.VISIBLE);
+                isValid = false;
+            }
+        }
         saveInsuranceButton.setEnabled(isValid);
     }
 
 
-    private View.OnClickListener getSelectOptionsListener(final List<? extends DemographicsOption> options, final OnOptionSelectedListener listener, final String title) {
+    private View.OnClickListener getSelectOptionsListener(final List<? extends DemographicsOption> options,
+                                                          final OnOptionSelectedListener listener,
+                                                          final String title) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -739,7 +904,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         };
     }
 
-    private OnOptionSelectedListener getDefaultOnOptionsSelectedListener(final TextView textView, final DemographicsOption storeOption, final OnSelectionChangeCallback callback) {
+    private OnOptionSelectedListener getDefaultOnOptionsSelectedListener(final TextView textView,
+                                                                         final DemographicsOption storeOption,
+                                                                         final OnSelectionChangeCallback callback) {
         return new OnOptionSelectedListener() {
             @Override
             public void onOptionSelected(DemographicsOption option) {
@@ -798,7 +965,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long row) {
-                DemographicsOption selectedOption = (DemographicsOption) adapterView.getAdapter().getItem(position);
+                DemographicsOption selectedOption = (DemographicsOption) adapterView
+                        .getAdapter().getItem(position);
                 if (listener != null) {
                     listener.onOptionSelected(selectedOption);
                 }
@@ -808,11 +976,11 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         listView.setOnItemClickListener(clickListener);
     }
 
-    private void removeOldPhoto(List<DemographicInsurancePhotoDTO> photos, int page){
+    private void removeOldPhoto(List<DemographicInsurancePhotoDTO> photos, int page) {
         Iterator<DemographicInsurancePhotoDTO> iterator = photos.iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             DemographicInsurancePhotoDTO photoDTO = iterator.next();
-            if(photoDTO.getPage() == page){
+            if (photoDTO.getPage() == page) {
                 iterator.remove();
             }
         }
@@ -825,5 +993,24 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private interface OnSelectionChangeCallback {
         void onSelectionChange(DemographicsOption demographicsOption);
     }
+
+    protected TextWatcher dateInputFormatter = new TextWatcher() {
+        int lastLength;
+
+        @Override
+        public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+            lastLength = sequence.length();
+        }
+
+        @Override
+        public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            StringUtil.autoFormatDateOfBirth(editable, lastLength);
+        }
+    };
 
 }
