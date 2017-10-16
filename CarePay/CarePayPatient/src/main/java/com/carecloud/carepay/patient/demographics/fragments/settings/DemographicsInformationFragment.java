@@ -147,7 +147,8 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         TextInputLayout dateBirthLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
         dateOfBirth = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
         dateOfBirth.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(dateBirthLayout, null));
-        setVisibility(dateBirthLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getDateOfBirth().isDisplayed());
+        setVisibility(dateBirthLayout, dataModel.getDemographic().getPersonalDetails().getProperties()
+                .getDateOfBirth().isDisplayed());
         dateOfBirth.addTextChangedListener(dateInputFormatter);
 
         String dateString = demographicPayload.getPersonalDetails().getFormattedDateOfBirth();

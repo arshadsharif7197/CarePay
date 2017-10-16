@@ -375,6 +375,16 @@
         <item name="android:visibility">gone</item>
     </style>
 
+    <style name="DemographicsRequiredLabelStyle" parent="android:Widget.TextView">
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:background">@drawable/button_red_border</item>
+        <item name="android:padding">@dimen/dimen_3dp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">@dimen/text_size_9sp</item>
+        <item name="android:textColor">@color/cardinal</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
     <style name="DemographicImageviewStyle">
         <item name="android:radius">3dp</item>
     </style>
