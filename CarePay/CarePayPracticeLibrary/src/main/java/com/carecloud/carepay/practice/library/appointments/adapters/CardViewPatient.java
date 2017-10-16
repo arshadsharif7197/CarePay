@@ -57,7 +57,7 @@ public class CardViewPatient {
     }
 
     /**
-     * @param dto Appointment Payload DTO
+     * @param dto     Appointment Payload DTO
      * @param balance owed
      */
     public CardViewPatient(AppointmentsPayloadDTO dto, Double balance) {
@@ -65,8 +65,8 @@ public class CardViewPatient {
     }
 
     /**
-     * @param raw main DTO
-     * @param dto Appointment Payload DTO
+     * @param raw     main DTO
+     * @param dto     Appointment Payload DTO
      * @param balance owed
      */
     public CardViewPatient(Object raw, AppointmentsPayloadDTO dto, Double balance) {
@@ -85,8 +85,8 @@ public class CardViewPatient {
         String code = dto.getAppointmentStatus().getCode();
         this.isRequested = code.equalsIgnoreCase(CarePayConstants.REQUESTED);
         this.isCheckedIn = code.equalsIgnoreCase(CarePayConstants.CHECKED_IN) ||
-            code.equalsIgnoreCase(CarePayConstants.IN_PROGRESS_IN_ROOM) ||
-            code.equalsIgnoreCase(CarePayConstants.IN_PROGRESS_OUT_ROOM);
+                code.equalsIgnoreCase(CarePayConstants.IN_PROGRESS_IN_ROOM) ||
+                code.equalsIgnoreCase(CarePayConstants.IN_PROGRESS_OUT_ROOM);
         this.isCheckingIn = code.equalsIgnoreCase(CarePayConstants.CHECKING_IN);
         this.isPending = code.equalsIgnoreCase(CarePayConstants.PENDING);
         this.isCheckingOut = code.equalsIgnoreCase(CarePayConstants.CHECKING_OUT);
@@ -94,7 +94,9 @@ public class CardViewPatient {
                 code.equalsIgnoreCase(CarePayConstants.BILLED) ||
                 code.equalsIgnoreCase(CarePayConstants.MANUALLY_BILLED);
         this.checkinStatus = dto.getAppointmentStatus().getCheckinStatusDTO();
-        this.lastUpdate = DateUtil.getInstance().setDateRaw(dto.getAppointmentStatus().getLastUpdated().replaceAll("\\.\\d\\d\\dZ", "-00:00")).getDate();
+        if (dto.getAppointmentStatus().getLastUpdated() != null) {
+            this.lastUpdate = DateUtil.getInstance().setDateRaw(dto.getAppointmentStatus().getLastUpdated().replaceAll("\\.\\d\\d\\dZ", "-00:00")).getDate();
+        }
     }
 
     /**
