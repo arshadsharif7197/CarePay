@@ -93,6 +93,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private View genderContainer;
     private boolean hadInsurance;
     private boolean isPatientMode;
+    private boolean isDataHolderSelf;
 
     private DemographicInsurancePhotoDTO frontInsurancePhotoDTO;
     private DemographicInsurancePhotoDTO backInsurancePhotoDTO;
@@ -342,6 +343,12 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                 findViewById(R.id.check_in_demographics_left_button).setOnClickListener(getNoInsuranceListener());
                 saveInsuranceButton.setText(Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
             }
+            selectedRelationshipOption = demographicDTO.getMetadata().getNewDataModel().getDemographic()
+                    .getInsurances().getProperties().getItems()
+                    .getInsuranceModel().getInsuranceModelProperties().getRelationship()
+                    .getOptions().get(0);
+            selectedRelationshipTextView.setText(selectedRelationshipOption.getLabel());
+            isDataHolderSelf = true;
         } else {
             DemographicInsurancePayloadDTO demographicInsurancePayload = demographicDTO.getPayload()
                     .getDemographics().getPayload().getInsurances().get(editedIndex);
@@ -379,12 +386,18 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         String selectedRelationship = demographicInsurancePayload.getRelationship();
         selectedRelationshipTextView.setText(selectedRelationship);
         selectedRelationshipOption.setName(selectedRelationship);
-        selectedRelationshipOption.setName(selectedRelationship);
+        selectedRelationshipOption.setLabel(selectedRelationship);
+        isDataHolderSelf = selectedRelationshipOption.getLabel().toLowerCase().equals("self");
+        manageBoDAndGenderVisibility(isDataHolderSelf);
 
         String selectedGender = demographicInsurancePayload.getGender();
-        selectedGenderTextView.setText(selectedGender);
-        selectedGenderOption.setName(selectedGender);
-        selectedGenderOption.setLabel(selectedGender);
+        if (selectedGender == null) {
+            selectedGenderTextView.setText(Label.getLabel("demographics_choose"));
+        } else {
+            selectedGenderTextView.setText(selectedGender);
+            selectedGenderOption.setName(selectedGender);
+            selectedGenderOption.setLabel(selectedGender);
+        }
 
         cardNumber.setText(demographicInsurancePayload.getInsuranceMemberId());
         if (!StringUtil.isNullOrEmpty(demographicInsurancePayload.getInsuranceMemberId())
@@ -671,13 +684,15 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                                     @Override
                                     public void onSelectionChange(DemographicsOption demographicsOption) {
                                         if (demographicsOption.getLabel().toLowerCase().equals("self")) {
-                                            dateOfBirthContainer.setVisibility(View.GONE);
-                                            genderContainer.setVisibility(View.GONE);
-                                            findViewById(R.id.divider).setVisibility(View.GONE);
+                                            isDataHolderSelf = true;
+                                            manageBoDAndGenderVisibility(isDataHolderSelf);
+                                            policyFirstNameHolderInput.setError(null);
+                                            policyFirstNameHolderInput.setErrorEnabled(false);
+                                            policyLastNameHolderInput.setError(null);
+                                            policyLastNameHolderInput.setErrorEnabled(false);
                                         } else {
-                                            dateOfBirthContainer.setVisibility(View.VISIBLE);
-                                            genderContainer.setVisibility(View.VISIBLE);
-                                            findViewById(R.id.divider).setVisibility(View.VISIBLE);
+                                            isDataHolderSelf = false;
+                                            manageBoDAndGenderVisibility(isDataHolderSelf);
                                         }
                                         validateForm();
                                     }
@@ -696,6 +711,12 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                                 }),
                         Label.getLabel("demographics_review_gender")));
 
+    }
+
+    private void manageBoDAndGenderVisibility(boolean isDataHolderSelf) {
+        dateOfBirthContainer.setVisibility(isDataHolderSelf ? View.GONE : View.VISIBLE);
+        genderContainer.setVisibility(isDataHolderSelf ? View.GONE : View.VISIBLE);
+        findViewById(R.id.divider).setVisibility(isDataHolderSelf ? View.GONE : View.VISIBLE);
     }
 
 
@@ -841,7 +862,17 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             isValid = false;
         }
 
-        if (policyBirthDateHolderInput.getVisibility() == View.VISIBLE) {
+        if (!isDataHolderSelf) {
+            if (StringUtil.isNullOrEmpty(policyFirstNameHolder.getText().toString().trim())) {
+                policyFirstNameHolderInput.setErrorEnabled(true);
+                policyFirstNameHolderInput.setError(Label.getLabel("demographics_required_field_msg"));
+                isValid = false;
+            }
+            if (StringUtil.isNullOrEmpty(policyLastNameHolder.getText().toString().trim())) {
+                policyLastNameHolderInput.setErrorEnabled(true);
+                policyLastNameHolderInput.setError(Label.getLabel("demographics_required_field_msg"));
+                isValid = false;
+            }
             if (StringUtil.isNullOrEmpty(policyBirthDateHolder.getText().toString().trim())) {
                 policyBirthDateHolderInput.setErrorEnabled(true);
                 policyBirthDateHolderInput.setError(Label.getLabel("demographics_required_field_msg"));
