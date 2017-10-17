@@ -44,7 +44,7 @@
     <string name="registration_progress_text">%1$d of %2$d</string>
     <string name="registration_complete_text">This device is ready to accept payments.</string>
     <string name="registration_complete_button">Let\'s go</string>
-    <string name="settings_sign_out">Sign Out</string>
+    <string name="settings_exit">Exit</string>
     <string name="settings_save">Save</string>
     <string name="settings_title">Settings</string>
 

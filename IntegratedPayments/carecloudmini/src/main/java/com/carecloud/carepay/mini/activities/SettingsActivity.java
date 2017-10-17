@@ -2,6 +2,7 @@ package com.carecloud.carepay.mini.activities;
 
 import android.os.Bundle;
 
+import com.carecloud.carepay.mini.HttpConstants;
 import com.carecloud.carepay.mini.fragments.UnlockFragment;
 
 /**
@@ -17,4 +18,13 @@ public class SettingsActivity extends RegistrationActivity {
         replaceFragment(new UnlockFragment(), false);
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        String environment = HttpConstants.getEnvironment();
+        if(environment.equals("Development")){
+            toggleCustomerMode();
+        }
+    }
 }

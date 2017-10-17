@@ -50,7 +50,7 @@ public class UnlockFragment extends LoginFragment {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.registration_toolbar);
 
         TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        title.setText(titleString);
+        title.setText(getString(R.string.settings_title));
 
         View exitButton = view.findViewById(R.id.button_exit);
         exitButton.setOnClickListener(new View.OnClickListener() {
