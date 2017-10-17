@@ -83,6 +83,11 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
     }
 
     @Override
+    public void onBackPressed(){
+        //kill this action on this activity as it leads to instability in the app
+    }
+
+    @Override
     public DTO getDto() {
         return dto;
     }
