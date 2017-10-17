@@ -56,7 +56,7 @@ public class MiniApplication extends MultiDexApplication implements ApplicationH
 
     private void updatePicassoHelper(){
         Map<String, String> headers = new HashMap<>();
-        headers.put("Authorization", authentication.getAccessToken());
+        headers.put("Authorization", authentication.getIdToken());
         PicassoHelper.setHeaders(headers);
     }
 
