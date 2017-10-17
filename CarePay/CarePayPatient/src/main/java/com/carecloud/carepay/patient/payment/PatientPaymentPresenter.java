@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.payment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
 import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
+import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -24,13 +26,14 @@ import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.google.android.gms.wallet.MaskedWallet;
 import com.google.gson.Gson;
 
 /**
  * Created by lmenendez on 5/18/17
  */
 
-public class PatientPaymentPresenter extends PaymentPresenter {
+public class PatientPaymentPresenter extends PaymentPresenter implements PatientPaymentMethodInterface {
 
     public PatientPaymentPresenter(PaymentViewHandler viewHandler, PaymentsModel paymentsModel, String patientId) {
         super(viewHandler, paymentsModel, patientId);
@@ -150,5 +153,15 @@ public class PatientPaymentPresenter extends PaymentPresenter {
     @Override
     public void onDetailCancelClicked(PaymentsModel paymentsModel) {
         startPaymentProcess(paymentsModel);
+    }
+
+    @Override
+    public void createAndAddWalletFragment(MaskedWallet maskedWallet) {
+        //todo implement
+    }
+
+    @Override
+    public void forwardActivityResult(int requestCode, int resultCode, Intent data) {
+        //todo implement
     }
 }

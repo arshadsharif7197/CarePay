@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.payment;
 
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.google.android.gms.wallet.WalletConstants;
 
 /**
@@ -8,7 +9,7 @@ import com.google.android.gms.wallet.WalletConstants;
 
 public class PaymentConstants {
     // Environment to use when creating an instance of Wallet.WalletOptions
-    public static final int WALLET_ENVIRONMENT = WalletConstants.ENVIRONMENT_TEST;
+    public static final int WALLET_ENVIRONMENT = HttpConstants.getEnvironment().equals("Production") ? WalletConstants.ENVIRONMENT_PRODUCTION : WalletConstants.ENVIRONMENT_TEST;
     public static final String ANDROID_PAY = "Android Pay";
     public static final String ANDROID_PAY_PAYMENT_TYPE = "android_pay";
     public static final String MERCHANT_NAME = "First data Corporation";

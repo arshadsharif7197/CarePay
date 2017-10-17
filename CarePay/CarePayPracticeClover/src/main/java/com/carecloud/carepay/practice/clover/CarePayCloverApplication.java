@@ -47,6 +47,7 @@ public class CarePayCloverApplication extends CarePayApplication
         HttpConstants.setPushNotificationWebclientUrl(BuildConfig.WEBCLIENT_URL);
         HttpConstants.setUseUnifiedAuth(BuildConfig.useUnifiedAuth);
         HttpConstants.setMixpanelAPI(mixpanelAPI);
+        HttpConstants.setEnvironment(BuildConfig.ENVIRONMENT);
     }
 
     @Override

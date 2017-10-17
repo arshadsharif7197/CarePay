@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.checkout;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,9 +13,11 @@ import com.carecloud.carepay.patient.appointments.fragments.AvailableHoursFragme
 import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragment;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
+import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -53,6 +56,7 @@ import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.google.android.gms.wallet.MaskedWallet;
 import com.google.gson.Gson;
 
 import java.util.Date;
@@ -61,7 +65,7 @@ import java.util.Map;
 
 public class AppointmentCheckoutActivity extends BasePatientActivity implements CheckOutInterface,
         VisitTypeInterface, AvailableHoursInterface, DateRangeInterface, PaymentNavigationCallback,
-        AppointmentPrepaymentCallback, ProviderInterface {
+        AppointmentPrepaymentCallback, ProviderInterface, PatientPaymentMethodInterface {
 
     private String appointmentId;
     private AppointmentDTO selectedAppointment;
@@ -85,6 +89,17 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         }
 
         shouldAddBackStack = true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
+                forwardActivityResult(requestCode, resultCode, data);
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+                break;
+        }
     }
 
     /**
@@ -445,5 +460,15 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
                     .setSelectedProvider(appointmentResourcesDTO.getResource().getProvider());
         }
 
+    }
+
+    @Override
+    public void createAndAddWalletFragment(MaskedWallet maskedWallet) {
+        //TODO implement
+    }
+
+    @Override
+    public void forwardActivityResult(int requestCode, int resultCode, Intent data) {
+        //TODO implement
     }
 }

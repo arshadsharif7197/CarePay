@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.appointments.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.label.Label;
@@ -37,6 +39,17 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
         initPresenter();
         gotoAppointmentFragment();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
+                presenter.forwardActivityResult(requestCode, resultCode, data);
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+                break;
+        }
     }
 
     @Override

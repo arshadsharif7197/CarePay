@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.appointments.presenter;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragme
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
+import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.appointment.DataDTO;
@@ -54,6 +56,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPo
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.android.gms.wallet.MaskedWallet;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -67,7 +70,7 @@ import java.util.Map;
  */
 
 public class PatientAppointmentPresenter extends AppointmentPresenter
-        implements PatientAppointmentNavigationCallback {
+        implements PatientAppointmentNavigationCallback, PatientPaymentMethodInterface {
     private String patientId;
     private String practiceId;
     private String practiceMgmt;
@@ -669,5 +672,15 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     @Override
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
         onAppointmentRequestSuccess();
+    }
+
+    @Override
+    public void createAndAddWalletFragment(MaskedWallet maskedWallet) {
+        //todo implement
+    }
+
+    @Override
+    public void forwardActivityResult(int requestCode, int resultCode, Intent data) {
+        //todo implement
     }
 }

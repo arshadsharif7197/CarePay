@@ -1,17 +1,15 @@
 package com.carecloud.carepay.patient.payment.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.widget.Toast;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
-import com.carecloud.carepay.patient.payment.androidpay.ConfirmationActivity;
+import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentHistoryDetailDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.NoPaymentsFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
@@ -38,7 +36,6 @@ import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.android.gms.wallet.MaskedWallet;
-import com.google.android.gms.wallet.WalletConstants;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -102,80 +99,13 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         navigationView.getMenu().findItem(R.id.nav_payments).setChecked(true);
     }
 
-    /**
-     * Invoked after the user taps the Buy With Android Pay button and the selected
-     * credit card and shipping address are confirmed. If the request succeeded,
-     * a {@link MaskedWallet} object is attached to the Intent. The Confirmation Activity is
-     * then launched, providing it with the {@link MaskedWallet} object.
-     *
-     * @param requestCode The code that was set in the Masked Wallet Request
-     * @param resultCode  The result of the request execution
-     * @param data        Intent carrying the results
-     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // retrieve the error code, if available
-        int errorCode = -1;
-        if (data != null) {
-            errorCode = data.getIntExtra(WalletConstants.EXTRA_ERROR_CODE, -1);
-        }
         switch (requestCode) {
             case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
-                switch (resultCode) {
-                    case Activity.RESULT_OK:
-                        MaskedWallet maskedWallet =
-                                data.getParcelableExtra(WalletConstants.EXTRA_MASKED_WALLET);
-                        Fragment fragment = getSupportFragmentManager().findFragmentByTag(ResponsibilityFragment.class.getName());
-                        if (fragment != null) {
-                            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-                        }
-                        //setTitle("Confirmation");
-
-                        launchConfirmationPage(maskedWallet);
-                        break;
-                    case Activity.RESULT_CANCELED:
-                        break;
-                    default:
-                        handleError(errorCode);
-                        break;
-                }
-                break;
-
-            case WalletConstants.RESULT_ERROR:
-                handleError(errorCode);
-                break;
-
+                forwardActivityResult(requestCode, resultCode, data);
             default:
                 super.onActivityResult(requestCode, resultCode, data);
-                break;
-        }
-    }
-
-    private void launchConfirmationPage(MaskedWallet maskedWallet) {
-        Intent intent = ConfirmationActivity.newIntent(this, maskedWallet, paymentsDTO
-                        .getPaymentPayload().getPatientBalances().get(0).getPendingRepsonsibility(), "CERT", bundle,
-                Label.getLabel("payment_patient_balance_toolbar"));
-        startActivity(intent);
-    }
-
-
-    protected void handleError(int errorCode) {
-        switch (errorCode) {
-            case WalletConstants.ERROR_CODE_SPENDING_LIMIT_EXCEEDED:
-                Toast.makeText(this, "Way too much!!", Toast.LENGTH_LONG).show();
-                break;
-            case WalletConstants.ERROR_CODE_INVALID_PARAMETERS:
-            case WalletConstants.ERROR_CODE_AUTHENTICATION_FAILURE:
-            case WalletConstants.ERROR_CODE_BUYER_ACCOUNT_ERROR:
-            case WalletConstants.ERROR_CODE_MERCHANT_ACCOUNT_ERROR:
-            case WalletConstants.ERROR_CODE_SERVICE_UNAVAILABLE:
-            case WalletConstants.ERROR_CODE_UNSUPPORTED_API_VERSION:
-            case WalletConstants.ERROR_CODE_UNKNOWN:
-            default:
-                // unrecoverable error
-                String errorMessage = "Android Pay is unavailable" + "\n" +
-                        "Error code: " + errorCode;
-                Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
                 break;
         }
     }
@@ -363,5 +293,47 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
             }
         }
         return null;
+    }
+
+    @Override
+    public void createAndAddWalletFragment(MaskedWallet maskedWallet) {
+//        WalletFragmentStyle walletFragmentStyle = new WalletFragmentStyle()
+//
+//                .setMaskedWalletDetailsTextAppearance(
+//                        R.style.WalletFragmentDetailsTextAppearance)
+//                .setMaskedWalletDetailsHeaderTextAppearance(
+//                        R.style.WalletFragmentDetailsHeaderTextAppearance)
+//                .setMaskedWalletDetailsBackgroundColor(
+//                        R.color.colorPrimary)
+//                .setMaskedWalletDetailsButtonTextAppearance(R.drawable.cell_checkbox_on)
+//                .setMaskedWalletDetailsButtonBackgroundResource(R.drawable.button_blue)
+//                .setMaskedWalletDetailsBackgroundResource(R.color.colorPrimary);
+//
+//        WalletFragmentOptions walletFragmentOptions = WalletFragmentOptions.newBuilder()
+//                .setEnvironment(PaymentConstants.WALLET_ENVIRONMENT)
+//                .setFragmentStyle(walletFragmentStyle)
+//                .setTheme(WalletConstants.THEME_LIGHT)
+//                .setMode(WalletFragmentMode.SELECTION_DETAILS)
+//                .build();
+//
+//        SupportWalletFragment walletFragment = SupportWalletFragment.newInstance(walletFragmentOptions);
+//
+//        // Now initialize the Wallet Fragment
+//        String accountName = getString(R.string.account_name);
+//        WalletFragmentInitParams.Builder startParamsBuilder = WalletFragmentInitParams.newBuilder()
+//                .setMaskedWallet(maskedWallet)
+//                .setMaskedWalletRequestCode(PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET)
+//                .setAccountName(accountName);
+//        walletFragment.initialize(startParamsBuilder.build());
+
+        // add Wallet fragment to the UI
+//        replaceFragment(walletFragment, true);
+        displayDialogFragment(AndroidPayDialogFragment.newInstance(maskedWallet, paymentsDTO), false);
+    }
+
+    @Override
+    public void forwardActivityResult(int requestCode, int resultCode, Intent data) {
+        Fragment targetFragment = getSupportFragmentManager().findFragmentByTag(PatientPaymentMethodFragment.class.getName());
+        targetFragment.onActivityResult(requestCode, resultCode, data);
     }
 }
