@@ -34,8 +34,8 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiAccountsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.MerchantServiceMetadataDTO;
+import com.carecloud.carepaylibray.payments.models.PapiAccountsDTO;
+import com.carecloud.carepaylibray.payments.models.MerchantServiceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
@@ -615,7 +615,7 @@ public class FullWalletConfirmationButtonFragment extends BaseFragment
 
     private MerchantServiceMetadataDTO getPayeezyMerchantService(){
         MerchantServiceMetadataDTO merchantServiceDTO = null;
-        for (DemographicsSettingsPapiAccountsDTO papiAccountDTO : paymentsModel.getPaymentPayload().getPapiAccounts()) {
+        for (PapiAccountsDTO papiAccountDTO : paymentsModel.getPaymentPayload().getPapiAccounts()) {
             if (papiAccountDTO.getType().contains("payeezy")) {
                 merchantServiceDTO = papiAccountDTO.getMetadata().getMerchantService();
             }

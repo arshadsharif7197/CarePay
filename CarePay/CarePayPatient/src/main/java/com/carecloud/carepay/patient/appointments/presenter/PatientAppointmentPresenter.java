@@ -675,7 +675,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     @Override
-    public void createAndAddWalletFragment(MaskedWallet maskedWallet) {
+    public void createAndAddWalletFragment(MaskedWallet maskedWallet, Double amount) {
         //todo implement
     }
 

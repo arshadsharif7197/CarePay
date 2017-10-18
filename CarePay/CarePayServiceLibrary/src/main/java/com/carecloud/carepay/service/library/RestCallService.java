@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 
 import java.util.Map;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -25,10 +26,16 @@ public interface RestCallService {
     Call<JsonElement> executeGet(@Url String url, @Body String jsonString);
 
     @GET
+    Call<JsonElement> executeGet(@Url String url, @Body RequestBody requestBody);
+
+    @GET
     Call<JsonElement> executeGet(@Url String url, @QueryMap Map<String, String> queryMap);
 
     @GET
     Call<JsonElement> executeGet(@Url String url, @Body String jsonString, @QueryMap Map<String, String> queryMap);
+
+    @GET
+    Call<JsonElement> executeGet(@Url String url, @Body RequestBody requestBody, @QueryMap Map<String, String> queryMap);
 
     @GET
     @FormUrlEncoded
@@ -42,10 +49,16 @@ public interface RestCallService {
     Call<JsonElement> executePost(@Url String url, @Body String jsonString);
 
     @POST
+    Call<JsonElement> executePost(@Url String url, @Body RequestBody requestBody);
+
+    @POST
     Call<JsonElement> executePost(@Url String url, @QueryMap Map<String, String> queryMap);
 
     @POST
     Call<JsonElement> executePost(@Url String url, @Body String jsonString, @QueryMap Map<String, String> queryMap);
+
+    @POST
+    Call<JsonElement> executePost(@Url String url, @Body RequestBody requestBody, @QueryMap Map<String, String> queryMap);
 
     @POST
     @FormUrlEncoded
@@ -60,10 +73,16 @@ public interface RestCallService {
     Call<JsonElement> executePut(@Url String url, @Body String jsonString);
 
     @PUT
+    Call<JsonElement> executePut(@Url String url, @Body RequestBody requestBody);
+
+    @PUT
     Call<JsonElement> executePut(@Url String url, @QueryMap Map<String, String> queryMap);
 
     @PUT
     Call<JsonElement> executePut(@Url String url, @Body String jsonString, @QueryMap Map<String, String> queryMap);
+
+    @PUT
+    Call<JsonElement> executePut(@Url String url, @Body RequestBody requestBody, @QueryMap Map<String, String> queryMap);
 
     @PUT
     @FormUrlEncoded
@@ -78,10 +97,16 @@ public interface RestCallService {
     Call<JsonElement> executeDelete(@Url String url, @Body String jsonString);
 
     @DELETE
+    Call<JsonElement> executeDelete(@Url String url, @Body RequestBody requestBody);
+
+    @DELETE
     Call<JsonElement> executeDelete(@Url String url, @QueryMap Map<String, String> queryMap);
 
     @DELETE
     Call<JsonElement> executeDelete(@Url String url, @Body String jsonString, @QueryMap Map<String, String> queryMap);
+
+    @DELETE
+    Call<JsonElement> executeDelete(@Url String url, @Body RequestBody requestBody, @QueryMap Map<String, String> queryMap);
 
     @DELETE
     @FormUrlEncoded

@@ -1,9 +1,9 @@
-package com.carecloud.carepaylibray.demographicsettings.models;
+package com.carecloud.carepaylibray.payments.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class DemographicsSettingsPapiBankAccountDTO {
+public class PapiBankAccountDTO {
     @SerializedName("id")
     @Expose
     private String id;
@@ -15,7 +15,7 @@ public class DemographicsSettingsPapiBankAccountDTO {
     private String token;
     @SerializedName("metadata")
     @Expose
-    private DemographicsSettingsPapiBankAccountMetadataDTO metadata = new DemographicsSettingsPapiBankAccountMetadataDTO();
+    private PapiBankAccountMetadataDTO metadata = new PapiBankAccountMetadataDTO();
 
     /**
      * Gets id.
@@ -78,7 +78,7 @@ public class DemographicsSettingsPapiBankAccountDTO {
      *
      * @return the metadata
      */
-    public DemographicsSettingsPapiBankAccountMetadataDTO getMetadata() {
+    public PapiBankAccountMetadataDTO getMetadata() {
         return metadata;
     }
 
@@ -87,7 +87,7 @@ public class DemographicsSettingsPapiBankAccountDTO {
      *
      * @param metadata the metadata
      */
-    public void setMetadata(DemographicsSettingsPapiBankAccountMetadataDTO metadata) {
+    public void setMetadata(PapiBankAccountMetadataDTO metadata) {
         this.metadata = metadata;
     }
 }

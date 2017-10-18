@@ -102,8 +102,11 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
+            case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
+            case PaymentConstants.REQUEST_CODE_FULL_WALLET:
                 forwardActivityResult(requestCode, resultCode, data);
+                break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
                 break;
@@ -296,44 +299,21 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void createAndAddWalletFragment(MaskedWallet maskedWallet) {
-//        WalletFragmentStyle walletFragmentStyle = new WalletFragmentStyle()
-//
-//                .setMaskedWalletDetailsTextAppearance(
-//                        R.style.WalletFragmentDetailsTextAppearance)
-//                .setMaskedWalletDetailsHeaderTextAppearance(
-//                        R.style.WalletFragmentDetailsHeaderTextAppearance)
-//                .setMaskedWalletDetailsBackgroundColor(
-//                        R.color.colorPrimary)
-//                .setMaskedWalletDetailsButtonTextAppearance(R.drawable.cell_checkbox_on)
-//                .setMaskedWalletDetailsButtonBackgroundResource(R.drawable.button_blue)
-//                .setMaskedWalletDetailsBackgroundResource(R.color.colorPrimary);
-//
-//        WalletFragmentOptions walletFragmentOptions = WalletFragmentOptions.newBuilder()
-//                .setEnvironment(PaymentConstants.WALLET_ENVIRONMENT)
-//                .setFragmentStyle(walletFragmentStyle)
-//                .setTheme(WalletConstants.THEME_LIGHT)
-//                .setMode(WalletFragmentMode.SELECTION_DETAILS)
-//                .build();
-//
-//        SupportWalletFragment walletFragment = SupportWalletFragment.newInstance(walletFragmentOptions);
-//
-//        // Now initialize the Wallet Fragment
-//        String accountName = getString(R.string.account_name);
-//        WalletFragmentInitParams.Builder startParamsBuilder = WalletFragmentInitParams.newBuilder()
-//                .setMaskedWallet(maskedWallet)
-//                .setMaskedWalletRequestCode(PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET)
-//                .setAccountName(accountName);
-//        walletFragment.initialize(startParamsBuilder.build());
-
-        // add Wallet fragment to the UI
-//        replaceFragment(walletFragment, true);
-        displayDialogFragment(AndroidPayDialogFragment.newInstance(maskedWallet, paymentsDTO), false);
+    public void createAndAddWalletFragment(MaskedWallet maskedWallet, Double amount) {
+        displayDialogFragment(AndroidPayDialogFragment.newInstance(maskedWallet, paymentsDTO, amount), false);
     }
 
     @Override
     public void forwardActivityResult(int requestCode, int resultCode, Intent data) {
-        Fragment targetFragment = getSupportFragmentManager().findFragmentByTag(PatientPaymentMethodFragment.class.getName());
+        Fragment targetFragment;
+        switch (requestCode) {
+            case PaymentConstants.REQUEST_CODE_FULL_WALLET:
+                targetFragment = getSupportFragmentManager().findFragmentByTag(AndroidPayDialogFragment.class.getName());
+                break;
+            default:
+                targetFragment = getSupportFragmentManager().findFragmentByTag(PatientPaymentMethodFragment.class.getName());
+                break;
+        }
         targetFragment.onActivityResult(requestCode, resultCode, data);
     }
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,13 +9,13 @@
         android:layout_width="@dimen/dialog_width"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_gravity="center_horizontal|bottom"
-        android:gravity="bottom">
+        android:layout_gravity="center_horizontal|bottom">
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dialog_height"
-            android:fillViewport="true">
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            android:layout_marginBottom="@dimen/padding_large">
 
             <FrameLayout
                 android:id="@+id/androidpay_invoice_container"
@@ -23,6 +24,17 @@
             </FrameLayout>
 
         </ScrollView>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/button_place_order"
+            style="@style/ResponsButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="0dp"
+            android:layout_marginTop="@dimen/padding_large"
+            android:background="@drawable/button_selector_green"
+            breeze:textKey="demographics_pay_button_text" />
 
         <FrameLayout
             android:id="@+id/androidpay_confirm_button_container"

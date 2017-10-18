@@ -15,6 +15,7 @@ public class PaymentConstants {
     public static final String MERCHANT_NAME = "First data Corporation";
 
     public static final String ANDROID_PAY_MERCHANT_SERVICE = "PZY";
+    public static final String ANDROID_PAY_PAPI_ACCOUNT_TYPE = "payeezy";
 
     // Intent extra keys
     public static final String EXTRA_ITEM_ID = "com.firstdata.firstapi.androidpay.EXTRA_ITEM_ID";
@@ -36,4 +37,6 @@ public class PaymentConstants {
     //  Request Codes
     public static final int REQUEST_CODE_MASKED_WALLET = 1001;
     public static final int REQUEST_CODE_CHANGE_MASKED_WALLET = 1002;
+    public static final int REQUEST_CODE_FULL_WALLET = 1003;
+
 }

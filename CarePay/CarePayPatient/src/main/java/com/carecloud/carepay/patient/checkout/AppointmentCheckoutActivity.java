@@ -463,7 +463,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     @Override
-    public void createAndAddWalletFragment(MaskedWallet maskedWallet) {
+    public void createAndAddWalletFragment(MaskedWallet maskedWallet, Double amount) {
         //TODO implement
     }
 

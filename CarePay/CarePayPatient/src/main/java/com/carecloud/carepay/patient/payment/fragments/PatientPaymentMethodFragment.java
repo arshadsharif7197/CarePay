@@ -18,23 +18,18 @@ import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayAdapter;
 import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.google.android.gms.wallet.LineItem;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PatientPaymentMethodFragment extends PaymentMethodFragment implements AndroidPayAdapter.AndroidPayCallback {
+public class PatientPaymentMethodFragment extends PaymentMethodFragment implements AndroidPayAdapter.AndroidPayReadyCallback {
 
     //Patient Specific Stuff
     private ProgressBar paymentMethodFragmentProgressBar;
@@ -122,7 +117,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
                     case Activity.RESULT_OK:
                         if(data != null) {
                             MaskedWallet maskedWallet = data.getParcelableExtra(WalletConstants.EXTRA_MASKED_WALLET);
-                            callback.createAndAddWalletFragment(maskedWallet);
+                            callback.createAndAddWalletFragment(maskedWallet, amountToMakePayment);
                         }
                         break;
                     case Activity.RESULT_CANCELED:
@@ -177,22 +172,6 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         androidPayAdapter.createWalletButton(amountToMakePayment, (ViewGroup) findViewById(R.id.dynamic_wallet_button_fragment));
     }
 
-
-    private List<LineItem> getLineItems(Double amount) {
-        List<LineItem> list = new ArrayList<LineItem>();
-
-        list.add(LineItem.newBuilder()
-                .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
-                .setDescription(Label.getLabel("payment_patient_payment_description"))
-                .setQuantity("1")
-                .setTotalPrice(amount.toString())
-                .setUnitPrice(amount.toString())
-                .build());
-
-
-        return list;
-    }
-
     private void handleError(int errorCode) {
         switch (errorCode) {
             case WalletConstants.ERROR_CODE_SPENDING_LIMIT_EXCEEDED:
@@ -214,10 +193,6 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         }
     }
 
-    @Override
-    public List<LineItem> getLineItems() {
-        return getLineItems(amountToMakePayment);
-    }
 
     @Override
     public void onAndroidPayReady() {
