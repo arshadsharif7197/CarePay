@@ -39,15 +39,15 @@ public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment
     /**
      * Creates a VisitTypeFragmentDialog fragment
      *
-     * @param model                   The appointment Resource DTO
+     * @param appointmentResourcesDTO                   The appointment Resource DTO
      * @param appointmentsResultModel The appointment resource model
      */
-    public static VisitTypeFragmentDialog newInstance(AppointmentResourcesDTO model,
+    public static VisitTypeFragmentDialog newInstance(AppointmentResourcesDTO appointmentResourcesDTO,
                                                       AppointmentsResultModel appointmentsResultModel,
                                                       AppointmentsSettingDTO appointmentsSettings) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, model);
+        DtoHelper.bundleDto(args, appointmentResourcesDTO);
         DtoHelper.bundleDto(args, appointmentsResultModel);
         DtoHelper.bundleDto(args, appointmentsSettings);
 

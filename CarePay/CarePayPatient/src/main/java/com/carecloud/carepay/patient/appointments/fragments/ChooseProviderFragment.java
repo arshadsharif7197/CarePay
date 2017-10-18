@@ -37,7 +37,9 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChooseProviderFragment extends BaseAppointmentFragment
         implements ProviderAdapter.OnProviderListItemClickListener {
@@ -53,13 +55,16 @@ public class ChooseProviderFragment extends BaseAppointmentFragment
     private ProviderInterface callback;
 
     /**
-     *
      * @param appointmentsResultModel the model
-     * @return a new instance of ChooseProviderFragment
+     * @param practiceMgmt
+     * @param practiceId              @return a new instance of ChooseProviderFragment
      */
-    public static ChooseProviderFragment newInstance(AppointmentsResultModel appointmentsResultModel) {
+    public static ChooseProviderFragment newInstance(AppointmentsResultModel appointmentsResultModel,
+                                                     String practiceMgmt, String practiceId) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, appointmentsResultModel);
+        args.putString("practiceMgmt", practiceMgmt);
+        args.putString("practiceId", practiceId);
         ChooseProviderFragment fragment = new ChooseProviderFragment();
         fragment.setArguments(args);
         return fragment;
@@ -140,7 +145,16 @@ public class ChooseProviderFragment extends BaseAppointmentFragment
     private void getResourcesInformation() {
         TransitionDTO resourcesToSchedule = appointmentsResultModel.getMetadata()
                 .getLinks().getResourcesToSchedule();
-        getWorkflowServiceHelper().execute(resourcesToSchedule, scheduleResourcesCallback);
+        Map<String, String> queryMap = new HashMap<>();
+        String practiceId = getArguments().getString("practiceId");
+        String practiceMgmt = getArguments().getString("practiceMgmt");
+        if (practiceId != null) {
+            queryMap.put("practice_id", practiceId);
+        }
+        if (practiceMgmt != null) {
+            queryMap.put("practice_mgmt", practiceMgmt);
+        }
+        getWorkflowServiceHelper().execute(resourcesToSchedule, scheduleResourcesCallback, queryMap);
     }
 
     private WorkflowServiceCallback scheduleResourcesCallback = new WorkflowServiceCallback() {
