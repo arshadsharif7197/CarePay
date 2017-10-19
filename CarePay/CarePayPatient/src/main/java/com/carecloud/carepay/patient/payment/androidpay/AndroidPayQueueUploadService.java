@@ -45,7 +45,6 @@ public class AndroidPayQueueUploadService extends IntentService {
 
         List<AndroidPayQueuePaymentRecord> queueRecords =  AndroidPayQueuePaymentRecord.listAll(AndroidPayQueuePaymentRecord.class);
         for(AndroidPayQueuePaymentRecord queueRecord : queueRecords){
-            TransitionDTO transitionDTO = gson.fromJson(queueRecord.getQueueTransition(), TransitionDTO.class);
 
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("patient_id", queueRecord.getPatientID());
@@ -57,6 +56,7 @@ public class AndroidPayQueueUploadService extends IntentService {
                 jsonBody = queueRecord.getPaymentModelJson();
             }
 
+            TransitionDTO transitionDTO = gson.fromJson(queueRecord.getQueueTransition(), TransitionDTO.class);
             boolean isSubmitted = executeWebCall(transitionDTO, jsonBody, queryMap, queueRecord.getUsername());
             if(isSubmitted){
                 queueRecord.delete();

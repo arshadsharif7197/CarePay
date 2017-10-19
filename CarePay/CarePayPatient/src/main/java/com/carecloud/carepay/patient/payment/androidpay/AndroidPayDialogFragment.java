@@ -73,6 +73,13 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
 
     private PatientPaymentMethodInterface callback;
 
+    /**
+     * get new instance of AndroidPayDialogFragment
+     * @param maskedWallet masked wallet
+     * @param paymentsModel payment model
+     * @param amount payment amount
+     * @return new instance of AndroidPayDialogFragment
+     */
     public static AndroidPayDialogFragment newInstance(MaskedWallet maskedWallet, PaymentsModel paymentsModel, Double amount){
         Bundle args = new Bundle();
         args.putParcelable(KEY_MASKED_WALLET, maskedWallet);

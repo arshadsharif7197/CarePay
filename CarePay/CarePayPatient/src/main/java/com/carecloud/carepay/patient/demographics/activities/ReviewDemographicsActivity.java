@@ -59,6 +59,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
             case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_FULL_WALLET:
                 paymentPresenter.forwardAndroidPayResult(requestCode, resultCode, data);
+                break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
                 break;

@@ -83,6 +83,12 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
 
     private static GoogleApiClient googleApiClient;
 
+    /**
+     * Constructor
+     * @param activity activity
+     * @param merchantServicesList merchant services list
+     * @param fragmentManager frament manager
+     */
     public AndroidPayAdapter(FragmentActivity activity, @NonNull List<MerchantServicesDTO> merchantServicesList, FragmentManager fragmentManager){
         this.activity = activity;
         this.fragMan = fragmentManager;
@@ -90,6 +96,12 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
     }
 
 
+    /**
+     * Constructor
+     * @param activity activity
+     * @param merchantServicesList merchant services list
+     * @param merchantServicesList
+     */
     public AndroidPayAdapter(FragmentActivity activity, @NonNull List<MerchantServicesDTO> merchantServicesList){
         this.activity = activity;
         this.fragMan = activity.getSupportFragmentManager();
@@ -97,10 +109,17 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
     }
 
 
+    /**
+     * disconnect google Api client
+     */
     public void disconnectClient(){
         disconnectGoogleAPI();
     }
 
+    /**
+     * Check if android pay is avaiable and init android pay
+     * @param callback callback
+     */
     public void initAndroidPay(final AndroidPayReadyCallback callback){
         IsReadyToPayRequest req = IsReadyToPayRequest.newBuilder()
                 .addAllowedCardNetwork(WalletConstants.CardNetwork.MASTERCARD)
@@ -151,6 +170,12 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
     //endregion
 
     //region WalletViews
+
+    /**
+     * Creates a Eallet Button fragment
+     * @param amount amount to make payment
+     * @param container container to insert fragment
+     */
     public void createWalletButton(Double amount, ViewGroup container) {
         SupportWalletFragment walletFragment = SupportWalletFragment.newInstance(walletButtonOptions);
 
@@ -173,7 +198,11 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
     }
 
 
-
+    /**
+     * Creates a Wallet Details Fragment
+     * @param maskedWallet  maskedWallet
+     * @param container  container to insert fragment
+     */
     public void createWalletDetails(MaskedWallet maskedWallet, ViewGroup container){
         SupportWalletFragment walletFragment = SupportWalletFragment.newInstance(walletDetailOptions);
 
@@ -190,6 +219,11 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
                 .commit();
     }
 
+    /**
+     * Send a full wallet request for payment
+     * @param maskedWallet masked wallet
+     * @param amount amount of payment
+     */
     public void createFullWallet(MaskedWallet maskedWallet, Double amount){
         setGoogleApiClient();
         Wallet.Payments.loadFullWallet(googleApiClient,
@@ -299,6 +333,14 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
     //endregion
 
     //region Processing
+
+    /**
+     * Complete android pay request and process payment
+     * @param fullWallet full wallet
+     * @param papiAccountsDTO papi account for payment
+     * @param paymentAmount amount of payment
+     * @param callback callback
+     */
     public void sendRequestToPayeezy(FullWallet fullWallet, PapiAccountsDTO papiAccountsDTO, Double paymentAmount, @NonNull AndroidPayProcessingCallback callback) {
         try {
             //  Parse the Json token retrieved from the Full Wallet.

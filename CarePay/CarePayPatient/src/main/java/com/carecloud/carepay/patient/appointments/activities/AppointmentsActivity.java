@@ -50,6 +50,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_FULL_WALLET:
                 presenter.forwardAndroidPayResult(requestCode, resultCode, data);
+                break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
                 break;
