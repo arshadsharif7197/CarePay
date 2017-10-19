@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.demographicsettings.models;
+package com.carecloud.carepaylibray.payments.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * The type Demographics settings papi accounts dto.
  */
-public class DemographicsSettingsPapiAccountsDTO {
+public class PapiAccountsDTO {
     @SerializedName("id")
     @Expose
     private String id;
@@ -27,10 +27,10 @@ public class DemographicsSettingsPapiAccountsDTO {
     private String defaultBankAccountToken;
     @SerializedName("bank_account")
     @Expose
-    private DemographicsSettingsPapiBankAccountDTO bankAccount = new DemographicsSettingsPapiBankAccountDTO();
+    private PapiBankAccountDTO bankAccount = new PapiBankAccountDTO();
     @SerializedName("metadata")
     @Expose
-    private DemographicsSettingsPapiMetadataDTO metadata = new DemographicsSettingsPapiMetadataDTO();
+    private PapiMetadataDTO metadata = new PapiMetadataDTO();
 
     /**
      * Gets id.
@@ -145,7 +145,7 @@ public class DemographicsSettingsPapiAccountsDTO {
      *
      * @return the bank account
      */
-    public DemographicsSettingsPapiBankAccountDTO getBankAccount() {
+    public PapiBankAccountDTO getBankAccount() {
         return bankAccount;
     }
 
@@ -154,7 +154,7 @@ public class DemographicsSettingsPapiAccountsDTO {
      *
      * @param bankAccount the bank account
      */
-    public void setBankAccount(DemographicsSettingsPapiBankAccountDTO bankAccount) {
+    public void setBankAccount(PapiBankAccountDTO bankAccount) {
         this.bankAccount = bankAccount;
     }
 
@@ -163,7 +163,7 @@ public class DemographicsSettingsPapiAccountsDTO {
      *
      * @return the metadata
      */
-    public DemographicsSettingsPapiMetadataDTO getMetadata() {
+    public PapiMetadataDTO getMetadata() {
         return metadata;
     }
 
@@ -172,7 +172,7 @@ public class DemographicsSettingsPapiAccountsDTO {
      *
      * @param metadata the metadata
      */
-    public void setMetadata(DemographicsSettingsPapiMetadataDTO metadata) {
+    public void setMetadata(PapiMetadataDTO metadata) {
         this.metadata = metadata;
     }
 }

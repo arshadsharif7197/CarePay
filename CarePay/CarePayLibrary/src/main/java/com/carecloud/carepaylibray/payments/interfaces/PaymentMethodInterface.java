@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.payments.interfaces;
 
 import android.support.annotation.Nullable;
 
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 
@@ -25,4 +26,7 @@ public interface PaymentMethodInterface {
     void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel);
 
     @Nullable String getAppointmentId();
+
+    UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel);
+
 }

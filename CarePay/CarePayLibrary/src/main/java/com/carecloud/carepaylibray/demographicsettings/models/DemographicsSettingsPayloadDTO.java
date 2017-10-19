@@ -1,6 +1,8 @@
 
 package com.carecloud.carepaylibray.demographicsettings.models;
 
+import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
+import com.carecloud.carepaylibray.payments.models.PapiAccountsDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -23,7 +25,7 @@ public class DemographicsSettingsPayloadDTO {
     private String currentEmail;
     @SerializedName("papi_accounts")
     @Expose
-    private List<DemographicsSettingsPapiAccountsDTO> papiAccounts = new ArrayList<>();
+    private List<PapiAccountsDTO> papiAccounts = new ArrayList<>();
     @SerializedName("merchant_services")
     @Expose
     private List<MerchantServicesDTO> merchantServices = new ArrayList<>();
@@ -103,7 +105,7 @@ public class DemographicsSettingsPayloadDTO {
      *
      * @return the papi accounts
      */
-    public List<DemographicsSettingsPapiAccountsDTO> getPapiAccounts() {
+    public List<PapiAccountsDTO> getPapiAccounts() {
         return papiAccounts;
     }
 
@@ -112,7 +114,7 @@ public class DemographicsSettingsPayloadDTO {
      *
      * @param papiAccounts the papi accounts
      */
-    public void setPapiAccounts(List<DemographicsSettingsPapiAccountsDTO> papiAccounts) {
+    public void setPapiAccounts(List<PapiAccountsDTO> papiAccounts) {
         this.papiAccounts = papiAccounts;
     }
 

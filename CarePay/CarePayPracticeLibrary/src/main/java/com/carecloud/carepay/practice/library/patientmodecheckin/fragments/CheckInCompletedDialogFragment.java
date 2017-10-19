@@ -90,12 +90,14 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        setRetainInstance(true);
         hasPayment = getArguments().getBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, false);
         isAdHocForms = getArguments().getBoolean(CarePayConstants.ADHOC_FORMS, false);
         DTO dto = callback.getDto();
         if(dto != null) {
             selectedAppointment = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
+            if(selectedAppointment == null){
+                selectedAppointment = DtoHelper.getConvertedDTO(AppointmentDTO.class, icicle);
+            }
             if (hasPayment) {
                 patientPaymentPayload = ((PaymentsModel) dto).getPaymentPayload().getPatientPayments().getPayload();
                 userImageUrl = ((PaymentsModel) dto).getPaymentPayload().getPatientBalances().get(0)
@@ -117,12 +119,22 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle icicle){
+        DtoHelper.bundleDto(icicle, selectedAppointment);
+        super.onSaveInstanceState(icicle);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_checkin_complete, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        if(selectedAppointment == null){
+            return;
+        }
+
         view.findViewById(R.id.paymentInformation).setVisibility(hasPayment ? View.VISIBLE : View.GONE);
 
         final ImageView userImage = (ImageView) view.findViewById(R.id.userImage);

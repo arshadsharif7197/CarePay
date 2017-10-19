@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.checkout;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,9 +13,12 @@ import com.carecloud.carepay.patient.appointments.fragments.AvailableHoursFragme
 import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragment;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.payment.PaymentConstants;
+import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
+import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -40,6 +44,7 @@ import com.carecloud.carepaylibray.checkout.CheckOutFormFragment;
 import com.carecloud.carepaylibray.checkout.CheckOutInterface;
 import com.carecloud.carepaylibray.checkout.NextAppointmentFragment;
 import com.carecloud.carepaylibray.checkout.NextAppointmentFragmentInterface;
+import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
@@ -53,6 +58,7 @@ import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.google.android.gms.wallet.MaskedWallet;
 import com.google.gson.Gson;
 
 import java.util.Date;
@@ -61,7 +67,7 @@ import java.util.Map;
 
 public class AppointmentCheckoutActivity extends BasePatientActivity implements CheckOutInterface,
         VisitTypeInterface, AvailableHoursInterface, DateRangeInterface, PaymentNavigationCallback,
-        AppointmentPrepaymentCallback, ProviderInterface {
+        AppointmentPrepaymentCallback, ProviderInterface, PatientPaymentMethodInterface {
 
     private String appointmentId;
     private AppointmentDTO selectedAppointment;
@@ -71,6 +77,8 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     private boolean shouldAddBackStack = false;
     private boolean paymentStarted = false;
+
+    private Fragment androidPayTargetFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +93,20 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         }
 
         shouldAddBackStack = true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
+            case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
+            case PaymentConstants.REQUEST_CODE_FULL_WALLET:
+                forwardAndroidPayResult(requestCode, resultCode, data);
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+                break;
+        }
     }
 
     /**
@@ -286,6 +308,35 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     @Override
+    public void showPaymentPendingConfirmation(PaymentsModel paymentsModel) {
+        new CustomMessageToast(this, Label.getLabel("payments_external_pending"), CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
+
+        UserPracticeDTO userPracticeDTO = getPracticeInfo(paymentsModel);
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
+        queryMap.put("practice_id", userPracticeDTO.getPracticeId());
+        queryMap.put("appointment_id", appointmentId);
+        queryMap.put("patient_id", userPracticeDTO.getPatientId());
+        Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
+        header.put("transition", "true");
+
+        TransitionDTO continueTransition = paymentsModel.getPaymentsMetadata()
+                .getPaymentsTransitions().getContinueTransition();
+        getWorkflowServiceHelper().execute(continueTransition, continueCallback, queryMap, header);
+
+    }
+
+    @Override
+    public void setAndroidPayTargetFragment(Fragment fragment) {
+        androidPayTargetFragment = fragment;
+    }
+
+    @Override
+    public Fragment getAndroidPayTargetFragment() {
+        return androidPayTargetFragment;
+    }
+
+    @Override
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
         String patientId = getAppointment().getMetadata().getPatientId();
         for (UserPracticeDTO userPracticeDTO : paymentsModel.getPaymentPayload().getUserPractices()) {
@@ -450,5 +501,18 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
                     .setSelectedProvider(appointmentResourcesDTO.getResource().getProvider());
         }
 
+    }
+
+    @Override
+    public void createWalletFragment(MaskedWallet maskedWallet, Double amount) {
+        replaceFragment(AndroidPayDialogFragment.newInstance(maskedWallet, paymentsModel, amount), true);
+    }
+
+    @Override
+    public void forwardAndroidPayResult(int requestCode, int resultCode, Intent data) {
+        Fragment targetFragment = getAndroidPayTargetFragment();
+        if(targetFragment != null) {
+            targetFragment.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

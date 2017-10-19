@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.appointments.presenter;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,8 +14,10 @@ import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDia
 import com.carecloud.carepay.patient.appointments.fragments.AvailableHoursFragment;
 import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragment;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
+import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.appointment.DataDTO;
@@ -40,6 +43,7 @@ import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.customdialogs.QrCodeViewDialog;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
@@ -54,6 +58,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPo
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.android.gms.wallet.MaskedWallet;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -67,7 +72,7 @@ import java.util.Map;
  */
 
 public class PatientAppointmentPresenter extends AppointmentPresenter
-        implements PatientAppointmentNavigationCallback {
+        implements PatientAppointmentNavigationCallback, PatientPaymentMethodInterface {
     private String patientId;
     private String practiceId;
     private String practiceMgmt;
@@ -76,6 +81,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     private AppointmentDTO appointmentDTO;
     private AppointmentsSlotsDTO appointmentSlot;
 
+    private Fragment androidPayTargetFragment;
 
     public PatientAppointmentPresenter(AppointmentViewHandler viewHandler,
                                        AppointmentsResultModel appointmentsResultModel,
@@ -640,6 +646,22 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     @Override
+    public void showPaymentPendingConfirmation(PaymentsModel paymentsModel) {
+        new CustomMessageToast(getContext(), Label.getLabel("payments_external_pending"), CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
+        onAppointmentRequestSuccess();
+    }
+
+    @Override
+    public void setAndroidPayTargetFragment(Fragment fragment) {
+        androidPayTargetFragment = fragment;
+    }
+
+    @Override
+    public Fragment getAndroidPayTargetFragment() {
+        return androidPayTargetFragment;
+    }
+
+    @Override
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
         for (UserPracticeDTO userPracticeDTO : paymentsModel.getPaymentPayload().getUserPractices()) {
             if (userPracticeDTO.getPatientId() != null && userPracticeDTO.getPatientId().equals(patientId)) {
@@ -670,5 +692,18 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     @Override
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
         onAppointmentRequestSuccess();
+    }
+
+    @Override
+    public void createWalletFragment(MaskedWallet maskedWallet, Double amount) {
+        viewHandler.navigateToFragment(AndroidPayDialogFragment.newInstance(maskedWallet, paymentsModel, amount), true);
+    }
+
+    @Override
+    public void forwardAndroidPayResult(int requestCode, int resultCode, Intent data) {
+        Fragment targetFragment = getAndroidPayTargetFragment();
+        if (targetFragment != null) {
+            targetFragment.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }
