@@ -72,7 +72,6 @@ public class WelcomeActivity extends FullScreenActivity {
         handler = new Handler();
 
         setContentView(R.layout.activity_welcome);
-        setPracticeDetails();
 
         message = (TextView) findViewById(R.id.welcome_message);
         TextView environment = (TextView) findViewById(R.id.environment_label);
@@ -86,6 +85,7 @@ public class WelcomeActivity extends FullScreenActivity {
     @Override
     protected void onStart(){
         super.onStart();
+        setPracticeDetails();
         if(connectedDevice == null || !connectedDevice.isProcessing()) {
             connectDevice();
             scheduleDeviceRefresh();
