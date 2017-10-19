@@ -69,10 +69,8 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
                         appointmentTransitionsWorkflow);
             }
 
-            if (savedInstanceState == null) {
-                replaceFragment(CheckInCompletedDialogFragment.newInstance(appointmentDTO,
-                        hasPayment, isAdHocForms), false);
-            }
+            replaceFragment(CheckInCompletedDialogFragment.newInstance(appointmentDTO,
+                    hasPayment, isAdHocForms), false);
         }
     }
 
