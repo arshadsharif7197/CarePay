@@ -421,7 +421,12 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     @Override
     public void showChooseProviderFragment() {
-        ChooseProviderFragment fragment = ChooseProviderFragment.newInstance(appointmentsResultModel);
+        selectedAppointment = getAppointment();
+        String practiceMgmt = selectedAppointment.getMetadata().getPracticeMgmt();
+        String practiceId = selectedAppointment.getMetadata().getPracticeId();
+
+        ChooseProviderFragment fragment = ChooseProviderFragment.newInstance(appointmentsResultModel,
+                practiceMgmt, practiceId);
         addFragment(fragment, true);
     }
 

@@ -91,7 +91,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void newAppointment() {
-        ChooseProviderFragment fragment = ChooseProviderFragment.newInstance(appointmentsResultModel);
+        ChooseProviderFragment fragment = ChooseProviderFragment.newInstance(appointmentsResultModel,
+                null, null);
         viewHandler.navigateToFragment(fragment, true);
     }
 
