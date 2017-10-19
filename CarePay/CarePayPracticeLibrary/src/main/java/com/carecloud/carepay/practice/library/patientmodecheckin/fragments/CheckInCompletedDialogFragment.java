@@ -90,7 +90,6 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-//        setRetainInstance(true);
         hasPayment = getArguments().getBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, false);
         isAdHocForms = getArguments().getBoolean(CarePayConstants.ADHOC_FORMS, false);
         DTO dto = callback.getDto();
