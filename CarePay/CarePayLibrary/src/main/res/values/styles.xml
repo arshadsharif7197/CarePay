@@ -864,7 +864,7 @@
     <style name="AppBaseTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="WalletFragmentDetailsTextAppearance">
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/lightSlateGray</item>
         <item name="android:textSize">@dimen/apt_popup_button_text</item>
         <item name="android:textStyle">normal</item>
         <item name="android:fontFamily">proximanova_regular</item>
@@ -872,8 +872,21 @@
 
     <style name="WalletFragmentDetailsHeaderTextAppearance"
         parent="WalletFragmentDetailsTextAppearance">
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:fontFamily">proximanova_regular</item>
+        <item name="android:fontFamily">proximanova_semibold</item>
+        <item name="android:textSize">@dimen/text_size_15</item>
+        <item name="android:gravity">start</item>
+    </style>
+
+    <style name="WalletFragmentDetailsButtonTextAppearance" parent="WalletFragmentDetailsTextAppearance">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:fontFamily">proximanova_semibold</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:padding">@dimen/dimen_3dp</item>
+        <item name="android:minHeight">@dimen/dimen_10dp</item>
     </style>
 
     <style name="settingsProfilelabel." parent="android:Widget.TextView">

@@ -14,6 +14,7 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.demographics.fragments.ConfirmExitDialogFragment;
 import com.carecloud.carepay.patient.payment.PatientPaymentPresenter;
+import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -48,6 +49,23 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_PAYMENT_DTO)) {
             paymentWorkflow = savedInstanceState.getString(KEY_PAYMENT_DTO);
             initPaymentPresenter(paymentWorkflow);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
+            case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
+            case PaymentConstants.REQUEST_CODE_FULL_WALLET:
+                paymentPresenter.forwardAndroidPayResult(requestCode, resultCode, data);
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+                break;
+        }
+        if (resultListener != null) {
+            resultListener.handleActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -156,14 +174,6 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         SystemUtil.showSuccessToast(getContext(), Label.getLabel("confirm_appointment_checkin"));
         finish();
         navigateToWorkflow(workflowDTO);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultListener != null) {
-            resultListener.handleActivityResult(requestCode, resultCode, data);
-        }
     }
 
     @Override

@@ -1,9 +1,9 @@
-package com.carecloud.carepaylibray.demographicsettings.models;
+package com.carecloud.carepaylibray.payments.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class DemographicsSettingsPapiMetadataDTO {
+public class PapiMetadataDTO {
     @SerializedName("form_sid")
     @Expose
     private String formSid;

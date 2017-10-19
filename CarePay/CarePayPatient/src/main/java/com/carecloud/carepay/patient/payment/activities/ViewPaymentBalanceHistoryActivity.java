@@ -1,17 +1,15 @@
 package com.carecloud.carepay.patient.payment.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.widget.Toast;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
-import com.carecloud.carepay.patient.payment.androidpay.ConfirmationActivity;
+import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentHistoryDetailDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.NoPaymentsFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
@@ -24,6 +22,7 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
@@ -38,7 +37,6 @@ import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.android.gms.wallet.MaskedWallet;
-import com.google.android.gms.wallet.WalletConstants;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -55,6 +53,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     public Bundle bundle;
     private String toolBarTitle;
+
+    private Fragment androidPayTargetFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,80 +102,16 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         navigationView.getMenu().findItem(R.id.nav_payments).setChecked(true);
     }
 
-    /**
-     * Invoked after the user taps the Buy With Android Pay button and the selected
-     * credit card and shipping address are confirmed. If the request succeeded,
-     * a {@link MaskedWallet} object is attached to the Intent. The Confirmation Activity is
-     * then launched, providing it with the {@link MaskedWallet} object.
-     *
-     * @param requestCode The code that was set in the Masked Wallet Request
-     * @param resultCode  The result of the request execution
-     * @param data        Intent carrying the results
-     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // retrieve the error code, if available
-        int errorCode = -1;
-        if (data != null) {
-            errorCode = data.getIntExtra(WalletConstants.EXTRA_ERROR_CODE, -1);
-        }
         switch (requestCode) {
+            case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
-                switch (resultCode) {
-                    case Activity.RESULT_OK:
-                        MaskedWallet maskedWallet =
-                                data.getParcelableExtra(WalletConstants.EXTRA_MASKED_WALLET);
-                        Fragment fragment = getSupportFragmentManager().findFragmentByTag(ResponsibilityFragment.class.getName());
-                        if (fragment != null) {
-                            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-                        }
-                        //setTitle("Confirmation");
-
-                        launchConfirmationPage(maskedWallet);
-                        break;
-                    case Activity.RESULT_CANCELED:
-                        break;
-                    default:
-                        handleError(errorCode);
-                        break;
-                }
+            case PaymentConstants.REQUEST_CODE_FULL_WALLET:
+                forwardAndroidPayResult(requestCode, resultCode, data);
                 break;
-
-            case WalletConstants.RESULT_ERROR:
-                handleError(errorCode);
-                break;
-
             default:
                 super.onActivityResult(requestCode, resultCode, data);
-                break;
-        }
-    }
-
-    private void launchConfirmationPage(MaskedWallet maskedWallet) {
-        Intent intent = ConfirmationActivity.newIntent(this, maskedWallet, paymentsDTO
-                        .getPaymentPayload().getPatientBalances().get(0).getPendingRepsonsibility(), "CERT", bundle,
-                Label.getLabel("payment_patient_balance_toolbar"));
-        startActivity(intent);
-    }
-
-
-    protected void handleError(int errorCode) {
-        switch (errorCode) {
-            case WalletConstants.ERROR_CODE_SPENDING_LIMIT_EXCEEDED:
-                Toast.makeText(this, "Way too much!!", Toast.LENGTH_LONG).show();
-                break;
-            case WalletConstants.ERROR_CODE_INVALID_PARAMETERS:
-            case WalletConstants.ERROR_CODE_AUTHENTICATION_FAILURE:
-            case WalletConstants.ERROR_CODE_BUYER_ACCOUNT_ERROR:
-            case WalletConstants.ERROR_CODE_MERCHANT_ACCOUNT_ERROR:
-            case WalletConstants.ERROR_CODE_SERVICE_UNAVAILABLE:
-            case WalletConstants.ERROR_CODE_UNSUPPORTED_API_VERSION:
-            case WalletConstants.ERROR_CODE_UNKNOWN:
-            default:
-                // unrecoverable error
-                String errorMessage = "Android Pay is unavailable" + "\n" +
-                        "Error code: " + errorCode;
-                Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
                 break;
         }
     }
@@ -298,6 +234,22 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
+    public void showPaymentPendingConfirmation(PaymentsModel paymentsModel) {
+        new CustomMessageToast(this, Label.getLabel("payments_external_pending"), CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
+        initFragments();
+    }
+
+    @Override
+    public void setAndroidPayTargetFragment(Fragment fragment) {
+        androidPayTargetFragment = fragment;
+    }
+
+    @Override
+    public Fragment getAndroidPayTargetFragment() {
+        return androidPayTargetFragment;
+    }
+
+    @Override
     public DTO getDto() {
         return paymentsDTO;
     }
@@ -363,5 +315,18 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
             }
         }
         return null;
+    }
+
+    @Override
+    public void createWalletFragment(MaskedWallet maskedWallet, Double amount) {
+        replaceFragment(AndroidPayDialogFragment.newInstance(maskedWallet, paymentsDTO, amount), true);
+    }
+
+    @Override
+    public void forwardAndroidPayResult(int requestCode, int resultCode, Intent data) {
+        Fragment targetFragment = getAndroidPayTargetFragment();
+        if (targetFragment != null) {
+            targetFragment.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

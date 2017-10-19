@@ -10,7 +10,7 @@ import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
  * @author pjohnson on 27/04/17.
  */
 
-public interface PaymentFragmentActivityInterface extends FragmentActivityInterface, PaymentNavigationCallback {
+public interface PaymentFragmentActivityInterface extends FragmentActivityInterface, PaymentNavigationCallback, PatientPaymentMethodInterface {
 
     void loadPaymentAmountScreen(PaymentsBalancesItem selectedBalancesItem, PaymentsModel paymentDTO);
 

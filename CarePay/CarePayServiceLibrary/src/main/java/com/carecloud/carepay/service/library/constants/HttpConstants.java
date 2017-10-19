@@ -29,6 +29,8 @@ public class HttpConstants {
 
     private static MixpanelAPI mixpanelAPI;
 
+    private static String environment;
+
 
     private static DeviceIdentifierDTO deviceInformation;
     private static String formsUrl;
@@ -104,5 +106,13 @@ public class HttpConstants {
 
     public static String getFormsUrl() {
         return formsUrl;
+    }
+
+    public static String getEnvironment() {
+        return environment;
+    }
+
+    public static void setEnvironment(String environment) {
+        HttpConstants.environment = environment;
     }
 }
