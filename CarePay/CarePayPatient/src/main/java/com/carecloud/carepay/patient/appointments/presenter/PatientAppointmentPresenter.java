@@ -14,6 +14,9 @@ import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDia
 import com.carecloud.carepay.patient.appointments.fragments.AvailableHoursFragment;
 import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragment;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.payment.PaymentConstants;
+import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
+import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
@@ -40,8 +43,10 @@ import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentReques
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.customdialogs.QrCodeViewDialog;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
@@ -642,6 +647,12 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     @Override
+    public void showPaymentPendingConfirmation(PaymentsModel paymentsModel) {
+        new CustomMessageToast(getContext(), Label.getLabel("payments_external_pending"), CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
+        onAppointmentRequestSuccess();
+    }
+
+    @Override
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
         for (UserPracticeDTO userPracticeDTO : paymentsModel.getPaymentPayload().getUserPractices()) {
             if (userPracticeDTO.getPatientId() != null && userPracticeDTO.getPatientId().equals(patientId)) {
@@ -675,12 +686,21 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     @Override
-    public void createAndAddWalletFragment(MaskedWallet maskedWallet, Double amount) {
-        //todo implement
+    public void createWalletFragment(MaskedWallet maskedWallet, Double amount) {
+        viewHandler.navigateToFragment(AndroidPayDialogFragment.newInstance(maskedWallet, paymentsModel, amount), true);
     }
 
     @Override
-    public void forwardActivityResult(int requestCode, int resultCode, Intent data) {
-        //todo implement
+    public void forwardAndroidPayResult(int requestCode, int resultCode, Intent data) {
+        Fragment targetFragment;
+        switch (requestCode) {
+            case PaymentConstants.REQUEST_CODE_FULL_WALLET:
+                targetFragment = ((BaseActivity)viewHandler.getContext()).getSupportFragmentManager().findFragmentByTag(AndroidPayDialogFragment.class.getName());
+                break;
+            default:
+                targetFragment = ((BaseActivity)viewHandler.getContext()).getSupportFragmentManager().findFragmentByTag(PatientPaymentMethodFragment.class.getName());
+                break;
+        }
+        targetFragment.onActivityResult(requestCode, resultCode, data);
     }
 }

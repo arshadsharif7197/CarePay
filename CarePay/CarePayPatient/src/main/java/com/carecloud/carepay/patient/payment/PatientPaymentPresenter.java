@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
 import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
@@ -13,8 +14,11 @@ import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInte
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
@@ -151,17 +155,32 @@ public class PatientPaymentPresenter extends PaymentPresenter implements Patient
     }
 
     @Override
+    public void showPaymentPendingConfirmation(PaymentsModel paymentsModel) {
+        new CustomMessageToast(viewHandler.getContext(), Label.getLabel("payments_external_pending"), CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
+        viewHandler.exitPaymentProcess(false);
+    }
+
+    @Override
     public void onDetailCancelClicked(PaymentsModel paymentsModel) {
         startPaymentProcess(paymentsModel);
     }
 
     @Override
-    public void createAndAddWalletFragment(MaskedWallet maskedWallet, Double amount) {
-        //todo implement
+    public void createWalletFragment(MaskedWallet maskedWallet, Double amount) {
+        viewHandler.navigateToFragment(AndroidPayDialogFragment.newInstance(maskedWallet, paymentsModel, amount), true);
     }
 
     @Override
-    public void forwardActivityResult(int requestCode, int resultCode, Intent data) {
-        //todo implement
+    public void forwardAndroidPayResult(int requestCode, int resultCode, Intent data) {
+        Fragment targetFragment;
+        switch (requestCode) {
+            case PaymentConstants.REQUEST_CODE_FULL_WALLET:
+                targetFragment = ((BaseActivity)viewHandler.getContext()).getSupportFragmentManager().findFragmentByTag(AndroidPayDialogFragment.class.getName());
+                break;
+            default:
+                targetFragment = ((BaseActivity)viewHandler.getContext()).getSupportFragmentManager().findFragmentByTag(PatientPaymentMethodFragment.class.getName());
+                break;
+        }
+        targetFragment.onActivityResult(requestCode, resultCode, data);
     }
 }

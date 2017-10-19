@@ -1,47 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <include
+        android:id="@+id/toolbar_layout"
+        layout="@layout/toolbar_responsibility" />
 
     <LinearLayout
-        android:layout_width="@dimen/dialog_width"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:layout_gravity="center_horizontal|bottom">
+        android:padding="@dimen/dimen_33dp">
 
-        <ScrollView
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fillViewport="true"
-            android:layout_marginBottom="@dimen/padding_large">
+            android:textColor="@color/soft_sky"
+            android:textSize="@dimen/text_size_16"
+            app:customAssetFont="gotham_rounded_book"
+            breeze:textKey="payment_pay_total_amount_button"
+            tools:text="Pay Total Amount" />
 
-            <FrameLayout
-                android:id="@+id/androidpay_invoice_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </FrameLayout>
-
-        </ScrollView>
-
-        <com.carecloud.carepaylibray.customcomponents.CarePayButton
-            android:id="@+id/button_place_order"
-            style="@style/ResponsButtonStyle"
-            android:layout_width="match_parent"
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/paymentAmount"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="0dp"
-            android:layout_marginTop="@dimen/padding_large"
-            android:background="@drawable/button_selector_green"
-            breeze:textKey="demographics_pay_button_text" />
-
-        <FrameLayout
-            android:id="@+id/androidpay_confirm_button_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimen_10dp" />
+            android:layout_marginTop="@dimen/dimen_15dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_60"
+            app:customAssetFont="gotham_rounded_medium"
+            tools:text="$49.00" />
 
     </LinearLayout>
 
-</FrameLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <FrameLayout
+        android:id="@+id/androidpay_invoice_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </FrameLayout>
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        android:id="@+id/button_place_order"
+        style="@style/ResponsButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/padding_large"
+        android:background="@drawable/button_selector_green"
+        breeze:textKey="demographics_pay_button_text" />
+
+</LinearLayout>

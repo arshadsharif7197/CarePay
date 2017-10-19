@@ -56,7 +56,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
-                paymentPresenter.forwardActivityResult(requestCode, resultCode, data);
+                paymentPresenter.forwardAndroidPayResult(requestCode, resultCode, data);
             default:
                 super.onActivityResult(requestCode, resultCode, data);
                 break;

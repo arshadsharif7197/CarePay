@@ -75,9 +75,6 @@
             android:name=".payment.activities.ViewPaymentBalanceHistoryActivity"
             android:screenOrientation="sensorPortrait" />
         <activity
-            android:name=".payment.androidpay.ConfirmationActivity"
-            android:screenOrientation="sensorPortrait" />
-        <activity
             android:name=".demographics.activities.DemographicsSettingsActivity"
             android:label=""
             android:parentActivityName=".appointments.activities.AppointmentsActivity"

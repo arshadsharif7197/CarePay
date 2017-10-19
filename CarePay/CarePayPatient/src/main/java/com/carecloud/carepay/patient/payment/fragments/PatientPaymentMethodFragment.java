@@ -87,15 +87,6 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if(androidPayAdapter != null) {
-            androidPayAdapter.disconnectClient();
-        }
-
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
         if(androidPayAdapter != null) {
@@ -117,7 +108,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
                     case Activity.RESULT_OK:
                         if(data != null) {
                             MaskedWallet maskedWallet = data.getParcelableExtra(WalletConstants.EXTRA_MASKED_WALLET);
-                            callback.createAndAddWalletFragment(maskedWallet, amountToMakePayment);
+                            callback.createWalletFragment(maskedWallet, amountToMakePayment);
                         }
                         break;
                     case Activity.RESULT_CANCELED:
@@ -162,8 +153,8 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     }
 
     private void initAndroidPay() {
-        androidPayAdapter = new AndroidPayAdapter(getActivity(), paymentsModel.getPaymentPayload().getMerchantServices(), this);
-        androidPayAdapter.initAndroidPay();
+        androidPayAdapter = new AndroidPayAdapter(getActivity(), paymentsModel.getPaymentPayload().getMerchantServices());
+        androidPayAdapter.initAndroidPay(this);
         showOrHideProgressDialog(true);
     }
 

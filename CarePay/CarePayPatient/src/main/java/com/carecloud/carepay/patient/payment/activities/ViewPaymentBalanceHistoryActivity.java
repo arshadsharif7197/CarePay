@@ -22,6 +22,7 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
@@ -105,7 +106,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
             case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_FULL_WALLET:
-                forwardActivityResult(requestCode, resultCode, data);
+                forwardAndroidPayResult(requestCode, resultCode, data);
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
@@ -231,6 +232,12 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
+    public void showPaymentPendingConfirmation(PaymentsModel paymentsModel) {
+        new CustomMessageToast(this, Label.getLabel("payments_external_pending"), CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
+        initFragments();
+    }
+
+    @Override
     public DTO getDto() {
         return paymentsDTO;
     }
@@ -299,12 +306,12 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void createAndAddWalletFragment(MaskedWallet maskedWallet, Double amount) {
-        displayDialogFragment(AndroidPayDialogFragment.newInstance(maskedWallet, paymentsDTO, amount), false);
+    public void createWalletFragment(MaskedWallet maskedWallet, Double amount) {
+        replaceFragment(AndroidPayDialogFragment.newInstance(maskedWallet, paymentsDTO, amount), true);
     }
 
     @Override
-    public void forwardActivityResult(int requestCode, int resultCode, Intent data) {
+    public void forwardAndroidPayResult(int requestCode, int resultCode, Intent data) {
         Fragment targetFragment;
         switch (requestCode) {
             case PaymentConstants.REQUEST_CODE_FULL_WALLET:

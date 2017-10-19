@@ -80,7 +80,6 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
     private FragmentActivity activity;
     private FragmentManager fragMan;
     private List<MerchantServicesDTO> merchantServicesList = new ArrayList<>();
-    private AndroidPayReadyCallback callback;
 
     private static GoogleApiClient googleApiClient;
 
@@ -88,16 +87,13 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
         this.activity = activity;
         this.fragMan = fragmentManager;
         this.merchantServicesList = merchantServicesList;
-        setGoogleApiClient();
     }
 
 
-    public AndroidPayAdapter(FragmentActivity activity, @NonNull List<MerchantServicesDTO> merchantServicesList, AndroidPayReadyCallback callback){
+    public AndroidPayAdapter(FragmentActivity activity, @NonNull List<MerchantServicesDTO> merchantServicesList){
         this.activity = activity;
         this.fragMan = activity.getSupportFragmentManager();
         this.merchantServicesList = merchantServicesList;
-        this.callback = callback;
-        setGoogleApiClient();
     }
 
 
@@ -105,14 +101,14 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
         disconnectGoogleAPI();
     }
 
-    public void initAndroidPay(){
+    public void initAndroidPay(final AndroidPayReadyCallback callback){
         IsReadyToPayRequest req = IsReadyToPayRequest.newBuilder()
                 .addAllowedCardNetwork(WalletConstants.CardNetwork.MASTERCARD)
                 .addAllowedCardNetwork(WalletConstants.CardNetwork.VISA)
                 .addAllowedCardNetwork(WalletConstants.CardNetwork.AMEX)
                 .addAllowedCardNetwork(WalletConstants.CardNetwork.DISCOVER)
                 .build();
-
+        setGoogleApiClient();
         Wallet.Payments.isReadyToPay(googleApiClient, req).setResultCallback(
                 new ResultCallback<BooleanResult>() {
                     @Override
@@ -195,6 +191,7 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
     }
 
     public void createFullWallet(MaskedWallet maskedWallet, Double amount){
+        setGoogleApiClient();
         Wallet.Payments.loadFullWallet(googleApiClient,
                 createFullWalletRequest(maskedWallet, amount),
                 PaymentConstants.REQUEST_CODE_FULL_WALLET);
@@ -302,7 +299,7 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
     //endregion
 
     //region Processing
-    public void sendRequestToPayeezy(FullWallet fullWallet, String env, PapiAccountsDTO papiAccountsDTO, Double paymentAmount, @NonNull AndroidPayProcessingCallback callback) {
+    public void sendRequestToPayeezy(FullWallet fullWallet, PapiAccountsDTO papiAccountsDTO, Double paymentAmount, @NonNull AndroidPayProcessingCallback callback) {
         try {
             //  Parse the Json token retrieved from the Full Wallet.
             String tokenJSON = fullWallet.getPaymentMethodToken().getToken();
@@ -334,7 +331,7 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
             RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),payloadString);
             RestCallServiceHelper restCallServiceHelper = new RestCallServiceHelper(callback.getSession().getAppAuthorizationHelper(), callback.getSession().getApplicationMode());
             restCallServiceHelper.executeRequest(RestDef.POST,
-                    EnvData.getProperties(env).getUrl(),
+                    payeezyMerchantService.getMetadata().getBaseUrl(),
                     getPayeezyServiceCallback(callback),
                     false,
                     false,

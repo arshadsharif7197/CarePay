@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
@@ -22,6 +23,7 @@ import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
@@ -74,7 +76,8 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
             amountToMakePayment = bundle.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
             paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, bundle);
             if (!paymentsModel.getPaymentPayload().getPaymentSettings().isEmpty()) {
-                paymentMethodsList = paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments().getPaymentMethods();//todo need to lookup appropriate settings for prctice id on selected balance
+
+                paymentMethodsList = getPaymentMethodList();
             }
             paymentList = paymentsModel.getPaymentPayload().getPatientBalances();
             initPaymentTypeMap();
@@ -168,7 +171,7 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
                 double previousBalance = 0;
                 double coPay = 0;
 
-                for (PaymentPatientBalancesPayloadDTO payment : paymentList.get(0).getPayload()) {
+                for (PaymentPatientBalancesPayloadDTO payment : paymentList.get(0).getPayload()) {//// TODO: 10/18/17 support multipractice whenever payment plans are ready
                     if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PREVIOUS_BALANCE)) {
                         previousBalance = Double.parseDouble(payment.getTotal());
                     } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
@@ -183,8 +186,15 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
         }
     };
 
-    public ListView getPaymentMethodList() {
-        return paymentMethodList;
+    private List<PaymentsMethodsDTO> getPaymentMethodList() {
+        UserPracticeDTO userPracticeDTO = callback.getPracticeInfo(paymentsModel);
+        for(PaymentsPayloadSettingsDTO paymentSetting : paymentsModel.getPaymentPayload().getPaymentSettings()){
+            if(paymentSetting.getMetadata().getPracticeId().equals(userPracticeDTO.getPracticeId()) &&
+                    paymentSetting.getMetadata().getPracticeMgmt().equals(userPracticeDTO.getPracticeMgmt())){
+                return paymentSetting.getPayload().getRegularPayments().getPaymentMethods();
+            }
+        }
+        return paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments().getPaymentMethods();
     }
 
 

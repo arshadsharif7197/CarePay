@@ -14,12 +14,14 @@ import com.google.android.gms.wallet.MaskedWallet;
 
 public interface PatientPaymentMethodInterface extends PaymentMethodInterface {
 
-    void createAndAddWalletFragment(MaskedWallet maskedWallet, Double amount);
+    void createWalletFragment(MaskedWallet maskedWallet, Double amount);
 
-    void forwardActivityResult(int requestCode, int resultCode, Intent data);
+    void forwardAndroidPayResult(int requestCode, int resultCode, Intent data);
 
     UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel);
 
     void showPaymentConfirmation(WorkflowDTO workflowDTO);
+
+    void showPaymentPendingConfirmation(PaymentsModel paymentsModel);
 
 }

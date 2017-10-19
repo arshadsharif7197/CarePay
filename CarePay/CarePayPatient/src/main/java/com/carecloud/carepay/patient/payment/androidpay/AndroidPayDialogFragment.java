@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.patient.R;
@@ -43,6 +45,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.newrelic.agent.android.NewRelic;
 
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -120,7 +123,7 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
                     case RESULT_OK:
                         if(data != null) {
                             FullWallet fullWallet = data.getParcelableExtra(WalletConstants.EXTRA_FULL_WALLET);
-                            androidPayAdapter.sendRequestToPayeezy(fullWallet, "CERT", papiAccount, paymentAmount, this);//TODO WTF is CERT?????
+                            androidPayAdapter.sendRequestToPayeezy(fullWallet, papiAccount, paymentAmount, this);
                         }
                         break;
                     case Activity.RESULT_CANCELED:
@@ -149,10 +152,37 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
 
     @Override
     public void onViewCreated(View view, Bundle icicle){
+        initToolbar(view);
         detailsContainer = (ViewGroup) view.findViewById(R.id.androidpay_invoice_container);
         buttonConfirm = view.findViewById(R.id.button_place_order);
-        initChildFragments();
+
+        TextView textView = (TextView) view.findViewById(R.id.paymentAmount);
+        textView.setText(NumberFormat.getCurrencyInstance().format(paymentAmount));
+
+//        initChildFragments();
         getPapiAccount();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(androidPayAdapter != null) {
+            androidPayAdapter.disconnectClient();
+        }
+
+    }
+
+    private void initToolbar(View view){
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        if (toolbar != null) {
+            toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivity().onBackPressed();
+                }
+            });
+        }
     }
 
     private void initChildFragments(){
@@ -407,7 +437,7 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
                     paymentJson.toString(),
                     error);
 
-            //TODO callback return processing message
+            callback.showPaymentPendingConfirmation(paymentsModel);
         }
     }
 

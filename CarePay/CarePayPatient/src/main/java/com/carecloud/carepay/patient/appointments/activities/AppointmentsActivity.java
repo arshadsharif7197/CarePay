@@ -45,7 +45,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
-                presenter.forwardActivityResult(requestCode, resultCode, data);
+                presenter.forwardAndroidPayResult(requestCode, resultCode, data);
             default:
                 super.onActivityResult(requestCode, resultCode, data);
                 break;

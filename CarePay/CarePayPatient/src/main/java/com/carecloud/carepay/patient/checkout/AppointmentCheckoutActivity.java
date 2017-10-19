@@ -14,6 +14,7 @@ import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragme
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
+import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
@@ -43,6 +44,7 @@ import com.carecloud.carepaylibray.checkout.CheckOutFormFragment;
 import com.carecloud.carepaylibray.checkout.CheckOutInterface;
 import com.carecloud.carepaylibray.checkout.NextAppointmentFragment;
 import com.carecloud.carepaylibray.checkout.NextAppointmentFragmentInterface;
+import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
@@ -95,7 +97,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
-                forwardActivityResult(requestCode, resultCode, data);
+                forwardAndroidPayResult(requestCode, resultCode, data);
             default:
                 super.onActivityResult(requestCode, resultCode, data);
                 break;
@@ -301,6 +303,25 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     @Override
+    public void showPaymentPendingConfirmation(PaymentsModel paymentsModel) {
+        new CustomMessageToast(this, Label.getLabel("payments_external_pending"), CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
+
+        UserPracticeDTO userPracticeDTO = getPracticeInfo(paymentsModel);
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
+        queryMap.put("practice_id", userPracticeDTO.getPracticeId());
+        queryMap.put("appointment_id", appointmentId);
+        queryMap.put("patient_id", userPracticeDTO.getPatientId());
+        Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
+        header.put("transition", "true");
+
+        TransitionDTO continueTransition = paymentsModel.getPaymentsMetadata()
+                .getPaymentsTransitions().getContinueTransition();
+        getWorkflowServiceHelper().execute(continueTransition, continueCallback, queryMap, header);
+
+    }
+
+    @Override
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
         String patientId = getAppointment().getMetadata().getPatientId();
         for (UserPracticeDTO userPracticeDTO : paymentsModel.getPaymentPayload().getUserPractices()) {
@@ -463,12 +484,21 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     @Override
-    public void createAndAddWalletFragment(MaskedWallet maskedWallet, Double amount) {
-        //TODO implement
+    public void createWalletFragment(MaskedWallet maskedWallet, Double amount) {
+        replaceFragment(AndroidPayDialogFragment.newInstance(maskedWallet, paymentsModel, amount), true);
     }
 
     @Override
-    public void forwardActivityResult(int requestCode, int resultCode, Intent data) {
-        //TODO implement
+    public void forwardAndroidPayResult(int requestCode, int resultCode, Intent data) {
+        Fragment targetFragment;
+        switch (requestCode) {
+            case PaymentConstants.REQUEST_CODE_FULL_WALLET:
+                targetFragment = getSupportFragmentManager().findFragmentByTag(AndroidPayDialogFragment.class.getName());
+                break;
+            default:
+                targetFragment = getSupportFragmentManager().findFragmentByTag(PatientPaymentMethodFragment.class.getName());
+                break;
+        }
+        targetFragment.onActivityResult(requestCode, resultCode, data);
     }
 }
