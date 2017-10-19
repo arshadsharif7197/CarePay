@@ -409,7 +409,6 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
         }
         appointmentSlot = null;
         setDefaultMessage();
-        visitTimeTextView.setText(Label.getLabel("next_appointment_choose_when_label"));
         findViewById(R.id.providerMessageHeader).setSelected(false);
         return shouldOpenHoursFragment;
     }
@@ -422,6 +421,10 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
             chooseProviderTextView.setText(selectedProvider.getFullName());
             setUpProviderMessage(getView(), selectedProvider);
             showVisitTypeFragment();
+            appointmentSlot = null;
+            visitType = null;
+            visitTimeTextView.setText(null);
+            visitTypeTextView.setText(null);
         }
     }
 
