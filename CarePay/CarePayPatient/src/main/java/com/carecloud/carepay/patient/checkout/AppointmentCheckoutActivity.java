@@ -78,6 +78,8 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     private boolean shouldAddBackStack = false;
     private boolean paymentStarted = false;
 
+    private Fragment androidPayTargetFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,7 +98,9 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
+            case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
+            case PaymentConstants.REQUEST_CODE_FULL_WALLET:
                 forwardAndroidPayResult(requestCode, resultCode, data);
             default:
                 super.onActivityResult(requestCode, resultCode, data);
@@ -322,6 +326,16 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     @Override
+    public void setAndroidPayTargetFragment(Fragment fragment) {
+        androidPayTargetFragment = fragment;
+    }
+
+    @Override
+    public Fragment getAndroidPayTargetFragment() {
+        return androidPayTargetFragment;
+    }
+
+    @Override
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
         String patientId = getAppointment().getMetadata().getPatientId();
         for (UserPracticeDTO userPracticeDTO : paymentsModel.getPaymentPayload().getUserPractices()) {
@@ -490,15 +504,9 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     @Override
     public void forwardAndroidPayResult(int requestCode, int resultCode, Intent data) {
-        Fragment targetFragment;
-        switch (requestCode) {
-            case PaymentConstants.REQUEST_CODE_FULL_WALLET:
-                targetFragment = getSupportFragmentManager().findFragmentByTag(AndroidPayDialogFragment.class.getName());
-                break;
-            default:
-                targetFragment = getSupportFragmentManager().findFragmentByTag(PatientPaymentMethodFragment.class.getName());
-                break;
+        Fragment targetFragment = getAndroidPayTargetFragment();
+        if(targetFragment != null) {
+            targetFragment.onActivityResult(requestCode, resultCode, data);
         }
-        targetFragment.onActivityResult(requestCode, resultCode, data);
     }
 }

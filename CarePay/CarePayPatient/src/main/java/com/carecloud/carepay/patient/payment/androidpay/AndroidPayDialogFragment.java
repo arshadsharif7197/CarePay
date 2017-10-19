@@ -21,6 +21,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.ISession;
@@ -36,6 +37,7 @@ import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.EncryptionUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.google.android.gms.identity.intents.model.UserAddress;
 import com.google.android.gms.wallet.FullWallet;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
@@ -108,6 +110,7 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
             paymentAmount = args.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
         }
         androidPayAdapter = new AndroidPayAdapter(getActivity(), paymentsModel.getPaymentPayload().getMerchantServices(), getChildFragmentManager());
+        callback.setAndroidPayTargetFragment(this);
     }
 
     @Override
@@ -153,6 +156,17 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
     @Override
     public void onViewCreated(View view, Bundle icicle){
         initToolbar(view);
+
+        TextView account = (TextView) view.findViewById(R.id.pay_account);
+        account.setText(maskedWallet.getEmail());
+
+        TextView method = (TextView) view.findViewById(R.id.pay_method);
+        method.setText(maskedWallet.getPaymentDescriptions()[0]);
+
+        TextView address = (TextView) view.findViewById(R.id.pay_billing_address);
+        address.setText(buildAddress());
+
+
         detailsContainer = (ViewGroup) view.findViewById(R.id.androidpay_invoice_container);
         buttonConfirm = view.findViewById(R.id.button_place_order);
 
@@ -174,7 +188,11 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
 
     private void initToolbar(View view){
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+
         if (toolbar != null) {
+            TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+            title.setText(Label.getLabel("payment_patient_balance_toolbar"));
+
             toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -183,6 +201,25 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
                 }
             });
         }
+    }
+
+    private String buildAddress(){
+        StringBuilder builder = new StringBuilder();
+        UserAddress address = maskedWallet.getBuyerBillingAddress();
+        builder.append(address.getName())
+                .append("\n")
+                .append(address.getAddress1())
+                .append("\n");
+        if(address.getAddress2() != null && address.getAddress2().length() > 0){
+            builder.append(address.getAddress2());
+            builder.append("\n");
+        }
+        builder.append(address.getLocality())
+                .append(", ")
+                .append(address.getAdministrativeArea())
+                .append(", ")
+                .append(address.getPostalCode());
+        return builder.toString();
     }
 
     private void initChildFragments(){

@@ -27,8 +27,8 @@
             android:textColor="@color/soft_sky"
             android:textSize="@dimen/text_size_16"
             app:customAssetFont="gotham_rounded_book"
-            breeze:textKey="payment_pay_total_amount_button"
-            tools:text="Pay Total Amount" />
+            breeze:textKey="payment_confirm_payment_title"
+            tools:text="Confirm payment details" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/paymentAmount"
@@ -39,6 +39,105 @@
             android:textSize="@dimen/text_size_60"
             app:customAssetFont="gotham_rounded_medium"
             tools:text="$49.00" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/dimen_10dp"
+        android:paddingEnd="@dimen/dimen_10dp">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:gravity="start"
+            android:padding="@dimen/dimen_10dp"
+            android:textColor="@color/textview_default_textcolor"
+            app:customAssetFont="proxima_nova_semi_bold"
+            breeze:textKey="payment_confirm_payment_account"
+            tools:text="Account"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/pay_account"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_gravity="center_vertical"
+            android:gravity="start"
+            android:padding="@dimen/dimen_10dp"
+            android:textColor="@color/lightSlateGray"
+            app:customAssetFont="proxima_nova_semi_bold"
+            tools:text="address@email.com"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/dimen_10dp"
+        android:paddingEnd="@dimen/dimen_10dp">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:gravity="start"
+            android:padding="@dimen/dimen_10dp"
+            android:textColor="@color/textview_default_textcolor"
+            app:customAssetFont="proxima_nova_semi_bold"
+            breeze:textKey="payment_confirm_payment_card"
+            tools:text="Payment Method"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/pay_method"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_gravity="center_vertical"
+            android:gravity="start"
+            android:padding="@dimen/dimen_10dp"
+            android:textColor="@color/lightSlateGray"
+            app:customAssetFont="proxima_nova_semi_bold"
+            tools:text="Visa *** 1111"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/dimen_10dp"
+        android:paddingStart="@dimen/dimen_10dp">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:padding="@dimen/dimen_10dp"
+            android:textColor="@color/textview_default_textcolor"
+            app:customAssetFont="proxima_nova_semi_bold"
+            breeze:textKey="payment_confirm_payment_address"
+            tools:text="Billing Address"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/pay_billing_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:gravity="start"
+            android:padding="@dimen/dimen_10dp"
+            android:textColor="@color/lightSlateGray"
+            app:customAssetFont="proxima_nova_semi_bold"
+            tools:text="John Smith\n 5200 BlueLagoon Drive \n Suite 900\n Miami, FL 33126"/>
 
     </LinearLayout>
 
@@ -61,6 +160,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="@dimen/padding_large"
         android:background="@drawable/button_selector_green"
-        breeze:textKey="demographics_pay_button_text" />
+        breeze:textKey="demographics_pay_button_text"
+        tools:text="Pay"/>
 
 </LinearLayout>

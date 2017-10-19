@@ -279,7 +279,7 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
     private static WalletFragmentOptions walletButtonOptions = WalletFragmentOptions.newBuilder()
             .setEnvironment(PaymentConstants.WALLET_ENVIRONMENT)
             .setFragmentStyle(walletButtonStyle)
-            .setTheme(WalletConstants.THEME_DARK)
+            .setTheme(WalletConstants.THEME_LIGHT)
             .setMode(WalletFragmentMode.BUY_BUTTON)
             .build();
 

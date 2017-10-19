@@ -16,7 +16,6 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
@@ -38,6 +37,7 @@ import com.google.gson.Gson;
  */
 
 public class PatientPaymentPresenter extends PaymentPresenter implements PatientPaymentMethodInterface {
+    private Fragment androidPayTargetFragment;
 
     public PatientPaymentPresenter(PaymentViewHandler viewHandler, PaymentsModel paymentsModel, String patientId) {
         super(viewHandler, paymentsModel, patientId);
@@ -161,6 +161,16 @@ public class PatientPaymentPresenter extends PaymentPresenter implements Patient
     }
 
     @Override
+    public void setAndroidPayTargetFragment(Fragment fragment) {
+        androidPayTargetFragment = fragment;
+    }
+
+    @Override
+    public Fragment getAndroidPayTargetFragment() {
+        return androidPayTargetFragment;
+    }
+
+    @Override
     public void onDetailCancelClicked(PaymentsModel paymentsModel) {
         startPaymentProcess(paymentsModel);
     }
@@ -172,15 +182,9 @@ public class PatientPaymentPresenter extends PaymentPresenter implements Patient
 
     @Override
     public void forwardAndroidPayResult(int requestCode, int resultCode, Intent data) {
-        Fragment targetFragment;
-        switch (requestCode) {
-            case PaymentConstants.REQUEST_CODE_FULL_WALLET:
-                targetFragment = ((BaseActivity)viewHandler.getContext()).getSupportFragmentManager().findFragmentByTag(AndroidPayDialogFragment.class.getName());
-                break;
-            default:
-                targetFragment = ((BaseActivity)viewHandler.getContext()).getSupportFragmentManager().findFragmentByTag(PatientPaymentMethodFragment.class.getName());
-                break;
+        Fragment targetFragment = getAndroidPayTargetFragment();
+        if (targetFragment != null) {
+            targetFragment.onActivityResult(requestCode, resultCode, data);
         }
-        targetFragment.onActivityResult(requestCode, resultCode, data);
     }
 }

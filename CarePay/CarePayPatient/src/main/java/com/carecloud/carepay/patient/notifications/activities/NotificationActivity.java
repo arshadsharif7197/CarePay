@@ -84,7 +84,9 @@ public class NotificationActivity extends MenuPatientActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
+            case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
+            case PaymentConstants.REQUEST_CODE_FULL_WALLET:
                 appointmentPresenter.forwardAndroidPayResult(requestCode, resultCode, data);
             default:
                 super.onActivityResult(requestCode, resultCode, data);

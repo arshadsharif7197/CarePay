@@ -30,6 +30,8 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     private PaymentsModel paymentsModel;
     private PatientAppointmentPresenter presenter;
 
+    private boolean toolbarHidden = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
@@ -44,7 +46,9 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
+            case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
+            case PaymentConstants.REQUEST_CODE_FULL_WALLET:
                 presenter.forwardAndroidPayResult(requestCode, resultCode, data);
             default:
                 super.onActivityResult(requestCode, resultCode, data);
@@ -57,7 +61,9 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         super.onResume();
         MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_appointments);
         menuItem.setChecked(true);
-        displayToolbar(true, menuItem.getTitle().toString());
+        if(!toolbarHidden) {
+            displayToolbar(true, menuItem.getTitle().toString());
+        }
     }
 
     private void gotoAppointmentFragment() {
@@ -83,6 +89,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             getSupportFragmentManager().popBackStackImmediate();
             if (getSupportFragmentManager().getBackStackEntryCount() < 1) {
                 displayToolbar(true, null);
+                toolbarHidden = false;
             }
         } else {
 
@@ -111,6 +118,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     public void navigateToFragment(Fragment fragment, boolean addToBackStack) {
         replaceFragment(R.id.container_main, fragment, addToBackStack);
         displayToolbar(false, null);
+        toolbarHidden = true;
     }
 
     @Override
@@ -120,7 +128,9 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         for (int i = 0; i < backStackCount; i++) {
             fragmentManager.popBackStackImmediate();
         }
-        displayToolbar(true, null);
+        MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_appointments);
+        displayToolbar(true, menuItem.getTitle().toString());
+        toolbarHidden = false;
 
         refreshAppointments();
         showAppointmentConfirmation();

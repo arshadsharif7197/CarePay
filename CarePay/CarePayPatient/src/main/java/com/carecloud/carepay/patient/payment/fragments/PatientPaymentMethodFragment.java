@@ -160,6 +160,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
 
 
     private void addAndroidPayPaymentMethod() {
+        callback.setAndroidPayTargetFragment(this);
         androidPayAdapter.createWalletButton(amountToMakePayment, (ViewGroup) findViewById(R.id.dynamic_wallet_button_fragment));
     }
 

@@ -54,6 +54,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public Bundle bundle;
     private String toolBarTitle;
 
+    private Fragment androidPayTargetFragment;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -238,6 +240,16 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
+    public void setAndroidPayTargetFragment(Fragment fragment) {
+        androidPayTargetFragment = fragment;
+    }
+
+    @Override
+    public Fragment getAndroidPayTargetFragment() {
+        return androidPayTargetFragment;
+    }
+
+    @Override
     public DTO getDto() {
         return paymentsDTO;
     }
@@ -312,15 +324,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void forwardAndroidPayResult(int requestCode, int resultCode, Intent data) {
-        Fragment targetFragment;
-        switch (requestCode) {
-            case PaymentConstants.REQUEST_CODE_FULL_WALLET:
-                targetFragment = getSupportFragmentManager().findFragmentByTag(AndroidPayDialogFragment.class.getName());
-                break;
-            default:
-                targetFragment = getSupportFragmentManager().findFragmentByTag(PatientPaymentMethodFragment.class.getName());
-                break;
+        Fragment targetFragment = getAndroidPayTargetFragment();
+        if (targetFragment != null) {
+            targetFragment.onActivityResult(requestCode, resultCode, data);
         }
-        targetFragment.onActivityResult(requestCode, resultCode, data);
     }
 }
