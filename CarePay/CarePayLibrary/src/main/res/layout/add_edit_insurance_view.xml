@@ -38,6 +38,19 @@
             app:customAssetFont="proxima_nova_semi_bold"
             breeze:textKey="demographics_choose" />
 
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/providerRequired"
+            style="@style/DemographicsRequiredLabelStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/dimen_5dp"
+            android:layout_marginStart="@dimen/dimen_5dp"
+            android:layout_toStartOf="@id/health_insurance_providers"
+            app:customAssetFont="proxima_nova_semi_bold"
+            breeze:textKey="demographics_required"
+            tools:text="demographics_required" />
+
         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
             android:id="@+id/otherProviderEditText"
             android:layout_width="200dp"

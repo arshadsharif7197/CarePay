@@ -86,7 +86,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private TextView selectedTypeTextView;
     private TextView selectedRelationshipTextView;
     private TextView selectedGenderTextView;
-    private TextView genderRequired;
+    private TextView genderRequiredTextView;
     private EditText otherProviderEditText;
 
     private View dateOfBirthContainer;
@@ -288,7 +288,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         selectedTypeTextView = (TextView) findViewById(R.id.health_insurance_types);
         selectedRelationshipTextView = (TextView) findViewById(R.id.health_insurance_relationship);
         selectedGenderTextView = (TextView) findViewById(R.id.chooseGenderTextView);
-        genderRequired = (TextView) findViewById(R.id.genderOptional);
+        genderRequiredTextView = (TextView) findViewById(R.id.genderOptional);
 
         cardNumberInput = (TextInputLayout) findViewById(R.id.health_insurance_card_number_layout);
         cardNumber = (EditText) findViewById(R.id.health_insurance_card_number);
@@ -355,6 +355,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             initInsuranceData(demographicInsurancePayload);
 
             findViewById(R.id.remove_insurance_entry).setOnClickListener(removeButtonListener);
+            findViewById(R.id.providerRequired).setVisibility(View.GONE);
         }
 
         initializeScanArea(view);
@@ -397,6 +398,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             selectedGenderTextView.setText(selectedGender);
             selectedGenderOption.setName(selectedGender);
             selectedGenderOption.setLabel(selectedGender);
+            genderRequiredTextView.setVisibility(View.GONE);
         }
 
         cardNumber.setText(demographicInsurancePayload.getInsuranceMemberId());
@@ -656,6 +658,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                 } else {
                     otherProviderEditText.setVisibility(View.GONE);
                 }
+                findViewById(R.id.providerRequired).setVisibility(View.GONE);
+                validateForm();
 
             }
         };
@@ -683,6 +687,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                                 selectedRelationshipOption, new OnSelectionChangeCallback() {
                                     @Override
                                     public void onSelectionChange(DemographicsOption demographicsOption) {
+                                        selectedRelationshipOption = demographicsOption;
                                         if (demographicsOption.getLabel().toLowerCase().equals("self")) {
                                             isDataHolderSelf = true;
                                             manageBoDAndGenderVisibility(isDataHolderSelf);
@@ -706,7 +711,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                                 selectedGenderOption, new OnSelectionChangeCallback() {
                                     @Override
                                     public void onSelectionChange(DemographicsOption demographicsOption) {
-                                        genderRequired.setVisibility(View.GONE);
+                                        genderRequiredTextView.setVisibility(View.GONE);
                                     }
                                 }),
                         Label.getLabel("demographics_review_gender")));
@@ -878,14 +883,19 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                 policyBirthDateHolderInput.setError(Label.getLabel("demographics_required_field_msg"));
                 isValid = false;
             }
-            if (!StringUtil.isNullOrEmpty(policyBirthDateHolder.getText().toString().trim()) &&
-                    !DateUtil.isValidateStringDateOfBirth(policyBirthDateHolder.getText().toString().trim())) {
-                policyBirthDateHolderInput.setErrorEnabled(true);
-                policyBirthDateHolderInput.setError(Label.getLabel("demographics_date_validation_msg"));
-                isValid = false;
+
+            if (!StringUtil.isNullOrEmpty(policyBirthDateHolder.getText().toString().trim())) {
+                String dateValidationResult = DateUtil
+                        .getDateOfBirthValidationResultMessage(policyBirthDateHolder.getText().toString().trim());
+                if (dateValidationResult != null) {
+                    policyBirthDateHolderInput.setErrorEnabled(true);
+                    policyBirthDateHolderInput.setError(dateValidationResult);
+                    isValid = false;
+                }
             }
-            if (StringUtil.isNullOrEmpty(selectedGenderOption.getName())) {
-                genderRequired.setVisibility(View.VISIBLE);
+            if (StringUtil.isNullOrEmpty(selectedGenderOption.getName())
+                    || "Choose".equals(selectedGenderOption.getName())) {
+                genderRequiredTextView.setVisibility(View.VISIBLE);
                 isValid = false;
             }
         }
