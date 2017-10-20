@@ -12,6 +12,9 @@ import android.util.Log;
 import com.carecloud.carepay.practice.clover.R;
 import com.carecloud.carepay.practice.clover.models.CloverPaymentDTO;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.RestCallService;
+import com.carecloud.carepay.service.library.RestCallServiceHelper;
+import com.carecloud.carepay.service.library.ServiceGenerator;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseActivity;
@@ -23,16 +26,31 @@ import com.clover.connector.sdk.v3.PaymentV3Connector;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.util.CloverAuth;
 import com.clover.sdk.v1.ServiceConnector;
+import com.clover.sdk.v1.printer.Category;
+import com.clover.sdk.v1.printer.Printer;
+import com.clover.sdk.v1.printer.PrinterConnector;
+import com.clover.sdk.v1.printer.job.PrintJob;
+import com.clover.sdk.v1.printer.job.PrintJobsConnector;
+import com.clover.sdk.v1.printer.job.StaticReceiptPrintJob;
+import com.clover.sdk.v3.base.Reference;
+import com.clover.sdk.v3.employees.EmployeeConnector;
 import com.clover.sdk.v3.order.LineItem;
+import com.clover.sdk.v3.order.Order;
 import com.clover.sdk.v3.order.OrderConnector;
 import com.clover.sdk.v3.payments.Credit;
+import com.clover.sdk.v3.payments.Payment;
 import com.clover.sdk.v3.payments.Refund;
 import com.clover.sdk.v3.remotepay.RefundPaymentRequest;
 import com.clover.sdk.v3.remotepay.RefundPaymentResponse;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 
 /**
@@ -44,15 +62,21 @@ public class CloverRefundActivity extends BaseActivity {
      */
     public static final int refundIntentID = 444;
     private static final String TAG = CloverRefundActivity.class.getName();
+    private static final String CLOVER_MERCHANT_SETTINGS_URL = "%s/v3/merchants/%s/properties?access_token=%s";
+
 
     private Account account;
     private OrderConnector orderConnector;
     private PaymentConnector paymentConnector;
+    private PrinterConnector printerConnector;
+    private EmployeeConnector employeeConnector;
+    private CloverAuth.AuthResult authResult;
 
     private Long amountLong = 0L;
     private PaymentLineItem[] paymentLineItems;
     private String paymentId;
     private String orderId;
+
 
 
     private Handler handler;
@@ -119,6 +143,10 @@ public class CloverRefundActivity extends BaseActivity {
         if (account != null) {
             orderConnector = new OrderConnector(this, account, null);
             orderConnector.connect();
+            printerConnector = new PrinterConnector(this, account, null);
+            printerConnector.connect();
+            employeeConnector = new EmployeeConnector(this, account, null);
+            employeeConnector.connect();
             connectPaymentService();
         }
     }
@@ -128,6 +156,14 @@ public class CloverRefundActivity extends BaseActivity {
         if (orderConnector != null) {
             orderConnector.disconnect();
             orderConnector = null;
+        }
+        if(printerConnector != null){
+            printerConnector.disconnect();
+            printerConnector = null;
+        }
+        if(employeeConnector != null){
+            employeeConnector.disconnect();
+            employeeConnector = null;
         }
         if (paymentConnector != null) {
             paymentConnector.disconnect();
@@ -145,7 +181,6 @@ public class CloverRefundActivity extends BaseActivity {
                 setResult(RESULT_CANCELED);
                 finish();
             }
-            finish();
         }
 
     };
@@ -184,14 +219,12 @@ public class CloverRefundActivity extends BaseActivity {
 
     private void onCloverAuthenticated(){
         connect();
-//        if (orderConnector != null) {
-//            new OrderAsyncTask().execute();
-//        }
-
-//        if(paymentConnector != null){
-//            startRefund();
-//        }
     }
+
+    public void setAuthResult(CloverAuth.AuthResult authResult) {
+        this.authResult = authResult;
+    }
+
 
     private void authenticateCloverAccount() {
         new AsyncTask<Void, String, CloverAuth.AuthResult>() {
@@ -219,6 +252,7 @@ public class CloverRefundActivity extends BaseActivity {
             protected void onPostExecute(CloverAuth.AuthResult authResult) {
                 if (authResult != null && authResult.authToken != null && authResult.baseUrl != null) {
                     onCloverAuthenticated();
+                    setAuthResult(authResult);
                 }else {
                     SystemUtil.showErrorToast(getContext(), Label.getLabel("clover_account_not_authorized"));
                     handler.postDelayed(new Runnable() {
@@ -250,10 +284,10 @@ public class CloverRefundActivity extends BaseActivity {
     private void processRefund(RefundPaymentResponse response){
         //TODO post refund to middleware
 
-        //TODO print receipt
+        printReceipt(response);
 
         setResult(RESULT_OK);
-        finish();
+//        finish();
     }
 
 
@@ -344,85 +378,62 @@ public class CloverRefundActivity extends BaseActivity {
     }
 
 
-//    /**
-//     * Dump intent.
-//     *
-//     * @param intent the intent
-//     */
-//    public static void dumpIntentLog(Intent intent) {
-//
-//        Bundle bundle = intent.getExtras();
-//        if (bundle != null) {
-//            Set<String> keys = bundle.keySet();
-//            Iterator<String> it = keys.iterator();
-//            Log.d(TAG, "Dumping Intent start");
-//            while (it.hasNext()) {
-//                String key = it.next();
-//                Log.e(TAG, "[" + key + "=" + bundle.get(key) + "]");
-//            }
-//            Log.e(TAG, "Dumping Intent end");
-//        }
-//    }
-//
+    private void printReceipt(final RefundPaymentResponse response){
+        new AsyncTask<Void, Void, String>(){
+
+            @Override
+            protected String doInBackground(Void... params) {
+                PrintJobsConnector printJobsConnector = new PrintJobsConnector(CloverRefundActivity.this);
+                Printer printer;
+                boolean shouldPrint = false;
+                try {
+                    if(authResult != null) {
+                        RestCallService service = ServiceGenerator.getInstance().createService(RestCallService.class);
+                        Call<JsonElement> call = service.executeGet(String.format(CLOVER_MERCHANT_SETTINGS_URL, authResult.baseUrl, authResult.merchantId, authResult.authToken));
+                        Response<JsonElement> response = call.execute();
+                        if (response.isSuccessful()) {
+                            JsonElement jsonResponse = response.body();
+                            String autoPrint = RestCallServiceHelper.findErrorElement(jsonResponse, "autoPrint");
+                            shouldPrint = Boolean.parseBoolean(autoPrint);
+                        }
+                    }
+
+                    if(shouldPrint) {
+                        printer = printerConnector.getPrinters(Category.RECEIPT).get(0);
+                        Order order = new Order();
+                        order.setLineItems(getLineItems());
+                        order.setId(response.getRefund().getId());
+                        order.setTotal(amountLong * -1);
+                        order.setCurrency("USD");
+
+                        Payment payment = new Payment();
+                        payment.setRefunds(getRefundItems());
+                        payment.setAmount(amountLong);
+                        payment.setId(response.getRefund().getPayment().getId());
+
+                        List<Payment> payments = new ArrayList<>();
+                        payments.add(payment);
+                        order.setPayments(payments);
+
+                        Reference employee = new Reference();
+                        employee.setId(employeeConnector.getEmployee().getId());
+                        order.setEmployee(employee);
 
 
-//    private class OrderAsyncTask extends AsyncTask<Void, Void, Order> {
-//
-//        @Override
-//        protected final Order doInBackground(Void... params) {
-//            Order order = null;
-//
-//            try {
-//                if (amountLong != null) {
-////                    // Create a new order
-////                    order = orderConnector.createOrder(new Order());
-//////                    for (Refund refund : getRefundItems()) {
-//////                        orderConnector.addRefund(order.getId(), refund);
-//////
-//////                    }
-////
-//////                    for (Credit credit : getCreditItems()){
-//////                        orderConnector.addCredit(order.getId(), credit);
-//////                    }
-////
-////                    List<LineItem> lineItems = getLineItems();
-////                    if (lineItems != null && !lineItems.isEmpty()) {
-////                        for (LineItem lineItem : lineItems) {
-////                            orderConnector.addCustomLineItem(order.getId(), lineItem, false);
-////                        }
-//
-////                    } else {
-////                        return null;
-////                        }
-//                order = orderConnector.getOrder("");
-//                // Update local representation of the order
-//                    order = orderConnector.getOrder(order.getId());
-//                }
-//            } catch (RemoteException | ClientException | ServiceException | BindingException e) {
-//                e.printStackTrace();
-//            }
-//
-//            return order;
-//        }
-//
-//        @Override
-//        protected final void onPostExecute(Order order) {
-//            if (order == null) {
-//                setResult(RESULT_CANCELED);
-//                SystemUtil.showErrorToast(CloverRefundActivity.this, Label.getLabel("clover_payment_canceled"));
-//                handler.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        finish();
-//                    }
-//                }, 3000);
-//                return;
-//            }
-//
-//            // Enables the pay buttons if the order is valid
-//            startRefundIntent(order);
-//
-//        }
-//    }
+
+                        Log.d(TAG, order.getJSONObject().toString());
+
+                        PrintJob printJob = new StaticReceiptPrintJob.Builder().order(order).build();
+//                        printJobsConnector.print(printer, printJob);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                finish();
+                return null;
+            }
+        }.execute();
+
+    }
 
 }

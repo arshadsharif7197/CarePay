@@ -490,7 +490,7 @@ public class RestCallServiceHelper {
         return message;
     }
 
-    private static String findErrorElement(JsonElement jsonElement, String errorFieldName) {
+    public static String findErrorElement(JsonElement jsonElement, String errorFieldName) {
         if (jsonElement instanceof JsonObject) {
             JsonObject jsonObject = (JsonObject) jsonElement;
             Set<Map.Entry<String, JsonElement>> entrySet = jsonObject.entrySet();
