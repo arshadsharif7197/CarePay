@@ -136,12 +136,12 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
 
     }
 
-    private void displayVersionNumber(){
+    private void displayVersionNumber() {
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             TextView versionNumber = (TextView) findViewById(R.id.version_number);
             versionNumber.setText(packageInfo.versionName);
-        }catch (PackageManager.NameNotFoundException nne){
+        } catch (PackageManager.NameNotFoundException nne) {
             nne.printStackTrace();
         }
     }

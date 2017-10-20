@@ -1,5 +1,9 @@
 package com.carecloud.carepay.practice.tablet;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.carecloud.carepay.practice.library.splash.SplashActivity;
@@ -19,5 +23,22 @@ public class PracticeTabletSplashActivity extends SplashActivity {
         NewRelic.withApplicationToken(newRelicId).start(this.getApplication());
 
         MixPanelUtil.logEvent("Practice App Start");
+
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                showProgressDialog();
+                Intent intent = new Intent(PracticeTabletSplashActivity.this, PracticeTabletSplashActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        | Intent.FLAG_ACTIVITY_NEW_TASK);
+                PendingIntent pendingIntent = PendingIntent.getActivity(PracticeTabletSplashActivity.this.getBaseContext(),
+                        0, intent, PendingIntent.FLAG_ONE_SHOT);
+                AlarmManager mgr = (AlarmManager) PracticeTabletSplashActivity.this.getBaseContext()
+                        .getSystemService(Context.ALARM_SERVICE);
+                mgr.set(AlarmManager.RTC, System.currentTimeMillis(), pendingIntent);
+                finish();
+                System.exit(2);
+            }
+        });
     }
 }

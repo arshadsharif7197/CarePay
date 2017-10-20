@@ -86,8 +86,11 @@ public class WorkflowServiceHelper {
             if ((applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE ||
                     applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) &&
                     applicationMode.getUserPracticeDTO() != null) {
-
-                userAuthHeaders.put("username", applicationMode.getUserPracticeDTO().getUserName());
+                String username = applicationMode.getUserPracticeDTO().getUserName();
+                if (username == null) {
+                    username = appAuthorizationHelper.getCurrUser();
+                }
+                userAuthHeaders.put("username", username);
 
                 if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
                     userAuthHeaders.put("username_patient", appAuthorizationHelper.getCurrUser());
@@ -215,54 +218,58 @@ public class WorkflowServiceHelper {
         queryMap = updateQueryMapWithDefault(queryMap);
         WorkflowService workflowService = ServiceGenerator.getInstance().createService(WorkflowService.class, headers); //, String token, String searchString
         Call<WorkflowDTO> call;
+        if (transitionDTO != null) {
+            if (transitionDTO.isGet()) {
+                if (jsonBody != null && queryMap == null) {
+                    call = workflowService.executeGet(transitionDTO.getUrl(), jsonBody);
+                } else if (jsonBody == null && queryMap != null) {
+                    call = workflowService.executeGet(transitionDTO.getUrl(), queryMap);
+                } else if (jsonBody != null && queryMap.size() > 0) {
+                    call = workflowService.executeGet(transitionDTO.getUrl(), jsonBody, queryMap);
+                } else {
+                    call = workflowService.executeGet(transitionDTO.getUrl());
+                }
+            } else if (transitionDTO.isPost()) {
+                if (jsonBody != null && queryMap == null) {
+                    call = workflowService.executePost(transitionDTO.getUrl(), jsonBody);
+                } else if (jsonBody == null && queryMap != null) {
+                    call = workflowService.executePost(transitionDTO.getUrl(), queryMap);
+                } else if (jsonBody != null && queryMap.size() > 0) {
+                    call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
+                } else if (jsonBody != null) {
+                    call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
+                } else {
+                    call = workflowService.executePost(transitionDTO.getUrl());
+                }
+            } else if (transitionDTO.isDelete()) {
+                if (jsonBody != null && queryMap == null) {
+                    call = workflowService.executeDelete(transitionDTO.getUrl(), jsonBody);
+                } else if (jsonBody == null && queryMap != null) {
+                    call = workflowService.executeDelete(transitionDTO.getUrl(), queryMap);
+                } else if (jsonBody != null && queryMap.size() > 0) {
+                    call = workflowService.executeDelete(transitionDTO.getUrl(), jsonBody, queryMap);
+                } else {
+                    call = workflowService.executeDelete(transitionDTO.getUrl());
+                }
+            } else {
+                if (jsonBody != null && queryMap == null) {
+                    call = workflowService.executePut(transitionDTO.getUrl(), jsonBody);
+                } else if (jsonBody == null && queryMap != null) {
+                    call = workflowService.executePut(transitionDTO.getUrl(), queryMap);
+                } else if (jsonBody != null && queryMap.size() > 0) {
+                    call = workflowService.executePut(transitionDTO.getUrl(), jsonBody, queryMap);
+                } else if (jsonBody != null) {
+                    call = workflowService.executePut(transitionDTO.getUrl(), jsonBody, queryMap);
+                } else {
+                    call = workflowService.executePut(transitionDTO.getUrl());
+                }
+            }
 
-        if (transitionDTO.isGet()) {
-            if (jsonBody != null && queryMap == null) {
-                call = workflowService.executeGet(transitionDTO.getUrl(), jsonBody);
-            } else if (jsonBody == null && queryMap != null) {
-                call = workflowService.executeGet(transitionDTO.getUrl(), queryMap);
-            } else if (jsonBody != null && queryMap.size() > 0) {
-                call = workflowService.executeGet(transitionDTO.getUrl(), jsonBody, queryMap);
-            } else {
-                call = workflowService.executeGet(transitionDTO.getUrl());
-            }
-        } else if (transitionDTO.isPost()) {
-            if (jsonBody != null && queryMap == null) {
-                call = workflowService.executePost(transitionDTO.getUrl(), jsonBody);
-            } else if (jsonBody == null && queryMap != null) {
-                call = workflowService.executePost(transitionDTO.getUrl(), queryMap);
-            } else if (jsonBody != null && queryMap.size() > 0) {
-                call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
-            } else if (jsonBody != null) {
-                call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
-            } else {
-                call = workflowService.executePost(transitionDTO.getUrl());
-            }
-        } else if (transitionDTO.isDelete()) {
-            if (jsonBody != null && queryMap == null) {
-                call = workflowService.executeDelete(transitionDTO.getUrl(), jsonBody);
-            } else if (jsonBody == null && queryMap != null) {
-                call = workflowService.executeDelete(transitionDTO.getUrl(), queryMap);
-            } else if (jsonBody != null && queryMap.size() > 0) {
-                call = workflowService.executeDelete(transitionDTO.getUrl(), jsonBody, queryMap);
-            } else {
-                call = workflowService.executeDelete(transitionDTO.getUrl());
-            }
+            executeCallback(transitionDTO, callback, jsonBody, queryMap, headers, attemptCount, call);
         } else {
-            if (jsonBody != null && queryMap == null) {
-                call = workflowService.executePut(transitionDTO.getUrl(), jsonBody);
-            } else if (jsonBody == null && queryMap != null) {
-                call = workflowService.executePut(transitionDTO.getUrl(), queryMap);
-            } else if (jsonBody != null && queryMap.size() > 0) {
-                call = workflowService.executePut(transitionDTO.getUrl(), jsonBody, queryMap);
-            } else if (jsonBody != null) {
-                call = workflowService.executePut(transitionDTO.getUrl(), jsonBody, queryMap);
-            } else {
-                call = workflowService.executePut(transitionDTO.getUrl());
-            }
+            callback.onFailure("We experienced an error, we are working to fix it!");
         }
 
-        executeCallback(transitionDTO, callback, jsonBody, queryMap, headers, attemptCount, call);
     }
 
     private void executeCallback(@NonNull final TransitionDTO transitionDTO,
@@ -276,6 +283,7 @@ public class WorkflowServiceHelper {
         call.enqueue(new Callback<WorkflowDTO>() {
             boolean shouldRetryRequest = false;
             final String retryErrorCodes = "403|408|409";
+
             @Override
             public void onResponse(Call<WorkflowDTO> call, Response<WorkflowDTO> response) {
                 callStack.remove(call);
@@ -411,7 +419,7 @@ public class WorkflowServiceHelper {
                     // Re-try failed request with increased attempt count
                     executeRequest(transitionDTO, callback, jsonBody, queryMap, headers, attemptCount + 1);
                 } else {
-                    callback.onFailure(""+errorMessage);
+                    callback.onFailure("" + errorMessage);
                 }
             }
         });
@@ -438,7 +446,7 @@ public class WorkflowServiceHelper {
 
             @Override
             public void onLoginFailure(String exceptionMessage) {
-                callback.onFailure(""+exceptionMessage);
+                callback.onFailure("" + exceptionMessage);
             }
         };
     }
@@ -482,7 +490,7 @@ public class WorkflowServiceHelper {
 
             @Override
             public void onFailure(String exceptionMessage) {
-                callback.onFailure(""+exceptionMessage);
+                callback.onFailure("" + exceptionMessage);
             }
         };
     }
