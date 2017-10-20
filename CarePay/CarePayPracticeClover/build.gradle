@@ -100,5 +100,6 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':CarePayPracticeLibrary')
     compile 'com.clover.sdk:clover-android-sdk:latest.release'
+    compile 'com.clover.sdk:clover-android-connector-sdk:168'
     compile 'com.newrelic.agent.android:android-agent:5.12.3'
 }

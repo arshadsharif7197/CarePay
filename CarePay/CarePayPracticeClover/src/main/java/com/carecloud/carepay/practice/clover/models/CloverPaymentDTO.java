@@ -25,6 +25,10 @@ public class CloverPaymentDTO {
     @Expose
     private String id;
 
+    @SerializedName("order")
+    @Expose
+    private Order order = new Order();
+
     public String getResult() {
         return result;
     }
@@ -55,5 +59,27 @@ public class CloverPaymentDTO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public class Order {
+
+        @SerializedName("id")
+        private String id;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
     }
 }

@@ -13,6 +13,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
@@ -99,7 +100,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
         });
 
         //Todo remove this... using it just to easily identify clover transactions in the list
-        if(isCloverDevice && item.getPayload().getMetadata().isExternallyProcessed()){
+        if(isCloverDevice && item.getPayload().getMetadata().isExternallyProcessed() && item.getPayload().getExecution().equals(IntegratedPaymentPostModel.EXECUTION_CLOVER)){
             holder.transactionAmount.setTextColor(ContextCompat.getColor(context, R.color.emerald));
         }else{
             holder.transactionAmount.setTextColor(ContextCompat.getColor(context, R.color.textview_default_textcolor));
