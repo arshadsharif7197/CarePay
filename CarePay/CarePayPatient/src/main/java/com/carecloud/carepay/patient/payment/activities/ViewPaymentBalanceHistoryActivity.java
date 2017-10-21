@@ -81,11 +81,11 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     private boolean hasPayments() {
-        if(!paymentsDTO.getPaymentPayload().getPatientBalances().isEmpty()){
-            for(PatientBalanceDTO patientBalanceDTO : paymentsDTO.getPaymentPayload().getPatientBalances()){
-                if(!patientBalanceDTO.getBalances().isEmpty()){
-                    for(PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()){
-                        if(!pendingBalanceDTO.getPayload().isEmpty()){
+        if (!paymentsDTO.getPaymentPayload().getPatientBalances().isEmpty()) {
+            for (PatientBalanceDTO patientBalanceDTO : paymentsDTO.getPaymentPayload().getPatientBalances()) {
+                if (!patientBalanceDTO.getBalances().isEmpty()) {
+                    for (PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()) {
+                        if (!pendingBalanceDTO.getPayload().isEmpty()) {
                             return true;
                         }
                     }
@@ -212,9 +212,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-        if(!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid()==0D){
+        if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
             StringBuilder builder = new StringBuilder();
-            for(IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()){
+            for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
                 builder.append(processingError.getError());
                 builder.append("\n");
             }
@@ -251,7 +251,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public DTO getDto() {
-        return paymentsDTO;
+        return paymentsDTO == null ? paymentsDTO = getConvertedDTO(PaymentsModel.class) : paymentsDTO;
     }
 
     @Override
@@ -294,12 +294,12 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         this.selectedBalancesItem = pendingBalanceDTO;
     }
 
-    private void updateBalances(List<PatientBalanceDTO> updatedBalances){
-        for(PatientBalanceDTO updatedManagementBalance : updatedBalances){//should contain just 1 element
-            for(PendingBalanceDTO updatedBalance : updatedManagementBalance.getBalances()){//should contain just 1 element - the updated balance that was just paid
-                for(PatientBalanceDTO existingManagementBalance : paymentsDTO.getPaymentPayload().getPatientBalances()){//should contain only 1 element until another PM is supported
-                    for(PendingBalanceDTO existingBalance : existingManagementBalance.getBalances()){//can contain multiple balances in multi practice mode, otherwise just 1
-                        if(existingBalance.getMetadata().getPracticeId().equals(updatedBalance.getMetadata().getPracticeId())){
+    private void updateBalances(List<PatientBalanceDTO> updatedBalances) {
+        for (PatientBalanceDTO updatedManagementBalance : updatedBalances) {//should contain just 1 element
+            for (PendingBalanceDTO updatedBalance : updatedManagementBalance.getBalances()) {//should contain just 1 element - the updated balance that was just paid
+                for (PatientBalanceDTO existingManagementBalance : paymentsDTO.getPaymentPayload().getPatientBalances()) {//should contain only 1 element until another PM is supported
+                    for (PendingBalanceDTO existingBalance : existingManagementBalance.getBalances()) {//can contain multiple balances in multi practice mode, otherwise just 1
+                        if (existingBalance.getMetadata().getPracticeId().equals(updatedBalance.getMetadata().getPracticeId())) {
                             existingBalance.setPayload(updatedBalance.getPayload());
                         }
                     }
@@ -308,9 +308,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         }
     }
 
-    private UserPracticeDTO getUserPracticeById(String practiceId){
-        for(UserPracticeDTO userPracticeDTO : paymentsDTO.getPaymentPayload().getUserPractices()){
-            if(userPracticeDTO.getPracticeId().equals(practiceId)){
+    private UserPracticeDTO getUserPracticeById(String practiceId) {
+        for (UserPracticeDTO userPracticeDTO : paymentsDTO.getPaymentPayload().getUserPractices()) {
+            if (userPracticeDTO.getPracticeId().equals(practiceId)) {
                 return userPracticeDTO;
             }
         }

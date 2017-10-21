@@ -44,6 +44,10 @@ public class ApplicationPreferences {
 
     private static final String PREFERENCE_APPOINTMENT_NAVIGATION_OPTION = "appointment_navigation_option";
 
+    public static final String PREFERENCE_USERNAME = "preference_username";
+
+    public static final String PREFERENCE_ID_TOKEN = "preference_token";
+
     private Context context;
 
     private String patientId;
@@ -59,6 +63,7 @@ public class ApplicationPreferences {
     private
     @Defs.AppointmentNavigationTypeDef
     Integer navigationOption;
+    private String userName;
 
     public ApplicationPreferences(Context context) {
         this.context = context;
@@ -368,5 +373,13 @@ public class ApplicationPreferences {
 
     public Set<String> getSelectedLocationsIds(String practiceId, String userId) {
         return readStringSetFromSharedPref(practiceId + userId + PREFERENCE_FILTERED_LOCATIONS);
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

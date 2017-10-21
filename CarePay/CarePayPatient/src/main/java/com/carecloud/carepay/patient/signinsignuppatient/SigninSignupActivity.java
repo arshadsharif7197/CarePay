@@ -4,13 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.signinsignuppatient.fragments.SigninFragment;
 import com.carecloud.carepay.patient.tutorial.tutorial.TutorialActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
@@ -41,6 +44,16 @@ public class SigninSignupActivity extends BasePatientActivity implements Fragmen
         if (!getApplicationPreferences().isTutorialShown()) {
             startActivity(new Intent(getContext(), TutorialActivity.class));
             getApplicationPreferences().setTutorialShown(true);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        boolean crash = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO)
+                .getBoolean("crash", false);
+        if (crash) {
+            Toast.makeText(this, Label.getLabel("crash_handled_error_message"), Toast.LENGTH_LONG).show();
         }
     }
 

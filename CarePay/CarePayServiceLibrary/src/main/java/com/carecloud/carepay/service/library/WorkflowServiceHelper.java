@@ -169,29 +169,42 @@ public class WorkflowServiceHelper {
         execute(transitionDTO, callback, null, null, getApplicationStartHeaders());
     }
 
-    public void execute(@NonNull TransitionDTO transitionDTO, @NonNull WorkflowServiceCallback callback) {
+    public void execute(@NonNull TransitionDTO transitionDTO,
+                        @NonNull WorkflowServiceCallback callback) {
         execute(transitionDTO, callback, null, null, null);
     }
 
-    public void execute(@NonNull TransitionDTO transitionDTO, @NonNull final WorkflowServiceCallback callback, String jsonBody) {
+    public void execute(@NonNull TransitionDTO transitionDTO,
+                        @NonNull final WorkflowServiceCallback callback,
+                        String jsonBody) {
         execute(transitionDTO, callback, jsonBody, null);
     }
 
-    public void execute(@NonNull TransitionDTO transitionDTO, @NonNull final WorkflowServiceCallback callback, Map<String, String> queryMap) {
+    public void execute(@NonNull TransitionDTO transitionDTO,
+                        @NonNull final WorkflowServiceCallback callback,
+                        Map<String, String> queryMap) {
         execute(transitionDTO, callback, null, queryMap, null);
     }
 
-    public void execute(@NonNull TransitionDTO transitionDTO, @NonNull final WorkflowServiceCallback callback, String jsonBody, Map<String, String> queryMap) {
+    public void execute(@NonNull TransitionDTO transitionDTO,
+                        @NonNull final WorkflowServiceCallback callback,
+                        String jsonBody,
+                        Map<String, String> queryMap) {
         execute(transitionDTO, callback, jsonBody, queryMap, null);
     }
 
-    public void execute(@NonNull TransitionDTO transitionDTO, @NonNull final WorkflowServiceCallback callback,
-                        Map<String, String> queryMap, Map<String, String> customHeaders) {
+    public void execute(@NonNull TransitionDTO transitionDTO,
+                        @NonNull final WorkflowServiceCallback callback,
+                        Map<String, String> queryMap,
+                        Map<String, String> customHeaders) {
         execute(transitionDTO, callback, null, queryMap, customHeaders);
     }
 
-    public void execute(@NonNull TransitionDTO transitionDTO, @NonNull final WorkflowServiceCallback callback,
-                        String jsonBody, Map<String, String> queryMap, Map<String, String> customHeaders) {
+    public void execute(@NonNull TransitionDTO transitionDTO,
+                        @NonNull final WorkflowServiceCallback callback,
+                        String jsonBody,
+                        Map<String, String> queryMap,
+                        Map<String, String> customHeaders) {
         executeRequest(transitionDTO, callback, jsonBody, queryMap, getHeaders(customHeaders), 0);
     }
 
@@ -216,7 +229,8 @@ public class WorkflowServiceHelper {
 
         callback.onPreExecute();
         queryMap = updateQueryMapWithDefault(queryMap);
-        WorkflowService workflowService = ServiceGenerator.getInstance().createService(WorkflowService.class, headers); //, String token, String searchString
+        //, String token, String searchString
+        WorkflowService workflowService = ServiceGenerator.getInstance().createService(WorkflowService.class, headers);
         Call<WorkflowDTO> call;
         if (transitionDTO != null) {
             if (transitionDTO.isGet()) {
@@ -267,7 +281,7 @@ public class WorkflowServiceHelper {
 
             executeCallback(transitionDTO, callback, jsonBody, queryMap, headers, attemptCount, call);
         } else {
-            callback.onFailure("We experienced an error, we are working to fix it!");
+            callback.onFailure(Label.getLabel("crash_handled_error_message"));
         }
 
     }
@@ -342,7 +356,8 @@ public class WorkflowServiceHelper {
                 if (!(message.contains(TOKEN) && message.contains(EXPIRED)) && !message.contains(UNAUTHORIZED) &&
                         !(errorBodyString.contains(TOKEN) && errorBodyString.contains(EXPIRED))) {
                     onFailure(response);
-                } else if (!HttpConstants.isUseUnifiedAuth() && !appAuthorizationHelper.refreshToken(getCognitoActionCallback(transitionDTO, callback, jsonBody, queryMap, headers))) {
+                } else if (!HttpConstants.isUseUnifiedAuth() && !appAuthorizationHelper
+                        .refreshToken(getCognitoActionCallback(transitionDTO, callback, jsonBody, queryMap, headers))) {
                     callback.onFailure("No User found to refresh token");
                 } else if (HttpConstants.isUseUnifiedAuth()) {
                     executeRefreshTokenRequest(getRefreshTokenCallback(transitionDTO, callback, jsonBody, queryMap, headers));
@@ -359,7 +374,8 @@ public class WorkflowServiceHelper {
                 }
 
                 if ((message.contains(TOKEN) && message.contains(REVOKED))
-                        || (errorBodyString.toLowerCase().contains(TOKEN) && errorBodyString.toLowerCase().contains(REVOKED))) {
+                        || (errorBodyString.toLowerCase().contains(TOKEN)
+                        && errorBodyString.toLowerCase().contains(REVOKED))) {
                     atomicAppRestart();
                 } else {
                     onFailure(parseError(message, errorBodyString, "message", "exception", "error"));
@@ -480,7 +496,8 @@ public class WorkflowServiceHelper {
                 String signInResponseString = gson.toJson(workflowDTO);
                 UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString, UnifiedSignInResponse.class);
                 if (signInResponse != null) {
-                    UnifiedAuthenticationTokens authTokens = signInResponse.getPayload().getAuthorizationModel().getCognito().getAuthenticationTokens();
+                    UnifiedAuthenticationTokens authTokens = signInResponse.getPayload()
+                            .getAuthorizationModel().getCognito().getAuthenticationTokens();
                     appAuthorizationHelper.setAuthorizationTokens(authTokens);
                 }
 
@@ -521,7 +538,8 @@ public class WorkflowServiceHelper {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
         Context context = applicationPreferences.getContext();
-        Toast.makeText(context, "Login Authorization has Expired!\nPlease Login to Application again", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Login Authorization has Expired!\nPlease Login to Application again",
+                Toast.LENGTH_LONG).show();
         context.startActivity(intent);
     }
 
@@ -533,7 +551,8 @@ public class WorkflowServiceHelper {
     public void saveLabels(WorkflowDTO workflowDTO) {
         JsonObject labels = workflowDTO.getMetadata().getAsJsonObject("labels");
         String state = workflowDTO.getState();
-        boolean contains = ((AndroidPlatform) Platform.get()).openSharedPreferences(AndroidPlatform.LABELS_FILE_NAME).contains("labelFor" + state);
+        boolean contains = ((AndroidPlatform) Platform.get())
+                .openSharedPreferences(AndroidPlatform.LABELS_FILE_NAME).contains("labelFor" + state);
         if (labels != null && !contains) {
             Set<Map.Entry<String, JsonElement>> set = labels.entrySet();
             for (Map.Entry<String, JsonElement> entry : set) {

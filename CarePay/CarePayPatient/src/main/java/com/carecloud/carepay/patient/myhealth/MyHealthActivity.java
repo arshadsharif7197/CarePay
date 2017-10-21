@@ -101,7 +101,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
 
     @Override
     public DTO getDto() {
-        return myHealthDto;
+        return myHealthDto == null ? myHealthDto = getConvertedDTO(MyHealthDto.class) : myHealthDto;
     }
 
     @Override
@@ -187,22 +187,22 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     private void prepareMedicalRecordPdf() {
         TransitionDTO transitionDTO = myHealthDto.getMetadata().getLinks().getMedicalRecord();
         PatientDto patientDto = getPatientDto(selectedRecordProvider);
-        if(patientDto != null) {
+        if (patientDto != null) {
             String url = String.format("%s?%s=%s", transitionDTO.getUrl(), "patient_id",
                     String.valueOf(patientDto.getId()));
 
             downloadPdf(url, patientDto.getFullName(), ".pdf", "Medical Record");
-        }else{
+        } else {
             showErrorNotification("Unable to find Patient Record");
         }
     }
 
-    private PatientDto getPatientDto(MyHealthProviderDto providerDTO){
+    private PatientDto getPatientDto(MyHealthProviderDto providerDTO) {
         PatientDto selectedPatient = null;
-        if(providerDTO == null){
+        if (providerDTO == null) {
             selectedPatient = myHealthDto.getPayload().getMyHealthData()
                     .getPatient().getPatients().get(0);
-        }else {
+        } else {
             for (PatientDto patientDto : myHealthDto.getPayload().getMyHealthData().getPatient().getPatients()) {
                 if (patientDto.getBusinessEntity().getGuid().equals(providerDTO.getBusinessEntity().getGuid())) {
                     return patientDto;
@@ -219,7 +219,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     }
 
     private void downloadPdf(String url, String title,
-                              String fileExtension, String description) {
+                             String fileExtension, String description) {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         request.setTitle(title + fileExtension);
         request.setDescription(description);
