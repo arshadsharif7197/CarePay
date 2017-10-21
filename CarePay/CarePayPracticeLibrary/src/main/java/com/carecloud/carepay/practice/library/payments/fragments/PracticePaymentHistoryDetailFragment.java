@@ -19,6 +19,7 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibray.payments.fragments.PaymentHistoryDetailFragment;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -112,7 +113,7 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
 
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
         View refundButton = view.findViewById(R.id.refund_button);
-        refundButton.setEnabled(isCloverDevice && historyItem.getPayload().getMetadata().isExternallyProcessed());//todo remove this, just for testing exclusively clover refunds
+        refundButton.setEnabled(isCloverDevice && historyItem.getPayload().getMetadata().isExternallyProcessed() && historyItem.getPayload().getExecution().equals(IntegratedPaymentPostModel.EXECUTION_CLOVER));//todo remove this, just for testing exclusively clover refunds
         refundButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,6 +131,9 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
 
             Gson gson = new Gson();
             intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(getPaymentLineItems()));
+
+            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSACTION_RESPONSE, gson.toJson(historyItem.getPayload().getTransactionResponse()));
+
             startActivity(intent);
         }
     }

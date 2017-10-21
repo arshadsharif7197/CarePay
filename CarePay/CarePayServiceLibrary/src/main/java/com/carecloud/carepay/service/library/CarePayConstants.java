@@ -121,6 +121,7 @@ public class CarePayConstants {
     public static final String CLOVER_PAYMENT_LINE_ITEMS = "clover_payment_line_items";
     public static final String CLOVER_PAYMENT_POST_MODEL = "clover_payment_post_model";
     public static final String CLOVER_PAYMENT_SUCCESS_INTENT_DATA = "clover_payment_success_intent_data";
+    public static final String CLOVER_PAYMENT_TRANSACTION_RESPONSE = "clover_payment_transaction_response";
 
     public static final String CLOVER_QUEUE_PAYMENT_TRANSITION = "clover_queue_payment_transition";
     public static final int PAYMENT_RETRY_PENDING_RESULT_CODE = 0x777;
