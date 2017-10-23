@@ -31,12 +31,9 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.Chal
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.amazonaws.regions.Regions;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.CognitoDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.platform.AndroidPlatform;
-import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
 
 import java.util.ArrayList;
@@ -86,10 +83,6 @@ public class AppAuthorizationHelper {
     }
 
     public String getIdToken() {
-        if (idToken == null) {
-            idToken = ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences()
-                    .getString(ApplicationPreferences.PREFERENCE_ID_TOKEN, null);
-        }
         return idToken;
     }
 
@@ -97,8 +90,6 @@ public class AppAuthorizationHelper {
      * @param idToken ID token
      */
     public void setIdToken(String idToken) {
-        ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences().edit()
-                .putString(ApplicationPreferences.PREFERENCE_ID_TOKEN, idToken).apply();
         this.idToken = idToken;
     }
 
@@ -126,10 +117,6 @@ public class AppAuthorizationHelper {
         if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             return patientUser;
         }
-        if (practiceUser == null) {
-            practiceUser = ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences()
-                    .getString(ApplicationPreferences.PREFERENCE_USERNAME, null);
-        }
         return practiceUser;
     }
 
@@ -144,8 +131,6 @@ public class AppAuthorizationHelper {
         } else {
             patientUser = null;
             practiceUser = newUser;
-            ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences().edit()
-                    .putString(ApplicationPreferences.PREFERENCE_USERNAME, newUser).apply();
         }
     }
 

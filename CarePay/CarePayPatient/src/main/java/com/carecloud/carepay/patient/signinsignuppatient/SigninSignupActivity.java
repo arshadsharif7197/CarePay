@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -45,13 +44,8 @@ public class SigninSignupActivity extends BasePatientActivity implements Fragmen
             startActivity(new Intent(getContext(), TutorialActivity.class));
             getApplicationPreferences().setTutorialShown(true);
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         boolean crash = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO)
-                .getBoolean("crash", false);
+                .getBoolean(CarePayConstants.CRASH, false);
         if (crash) {
             Toast.makeText(this, Label.getLabel("crash_handled_error_message"), Toast.LENGTH_LONG).show();
         }

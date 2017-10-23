@@ -44,10 +44,6 @@ public class ApplicationPreferences {
 
     private static final String PREFERENCE_APPOINTMENT_NAVIGATION_OPTION = "appointment_navigation_option";
 
-    public static final String PREFERENCE_USERNAME = "preference_username";
-
-    public static final String PREFERENCE_ID_TOKEN = "preference_token";
-
     private Context context;
 
     private String patientId;

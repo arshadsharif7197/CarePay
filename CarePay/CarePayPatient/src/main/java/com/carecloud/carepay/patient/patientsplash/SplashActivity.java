@@ -12,6 +12,7 @@ import com.carecloud.carepay.patient.BuildConfig;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.patientsplash.dtos.SelectLanguageDTO;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -54,9 +55,8 @@ public class SplashActivity extends BasePatientActivity {
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread t, Throwable e) {
-                Toast.makeText(getContext(), Label.getLabel("crash_handled_error_message"), Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(SplashActivity.this, SplashActivity.class);
-                intent.putExtra("crash", true);
+                intent.putExtra(CarePayConstants.CRASH, true);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                         | Intent.FLAG_ACTIVITY_CLEAR_TASK
                         | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -65,7 +65,7 @@ public class SplashActivity extends BasePatientActivity {
                 AlarmManager mgr = (AlarmManager) SplashActivity.this.getBaseContext()
                         .getSystemService(Context.ALARM_SERVICE);
                 mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 1, pendingIntent);
-                finish();
+                finishAffinity();
                 System.exit(2);
             }
         });
