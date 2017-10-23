@@ -144,9 +144,9 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         appointment.getPatient().setId(patientId);
 
         double amount = visitTypeDTO.getAmount();
-        if(amount > 0 && paymentsModel != null){
+        if (amount > 0 && paymentsModel != null) {
             startPrepaymentProcess(scheduleAppointmentRequestDTO, appointmentSlot, amount);
-        }else {
+        } else {
             Gson gson = new Gson();
             getWorkflowServiceHelper().execute(getMakeAppointmentTransition(),
                     getMakeAppointmentCallback, gson.toJson(scheduleAppointmentRequestDTO), queryMap);
@@ -176,6 +176,10 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
             SystemUtil.doDefaultFailureBehavior((BaseActivity) getContext(), exceptionMessage);
         }
     };
+
+    public String getPatientId() {
+        return patientId;
+    }
 
     public void setPatientId(String patientId) {
         this.patientId = patientId;
@@ -289,10 +293,10 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     protected abstract LinksDTO getLinks();
 
-    private AppointmentsSettingDTO getAppointmentsSettings(){
+    private AppointmentsSettingDTO getAppointmentsSettings() {
         List<AppointmentsSettingDTO> appointmentsSettingDTOList = appointmentsResultModel
                 .getPayload().getAppointmentsSettings();
-        if(!appointmentsSettingDTOList.isEmpty()){
+        if (!appointmentsSettingDTOList.isEmpty()) {
             return appointmentsSettingDTOList.get(0);
         }
         return new AppointmentsSettingDTO();
@@ -378,17 +382,17 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload()
                 .getPatientPayments().getPayload();
-        if(!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid()==0D){
+        if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
             StringBuilder builder = new StringBuilder();
-            for(IntegratedPatientPaymentPayload.ProcessingError processingError
-                    : payload.getProcessingErrors()){
+            for (IntegratedPatientPaymentPayload.ProcessingError processingError
+                    : payload.getProcessingErrors()) {
                 builder.append(processingError.getError());
                 builder.append("\n");
             }
             int last = builder.lastIndexOf("\n");
             builder.replace(last, builder.length(), "");
             showErrorNotification(builder.toString());
-        }else {
+        } else {
             Bundle args = new Bundle();
             args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
 
@@ -400,7 +404,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     @Override
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
-        UserPracticeDTO userPracticeDTO =  paymentsModel.getPaymentPayload().getUserPractices().get(0);
+        UserPracticeDTO userPracticeDTO = paymentsModel.getPaymentPayload().getUserPractices().get(0);
         userPracticeDTO.setPatientId(patientId);
         return userPracticeDTO;
     }
