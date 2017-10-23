@@ -87,9 +87,6 @@ public class WorkflowServiceHelper {
                     applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) &&
                     applicationMode.getUserPracticeDTO() != null) {
                 String username = applicationMode.getUserPracticeDTO().getUserName();
-                if (username == null) {
-                    username = appAuthorizationHelper.getCurrUser();
-                }
                 userAuthHeaders.put("username", username);
 
                 if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
@@ -556,7 +553,6 @@ public class WorkflowServiceHelper {
         if (labels != null && !contains) {
             Set<Map.Entry<String, JsonElement>> set = labels.entrySet();
             for (Map.Entry<String, JsonElement> entry : set) {
-                Log.d(state, "Saving Label " + entry.getKey());
                 Label.putLabelAsync(entry.getKey(), entry.getValue().getAsString());
             }
             Label.applyAsyncLabels();

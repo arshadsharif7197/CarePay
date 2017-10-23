@@ -16,13 +16,11 @@ import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 
 public class SplashActivity extends BasePracticeActivity {
 
-    private static final int STOPSPLASH = 0;
-    private static final long SPLASHTIME = 1000;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
 
         WorkflowSessionHandler.createSession(this);
@@ -30,11 +28,12 @@ public class SplashActivity extends BasePracticeActivity {
         getWorkflowServiceHelper().executeApplicationStartRequest(applicationStartCallback);
 
         //clear old Labels from Preferences
-        SharedPreferences preferences = ((AndroidPlatform) Platform.get()).openSharedPreferences(AndroidPlatform.LABELS_FILE_NAME);
+        SharedPreferences preferences = ((AndroidPlatform) Platform.get())
+                .openSharedPreferences(AndroidPlatform.LABELS_FILE_NAME);
         preferences.edit().clear().apply();
     }
 
-    WorkflowServiceCallback applicationStartCallback=new WorkflowServiceCallback() {
+    WorkflowServiceCallback applicationStartCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
 
@@ -43,7 +42,7 @@ public class SplashActivity extends BasePracticeActivity {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             getWorkflowServiceHelper().saveLabels(workflowDTO);
-            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, getIntent().getExtras());
             SplashActivity.this.finish();
         }
 
