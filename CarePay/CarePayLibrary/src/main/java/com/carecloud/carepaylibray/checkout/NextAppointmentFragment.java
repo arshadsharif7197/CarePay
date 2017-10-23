@@ -394,25 +394,6 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
         return null;
     }
 
-    /**
-     * @param visitTypeDTO the visit type
-     */
-    @Override
-    public boolean setVisitType(VisitTypeDTO visitTypeDTO) {
-        visitType = visitTypeDTO;
-        visitTypeTextView.setText(visitTypeDTO.getName());
-        visitTimeTextView.setEnabled(true);
-        scheduleAppointmentButton.setEnabled(false);
-        boolean shouldOpenHoursFragment = false;
-        if (appointmentSlot == null) {
-            shouldOpenHoursFragment = true;
-        }
-        appointmentSlot = null;
-        setDefaultMessage();
-        findViewById(R.id.providerMessageHeader).setSelected(false);
-        return shouldOpenHoursFragment;
-    }
-
     @Override
     public void setSelectedProvider(ProviderDTO provider) {
         selectedProvider = provider;
@@ -425,7 +406,24 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
             visitType = null;
             visitTimeTextView.setText(null);
             visitTypeTextView.setText(null);
+            scheduleAppointmentButton.setEnabled(false);
+            findViewById(R.id.providerMessageHeader).setSelected(false);
         }
+    }
+
+    /**
+     * @param visitTypeDTO the visit type
+     */
+    @Override
+    public boolean setVisitType(VisitTypeDTO visitTypeDTO) {
+        visitType = visitTypeDTO;
+        visitTypeTextView.setText(visitTypeDTO.getName());
+        visitTimeTextView.setEnabled(true);
+        scheduleAppointmentButton.setEnabled(false);
+        appointmentSlot = null;
+        setDefaultMessage();
+        findViewById(R.id.providerMessageHeader).setSelected(false);
+        return true;
     }
 
     /**
