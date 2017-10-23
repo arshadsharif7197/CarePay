@@ -25,7 +25,7 @@ public class PracticeTabletSplashActivity extends SplashActivity {
         MixPanelUtil.logEvent("Practice App Start");
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
-            public void uncaughtException(Thread t, Throwable e) {
+            public void uncaughtException(Thread thread, Throwable throwable) {
                 Intent intent = new Intent(PracticeTabletSplashActivity.this, PracticeTabletSplashActivity.class);
                 intent.putExtra(CarePayConstants.CRASH, true);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
