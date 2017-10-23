@@ -46,9 +46,6 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.marcok.stepprogressbar.StepProgressBar;
 
-import java.util.Iterator;
-import java.util.List;
-
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_BACK_DTO;
@@ -56,10 +53,14 @@ import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAd
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_BACK;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_FRONT;
 
+import java.util.Iterator;
+import java.util.List;
+
 public class InsuranceEditDialog extends BaseDialogFragment implements MediaViewInterface {
 
     public static final String EDITED_INDEX = "EditedIndex";
     public static final String IS_PATIENT_MODE = "IsPatientMode";
+    public static final String IS_CHECK_IN = "IsCheckIn";
     public static final int NEW_INSURANCE = -1;
 
     private DemographicDTO demographicDTO;
@@ -94,6 +95,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private boolean hadInsurance;
     private boolean isPatientMode;
     private boolean isDataHolderSelf;
+    private boolean isCheckin;
 
     private DemographicInsurancePhotoDTO frontInsurancePhotoDTO;
     private DemographicInsurancePhotoDTO backInsurancePhotoDTO;
@@ -125,11 +127,13 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
      */
     public static InsuranceEditDialog newInstance(DemographicDTO demographicDTO,
                                                   Integer editedIndex,
-                                                  boolean isPatientMode) {
+                                                  boolean isPatientMode,
+                                                  boolean isCheckin) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
         args.putInt(EDITED_INDEX, editedIndex == null ? NEW_INSURANCE : editedIndex);
         args.putBoolean(IS_PATIENT_MODE, isPatientMode);
+        args.putBoolean(IS_CHECK_IN, isCheckin);
         DtoHelper.bundleDto(args, demographicDTO);
 
         InsuranceEditDialog dialog = new InsuranceEditDialog();
@@ -177,6 +181,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         Bundle arguments = getArguments();
         editedIndex = arguments.getInt(EDITED_INDEX);
         isPatientMode = arguments.getBoolean(IS_PATIENT_MODE);
+        isCheckin = arguments.getBoolean(IS_CHECK_IN);
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, arguments);
         if (savedInstanceState != null) {
             String frontString = savedInstanceState.getString(KEY_FRONT_DTO);
@@ -207,7 +212,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         hadInsurance = hasInsurance();
-        if (getDialog() != null || (hadInsurance && !isPatientMode)) {
+        if (getDialog() != null || (hadInsurance && !isPatientMode) || !isCheckin) {
             View view = inflater.inflate(R.layout.dialog_add_edit_insurance, container, false);
 
             hideKeyboardOnViewTouch(view.findViewById(R.id.dialog_content_layout));
@@ -314,7 +319,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         setActionListeners();
 
 
-        if (getDialog() != null || (hadInsurance && !isPatientMode)) {
+        if (getDialog() != null || (hadInsurance && !isPatientMode) || !isCheckin) {
             saveInsuranceButton = (Button) findViewById(R.id.save_insurance_changes);
         } else {
             saveInsuranceButton = (Button) findViewById(R.id.checkinDemographicsNextButton);
@@ -334,7 +339,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
             selectedTypeTextView.setText(Label.getLabel("demographics_choose"));
 
-            if (hasInsurance() && (getDialog() != null || !isPatientMode)) {
+            if (hasInsurance() && (getDialog() != null || !isPatientMode) || !isCheckin) {
                 disappearViewById(R.id.remove_insurance_entry);
                 ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(
                         Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));

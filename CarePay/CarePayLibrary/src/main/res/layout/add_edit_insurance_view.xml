@@ -24,7 +24,8 @@
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/text_size_17"
             app:customAssetFont="proxima_nova_regular"
-            breeze:textKey="demographics_documents_title_select_provider" />
+            breeze:textKey="demographics_documents_title_select_provider"
+            tools:text="Provider"/>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/health_insurance_providers"
@@ -36,7 +37,8 @@
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_16"
             app:customAssetFont="proxima_nova_semi_bold"
-            breeze:textKey="demographics_choose" />
+            breeze:textKey="demographics_choose"
+            tools:text="Choose"/>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/providerRequired"
@@ -49,7 +51,7 @@
             android:layout_toStartOf="@id/health_insurance_providers"
             app:customAssetFont="proxima_nova_semi_bold"
             breeze:textKey="demographics_required"
-            tools:text="demographics_required" />
+            tools:text="Required"/>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
             android:id="@+id/otherProviderEditText"
@@ -94,7 +96,8 @@
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/text_size_17"
             app:customAssetFont="proxima_nova_regular"
-            breeze:textKey="demographics_documents_title_select_plan" />
+            breeze:textKey="demographics_documents_title_select_plan"
+            tools:text="Plan"/>
 
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -106,7 +109,8 @@
             android:textColor="@color/light_gray"
             android:textSize="@dimen/text_size_14"
             app:customAssetFont="proxima_nova_semi_bold"
-            breeze:textKey="demographics_documents_choose_plan" />
+            breeze:textKey="demographics_documents_choose_plan"
+            tools:text="Choose Provider First"/>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/health_insurance_choose_plans"
@@ -136,7 +140,8 @@
             android:inputType="text"
             android:textAllCaps="true"
             app:customAssetFont="proxima_nova_regular"
-            breeze:hintKey="demographics_insurance_card_number" />
+            breeze:hintKey="demographics_insurance_card_number"
+            tools:text="InsuranceCardNumber"/>
     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
@@ -153,7 +158,8 @@
             android:inputType="text"
             android:textAllCaps="true"
             app:customAssetFont="proxima_nova_regular"
-            breeze:hintKey="demographics_insurance_group_number" />
+            breeze:hintKey="demographics_insurance_group_number"
+            tools:text="GroupNumber"/>
     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
     <LinearLayout
@@ -173,7 +179,8 @@
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/text_size_17"
             app:customAssetFont="proxima_nova_regular"
-            breeze:textKey="demographics_insurance_type_label" />
+            breeze:textKey="demographics_insurance_type_label"
+            tools:text="Type"/>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/health_insurance_types"
@@ -184,7 +191,8 @@
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_16"
             app:customAssetFont="proxima_nova_semi_bold"
-            breeze:textKey="demographics_choose" />
+            breeze:textKey="demographics_choose"
+            tools:text="Choose"/>
     </LinearLayout>
 
     <View
@@ -209,7 +217,8 @@
             android:maxLength="100"
             android:textAllCaps="true"
             app:customAssetFont="proxima_nova_regular"
-            breeze:hintKey="demographics_insurance_policy_holder" />
+            breeze:hintKey="demographics_insurance_policy_holder"
+            tools:text="FirstName"/>
     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
@@ -228,7 +237,8 @@
             android:maxLength="100"
             android:textAllCaps="true"
             app:customAssetFont="proxima_nova_regular"
-            breeze:hintKey="demographics_insurance_policy_holder_last_name" />
+            breeze:hintKey="demographics_insurance_policy_holder_last_name"
+            tools:text="LastName"/>
     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
     <LinearLayout
@@ -249,7 +259,8 @@
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/text_size_17"
             app:customAssetFont="proxima_nova_regular"
-            breeze:textKey="demographics_insurance_relationship_label" />
+            breeze:textKey="demographics_insurance_relationship_label"
+            tools:text="Relationship"/>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/health_insurance_relationship"
@@ -260,7 +271,8 @@
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_16"
             app:customAssetFont="proxima_nova_semi_bold"
-            breeze:textKey="demographics_choose" />
+            breeze:textKey="demographics_choose"
+            tools:text="Self"/>
     </LinearLayout>
 
     <View
