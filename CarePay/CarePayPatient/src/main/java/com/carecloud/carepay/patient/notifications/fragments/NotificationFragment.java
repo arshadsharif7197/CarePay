@@ -163,7 +163,6 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
 
     @Override
     public void notificationSelected(NotificationItem notificationItem) {
-        crashMe();
         callback.displayNotification(notificationItem);
     }
 
@@ -272,10 +271,6 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
                 Log.d(TAG, "Delete notificaton FAILED");
             }
         };
-    }
-
-    private void crashMe() {
-        throw new NullPointerException();
     }
 
 }
