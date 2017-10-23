@@ -18,6 +18,8 @@ public interface IApplicationSession {
 
     ApplicationMode getApplicationMode();
 
+    void onAtomicRestart();
+
     void setLastInteraction(long systemTime);
 
     long getLastInteraction();

@@ -1,22 +1,15 @@
 package com.carecloud.carepay.patient.patientsplash;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.carecloud.carepay.patient.BuildConfig;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.patientsplash.dtos.SelectLanguageDTO;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.fcm.RegistrationIntentService;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -52,23 +45,7 @@ public class SplashActivity extends BasePatientActivity {
         Intent intent = new Intent(this, RegistrationIntentService.class);
         startService(intent);
 
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                Intent intent = new Intent(SplashActivity.this, SplashActivity.class);
-                intent.putExtra(CarePayConstants.CRASH, true);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        | Intent.FLAG_ACTIVITY_NEW_TASK);
-                PendingIntent pendingIntent = PendingIntent.getActivity(SplashActivity.this.getBaseContext(),
-                        0, intent, PendingIntent.FLAG_ONE_SHOT);
-                AlarmManager mgr = (AlarmManager) SplashActivity.this.getBaseContext()
-                        .getSystemService(Context.ALARM_SERVICE);
-                mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 1, pendingIntent);
-                finishAffinity();
-                System.exit(2);
-            }
-        });
+        setUncaughtExceptionHandler();
     }
 
     WorkflowServiceCallback applicationStartCallback = new WorkflowServiceCallback() {

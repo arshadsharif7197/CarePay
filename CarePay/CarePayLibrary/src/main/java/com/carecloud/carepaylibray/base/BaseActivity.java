@@ -1,7 +1,10 @@
 package com.carecloud.carepaylibray.base;
 
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -103,6 +106,11 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     @Override
     public ApplicationMode getApplicationMode() {
         return ((IApplicationSession) getApplication()).getApplicationMode();
+    }
+
+    @Override
+    public void onAtomicRestart(){
+        ((IApplicationSession) getApplication()).onAtomicRestart();
     }
 
     @Override
@@ -384,5 +392,26 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             }
         }
     };
+
+    protected void setUncaughtExceptionHandler(){
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                onAtomicRestart();
+                Intent intent = new Intent();
+                intent.setAction("com.carecloud.carepay.restart");
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                intent.putExtra(CarePayConstants.CRASH, true);
+                PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(),
+                        0, intent, PendingIntent.FLAG_ONE_SHOT);
+                AlarmManager mgr = (AlarmManager) getBaseContext()
+                        .getSystemService(Context.ALARM_SERVICE);
+                mgr.set(AlarmManager.RTC, System.currentTimeMillis(), pendingIntent);
+                finishAffinity();
+                System.exit(2);
+            }
+        });
+
+    }
 
 }
