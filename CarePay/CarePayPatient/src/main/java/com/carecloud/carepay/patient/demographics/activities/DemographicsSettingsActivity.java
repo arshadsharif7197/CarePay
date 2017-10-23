@@ -157,7 +157,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     @Override
     public void editInsurance(DemographicDTO demographicDTO, int editedIndex) {
         InsuranceEditDialog insuranceEditDialog = InsuranceEditDialog
-                .newInstance(demographicDTO, editedIndex, false);
+                .newInstance(demographicDTO, editedIndex, false, false);
 
         replaceFragment(insuranceEditDialog, true);
     }
