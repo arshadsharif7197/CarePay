@@ -53,7 +53,12 @@ public class CarePayPatientApplication extends CarePayApplication {
         HttpConstants.setEnvironment(BuildConfig.ENVIRONMENT);
     }
 
-
+    @Override
+    public void onAtomicRestart(){
+        super.onAtomicRestart();
+        applicationMode.clearUserPracticeDTO();
+        applicationMode = null;
+    }
 
     @Override
     public ApplicationMode getApplicationMode() {

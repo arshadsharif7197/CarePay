@@ -31,6 +31,8 @@ public class SplashActivity extends BasePracticeActivity {
         SharedPreferences preferences = ((AndroidPlatform) Platform.get())
                 .openSharedPreferences(AndroidPlatform.LABELS_FILE_NAME);
         preferences.edit().clear().apply();
+
+        setUncaughtExceptionHandler();
     }
 
     WorkflowServiceCallback applicationStartCallback = new WorkflowServiceCallback() {
