@@ -148,7 +148,7 @@ public class NotificationActivity extends MenuPatientActivity
     }
 
     @Override
-    public void confirmAppointment() {
+    public void confirmAppointment(boolean showSuccess) {
         Map<String, String> queryMap = new HashMap<>();
         getWorkflowServiceHelper().execute(transitionNotifications, notificationsWorkflowCallback, queryMap);
     }
