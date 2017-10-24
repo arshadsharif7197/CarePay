@@ -396,7 +396,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     protected void setUncaughtExceptionHandler(){
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
-            public void uncaughtException(Thread t, Throwable e) {
+            public void uncaughtException(Thread thread, Throwable throwable) {
                 onAtomicRestart();
                 Intent intent = new Intent();
                 intent.setAction("com.carecloud.carepay.restart");
