@@ -519,12 +519,12 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         }
     };
 
-    private void showAdHocFragment(WorkflowDTO workflowDTO, AppointmentDTO appointmentDTO) {
+    private void showAdHocFragment(WorkflowDTO workflowDTO, String patientId) {
         Gson gson = new Gson();
         AppointmentsResultModel appointmentsResultModel = gson
                 .fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
         AdHocFormsListFragment fragment = AdHocFormsListFragment
-                .newInstance(appointmentsResultModel, appointmentDTO.getPayload().getId());
+                .newInstance(appointmentsResultModel, patientId);
         fragment.show(getSupportFragmentManager(), "forms");
     }
 
@@ -532,9 +532,12 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         String tag = ResponsibilityFragmentDialog.class.getSimpleName();
         ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(paymentsModel);
         ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
-                .newInstance(paymentsModel, null, Label.getLabel("create_appointment_label"),
+                .newInstance(paymentsModel,
+                        Label.getLabel("adhoc_show_forms_button_label"),
+                        Label.getLabel("create_appointment_label"),
                         Label.getLabel("payment_balance_empty_appointment_screen"),
                         headerModel);
+        dialog.setShowLeftButtonAlways(true);
         dialog.show(getSupportFragmentManager(), tag);
     }
 
@@ -580,7 +583,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void onLeftActionTapped(PaymentsModel paymentsModel, double owedAmount) {
-
+        getAllPracticeForms(getPatientId());
     }
 
     @Override
@@ -616,13 +619,17 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void onMiddleActionTapped(AppointmentDTO appointmentDTO) {
-        Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("patient_id", appointmentDTO.getPayload().getPatient().getPatientId());
-        TransitionDTO adHocForms = checkInDTO.getMetadata().getLinks().getAllPracticeForms();
-        getWorkflowServiceHelper().execute(adHocForms, getAdHocServiceCallback(appointmentDTO), queryMap);
+        getAllPracticeForms(appointmentDTO.getMetadata().getPatientId());
     }
 
-    WorkflowServiceCallback getAdHocServiceCallback(final AppointmentDTO appointmentDTO) {
+    private void getAllPracticeForms(String patientId) {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("patient_id", patientId);
+        TransitionDTO adHocForms = checkInDTO.getMetadata().getLinks().getAllPracticeForms();
+        getWorkflowServiceHelper().execute(adHocForms, getAdHocServiceCallback(patientId), queryMap);
+    }
+
+    WorkflowServiceCallback getAdHocServiceCallback(final String patientId) {
         return new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
@@ -632,7 +639,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
-                showAdHocFragment(workflowDTO, appointmentDTO);
+                showAdHocFragment(workflowDTO, patientId);
             }
 
             @Override

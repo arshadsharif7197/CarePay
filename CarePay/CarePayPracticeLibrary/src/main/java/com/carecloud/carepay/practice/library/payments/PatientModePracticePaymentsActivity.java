@@ -130,8 +130,11 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         boolean showPartial = paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments().isAllowPartialPayments();
         ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newClinicHeader(paymentsModel);
         ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
-                .newInstance(paymentsModel, showPartial ? Label.getLabel("payment_partial_payment_text") : null,
-                        Label.getLabel("payment_details_pay_now"), null, headerModel);
+                .newInstance(paymentsModel,
+                        showPartial ? Label.getLabel("payment_partial_payment_text") : null,
+                        Label.getLabel("payment_details_pay_now"),
+                        null,
+                        headerModel);
         displayDialogFragment(dialog, false);
     }
 
