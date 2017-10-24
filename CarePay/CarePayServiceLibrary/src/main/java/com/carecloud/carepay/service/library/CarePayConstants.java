@@ -153,4 +153,6 @@ public class CarePayConstants {
     public static final String LOGIN_OPTION_QR = "login_option_qr";
     public static final String LOGIN_OPTION_SEARCH = "login_option_search";
 
+    public static final String CRASH = "crash";
+
 }

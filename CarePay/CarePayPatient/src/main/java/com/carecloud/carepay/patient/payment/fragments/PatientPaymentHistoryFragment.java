@@ -29,7 +29,8 @@ import java.util.List;
 /**
  * Created by jorge on 02/01/17
  */
-public class PatientPaymentHistoryFragment extends BaseFragment implements PaymentHistoryAdapter.HistoryItemClickListener {
+public class PatientPaymentHistoryFragment extends BaseFragment
+        implements PaymentHistoryAdapter.HistoryItemClickListener {
     private static final int BOTTOM_ROW_OFFSET = 2;
 
     private PaymentsModel paymentsModel;
@@ -62,7 +63,8 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
         super.onCreate(icicle);
         paymentsModel = (PaymentsModel) callback.getDto();
         paging = paymentsModel.getPaymentPayload().getTransactionHistory().getPageDetails();
-        paymentHistoryItems = filterPaymentHistory(paymentsModel.getPaymentPayload().getTransactionHistory().getPaymentHistoryList());
+        paymentHistoryItems = filterPaymentHistory(paymentsModel.getPaymentPayload()
+                .getTransactionHistory().getPaymentHistoryList());
     }
 
     @Override
@@ -91,16 +93,17 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
 
     }
 
-    private void setAdapter(List<PaymentHistoryItem> newItems){
+    private void setAdapter(List<PaymentHistoryItem> newItems) {
         PaymentHistoryAdapter historyAdapter = (PaymentHistoryAdapter) historyRecyclerView.getAdapter();
-        if(historyAdapter != null){
-            if(newItems != null && !newItems.isEmpty()){
+        if (historyAdapter != null) {
+            if (newItems != null && !newItems.isEmpty()) {
                 historyAdapter.addHistoryList(newItems);
-            }else{
+            } else {
                 historyAdapter.setPaymentHistoryItems(paymentHistoryItems);
             }
-        }else{
-            historyAdapter = new PaymentHistoryAdapter(getContext(), paymentHistoryItems, paymentsModel.getPaymentPayload().getUserPractices(), this);
+        } else {
+            historyAdapter = new PaymentHistoryAdapter(getContext(), paymentHistoryItems,
+                    paymentsModel.getPaymentPayload().getUserPractices(), this);
             historyRecyclerView.setAdapter(historyAdapter);
         }
     }
@@ -109,10 +112,10 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
         noPaymentsLayout.setVisibility(View.VISIBLE);
     }
 
-    private List<PaymentHistoryItem> filterPaymentHistory(List<PaymentHistoryItem> paymentHistoryItems){
+    private List<PaymentHistoryItem> filterPaymentHistory(List<PaymentHistoryItem> paymentHistoryItems) {
         List<PaymentHistoryItem> output = new ArrayList<>();
-        for(PaymentHistoryItem item : paymentHistoryItems){
-            if(item.getPayload().getTotalPaid() > 0 || item.getPayload().getProcessingErrors().isEmpty()){
+        for (PaymentHistoryItem item : paymentHistoryItems) {
+            if (item.getPayload().getTotalPaid() > 0 || item.getPayload().getProcessingErrors().isEmpty()) {
                 output.add(item);
             }
         }
@@ -123,16 +126,17 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
         return !paymentsModel.getPaymentPayload().getTransactionHistory().getPaymentHistoryList().isEmpty();
     }
 
-    private boolean hasMorePages(){
+    private boolean hasMorePages() {
         return paging.getCurrentPage() != paging.getTotalPages();
     }
 
-    private void loadNextPage(){
+    private void loadNextPage() {
         NextPagingDTO next = new NextPagingDTO();
-        next.setNextPage(paging.getCurrentPage()+1);
+        next.setNextPage(paging.getCurrentPage() + 1);
         next.setPageCount(paging.getResultsPerPage());
 
-        TransitionDTO nextPageTransition = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getPaymentTransactionHistory();
+        TransitionDTO nextPageTransition = paymentsModel.getPaymentsMetadata().getPaymentsLinks()
+                .getPaymentTransactionHistory();
         String payload = new Gson().toJson(next);
         getWorkflowServiceHelper().execute(nextPageTransition, nextPageCallback, payload);
     }
@@ -143,8 +147,8 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
             super.onScrolled(recyclerView, dx, dy);
             super.onScrolled(recyclerView, dx, dy);
             if (hasMorePages()) {
-                int last = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-                if(last > recyclerView.getAdapter().getItemCount() - BOTTOM_ROW_OFFSET && !isPaging){
+                int last = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+                if (last > recyclerView.getAdapter().getItemCount() - BOTTOM_ROW_OFFSET && !isPaging) {
                     loadNextPage();
                     isPaging = true;
                 }
@@ -155,6 +159,7 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
 
     private WorkflowServiceCallback nextPageCallback = new WorkflowServiceCallback() {
         PaymentHistoryAdapter adapter;
+
         @Override
         public void onPreExecute() {
             adapter = (PaymentHistoryAdapter) historyRecyclerView.getAdapter();
@@ -166,9 +171,10 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
             adapter.setLoading(false);
             PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             Paging nextPage = paymentsModel.getPaymentPayload().getTransactionHistory().getPageDetails();
-            if(nextPage.getCurrentPage() != paging.getCurrentPage()){
+            if (nextPage.getCurrentPage() != paging.getCurrentPage()) {
                 paging = nextPage;
-                List<PaymentHistoryItem> newItems = paymentsModel.getPaymentPayload().getTransactionHistory().getPaymentHistoryList();
+                List<PaymentHistoryItem> newItems = paymentsModel.getPaymentPayload()
+                        .getTransactionHistory().getPaymentHistoryList();
                 setAdapter(newItems);
                 paymentHistoryItems.addAll(filterPaymentHistory(newItems));
             }

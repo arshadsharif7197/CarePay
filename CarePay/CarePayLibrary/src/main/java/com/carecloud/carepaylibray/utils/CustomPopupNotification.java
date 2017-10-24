@@ -56,7 +56,12 @@ public class CustomPopupNotification extends PopupWindow {
      * @param popupMessageText Sets the string value of the TextView popup message
      * @param notificationType The notification type to be displayed from CustomPopupNotification class
      */
-    public CustomPopupNotification(Context context, View parentView, Window window, String popupMessageText, int notificationType, CustomPopupNotificationListener callback) {
+    public CustomPopupNotification(Context context,
+                                   View parentView,
+                                   Window window,
+                                   String popupMessageText,
+                                   int notificationType,
+                                   CustomPopupNotificationListener callback) {
 
         super(((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                 .inflate(R.layout.custom_popup, null));
@@ -90,7 +95,8 @@ public class CustomPopupNotification extends PopupWindow {
             case TYPE_ERROR_NOTIFICATION:
                 popupWindowLayout.setBackgroundResource(R.drawable.error_notification_background);
                 popupMessageLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
-                ApplicationMode.ApplicationType appMode = ((IApplicationSession) context).getApplicationMode().getApplicationType();
+                ApplicationMode.ApplicationType appMode = ((IApplicationSession) context)
+                        .getApplicationMode().getApplicationType();
                 if (popupMessageText == null) {
                     popupMessageText = CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE;
                 }

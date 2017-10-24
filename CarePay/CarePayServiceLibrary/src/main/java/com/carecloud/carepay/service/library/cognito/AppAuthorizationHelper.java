@@ -48,7 +48,6 @@ public class AppAuthorizationHelper {
     private static int retryCount;
 
 
-
     //////////////////////////////////////////////////////////////////////////////////
     //                      New Unified Authorization Handling                      //
     //////////////////////////////////////////////////////////////////////////////////
@@ -97,32 +96,33 @@ public class AppAuthorizationHelper {
     /**
      * @param authTokens new auth tokens
      */
-    public void setAuthorizationTokens(UnifiedAuthenticationTokens authTokens){
-        if(authTokens.getIdToken()!=null) {
+    public void setAuthorizationTokens(UnifiedAuthenticationTokens authTokens) {
+        if (authTokens.getIdToken() != null) {
             setIdToken(authTokens.getIdToken());
         }
-        if(authTokens.getAccessToken()!=null) {
+        if (authTokens.getAccessToken() != null) {
             setAccessToken(authTokens.getAccessToken());
         }
-        if(authTokens.getRefreshToken()!=null) {
+        if (authTokens.getRefreshToken() != null) {
             setRefreshToken(authTokens.getRefreshToken());
         }
     }
 
     /**
      * Gives current user
+     *
      * @return current user
      */
     public String getCurrUser() {
         if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             return patientUser;
         }
-
         return practiceUser;
     }
 
     /**
      * Set current user
+     *
      * @param newUser user
      */
     public void setUser(String newUser) {
@@ -136,9 +136,10 @@ public class AppAuthorizationHelper {
 
     /**
      * Get Patient user
+     *
      * @return patient user
      */
-    public String getPatientUser(){
+    public String getPatientUser() {
         return patientUser;
     }
 
@@ -157,15 +158,15 @@ public class AppAuthorizationHelper {
 
     // App settings
 
-    private List<String>        attributeDisplaySeq;
+    private List<String> attributeDisplaySeq;
     private Map<String, String> signUpFieldsC2O;
     private Map<String, String> signUpFieldsO2C;
 
     private ApplicationMode applicationMode;
-    private CognitoUserPool  userPool;
+    private CognitoUserPool userPool;
 
-    private CognitoDevice    newDevice;
-    private int              itemCount;
+    private CognitoDevice newDevice;
+    private int itemCount;
 
     /**
      * App secret associated with your app id - if the App id does not have an associated App secret,
@@ -196,6 +197,7 @@ public class AppAuthorizationHelper {
     /**
      * initialize cognito from the application
      * default value assign for variables
+     *
      * @param context the context
      */
     public AppAuthorizationHelper(Context context, ApplicationMode applicationMode) {
@@ -354,7 +356,7 @@ public class AppAuthorizationHelper {
      * @return Whether the current user has is signed in
      */
     public boolean refreshToken(final CognitoActionCallback successAction) {
-        if(retryCount > MAX_RETRIES){
+        if (retryCount > MAX_RETRIES) {
             return false;
         }
         retryCount++;

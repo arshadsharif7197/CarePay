@@ -11,7 +11,7 @@ import com.carecloud.carepaylibray.base.IApplicationSession;
 import com.orm.SugarContext;
 
 /**
- * Created by pjohnson on 15/03/17.
+ * Created by pjohnson on 15/03/17
  */
 
 public abstract class CarePayApplication extends MultiDexApplication implements IApplicationSession {
@@ -63,6 +63,14 @@ public abstract class CarePayApplication extends MultiDexApplication implements 
     }
 
     @Override
+    public void onAtomicRestart(){
+        workflowServiceHelper = null;
+        appAuthorizationHelper = null;
+        applicationPreferences = null;
+    }
+
+
+    @Override
     public void setLastInteraction(long systemTime){
         this.lastInteraction = systemTime;
     }
@@ -71,6 +79,5 @@ public abstract class CarePayApplication extends MultiDexApplication implements 
     public long getLastInteraction(){
         return this.lastInteraction;
     }
-
 
 }
