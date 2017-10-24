@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class NotificationFragment extends BaseFragment implements NotificationsAdapter.SelectNotificationCallback, SwipeHelper.SwipeHelperListener {
 
-    public interface NotificationCallback{
+    public interface NotificationCallback {
         void displayNotification(NotificationItem notificationItem);
     }
 
@@ -56,10 +56,11 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
 
     /**
      * Instantiate Notification Fragment with Notification data
+     *
      * @param notificationsDTO notification data
      * @return NotificationFragment
      */
-    public static NotificationFragment newInstance(NotificationsDTO notificationsDTO){
+    public static NotificationFragment newInstance(NotificationsDTO notificationsDTO) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, notificationsDTO);
 
@@ -69,23 +70,23 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
     }
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
-        try{
+        try {
             callback = (NotificationCallback) context;
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached Context must implement NotificationCallback");
         }
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
         Bundle args = getArguments();
-        if(args != null){
+        if (args != null) {
             notificationsDTO = DtoHelper.getConvertedDTO(NotificationsDTO.class, args);
-            if(notificationsDTO!=null){
+            if (notificationsDTO != null) {
                 notificationItems = notificationsDTO.getPayload().getNotifications();
             }
         }
@@ -94,12 +95,12 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_notification, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         noNotificationLayout = view.findViewById(R.id.no_notification_layout);
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -136,17 +137,17 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         refreshNotifications();
     }
 
-    private void setAdapter(){
-        if(!notificationItems.isEmpty()){
-            if(notificationsRecycler.getAdapter()==null) {
+    private void setAdapter() {
+        if (!notificationItems.isEmpty()) {
+            if (notificationsRecycler.getAdapter() == null) {
                 notificationsAdapter = new NotificationsAdapter(getContext(), notificationItems, this);
                 notificationsRecycler.setAdapter(notificationsAdapter);
-            }else{
+            } else {
                 notificationsAdapter = (NotificationsAdapter) notificationsRecycler.getAdapter();
                 notificationsAdapter.setNotificationItems(notificationItems);
             }
@@ -154,7 +155,7 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
             refreshLayout.setVisibility(View.VISIBLE);
             noNotificationLayout.setVisibility(View.GONE);
 
-        }else{
+        } else {
             refreshLayout.setVisibility(View.GONE);
             noNotificationLayout.setVisibility(View.VISIBLE);
         }
@@ -176,7 +177,7 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
 
     }
 
-    private void refreshNotifications(){
+    private void refreshNotifications() {
         TransitionDTO refreshTransition = notificationsDTO.getMetadata().getLinks().getNotifications();
         getWorkflowServiceHelper().execute(refreshTransition, refreshCallback);
     }
@@ -191,7 +192,7 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
         public void onPostExecute(WorkflowDTO workflowDTO) {
             refreshLayout.setRefreshing(false);
             NotificationsDTO notificationsDTO = DtoHelper.getConvertedDTO(NotificationsDTO.class, workflowDTO);
-            if(notificationsDTO!=null){
+            if (notificationsDTO != null) {
                 notificationItems = notificationsDTO.getPayload().getNotifications();
             }
             setAdapter();
@@ -203,7 +204,6 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
             showErrorNotification(exceptionMessage);
         }
     };
-
 
 
     @Override
@@ -222,7 +222,7 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
 
     private DeleteNotificationRunnable deleteNotificationRunnable = new DeleteNotificationRunnable();
 
-    private class DeleteNotificationRunnable implements Runnable{
+    private class DeleteNotificationRunnable implements Runnable {
 
         public void setNotificationItem(NotificationItem notificationItem) {
             this.notificationItem = notificationItem;
@@ -233,7 +233,7 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
 
         @Override
         public void run() {
-            if(notificationItem!=null) {
+            if (notificationItem != null) {
                 Log.d(TAG, "Deleting notification");
                 int index = notificationItems.indexOf(notificationItem);
                 notificationsAdapter.clearRemovedNotification(notificationItem);
@@ -241,13 +241,13 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
                 notificationsRecycler.getAdapter().notifyItemRemoved(index);
                 deleteNotification(notificationItem);
                 notificationItem = null;
-                if(notificationItems.size()==0){
+                if (notificationItems.size() == 0) {
                     setAdapter();
                 }
             }
         }
 
-        private void deleteNotification(NotificationItem notificationItem){
+        private void deleteNotification(NotificationItem notificationItem) {
             TransitionDTO transitionDTO = notificationsDTO.getMetadata().getTransitions().getDeleteNotifications();
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("notification_id", notificationItem.getPayload().getNotificationId());

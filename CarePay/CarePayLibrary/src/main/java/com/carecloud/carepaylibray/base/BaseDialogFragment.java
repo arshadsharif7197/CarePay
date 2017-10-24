@@ -181,6 +181,11 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     }
 
     @Override
+    public void onAtomicRestart(){
+        ((IApplicationSession) getActivity()).onAtomicRestart();
+    }
+
+    @Override
     public void setLastInteraction(long systemTime){
         ((IApplicationSession) getActivity()).setLastInteraction(systemTime);
     }

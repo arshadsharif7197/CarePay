@@ -15,7 +15,7 @@ import com.carecloud.carepaylibray.CarePayApplication;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 /**
- * Created by Jahirul Bhuiyan on 10/24/2016.
+ * Created by Jahirul Bhuiyan on 10/24/2016
  */
 
 public class CarePayPracticeApplication extends CarePayApplication
@@ -94,6 +94,13 @@ public class CarePayPracticeApplication extends CarePayApplication
             //getAppAuthorizationHelper().getPool().getUser().signOut();
             //getAppAuthorizationHelper().setUser(null);
         }
+    }
+
+    @Override
+    public void onAtomicRestart(){
+        super.onAtomicRestart();
+        applicationMode.clearUserPracticeDTO();
+        applicationMode = null;
     }
 
     @Override

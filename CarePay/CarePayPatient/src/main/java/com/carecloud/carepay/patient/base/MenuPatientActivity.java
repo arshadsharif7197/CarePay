@@ -36,7 +36,8 @@ import java.util.Map;
  * Created by jorge on 10/01/17
  */
 
-public abstract class MenuPatientActivity extends BasePatientActivity implements NavigationView.OnNavigationItemSelectedListener {
+public abstract class MenuPatientActivity extends BasePatientActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     //transitions
     private static TransitionDTO transitionBalance;
@@ -300,7 +301,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         }
     };
 
-    private WorkflowServiceCallback purchaseWorkflowCallback = new WorkflowServiceCallback() {//TODO this is currently pointed at appointments endpoint
+    //TODO this is currently pointed at appointments endpoint
+    private WorkflowServiceCallback purchaseWorkflowCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();

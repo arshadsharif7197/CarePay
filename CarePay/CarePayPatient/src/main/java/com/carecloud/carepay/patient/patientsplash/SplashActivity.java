@@ -8,7 +8,6 @@ import com.carecloud.carepay.patient.BuildConfig;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.patientsplash.dtos.SelectLanguageDTO;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
@@ -45,6 +44,8 @@ public class SplashActivity extends BasePatientActivity {
 
         Intent intent = new Intent(this, RegistrationIntentService.class);
         startService(intent);
+
+        setUncaughtExceptionHandler();
     }
 
     WorkflowServiceCallback applicationStartCallback = new WorkflowServiceCallback() {
@@ -67,7 +68,8 @@ public class SplashActivity extends BasePatientActivity {
                 Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
                 header.put("Accept-Language", languageid);
 
-                getWorkflowServiceHelper().execute(signInSignUpDTO.getMetadata().getTransitions().getSignin(), signInCallback, null, null, header);
+                getWorkflowServiceHelper().execute(signInSignUpDTO.getMetadata().getTransitions().getSignin(),
+                        signInCallback, null, null, header);
             }
 
         }
