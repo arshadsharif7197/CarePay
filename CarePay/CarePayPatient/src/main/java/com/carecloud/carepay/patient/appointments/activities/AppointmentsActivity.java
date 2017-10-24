@@ -74,7 +74,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         bundle.putString(CarePayConstants.APPOINTMENT_INFO_BUNDLE, gson.toJson(appointmentsResultModel));
         appointmentsListFragment.setArguments(bundle);
 
-        navigateToFragment(appointmentsListFragment, false);
+        replaceFragment(R.id.container_main, appointmentsListFragment, false);
     }
 
     private void initPresenter() {
