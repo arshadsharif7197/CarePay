@@ -123,7 +123,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
     @Override
-    public void confirmAppointment() {
+    public void confirmAppointment(boolean showSuccess) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         int backStackCount = fragmentManager.getBackStackEntryCount();
         for (int i = 0; i < backStackCount; i++) {
@@ -134,7 +134,9 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         toolbarHidden = false;
 
         refreshAppointments();
-        showAppointmentConfirmation();
+        if(showSuccess) {
+            showAppointmentConfirmation();
+        }
     }
 
     @Override

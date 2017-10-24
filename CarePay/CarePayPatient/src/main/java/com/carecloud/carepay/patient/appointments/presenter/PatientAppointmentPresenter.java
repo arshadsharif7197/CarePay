@@ -83,6 +83,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     private Fragment androidPayTargetFragment;
 
+    private boolean startCancelationFeePayment = false;
+
+
     public PatientAppointmentPresenter(AppointmentViewHandler viewHandler,
                                        AppointmentsResultModel appointmentsResultModel,
                                        PaymentsModel paymentsModel) {
@@ -255,7 +258,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void onAppointmentRequestSuccess() {
-        viewHandler.confirmAppointment();
+        viewHandler.confirmAppointment(true);
     }
 
     @Override
@@ -414,6 +417,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                         if (cancellationFee == null) {
                             onCancelAppointment(appointmentDTO, cancellationReason, cancellationReasonComment);
                         } else {
+                            startCancelationFeePayment = true;
                             IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
                             postModel.setAmount(Double.parseDouble(cancellationFee.getAmount()));
                             IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
@@ -553,8 +557,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void onPaymentDismissed() {
+        startCancelationFeePayment = false;
         if (appointmentDTO != null) {
             onHoursAndLocationSelected(appointmentSlot, null);
+        }else{
+            viewHandler.refreshAppointments();
         }
     }
 
@@ -691,7 +698,13 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
-        onAppointmentRequestSuccess();
+        if(startCancelationFeePayment){
+            SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_cancellation_success_message_HTML"));
+            viewHandler.confirmAppointment(false);
+        }else {
+            onAppointmentRequestSuccess();
+        }
+        startCancelationFeePayment = false;
     }
 
     @Override
