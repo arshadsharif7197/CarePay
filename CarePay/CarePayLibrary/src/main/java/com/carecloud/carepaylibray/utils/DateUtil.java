@@ -825,7 +825,6 @@ public class DateUtil {
     }
 
     /**
-     *
      * @param dateString the date to be validated
      * @return a readable error message from the result of validating a date
      */
@@ -1030,13 +1029,13 @@ public class DateUtil {
     }
 
     /**
-     *
      * @param date the date
      * @return returns a string formatted like 10:00 PM
      */
-    public static String getHoutsFormatted(Date date){
+    public static String getHoursFormatted(Date date) {
         return DateFormat.format(FORMAT_HOURS_AM_PM, date).toString();
     }
+
     /**
      * @param rawDate a string containing the date
      * @return returns a string formatted like 10:00 PM
