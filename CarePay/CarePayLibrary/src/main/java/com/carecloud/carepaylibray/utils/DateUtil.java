@@ -885,7 +885,8 @@ public class DateUtil {
      * @param nextDays  Formatted String to represent upcoming day count
      * @return Contextually formatted Date range
      */
-    public static String getFormattedDate(Date startDate, Date endDate, String today, String tomorrow, String thisMonth, String nextDays) {
+    public static String getFormattedDate(Date startDate, Date endDate, String today,
+                                          String tomorrow, String thisMonth, String nextDays) {
         Calendar startCal = Calendar.getInstance();
         Calendar endCal = Calendar.getInstance();
 
@@ -1028,6 +1029,14 @@ public class DateUtil {
         return builder.toString();
     }
 
+    /**
+     *
+     * @param date the date
+     * @return returns a string formatted like 10:00 PM
+     */
+    public static String getHoutsFormatted(Date date){
+        return DateFormat.format(FORMAT_HOURS_AM_PM, date).toString();
+    }
     /**
      * @param rawDate a string containing the date
      * @return returns a string formatted like 10:00 PM

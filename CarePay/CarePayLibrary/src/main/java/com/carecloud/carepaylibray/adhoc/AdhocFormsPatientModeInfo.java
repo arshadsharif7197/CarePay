@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.adhoc;
 
+import com.carecloud.carepaylibray.intake.models.AppointmentMetadataModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,13 +12,13 @@ public class AdhocFormsPatientModeInfo {
 
     @Expose
     @SerializedName("metadata")
-    private AdhocFormsPatientModeInfoMetadata metadata = new AdhocFormsPatientModeInfoMetadata();
+    private AppointmentMetadataModel metadata = new AppointmentMetadataModel();
 
-    public AdhocFormsPatientModeInfoMetadata getMetadata() {
+    public AppointmentMetadataModel getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(AdhocFormsPatientModeInfoMetadata metadata) {
+    public void setMetadata(AppointmentMetadataModel metadata) {
         this.metadata = metadata;
     }
 

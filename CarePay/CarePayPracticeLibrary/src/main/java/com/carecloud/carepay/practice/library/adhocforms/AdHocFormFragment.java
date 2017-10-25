@@ -13,12 +13,11 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.adhoc.AdhocFormsPatientModeInfoMetadata;
-import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.checkout.BaseWebFormFragment;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
+import com.carecloud.carepaylibray.intake.models.AppointmentMetadataModel;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -94,9 +93,9 @@ public class AdHocFormFragment extends BaseWebFormFragment {
         int displayedFormsIndex = getDisplayedFormsIndex();
         if (getDisplayedFormsIndex() < getTotalForms()) {
             Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbar_layout);
-            if (getDisplayedFormsIndex()==0){
+            if (getDisplayedFormsIndex() == 0) {
                 toolbar.setNavigationIcon(null);
-            }else{
+            } else {
                 toolbar.setNavigationIcon(R.drawable.icn_nav_back);
             }
             PracticeForm practiceForm = formsList.get(displayedFormsIndex);
@@ -143,7 +142,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
 
     @Override
     protected void submitAllForms() {
-        AdhocFormsPatientModeInfoMetadata patientInfo = appointmentsResultModel.getPayload()
+        AppointmentMetadataModel patientInfo = appointmentsResultModel.getPayload()
                 .getAdhocFormsPatientModeInfo().getMetadata();
         Map<String, String> queries = new HashMap<>();
         queries.put("practice_mgmt", patientInfo.getPracticeMgmt());

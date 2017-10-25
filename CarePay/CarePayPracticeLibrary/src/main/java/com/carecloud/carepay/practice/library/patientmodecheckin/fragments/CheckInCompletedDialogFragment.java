@@ -32,6 +32,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -162,7 +163,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
         if (isAdHocForms) {
             userNameTextView.setText(((AppointmentsResultModel) callback.getDto()).getPayload().getDemographicDTO().getPayload()
                     .getPersonalDetails().getFullName());
-            appointmentHourTextView.setText("Now");
+            appointmentHourTextView.setText(DateUtil.getInstance().getHoutsFormatted(new Date()));
             view.findViewById(R.id.statusContainer).setVisibility(View.GONE);
             view.findViewById(R.id.separator1).setVisibility(View.GONE);
             view.findViewById(R.id.visitTypeContainer).setVisibility(View.GONE);
