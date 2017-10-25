@@ -23,7 +23,12 @@ public class RefundProcessFragment extends BaseDialogFragment {
     private PaymentHistoryItem historyItem;
 
 
-    public RefundProcessFragment newInstance(PaymentHistoryItem historyItem){
+    /**
+     * Create a new instance of RefundProcessFragment
+     * @param historyItem history item
+     * @return new instance of RefundProcessFragment
+     */
+    public static RefundProcessFragment newInstance(PaymentHistoryItem historyItem){
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, historyItem);
 

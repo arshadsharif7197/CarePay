@@ -34,6 +34,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewC
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentHistoryDetailFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.RefundProcessFragment;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentNavigationCallback;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -785,6 +786,12 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     public void displayHistoryItemDetails(PaymentHistoryItem item) {
         PracticePaymentHistoryDetailFragment fragment = PracticePaymentHistoryDetailFragment.newInstance(item);
         displayDialogFragment(fragment, true);
+    }
+
+    @Override
+    public void startRefundProcess(PaymentHistoryItem historyItem) {
+        RefundProcessFragment refundProcessFragment = RefundProcessFragment.newInstance(historyItem);
+        displayDialogFragment(refundProcessFragment, false);
     }
 
     private void refreshLists(boolean isBlocking){
