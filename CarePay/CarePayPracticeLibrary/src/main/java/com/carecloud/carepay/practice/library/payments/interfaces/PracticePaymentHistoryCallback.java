@@ -13,5 +13,7 @@ public interface PracticePaymentHistoryCallback {
     void onDismissPaymentHistory(PaymentsModel paymentsModel);
 
     void displayHistoryItemDetails(PaymentHistoryItem item);
+
+    void startRefundProcess(PaymentHistoryItem historyItem);
 }
 

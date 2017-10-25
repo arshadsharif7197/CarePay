@@ -37,11 +37,11 @@
         android:layout_marginEnd="@dimen/dimen_26dp"
         android:orientation="vertical">
 
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/patient_mode_dialog_header_bg"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:gravity="center">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -49,13 +49,37 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:padding="@dimen/dimen_18dp"
+                android:paddingTop="@dimen/dimen_18dp"
+                android:paddingBottom="@dimen/dimen_18dp"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22sp"
                 tools:text="October 13, 2017"
                 app:customAssetFont="proxima_nova_semi_bold" />
 
-        </FrameLayout>
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="@dimen/dimen_18dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_22sp"
+                android:text="@string/em_dash"
+                app:customAssetFont="proxima_nova_semi_bold" />
+
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/transaction_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingTop="@dimen/dimen_18dp"
+                android:paddingBottom="@dimen/dimen_18dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_22sp"
+                tools:text="8:45 AM"
+                app:customAssetFont="proxima_nova_semi_bold" />
+
+        </LinearLayout>
 
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/scrollView"
@@ -117,46 +141,7 @@
                         android:gravity="start"
                         android:textColor="@color/textview_default_textcolor"
                         android:textSize="@dimen/text_size_24sp"
-                        tools:text="Time"
-                        breeze:textKey="payment_history_detail_time"
-                        app:customAssetFont="gotham_rounded_book"/>
-
-                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                        android:id="@+id/transaction_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="end"
-                        android:textColor="@color/textview_default_textcolor"
-                        android:textSize="@dimen/text_size_17"
-                        tools:text="12:45 PM"
-                        app:customAssetFont="gotham_rounded_medium"/>
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_1dp"
-                    android:background="@color/light_gray" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingStart="@dimen/dimen_13dp"
-                    android:paddingEnd="@dimen/dimen_13dp"
-                    android:paddingTop="@dimen/dimen_22dp"
-                    android:paddingBottom="@dimen/dimen_22dp">
-
-                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="start"
-                        android:textColor="@color/textview_default_textcolor"
-                        android:textSize="@dimen/text_size_24sp"
-                        tools:text="Type"
+                        tools:text="Method"
                         breeze:textKey="payment_history_detail_type"
                         app:customAssetFont="gotham_rounded_book"/>
 
@@ -266,8 +251,8 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_18sp"
                 android:textAllCaps="false"
-                tools:text="Refund"
-                breeze:textKey="payment_history_refund"
+                tools:text="Start Refund Process"
+                breeze:textKey="payment_history_start_refund"
                 app:customAssetFont="gotham_rounded_medium"
                 android:enabled="false"/>
 
