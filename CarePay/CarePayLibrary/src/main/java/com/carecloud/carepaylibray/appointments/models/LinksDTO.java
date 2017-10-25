@@ -57,6 +57,9 @@ public class LinksDTO extends BaseLinks {
     @SerializedName("practice_appointments")
     @Expose
     private TransitionDTO practiceAppointments = new TransitionDTO();
+    @SerializedName("appointment_status")
+    @Expose
+    private TransitionDTO appointmentStatus = new TransitionDTO();
 
     /**
      * @return The demographics
@@ -191,5 +194,13 @@ public class LinksDTO extends BaseLinks {
 
     public void setPracticeAppointments(TransitionDTO practiceAppointments) {
         this.practiceAppointments = practiceAppointments;
+    }
+
+    public TransitionDTO getAppointmentStatus() {
+        return appointmentStatus;
+    }
+
+    public void setAppointmentStatus(TransitionDTO appointmentStatus) {
+        this.appointmentStatus = appointmentStatus;
     }
 }

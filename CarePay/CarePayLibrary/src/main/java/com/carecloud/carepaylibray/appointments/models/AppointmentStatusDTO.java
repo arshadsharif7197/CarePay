@@ -20,7 +20,7 @@ public class AppointmentStatusDTO {
     @SerializedName("updated_at")
     private String lastUpdated;
 
-    @SerializedName("status")
+    @SerializedName(value = "status", alternate = "payload")
     private CheckinStatusDTO checkinStatusDTO = new CheckinStatusDTO();
 
     /**

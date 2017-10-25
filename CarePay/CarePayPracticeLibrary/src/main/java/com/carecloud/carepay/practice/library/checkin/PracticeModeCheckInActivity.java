@@ -434,16 +434,9 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         }
     };
 
-    private void onCheckInAppointment(String patientId) {
+    private void onCheckInAppointment(String appointmentId) {
         Map<String, String> queryMap = new HashMap<>();
-        if (checkInDTO.getPayload().getAppointments() != null
-                && checkInDTO.getPayload().getAppointments().size() > 0) {
-            queryMap.put("practice_mgmt", checkInDTO.getPayload().getAppointments()
-                    .get(0).getMetadata().getPracticeMgmt());
-            queryMap.put("practice_id", checkInDTO.getPayload().getAppointments()
-                    .get(0).getMetadata().getPracticeId());
-        }
-        queryMap.put("appointment_id", patientId);
+        queryMap.put("appointment_id", appointmentId);
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getCheckinAppointment();
         getWorkflowServiceHelper().execute(transitionDTO, checkInAppointmentCallback, queryMap);
     }
@@ -464,6 +457,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
+            refreshLists(false);
             findViewById(R.id.drop_down_area_view).setVisibility(View.GONE);
             findViewById(R.id.drop_down_checking_area_view).setVisibility(View.GONE);
             // Reset to original state
