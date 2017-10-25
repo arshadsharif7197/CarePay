@@ -64,7 +64,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
     public static final int CHECKED_OUT = 3;
 
     private int theRoom;
-    private static final String minutesElapsedLabel = Label.getLabel("practice_checkin_minutes_elapsed");
+    private static final String timeElapsedLabel = Label.getLabel("practice_checkin_complete_elapsed");
 
     /**
      * Constructor
@@ -313,7 +313,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
 
     private static String getFormattedTimeElapsed(String timeElapsed){
         try{
-            return String.format(minutesElapsedLabel, timeElapsed);
+            return String.format(timeElapsedLabel, timeElapsed);
         }catch (IllegalFormatException ife){
             return null;
         }
