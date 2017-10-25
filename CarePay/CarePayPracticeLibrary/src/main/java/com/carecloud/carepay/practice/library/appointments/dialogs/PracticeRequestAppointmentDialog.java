@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.customdialog.BasePracticeDialog;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
@@ -82,7 +83,8 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
     private void inflateUIComponents(View view) {
         Button requestAppointmentButton = (Button)
                 view.findViewById(R.id.requestAppointmentButton);
-        requestAppointmentButton.setText(Label.getLabel("appointments_request_heading"));
+        ApplicationMode.ApplicationType applicationType = callback.getApplicationMode().getApplicationType();
+        requestAppointmentButton.setText(Label.getLabel(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ? "appointments_request_heading" : "schedule_appointment_button_label"));
         requestAppointmentButton.setOnClickListener(requestAppointmentClickListener);
         requestAppointmentButton.requestFocus();
 

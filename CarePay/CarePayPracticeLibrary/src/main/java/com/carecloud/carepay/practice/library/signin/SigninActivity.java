@@ -101,10 +101,12 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         setClickables();
         changeScreenMode(signinScreenMode);
 
-        boolean crash = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO)
-                .getBoolean(CarePayConstants.CRASH, false);
-        if (crash) {
-            Toast.makeText(this, Label.getLabel("crash_handled_error_message"), Toast.LENGTH_LONG).show();
+        Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
+        if(extra != null) {
+            boolean crash = extra.getBoolean(CarePayConstants.CRASH, false);
+            if (crash) {
+                Toast.makeText(this, Label.getLabel("crash_handled_error_message"), Toast.LENGTH_LONG).show();
+            }
         }
     }
 
