@@ -21,7 +21,6 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.adapters.CheckedInAppointmentAdapter;
 import com.carecloud.carepay.practice.library.checkin.adapters.PagePickerAdapter;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.QueryStrings;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerWindow;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -29,6 +28,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.CheckinStatusDTO;
 import com.carecloud.carepaylibray.appointments.models.QueueDTO;
@@ -44,8 +44,6 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -221,13 +219,14 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
      */
     private void onSetValuesFromDTO() {
         String title = "";
+        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentPayloadDTO.getAppointmentStatus().getLastUpdated().replaceAll("\\.\\d\\d\\dZ", "-00:00"));
         if (theRoom == CheckedInAppointmentAdapter.CHECKING_IN) {
             demographicsCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_demographics"));
             consentFormsCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_consent_forms"));
             medicationsCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_medications"));
             intakeCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_intake"));
             responsibilityCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_responsibility"));
-            title = Label.getLabel("practice_checkin_checking_in");
+            title = String.format(Label.getLabel("practice_checkin_started_elapsed"), DateUtil.getContextualTimeElapsed(dateUtil.getDate(), new Date()));
         } else if (theRoom == CheckedInAppointmentAdapter.CHECKED_IN) {
             checkboxLayout.setVisibility(View.INVISIBLE);
             checkBoxes.add(demographicsCheckbox);
@@ -235,17 +234,17 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
             checkBoxes.add(intakeCheckbox);
             checkBoxes.add(responsibilityCheckbox);
             medicationsCheckbox.setVisibility(View.GONE);
-            title = Label.getLabel("practice_checkin_checked_in");
+            title = String.format(Label.getLabel("practice_checkin_complete_elapsed"), DateUtil.getContextualTimeElapsed(dateUtil.getDate(), new Date()));
         } else if (theRoom == CheckedInAppointmentAdapter.CHECKING_OUT) {
             demographicsCheckbox.setText(Label.getLabel("next_appointment_title"));
             consentFormsCheckbox.setVisibility(View.INVISIBLE);
             medicationsCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_consent_forms"));
             intakeCheckbox.setVisibility(View.INVISIBLE);
             responsibilityCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_payment"));
-            title = Label.getLabel("practice_checkin_checking_out");
+            title = String.format(Label.getLabel("practice_checkout_started_elapsed"), DateUtil.getContextualTimeElapsed(dateUtil.getDate(), new Date()));
         } else if (theRoom == CheckedInAppointmentAdapter.CHECKED_OUT) {
             checkboxLayout.setVisibility(View.INVISIBLE);
-            title = Label.getLabel("practice_checkin_checked_out");
+            title = String.format(Label.getLabel("practice_checkout_complete_elapsed"), dateUtil.getTime12Hour());
         }
 
         checkingInLabel.setText(title);
@@ -345,45 +344,33 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         if (checkInDTO != null && checkInDTO.getMetadata().getLinks() != null &&
                 checkInDTO.getMetadata().getLinks().getCheckinStatus() != null) {
 
-            JsonObject queryStringObject;
-            Gson gson = new Gson();
-            QueryStrings queryStrings;
-            TransitionDTO transition;
-            Map<String, String> querymap;
-            WorkflowServiceCallback callback;
+            TransitionDTO transition = null;
+            Map<String, String> queryMap = new HashMap<>();
+            WorkflowServiceCallback callback = null;
+            queryMap.put("appointment_id", appointmentPayloadDTO.getId());
 
             if (theRoom == CheckedInAppointmentAdapter.CHECKING_IN) {
-                updateCheckinStatus();
+                updateCheckinStatus(appointmentPayloadDTO.getAppointmentStatus().getCheckinStatusDTO());
+                transition = checkInDTO.getMetadata().getLinks().getAppointmentStatus();
+                callback = getAppointmentStatusCallback(true);
             } else if (theRoom == CheckedInAppointmentAdapter.CHECKED_IN) {
-                queryStringObject = checkInDTO.getMetadata().getLinks().getQueueStatus().getQueryString();
-                queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
-                querymap = getQueueQueryParam(queryStrings);
+                queryMap.put("patient_id", appointmentPayloadDTO.getPatient().getPatientId());
                 transition = checkInDTO.getMetadata().getLinks().getQueueStatus();
                 callback = getQueueCallBack;
-
-                ((ISession) context).getWorkflowServiceHelper().execute(transition, callback, querymap);
             } else if (theRoom == CheckedInAppointmentAdapter.CHECKING_OUT) {
-                updateCheckoutStatus();
+                updateCheckoutStatus(appointmentPayloadDTO.getAppointmentStatus().getCheckinStatusDTO());
+                transition = checkInDTO.getMetadata().getLinks().getAppointmentStatus();
+                callback = getAppointmentStatusCallback(false);
             } else if (theRoom == CheckedInAppointmentAdapter.CHECKED_OUT) {
-                //TODO: will do in a next ticket
                 getPatientBalanceDetails(true);
+            }
+
+            if(transition != null && callback != null) {
+                ((ISession) context).getWorkflowServiceHelper().execute(transition, callback, queryMap);
             }
         }
     }
 
-    /**
-     * @param queryStrings the query strings for the queue url
-     * @return queryMap
-     */
-    private Map<String, String> getQueueQueryParam(QueryStrings queryStrings) {
-        Map<String, String> queryMap = new HashMap<>();
-        if (appointmentPayloadDTO != null) {
-            queryMap.put(queryStrings.getPatientId().getName(), appointmentPayloadDTO.getPatient().getPatientId());
-            queryMap.put(queryStrings.getAppointmentId().getName(), appointmentPayloadDTO.getId());
-        }
-
-        return queryMap;
-    }
 
     private WorkflowServiceCallback getQueueCallBack = new WorkflowServiceCallback() {
         @Override
@@ -402,6 +389,32 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+
+    private WorkflowServiceCallback getAppointmentStatusCallback(final boolean isCheckin) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                AppointmentDTO appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, workflowDTO);
+                if(isCheckin) {
+                    updateCheckinStatus(appointmentDTO.getPayload().getAppointmentStatus().getCheckinStatusDTO());
+                }else{
+                    updateCheckoutStatus(appointmentDTO.getPayload().getAppointmentStatus().getCheckinStatusDTO());
+                }
+                updatePageOptions(workflowDTO);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            }
+        };
+    }
 
     /**
      * @param workflowDTO workflow model returned by server.
@@ -502,8 +515,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
     }
 
 
-    private void updateCheckinStatus() {
-        CheckinStatusDTO checkinStatusDTO = appointmentPayloadDTO.getAppointmentStatus().getCheckinStatusDTO();
+    private void updateCheckinStatus(CheckinStatusDTO checkinStatusDTO) {
         final boolean demographicsComplete = CarePayConstants.APPOINTMENTS_STATUS_COMPLETED
                 .equalsIgnoreCase(checkinStatusDTO.getDemographicsStatus());
         final boolean consentComplete = CarePayConstants.APPOINTMENTS_STATUS_COMPLETED
@@ -552,8 +564,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
     }
 
-    private void updateCheckoutStatus() {
-        CheckinStatusDTO checkinStatusDTO = appointmentPayloadDTO.getAppointmentStatus().getCheckinStatusDTO();
+    private void updateCheckoutStatus(CheckinStatusDTO checkinStatusDTO) {
         final boolean appointmentsComplete = CarePayConstants.APPOINTMENTS_STATUS_COMPLETED
                 .equalsIgnoreCase(checkinStatusDTO.getCheckoutAppointmentStatus());
         final boolean formsComplete = CarePayConstants.APPOINTMENTS_STATUS_COMPLETED
@@ -695,6 +706,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                 PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
                 if(showInline){
                     updatePatientBalanceStatus(patientDetails);
+                    pageButton.setEnabled(patientDetails.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getNotificationOptions().hasPushNotification());
                     return;
                 }
                 if (patientDetails != null && !patientDetails.getPaymentPayload().getPatientBalances().isEmpty()) {
