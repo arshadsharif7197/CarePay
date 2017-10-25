@@ -16,6 +16,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseC
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -87,8 +88,9 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     public void showAppointmentConfirmation() {
 
         if (isVisible()) {
+            ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
             SystemUtil.showSuccessToast(getContext(),
-                    Label.getLabel("appointment_request_success_message_HTML"));
+                    Label.getLabel(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ? "appointment_request_success_message_HTML" : "appointment_schedule_success_message_HTML"));
         }
 
         onAppointmentRequestSuccess();
