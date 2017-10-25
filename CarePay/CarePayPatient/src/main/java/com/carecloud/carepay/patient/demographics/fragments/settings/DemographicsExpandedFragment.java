@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.demographics.fragments.settings;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -30,11 +31,13 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadR
 import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
 import com.carecloud.carepaylibray.demographics.interfaces.EmployerFragmentInterface;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
+import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.Gson;
+import com.smartystreets.api.us_zipcode.City;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +53,6 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
     private DemographicDataModel dataModel;
 
     private View nextButton;
-
     private DemographicsSettingsFragmentListener callback;
 
     private DemographicsOption selectedPreferredLanguage = new DemographicsOption();
@@ -62,6 +64,21 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
     private DemographicsOption selectedEmergencyContactRelationship = new DemographicsOption();
     private DemographicsOption selectedReferralSource = new DemographicsOption();
     private EmployerDto selectedEmployer = new EmployerDto();
+    private boolean enableEmployerData;
+    private TextInputLayout employerNameTextLayout;
+    private TextInputLayout address1TextInputLayout;
+    private TextInputLayout address2TextInputLayout;
+    private TextInputLayout zipCodeTextInputLayout;
+    private TextInputLayout phoneTextInputLayout;
+    private TextInputLayout cityTextInputLayout;
+    private TextInputLayout stateTextInputLayout;
+    private EditText employerNameEditText;
+    private EditText addressEditText;
+    private EditText addressEditText2;
+    private EditText zipCodeEditText;
+    private EditText phoneEditText;
+    private EditText cityEditText;
+    private EditText stateEditText;
 
     /**
      * @return an instance of DemographicsInformationFragment
@@ -112,13 +129,11 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
 
         initViews(view);
         checkIfEnableButton();
-
     }
 
 
     private void initViews(View view) {
         DemographicPayloadDTO demographicPayload = demographicsSettingsDTO.getPayload().getDemographics().getPayload();
-
         initDemographicInfo(view, demographicPayload);
     }
 
@@ -291,23 +306,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 personalInfoSection.getProperties().getMaritalStatus().isRequired()
                         ? null : maritalStatusOptional);
 
-
-        View employmentStatusLayout = view.findViewById(R.id.employmentStatusDemographicsLayout);
-        TextView chooseEmploymentStatus = (TextView) view.findViewById(R.id.chooseEmploymentStatus);
-        View employmentStatusOptional = view.findViewById(R.id.employmentStatusOptional);
-        setVisibility(employmentStatusLayout, personalInfoSection.getProperties().getEmploymentStatus().isDisplayed());
-        chooseEmploymentStatus.setOnClickListener(
-                getSelectOptionsListener(personalInfoSection.getProperties().getEmploymentStatus().getOptions(),
-                        getDefaultOnOptionsSelectedListener(chooseEmploymentStatus,
-                                selectedEmploymentStatus, employmentStatusOptional),
-                        Label.getLabel("demographics_employment_status")));
-        String employmentStatus = demographicPayload.getPersonalDetails().getEmploymentStatus();
-        initSelectableInput(chooseEmploymentStatus, selectedEmploymentStatus, employmentStatus,
-                personalInfoSection.getProperties().getEmploymentStatus().isRequired() ? null : employmentStatusOptional);
-
-
         setUpEmployer(view, demographicPayload, personalInfoSection);
-
 
         View emergencyContactRelationshipLayout = view.findViewById(R.id.emergencyContactRelationshipDemographicsLayout);
         TextView chooseEmergencyContactRelationship = (TextView) view
@@ -338,37 +337,198 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         initSelectableInput(chooseReferralSource, selectedReferralSource, referralSource,
                 personalInfoSection.getProperties().getReferralSource().isRequired()
                         ? null : referralSourceOptional);
+
     }
 
-    private void setUpEmployer(View view, DemographicPayloadDTO demographicPayload,
+    private void setUpEmployer(final View view, DemographicPayloadDTO demographicPayload,
                                DemographicsPersonalSection personalInfoSection) {
-        View employerLayout = view.findViewById(R.id.employerDemographicsLayout);
-        View employerOptional = view.findViewById(R.id.employerOptional);
-        setVisibility(employerLayout, personalInfoSection.getProperties().getEmployer().isDisplayed());
-        final EmployerDto employer = demographicPayload.getPersonalDetails().getEmployer();
-        TextView chooseEmployer = (TextView) view.findViewById(R.id.chooseEmployer);
-        if (employer == null) {
-            if (!personalInfoSection.getProperties().getEmployer().isRequired()) {
-                employerOptional.setVisibility(View.VISIBLE);
+
+
+        boolean isEmploymentStuffVisible = personalInfoSection.getProperties().getEmploymentStatus().isDisplayed();
+        if (isEmploymentStuffVisible) {
+
+            final TextView chooseEmploymentStatus = (TextView) view.findViewById(R.id.chooseEmploymentStatus);
+            final View employmentStatusOptional = view.findViewById(R.id.employmentStatusOptional);
+
+            chooseEmploymentStatus.setOnClickListener(
+                    getSelectOptionsListener(personalInfoSection.getProperties().getEmploymentStatus().getOptions(),
+                            new OnOptionSelectedListener() {
+                                @Override
+                                public void onOptionSelected(DemographicsOption option) {
+                                    if (chooseEmploymentStatus != null) {
+                                        chooseEmploymentStatus.setText(option.getLabel());
+                                    }
+                                    if (employmentStatusOptional != null) {
+                                        employmentStatusOptional.setVisibility(View.GONE);
+                                    }
+                                    selectedEmploymentStatus.setLabel(option.getLabel());
+                                    selectedEmploymentStatus.setName(option.getName());
+                                    enableEmployerData = option.getLabel().toLowerCase().equals("employed")
+                                            || option.getLabel().toLowerCase().equals("part time");
+                                    enableEmployerData(enableEmployerData);
+                                    checkIfEnableButton();
+                                }
+                            }, Label.getLabel("demographics_employment_status")));
+
+            String employmentStatus = demographicPayload.getPersonalDetails().getEmploymentStatus();
+            initSelectableInput(chooseEmploymentStatus, selectedEmploymentStatus, employmentStatus,
+                    personalInfoSection.getProperties().getEmploymentStatus().isRequired()
+                            ? null : employmentStatusOptional);
+            enableEmployerData = employmentStatus.toLowerCase().equals("employed")
+                    || employmentStatus.toLowerCase().equals("part time");
+
+            selectedEmployer = demographicPayload.getPersonalDetails().getEmployer();
+
+            employerNameTextLayout = (TextInputLayout) view
+                    .findViewById(R.id.employerNameTextInputLayout);
+            employerNameEditText = (EditText) view.findViewById(R.id.employerNameEditText);
+            employerNameEditText.setOnFocusChangeListener(SystemUtil
+                    .getHintFocusChangeListener(employerNameTextLayout, null));
+            employerNameEditText.setText(selectedEmployer.getName());
+            employerNameEditText.getOnFocusChangeListener().onFocusChange(employerNameEditText,
+                    !StringUtil.isNullOrEmpty(employerNameEditText.getText().toString().trim()));
+
+            address1TextInputLayout = (TextInputLayout) view
+                    .findViewById(R.id.address1TextInputLayout);
+            addressEditText = (EditText) view.findViewById(R.id.addressEditText);
+            addressEditText.setOnFocusChangeListener(SystemUtil
+                    .getHintFocusChangeListener(address1TextInputLayout, new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View view, boolean hasFocus) {
+                            if (!hasFocus) {
+                                selectedEmployer.getAddress().setAddress1(addressEditText.getText().toString());
+                            }
+                        }
+                    }));
+            if (selectedEmployer.getAddress() != null) {
+                addressEditText.setText(selectedEmployer.getAddress().getAddress1());
             }
-            String value = Label.getLabel("demographics_choose");
-            chooseEmployer.setText(value);
-            chooseEmployer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    callback.displaySearchEmployer();
-                }
-            });
+
+            address2TextInputLayout = (TextInputLayout) view
+                    .findViewById(R.id.address2TextInputLayout);
+            addressEditText2 = (EditText) view.findViewById(R.id.addressEditText2);
+            addressEditText2.setOnFocusChangeListener(SystemUtil
+                    .getHintFocusChangeListener(address2TextInputLayout, new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View view, boolean hasFocus) {
+                            if (!hasFocus) {
+                                selectedEmployer.getAddress().setAddress2(addressEditText2.getText().toString());
+                            }
+                        }
+                    }));
+            if (selectedEmployer.getAddress() != null) {
+                addressEditText2.setText(selectedEmployer.getAddress().getAddress2());
+            }
+
+            zipCodeTextInputLayout = (TextInputLayout) view
+                    .findViewById(R.id.zipCodeTextInputLayout);
+            zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeTextView);
+            zipCodeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeTextInputLayout,
+                    getZipCodeFocusListener(zipCodeEditText)));
+            if (selectedEmployer.getAddress() != null) {
+                zipCodeEditText.setText(selectedEmployer.getAddress().getZipcode());
+            }
+
+            cityTextInputLayout = (TextInputLayout) view
+                    .findViewById(R.id.cityTextInputLayout);
+            cityEditText = (EditText) view.findViewById(R.id.cityTextView);
+            cityEditText.setOnFocusChangeListener(SystemUtil
+                    .getHintFocusChangeListener(cityTextInputLayout, null));
+            if (selectedEmployer.getAddress() != null) {
+                cityEditText.setText(selectedEmployer.getAddress().getCity());
+            }
+
+            stateTextInputLayout = (TextInputLayout) view
+                    .findViewById(R.id.stateTextInputLayout);
+            stateEditText = (EditText) view.findViewById(R.id.stateTextView);
+            stateEditText.setOnFocusChangeListener(SystemUtil
+                    .getHintFocusChangeListener(stateTextInputLayout, null));
+            stateEditText.setOnClickListener(
+                    getSelectOptionsListener(dataModel.getDemographic().getAddress().getProperties()
+                                    .getState().getOptions(),
+                            new OnOptionSelectedListener() {
+                                @Override
+                                public void onOptionSelected(DemographicsOption option) {
+                                    stateEditText.setText(option.getLabel());
+                                    selectedEmployer.getAddress().setState(option.getLabel());
+                                }
+                            },
+                            Label.getLabel("demographics_documents_title_select_state")));
+            stateEditText.setText(selectedEmployer.getAddress().getState());
+
+            phoneTextInputLayout = (TextInputLayout) view
+                    .findViewById(R.id.phoneTextInputLayout);
+            phoneEditText = (EditText) view.findViewById(R.id.phoneTextView);
+            phoneEditText.setOnFocusChangeListener(SystemUtil
+                    .getHintFocusChangeListener(phoneTextInputLayout, new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View v, boolean hasFocus) {
+                            if (!hasFocus) {
+                                selectedEmployer.getAddress().setPhone(phoneEditText.getText().toString());
+                            }
+                        }
+                    }));
+            if (selectedEmployer.getAddress() != null) {
+                phoneEditText.setText(selectedEmployer.getAddress().getPhone());
+            }
+            enableEmployerData(enableEmployerData);
+
         } else {
-            employerOptional.setVisibility(View.GONE);
-            selectedEmployer = employer;
-            chooseEmployer.setText(employer.getName());
-            chooseEmployer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    callback.displayEmployerDetail(employer);
-                }
-            });
+            manageEmploymentVisibility(view, false);
+        }
+
+
+    }
+
+    private void manageEmploymentVisibility(View view, boolean visible) {
+        view.findViewById(R.id.employmentStatusDemographicsLayout)
+                .setVisibility(visible ? View.VISIBLE : View.GONE);
+        employerNameTextLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+        address1TextInputLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+        address2TextInputLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+        zipCodeTextInputLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+        phoneTextInputLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+        view.findViewById(R.id.cityAndStateLayoutContainer)
+                .setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    private void enableEmployerData(boolean enableEmployerData) {
+        employerNameTextLayout.setEnabled(enableEmployerData);
+        address1TextInputLayout.setEnabled(enableEmployerData);
+        address2TextInputLayout.setEnabled(enableEmployerData);
+        zipCodeTextInputLayout.setEnabled(enableEmployerData);
+        phoneTextInputLayout.setEnabled(enableEmployerData);
+        cityTextInputLayout.setEnabled(enableEmployerData);
+        stateTextInputLayout.setEnabled(enableEmployerData);
+        cleanOrRestoreEmployerData(enableEmployerData);
+    }
+
+    private void cleanOrRestoreEmployerData(boolean restore) {
+        if (restore) {
+            employerNameEditText.setText(selectedEmployer.getName());
+            if (selectedEmployer.getAddress() != null) {
+                addressEditText.setText(selectedEmployer.getAddress().getAddress1());
+                addressEditText2.setText(selectedEmployer.getAddress().getAddress2());
+                zipCodeEditText.setText(selectedEmployer.getAddress().getZipcode());
+                phoneEditText.setText(selectedEmployer.getAddress().getPhone());
+                cityEditText.setText(selectedEmployer.getAddress().getCity());
+                stateEditText.setText(selectedEmployer.getAddress().getState());
+            }
+        } else {
+            employerNameEditText.setText(null);
+            employerNameTextLayout.setHint(Label.getLabel("demographics_employer_name_hint"));
+            addressEditText.setText(null);
+            address1TextInputLayout.setHint(Label.getLabel("address1_label"));
+            addressEditText2.setText(null);
+            address2TextInputLayout.setHint(Label.getLabel("address2_label"));
+            zipCodeEditText.setText(null);
+            zipCodeTextInputLayout.setHint(Label.getLabel("payment_zipcode"));
+            phoneEditText.setText(null);
+            phoneTextInputLayout.setHint(Label.getLabel("demographics_phone_number_label"));
+            cityEditText.setText(null);
+            cityTextInputLayout.setHint(Label.getLabel("payment_city"));
+            stateEditText.setText(null);
+            stateTextInputLayout.setHint(Label.getLabel("payment_state"));
         }
     }
 
@@ -539,7 +699,17 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         }
 
         if (selectedEmployer != null && !StringUtil.isNullOrEmpty(selectedEmployer.getName())) {
-            patientModel.setEmployer(selectedEmployer);
+            if (enableEmployerData) {
+                selectedEmployer.getAddress().setAddress1(addressEditText.getText().toString());
+                selectedEmployer.getAddress().setAddress2(addressEditText2.getText().toString());
+                selectedEmployer.getAddress().setZipcode(zipCodeEditText.getText().toString());
+                selectedEmployer.getAddress().setCity(cityEditText.getText().toString());
+                selectedEmployer.getAddress().setState(stateEditText.getText().toString());
+                selectedEmployer.getAddress().setPhone(phoneEditText.getText().toString());
+                patientModel.setEmployer(selectedEmployer);
+            } else {
+                patientModel.setEmployer(null);
+            }
         }
 
         String emergencyContactRelationship = selectedEmergencyContactRelationship.getName();
@@ -610,5 +780,48 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         setUpEmployer(getView(), demographicsSettingsDTO.getPayload().getDemographics().getPayload(),
                 demographicsSettingsDTO.getMetadata().getNewDataModel()
                         .getDemographic().getPersonalDetails());
+    }
+
+    private View.OnFocusChangeListener getZipCodeFocusListener(final EditText editText) {
+        return new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) {
+                    getCityAndState(editText.getText().toString());
+                    selectedEmployer.getAddress().setZipcode(editText.getText().toString());
+                }
+            }
+        };
+    }
+
+    /**
+     * Background task to call smarty streets zip code lookup.
+     * The response is a com.smartystreets.api.us_zipcode.City object,
+     * that contains city, mailableCity, stateAbbreviation and state.
+     */
+    private void getCityAndState(String zipCode) {
+
+        new AsyncTask<String, Void, City>() {
+
+            @Override
+            protected City doInBackground(String... params) {
+                return AddressUtil.getCityAndStateByZipCode(params[0]);
+            }
+
+            @Override
+            protected void onPostExecute(City smartyStreetsResponse) {
+                super.onPostExecute(smartyStreetsResponse);
+
+                if (smartyStreetsResponse != null) {
+                    selectedEmployer.getAddress().setCity(smartyStreetsResponse.getCity());
+                    cityEditText.setText(smartyStreetsResponse.getCity());
+                    String stateAbbr = smartyStreetsResponse.getStateAbbreviation();
+                    selectedEmployer.getAddress().setState(stateAbbr);
+                    stateEditText.setText(stateAbbr);
+                }
+            }
+
+
+        }.execute(zipCode);
     }
 }

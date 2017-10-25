@@ -339,33 +339,28 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     }
 
     private void setUpEmployer(View view, DemographicPayloadDTO demographicPayload, DemographicsPersonalSection personalInfoSection) {
-        View employerLayout = view.findViewById(R.id.employerDemographicsLayout);
-        View employerOptional = view.findViewById(R.id.employerOptional);
-        setVisibility(employerLayout, personalInfoSection.getProperties().getEmployer().isDisplayed());
-        final EmployerDto employer = demographicPayload.getPersonalDetails().getEmployer();
-        TextView chooseEmployer = (TextView) view.findViewById(R.id.chooseEmployer);
-        if (employer == null) {
-            if (!personalInfoSection.getProperties().getEmployer().isRequired()) {
-                employerOptional.setVisibility(View.VISIBLE);
-            }
-            String value = Label.getLabel("demographics_choose");
-            chooseEmployer.setText(value);
-            chooseEmployer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    callback.displaySearchEmployer();
-                }
-            });
-        } else {
-            selectedEmployer = employer;
-            chooseEmployer.setText(employer.getName());
-            chooseEmployer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    callback.displayEmployerDetail(employer);
-                }
-            });
-        }
+//        final EmployerDto employer = demographicPayload.getPersonalDetails().getEmployer();
+//        if (employer == null) {
+//            if (!personalInfoSection.getProperties().getEmployer().isRequired()) {
+//            }
+//            String value = Label.getLabel("demographics_choose");
+//            chooseEmployer.setText(value);
+//            chooseEmployer.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    callback.displaySearchEmployer();
+//                }
+//            });
+//        } else {
+//            selectedEmployer = employer;
+//            chooseEmployer.setText(employer.getName());
+//            chooseEmployer.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    callback.displayEmployerDetail(employer);
+//                }
+//            });
+//        }
     }
 
 
