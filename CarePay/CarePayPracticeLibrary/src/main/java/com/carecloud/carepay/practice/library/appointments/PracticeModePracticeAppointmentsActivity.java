@@ -443,7 +443,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     private void confirmAppointment(AppointmentDTO appointmentDTO) {
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getConfirmAppointment();
-        confirmationMessageText = "appointment_request_success_message_HTML";
+        confirmationMessageText = "appointment_schedule_success_message_HTML";
         transitionAppointment(transitionDTO, appointmentDTO, true);
     }
 
