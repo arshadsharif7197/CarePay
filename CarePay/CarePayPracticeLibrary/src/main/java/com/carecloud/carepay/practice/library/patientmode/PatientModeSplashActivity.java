@@ -16,10 +16,7 @@ import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModePayloadDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSplashDTO;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.constants.ApplicationMode;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -177,14 +174,7 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        // log out previous user from Cognito
-        Log.v(this.getClass().getSimpleName(), "sign out Cognito");
-        if (!HttpConstants.isUseUnifiedAuth()) {
-            getAppAuthorizationHelper().getPool().getUser().signOut();
-            getAppAuthorizationHelper().setUser(null);
-        }
-        getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
+        //prevent going back
     }
 
 
