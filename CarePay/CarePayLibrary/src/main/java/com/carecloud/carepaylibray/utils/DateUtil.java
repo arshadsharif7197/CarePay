@@ -630,33 +630,12 @@ public class DateUtil {
      * @param end   end date
      * @return hours elapsed
      */
-    public static int getHoursElapsed(Date start, Date end) {
-        Calendar startCal = Calendar.getInstance();
-        Calendar endCal = Calendar.getInstance();
+    public static long getHoursElapsed(Date start, Date end) {
+        long differenceInMilli = Math.abs(start.getTime() - end.getTime());
 
-        startCal.setTime(start);
-        endCal.setTime(end);
-
-        return getHoursElapsed(startCal, endCal);
+        return TimeUnit.MILLISECONDS.toHours(differenceInMilli);
     }
 
-    /**
-     * Get the number of hours elapsed between two Calendar instances
-     *
-     * @param start start calendar date
-     * @param end   end calendar date
-     * @return hours elapsed
-     */
-    public static int getHoursElapsed(Calendar start, Calendar end) {
-        if (end.compareTo(start) < 0) {//parameters in wrong order
-            Log.w(TAG, "calendar parameters out of order");
-            Calendar temp = start;
-            start = end;
-            end = temp;
-        }
-
-        return end.get(Calendar.HOUR_OF_DAY) - start.get(Calendar.HOUR_OF_DAY);
-    }
 
     /**
      * Get the number of months elapsed between two Dates
@@ -1002,10 +981,10 @@ public class DateUtil {
         long hoursInMilli = minutesInMilli * 60;
 
         final long elapsedHours = differenceInMilli / hoursInMilli;
-        differenceInMilli = differenceInMilli % hoursInMilli;
+        differenceInMilli = differenceInMilli - (elapsedHours * hoursInMilli);
 
         final long elapsedMinutes = differenceInMilli / minutesInMilli;
-        differenceInMilli = differenceInMilli & minutesInMilli;
+        differenceInMilli = differenceInMilli - (elapsedMinutes * minutesInMilli);
 
         final long elapsedSeconds = differenceInMilli / secondsInMilli;
 
@@ -1014,10 +993,10 @@ public class DateUtil {
             builder.append(elapsedHours);
             builder.append(':');
         }
-        if (elapsedMinutes > 10) {
+        if (elapsedMinutes < 10) {
+            builder.append('0');
             builder.append(elapsedMinutes);
         } else {
-            builder.append('0');
             builder.append(elapsedMinutes);
         }
         builder.append(':');
@@ -1048,13 +1027,22 @@ public class DateUtil {
     public static String getContextualTimeElapsed(Date date1, Date date2) {
         long hoursElapsed = getHoursElapsed(date1, date2);
         if (hoursElapsed > 0) {
+            if(hoursElapsed == 1){
+                return hoursElapsed + Label.getLabel("label_hours_ago_singular");
+            }
             return hoursElapsed + Label.getLabel("label_hours_ago");
         }
         long minutesElapsed = getMinutesElapsed(date1, date2);
         if (minutesElapsed > 0) {
+            if(minutesElapsed == 1){
+                return minutesElapsed + Label.getLabel("label_minutes_ago_singular");
+            }
             return minutesElapsed + Label.getLabel("label_minutes_ago");
         }
         long secondsElapsed = getSecondsElapsed(date1, date2);
+        if(secondsElapsed == 1){
+            return secondsElapsed + Label.getLabel("label_seconds_ago_singular");
+        }
         return secondsElapsed + Label.getLabel("label_seconds_ago");
     }
 
