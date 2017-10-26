@@ -92,6 +92,7 @@
                 android:padding="20dp">
 
                 <LinearLayout
+                    android:id="@+id/statusContainer"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
@@ -131,6 +132,7 @@
                     android:background="@color/divider_color" />
 
                 <LinearLayout
+                    android:id="@+id/visitTypeContainer"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"

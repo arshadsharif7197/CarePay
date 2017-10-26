@@ -109,7 +109,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     }
 
     @Override
-    public void onAtomicRestart(){
+    public void onAtomicRestart() {
         ((IApplicationSession) getApplication()).onAtomicRestart();
     }
 
@@ -393,11 +393,12 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         }
     };
 
-    protected void setUncaughtExceptionHandler(){
+    protected void setUncaughtExceptionHandler() {
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread thread, Throwable throwable) {
                 onAtomicRestart();
+                Log.e("CareCloud", "" + throwable.getMessage(), throwable);
                 Intent intent = new Intent();
                 intent.setAction("com.carecloud.carepay.restart");
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);

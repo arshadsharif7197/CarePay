@@ -2,6 +2,7 @@
 package com.carecloud.carepaylibray.appointments.models;
 
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepaylibray.adhoc.AdhocFormsPatientModeInfo;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
 import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
@@ -83,6 +84,9 @@ public class AppointmentPayloadModel implements Serializable {
     @SerializedName("patient_credit_cards")
     @Expose
     private List<PaymentsPatientsCreditCardsPayloadListDTO> patientCreditCards = new ArrayList<>();
+    @SerializedName("adhoc_forms_patient_mode")
+    @Expose
+    private AdhocFormsPatientModeInfo adhocFormsPatientModeInfo = new AdhocFormsPatientModeInfo();
 
     /**
      * @return languages
@@ -320,5 +324,13 @@ public class AppointmentPayloadModel implements Serializable {
 
     public void setPatientCreditCards(List<PaymentsPatientsCreditCardsPayloadListDTO> patientCreditCards) {
         this.patientCreditCards = patientCreditCards;
+    }
+
+    public AdhocFormsPatientModeInfo getAdhocFormsPatientModeInfo() {
+        return adhocFormsPatientModeInfo;
+    }
+
+    public void setAdhocFormsPatientModeInfo(AdhocFormsPatientModeInfo adhocFormsPatientModeInfo) {
+        this.adhocFormsPatientModeInfo = adhocFormsPatientModeInfo;
     }
 }
