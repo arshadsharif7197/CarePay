@@ -16,8 +16,7 @@ public interface DemographicsPresenter extends HealthInsuranceFragment.Insurance
         MedicationsAllergyFragment.MedicationAllergyCallback,
         MedicationAllergySearchFragment.MedicationAllergySearchCallback,
         CheckinFlowCallback,
-        InsuranceEditDialog.InsuranceEditDialogListener,
-        EmployerInterface{
+        InsuranceEditDialog.InsuranceEditDialogListener {
 
     void onSaveInstanceState(Bundle icicle);
 
