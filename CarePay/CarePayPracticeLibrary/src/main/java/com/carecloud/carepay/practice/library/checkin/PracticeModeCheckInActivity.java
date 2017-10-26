@@ -774,7 +774,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
 
     @Override
-    public void onDismissPaymentHistory(PaymentsModel paymentsModel) {
+    public void onDismissPaymentHistory() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
         if (fragment != null) {
@@ -783,15 +783,15 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     }
 
     @Override
-    public void displayHistoryItemDetails(PaymentHistoryItem item) {
-        PracticePaymentHistoryDetailFragment fragment = PracticePaymentHistoryDetailFragment.newInstance(item);
+    public void displayHistoryItemDetails(PaymentHistoryItem item, PaymentsModel paymentsModel) {
+        PracticePaymentHistoryDetailFragment fragment = PracticePaymentHistoryDetailFragment.newInstance(item, paymentsModel);
         displayDialogFragment(fragment, true);
     }
 
     @Override
-    public void startRefundProcess(PaymentHistoryItem historyItem) {
-        RefundProcessFragment refundProcessFragment = RefundProcessFragment.newInstance(historyItem);
-        displayDialogFragment(refundProcessFragment, false);
+    public void startRefundProcess(PaymentHistoryItem historyItem, PaymentsModel paymentsModel) {
+        RefundProcessFragment fragment = RefundProcessFragment.newInstance(historyItem, paymentsModel);
+        displayDialogFragment(fragment, true);
     }
 
     private void refreshLists(boolean isBlocking){

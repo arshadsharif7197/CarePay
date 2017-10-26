@@ -10,10 +10,10 @@ import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 public interface PracticePaymentHistoryCallback {
     void showPaymentHistory(PaymentsModel paymentsModel);
 
-    void onDismissPaymentHistory(PaymentsModel paymentsModel);
+    void onDismissPaymentHistory();
 
-    void displayHistoryItemDetails(PaymentHistoryItem item);
+    void displayHistoryItemDetails(PaymentHistoryItem item, PaymentsModel paymentsModel);
 
-    void startRefundProcess(PaymentHistoryItem historyItem);
+    void startRefundProcess(PaymentHistoryItem historyItem, PaymentsModel paymentsModel);
 }
 

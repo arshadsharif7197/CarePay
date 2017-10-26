@@ -87,7 +87,7 @@
                 android:ellipsize="end"
                 android:gravity="start|center_vertical"
                 android:textSize="@dimen/text_size_16sp"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/pastel_blue"
                 tools:text="Dr. Nina Simone"
                 app:customAssetFont="proxima_nova_regular"/>
 
@@ -126,7 +126,7 @@
                 android:ellipsize="end"
                 android:gravity="start|center_vertical"
                 android:textSize="@dimen/text_size_16sp"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/pastel_blue"
                 tools:text="Miami, FL"
                 app:customAssetFont="proxima_nova_regular"/>
 
@@ -157,6 +157,7 @@
     </LinearLayout>
 
     <View
+        android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_1dp"
         android:background="@color/light_gray"/>

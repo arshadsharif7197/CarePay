@@ -65,7 +65,7 @@
                 android:layout_gravity="center_vertical">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                    android:id="@+id/total_paid_label"
+                    android:id="@+id/total_paid_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -182,7 +182,7 @@
                     android:layout_margin="@dimen/dimen_10dp"
                     android:background="@drawable/green_rounded_button_selector"
                     android:textSize="@dimen/text_size_22"
-                    breeze:textKey="practice_payments_detail_dialog_pay"
+                    breeze:textKey="payment_refund_button_full"
                     tools:text="Issue Full Refund"
                     app:customAssetFont="gotham_rounded_medium"/>
 

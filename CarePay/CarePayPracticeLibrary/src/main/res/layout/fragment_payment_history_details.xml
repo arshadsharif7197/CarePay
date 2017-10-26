@@ -253,8 +253,7 @@
                 android:textAllCaps="false"
                 tools:text="Start Refund Process"
                 breeze:textKey="payment_history_start_refund"
-                app:customAssetFont="gotham_rounded_medium"
-                android:enabled="false"/>
+                app:customAssetFont="gotham_rounded_medium"/>
 
         </FrameLayout>
     </LinearLayout>

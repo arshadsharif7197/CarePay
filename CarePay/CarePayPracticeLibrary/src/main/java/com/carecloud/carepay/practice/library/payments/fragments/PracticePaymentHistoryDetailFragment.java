@@ -1,7 +1,6 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.NestedScrollView;
@@ -14,16 +13,13 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentHistoryCallback;
-import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibray.payments.fragments.PaymentHistoryDetailFragment;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
-import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.google.gson.Gson;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -36,15 +32,17 @@ import java.util.List;
 public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFragment {
 
     private PracticePaymentHistoryCallback callback;
+    private PaymentsModel paymentsModel;
 
     /**
      * Get new instance of PracticePaymentHistoryDetailFragment
      * @param historyItem history item
      * @return new instance of PracticePaymentHistoryDetailFragment
      */
-    public static PracticePaymentHistoryDetailFragment newInstance(PaymentHistoryItem historyItem){
+    public static PracticePaymentHistoryDetailFragment newInstance(PaymentHistoryItem historyItem, PaymentsModel paymentsModel){
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, historyItem);
+        DtoHelper.bundleDto(args, paymentsModel);
 
         PracticePaymentHistoryDetailFragment fragment = new PracticePaymentHistoryDetailFragment();
         fragment.setArguments(args);
@@ -58,6 +56,13 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
         }catch (ClassCastException cce){
             throw new ClassCastException("Attached context must implememnt PracticePaymentHistoryCallback");
         }
+    }
+
+    @Override
+    public void onCreate(Bundle icicle){
+        super.onCreate(icicle);
+        Bundle args = getArguments();
+        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
     }
 
     @Override
@@ -78,7 +83,8 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().onBackPressed();
+                dismiss();
+                callback.showPaymentHistory(paymentsModel);
             }
         });
 
@@ -111,9 +117,7 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
             }
         }, 100);
 
-        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
         View refundButton = view.findViewById(R.id.refund_button);
-        refundButton.setEnabled(isCloverDevice && historyItem.getPayload().getMetadata().isExternallyProcessed() && historyItem.getPayload().getExecution().equals(IntegratedPaymentPostModel.EXECUTION_CLOVER));//todo remove this, just for testing exclusively clover refunds
         refundButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -124,18 +128,21 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
     }
 
     private void processRefund(){
-        if(historyItem.getPayload().getMetadata().isExternallyProcessed()){
-            Intent intent = new Intent();
-            intent.setAction(CarePayConstants.CLOVER_REFUND_INTENT);
-            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, historyItem.getPayload().getAmount());
+        dismiss();
+        callback.startRefundProcess(historyItem, paymentsModel);
 
-            Gson gson = new Gson();
-            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(getPaymentLineItems()));
-
-            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSACTION_RESPONSE, gson.toJson(historyItem.getPayload().getTransactionResponse()));
-
-            startActivity(intent);
-        }
+//        if(historyItem.getPayload().getMetadata().isExternallyProcessed()){
+//            Intent intent = new Intent();
+//            intent.setAction(CarePayConstants.CLOVER_REFUND_INTENT);
+//            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, historyItem.getPayload().getAmount());
+//
+//            Gson gson = new Gson();
+//            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(getPaymentLineItems()));
+//
+//            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSACTION_RESPONSE, gson.toJson(historyItem.getPayload().getTransactionResponse()));
+//
+//            startActivity(intent);
+//        }
     }
 
 
