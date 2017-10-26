@@ -266,6 +266,12 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             }
         });
 
+        if(!isCheckin){
+            View container = view.findViewById(R.id.insurance_toolbar);
+            container.setPadding(0,0,0,0);
+            toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
+        }
+
         TextView textView = (TextView) view.findViewById(R.id.toolbar_title);
         textView.setText(Label.getLabel("demographics_insurance_label"));
     }
