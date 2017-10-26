@@ -825,7 +825,6 @@ public class DateUtil {
     }
 
     /**
-     *
      * @param dateString the date to be validated
      * @return a readable error message from the result of validating a date
      */
@@ -885,7 +884,8 @@ public class DateUtil {
      * @param nextDays  Formatted String to represent upcoming day count
      * @return Contextually formatted Date range
      */
-    public static String getFormattedDate(Date startDate, Date endDate, String today, String tomorrow, String thisMonth, String nextDays) {
+    public static String getFormattedDate(Date startDate, Date endDate, String today,
+                                          String tomorrow, String thisMonth, String nextDays) {
         Calendar startCal = Calendar.getInstance();
         Calendar endCal = Calendar.getInstance();
 
@@ -1026,6 +1026,14 @@ public class DateUtil {
         }
         builder.append(elapsedSeconds);
         return builder.toString();
+    }
+
+    /**
+     * @param date the date
+     * @return returns a string formatted like 10:00 PM
+     */
+    public static String getHoursFormatted(Date date) {
+        return DateFormat.format(FORMAT_HOURS_AM_PM, date).toString();
     }
 
     /**

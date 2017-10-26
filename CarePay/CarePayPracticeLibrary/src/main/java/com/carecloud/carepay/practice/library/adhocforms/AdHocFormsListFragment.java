@@ -35,7 +35,8 @@ import java.util.Map;
  * Use the {@link AdHocFormsListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AdHocFormsListFragment extends BaseDialogFragment implements AdHocFormRecyclerViewAdapter.AdHocFormsListInterface {
+public class AdHocFormsListFragment extends BaseDialogFragment
+        implements AdHocFormRecyclerViewAdapter.AdHocFormsListInterface {
 
     private AppointmentsResultModel dto;
     private SelectedAdHocForms selectedForms;

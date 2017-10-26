@@ -35,7 +35,6 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreen
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLinksDTO;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -621,8 +620,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     @Override
     public void onBackPressed() {
 
-        getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
-
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
             Gson gson = new Gson();
             JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
@@ -633,7 +630,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             getApplicationMode().setUserPracticeDTO(getAppAuthorizationHelper(), null);
         }
 
-        super.onBackPressed();
+//        super.onBackPressed();
     }
 
 }
