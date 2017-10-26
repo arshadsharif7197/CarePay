@@ -63,9 +63,6 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
     private TextView stateEditText;
     private View nextButton;
 
-    private String stateAbbr = null;
-    private City smartyStreetsResponse;
-
     private DemographicsSettingsFragmentListener callback;
 
     private DemographicsOption selectedGender = new DemographicsOption();
@@ -281,7 +278,8 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
 
         TextInputLayout zipCodeInputLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
         zipCode = (EditText) view.findViewById(R.id.zipCodeId);
-        zipCode.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeInputLayout, getZipCodeFocusListener(zipCode)));
+        zipCode.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeInputLayout,
+                getZipCodeFocusListener(zipCode)));
         setVisibility(zipCodeInputLayout, addressSection.getProperties().getZipcode().isDisplayed());
         zipCode.addTextChangedListener(zipInputFormatter);
         zipCode.setText(demographicPayload.getAddress().getZipcode());
@@ -428,30 +426,28 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
      * The response is a com.smartystreets.api.us_zipcode.City object,
      * that contains city, mailableCity, stateAbbreviation and state.
      */
-    private void getCityAndState(String zipcode) {
+    private void getCityAndState(String zipCode) {
 
-        new AsyncTask<String, Void, Void>() {
+        new AsyncTask<String, Void, City>() {
 
             @Override
-            protected Void doInBackground(String... params) {
-                smartyStreetsResponse = AddressUtil.getCityAndStateByZipCode(params[0]);
-                return null;
+            protected City doInBackground(String... params) {
+                return AddressUtil.getCityAndStateByZipCode(params[0]);
             }
 
             @Override
-            protected void onPostExecute(Void result) {
-                super.onPostExecute(result);
+            protected void onPostExecute(City smartyStreetsResponse) {
+                super.onPostExecute(smartyStreetsResponse);
 
                 if (smartyStreetsResponse != null) {
                     cityEditText.setText(smartyStreetsResponse.getCity());
-
-                    stateAbbr = smartyStreetsResponse.getStateAbbreviation();
+                    String stateAbbr = smartyStreetsResponse.getStateAbbreviation();
                     stateEditText.setText(stateAbbr);
                 }
             }
 
 
-        }.execute(zipcode);
+        }.execute(zipCode);
     }
 
     private View.OnFocusChangeListener getZipCodeFocusListener(final EditText zipCode) {

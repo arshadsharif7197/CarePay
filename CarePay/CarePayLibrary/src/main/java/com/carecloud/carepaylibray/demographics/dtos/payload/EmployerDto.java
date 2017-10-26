@@ -15,7 +15,7 @@ public class EmployerDto {
 
     @Expose
     @SerializedName("address")
-    private EmployerAddressDto address;
+    private EmployerAddressDto address = new EmployerAddressDto();
 
     public String getName() {
         return name;
