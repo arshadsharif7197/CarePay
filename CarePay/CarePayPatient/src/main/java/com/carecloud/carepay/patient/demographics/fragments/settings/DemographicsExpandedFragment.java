@@ -463,7 +463,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
             phoneEditText.setOnFocusChangeListener(SystemUtil
                     .getHintFocusChangeListener(phoneTextInputLayout, new View.OnFocusChangeListener() {
                         @Override
-                        public void onFocusChange(View v, boolean hasFocus) {
+                        public void onFocusChange(View view, boolean hasFocus) {
                             if (!hasFocus) {
                                 selectedEmployer.getAddress().setPhone(phoneEditText.getText().toString());
                             }
