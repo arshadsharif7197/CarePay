@@ -496,17 +496,14 @@
             android:paddingEnd="@dimen/dimen_10dp"
             android:paddingStart="@dimen/dimen_10dp"
             android:textAllCaps="true"
-            android:textColor="@color/black"
+            android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/text_size_18sp"
             app:customAssetFont="proxima_nova_regular"
             breeze:textKey="demographics_employer_info" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/addressOptionalTextView"
+            android:id="@+id/employmentInfoOptionalTextView"
             style="@style/DemographicsOptionalLabelStyle"
-            android:layout_gravity="center_vertical|end"
-            android:layout_marginEnd="@dimen/dimen_10dp"
-            android:layout_marginStart="@dimen/dimen_10dp"
             app:customAssetFont="proxima_nova_semi_bold"
             breeze:textKey="demographics_details_optional_hint"
             tools:text="Optional" />
@@ -688,11 +685,11 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/stateTextView"
                 style="@style/SigninSignupEditStyle"
-                android:imeOptions="actionDone"
-                android:focusable="false"
                 android:clickable="true"
-                breeze:hintKey="demographics_state"
-                app:customAssetFont="proxima_nova_regular"/>
+                android:focusable="false"
+                android:imeOptions="actionDone"
+                app:customAssetFont="proxima_nova_regular"
+                breeze:hintKey="demographics_state" />
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 

@@ -376,6 +376,9 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                             ? null : employmentStatusOptional);
             enableEmployerData = employmentStatus.toLowerCase().equals("employed")
                     || employmentStatus.toLowerCase().equals("part time");
+            if (!personalInfoSection.getProperties().getEmploymentStatus().isRequired()) {
+                view.findViewById(R.id.employmentInfoOptionalTextView).setVisibility(View.VISIBLE);
+            }
 
             selectedEmployer = demographicPayload.getPersonalDetails().getEmployer();
 
@@ -698,8 +701,9 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
             patientModel.setEmploymentStatus(employmentStatus);
         }
 
-        if (selectedEmployer != null && !StringUtil.isNullOrEmpty(selectedEmployer.getName())) {
+        if (selectedEmployer != null) {
             if (enableEmployerData) {
+                selectedEmployer.setName(employerNameEditText.getText().toString());
                 selectedEmployer.getAddress().setAddress1(addressEditText.getText().toString());
                 selectedEmployer.getAddress().setAddress2(addressEditText2.getText().toString());
                 selectedEmployer.getAddress().setZipcode(zipCodeEditText.getText().toString());
