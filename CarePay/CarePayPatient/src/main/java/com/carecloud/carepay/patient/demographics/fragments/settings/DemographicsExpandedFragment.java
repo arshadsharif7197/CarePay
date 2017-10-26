@@ -29,7 +29,6 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadD
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
-import com.carecloud.carepaylibray.demographics.interfaces.EmployerFragmentInterface;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -46,8 +45,7 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragment
-        implements EmployerFragmentInterface {
+public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragment {
 
     private DemographicsSettingsDTO demographicsSettingsDTO;
     private DemographicDataModel dataModel;
@@ -775,16 +773,6 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
             Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
-
-    @Override
-    public void setEmployer(EmployerDto employer) {
-        this.selectedEmployer = employer;
-        demographicsSettingsDTO.getPayload().getDemographics().getPayload()
-                .getPersonalDetails().setEmployer(employer);
-        setUpEmployer(getView(), demographicsSettingsDTO.getPayload().getDemographics().getPayload(),
-                demographicsSettingsDTO.getMetadata().getNewDataModel()
-                        .getDemographic().getPersonalDetails());
-    }
 
     private View.OnFocusChangeListener getZipCodeFocusListener(final EditText editText) {
         return new View.OnFocusChangeListener() {

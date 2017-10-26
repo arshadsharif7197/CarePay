@@ -1,6 +1,5 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -13,8 +12,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
-import com.carecloud.carepaylibray.demographics.DemographicsView;
-import com.carecloud.carepaylibray.demographics.EmployerInterface;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
@@ -23,7 +20,6 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadD
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
-import com.carecloud.carepaylibray.demographics.interfaces.EmployerFragmentInterface;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.utils.AddressUtil;
@@ -36,12 +32,10 @@ import com.smartystreets.api.us_zipcode.City;
 /**
  * A simple {@link CheckInDemographicsBaseFragment} subclass.
  */
-public class DemographicsFragment extends CheckInDemographicsBaseFragment
-        implements EmployerFragmentInterface {
+public class DemographicsFragment extends CheckInDemographicsBaseFragment {
 
     private DemographicDTO demographicDTO;
     private DemographicDataModel dataModel;
-    private EmployerInterface callback;
 
     private PatientModel demographicPersDetailsPayloadDTO;
 
@@ -73,20 +67,6 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     private EditText phoneEditText;
     private EditText cityEditText;
     private EditText stateEditText;
-
-
-    @Override
-    public void attachCallback(Context context) {
-        super.attachCallback(context);
-        try {
-            if (context instanceof DemographicsView) {
-                callback = ((DemographicsView) context).getPresenter();
-            }
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement EmployerInterface");
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -793,16 +773,6 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     @Override
     protected int getContentId() {
         return R.layout.fragment_review_demographic_demographics;
-    }
-
-    @Override
-    public void setEmployer(EmployerDto employer) {
-        this.selectedEmployer = employer;
-        demographicDTO.getPayload().getDemographics().getPayload()
-                .getPersonalDetails().setEmployer(employer);
-        setUpEmployer(getView(), demographicDTO.getPayload().getDemographics().getPayload(),
-                demographicDTO.getMetadata().getNewDataModel()
-                        .getDemographic().getPersonalDetails());
     }
 
     private View.OnFocusChangeListener getZipCodeFocusListener(final EditText editText) {
