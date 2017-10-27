@@ -123,7 +123,7 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
             @Override
             public void onClick(View view) {
                 dismiss();
-                callback.onDismissPaymentHistory(paymentsModel);
+                callback.onDismissPaymentHistory();
             }
         });
 
@@ -153,7 +153,8 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
 
     @Override
     public void onHistoryItemClicked(PaymentHistoryItem item) {
-        callback.displayHistoryItemDetails(item);
+        callback.displayHistoryItemDetails(item, paymentsModel);
+        dismiss();
     }
 
     private boolean hasMorePages(){

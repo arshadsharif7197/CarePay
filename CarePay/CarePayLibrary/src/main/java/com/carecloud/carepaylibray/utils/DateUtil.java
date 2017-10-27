@@ -30,10 +30,11 @@ public class DateUtil {
     private static final String FORMAT_MM_SLASH_DD_SLASH_YYYY = "MM/dd/yyyy";
     private static final String FORMAT_HOURS_AM_PM = "h:mm a";
     private static final String FORMAT_MONTH_DAY_TIME12 = "MMM dd, h:mm a";
-    public static final int IS_A_FUTURE_DATE = 100;
-    public static final int IS_A_TOO_OLD_DATE = -100;
-    public static final int IS_A_BAD_FORMAT_DATE = -1;
-    public static final int IS_A_CORRECT_DATE = 0;
+    private static final String FORMAT_FULL_DATE_TIME12 = "MMM dd, yyyy, h:mm a";
+    private static final int IS_A_FUTURE_DATE = 100;
+    private static final int IS_A_TOO_OLD_DATE = -100;
+    private static final int IS_A_BAD_FORMAT_DATE = -1;
+    private static final int IS_A_CORRECT_DATE = 0;
 
     private static DateUtil instance;
     private String[] formats;
@@ -178,6 +179,14 @@ public class DateUtil {
         String ordinal = instance.getOrdinalSuffix(day); // fetch the ordinal
         return String.format(Locale.getDefault(), "%s %s%s",
                 monthLiteralAbbr, day, ordinal);
+    }
+
+    /**
+     * Format current date as Month DD, YYYY, hh:mm a
+     * @return formated date as string
+     */
+    public String getFullDateTime(){
+        return toStringWithFormat(FORMAT_FULL_DATE_TIME12);
     }
 
     /**

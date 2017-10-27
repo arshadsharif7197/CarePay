@@ -28,6 +28,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PaymentHistoryF
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.RefundProcessFragment;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentNavigationCallback;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -573,7 +574,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
 
     @Override
-    public void onDismissPaymentHistory(PaymentsModel paymentsModel) {
+    public void onDismissPaymentHistory() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
         if (fragment != null) {
@@ -582,8 +583,15 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void displayHistoryItemDetails(PaymentHistoryItem item) {
-        PracticePaymentHistoryDetailFragment fragment = PracticePaymentHistoryDetailFragment.newInstance(item);
+    public void displayHistoryItemDetails(PaymentHistoryItem item, PaymentsModel paymentsModel) {
+        PracticePaymentHistoryDetailFragment fragment = PracticePaymentHistoryDetailFragment.newInstance(item, paymentsModel);
+        displayDialogFragment(fragment, true);
+    }
+
+    @Override
+    public void startRefundProcess(PaymentHistoryItem historyItem, PaymentsModel paymentsModel) {
+        getSupportFragmentManager().popBackStack(PaymentDistributionFragment.class.getName(), 0);
+        RefundProcessFragment fragment = RefundProcessFragment.newInstance(historyItem, paymentsModel);
         displayDialogFragment(fragment, true);
     }
 

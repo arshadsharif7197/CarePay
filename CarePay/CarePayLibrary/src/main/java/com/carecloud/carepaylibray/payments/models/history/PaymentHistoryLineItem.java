@@ -41,6 +41,8 @@ public class PaymentHistoryLineItem extends IntegratedPatientPaymentLineItem {
     @SerializedName("status")
     private @LineItemStatus String status;
 
+    private transient boolean checked = true;
+
     public boolean isPapiProcessingExhausted() {
         return papiProcessingExhausted;
     }
@@ -96,5 +98,14 @@ public class PaymentHistoryLineItem extends IntegratedPatientPaymentLineItem {
     public void setStatus(@LineItemStatus String status) {
         this.status = status;
     }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
 
 }

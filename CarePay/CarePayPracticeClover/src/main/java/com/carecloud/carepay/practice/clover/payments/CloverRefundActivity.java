@@ -38,7 +38,6 @@ import com.clover.sdk.v3.order.LineItem;
 import com.clover.sdk.v3.order.Order;
 import com.clover.sdk.v3.order.OrderConnector;
 import com.clover.sdk.v3.payments.Credit;
-import com.clover.sdk.v3.payments.Payment;
 import com.clover.sdk.v3.payments.Refund;
 import com.clover.sdk.v3.remotepay.RefundPaymentRequest;
 import com.clover.sdk.v3.remotepay.RefundPaymentResponse;
@@ -398,22 +397,28 @@ public class CloverRefundActivity extends BaseActivity {
                         }
                     }
 
-                    if(shouldPrint) {
+                    if(shouldPrint=true) {
                         printer = printerConnector.getPrinters(Category.RECEIPT).get(0);
                         Order order = new Order();
                         order.setLineItems(getLineItems());
                         order.setId(response.getRefund().getId());
                         order.setTotal(amountLong * -1);
                         order.setCurrency("USD");
+                        order.setTestMode(false);
 
-                        Payment payment = new Payment();
-                        payment.setRefunds(getRefundItems());
-                        payment.setAmount(amountLong);
-                        payment.setId(response.getRefund().getPayment().getId());
+//                        Payment payment = new Payment();
+//                        payment.setAmount(amountLong * -1);
+//                        payment.setId(response.getRefund().getPayment().getId());
+//
+//                        List<Payment> payments = new ArrayList<>();
+//                        payments.add(payment);
+//                        order.setPayments(payments);
 
-                        List<Payment> payments = new ArrayList<>();
-                        payments.add(payment);
-                        order.setPayments(payments);
+                        List<Refund> refunds = new ArrayList<Refund>();
+                        refunds.add(response.getRefund());
+                        order.setRefunds(refunds);
+
+                        order.setCredits(getCreditItems());
 
                         Reference employee = new Reference();
                         employee.setId(employeeConnector.getEmployee().getId());
@@ -424,7 +429,7 @@ public class CloverRefundActivity extends BaseActivity {
                         Log.d(TAG, order.getJSONObject().toString());
 
                         PrintJob printJob = new StaticReceiptPrintJob.Builder().order(order).build();
-//                        printJobsConnector.print(printer, printJob);
+                        printJobsConnector.print(printer, printJob);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
