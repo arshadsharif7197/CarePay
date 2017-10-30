@@ -321,18 +321,18 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
 
         setUpEmployer(view, demographicPayload, personalInfoSection);
 
-        View emergencyContactRelationshipLayout = view.findViewById(R.id.emergencyContactRelationshipDemographicsLayout);
-        TextView chooseEmergencyContactRelationship = (TextView) view.findViewById(R.id.chooseEmergencyContactRelationship);
-        View emergencyContactRelationshipOptional = view.findViewById(R.id.emergencyContactRelationshipOptional);
-        setVisibility(emergencyContactRelationshipLayout, personalInfoSection.getProperties().getEmergencyContactRelationship().isDisplayed());
-        chooseEmergencyContactRelationship.setOnClickListener(
-                getSelectOptionsListener(personalInfoSection.getProperties().getEmergencyContactRelationship().getOptions(),
-                        getDefaultOnOptionsSelectedListener(chooseEmergencyContactRelationship, selectedEmergencyContactRelationship, emergencyContactRelationshipOptional),
-                        Label.getLabel("demographics_emergency_contact_relationship")));
-        String emergencyContactRelationship = demographicPayload.getPersonalDetails().getEmergencyContactRelationship();
-        initSelectableInput(chooseEmergencyContactRelationship, selectedEmergencyContactRelationship,
-                emergencyContactRelationship, personalInfoSection.getProperties()
-                        .getEmergencyContactRelationship().isRequired() ? null : emergencyContactRelationshipOptional);
+//        View emergencyContactRelationshipLayout = view.findViewById(R.id.emergencyContactRelationshipDemographicsLayout);
+//        TextView chooseEmergencyContactRelationship = (TextView) view.findViewById(R.id.chooseEmergencyContactRelationship);
+//        View emergencyContactRelationshipOptional = view.findViewById(R.id.emergencyContactRelationshipOptional);
+//        setVisibility(emergencyContactRelationshipLayout, personalInfoSection.getProperties().getEmergencyContactRelationship().isDisplayed());
+//        chooseEmergencyContactRelationship.setOnClickListener(
+//                getOptionsListener(personalInfoSection.getProperties().getEmergencyContactRelationship().getOptions(),
+//                        getDefaultOnOptionsSelectedListener(chooseEmergencyContactRelationship, selectedEmergencyContactRelationship, emergencyContactRelationshipOptional),
+//                        Label.getLabel("demographics_emergency_contact_relationship")));
+//        String emergencyContactRelationship = demographicPayload.getPersonalDetails().getEmergencyContactRelationship();
+//        initSelectableInput(chooseEmergencyContactRelationship, selectedEmergencyContactRelationship,
+//                emergencyContactRelationship, personalInfoSection.getProperties()
+//                        .getEmergencyContactRelationship().isRequired() ? null : emergencyContactRelationshipOptional);
 
 
         View referralSourceLayout = view.findViewById(R.id.referralSourceDemographicsLayout);

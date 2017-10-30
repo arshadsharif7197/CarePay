@@ -15,14 +15,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.demographics.EmergencyContactInterface;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicEmergencyContactSection;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsPersonalSection;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
@@ -51,7 +52,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
     private DemographicDataModel dataModel;
 
     private View nextButton;
-    private DemographicsSettingsFragmentListener callback;
+    private EmergencyContactInterface callback;
 
     private DemographicsOption selectedPreferredLanguage = new DemographicsOption();
     private DemographicsOption selectedDriverLicenseState = new DemographicsOption();
@@ -89,10 +90,10 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (DemographicsSettingsFragmentListener) context;
+            callback = (EmergencyContactInterface) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement DemographicsSettingsFragmentListener");
+                    + " must implement EmergencyContactInterface");
         }
     }
 
@@ -304,23 +305,9 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 personalInfoSection.getProperties().getMaritalStatus().isRequired()
                         ? null : maritalStatusOptional);
 
+        setUpEmergencyContact(view, demographicPayload);
+
         setUpEmployer(view, demographicPayload, personalInfoSection);
-
-        View emergencyContactRelationshipLayout = view.findViewById(R.id.emergencyContactRelationshipDemographicsLayout);
-        TextView chooseEmergencyContactRelationship = (TextView) view
-                .findViewById(R.id.chooseEmergencyContactRelationship);
-        View emergencyContactRelationshipOptional = view.findViewById(R.id.emergencyContactRelationshipOptional);
-        setVisibility(emergencyContactRelationshipLayout, false);//todo re-enable this when ready
-        chooseEmergencyContactRelationship.setOnClickListener(
-                getSelectOptionsListener(personalInfoSection.getProperties().getEmergencyContactRelationship().getOptions(),
-                        getDefaultOnOptionsSelectedListener(chooseEmergencyContactRelationship,
-                                selectedEmergencyContactRelationship, emergencyContactRelationshipOptional),
-                        Label.getLabel("demographics_emergency_contact_relationship")));
-        String emergencyContactRelationship = demographicPayload.getPersonalDetails().getEmergencyContactRelationship();
-        initSelectableInput(chooseEmergencyContactRelationship, selectedEmergencyContactRelationship,
-                emergencyContactRelationship, personalInfoSection.getProperties()
-                        .getEmergencyContactRelationship().isRequired() ? null : emergencyContactRelationshipOptional);
-
 
         View referralSourceLayout = view.findViewById(R.id.referralSourceDemographicsLayout);
         TextView chooseReferralSource = (TextView) view.findViewById(R.id.chooseReferralSource);
@@ -336,6 +323,27 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 personalInfoSection.getProperties().getReferralSource().isRequired()
                         ? null : referralSourceOptional);
 
+    }
+
+    private void setUpEmergencyContact(View view, DemographicPayloadDTO demographicPayload) {
+        DemographicEmergencyContactSection emergencyContactSection = dataModel.getDemographic().getEmergencyContact();
+        TextInputLayout emergencyContactInputLayout = (TextInputLayout) view.findViewById(R.id.emergencyContactInputLayout);
+        emergencyContactInputLayout.setVisibility(emergencyContactSection.isDisplay() ? View.VISIBLE : View.GONE);
+        final PatientModel emergencyContact = demographicPayload.getEmergencyContact();
+        EditText emergencyContactEditText = (EditText) view.findViewById(R.id.emergencyContactEditText);
+        emergencyContactEditText.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(emergencyContactInputLayout, null));
+        emergencyContactEditText.setText(emergencyContact.getFullName());
+        emergencyContactEditText.getOnFocusChangeListener().onFocusChange(emergencyContactEditText,
+                !StringUtil.isNullOrEmpty(emergencyContactEditText.getText().toString().trim()));
+        view.findViewById(R.id.emergencyContactOptionalLabel)
+                .setVisibility(emergencyContactSection.isRequired() ? View.GONE : View.VISIBLE);
+        view.findViewById(R.id.emergencyContactContainer).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.showAddEditEmergencyContactDialog(emergencyContact);
+            }
+        });
     }
 
     private void setUpEmployer(final View view, DemographicPayloadDTO demographicPayload,
@@ -372,8 +380,10 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
             initSelectableInput(chooseEmploymentStatus, selectedEmploymentStatus, employmentStatus,
                     personalInfoSection.getProperties().getEmploymentStatus().isRequired()
                             ? null : employmentStatusOptional);
-            enableEmployerData = employmentStatus.toLowerCase().equals("employed")
-                    || employmentStatus.toLowerCase().equals("part time");
+            if (employmentStatus != null) {
+                enableEmployerData = employmentStatus.toLowerCase().equals("employed")
+                        || employmentStatus.toLowerCase().equals("part time");
+            }
             if (!personalInfoSection.getProperties().getEmploymentStatus().isRequired()) {
                 view.findViewById(R.id.employmentInfoOptionalTextView).setVisibility(View.VISIBLE);
             }
@@ -744,7 +754,6 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
             getWorkflowServiceHelper().execute(updateDemographics, updateDemographicsCallback, jsonPayload, header);
         }
     }
-
 
     private WorkflowServiceCallback updateDemographicsCallback = new WorkflowServiceCallback() {
         @Override

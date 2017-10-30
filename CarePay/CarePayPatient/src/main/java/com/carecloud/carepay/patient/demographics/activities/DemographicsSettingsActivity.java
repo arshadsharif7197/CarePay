@@ -23,7 +23,10 @@ import com.carecloud.carepay.patient.payment.fragments.CreditCardDetailsFragment
 import com.carecloud.carepay.patient.payment.fragments.CreditCardListFragment;
 import com.carecloud.carepay.patient.payment.fragments.SettingAddCreditCardFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.demographics.EmergencyContactInterface;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.fragments.EmergencyContactFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
@@ -34,7 +37,8 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
  * Main activity for Settings workflow
  */
 public class DemographicsSettingsActivity extends BasePatientActivity implements
-        DemographicsSettingsFragmentListener, InsuranceEditDialog.InsuranceEditDialogListener {
+        DemographicsSettingsFragmentListener, InsuranceEditDialog.InsuranceEditDialogListener,
+        EmergencyContactInterface {
 
     DemographicsSettingsDTO demographicsSettingsDTO;
 
@@ -203,5 +207,10 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
 
     public void addFragment(Fragment fragment, boolean addToBackStack) {
         addFragment(R.id.activity_demographics_settings, fragment, addToBackStack);
+    }
+
+    @Override
+    public void showAddEditEmergencyContactDialog(PatientModel emergencyContact) {
+        addFragment(EmergencyContactFragment.newInstance(), true);
     }
 }

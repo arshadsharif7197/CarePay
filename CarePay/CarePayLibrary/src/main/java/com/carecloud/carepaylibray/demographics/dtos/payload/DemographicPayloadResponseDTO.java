@@ -27,9 +27,6 @@ public class DemographicPayloadResponseDTO extends DemographicsSettingsPayloadDT
     @SerializedName("checkin_settings")
     @Expose
     private CheckinSettingsDTO checkinSettings = new CheckinSettingsDTO();
-    @SerializedName("employers")
-    @Expose
-    private EmployersDto employers = new EmployersDto();
 
     public DemographicPayloadInfoDTO getDemographics() {
         return demographics;
@@ -67,13 +64,5 @@ public class DemographicPayloadResponseDTO extends DemographicsSettingsPayloadDT
 
     public void setCheckinSettings(CheckinSettingsDTO checkinSettings) {
         this.checkinSettings = checkinSettings;
-    }
-
-    public EmployersDto getEmployers() {
-        return employers;
-    }
-
-    public void setEmployers(EmployersDto employers) {
-        this.employers = employers;
     }
 }

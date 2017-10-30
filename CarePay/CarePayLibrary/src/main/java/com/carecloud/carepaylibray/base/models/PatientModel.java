@@ -1,10 +1,14 @@
 package com.carecloud.carepaylibray.base.models;
 
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PatientModel {
 
@@ -53,6 +57,10 @@ public class PatientModel {
     @Expose
     private String primaryPhoneNumber;
 
+    @SerializedName("secondary_phone_number")
+    @Expose
+    private String secondaryPhoneNumber;
+
     @SerializedName("preferred_language")
     @Expose
     private String preferredLanguage;
@@ -61,9 +69,13 @@ public class PatientModel {
     @Expose
     private String preferredName;
 
-    @SerializedName("email_address")
+    @SerializedName(value = "email_address")
     @Expose
     private String emailAddress;
+
+    @SerializedName("email")
+    @Expose
+    private String email;
 
     @SerializedName("ssn")
     @Expose
@@ -76,10 +88,6 @@ public class PatientModel {
     @SerializedName("drivers_license_state")
     @Expose
     private String driversLicenseState;
-
-    @SerializedName("secondary_phone_number")
-    @Expose
-    private String secondaryPhoneNumber;
 
     @SerializedName("secondary_phone_type")
     @Expose
@@ -99,7 +107,7 @@ public class PatientModel {
 
     @SerializedName("employer")
     @Expose
-    private EmployerDto employer;
+    private EmployerDto employer = new EmployerDto();
 
     @SerializedName("ec_relationship_type")
     @Expose
@@ -108,6 +116,14 @@ public class PatientModel {
     @SerializedName("referral_source")
     @Expose
     private String referralSource;
+
+    @SerializedName("phones")
+    @Expose
+    private List<String> phones = new ArrayList<>();
+
+    @SerializedName("address")
+    @Expose
+    private DemographicAddressPayloadDTO address = new DemographicAddressPayloadDTO();
 
     public void setPatientId(String patientId) {
         this.patientId = patientId;
@@ -353,5 +369,29 @@ public class PatientModel {
 
     public void setLocalUriPhoto(String localUriPhoto) {
         this.localUriPhoto = localUriPhoto;
+    }
+
+    public List<String> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(List<String> phones) {
+        this.phones = phones;
+    }
+
+    public DemographicAddressPayloadDTO getAddress() {
+        return address;
+    }
+
+    public void setAddress(DemographicAddressPayloadDTO address) {
+        this.address = address;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
