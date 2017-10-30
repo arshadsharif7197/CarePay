@@ -379,8 +379,10 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
             initSelectableInput(chooseEmploymentStatus, selectedEmploymentStatus, employmentStatus,
                     personalInfoSection.getProperties().getEmploymentStatus().isRequired()
                             ? null : employmentStatusOptional);
-            enableEmployerData = employmentStatus.toLowerCase().equals("employed")
-                    || employmentStatus.toLowerCase().equals("part time");
+            if (employmentStatus != null) {
+                enableEmployerData = employmentStatus.toLowerCase().equals("employed")
+                        || employmentStatus.toLowerCase().equals("part time");
+            }
             if (!personalInfoSection.getProperties().getEmploymentStatus().isRequired()) {
                 view.findViewById(R.id.employmentInfoOptionalTextView).setVisibility(View.VISIBLE);
             }
@@ -633,7 +635,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
         }
 
         if (selectedEmployer != null) {
-            if (enableEmployerData) {
+            if (enableEmployerData && !employerNameEditText.getText().toString().isEmpty()) {
                 selectedEmployer.setName(employerNameEditText.getText().toString());
                 selectedEmployer.getAddress().setAddress1(addressEditText.getText().toString());
                 selectedEmployer.getAddress().setAddress2(addressEditText2.getText().toString());
