@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -24,7 +23,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemD
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.squareup.timessquare.CalendarPickerView;
 
@@ -130,8 +128,6 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
      */
     private void inflateToolbar(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.add_appointment_toolbar);
-        TextView titleView = (TextView) toolbar.findViewById(R.id.add_appointment_toolbar_title);
-        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), titleView);
         toolbar.setTitle("");
 
         Drawable closeIcon = ContextCompat.getDrawable(getActivity(),
@@ -139,7 +135,7 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
         toolbar.setNavigationIcon(closeIcon);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
-        Button todayButton = (Button) toolbar.findViewById(R.id.today_button);
+        View todayButton = toolbar.findViewById(R.id.today_button);
         todayButton.setOnClickListener(todayButtonClickListener);
 
         toolbar.setNavigationOnClickListener(navigationOnClickListener);
@@ -196,8 +192,7 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
     View.OnClickListener navigationOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
-            getActivity().onBackPressed();
+            callback.onDateRangeSelected(previousStartDate, previousEndDate, selectedVisitTypeDTO, selectedResourcesDTO, resourcesToScheduleDTO);
         }
     };
 
@@ -258,6 +253,7 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
                     .inMode(CalendarPickerView.SelectionMode.RANGE);
 
             newStartDate = today;
+            applyDateRangeButton.setEnabled(true);
         }
     };
 

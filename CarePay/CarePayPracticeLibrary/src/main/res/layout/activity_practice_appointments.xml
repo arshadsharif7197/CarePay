@@ -159,7 +159,7 @@
                     android:paddingTop="10dp"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_16sp"
-                    breeze:textKey="change_date_range_label"/>
+                    breeze:textKey="appoitment_edit_date_range_button"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/activity_practice_appointments_show_all_appointments_label"
