@@ -101,7 +101,7 @@ public class PracticeAvailableHoursDialogFragment extends BaseAvailableHoursFrag
         }else{
             editRangeButton.setText(Label.getLabel("appoitment_edit_date_range_button"));
         }
-    };
+    }
 
     @Override
     protected void selectDateRange(){

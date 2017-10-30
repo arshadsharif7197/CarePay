@@ -271,7 +271,7 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
         callback.selectDateRange(startDate, endDate, selectedVisitTypeDTO, selectedResource, appointmentsResultModel);
     }
 
-    protected void onAdapterRefresh(int count){};
+    protected void onAdapterRefresh(int count){}
 
     private void resetLocationSelections(boolean clearAll) {
         RecyclerView.LayoutManager layoutManager = availableLocationsRecycleView.getLayoutManager();
