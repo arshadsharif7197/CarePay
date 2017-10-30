@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.appointments.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.label.Label;
@@ -28,6 +30,8 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     private PaymentsModel paymentsModel;
     private PatientAppointmentPresenter presenter;
 
+    private boolean toolbarHidden = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
@@ -40,11 +44,27 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
+            case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
+            case PaymentConstants.REQUEST_CODE_FULL_WALLET:
+                presenter.forwardAndroidPayResult(requestCode, resultCode, data);
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+                break;
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_appointments);
         menuItem.setChecked(true);
-        displayToolbar(true, menuItem.getTitle().toString());
+        if(!toolbarHidden) {
+            displayToolbar(true, menuItem.getTitle().toString());
+        }
     }
 
     private void gotoAppointmentFragment() {
@@ -54,7 +74,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         bundle.putString(CarePayConstants.APPOINTMENT_INFO_BUNDLE, gson.toJson(appointmentsResultModel));
         appointmentsListFragment.setArguments(bundle);
 
-        navigateToFragment(appointmentsListFragment, false);
+        replaceFragment(R.id.container_main, appointmentsListFragment, false);
     }
 
     private void initPresenter() {
@@ -70,6 +90,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             getSupportFragmentManager().popBackStackImmediate();
             if (getSupportFragmentManager().getBackStackEntryCount() < 1) {
                 displayToolbar(true, null);
+                toolbarHidden = false;
             }
         } else {
 
@@ -98,19 +119,24 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     public void navigateToFragment(Fragment fragment, boolean addToBackStack) {
         replaceFragment(R.id.container_main, fragment, addToBackStack);
         displayToolbar(false, null);
+        toolbarHidden = true;
     }
 
     @Override
-    public void confirmAppointment() {
+    public void confirmAppointment(boolean showSuccess) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         int backStackCount = fragmentManager.getBackStackEntryCount();
         for (int i = 0; i < backStackCount; i++) {
             fragmentManager.popBackStackImmediate();
         }
-        displayToolbar(true, null);
+        MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_appointments);
+        displayToolbar(true, menuItem.getTitle().toString());
+        toolbarHidden = false;
 
         refreshAppointments();
-        showAppointmentConfirmation();
+        if(showSuccess) {
+            showAppointmentConfirmation();
+        }
     }
 
     @Override

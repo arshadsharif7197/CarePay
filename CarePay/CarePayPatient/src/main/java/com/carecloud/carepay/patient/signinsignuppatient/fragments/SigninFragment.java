@@ -254,6 +254,8 @@ public class SigninFragment extends BaseFragment {
             boolean shouldShowNotificationScreen = getArguments()
                     .getBoolean(CarePayConstants.OPEN_NOTIFICATIONS);
             getApplicationPreferences().setUserPhotoUrl(null);
+            getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants
+                    .DEMOGRAPHICS_ADDRESS_BUNDLE, null);
             if (shouldShowNotificationScreen) {
                 manageNotificationAsLandingScreen(workflowDTO.toString());
             } else {
@@ -265,7 +267,7 @@ public class SigninFragment extends BaseFragment {
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             setSignInButtonClickable(true);
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

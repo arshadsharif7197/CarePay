@@ -1,17 +1,16 @@
 package com.carecloud.carepay.patient.payment.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.widget.Toast;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
-import com.carecloud.carepay.patient.payment.androidpay.ConfirmationActivity;
+import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
+import com.carecloud.carepay.patient.payment.dialogs.PaymentHistoryDetailDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.NoPaymentsFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment;
@@ -23,21 +22,24 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
-import com.carecloud.carepaylibray.payments.models.PatientPaymentPayload;
-import com.carecloud.carepaylibray.payments.models.PaymentExceptionDTO;
+import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.android.gms.wallet.MaskedWallet;
-import com.google.android.gms.wallet.WalletConstants;
 import com.google.gson.Gson;
+
+import java.util.List;
 
 /**
  * Created by jorge on 29/12/16
@@ -52,13 +54,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public Bundle bundle;
     private String toolBarTitle;
 
-    public static boolean isPaymentDone() {
-        return isPaymentDone;
-    }
-
-    public static void setIsPaymentDone(boolean isPaymentDone) {
-        ViewPaymentBalanceHistoryActivity.isPaymentDone = isPaymentDone;
-    }
+    private Fragment androidPayTargetFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,15 +77,23 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     private boolean hasCharges() {
-        return paymentsDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges()
-                .getCharges().size() > 0;
+        return !paymentsDTO.getPaymentPayload().getTransactionHistory().getPaymentHistoryList().isEmpty();
     }
 
     private boolean hasPayments() {
-        return paymentsDTO.getPaymentPayload().getPatientBalances().size() > 0
-                && paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().size() > 0
-                && paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0)
-                .getPayload().size() > 0;
+        if (!paymentsDTO.getPaymentPayload().getPatientBalances().isEmpty()) {
+            for (PatientBalanceDTO patientBalanceDTO : paymentsDTO.getPaymentPayload().getPatientBalances()) {
+                if (!patientBalanceDTO.getBalances().isEmpty()) {
+                    for (PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()) {
+                        if (!pendingBalanceDTO.getPayload().isEmpty()) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -98,80 +102,16 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         navigationView.getMenu().findItem(R.id.nav_payments).setChecked(true);
     }
 
-    /**
-     * Invoked after the user taps the Buy With Android Pay button and the selected
-     * credit card and shipping address are confirmed. If the request succeeded,
-     * a {@link MaskedWallet} object is attached to the Intent. The Confirmation Activity is
-     * then launched, providing it with the {@link MaskedWallet} object.
-     *
-     * @param requestCode The code that was set in the Masked Wallet Request
-     * @param resultCode  The result of the request execution
-     * @param data        Intent carrying the results
-     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // retrieve the error code, if available
-        int errorCode = -1;
-        if (data != null) {
-            errorCode = data.getIntExtra(WalletConstants.EXTRA_ERROR_CODE, -1);
-        }
         switch (requestCode) {
+            case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
-                switch (resultCode) {
-                    case Activity.RESULT_OK:
-                        MaskedWallet maskedWallet =
-                                data.getParcelableExtra(WalletConstants.EXTRA_MASKED_WALLET);
-                        Fragment fragment = getSupportFragmentManager().findFragmentByTag(ResponsibilityFragment.class.getName());
-                        if (fragment != null) {
-                            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-                        }
-                        //setTitle("Confirmation");
-
-                        launchConfirmationPage(maskedWallet);
-                        break;
-                    case Activity.RESULT_CANCELED:
-                        break;
-                    default:
-                        handleError(errorCode);
-                        break;
-                }
+            case PaymentConstants.REQUEST_CODE_FULL_WALLET:
+                forwardAndroidPayResult(requestCode, resultCode, data);
                 break;
-
-            case WalletConstants.RESULT_ERROR:
-                handleError(errorCode);
-                break;
-
             default:
                 super.onActivityResult(requestCode, resultCode, data);
-                break;
-        }
-    }
-
-    private void launchConfirmationPage(MaskedWallet maskedWallet) {
-        Intent intent = ConfirmationActivity.newIntent(this, maskedWallet, paymentsDTO
-                        .getPaymentPayload().getPatientBalances().get(0).getPendingRepsonsibility(), "CERT", bundle,
-                Label.getLabel("payment_patient_balance_toolbar"));
-        startActivity(intent);
-    }
-
-
-    protected void handleError(int errorCode) {
-        switch (errorCode) {
-            case WalletConstants.ERROR_CODE_SPENDING_LIMIT_EXCEEDED:
-                Toast.makeText(this, "Way too much!!", Toast.LENGTH_LONG).show();
-                break;
-            case WalletConstants.ERROR_CODE_INVALID_PARAMETERS:
-            case WalletConstants.ERROR_CODE_AUTHENTICATION_FAILURE:
-            case WalletConstants.ERROR_CODE_BUYER_ACCOUNT_ERROR:
-            case WalletConstants.ERROR_CODE_MERCHANT_ACCOUNT_ERROR:
-            case WalletConstants.ERROR_CODE_SERVICE_UNAVAILABLE:
-            case WalletConstants.ERROR_CODE_UNSUPPORTED_API_VERSION:
-            case WalletConstants.ERROR_CODE_UNKNOWN:
-            default:
-                // unrecoverable error
-                String errorMessage = "Android Pay is unavailable" + "\n" +
-                        "Error code: " + errorCode;
-                Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
                 break;
         }
     }
@@ -183,8 +123,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void onPartialPaymentClicked(double owedAmount) {
-        new PartialPaymentDialog(this, paymentsDTO).show();
+    public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
+        new PartialPaymentDialog(this, paymentsDTO, selectedBalance).show();
     }
 
     @Override
@@ -203,8 +143,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
-        if (paymentsDTO.getPaymentPayload().getPatientCreditCards() != null && !paymentsDTO.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsDTO, selectedPaymentMethod.getLabel(), amount);
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel, selectedPaymentMethod.getLabel(), amount);
             replaceFragment(fragment, true);
         } else {
             showAddCard(amount, paymentsModel);
@@ -229,7 +169,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
         PaymentsModel updatePaymentModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        paymentsDTO.getPaymentPayload().setPatientBalances(updatePaymentModel.getPaymentPayload().getPatientBalances());
+        updateBalances(updatePaymentModel.getPaymentPayload().getPatientBalances());
         initFragments();
     }
 
@@ -271,13 +211,11 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        PatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments()
-                .getPayload().get(0);
-        if (payload.getPaymentExceptions() != null && !payload.getPaymentExceptions().isEmpty()
-                && payload.getTotal() == 0D) {
+        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
+        if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
             StringBuilder builder = new StringBuilder();
-            for (PaymentExceptionDTO paymentException : payload.getPaymentExceptions()) {
-                builder.append(paymentException.getMessage());
+            for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
+                builder.append(processingError.getError());
                 builder.append("\n");
             }
             int last = builder.lastIndexOf("\n");
@@ -296,8 +234,24 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
+    public void showPaymentPendingConfirmation(PaymentsModel paymentsModel) {
+        new CustomMessageToast(this, Label.getLabel("payments_external_pending"), CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
+        initFragments();
+    }
+
+    @Override
+    public void setAndroidPayTargetFragment(Fragment fragment) {
+        androidPayTargetFragment = fragment;
+    }
+
+    @Override
+    public Fragment getAndroidPayTargetFragment() {
+        return androidPayTargetFragment;
+    }
+
+    @Override
     public DTO getDto() {
-        return paymentsDTO;
+        return paymentsDTO == null ? paymentsDTO = getConvertedDTO(PaymentsModel.class) : paymentsDTO;
     }
 
     @Override
@@ -322,6 +276,13 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
+    public void displayPaymentHistoryDetails(PaymentHistoryItem paymentHistoryItem) {
+        selectedUserPractice = getUserPracticeById(paymentHistoryItem.getMetadata().getPracticeId());
+        PaymentHistoryDetailDialogFragment fragment = PaymentHistoryDetailDialogFragment.newInstance(paymentHistoryItem, selectedUserPractice);
+        displayDialogFragment(fragment, false);
+    }
+
+    @Override
     public void onDetailCancelClicked(PaymentsModel paymentsModel) {
         loadPaymentAmountScreen(null, paymentsModel);
     }
@@ -331,5 +292,41 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         pendingBalanceDTO.setMetadata(selectedBalancesItem.getMetadata());
         pendingBalanceDTO.getPayload().add(selectedBalancesItem.getBalance());
         this.selectedBalancesItem = pendingBalanceDTO;
+    }
+
+    private void updateBalances(List<PatientBalanceDTO> updatedBalances) {
+        for (PatientBalanceDTO updatedManagementBalance : updatedBalances) {//should contain just 1 element
+            for (PendingBalanceDTO updatedBalance : updatedManagementBalance.getBalances()) {//should contain just 1 element - the updated balance that was just paid
+                for (PatientBalanceDTO existingManagementBalance : paymentsDTO.getPaymentPayload().getPatientBalances()) {//should contain only 1 element until another PM is supported
+                    for (PendingBalanceDTO existingBalance : existingManagementBalance.getBalances()) {//can contain multiple balances in multi practice mode, otherwise just 1
+                        if (existingBalance.getMetadata().getPracticeId().equals(updatedBalance.getMetadata().getPracticeId())) {
+                            existingBalance.setPayload(updatedBalance.getPayload());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private UserPracticeDTO getUserPracticeById(String practiceId) {
+        for (UserPracticeDTO userPracticeDTO : paymentsDTO.getPaymentPayload().getUserPractices()) {
+            if (userPracticeDTO.getPracticeId().equals(practiceId)) {
+                return userPracticeDTO;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void createWalletFragment(MaskedWallet maskedWallet, Double amount) {
+        replaceFragment(AndroidPayDialogFragment.newInstance(maskedWallet, paymentsDTO, amount), true);
+    }
+
+    @Override
+    public void forwardAndroidPayResult(int requestCode, int resultCode, Intent data) {
+        Fragment targetFragment = getAndroidPayTargetFragment();
+        if (targetFragment != null) {
+            targetFragment.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

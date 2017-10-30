@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.ProvidersListAdapter;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -21,6 +20,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
+import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -37,11 +37,12 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
         ProvidersListAdapter.OnProviderListItemClickListener {
 
     private RecyclerView appointmentsRecyclerView;
-    private AppointmentsResultModel scheduleResourcesModel;
 
     private LinearLayout noAppointmentView;
 
     private List<AppointmentResourcesDTO> resources;
+
+    private AppointmentsResultModel resourcesToSchedule;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +60,7 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
         findViewById(R.id.btnHome).setOnClickListener(this);
 
         try {
-            scheduleResourcesModel = getConvertedDTO(AppointmentsResultModel.class);
+            appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
             populateWithLabels();
         } catch (JsonSyntaxException ex) {
             showErrorNotification(null);
@@ -76,7 +77,7 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
         if (viewId == R.id.provider_logout) {
             logout();
         } else if (viewId == R.id.btnHome) {
-            goToHome(scheduleResourcesModel.getMetadata().getTransitions().getLogout());
+            goToHome(appointmentsResultModel.getMetadata().getTransitions().getLogout());
         }
     }
 
@@ -87,7 +88,7 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
         Map<String, String> query = new HashMap<>();
         query.put("transition", "true");
 
-        getWorkflowServiceHelper().execute(scheduleResourcesModel.getMetadata()
+        getWorkflowServiceHelper().execute(appointmentsResultModel.getMetadata()
                 .getTransitions().getLogout(), logOutCall, query, headers);
     }
 
@@ -107,7 +108,7 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -144,14 +145,14 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             Gson gson = new Gson();
-            scheduleResourcesModel = gson.fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
+            resourcesToSchedule = gson.fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
 
-            if (scheduleResourcesModel != null && scheduleResourcesModel.getPayload() != null
-                    && scheduleResourcesModel.getPayload().getResourcesToSchedule() != null
-                    && scheduleResourcesModel.getPayload().getResourcesToSchedule().size() > 0) {
+            if (resourcesToSchedule != null && resourcesToSchedule.getPayload() != null
+                    && resourcesToSchedule.getPayload().getResourcesToSchedule() != null
+                    && resourcesToSchedule.getPayload().getResourcesToSchedule().size() > 0) {
 
                 noAppointmentView.setVisibility(View.GONE);
-                resources = scheduleResourcesModel.getPayload()
+                resources = resourcesToSchedule.getPayload()
                         .getResourcesToSchedule().get(0).getResources();
 
                 if (resources.size() > 0) {
@@ -165,7 +166,7 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
                 }
 
                 ProvidersListAdapter appointmentsListAdapter = new ProvidersListAdapter(
-                        PatientModePracticeAppointmentActivity.this, resources, scheduleResourcesModel,
+                        PatientModePracticeAppointmentActivity.this, resources, resourcesToSchedule,
                         PatientModePracticeAppointmentActivity.this);
                 appointmentsRecyclerView.setAdapter(appointmentsListAdapter);
 
@@ -190,12 +191,13 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
 
     @Override
     public void onProviderListItemClickListener(int position) {
-        onProviderSelected(resources.get(position), scheduleResourcesModel);
+        AppointmentResourcesDTO selectedResource = resources.get(position);
+        onProviderSelected(selectedResource, resourcesToSchedule, getSelectedResourcesToSchedule(selectedResource));
     }
 
     @Override
     protected TransitionDTO getMakeAppointmentTransition() {
-        return scheduleResourcesModel.getMetadata().getTransitions().getMakeAppointment();
+        return appointmentsResultModel.getMetadata().getTransitions().getMakeAppointment();
     }
 
     @Override
@@ -205,6 +207,19 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
 
     @Override
     protected LinksDTO getLinks() {
-        return scheduleResourcesModel.getMetadata().getLinks();
+        return appointmentsResultModel.getMetadata().getLinks();
     }
+
+    private ResourcesToScheduleDTO getSelectedResourcesToSchedule(AppointmentResourcesDTO selectedResource){
+        List<ResourcesToScheduleDTO> resourcesToScheduleDTOList = resourcesToSchedule.getPayload().getResourcesToSchedule();
+        for(ResourcesToScheduleDTO resourcesToScheduleDTO : resourcesToScheduleDTOList){
+            for(AppointmentResourcesDTO appointmentResourcesDTO : resourcesToScheduleDTO.getResources()){
+                if(appointmentResourcesDTO == selectedResource){
+                    return resourcesToScheduleDTO;
+                }
+            }
+        }
+        return null;
+    }
+
 }

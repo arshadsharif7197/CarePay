@@ -32,9 +32,8 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PatientPaymentPayload;
-import com.carecloud.carepaylibray.payments.models.PaymentExceptionDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -131,13 +130,16 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         boolean showPartial = paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments().isAllowPartialPayments();
         ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newClinicHeader(paymentsModel);
         ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
-                .newInstance(paymentsModel, showPartial ? Label.getLabel("payment_partial_payment_text") : null,
-                        Label.getLabel("payment_details_pay_now"), headerModel);
+                .newInstance(paymentsModel,
+                        showPartial ? Label.getLabel("payment_partial_payment_text") : null,
+                        Label.getLabel("payment_details_pay_now"),
+                        null,
+                        headerModel);
         displayDialogFragment(dialog, false);
     }
 
     @Override
-    public void onPartialPaymentClicked(double owedAmount) {
+    public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
         PracticePartialPaymentDialogFragment dialog = PracticePartialPaymentDialogFragment
                 .newInstance(paymentResultModel, owedAmount);
         displayDialogFragment(dialog, false);
@@ -168,11 +170,11 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        PatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload().get(0);
-        if(payload.getPaymentExceptions()!=null && !payload.getPaymentExceptions().isEmpty() && payload.getTotal()==0D){
+        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
+        if(!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid()==0D){
             StringBuilder builder = new StringBuilder();
-            for(PaymentExceptionDTO paymentException : payload.getPaymentExceptions()){
-                builder.append(paymentException.getMessage());
+            for(IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()){
+                builder.append(processingError.getError());
                 builder.append("\n");
             }
             int last = builder.lastIndexOf("\n");
@@ -232,7 +234,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
 
     @Override
     public void onLeftActionTapped(PaymentsModel paymentsModel, double owedAmount) {
-        onPartialPaymentClicked(owedAmount);
+        onPartialPaymentClicked(owedAmount, null);
     }
 
     @Override
@@ -285,7 +287,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
         }
     };
 
@@ -296,7 +298,6 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
                 String jsonPayload = data.getStringExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA);
                 if (jsonPayload != null) {
                     Gson gson = new Gson();
-//                    PaymentsModel paymentsModel = gson.fromJson(jsonPayload, PaymentsModel.class);
                     WorkflowDTO workflowDTO = gson.fromJson(jsonPayload, WorkflowDTO.class);
                     showPaymentConfirmation(workflowDTO);
                 }
@@ -304,7 +305,6 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
             }
             default:
                 //nothing
-                return;
         }
     }
 

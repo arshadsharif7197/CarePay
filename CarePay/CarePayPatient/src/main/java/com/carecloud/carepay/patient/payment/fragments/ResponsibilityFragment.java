@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -105,7 +106,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         }
         title.setText(paymentsTitleString);
 
-        if(toolbarCallback != null){
+        if (toolbarCallback != null) {
             toolbarCallback.displayToolbar(false, null);
         }
 
@@ -162,7 +163,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         makePartialPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionCallback.onPartialPaymentClicked(total);
+                actionCallback.onPartialPaymentClicked(total, selectedBalance);
             }
         });
 

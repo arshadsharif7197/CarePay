@@ -117,6 +117,11 @@ public abstract class BaseFragment extends Fragment implements ISession {
     }
 
     @Override
+    public void onAtomicRestart(){
+        ((IApplicationSession) getActivity()).onAtomicRestart();
+    }
+
+    @Override
     public void setLastInteraction(long systemTime){
         ((IApplicationSession) getActivity()).setLastInteraction(systemTime);
     }

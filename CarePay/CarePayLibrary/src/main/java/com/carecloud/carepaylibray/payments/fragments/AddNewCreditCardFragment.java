@@ -21,11 +21,11 @@ import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
-import com.carecloud.carepaylibray.payments.models.postmodel.CreditCardModel;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentType;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentCardData;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentMetadata;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -43,11 +43,11 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
     @Override
     protected void attachCallback(Context context) {
         try {
-            if(context instanceof PaymentViewHandler){
+            if (context instanceof PaymentViewHandler) {
                 callback = ((PaymentViewHandler) context).getPaymentPresenter();
-            }else if (context instanceof AppointmentViewHandler){
+            } else if (context instanceof AppointmentViewHandler) {
                 callback = (PaymentConfirmationInterface) ((AppointmentViewHandler) context).getAppointmentPresenter();
-            }else {
+            } else {
                 callback = (PaymentConfirmationInterface) context;
             }
         } catch (ClassCastException cce) {
@@ -56,9 +56,9 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(callback == null){
+        if (callback == null) {
             attachCallback(getContext());
         }
     }
@@ -71,8 +71,11 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             Gson gson = new Gson();
             String paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
             paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
-            if(paymentsModel!=null) {
-                addressPayloadDTO = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getAddress();
+            if (paymentsModel != null) {
+                if (!paymentsModel.getPaymentPayload().getPatientBalances().isEmpty()) {
+                    addressPayloadDTO = paymentsModel.getPaymentPayload().getPatientBalances().get(0)
+                            .getDemographics().getPayload().getAddress();
+                }
                 userPracticeDTO = callback.getPracticeInfo(paymentsModel);
             }
         }
@@ -109,7 +112,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             nextButton.setEnabled(true);
-            SystemUtil.showErrorToast(getContext(), CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            SystemUtil.showErrorToast(getContext(), exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -126,7 +129,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             nextButton.setEnabled(true);
             Log.d("makePaymentCallback", "=========================>\nworkflowDTO=" + workflowDTO.toString());
             callback.showPaymentConfirmation(workflowDTO);
-            if(getDialog()!=null){
+            if (getDialog() != null) {
                 dismiss();
             }
         }
@@ -135,7 +138,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             nextButton.setEnabled(true);
-            SystemUtil.showErrorToast(getContext(), CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            SystemUtil.showErrorToast(getContext(), exceptionMessage);
             Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -149,7 +152,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
 
 
     private void makePaymentCall() {
-        PaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
+        IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
         if (postModel != null && postModel.getAmount() > 0) {
             processPayment(postModel);
         } else {
@@ -157,12 +160,17 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         }
     }
 
-    private void processPayment(PaymentPostModel postModel) {
-        CreditCardModel creditCardModel = getCreditCardModel();
-        for (PaymentObject paymentObject : postModel.getPaymentObjects()) {
-            paymentObject.setType(PaymentType.credit_card);
-            paymentObject.setExecution(PaymentExecution.papi);
-            paymentObject.setCreditCard(creditCardModel);
+    private void processPayment(IntegratedPaymentPostModel postModel) {
+        PapiPaymentMethod papiPaymentMethod = new PapiPaymentMethod();
+        papiPaymentMethod.setPaymentMethodType(PapiPaymentMethod.PAYMENT_METHOD_NEW_CARD);
+        papiPaymentMethod.setCardData(getCreditCardModel());
+
+        postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
+        postModel.setPapiPaymentMethod(papiPaymentMethod);
+
+        IntegratedPaymentMetadata integratedPaymentMetadata = postModel.getMetadata();
+        if (callback.getAppointmentId() != null && integratedPaymentMetadata.getAppointmentRequestDTO() == null) {
+            integratedPaymentMetadata.setAppointmentId(callback.getAppointmentId());
         }
 
         Gson gson = new Gson();
@@ -174,19 +182,27 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
     }
 
     private void processPayment() {
-        PaymentObject paymentObject = new PaymentObject();
-        paymentObject.setType(PaymentType.credit_card);
-        paymentObject.setExecution(PaymentExecution.papi);
-        paymentObject.setAmount(amountToMakePayment);
-        paymentObject.setCreditCard(getCreditCardModel());
+        IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
+        paymentLineItem.setAmount(amountToMakePayment);
+        paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_UNAPPLIED);
+        paymentLineItem.setDescription("Unapplied Amount");
 
-        PaymentPostModel paymentPostModel = new PaymentPostModel();
-        paymentPostModel.setAmount(amountToMakePayment);
-        paymentPostModel.addPaymentMethod(paymentObject);
+        PapiPaymentMethod papiPaymentMethod = new PapiPaymentMethod();
+        papiPaymentMethod.setPaymentMethodType(PapiPaymentMethod.PAYMENT_METHOD_NEW_CARD);
+        papiPaymentMethod.setCardData(getCreditCardModel());
+
+        IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
+        postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
+        postModel.setPapiPaymentMethod(papiPaymentMethod);
+        postModel.setAmount(amountToMakePayment);
+        postModel.addLineItem(paymentLineItem);
+
+        IntegratedPaymentMetadata postModelMetadata = postModel.getMetadata();
+        postModelMetadata.setAppointmentId(callback.getAppointmentId());
 
         Gson gson = new Gson();
-        if (paymentPostModel.isPaymentModelValid()) {
-            postPayment(gson.toJson(paymentPostModel));
+        if (postModel.isPaymentModelValid()) {
+            postPayment(gson.toJson(postModel));
         } else {
             Toast.makeText(getContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
         }
@@ -195,18 +211,18 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
 
     private void postPayment(String paymentModelJson) {
         Map<String, String> queries = new HashMap<>();
-        if(userPracticeDTO!=null){
+        if (userPracticeDTO != null) {
             queries.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
             queries.put("practice_id", userPracticeDTO.getPracticeId());
             queries.put("patient_id", userPracticeDTO.getPatientId());
-            if(callback.getAppointmentId() != null){
-                queries.put("appointment_id", callback.getAppointmentId());
-            }
-        }else {
+        } else {
             PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
             queries.put("practice_mgmt", metadata.getPracticeMgmt());
             queries.put("practice_id", metadata.getPracticeId());
             queries.put("patient_id", metadata.getPatientId());
+        }
+        if (callback.getAppointmentId() != null) {
+            queries.put("appointment_id", callback.getAppointmentId());
         }
         Map<String, String> header = new HashMap<>();
         header.put("transition", "true");
@@ -216,19 +232,19 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
 
     }
 
-    private CreditCardModel getCreditCardModel() {
-        CreditCardModel creditCardModel = new CreditCardModel();
+    private IntegratedPaymentCardData getCreditCardModel() {
+        IntegratedPaymentCardData creditCardModel = new IntegratedPaymentCardData();
         creditCardModel.setCardType(creditCardsPayloadDTO.getCardType());
         creditCardModel.setCardNumber(creditCardsPayloadDTO.getCardNumber());
         creditCardModel.setExpiryDate(creditCardsPayloadDTO.getExpireDt().replaceAll("/", ""));
         creditCardModel.setNameOnCard(creditCardsPayloadDTO.getNameOnCard());
         creditCardModel.setToken(creditCardsPayloadDTO.getToken());
-        creditCardModel.setCvv(creditCardsPayloadDTO.getCvv());
         creditCardModel.setSaveCard(saveCardOnFileCheckBox.isChecked());
         creditCardModel.setDefault(setAsDefaultCheckBox.isChecked());
-        creditCardModel.setTokenizationService(creditCardsPayloadDTO.getTokenizationService());
 
-        creditCardModel.setBillingInformation(billingInformationDTO);
+        @IntegratedPaymentCardData.TokenizationService String tokenizationService = creditCardsPayloadDTO.getTokenizationService().toString();
+        creditCardModel.setTokenizationService(tokenizationService);
+
         return creditCardModel;
     }
 
@@ -249,7 +265,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         new LargeAlertDialog(getActivity(), Label.getLabel("payment_failed_error"), Label.getLabel("payment_change_payment_label"), R.color.Feldgrau, R.drawable.icn_card_error, getLargeAlertInterface()).show();
     }
 
-    protected LargeAlertDialog.LargeAlertInterface getLargeAlertInterface(){
+    protected LargeAlertDialog.LargeAlertInterface getLargeAlertInterface() {
         return new LargeAlertDialog.LargeAlertInterface() {
             @Override
             public void onActionButton() {

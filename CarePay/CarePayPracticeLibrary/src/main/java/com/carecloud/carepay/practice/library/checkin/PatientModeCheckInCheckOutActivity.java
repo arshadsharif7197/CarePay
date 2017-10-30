@@ -139,7 +139,7 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             findViewById(R.id.logoutTextview).setEnabled(true);
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -291,7 +291,7 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
             @Override
             public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
-                showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+                showErrorNotification(exceptionMessage);
                 Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
             }
         };

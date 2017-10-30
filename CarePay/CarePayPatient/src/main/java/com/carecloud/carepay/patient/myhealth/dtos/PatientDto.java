@@ -1,7 +1,6 @@
 package com.carecloud.carepay.patient.myhealth.dtos;
 
 import com.carecloud.carepaylibray.appointments.models.PrimaryAddressDto;
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -10,38 +9,34 @@ import com.google.gson.annotations.SerializedName;
 
 public class PatientDto {
 
-    @Expose
+    @SerializedName("id")
     private Integer id;
-    @Expose
     @SerializedName("first_name")
     private String firstName;
-    @Expose
     @SerializedName("last_name")
     private String lastName;
-    @Expose
     @SerializedName("middle_initial")
     private String middleInitial;
-    @Expose
+    @SerializedName("suffix")
     private String sufix;
-    @Expose
+    @SerializedName("prefix")
     private String prefix;
-    @Expose
     @SerializedName("full_name")
     private String fullName;
-    @Expose
+    @SerializedName("email")
     private String email;
-    @Expose
     @SerializedName("date_of_birth")
     private String dateOfBirth;
-    @Expose
     @SerializedName("gender_id")
     private Integer gender;
-    @Expose
     @SerializedName("primary_address")
     private PrimaryAddressDto primaryAddress;
-    @Expose
     @SerializedName("profile_photo")
     private String profilePhoto;
+    @SerializedName("practice")
+    private String practice;
+    @SerializedName("business_entity")
+    private BusinessEntity businessEntity = new BusinessEntity();
 
     public Integer getId() {
         return id;
@@ -137,5 +132,21 @@ public class PatientDto {
 
     public void setProfilePhoto(String profilePhoto) {
         this.profilePhoto = profilePhoto;
+    }
+
+    public String getPractice() {
+        return practice;
+    }
+
+    public void setPractice(String practice) {
+        this.practice = practice;
+    }
+
+    public BusinessEntity getBusinessEntity() {
+        return businessEntity;
+    }
+
+    public void setBusinessEntity(BusinessEntity businessEntity) {
+        this.businessEntity = businessEntity;
     }
 }

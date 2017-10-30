@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.base.models;
 
+import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
@@ -7,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class PatientModel {
 
-    @SerializedName(value="patient_id", alternate={"id"})
+    @SerializedName(value = "patient_id", alternate = {"id"})
     @Expose
     private String patientId;
 
@@ -46,6 +47,7 @@ public class PatientModel {
     @SerializedName("profile_photo")
     @Expose
     private String profilePhoto;
+    private transient String localUriPhoto;
 
     @SerializedName("primary_phone_number")
     @Expose
@@ -94,6 +96,10 @@ public class PatientModel {
     @SerializedName("employment_status")
     @Expose
     private String employmentStatus;
+
+    @SerializedName("employer")
+    @Expose
+    private EmployerDto employer = new EmployerDto();
 
     @SerializedName("ec_relationship_type")
     @Expose
@@ -283,6 +289,14 @@ public class PatientModel {
         this.employmentStatus = employmentStatus;
     }
 
+    public EmployerDto getEmployer() {
+        return employer;
+    }
+
+    public void setEmployer(EmployerDto employer) {
+        this.employer = employer;
+    }
+
     public String getEmergencyContactRelationship() {
         return emergencyContactRelationship;
     }
@@ -333,6 +347,11 @@ public class PatientModel {
         return name;
     }
 
+    public String getLocalUriPhoto() {
+        return localUriPhoto;
+    }
 
-
+    public void setLocalUriPhoto(String localUriPhoto) {
+        this.localUriPhoto = localUriPhoto;
+    }
 }

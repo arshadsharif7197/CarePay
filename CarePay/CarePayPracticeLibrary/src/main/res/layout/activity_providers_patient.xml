@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/provider_list_title_margin"
             android:scaleType="fitXY"
-            android:src="@drawable/cp_logo" />
+            android:src="?practiceLogoDrawable" />
     </LinearLayout>
 
     <FrameLayout

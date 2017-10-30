@@ -5,9 +5,8 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiAccountsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.MerchantServicesDTO;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
+import com.carecloud.carepaylibray.payments.models.history.PaymentsTransactionHistory;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -21,21 +20,37 @@ import java.util.List;
 
 public class PaymentsPayloadDTO implements Serializable {
 
-    @SerializedName("intake_forms")
+
+    @SerializedName("providers")
     @Expose
-    private PaymentsPayloadIntakeFormsDTO intakeForms = new PaymentsPayloadIntakeFormsDTO();
+    private List<ProviderDTO> providers = new ArrayList<>();
+    @SerializedName("locations")
+    @Expose
+    private List<LocationDTO> locations = new ArrayList<>();
+    @SerializedName("patient_balances")
+    @Expose
+    private List<PatientBalanceDTO> patientBalances = new ArrayList<>();
+    @SerializedName(value = "user_practices", alternate = "practice_information")
+    @Expose
+    private List<UserPracticeDTO> userPractices = new ArrayList<>();
     @SerializedName("payment_settings")
     @Expose
     private List<PaymentsPayloadSettingsDTO> paymentSettings = new ArrayList<>();
+    @SerializedName("merchant_services")
+    @Expose
+    private List<MerchantServicesDTO> merchantServices = new ArrayList<>();
+    @SerializedName("patient_credit_cards")
+    @Expose
+    private List<PaymentsPatientsCreditCardsPayloadListDTO> patientCreditCards = new ArrayList<>();
+    @SerializedName("intake_forms")
+    @Expose
+    private PaymentsPayloadIntakeFormsDTO intakeForms = new PaymentsPayloadIntakeFormsDTO();
     @SerializedName("patient_payment_plans")
     @Expose
     private PaymentsPatientsPlansDTO patientPaymentPlans = new PaymentsPatientsPlansDTO();
     @SerializedName("patient_history")
     @Expose
     private PaymentsPatientHistoryDTO patientHistory = new PaymentsPatientHistoryDTO();
-    @SerializedName("patient_credit_cards")
-    @Expose
-    private List<PaymentsPatientsCreditCardsPayloadListDTO> patientCreditCards = new ArrayList<>();
     @SerializedName("provider_index")
     @Expose
     private List<ProviderIndexDTO> providerIndex = new ArrayList<>();
@@ -45,15 +60,6 @@ public class PaymentsPayloadDTO implements Serializable {
     @SerializedName("in_office_counts")
     @Expose
     private Integer inOfficeCounts;
-    @SerializedName("patient_balances")
-    @Expose
-    private List<PatientBalanceDTO> patientBalances = new ArrayList<>();
-    @SerializedName("providers")
-    @Expose
-    private List<ProviderDTO> providers = new ArrayList<>();
-    @SerializedName("locations")
-    @Expose
-    private List<LocationDTO> locations = new ArrayList<>();
     @SerializedName("patient_payments")
     @Expose
     private PatientPaymentsDTO patientPayments = new PatientPaymentsDTO();
@@ -62,19 +68,16 @@ public class PaymentsPayloadDTO implements Serializable {
     private List<PatientModel> patients = new ArrayList<>();
     @SerializedName("papi_accounts")
     @Expose
-    private List<DemographicsSettingsPapiAccountsDTO> papiAccounts = new ArrayList<>();
-    @SerializedName("merchant_services")
-    @Expose
-    private List<MerchantServicesDTO> merchantServices = new ArrayList<>();
-    @SerializedName(value = "user_practices", alternate = "practice_information")
-    @Expose
-    private List<UserPracticeDTO> userPractices = new ArrayList<>();
+    private List<PapiAccountsDTO> papiAccounts = new ArrayList<>();
     @SerializedName("payment_post_model")
     @Expose
-    private PaymentPostModel paymentPostModel;
+    private IntegratedPaymentPostModel paymentPostModel;
     @SerializedName("simple_charge_types")
     @Expose
     private List<SimpleChargeItem> simpleChargeItems = new ArrayList<>();
+    @SerializedName("transactions")
+    @Expose
+    private PaymentsTransactionHistory transactionHistory = new PaymentsTransactionHistory();
 
     public List<PatientModel> getPatients() {
         return patients;
@@ -201,7 +204,7 @@ public class PaymentsPayloadDTO implements Serializable {
      *
      * @return the papi accounts
      */
-    public List<DemographicsSettingsPapiAccountsDTO> getPapiAccounts() {
+    public List<PapiAccountsDTO> getPapiAccounts() {
         return papiAccounts;
     }
 
@@ -210,8 +213,8 @@ public class PaymentsPayloadDTO implements Serializable {
      *
      * @return the papi account
      */
-    public DemographicsSettingsPapiAccountsDTO getPapiAccountByType(String accountType) {
-        for (DemographicsSettingsPapiAccountsDTO papiAccountDTO : getPapiAccounts()) {
+    public PapiAccountsDTO getPapiAccountByType(String accountType) {
+        for (PapiAccountsDTO papiAccountDTO : getPapiAccounts()) {
             if (papiAccountDTO.getType().contains(accountType)) {
                return papiAccountDTO ;
             }
@@ -224,7 +227,7 @@ public class PaymentsPayloadDTO implements Serializable {
      *
      * @param papiAccounts the papi accounts
      */
-    public void setPapiAccounts(List<DemographicsSettingsPapiAccountsDTO> papiAccounts) {
+    public void setPapiAccounts(List<PapiAccountsDTO> papiAccounts) {
         this.papiAccounts = papiAccounts;
     }
 
@@ -262,11 +265,11 @@ public class PaymentsPayloadDTO implements Serializable {
         this.userPractices = userPractices;
     }
 
-    public PaymentPostModel getPaymentPostModel() {
+    public IntegratedPaymentPostModel getPaymentPostModel() {
         return paymentPostModel;
     }
 
-    public void setPaymentPostModel(PaymentPostModel paymentPostModel) {
+    public void setPaymentPostModel(IntegratedPaymentPostModel paymentPostModel) {
         this.paymentPostModel = paymentPostModel;
     }
 
@@ -276,5 +279,13 @@ public class PaymentsPayloadDTO implements Serializable {
 
     public void setSimpleChargeItems(List<SimpleChargeItem> simpleChargeItems) {
         this.simpleChargeItems = simpleChargeItems;
+    }
+
+    public PaymentsTransactionHistory getTransactionHistory() {
+        return transactionHistory;
+    }
+
+    public void setTransactionHistory(PaymentsTransactionHistory transactionHistory) {
+        this.transactionHistory = transactionHistory;
     }
 }

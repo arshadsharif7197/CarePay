@@ -22,7 +22,7 @@
         android:padding="@dimen/dimen_20dp"
         android:textColor="@color/lightning_yellow"
         android:textSize="@dimen/text_size_16"
-        android:visibility="visible"
+        android:visibility="gone"
         app:customAssetFont="proxima_nova_regular"
         tools:text="Your %s plan health insurance is still missing their card photos. How about taking them now?" />
 

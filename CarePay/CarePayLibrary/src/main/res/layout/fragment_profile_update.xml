@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:breeze="http://schemas.carecloud.com/breeze"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/demographicsReviewRootLayout"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/white"
-              android:descendantFocusability="beforeDescendants"
-              android:focusable="true"
-              android:focusableInTouchMode="true"
-              android:orientation="vertical"
-              tools:ignore="MissingPrefix">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/demographicsReviewRootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:descendantFocusability="beforeDescendants"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
 
     <include layout="@layout/toolbar_demographics_settings" />
 
@@ -40,16 +40,17 @@
                 style="@style/DemographicsChooseProfilePicStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/dimen_20dp"
                 android:layout_toEndOf="@id/providerPicImageView"
-                android:layout_alignParentEnd="true"
-                android:padding="@dimen/dimen_10dp"
+                android:foreground="?android:selectableItemBackground"
                 android:minHeight="@dimen/dimen_10dp"
+                android:padding="@dimen/dimen_10dp"
                 android:textColor="@color/colorPrimary"
-                tools:text="Change Current Photo"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="profile_change_photo_label" />
+                breeze:textKey="profile_change_photo_label"
+                tools:text="Change Current Photo" />
 
         </RelativeLayout>
 
@@ -65,8 +66,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ellipsize="end"
-                android:maxLines="1"
                 android:gravity="start"
+                android:maxLines="1"
                 android:padding="@dimen/dimen_3dp"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/textview_default_textsize"
@@ -77,12 +78,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_10dp"
+                android:foreground="?android:selectableItemBackground"
                 android:padding="@dimen/dimen_3dp"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_14"
-                tools:text="Change Name"
                 app:customAssetFont="proxima_nova_semi_bold"
-                breeze:textKey="setting_change_name" />
+                breeze:textKey="setting_change_name"
+                tools:text="Change Name" />
 
         </LinearLayout>
 
@@ -103,8 +105,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ellipsize="end"
-                android:maxLines="1"
                 android:gravity="start"
+                android:maxLines="1"
                 android:padding="@dimen/dimen_3dp"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/textview_default_textsize"
@@ -116,12 +118,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_10dp"
+                android:foreground="?android:selectableItemBackground"
                 android:padding="@dimen/dimen_3dp"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_14"
-                tools:text="Change Email"
                 app:customAssetFont="proxima_nova_semi_bold"
-                breeze:textKey="setting_change_Email" />
+                breeze:textKey="setting_change_Email"
+                tools:text="Change Email" />
 
         </LinearLayout>
 
@@ -148,7 +151,7 @@
                 android:padding="@dimen/dimen_3dp"
                 android:textSize="@dimen/textview_default_textsize"
                 app:customAssetFont="proxima_nova_regular"
-                breeze:textKey="settings_change_password"/>
+                breeze:textKey="settings_change_password" />
 
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -156,12 +159,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_10dp"
+                android:foreground="?android:selectableItemBackground"
                 android:padding="@dimen/dimen_3dp"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_14"
-                tools:text="Change Password"
                 app:customAssetFont="proxima_nova_semi_bold"
-                breeze:textKey="settings_change_password" />
+                breeze:textKey="settings_change_password"
+                tools:text="Change Password" />
 
         </LinearLayout>
 
@@ -181,8 +185,8 @@
         android:background="@drawable/settings_button_selector"
         android:gravity="center"
         android:textColor="@color/white"
-        tools:text="save changes"
+        app:customAssetFont="proxima_nova_semi_bold"
         breeze:textKey="demographics_save_changes_label"
-        app:customAssetFont="proxima_nova_semi_bold"/>
+        tools:text="save changes" />
 
 </LinearLayout>

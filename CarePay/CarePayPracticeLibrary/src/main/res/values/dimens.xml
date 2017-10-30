@@ -73,6 +73,7 @@
     <dimen name="text_size_36sp">36sp</dimen>
     <dimen name="text_size_40sp">40sp</dimen>
     <dimen name="text_size_50sp">50sp</dimen>
+    <dimen name="text_size_90sp">90sp</dimen>
 
     <dimen name="appointment_cart_padding">10dp</dimen>
     <dimen name="appointment_cart_elevation">30dp</dimen>
@@ -129,9 +130,9 @@
     <dimen name="custom_appointment_dialog_checkbox_margin">10dp</dimen>
     <dimen name="appointment_detail_dialog_checkbox_divider_width">100dp</dimen>
     <dimen name="appointment_detail_dialog_checkbox_divider_height">4dp</dimen>
-    <dimen name="appointment_detail_dialog_checkbox_divider_margin">-165dp</dimen>
+    <dimen name="appointment_detail_dialog_checkbox_divider_margin">-50dp</dimen>
     <dimen name="appointment_detail_dialog_checkbox_divider_margin_top">20dp</dimen>
-    <dimen name="custom_appointment_dialog_checkbox_textsize">16sp</dimen>
+    <dimen name="custom_appointment_dialog_checkbox_textsize">15sp</dimen>
     <dimen name="custom_appointment_dialog_button_textsize">22sp</dimen>
 
     <dimen name="custom_appointment_dialog_background_shape_radius">7dp</dimen>
@@ -163,9 +164,9 @@
     <dimen name="home_button_width">282dp</dimen>
     <dimen name="home_button_height">250dp</dimen>
 
-    <dimen name="home_shadow_width">600dp</dimen>
+    <dimen name="home_shadow_width">800dp</dimen>
 
-    <dimen name="home_shadow_margin_top">-17dp</dimen>
+    <dimen name="home_shadow_margin_top">-7dp</dimen>
 
     <dimen name="home_settings_icon_width">30dp</dimen>
     <dimen name="home_settings_icon_height">30dp</dimen>
@@ -225,8 +226,8 @@
     <dimen name="responsibility_list_margin">80dp</dimen>
 
     <dimen name="dimen_72dp">72dp</dimen>
-    <dimen name="payment_distibution_dialog_height">540dp</dimen>
-    <dimen name="payment_distribution_dialog_width">800dp</dimen>
+    <dimen name="payment_distibution_dialog_height">600dp</dimen>
+    <dimen name="payment_distribution_dialog_width">860dp</dimen>
 
     <dimen name="popup_picker_width">300dp</dimen>
     <dimen name="popup_picker_height">200dp</dimen>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
@@ -15,8 +14,8 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/socialSecurityInputLayout"
             style="@style/SigninSignupTextInputStyle"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
-            app:customAssetFont="proxima_nova_semi_bold">
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/socialSecurityNumber"
@@ -24,10 +23,10 @@
                 android:imeOptions="actionDone"
                 android:inputType="number"
                 android:maxLength="10"
-                tools:hint="Social Security Number"
+                app:customAssetFont="gotham_rounded_book"
                 app:hintTextAppearance="@style/FloatingLabelStyle"
                 breeze:hintKey="demographics_social_security"
-                app:customAssetFont="gotham_rounded_book"/>
+                tools:hint="Social Security Number" />
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -36,9 +35,9 @@
             style="@style/DemographicsOptionalLabelStyle"
             android:layout_gravity="center_vertical|end"
             android:layout_marginEnd="@dimen/dimen_10dp"
-            tools:text="Optional"
+            app:customAssetFont="proxima_nova_semi_bold"
             breeze:textKey="demographics_details_optional_hint"
-            app:customAssetFont="proxima_nova_semi_bold"/>
+            tools:text="Optional" />
 
     </FrameLayout>
 
@@ -49,18 +48,18 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/preferredNameInputLayout"
             style="@style/SigninSignupTextInputStyle"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
-            app:customAssetFont="proxima_nova_semi_bold">
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/preferredName"
                 style="@style/DemographicsReviewEditTextStyle"
                 android:imeOptions="actionDone"
                 android:maxLength="250"
-                tools:hint="Preferred Name"
+                app:customAssetFont="gotham_rounded_book"
                 app:hintTextAppearance="@style/FloatingLabelStyle"
                 breeze:hintKey="demographics_preferred_name"
-                app:customAssetFont="gotham_rounded_book"/>
+                tools:hint="Preferred Name" />
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -69,9 +68,9 @@
             style="@style/DemographicsOptionalLabelStyle"
             android:layout_gravity="center_vertical|end"
             android:layout_marginEnd="@dimen/dimen_10dp"
-            tools:text="Optional"
+            app:customAssetFont="proxima_nova_semi_bold"
             breeze:textKey="demographics_details_optional_hint"
-            app:customAssetFont="proxima_nova_semi_bold"/>
+            tools:text="Optional" />
 
     </FrameLayout>
 
@@ -82,8 +81,8 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/emailInputLayout"
             style="@style/SigninSignupTextInputStyle"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
-            app:customAssetFont="proxima_nova_semi_bold">
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/email"
@@ -91,10 +90,10 @@
                 android:imeOptions="actionDone"
                 android:inputType="textEmailAddress"
                 android:maxLength="250"
-                tools:hint="Email"
+                app:customAssetFont="gotham_rounded_book"
                 app:hintTextAppearance="@style/FloatingLabelStyle"
                 breeze:hintKey="demographics_email"
-                app:customAssetFont="gotham_rounded_book"/>
+                tools:hint="Email" />
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -103,9 +102,9 @@
             style="@style/DemographicsOptionalLabelStyle"
             android:layout_gravity="center_vertical|end"
             android:layout_marginEnd="@dimen/dimen_10dp"
-            tools:text="Optional"
+            app:customAssetFont="proxima_nova_semi_bold"
             breeze:textKey="demographics_details_optional_hint"
-            app:customAssetFont="proxima_nova_semi_bold"/>
+            tools:text="Optional" />
 
     </FrameLayout>
 
@@ -125,23 +124,23 @@
                 style="@style/DemographicsReviewLabelStyle"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                tools:text="Preferred Lanuage"
+                app:customAssetFont="gotham_rounded_book"
                 breeze:textKey="demographics_preferred_language"
-                app:customAssetFont="gotham_rounded_book"/>
+                tools:text="Preferred Lanuage" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/preferredLanguageOptional"
                 style="@style/DemographicsOptionalLabelStyle"
-                tools:text="Optional"
+                app:customAssetFont="proxima_nova_semi_bold"
                 breeze:textKey="demographics_details_optional_hint"
-                app:customAssetFont="proxima_nova_semi_bold"/>
+                tools:text="Optional" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/choosePreferredLanguage"
                 style="@style/DemographicsReviewClickableStyle"
                 android:layout_width="wrap_content"
-                tools:text="Choose"
-                app:customAssetFont="gotham_rounded_medium"/>
+                app:customAssetFont="gotham_rounded_medium"
+                tools:text="Choose" />
 
         </LinearLayout>
 
@@ -158,18 +157,18 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/driverLicenseInputLayout"
             style="@style/SigninSignupTextInputStyle"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
-            app:customAssetFont="proxima_nova_semi_bold">
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/driverLicense"
                 style="@style/DemographicsReviewEditTextStyle"
                 android:imeOptions="actionDone"
                 android:maxLength="50"
-                tools:hint="Driver's License Number"
+                app:customAssetFont="gotham_rounded_book"
                 app:hintTextAppearance="@style/FloatingLabelStyle"
                 breeze:hintKey="demographics_driver_license"
-                app:customAssetFont="gotham_rounded_book"/>
+                tools:hint="Driver's License Number" />
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -178,9 +177,9 @@
             style="@style/DemographicsOptionalLabelStyle"
             android:layout_gravity="center_vertical|end"
             android:layout_marginEnd="@dimen/dimen_10dp"
-            tools:text="Optional"
+            app:customAssetFont="proxima_nova_semi_bold"
             breeze:textKey="demographics_details_optional_hint"
-            app:customAssetFont="proxima_nova_semi_bold"/>
+            tools:text="Optional" />
 
     </FrameLayout>
 
@@ -200,23 +199,23 @@
                 style="@style/DemographicsReviewLabelStyle"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                tools:text="Driver's License State"
+                app:customAssetFont="gotham_rounded_book"
                 breeze:textKey="demographics_driver_license_state"
-                app:customAssetFont="gotham_rounded_book"/>
+                tools:text="Driver's License State" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/driverLicenseStateOptional"
                 style="@style/DemographicsOptionalLabelStyle"
-                tools:text="Optional"
+                app:customAssetFont="proxima_nova_semi_bold"
                 breeze:textKey="demographics_details_optional_hint"
-                app:customAssetFont="proxima_nova_semi_bold"/>
+                tools:text="Optional" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/chooseDriverLicenseState"
                 style="@style/DemographicsReviewClickableStyle"
                 android:layout_width="wrap_content"
-                tools:text="Choose"
-                app:customAssetFont="gotham_rounded_medium"/>
+                app:customAssetFont="gotham_rounded_medium"
+                tools:text="Choose" />
 
         </LinearLayout>
 
@@ -233,8 +232,8 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/secondaryPhoneInputLayout"
             style="@style/SigninSignupTextInputStyle"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
-            app:customAssetFont="proxima_nova_semi_bold">
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/secondaryPhone"
@@ -242,10 +241,10 @@
                 android:imeOptions="actionDone"
                 android:inputType="phone"
                 android:maxLength="20"
-                tools:hint="Secondary Phone"
+                app:customAssetFont="gotham_rounded_book"
                 app:hintTextAppearance="@style/FloatingLabelStyle"
                 breeze:hintKey="demographics_secondary_phone"
-                app:customAssetFont="gotham_rounded_book"/>
+                tools:hint="Secondary Phone" />
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -254,9 +253,9 @@
             style="@style/DemographicsOptionalLabelStyle"
             android:layout_gravity="center_vertical|end"
             android:layout_marginEnd="@dimen/dimen_10dp"
-            tools:text="Optional"
+            app:customAssetFont="proxima_nova_semi_bold"
             breeze:textKey="demographics_details_optional_hint"
-            app:customAssetFont="proxima_nova_semi_bold"/>
+            tools:text="Optional" />
 
     </FrameLayout>
 
@@ -276,23 +275,23 @@
                 style="@style/DemographicsReviewLabelStyle"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                tools:text="Secondary Phone Type"
+                app:customAssetFont="gotham_rounded_book"
                 breeze:textKey="demographics_secondary_phone_type"
-                app:customAssetFont="gotham_rounded_book"/>
+                tools:text="Secondary Phone Type" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/secondaryPhoneTypeOptional"
                 style="@style/DemographicsOptionalLabelStyle"
-                tools:text="Optional"
+                app:customAssetFont="proxima_nova_semi_bold"
                 breeze:textKey="demographics_details_optional_hint"
-                app:customAssetFont="proxima_nova_semi_bold"/>
+                tools:text="Optional" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/chooseSecondaryPhoneType"
                 style="@style/DemographicsReviewClickableStyle"
                 android:layout_width="wrap_content"
-                tools:text="Choose"
-                app:customAssetFont="gotham_rounded_medium"/>
+                app:customAssetFont="gotham_rounded_medium"
+                tools:text="Choose" />
 
         </LinearLayout>
 
@@ -318,23 +317,23 @@
                 style="@style/DemographicsReviewLabelStyle"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                tools:text="Preferred Contact Method"
+                app:customAssetFont="gotham_rounded_book"
                 breeze:textKey="demographics_preferred_contact_method"
-                app:customAssetFont="gotham_rounded_book"/>
+                tools:text="Preferred Contact Method" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/contactMethodOptional"
                 style="@style/DemographicsOptionalLabelStyle"
-                tools:text="Optional"
+                app:customAssetFont="proxima_nova_semi_bold"
                 breeze:textKey="demographics_details_optional_hint"
-                app:customAssetFont="proxima_nova_semi_bold"/>
+                tools:text="Optional" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/choosePreferredContactMethod"
                 style="@style/DemographicsReviewClickableStyle"
                 android:layout_width="wrap_content"
-                tools:text="Choose"
-                app:customAssetFont="gotham_rounded_medium"/>
+                app:customAssetFont="gotham_rounded_medium"
+                tools:text="Choose" />
 
         </LinearLayout>
 
@@ -360,65 +359,23 @@
                 style="@style/DemographicsReviewLabelStyle"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                tools:text="Marital Status"
+                app:customAssetFont="gotham_rounded_book"
                 breeze:textKey="demographics_marital_status"
-                app:customAssetFont="gotham_rounded_book"/>
+                tools:text="Marital Status" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/maritalStatusOptional"
                 style="@style/DemographicsOptionalLabelStyle"
-                tools:text="Optional"
+                app:customAssetFont="proxima_nova_semi_bold"
                 breeze:textKey="demographics_details_optional_hint"
-                app:customAssetFont="proxima_nova_semi_bold"/>
+                tools:text="Optional" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/chooseMaritalStatus"
                 style="@style/DemographicsReviewClickableStyle"
                 android:layout_width="wrap_content"
-                tools:text="Choose"
-                app:customAssetFont="gotham_rounded_medium"/>
-
-        </LinearLayout>
-
-        <View
-            style="@style/Consent_Form_View_Style"
-            android:layout_width="match_parent" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/employmentStatusDemographicsLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
-            android:orientation="horizontal">
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                style="@style/DemographicsReviewLabelStyle"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                tools:text="Employment Status"
-                breeze:textKey="demographics_employment_status"
-                app:customAssetFont="gotham_rounded_book"/>
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/employmentStatusOptional"
-                style="@style/DemographicsOptionalLabelStyle"
-                tools:text="Optional"
-                breeze:textKey="demographics_details_optional_hint"
-                app:customAssetFont="proxima_nova_semi_bold"/>
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/chooseEmploymentStatus"
-                style="@style/DemographicsReviewClickableStyle"
-                android:layout_width="wrap_content"
-                tools:text="Choose"
-                app:customAssetFont="gotham_rounded_medium"/>
+                app:customAssetFont="gotham_rounded_medium"
+                tools:text="Choose" />
 
         </LinearLayout>
 
@@ -444,23 +401,23 @@
                 style="@style/DemographicsReviewLabelStyle"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                tools:text="EC Relationship"
+                app:customAssetFont="gotham_rounded_book"
                 breeze:textKey="demographics_emergency_contact_relationship"
-                app:customAssetFont="gotham_rounded_book"/>
+                tools:text="EC Relationship" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/emergencyContactRelationshipOptional"
                 style="@style/DemographicsOptionalLabelStyle"
-                tools:text="Optional"
+                app:customAssetFont="proxima_nova_semi_bold"
                 breeze:textKey="demographics_details_optional_hint"
-                app:customAssetFont="proxima_nova_semi_bold"/>
+                tools:text="Optional" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/chooseEmergencyContactRelationship"
                 style="@style/DemographicsReviewClickableStyle"
                 android:layout_width="wrap_content"
-                tools:text="Choose"
-                app:customAssetFont="gotham_rounded_medium"/>
+                app:customAssetFont="gotham_rounded_medium"
+                tools:text="Choose" />
 
         </LinearLayout>
 
@@ -486,23 +443,23 @@
                 style="@style/DemographicsReviewLabelStyle"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                tools:text="Referral Source"
+                app:customAssetFont="gotham_rounded_book"
                 breeze:textKey="demographics_referral_source"
-                app:customAssetFont="gotham_rounded_book"/>
+                tools:text="Referral Source" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/referralSourceOptional"
                 style="@style/DemographicsOptionalLabelStyle"
-                tools:text="Optional"
+                app:customAssetFont="proxima_nova_semi_bold"
                 breeze:textKey="demographics_details_optional_hint"
-                app:customAssetFont="proxima_nova_semi_bold"/>
+                tools:text="Optional" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/chooseReferralSource"
                 style="@style/DemographicsReviewClickableStyle"
                 android:layout_width="wrap_content"
-                tools:text="Choose"
-                app:customAssetFont="gotham_rounded_medium"/>
+                app:customAssetFont="gotham_rounded_medium"
+                tools:text="Choose" />
 
         </LinearLayout>
 
@@ -511,5 +468,235 @@
             android:layout_width="match_parent" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:layout_marginTop="@dimen/dimen_30dp"
+        android:orientation="horizontal">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textColor="@color/textview_default_textcolor"
+            android:textSize="@dimen/text_size_24sp"
+            app:customAssetFont="proxima_nova_semi_bold"
+            breeze:textKey="demographics_employer_info" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/employmentInfoOptionalTextView"
+            style="@style/DemographicsOptionalLabelStyle"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            app:customAssetFont="proxima_nova_semi_bold"
+            breeze:textKey="demographics_details_optional_hint"
+            tools:text="Optional" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/employmentStatusDemographicsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
+            android:orientation="horizontal">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                style="@style/DemographicsReviewLabelStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                app:customAssetFont="gotham_rounded_book"
+                breeze:textKey="demographics_employment_status"
+                tools:text="Employment Status" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/employmentStatusOptional"
+                style="@style/DemographicsOptionalLabelStyle"
+                app:customAssetFont="proxima_nova_semi_bold"
+                breeze:textKey="demographics_details_optional_hint"
+                tools:text="Optional" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/chooseEmploymentStatus"
+                style="@style/DemographicsReviewClickableStyle"
+                android:layout_width="wrap_content"
+                app:customAssetFont="gotham_rounded_medium"
+                tools:text="Choose" />
+
+        </LinearLayout>
+
+        <View
+            style="@style/Consent_Form_View_Style"
+            android:layout_width="match_parent" />
+
+    </LinearLayout>
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+        android:id="@+id/employerNameTextInputLayout"
+        style="@style/SigninSignupTextInputStyle"
+        app:customAssetFont="proxima_nova_semi_bold"
+        app:hintTextAppearance="@style/FloatingLabelStyle">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+            android:id="@+id/employerNameEditText"
+            style="@style/DemographicsReviewEditTextStyle"
+            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ0123456789 "
+            android:imeOptions="actionNext"
+            android:inputType="textPostalAddress"
+            android:maxLength="256"
+            android:nextFocusForward="@+id/addressEditText"
+            app:customAssetFont="gotham_rounded_book"
+            app:hintTextAppearance="@style/FloatingLabelStyle"
+            breeze:hintKey="demographics_employer_name_hint" />
+
+    </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+        android:id="@+id/address1TextInputLayout"
+        style="@style/SigninSignupTextInputStyle"
+        app:customAssetFont="proxima_nova_semi_bold"
+        app:hintTextAppearance="@style/FloatingLabelStyle">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+            android:id="@+id/addressEditText"
+            style="@style/DemographicsReviewEditTextStyle"
+            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ0123456789 "
+            android:imeOptions="actionNext"
+            android:inputType="textPostalAddress"
+            android:maxLength="256"
+            android:nextFocusForward="@+id/addressEditText2"
+            app:customAssetFont="gotham_rounded_book"
+            app:hintTextAppearance="@style/FloatingLabelStyle"
+            breeze:hintKey="address1_label" />
+
+    </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+            android:id="@+id/address2TextInputLayout"
+            style="@style/SigninSignupTextInputStyle"
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                android:id="@+id/addressEditText2"
+                style="@style/DemographicsReviewEditTextStyle"
+                android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ0123456789 "
+                android:imeOptions="actionNext"
+                android:inputType="textPostalAddress"
+                android:maxLength="256"
+                android:nextFocusForward="@+id/zipCodeTextView"
+                app:customAssetFont="gotham_rounded_book"
+                app:hintTextAppearance="@style/FloatingLabelStyle"
+                breeze:hintKey="address2_label" />
+
+        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/demogrAddressOptionalLabel"
+            style="@style/SignupRequireHintStyle"
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textHint="payment_address_line2_text" />
+
+    </FrameLayout>
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+        android:id="@+id/zipCodeTextInputLayout"
+        style="@style/SigninSignupTextInputStyle"
+        app:customAssetFont="proxima_nova_semi_bold"
+        app:hintTextAppearance="@style/FloatingLabelStyle">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+            android:id="@+id/zipCodeTextView"
+            style="@style/DemographicsReviewEditTextStyle"
+            android:digits="0123456789-"
+            android:imeOptions="actionNext"
+            android:maxLength="10"
+            android:nextFocusForward="@+id/cityTextView"
+            app:customAssetFont="gotham_rounded_book"
+            app:hintTextAppearance="@style/FloatingLabelStyle"
+            breeze:hintKey="payment_zipcode" />
+
+    </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+    <LinearLayout
+        android:id="@+id/cityAndStateLayoutContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+            android:id="@+id/cityTextInputLayout"
+            style="@style/SigninSignupTextInputStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                android:id="@+id/cityTextView"
+                style="@style/DemographicsReviewEditTextStyle"
+                android:imeOptions="actionNext"
+                android:inputType="textCapCharacters"
+                android:maxLength="255"
+                android:maxLines="1"
+                android:nextFocusRight="@+id/phoneTextView"
+                app:customAssetFont="gotham_rounded_book"
+                app:hintTextAppearance="@style/FloatingLabelStyle"
+                breeze:hintKey="payment_city" />
+
+        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+            android:id="@+id/stateTextInputLayout"
+            style="@style/SigninSignupTextInputStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                android:id="@+id/stateTextView"
+                style="@style/DemographicsReviewEditTextStyle"
+                android:clickable="true"
+                android:focusable="false"
+                android:imeOptions="actionDone"
+                app:customAssetFont="gotham_rounded_book"
+                breeze:hintKey="demographics_state" />
+
+        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+    </LinearLayout>
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+        android:id="@+id/phoneTextInputLayout"
+        style="@style/SigninSignupTextInputStyle"
+        android:layout_marginBottom="@dimen/dimen_10dp"
+        app:customAssetFont="proxima_nova_semi_bold"
+        app:hintTextAppearance="@style/FloatingLabelStyle">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+            android:id="@+id/phoneTextView"
+            style="@style/DemographicsReviewEditTextStyle"
+            android:digits="0123456789"
+            android:imeOptions="actionDone"
+            android:maxLength="10"
+            app:customAssetFont="gotham_rounded_book"
+            app:hintTextAppearance="@style/FloatingLabelStyle"
+            breeze:hintKey="demographics_phone_number_label" />
+
+    </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
 </LinearLayout>

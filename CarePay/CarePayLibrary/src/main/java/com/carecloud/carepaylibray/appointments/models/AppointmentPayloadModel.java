@@ -1,9 +1,14 @@
 
 package com.carecloud.carepaylibray.appointments.models;
 
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepaylibray.adhoc.AdhocFormsPatientModeInfo;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
+import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -66,10 +71,22 @@ public class AppointmentPayloadModel implements Serializable {
     private List<ConsentFormUserResponseDTO> patientFormsFilled = new ArrayList<>();
     @Expose
     @SerializedName("user_practices")
-    private List<ResourcesPracticeDTO> userPractices = new ArrayList<>();
+    private List<UserPracticeDTO> userPractices = new ArrayList<>();
     @Expose
     @SerializedName("filled_forms")
     private List<String> filledForms = new ArrayList<>();
+    @SerializedName("payment_settings")
+    @Expose
+    private List<PaymentsPayloadSettingsDTO> paymentSettings = new ArrayList<>();
+    @SerializedName("merchant_services")
+    @Expose
+    private List<MerchantServicesDTO> merchantServices = new ArrayList<>();
+    @SerializedName("patient_credit_cards")
+    @Expose
+    private List<PaymentsPatientsCreditCardsPayloadListDTO> patientCreditCards = new ArrayList<>();
+    @SerializedName("adhoc_forms_patient_mode")
+    @Expose
+    private AdhocFormsPatientModeInfo adhocFormsPatientModeInfo = new AdhocFormsPatientModeInfo();
 
     /**
      * @return languages
@@ -269,11 +286,11 @@ public class AppointmentPayloadModel implements Serializable {
         this.patientFormsFilled = patientFormsFilled;
     }
 
-    public List<ResourcesPracticeDTO> getUserPractices() {
+    public List<UserPracticeDTO> getUserPractices() {
         return userPractices;
     }
 
-    public void setUserPractices(List<ResourcesPracticeDTO> userPractices) {
+    public void setUserPractices(List<UserPracticeDTO> userPractices) {
         this.userPractices = userPractices;
     }
 
@@ -283,5 +300,37 @@ public class AppointmentPayloadModel implements Serializable {
 
     public void setFilledForms(List<String> filledForms) {
         this.filledForms = filledForms;
+    }
+
+    public List<PaymentsPayloadSettingsDTO> getPaymentSettings() {
+        return paymentSettings;
+    }
+
+    public void setPaymentSettings(List<PaymentsPayloadSettingsDTO> paymentSettings) {
+        this.paymentSettings = paymentSettings;
+    }
+
+    public List<MerchantServicesDTO> getMerchantServices() {
+        return merchantServices;
+    }
+
+    public void setMerchantServices(List<MerchantServicesDTO> merchantServices) {
+        this.merchantServices = merchantServices;
+    }
+
+    public List<PaymentsPatientsCreditCardsPayloadListDTO> getPatientCreditCards() {
+        return patientCreditCards;
+    }
+
+    public void setPatientCreditCards(List<PaymentsPatientsCreditCardsPayloadListDTO> patientCreditCards) {
+        this.patientCreditCards = patientCreditCards;
+    }
+
+    public AdhocFormsPatientModeInfo getAdhocFormsPatientModeInfo() {
+        return adhocFormsPatientModeInfo;
+    }
+
+    public void setAdhocFormsPatientModeInfo(AdhocFormsPatientModeInfo adhocFormsPatientModeInfo) {
+        this.adhocFormsPatientModeInfo = adhocFormsPatientModeInfo;
     }
 }

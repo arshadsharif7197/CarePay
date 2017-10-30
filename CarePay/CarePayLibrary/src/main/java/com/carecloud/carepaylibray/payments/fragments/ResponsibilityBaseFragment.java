@@ -20,9 +20,8 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
-import com.carecloud.carepaylibray.payments.models.postmodel.ResponsibilityType;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -49,9 +48,9 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
     @Override
     public void attachCallback(Context context) {
         try {
-            if(context instanceof PaymentViewHandler){
+            if (context instanceof PaymentViewHandler) {
                 actionCallback = ((PaymentViewHandler) context).getPaymentPresenter();
-            }else {
+            } else {
                 actionCallback = (ResponsibilityPaymentInterface) context;
             }
         } catch (ClassCastException cce) {
@@ -60,9 +59,9 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(actionCallback == null) {
+        if (actionCallback == null) {
             attachCallback(getContext());
         }
     }
@@ -80,9 +79,9 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
         paymentDetailsListRecyclerView.setAdapter(adapter);
     }
 
-    protected List<PendingBalancePayloadDTO> getAllPendingBalancePayloads(List<PendingBalanceDTO> pendingBalances){
+    protected List<PendingBalancePayloadDTO> getAllPendingBalancePayloads(List<PendingBalanceDTO> pendingBalances) {
         List<PendingBalancePayloadDTO> pendingBalancePayloads = new ArrayList<>();
-        for(PendingBalanceDTO pendingBalance : pendingBalances){
+        for (PendingBalanceDTO pendingBalance : pendingBalances) {
             pendingBalancePayloads.addAll(pendingBalance.getPayload());
         }
         return pendingBalancePayloads;
@@ -120,16 +119,17 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
         appCompatActivity = activity;
     }
 
-    protected void createPaymentModel(double payAmount){
-        PaymentPostModel postModel = paymentDTO.getPaymentPayload().getPaymentPostModel();
-        if( postModel == null){
-            postModel = new PaymentPostModel();
+    protected void createPaymentModel(double payAmount) {
+        IntegratedPaymentPostModel postModel = paymentDTO.getPaymentPayload().getPaymentPostModel();
+        if (postModel == null) {
+            postModel = new IntegratedPaymentPostModel();
         }
         postModel.setAmount(payAmount);
+        postModel.getLineItems().clear();
 
         List<PendingBalancePayloadDTO> responsibilityTypes = getPendingResponsibilityTypes();
-        for(PendingBalancePayloadDTO responsibility : responsibilityTypes){
-            if(payAmount > 0D) {
+        for (PendingBalancePayloadDTO responsibility : responsibilityTypes) {
+            if (payAmount > 0D) {
                 double itemAmount;
                 if (payAmount >= responsibility.getAmount()) {
                     itemAmount = responsibility.getAmount();
@@ -138,48 +138,52 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
                 }
                 payAmount = (double) Math.round((payAmount - itemAmount) * 100) / 100;
 
-                PaymentObject paymentObject = new PaymentObject();
-                paymentObject.setAmount(itemAmount);
+                IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
+                paymentLineItem.setAmount(itemAmount);
 
                 AppointmentDTO appointmentDTO = actionCallback.getAppointment();
-                if(appointmentDTO != null){
-                    paymentObject.setProviderID(appointmentDTO.getPayload().getProvider().getGuid());
-                    paymentObject.setLocationID(appointmentDTO.getPayload().getLocation().getGuid());
+                if (appointmentDTO != null) {
+                    paymentLineItem.setProviderID(appointmentDTO.getPayload().getProvider().getGuid());
+                    paymentLineItem.setLocationID(appointmentDTO.getPayload().getLocation().getGuid());
                 }
 
-                switch (responsibility.getType()){
+                switch (responsibility.getType()) {
                     case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
-                        paymentObject.setResponsibilityType(ResponsibilityType.co_insurance);
+                        paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_COINSURANCE);
                         break;
                     case PendingBalancePayloadDTO.DEDUCTIBLE_TYPE:
-                        paymentObject.setResponsibilityType(ResponsibilityType.deductable);
+                        paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_DEDUCTABLE);
                         break;
                     case PendingBalancePayloadDTO.CO_PAY_TYPE:
                     default:
-                        paymentObject.setResponsibilityType(ResponsibilityType.co_pay);
+                        paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_COPAY);
                         break;
                 }
-                postModel.addPaymentMethod(paymentObject);
+
+                postModel.addLineItem(paymentLineItem);
+
             }
         }
 
-        if(payAmount > 0){//payment is greater than any responsibility types
-            PaymentObject paymentObject = new PaymentObject();
-            paymentObject.setAmount(payAmount);
-            paymentObject.setDescription("Unapplied Amount");
+        if (payAmount > 0) {//payment is greater than any responsibility types
 
-            postModel.addPaymentMethod(paymentObject);
+            IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
+            paymentLineItem.setAmount(payAmount);
+            paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_UNAPPLIED);
+            paymentLineItem.setDescription("Unapplied Amount");
+
+            postModel.addLineItem(paymentLineItem);
         }
 
         paymentDTO.getPaymentPayload().setPaymentPostModel(postModel);
     }
 
-    private List<PendingBalancePayloadDTO> getPendingResponsibilityTypes(){
+    private List<PendingBalancePayloadDTO> getPendingResponsibilityTypes() {
         List<PendingBalancePayloadDTO> responsibilityTypes = new ArrayList<>();
-        for(PatientBalanceDTO patientBalanceDTO : paymentDTO.getPaymentPayload().getPatientBalances()){
-            for(PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()){
-                for(PendingBalancePayloadDTO pendingBalancePayloadDTO : pendingBalanceDTO.getPayload()){
-                    switch (pendingBalancePayloadDTO.getType()){
+        for (PatientBalanceDTO patientBalanceDTO : paymentDTO.getPaymentPayload().getPatientBalances()) {
+            for (PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()) {
+                for (PendingBalancePayloadDTO pendingBalancePayloadDTO : pendingBalanceDTO.getPayload()) {
+                    switch (pendingBalancePayloadDTO.getType()) {
                         case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
                         case PendingBalancePayloadDTO.CO_PAY_TYPE:
                         case PendingBalancePayloadDTO.DEDUCTIBLE_TYPE:
@@ -194,13 +198,14 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
         return responsibilityTypes;
     }
 
-    protected boolean isPartialPayAvailable(String practiceId, double total){
-        if(practiceId != null) {
+    protected boolean isPartialPayAvailable(String practiceId, double total) {
+        if (practiceId != null) {
             for (PaymentsPayloadSettingsDTO payloadSettingsDTO : paymentDTO.getPaymentPayload().getPaymentSettings()) {
                 if (practiceId.equals(payloadSettingsDTO.getMetadata().getPracticeId())) {
-                    if(payloadSettingsDTO.getPayload().getRegularPayments().isAllowPartialPayments()){
+                    if (payloadSettingsDTO.getPayload().getRegularPayments().isAllowPartialPayments()) {
                         double minBalance = payloadSettingsDTO.getPayload().getRegularPayments().getPartialPaymentsThreshold();
-                        return total >= minBalance;
+                        double minPayment = payloadSettingsDTO.getPayload().getRegularPayments().getMinimumPartialPaymentAmount();
+                        return total >= minBalance && total >= minPayment;
                     }
 
                     return false;

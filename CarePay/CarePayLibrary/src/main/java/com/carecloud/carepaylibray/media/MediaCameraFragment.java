@@ -108,6 +108,7 @@ public class MediaCameraFragment extends BaseDialogFragment implements CarePayCa
     @Override
     public void onStart() {
         super.onStart();
+        carePayCameraView.start(currentCameraId);
         Dialog dialog = getDialog();
         if (dialog != null) {
             Window window = dialog.getWindow();
@@ -116,7 +117,6 @@ public class MediaCameraFragment extends BaseDialogFragment implements CarePayCa
                 window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             }
         }
-        carePayCameraView.start(currentCameraId);
 
     }
 

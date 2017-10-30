@@ -1,6 +1,7 @@
 
 package com.carecloud.carepaylibray.appointments.models;
 
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,7 +12,7 @@ public class ResourcesToScheduleDTO {
 
     @SerializedName("practice")
     @Expose
-    private ResourcesPracticeDTO practice = new ResourcesPracticeDTO();
+    private UserPracticeDTO practice = new UserPracticeDTO();
     @SerializedName("locations")
     @Expose
     private List<LocationDTO> locations = new ArrayList<>();
@@ -23,7 +24,7 @@ public class ResourcesToScheduleDTO {
      *
      * @return practice
      */
-    public ResourcesPracticeDTO getPractice() {
+    public UserPracticeDTO getPractice() {
         return practice;
     }
 
@@ -31,7 +32,7 @@ public class ResourcesToScheduleDTO {
      *
      * @param practice practice
      */
-    public void setPractice(ResourcesPracticeDTO practice) {
+    public void setPractice(UserPracticeDTO practice) {
         this.practice = practice;
     }
 

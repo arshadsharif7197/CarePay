@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.notifications.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -12,6 +13,8 @@ import com.carecloud.carepay.patient.notifications.fragments.NotificationFragmen
 import com.carecloud.carepay.patient.notifications.models.NotificationItem;
 import com.carecloud.carepay.patient.notifications.models.NotificationStatus;
 import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
+import com.carecloud.carepay.patient.payment.PaymentConstants;
+import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -22,6 +25,7 @@ import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import org.json.JSONObject;
@@ -34,7 +38,8 @@ import java.util.Map;
  * Created by lmenendez on 2/8/17
  */
 
-public class NotificationActivity extends MenuPatientActivity implements NotificationFragment.NotificationCallback, AppointmentViewHandler {
+public class NotificationActivity extends MenuPatientActivity
+        implements NotificationFragment.NotificationCallback, AppointmentViewHandler {
 
     private PatientAppointmentPresenter appointmentPresenter;
     private NotificationsDTO notificationsDTO;
@@ -47,8 +52,9 @@ public class NotificationActivity extends MenuPatientActivity implements Notific
         boolean isLandingPage = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO)
                 .getBoolean(CarePayConstants.OPEN_NOTIFICATIONS, false);
 
-        if (isLandingPage){
-            List<PracticePatientIdsDTO> practicePatientIds = notificationsDTO.getPayload().getPracticePatientIds();
+        if (isLandingPage) {
+            List<PracticePatientIdsDTO> practicePatientIds = notificationsDTO.getPayload()
+                    .getPracticePatientIds();
             if (!practicePatientIds.isEmpty()) {
                 getApplicationPreferences().writeObjectToSharedPreference(
                         CarePayConstants.KEY_PRACTICE_PATIENT_IDS, practicePatientIds);
@@ -76,11 +82,28 @@ public class NotificationActivity extends MenuPatientActivity implements Notific
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
+            case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
+            case PaymentConstants.REQUEST_CODE_FULL_WALLET:
+                appointmentPresenter.forwardAndroidPayResult(requestCode, resultCode, data);
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+                break;
+        }
+    }
+
+
+    @Override
     protected void onResume() {
         super.onResume();
         MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_notification);
         menuItem.setChecked(true);
-        displayToolbar(true, menuItem.getTitle().toString());
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            displayToolbar(true, menuItem.getTitle().toString());
+        }
     }
 
     @Override
@@ -103,7 +126,6 @@ public class NotificationActivity extends MenuPatientActivity implements Notific
         }
     }
 
-
     @Override
     public AppointmentPresenter getAppointmentPresenter() {
         return appointmentPresenter;
@@ -112,11 +134,23 @@ public class NotificationActivity extends MenuPatientActivity implements Notific
     @Override
     public void navigateToFragment(Fragment fragment, boolean addToBackStack) {
         replaceFragment(R.id.container_main, fragment, addToBackStack);
+        if (fragment instanceof PaymentMethodPrepaymentFragment){
+            displayToolbar(false, null);
+        }
     }
 
     @Override
-    public void confirmAppointment() {
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (getSupportFragmentManager().getBackStackEntryCount() < 1) {
+            displayToolbar(true, null);
+        }
+    }
 
+    @Override
+    public void confirmAppointment(boolean showSuccess) {
+        Map<String, String> queryMap = new HashMap<>();
+        getWorkflowServiceHelper().execute(transitionNotifications, notificationsWorkflowCallback, queryMap);
     }
 
     @Override
@@ -136,9 +170,27 @@ public class NotificationActivity extends MenuPatientActivity implements Notific
 
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
-                AppointmentsResultModel appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+                AppointmentsResultModel appointmentsResultModel = DtoHelper
+                        .getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
                 if (appointmentsResultModel != null) {
-                    appointmentPresenter = new PatientAppointmentPresenter(NotificationActivity.this, appointmentsResultModel, null);
+                    PaymentsModel paymentModel = new PaymentsModel();
+                    paymentModel.getPaymentPayload().setPatientCreditCards(appointmentsResultModel
+                            .getPayload().getPatientCreditCards());
+                    paymentModel.getPaymentPayload().setPaymentSettings(appointmentsResultModel
+                            .getPayload().getPaymentSettings());
+                    paymentModel.getPaymentPayload().setMerchantServices(appointmentsResultModel
+                            .getPayload().getMerchantServices());
+                    paymentModel.getPaymentPayload().setPatientBalances(appointmentsResultModel
+                            .getPayload().getPatientBalances());
+                    paymentModel.getPaymentPayload().setUserPractices(appointmentsResultModel
+                            .getPayload().getUserPractices());
+                    paymentModel.getPaymentsMetadata().getPaymentsTransitions().setMakePayment(
+                            appointmentsResultModel.getMetadata().getTransitions().getMakePayment());
+                    paymentModel.getPaymentsMetadata().getPaymentsTransitions().setAddCreditCard(
+                            appointmentsResultModel.getMetadata().getTransitions().getAddCreditCard());
+
+                    appointmentPresenter = new PatientAppointmentPresenter(NotificationActivity.this,
+                            appointmentsResultModel, paymentModel);
                 }
                 if (appointmentDTO != null) {
                     hideProgressDialog();

@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -24,9 +23,8 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsSettingsRegularPaymentsDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
-import com.carecloud.carepaylibray.payments.models.postmodel.ResponsibilityType;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -37,18 +35,23 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
-
-public class ResponsibilityFragmentDialog extends BaseDialogFragment implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
+public class ResponsibilityFragmentDialog extends BaseDialogFragment
+        implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
+    private static final String KEY_LEFT_BUTTON = "leftLabel";
+    private static final String KEY_RIGHT_BUTTON = "rightLabel";
+    private static final String KEY_EMPTY_MESSAGE = "messageLabel";
 
     private String leftLabel;
     private String rightLabel;
+    private String emptyMessage;
     private PaymentsModel paymentsModel;
     private PatientBalanceDTO patientBalance;
     private PayResponsibilityCallback callback;
-    @Nullable private PaymentConfirmationInterface payInfoCallback;
+    @Nullable
+    private PaymentConfirmationInterface payInfoCallback;
     private double owedAmount = 0;
     private ResponsibilityHeaderModel headerModel;
+    private boolean showLeftButtonAlways;
 
     @Override
     protected String getCancelString() {
@@ -83,14 +86,17 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
      * @return new instance of a ResponsibilityFragmentDialog
      */
     public static ResponsibilityFragmentDialog newInstance(PaymentsModel paymentsModel,
-                                                           String leftLabel, String rightLabel,
+                                                           String leftLabel,
+                                                           String rightLabel,
+                                                           String emptyMessage,
                                                            ResponsibilityHeaderModel headerModel) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, headerModel);
-        args.putString("leftLabel", leftLabel);
-        args.putString("rightLabel", rightLabel);
+        args.putString(KEY_LEFT_BUTTON, leftLabel);
+        args.putString(KEY_RIGHT_BUTTON, rightLabel);
+        args.putString(KEY_EMPTY_MESSAGE, emptyMessage);
 
         ResponsibilityFragmentDialog dialog = new ResponsibilityFragmentDialog();
         dialog.setArguments(args);
@@ -105,8 +111,9 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
         paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
         headerModel = DtoHelper.getConvertedDTO(ResponsibilityHeaderModel.class, arguments);
         patientBalance = paymentsModel.getPaymentPayload().getPatientBalances().get(0);
-        leftLabel = arguments.getString("leftLabel");
-        rightLabel = arguments.getString("rightLabel");
+        leftLabel = arguments.getString(KEY_LEFT_BUTTON);
+        rightLabel = arguments.getString(KEY_RIGHT_BUTTON);
+        emptyMessage = arguments.getString(KEY_EMPTY_MESSAGE);
         handleException();
     }
 
@@ -125,9 +132,9 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
             throw new ClassCastException("Provided context must implement PayResponsibilityCallback");
         }
 
-        try{
+        try {
             payInfoCallback = (PaymentConfirmationInterface) context;
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             //this callback is optional and expected only in patient mode
             cce.printStackTrace();
         }
@@ -174,13 +181,13 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
                         }
                     });
 
-            ImageView bgImage = (ImageView) view.findViewById(R.id.profile_bg_image);
-
-
-            Picasso.with(getContext()).load(photoUrl)
-                    .fit()
-                    .transform(new RoundedCornersTransformation(10, 0, RoundedCornersTransformation.CornerType.TOP))
-                    .into(bgImage);
+//            ImageView bgImage = (ImageView) view.findViewById(R.id.profile_bg_image);
+//
+//
+//            Picasso.with(getContext()).load(photoUrl)
+//                    .fit()
+//                    .transform(new RoundedCornersTransformation(10, 0, RoundedCornersTransformation.CornerType.TOP))
+//                    .into(bgImage);
 
             profilePhoto.setVisibility(View.VISIBLE);
         }
@@ -190,20 +197,16 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
 
     private void initializeBody(View view) {
         if (null != patientBalance && null != patientBalance.getBalances() && !patientBalance.getBalances().isEmpty()) {
-            LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.rowLayout);
+            View noBalancePlaceholder = view.findViewById(R.id.empty_balance_layout);
             List<PendingBalanceDTO> balances = patientBalance.getBalances();
             initializeOwedAmount(balances);
             if (owedAmount > 0) {
                 initializePaymentLines(view, balances);
-                linearLayout.setVisibility(View.GONE);
-            } else{
-                linearLayout.setVisibility(View.VISIBLE);
-                TextView paymentDetailLabel =(TextView) view.findViewById(R.id.itemNameLabel);
-                TextView paymentDetailAmount =(TextView) view.findViewById(R.id.itemAmountLabel);
-
-                paymentDetailLabel.setText(Label.getLabel("payment_details_patient_balance_label"));
-                paymentDetailAmount.setText("$0.00");
-
+                noBalancePlaceholder.setVisibility(View.GONE);
+            } else {
+                noBalancePlaceholder.setVisibility(View.VISIBLE);
+                TextView message = (TextView) view.findViewById(R.id.no_payment_message);
+                message.setText(emptyMessage);
             }
         }
 
@@ -217,9 +220,9 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
         amountDetails.setAdapter(adapter);
     }
 
-    protected List<PendingBalancePayloadDTO> getAllPendingBalancePayloads(List<PendingBalanceDTO> pendingBalances){
+    protected List<PendingBalancePayloadDTO> getAllPendingBalancePayloads(List<PendingBalanceDTO> pendingBalances) {
         List<PendingBalancePayloadDTO> pendingBalancePayloads = new ArrayList<>();
-        for(PendingBalanceDTO pendingBalance : pendingBalances){
+        for (PendingBalanceDTO pendingBalance : pendingBalances) {
             pendingBalancePayloads.addAll(pendingBalance.getPayload());
         }
         return pendingBalancePayloads;
@@ -247,7 +250,8 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
             leftButton.setVisibility(View.GONE);
         } else {
             leftButton.setText(leftLabel);
-            leftButton.setVisibility(isPartialPayAvailable(owedAmount)?View.VISIBLE:View.GONE);
+            leftButton.setVisibility(isPartialPayAvailable(owedAmount) || showLeftButtonAlways
+                    ? View.VISIBLE : View.GONE);
             leftButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -283,16 +287,20 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
         void onDetailItemClick(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem);
     }
 
-    private void createPaymentModel(double payAmount){
-        PaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
-        if( postModel == null){
-            postModel = new PaymentPostModel();
+    private void createPaymentModel(double payAmount) {
+        if (payInfoCallback == null) {
+            return;
+        }
+        IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
+        if (postModel == null) {
+            postModel = new IntegratedPaymentPostModel();
         }
         postModel.setAmount(payAmount);
+        postModel.getLineItems().clear();
 
         List<PendingBalancePayloadDTO> responsibilityTypes = getPendingResponsibilityTypes();
-        for(PendingBalancePayloadDTO responsibility : responsibilityTypes){
-            if(payAmount > 0D) {
+        for (PendingBalancePayloadDTO responsibility : responsibilityTypes) {
+            if (payAmount > 0D) {
                 double itemAmount;
                 if (payAmount >= responsibility.getAmount()) {
                     itemAmount = responsibility.getAmount();
@@ -301,50 +309,50 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
                 }
                 payAmount = (double) Math.round((payAmount - itemAmount) * 100) / 100;
 
-                PaymentObject paymentObject = new PaymentObject();
-                paymentObject.setAmount(itemAmount);
+                IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
+                paymentLineItem.setAmount(itemAmount);
 
-                if(payInfoCallback != null) {
-                    AppointmentDTO appointmentDTO = payInfoCallback.getAppointment();
-                    if (appointmentDTO != null) {
-                        paymentObject.setProviderID(appointmentDTO.getPayload().getProvider().getGuid());
-                        paymentObject.setLocationID(appointmentDTO.getPayload().getLocation().getGuid());
-                    }
+                AppointmentDTO appointmentDTO = payInfoCallback.getAppointment();
+                if (appointmentDTO != null) {
+                    paymentLineItem.setProviderID(appointmentDTO.getPayload().getProvider().getGuid());
+                    paymentLineItem.setLocationID(appointmentDTO.getPayload().getLocation().getGuid());
                 }
 
-                switch (responsibility.getType()){
+                switch (responsibility.getType()) {
                     case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
-                        paymentObject.setResponsibilityType(ResponsibilityType.co_insurance);
+                        paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_COINSURANCE);
                         break;
                     case PendingBalancePayloadDTO.DEDUCTIBLE_TYPE:
-                        paymentObject.setResponsibilityType(ResponsibilityType.deductable);
+                        paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_DEDUCTABLE);
                         break;
                     case PendingBalancePayloadDTO.CO_PAY_TYPE:
                     default:
-                        paymentObject.setResponsibilityType(ResponsibilityType.co_pay);
+                        paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_COPAY);
                         break;
                 }
-                postModel.addPaymentMethod(paymentObject);
+
+                postModel.addLineItem(paymentLineItem);
             }
         }
 
-        if(payAmount > 0){//payment is greater than any responsibility types
-            PaymentObject paymentObject = new PaymentObject();
-            paymentObject.setAmount(payAmount);
-            paymentObject.setDescription("Unapplied Amount");
+        if (payAmount > 0) {//payment is greater than any responsibility types
+            IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
+            paymentLineItem.setAmount(payAmount);
+            paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_UNAPPLIED);
+            paymentLineItem.setDescription("Unapplied Amount");
 
-            postModel.addPaymentMethod(paymentObject);
+            postModel.addLineItem(paymentLineItem);
         }
 
         paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
     }
 
-    private List<PendingBalancePayloadDTO> getPendingResponsibilityTypes(){
+    private List<PendingBalancePayloadDTO> getPendingResponsibilityTypes() {
         List<PendingBalancePayloadDTO> responsibilityTypes = new ArrayList<>();
-        for(PatientBalanceDTO patientBalanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()){
-            for(PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()){
-                for(PendingBalancePayloadDTO pendingBalancePayloadDTO : pendingBalanceDTO.getPayload()){
-                    switch (pendingBalancePayloadDTO.getType()){
+        for (PatientBalanceDTO patientBalanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()) {
+            for (PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()) {
+                for (PendingBalancePayloadDTO pendingBalancePayloadDTO : pendingBalanceDTO.getPayload()) {
+                    switch (pendingBalancePayloadDTO.getType()) {
                         case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
                         case PendingBalancePayloadDTO.CO_PAY_TYPE:
                         case PendingBalancePayloadDTO.DEDUCTIBLE_TYPE:
@@ -359,14 +367,19 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
         return responsibilityTypes;
     }
 
-    protected boolean isPartialPayAvailable(double balance){
-        PaymentsSettingsRegularPaymentsDTO regularPaymentsDTO = paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments();
-        if(regularPaymentsDTO.isAllowPartialPayments()){
+    protected boolean isPartialPayAvailable(double balance) {
+        PaymentsSettingsRegularPaymentsDTO regularPaymentsDTO = paymentsModel.getPaymentPayload()
+                .getPaymentSettings().get(0).getPayload().getRegularPayments();
+        if (regularPaymentsDTO.isAllowPartialPayments()) {
             double minBalance = regularPaymentsDTO.getPartialPaymentsThreshold();
-            return balance >= minBalance;
+            double minPayment = regularPaymentsDTO.getMinimumPartialPaymentAmount();
+            return balance >= minBalance && balance >= minPayment;
         }
 
         return false;
     }
 
+    public void setShowLeftButtonAlways(boolean showLeftButtonAlways) {
+        this.showLeftButtonAlways = showLeftButtonAlways;
+    }
 }

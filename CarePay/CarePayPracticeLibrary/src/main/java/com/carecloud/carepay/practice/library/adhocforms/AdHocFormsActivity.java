@@ -1,16 +1,12 @@
 package com.carecloud.carepay.practice.library.adhocforms;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
@@ -26,8 +22,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
-import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.interfaces.DTO;
 
 import java.util.ArrayList;
@@ -84,12 +78,6 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         confirmationPinDialog.show();
     }
 
-    private void createLabel(ViewGroup viewGroup, PracticeForm practiceForm) {
-        CarePayTextView label = new CarePayTextView(getContext());
-
-        viewGroup.addView(label);
-    }
-
     @Override
     public DTO getDto() {
         return appointmentModel;
@@ -113,15 +101,6 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
     @Override
     public void highlightFormName(int displayedFormsIndex) {
         adapter.highlightFormName(displayedFormsIndex);
-//        ViewGroup viewGroup = (ViewGroup) findViewById(R.id.formsNamesContainer);
-//        for (int index = 0; index < viewGroup.getChildCount(); ++index) {
-//            CarePayTextView nextChild = (CarePayTextView) viewGroup.getChildAt(index);
-//            if (displayedFormsIndex == index) {
-//                nextChild.setFontAttribute(CustomAssetStyleable.GOTHAM_ROUNDED_BOLD);
-//            } else {
-//                nextChild.setFontAttribute(CustomAssetStyleable.GOTHAM_ROUNDED_LIGHT);
-//            }
-//        }
     }
 
     @Override
@@ -167,7 +146,7 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

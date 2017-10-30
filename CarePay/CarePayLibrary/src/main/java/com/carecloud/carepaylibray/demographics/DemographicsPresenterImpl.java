@@ -36,8 +36,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     private AppointmentDTO appointmentPayload;
     private DemographicsView demographicsView;
 
-    private InsuranceEditDialog insuranceEditDialog;
-
     private DemographicDTO demographicDTO;
     private final boolean isPatientMode;
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
@@ -55,7 +53,8 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
      * @param savedInstanceState Bundle
      * @param isPatientMode      true if Practice App - Patient Mode
      */
-    public DemographicsPresenterImpl(DemographicsView demographicsView, Bundle savedInstanceState, boolean isPatientMode) {
+    public DemographicsPresenterImpl(DemographicsView demographicsView, Bundle savedInstanceState,
+                                     boolean isPatientMode) {
         this.demographicsView = demographicsView;
         demographicDTO = demographicsView.getConvertedDTO(DemographicDTO.class);
         if (!demographicDTO.getPayload().getAppointmentpayloaddto().isEmpty()) {
@@ -163,7 +162,8 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
     @Override
     public void navigateToMedicationsAllergy(WorkflowDTO workflowDTO) {
-        medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class, workflowDTO);
+        medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class,
+                workflowDTO);
 
         Bundle bundle = new Bundle();
         bundle.putString(CarePayConstants.MEDICATION_ALLERGIES_DTO_EXTRA, workflowDTO.toString());
@@ -203,7 +203,8 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     @Override
     public void editInsurance(DemographicDTO demographicDTO, Integer editedIndex, boolean showAsDialog) {
         this.demographicDTO = demographicDTO;
-        insuranceEditDialog = InsuranceEditDialog.newInstance(demographicDTO, editedIndex, isPatientMode);
+        InsuranceEditDialog insuranceEditDialog = InsuranceEditDialog.newInstance(demographicDTO,
+                editedIndex, isPatientMode, true);
 
         if (showAsDialog && isPatientMode) {
             String tag = "InsuranceEditFloatingDialog";
@@ -223,25 +224,28 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
     @Override
     public void addMedicationAllergyItem(MedicationsAllergiesObject item) {
-        MedicationsAllergyFragment medicationsAllergyFragment = (MedicationsAllergyFragment) getSupportFragmentManager().findFragmentById(R.id.root_layout);
+        MedicationsAllergyFragment medicationsAllergyFragment =
+                (MedicationsAllergyFragment) getSupportFragmentManager().findFragmentById(R.id.root_layout);
         medicationsAllergyFragment.addItem(item);
     }
 
     @Override
     public void showMedicationSearch() {
-        MedicationAllergySearchFragment medicationAllergySearchFragment = new MedicationAllergySearchFragment();
+        MedicationAllergySearchFragment fragment = new MedicationAllergySearchFragment();
         if (medicationsAllergiesDTO != null) {
             Gson gson = new Gson();
             String jsonExtra = gson.toJson(medicationsAllergiesDTO);
             Bundle bundle = new Bundle();
             bundle.putString(CarePayConstants.MEDICATION_ALLERGIES_DTO_EXTRA, jsonExtra);
 
-            bundle.putString(CarePayConstants.MEDICATION_ALLERGIES_SEARCH_MODE_EXTRA, MedicationAllergySearchFragment.SearchMode.MEDICATION.name());
-            medicationAllergySearchFragment.setArguments(bundle);
+            bundle.putString(CarePayConstants.MEDICATION_ALLERGIES_SEARCH_MODE_EXTRA,
+                    MedicationAllergySearchFragment.SearchMode.MEDICATION.name());
+            fragment.setArguments(bundle);
 
         }
 
-        medicationAllergySearchFragment.show(getSupportFragmentManager(), medicationAllergySearchFragment.getClass().getName());
+        fragment.show(getSupportFragmentManager(),
+                fragment.getClass().getName());
     }
 
     @Override
@@ -259,7 +263,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     @Override
     public void medicationSubmitFail(String message) {
         if (demographicsView != null) {
-            demographicsView.showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            demographicsView.showErrorNotification(message);
             Log.e(demographicsView.getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), message);
         }
     }
@@ -279,29 +283,29 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     @Override
     public int getTotalSteps() {
         int countSteps = 0;
-        for(int i=0; i<MAX_STEPS; i++){
-            countSteps += hasStep(i+1);
+        for (int i = 0; i < MAX_STEPS; i++) {
+            countSteps += hasStep(i + 1);
         }
         return countSteps;
     }
 
     @Override
     public int hasStep(int step) {
-        switch (step){
+        switch (step) {
             case PERSONAL_INFO:
             case ADDRESS:
             case DEMOGRAPHICS:
                 return 1;
             case IDENTITY:
-                if(false) {//check if identity is disabled
-                    return 0;
+                if (demographicDTO.getPayload().getCheckinSettings().shouldShowIdentityDocs()) {
+                    return 1;
                 }
-                return 1;
+                return 0;
             case INSURANCE:
-                if(false){//check if insurance is disabled
-                    return 0;
+                if (demographicDTO.getPayload().getCheckinSettings().shouldShowHealthInsurance()) {
+                    return 1;
                 }
-                return 1;
+                return 0;
             default:
                 return 0;
         }
@@ -348,13 +352,15 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
         // Update Health Insurance Fragment
         String tag = getHealthInsuranceFragmentTag();
-        HealthInsuranceFragment healthInsuranceFragment = (HealthInsuranceFragment) fm.findFragmentByTag(tag);
+        HealthInsuranceFragment healthInsuranceFragment
+                = (HealthInsuranceFragment) fm.findFragmentByTag(tag);
         if (healthInsuranceFragment == null) {//may need to recreate it if no insurances
             healthInsuranceFragment = new HealthInsuranceFragment();
         }
 
         if (!healthInsuranceFragment.isAdded()) {
             fm.popBackStack();
+            healthInsuranceFragment.updateInsuranceList(demographicDTO);
             navigateToFragment(healthInsuranceFragment, true);
         }
 
@@ -378,7 +384,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     protected CheckInDemographicsBaseFragment getDemographicFragment(int step) {
-        if(hasStep(step)!=1){
+        if (hasStep(step) != 1) {
             return getDemographicFragment(++step);
         }
         switch (step) {

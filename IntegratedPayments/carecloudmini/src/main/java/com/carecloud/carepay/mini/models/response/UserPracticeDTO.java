@@ -4,6 +4,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -136,6 +138,26 @@ public class UserPracticeDTO {
         return null;
     }
 
+    /**
+     * Get List of Locations sorted alphabetically by name
+     * @return list of locations
+     */
+    public List<LocationsDTO> getSortedLocations(){
+        Collections.sort(locationsDTOList, new Comparator<LocationsDTO>() {
+            @Override
+            public int compare(LocationsDTO location1, LocationsDTO location2) {
+                if(location1.getName() == null){
+                    location1.setName("");
+                }
+                if(location2.getName() == null){
+                    location2.setName("");
+                }
+                return location1.getName().compareTo(location2.getName());
+            }
+        });
+        return locationsDTOList;
+    }
+
     @Override
     public boolean equals(Object object){
         try{
@@ -160,5 +182,16 @@ public class UserPracticeDTO {
         return super.hashCode();
     }
 
+    @Override
+    public String toString(){
+        return  "user_id" + ": " + userId + "\n" +
+                "practice_mgmt" + ": " + practiceMgmt + "\n" +
+                "id" + ": " + practiceId + "\n" +
+                "name" + ": " + practiceName + "\n" +
+                "name_alias" + ": " + getPracticeAliasName() + "\n" +
+                "papi_organization_id" + ": " + organizationId + "\n" +
+                "photo_url" + ": " + practicePhoto + "\n" +
+                "practice_phone" + ": " + practicePhone;
+    }
 }
 

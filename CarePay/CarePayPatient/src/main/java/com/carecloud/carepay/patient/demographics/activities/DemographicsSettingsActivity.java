@@ -62,7 +62,10 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         }
-        return item.getItemId() != R.id.action_remove_credit_card;
+        if (item.getItemId() == R.id.action_remove_credit_card || item.getItemId() == R.id.deleteEmployer) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -112,7 +115,8 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
 
     @Override
     public void displayDemographicsFragment() {
-        DemographicsInformationFragment demographicsInformationFragment = DemographicsInformationFragment.newInstance();
+        DemographicsInformationFragment demographicsInformationFragment =
+                DemographicsInformationFragment.newInstance();
         replaceFragment(demographicsInformationFragment, true);
     }
 
@@ -130,7 +134,8 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
 
     @Override
     public void editInsurance(DemographicDTO demographicDTO, int editedIndex) {
-        InsuranceEditDialog insuranceEditDialog = InsuranceEditDialog.newInstance(demographicDTO, editedIndex, false);
+        InsuranceEditDialog insuranceEditDialog = InsuranceEditDialog
+                .newInstance(demographicDTO, editedIndex, false, false);
 
         replaceFragment(insuranceEditDialog, true);
     }
@@ -149,8 +154,10 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     }
 
     @Override
-    public void displayCreditCardDetailsFragment(DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO) {
-        CreditCardDetailsFragment creditCardDetailsFragment = CreditCardDetailsFragment.newInstance(creditCardsPayloadDTO);
+    public void displayCreditCardDetailsFragment(DemographicsSettingsCreditCardsPayloadDTO
+                                                         creditCardsPayloadDTO) {
+        CreditCardDetailsFragment creditCardDetailsFragment = CreditCardDetailsFragment
+                .newInstance(creditCardsPayloadDTO);
         replaceFragment(creditCardDetailsFragment, true);
     }
 
@@ -183,7 +190,8 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
 
         // Update Health Insurance Fragment
         String tag = SettingsDocumentsFragment.class.getName();
-        SettingsDocumentsFragment settingsDocumentsFragment = (SettingsDocumentsFragment) fm.findFragmentByTag(tag);
+        SettingsDocumentsFragment settingsDocumentsFragment =
+                (SettingsDocumentsFragment) fm.findFragmentByTag(tag);
 
         settingsDocumentsFragment.updateInsuranceList(demographicDTO);
     }

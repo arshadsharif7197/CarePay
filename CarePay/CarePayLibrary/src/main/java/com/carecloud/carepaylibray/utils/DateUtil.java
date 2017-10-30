@@ -30,6 +30,11 @@ public class DateUtil {
     private static final String FORMAT_MM_SLASH_DD_SLASH_YYYY = "MM/dd/yyyy";
     private static final String FORMAT_HOURS_AM_PM = "h:mm a";
     private static final String FORMAT_MONTH_DAY_TIME12 = "MMM dd, h:mm a";
+    private static final String FORMAT_FULL_DATE_TIME12 = "MMM dd, yyyy, h:mm a";
+    private static final int IS_A_FUTURE_DATE = 100;
+    private static final int IS_A_TOO_OLD_DATE = -100;
+    private static final int IS_A_BAD_FORMAT_DATE = -1;
+    private static final int IS_A_CORRECT_DATE = 0;
 
     private static DateUtil instance;
     private String[] formats;
@@ -174,6 +179,14 @@ public class DateUtil {
         String ordinal = instance.getOrdinalSuffix(day); // fetch the ordinal
         return String.format(Locale.getDefault(), "%s %s%s",
                 monthLiteralAbbr, day, ordinal);
+    }
+
+    /**
+     * Format current date as Month DD, YYYY, hh:mm a
+     * @return formated date as string
+     */
+    public String getFullDateTime(){
+        return toStringWithFormat(FORMAT_FULL_DATE_TIME12);
     }
 
     /**
@@ -621,44 +634,26 @@ public class DateUtil {
 
     /**
      * Get the number of hours elapsed between two Dates
+     *
      * @param start start date
-     * @param end end date
+     * @param end   end date
      * @return hours elapsed
      */
-    public static int getHoursElapsed(Date start, Date end){
-        Calendar startCal = Calendar.getInstance();
-        Calendar endCal = Calendar.getInstance();
+    public static long getHoursElapsed(Date start, Date end) {
+        long differenceInMilli = Math.abs(start.getTime() - end.getTime());
 
-        startCal.setTime(start);
-        endCal.setTime(end);
-
-        return getHoursElapsed(startCal, endCal);
+        return TimeUnit.MILLISECONDS.toHours(differenceInMilli);
     }
 
-    /**
-     * Get the number of hours elapsed between two Calendar instances
-     * @param start start calendar date
-     * @param end end calendar date
-     * @return hours elapsed
-     */
-    public static int getHoursElapsed(Calendar start, Calendar end){
-        if (end.compareTo(start) < 0) {//parameters in wrong order
-            Log.w(TAG, "calendar parameters out of order");
-            Calendar temp = start;
-            start = end;
-            end = temp;
-        }
-
-        return end.get(Calendar.HOUR_OF_DAY) - start.get(Calendar.HOUR_OF_DAY);
-    }
 
     /**
      * Get the number of months elapsed between two Dates
+     *
      * @param start start Date
-     * @param end end Date
+     * @param end   end Date
      * @return number of months elapsed
      */
-    public static int getMonthsElapsed(Date start, Date end){
+    public static int getMonthsElapsed(Date start, Date end) {
         Calendar startCal = Calendar.getInstance();
         Calendar endCal = Calendar.getInstance();
 
@@ -670,11 +665,12 @@ public class DateUtil {
 
     /**
      * Get the number of months elapsed between two Calendar instances
+     *
      * @param start start Calendar
-     * @param end end Calendar
+     * @param end   end Calendar
      * @return number of months elapsed
      */
-    public static int getMonthsElapsed(Calendar start, Calendar end){
+    public static int getMonthsElapsed(Calendar start, Calendar end) {
         if (end.compareTo(start) < 0) {//parameters in wrong order
             Log.w(TAG, "calendar parameters out of order");
             Calendar temp = start;
@@ -691,7 +687,7 @@ public class DateUtil {
         } else {//need to figure out how many years we are looking at
             int fullYearCount = years - 1;
 
-            int monthsRemainingStartYear  = start.getActualMaximum(Calendar.MONTH) - start.get(Calendar.MONTH);
+            int monthsRemainingStartYear = start.getActualMaximum(Calendar.MONTH) - start.get(Calendar.MONTH);
             return monthsRemainingStartYear + fullYearCount * start.getActualMaximum(Calendar.MONTH) + end.get(Calendar.MONTH);
         }
 
@@ -699,8 +695,9 @@ public class DateUtil {
 
     /**
      * Get the number of years elapsed between two Dates
+     *
      * @param start start Date
-     * @param end end Date
+     * @param end   end Date
      * @return number of years elapsed
      */
     public static int getYearsElapsed(Date start, Date end) {
@@ -715,11 +712,12 @@ public class DateUtil {
 
     /**
      * Get the number of years elapsed between two Calendar Instances
+     *
      * @param start start Calendar
-     * @param end end Calendar
+     * @param end   end Calendar
      * @return number of years elapsed
      */
-    public static int getYearsElapsed(Calendar start, Calendar end){
+    public static int getYearsElapsed(Calendar start, Calendar end) {
         if (end.compareTo(start) < 0) {//parameters in wrong order
             Log.w(TAG, "calendar parameters out of order");
             Calendar temp = start;
@@ -793,19 +791,44 @@ public class DateUtil {
      * @param dateString The date whose format is to be changed
      * @return The dat in the new format as a string
      */
-    public static boolean isValidateStringDateOfBirth(String dateString) {
+    public static int validateDateOfBirth(String dateString) {
         String formatString = "MM/dd/yyyy";
         try {
             SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.getDefault());
             format.setLenient(false);
             Date dob = format.parse(dateString);
             getInstance().setDate(dob);
-            return getInstance().isYesterdayOrBefore() && getInstance().year > 1900;
+            if (!getInstance().isYesterdayOrBefore()) {
+                return IS_A_FUTURE_DATE;
+            }
+            if (getInstance().year < 1900) {
+                return IS_A_TOO_OLD_DATE;
+            }
+            return IS_A_CORRECT_DATE;
         } catch (ParseException e) {
-            return false;
+            return IS_A_BAD_FORMAT_DATE;
         } catch (IllegalArgumentException e) {
-            return false;
+            return IS_A_CORRECT_DATE;
         }
+    }
+
+    /**
+     * @param dateString the date to be validated
+     * @return a readable error message from the result of validating a date
+     */
+    public static String getDateOfBirthValidationResultMessage(String dateString) {
+        if (dateString != null) {
+            int resultCode = validateDateOfBirth(dateString);
+            if (resultCode == DateUtil.IS_A_BAD_FORMAT_DATE) {
+                return Label.getLabel("demographics_date_bad_format_msg");
+            } else if (resultCode == DateUtil.IS_A_FUTURE_DATE) {
+                return Label.getLabel("demographics_date_validation_msg");
+            } else if (resultCode == DateUtil.IS_A_TOO_OLD_DATE) {
+                return Label.getLabel("demographics_date_old_msg");
+            }
+        }
+        return null;
+
     }
 
     /**
@@ -849,7 +872,8 @@ public class DateUtil {
      * @param nextDays  Formatted String to represent upcoming day count
      * @return Contextually formatted Date range
      */
-    public static String getFormattedDate(Date startDate, Date endDate, String today, String tomorrow, String thisMonth, String nextDays) {
+    public static String getFormattedDate(Date startDate, Date endDate, String today,
+                                          String tomorrow, String thisMonth, String nextDays) {
         Calendar startCal = Calendar.getInstance();
         Calendar endCal = Calendar.getInstance();
 
@@ -944,50 +968,128 @@ public class DateUtil {
         return TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
     }
 
+
+    public static long getSecondsElapsed(Date date1, Date date2) {
+        long differenceInMilli = Math.abs(date1.getTime() - date2.getTime());
+
+        return TimeUnit.MILLISECONDS.toSeconds(differenceInMilli);
+    }
+
     /**
+     * Get readable time elapsed between two dates in format: hh:MM:SS
      *
-     * @param rawDate a string containing the date
+     * @param date1 date
+     * @param date2 date
+     * @return readable string;
+     */
+    public static String getTimeElapsed(Date date1, Date date2) {
+        long differenceInMilli = Math.abs(date1.getTime() - date2.getTime());
+
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+
+        final long elapsedHours = differenceInMilli / hoursInMilli;
+        differenceInMilli = differenceInMilli - (elapsedHours * hoursInMilli);
+
+        final long elapsedMinutes = differenceInMilli / minutesInMilli;
+        differenceInMilli = differenceInMilli - (elapsedMinutes * minutesInMilli);
+
+        final long elapsedSeconds = differenceInMilli / secondsInMilli;
+
+        StringBuilder builder = new StringBuilder();
+        if (elapsedHours > 0) {
+            builder.append(elapsedHours);
+            builder.append(':');
+        }
+        if (elapsedMinutes < 10) {
+            builder.append('0');
+            builder.append(elapsedMinutes);
+        } else {
+            builder.append(elapsedMinutes);
+        }
+        builder.append(':');
+        if (elapsedSeconds < 10) {
+            builder.append('0');
+        }
+        builder.append(elapsedSeconds);
+        return builder.toString();
+    }
+
+    /**
+     * @param date the date
      * @return returns a string formatted like 10:00 PM
      */
-    public static String getHoursFormatted(String rawDate){
-        Date date = getInstance().setDateRaw(rawDate).getDate();
+    public static String getHoursFormatted(Date date) {
         return DateFormat.format(FORMAT_HOURS_AM_PM, date).toString();
     }
 
     /**
+     * @param rawDate a string containing the date
+     * @return returns a string formatted like 10:00 PM
+     */
+    public static String getHoursFormatted(String rawDate) {
+        Date date = getInstance().setDateRaw(rawDate).getDate();
+        return DateFormat.format(FORMAT_HOURS_AM_PM, date).toString();
+    }
+
+    public static String getContextualTimeElapsed(Date date1, Date date2) {
+        long hoursElapsed = getHoursElapsed(date1, date2);
+        if (hoursElapsed > 0) {
+            if(hoursElapsed == 1){
+                return hoursElapsed + Label.getLabel("label_hours_ago_singular");
+            }
+            return hoursElapsed + Label.getLabel("label_hours_ago");
+        }
+        long minutesElapsed = getMinutesElapsed(date1, date2);
+        if (minutesElapsed > 0) {
+            if(minutesElapsed == 1){
+                return minutesElapsed + Label.getLabel("label_minutes_ago_singular");
+            }
+            return minutesElapsed + Label.getLabel("label_minutes_ago");
+        }
+        long secondsElapsed = getSecondsElapsed(date1, date2);
+        if(secondsElapsed == 1){
+            return secondsElapsed + Label.getLabel("label_seconds_ago_singular");
+        }
+        return secondsElapsed + Label.getLabel("label_seconds_ago");
+    }
+
+    /**
      * Get contextual date for messaging
+     *
      * @return contextual date string
      */
-    public String toContextualMessageDate(){
+    public String toContextualMessageDate() {
         Date compareDate = new Date();
-        if(isToday()){
+        if (isToday()) {
             return getTime12Hour();
-        }else {
+        } else {
             int daysElapsed = getDaysElapsed(getDate(), compareDate);
-            if(daysElapsed < 7){
-                if(daysElapsed == 1){
+            if (daysElapsed < 7) {
+                if (daysElapsed == 1) {
                     return Label.getLabel("label_yesterday");
                 }
                 return daysElapsed + Label.getLabel("label_days_ago");
-            }else if (daysElapsed < 28){
+            } else if (daysElapsed < 28) {
                 int weeksElapsed = daysElapsed / 7;
-                if(weeksElapsed == 1){
+                if (weeksElapsed == 1) {
                     return Label.getLabel("label_last_week");
-                }else{
+                } else {
                     return weeksElapsed + Label.getLabel("label_weeks_ago");
                 }
-            }else if (isSameYear(getDate(), compareDate)){
+            } else if (isSameYear(getDate(), compareDate)) {
                 int monthsElapsed = getMonthsElapsed(getDate(), compareDate);
-                if(monthsElapsed == 1){
+                if (monthsElapsed == 1) {
                     return Label.getLabel("label_last_month");
-                }else{
+                } else {
                     return monthsElapsed + Label.getLabel("label_months_ago");
                 }
-            }else{
+            } else {
                 int yearsElapsed = getYearsElapsed(getDate(), compareDate);
-                if(yearsElapsed == 1){
+                if (yearsElapsed == 1) {
                     return Label.getLabel("label_last_year");
-                }else{
+                } else {
                     return yearsElapsed + Label.getLabel("label_years_ago");
                 }
             }
@@ -998,10 +1100,11 @@ public class DateUtil {
      * Shift current date to GMT by copying current date & time fields to new GMT time zone calendar.
      * This will cause a new date to be set shifted to the GMT time zone but maintaining the current time values
      * 1/1/2001 13:00:00 EST will become 1/1/2001 13:00:00 GMT
+     *
      * @return DateUtil instance with updated Date value
      */
-    public DateUtil shiftDateToGMT(){
-        if(date == null){
+    public DateUtil shiftDateToGMT() {
+        if (date == null) {
             date = new Date();
         }
         Calendar calLocal = Calendar.getInstance();
@@ -1016,7 +1119,7 @@ public class DateUtil {
         return this;
     }
 
-    public String getDateAsMonthDayTime(){
+    public String getDateAsMonthDayTime() {
         return toStringWithFormat(FORMAT_MONTH_DAY_TIME12);
     }
 

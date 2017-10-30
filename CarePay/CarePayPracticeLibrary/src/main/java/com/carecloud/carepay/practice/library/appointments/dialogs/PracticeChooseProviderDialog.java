@@ -16,9 +16,10 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.ProviderSearchAdapter;
-import com.carecloud.carepaylibray.appointments.interfaces.AppointmentNavigationCallback;
+import com.carecloud.carepaylibray.appointments.interfaces.ProviderInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -29,11 +30,11 @@ import java.util.List;
 public class PracticeChooseProviderDialog extends BaseDialogFragment
         implements ProviderSearchAdapter.SelectPracticeAdapterCallback {
 
-    private AppointmentNavigationCallback callback;
+    private ProviderInterface callback;
 
     private List<AppointmentResourcesDTO> providerList = new ArrayList<>();
     private AppointmentResourcesDTO selectedProvider;
-    private AppointmentsResultModel resourcesToScheduleModel;
+    private AppointmentsResultModel appointmentsResultModel;
 
     private RecyclerView searchRecycler;
     private Button continueButton;
@@ -41,42 +42,59 @@ public class PracticeChooseProviderDialog extends BaseDialogFragment
     private String continueButtonLabel;
     private String titleLabel;
 
+    /**
+     *
+     * @param appointmentsResultModel the model
+     * @param titleLabel the title label
+     * @param continueButtonLabel the button label
+     * @return a new instance of PracticeChooseProviderDialog
+     */
+    public static PracticeChooseProviderDialog newInstance(AppointmentsResultModel appointmentsResultModel,
+                                                           String titleLabel,
+                                                           String continueButtonLabel) {
+        Bundle args = new Bundle();
+        args.putString("titleLabel", titleLabel);
+        args.putString("continueButtonLabel", continueButtonLabel);
+        DtoHelper.bundleDto(args, appointmentsResultModel);
+        PracticeChooseProviderDialog fragment = new PracticeChooseProviderDialog();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
-        try{
+        try {
             if (null == callback) {
-                callback = (AppointmentNavigationCallback) context;
+                callback = (ProviderInterface) context;
             }
-        }catch (ClassCastException e){
+        } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement AppointmentNavigationCallback");
+                    + " must implement ProviderInterface");
         }
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Bundle bundle = getArguments();
         continueButtonLabel = bundle.getString("continueButtonLabel");
         titleLabel = bundle.getString("titleLabel");
-
-        resourcesToScheduleModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, bundle);
-        providerList = resourcesToScheduleModel.getPayload().getResourcesToSchedule().get(0).getResources();
+        appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, bundle);
+        providerList = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getResources();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_practice_search, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.search_toolbar);
-        if(toolbar!=null){
+        if (toolbar != null) {
             TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
-            if(title!=null){
+            if (title != null) {
                 ViewGroup.LayoutParams layoutParams = title.getLayoutParams();
                 layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
                 title.setLayoutParams(layoutParams);
@@ -102,19 +120,20 @@ public class PracticeChooseProviderDialog extends BaseDialogFragment
         searchView = (SearchView) view.findViewById(R.id.search_entry_view);
         searchView.setOnQueryTextListener(queryTextListener);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL, false);
         searchRecycler = (RecyclerView) view.findViewById(R.id.search_recycler);
         searchRecycler.setLayoutManager(layoutManager);
 
         setAdapter(providerList);
     }
 
-    private void setAdapter(List<AppointmentResourcesDTO> practiceList){
+    private void setAdapter(List<AppointmentResourcesDTO> practiceList) {
         ProviderSearchAdapter practiceSearchAdapter;
-        if(searchRecycler.getAdapter() == null){
+        if (searchRecycler.getAdapter() == null) {
             practiceSearchAdapter = new ProviderSearchAdapter(getContext(), practiceList, this);
             searchRecycler.setAdapter(practiceSearchAdapter);
-        }else{
+        } else {
             practiceSearchAdapter = (ProviderSearchAdapter) searchRecycler.getAdapter();
             practiceSearchAdapter.setPracticeList(practiceList);
             practiceSearchAdapter.notifyDataSetChanged();
@@ -141,8 +160,9 @@ public class PracticeChooseProviderDialog extends BaseDialogFragment
     private View.OnClickListener continueClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if(selectedProvider != null){
-                callback.onProviderSelected(selectedProvider, resourcesToScheduleModel);
+            if (selectedProvider != null) {
+                callback.onProviderSelected(selectedProvider, appointmentsResultModel,
+                        getSelectedResourcesToSchedule(selectedProvider));
                 dismiss();
             }
         }
@@ -156,10 +176,10 @@ public class PracticeChooseProviderDialog extends BaseDialogFragment
         continueButton.setEnabled(true);
     }
 
-    private void findPractice(String search){
+    private void findPractice(String search) {
         List<AppointmentResourcesDTO> searchList = new ArrayList<>();
-        for(AppointmentResourcesDTO practice : providerList){
-            if(practice.getResource().getProvider().getName().toLowerCase().contains(search.toLowerCase())){
+        for (AppointmentResourcesDTO practice : providerList) {
+            if (practice.getResource().getProvider().getName().toLowerCase().contains(search.toLowerCase())) {
                 searchList.add(practice);
             }
         }
@@ -167,9 +187,23 @@ public class PracticeChooseProviderDialog extends BaseDialogFragment
         setAdapter(searchList);
     }
 
-    private void clearSelectedProvider(){
+    private void clearSelectedProvider() {
         selectedProvider = null;
         ProviderSearchAdapter searchAdapter = (ProviderSearchAdapter) searchRecycler.getAdapter();
         searchAdapter.setSelectedPractice(selectedProvider);
     }
+
+    private ResourcesToScheduleDTO getSelectedResourcesToSchedule(AppointmentResourcesDTO selectedResource) {
+        List<ResourcesToScheduleDTO> resourcesToScheduleDTOList = appointmentsResultModel
+                .getPayload().getResourcesToSchedule();
+        for (ResourcesToScheduleDTO resourcesToScheduleDTO : resourcesToScheduleDTOList) {
+            for (AppointmentResourcesDTO appointmentResourcesDTO : resourcesToScheduleDTO.getResources()) {
+                if (appointmentResourcesDTO == selectedResource) {
+                    return resourcesToScheduleDTO;
+                }
+            }
+        }
+        return null;
+    }
+
 }

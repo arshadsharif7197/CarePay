@@ -68,7 +68,11 @@ public class DeviceFragment extends RegistrationFragment {
         getApplicationHelper().getApplicationPreferences().setDeviceName(nameInput.getText().toString());
 //        getApplicationHelper().getApplicationPreferences().setWelcomeMessage(welcomeInput.getText().toString());
 
-        callback.replaceFragment(new ImageSelectFragment(), true);
+        if(isSettingsActivity()){
+            callback.replaceFragment(new SettingsFragment(), false);
+        }else {
+            callback.replaceFragment(new ImageSelectFragment(), true);
+        }
     }
 
     private TextWatcher emptyTextWatcher = new TextWatcher() {

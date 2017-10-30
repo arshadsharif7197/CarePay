@@ -92,7 +92,7 @@
                 android:textSize="@dimen/text_size_14sp"
                 app:customAssetFont="proxima_nova_regular" />
 
-            <Button
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/provider_schedule_appointment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -103,7 +103,8 @@
                 android:background="@drawable/bg_yellow_overlay"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22sp"
-                android:textAllCaps="false"/>
+                android:textAllCaps="false"
+                app:customAssetFont="gotham_rounded_medium"/>
         </LinearLayout>
     </LinearLayout>
 

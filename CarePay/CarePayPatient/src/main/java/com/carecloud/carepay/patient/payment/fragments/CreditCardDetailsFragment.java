@@ -25,10 +25,10 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
+import com.carecloud.carepaylibray.payments.models.CreditCardBillingInformationDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -122,31 +122,39 @@ public class CreditCardDetailsFragment extends BaseFragment {
     private void initializeViews(View view) {
 
         if (demographicsSettingsDTO != null && creditCardsPayloadDTO!=null) {
-            CarePayTextView nameOnCardValue = (CarePayTextView) view.findViewById(R.id.nameOnCardValue);
+            TextView nameOnCardValue = (TextView) view.findViewById(R.id.nameOnCardValue);
             nameOnCardValue.setText(creditCardsPayloadDTO.getPayload().getNameOnCard());
 
-            CarePayTextView cardNumberValue = (CarePayTextView) view.findViewById(R.id.cardNumberValue);
+            TextView cardNumberValue = (TextView) view.findViewById(R.id.cardNumberValue);
             cardNumberValue.setText(getMaskedCardNumber(creditCardsPayloadDTO.getPayload().getCardNumber(), creditCardsPayloadDTO.getPayload().getCardType()));
 
-            CarePayTextView expirationDateValue = (CarePayTextView) view.findViewById(R.id.expirationDateValue);
+            TextView expirationDateValue = (TextView) view.findViewById(R.id.expirationDateValue);
             expirationDateValue.setText(creditCardsPayloadDTO.getPayload().getExpireDt());
 
-            CarePayTextView addressValue = (CarePayTextView) view.findViewById(R.id.addressValue);
+            TextView addressValue = (TextView) view.findViewById(R.id.addressValue);
+            TextView zipcodeValue = (TextView) view.findViewById(R.id.zipcodeValue);
+            TextView cityValue = (TextView) view.findViewById(R.id.cityValue);
+            TextView stateValue = (TextView) view.findViewById(R.id.stateValue);
 
-
-
-            DemographicAddressPayloadDTO addressDTO = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getAddress();
-            addressValue.setText(addressDTO.getAddress1());
-
-            CarePayTextView zipcodeValue = (CarePayTextView) view.findViewById(R.id.zipcodeValue);
-            zipcodeValue.setText(addressDTO.getZipcode());
-
-            CarePayTextView cityValue = (CarePayTextView) view.findViewById(R.id.cityValue);
-            cityValue.setText(addressDTO.getCity());
-
-            CarePayTextView stateValue = (CarePayTextView) view.findViewById(R.id.stateValue);
-            stateValue.setText(addressDTO.getState());
-
+            CreditCardBillingInformationDTO billingInformationDTO = creditCardsPayloadDTO.getPayload().getBillingInformation();
+            if(StringUtil.isNullOrEmpty(billingInformationDTO.getLine1()) && billingInformationDTO.getSameAsPatient()){
+                DemographicAddressPayloadDTO addressDTO = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getAddress();
+                if(!StringUtil.isNullOrEmpty(addressDTO.getAddress1())) {
+                    String fullAddress = addressDTO.getAddress1() + (!StringUtil.isNullOrEmpty(addressDTO.getAddress2()) ? addressDTO.getAddress2() : "");
+                    addressValue.setText(fullAddress);
+                }
+                zipcodeValue.setText(addressDTO.getZipcode());
+                cityValue.setText(addressDTO.getCity());
+                stateValue.setText(addressDTO.getState());
+            }else {
+                if(!StringUtil.isNullOrEmpty(billingInformationDTO.getLine1())) {
+                    String fullAddress = billingInformationDTO.getLine1() + (!StringUtil.isNullOrEmpty(billingInformationDTO.getLine2()) ? billingInformationDTO.getLine2() : "");
+                    addressValue.setText(fullAddress);
+                }
+                zipcodeValue.setText(billingInformationDTO.getZip());
+                cityValue.setText(billingInformationDTO.getCity());
+                stateValue.setText(billingInformationDTO.getState());
+            }
             Button setAsDefaultButton = (Button) view.findViewById(R.id.setAsDefaultButton);
             setAsDefaultButton.setOnClickListener(setAsDefaultButtonListener);
 
@@ -156,8 +164,10 @@ public class CreditCardDetailsFragment extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.setting_credit_card, menu);
-        menu.getItem(0).setTitle(Label.getLabel("edit_credit_card_remove_label"));
+        if(!creditCardsPayloadDTO.getPayload().isDefault()) {
+            inflater.inflate(R.menu.setting_credit_card, menu);
+            menu.getItem(0).setTitle(Label.getLabel("edit_credit_card_remove_label"));
+        }
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -238,8 +248,10 @@ public class CreditCardDetailsFragment extends BaseFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             try {
-                DemographicsSettingsDTO removeCreditCardResponseDTO = DtoHelper.getConvertedDTO(DemographicsSettingsDTO.class, workflowDTO);
-                demographicsSettingsDTO.getPayload().setPatientCreditCards(removeCreditCardResponseDTO.getPayload().getPatientCreditCards());
+                DemographicsSettingsDTO removeCreditCardResponseDTO = DtoHelper
+                        .getConvertedDTO(DemographicsSettingsDTO.class, workflowDTO);
+                demographicsSettingsDTO.getPayload()
+                        .setPatientCreditCards(removeCreditCardResponseDTO.getPayload().getPatientCreditCards());
                 callback.onCreditCardOperation(demographicsSettingsDTO);
                 SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
                 getActivity().onBackPressed();
@@ -253,7 +265,7 @@ public class CreditCardDetailsFragment extends BaseFragment {
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
             Log.e(TAG, "Credit Card onFailure" + exceptionMessage);
         }
     };

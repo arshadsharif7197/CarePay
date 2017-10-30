@@ -13,11 +13,11 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.checkout.BaseWebFormFragment;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
+import com.carecloud.carepaylibray.intake.models.AppointmentMetadataModel;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -77,6 +77,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
         nextButton.setText(Label.getLabel("adhoc_sign_form_button_label"));
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         if (toolbar != null) {
+            toolbar.setNavigationIcon(null);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -91,6 +92,12 @@ public class AdHocFormFragment extends BaseWebFormFragment {
     protected void displayNextForm() {
         int displayedFormsIndex = getDisplayedFormsIndex();
         if (getDisplayedFormsIndex() < getTotalForms()) {
+            Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbar_layout);
+            if (getDisplayedFormsIndex() == 0) {
+                toolbar.setNavigationIcon(null);
+            } else {
+                toolbar.setNavigationIcon(R.drawable.icn_nav_back);
+            }
             PracticeForm practiceForm = formsList.get(displayedFormsIndex);
             JsonObject payload = practiceForm.getPayload();
             JsonObject userResponse = null;
@@ -135,16 +142,16 @@ public class AdHocFormFragment extends BaseWebFormFragment {
 
     @Override
     protected void submitAllForms() {
-        AppointmentDTO appointmentDTO = appointmentsResultModel.getPayload().getAppointments().get(0);
+        AppointmentMetadataModel patientInfo = appointmentsResultModel.getPayload()
+                .getAdhocFormsPatientModeInfo().getMetadata();
         Map<String, String> queries = new HashMap<>();
-        queries.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
-        queries.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
-        queries.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
-        queries.put("patient_id", appointmentDTO.getMetadata().getPatientId());
+        queries.put("practice_mgmt", patientInfo.getPracticeMgmt());
+        queries.put("practice_id", patientInfo.getPracticeId());
+        queries.put("patient_id", patientInfo.getPatientId());
 
         Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
         header.put("transition", "true");
-        header.put("username_patient", appointmentDTO.getMetadata().getUsername());
+        header.put("username_patient", patientInfo.getUsername());
 
         Gson gson = new Gson();
         String body = gson.toJson(jsonFormSaveResponseArray);

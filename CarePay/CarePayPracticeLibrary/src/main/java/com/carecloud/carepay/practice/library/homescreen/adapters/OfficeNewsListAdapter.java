@@ -15,13 +15,15 @@ import java.util.List;
 
 public class OfficeNewsListAdapter extends RecyclerView.Adapter<OfficeNewsListAdapter.OfficeNewsViewHolder> {
 
+    private static final int MAX_NEWS_TO_SHOW = 3;
     private Context context;
     private List<HomeScreenOfficeNewsDTO> officeNewsList;
     private OnOfficeNewsClickedListener listener;
 
     /**
      * Constructor
-     * @param context context
+     *
+     * @param context    context
      * @param officeNews list of office news
      */
     public OfficeNewsListAdapter(Context context, List<HomeScreenOfficeNewsDTO> officeNews,
@@ -46,7 +48,7 @@ public class OfficeNewsListAdapter extends RecyclerView.Adapter<OfficeNewsListAd
 
     @Override
     public int getItemCount() {
-        return officeNewsList.size();
+        return Math.min(officeNewsList.size(), MAX_NEWS_TO_SHOW);
     }
 
     class OfficeNewsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

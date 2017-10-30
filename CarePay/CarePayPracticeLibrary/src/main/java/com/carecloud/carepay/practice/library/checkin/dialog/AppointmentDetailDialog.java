@@ -6,6 +6,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -16,38 +18,37 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.checkin.adapters.CheckedInAppointmentAdapter;
 import com.carecloud.carepay.practice.library.checkin.adapters.PagePickerAdapter;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.CheckInLabelDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusDataPayloadValueDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusPayloadDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.QueryStrings;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerWindow;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
+import com.carecloud.carepaylibray.appointments.models.CheckinStatusDTO;
 import com.carecloud.carepaylibray.appointments.models.QueueDTO;
 import com.carecloud.carepaylibray.appointments.models.QueueStatusPayloadDTO;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -71,16 +72,15 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
     private CheckInDTO checkInDTO;
     private AppointmentsPayloadDTO appointmentPayloadDTO;
     private PendingBalanceDTO pendingBalanceDTO;
-    private CheckInLabelDTO checkInLabelDTO;
 
-    private CarePayTextView checkingInLabel;
-    private CarePayTextView hourLabel;
-    private CarePayTextView patientNameLabel;
-    private CarePayTextView doctorNameLabel;
-    private CarePayTextView balanceTextLabel;
-    private CarePayTextView balanceValueLabel;
+    private TextView checkingInLabel;
+    private TextView hourLabel;
+    private TextView patientNameLabel;
+    private TextView doctorNameLabel;
+    private TextView balanceValueLabel;
     private CheckBox demographicsCheckbox;
     private CheckBox consentFormsCheckbox;
+    private CheckBox medicationsCheckbox;
     private CheckBox intakeCheckbox;
     private CheckBox responsibilityCheckbox;
     private CarePayButton paymentButton;
@@ -91,11 +91,12 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
     private TextView shortName;
     private View checkboxLayout;
     private View queueTextLayout;
+    private View patientBalancesLayout;
+    private RecyclerView patientBalancesRecycler;
     private TextView queueText;
 
-    private boolean isWaitingRoom;
+    private int theRoom;
     private Vector<CheckBox> checkBoxes = new Vector<>();
-    private Vector<View> spacers = new Vector<>();
 
     private ISession sessionHandler;
 
@@ -113,13 +114,13 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
      * @param context context
      */
     public AppointmentDetailDialog(Context context, CheckInDTO checkInDTO, PendingBalanceDTO pendingBalanceDTO,
-                                   AppointmentsPayloadDTO payloadDTO, boolean isWaitingRoom, AppointmentDialogCallback callback) {
+                                   AppointmentsPayloadDTO payloadDTO, int theRoom, AppointmentDialogCallback callback) {
         super(context);
         this.context = context;
         this.checkInDTO = checkInDTO;
         this.pendingBalanceDTO = pendingBalanceDTO;
         this.appointmentPayloadDTO = payloadDTO;
-        this.isWaitingRoom = isWaitingRoom;
+        this.theRoom = theRoom;
         this.callback = callback;
         this.handler = new Handler();
         setHandlersAndListeners();
@@ -148,8 +149,8 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         setCancelable(true);
 
-        callGetCheckInStatusAPI(); //API call for getting check-in status
         onInitialization();
+        callGetCheckInStatusAPI(); //API call for getting check-in status
         onSetValuesFromDTO();
 //        onSettingStyle();
 
@@ -163,15 +164,15 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
      * for initialization UI components  .
      */
     private void onInitialization() {
-        checkingInLabel = (CarePayTextView) findViewById(R.id.checkingInLabel);
-        hourLabel = (CarePayTextView) findViewById(R.id.hourLabel);
-        patientNameLabel = (CarePayTextView) findViewById(R.id.patientNameLabel);
-        doctorNameLabel = (CarePayTextView) findViewById(R.id.doctorNameLabel);
-        balanceTextLabel = (CarePayTextView) findViewById(R.id.balanceTextLabel);
-        balanceValueLabel = (CarePayTextView) findViewById(R.id.balanceValueLabel);
+        checkingInLabel = (TextView) findViewById(R.id.checkingInLabel);
+        hourLabel = (TextView) findViewById(R.id.hourLabel);
+        patientNameLabel = (TextView) findViewById(R.id.patientNameLabel);
+        doctorNameLabel = (TextView) findViewById(R.id.doctorNameLabel);
+        balanceValueLabel = (TextView) findViewById(R.id.balanceValueLabel);
 
         demographicsCheckbox = (CheckBox) findViewById(R.id.demographicsCheckbox);
         consentFormsCheckbox = (CheckBox) findViewById(R.id.consentFormsCheckbox);
+        medicationsCheckbox = (CheckBox) findViewById(R.id.medsAllergiesCheckbox);
         intakeCheckbox = (CheckBox) findViewById(R.id.intakeFormsCheckbox);
         responsibilityCheckbox = (CheckBox) findViewById(R.id.responsibilityCheckbox);
 
@@ -190,21 +191,17 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         checkboxLayout = findViewById(R.id.checkbox_layout);
         queueTextLayout = findViewById(R.id.queue_text_layout);
         queueText = (TextView) findViewById(R.id.queue_text);
-
-        View spacer = findViewById(R.id.spacer_one);
-        spacers.add(spacer);
-        spacer = findViewById(R.id.spacer_two);
-        spacers.add(spacer);
-        spacer = findViewById(R.id.spacer_three);
-        spacers.add(spacer);
+        patientBalancesLayout = findViewById(R.id.patientBalancesContainer);
+        patientBalancesRecycler = (RecyclerView) findViewById(R.id.patientBalancesRecycler);
+        patientBalancesRecycler.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
 
         pickerWindow = new PopupPickerWindow(context);
         pickerWindow.flipPopup(true);
         pickerWindow.setAdapter(new PagePickerAdapter(context, checkInDTO.getPayload().getPageMessages(), this));
 
-        if(!canSendPage()){
+        if (!canSendPage()) {
             pageButton.setEnabled(false);
-        }else{
+        } else {
             View mainView = findViewById(R.id.dialog_checkin_main);
             mainView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -221,25 +218,36 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
      * for setting values to UI Component from DTO .
      */
     private void onSetValuesFromDTO() {
-        checkInLabelDTO = checkInDTO.getMetadata().getLabel();
-        if (!isWaitingRoom) {
-            demographicsCheckbox.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_demographics")));
-            consentFormsCheckbox.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_consent_forms")));
-            intakeCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogIntake()));
-            responsibilityCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogResponsibility()));
-        } else {
+        String title = "";
+        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentPayloadDTO.getAppointmentStatus().getLastUpdated().replaceAll("\\.\\d\\d\\dZ", "-00:00"));
+        if (theRoom == CheckedInAppointmentAdapter.CHECKING_IN) {
+            demographicsCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_demographics"));
+            consentFormsCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_consent_forms"));
+            medicationsCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_medications"));
+            intakeCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_intake"));
+            responsibilityCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_responsibility"));
+            title = String.format(Label.getLabel("practice_checkin_started_elapsed"), DateUtil.getContextualTimeElapsed(dateUtil.getDate(), new Date()));
+        } else if (theRoom == CheckedInAppointmentAdapter.CHECKED_IN) {
+            checkboxLayout.setVisibility(View.INVISIBLE);
             checkBoxes.add(demographicsCheckbox);
             checkBoxes.add(consentFormsCheckbox);
             checkBoxes.add(intakeCheckbox);
             checkBoxes.add(responsibilityCheckbox);
+            medicationsCheckbox.setVisibility(View.GONE);
+            title = String.format(Label.getLabel("practice_checkin_complete_elapsed"), DateUtil.getContextualTimeElapsed(dateUtil.getDate(), new Date()));
+        } else if (theRoom == CheckedInAppointmentAdapter.CHECKING_OUT) {
+            demographicsCheckbox.setText(Label.getLabel("next_appointment_title"));
+            consentFormsCheckbox.setVisibility(View.INVISIBLE);
+            medicationsCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_consent_forms"));
+            intakeCheckbox.setVisibility(View.INVISIBLE);
+            responsibilityCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_payment"));
+            title = String.format(Label.getLabel("practice_checkout_started_elapsed"), DateUtil.getContextualTimeElapsed(dateUtil.getDate(), new Date()));
+        } else if (theRoom == CheckedInAppointmentAdapter.CHECKED_OUT) {
+            checkboxLayout.setVisibility(View.INVISIBLE);
+            title = String.format(Label.getLabel("practice_checkout_complete_elapsed"), dateUtil.getTime12Hour());
         }
 
-        checkingInLabel.setText(StringUtil.getFormatedLabal(context, isWaitingRoom ?
-                checkInLabelDTO.getPracticeCheckinDetailDialogWaitingRoom() : Label.getLabel("practice_checkin_detail_dialog_checking_in")));
-        balanceTextLabel.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_balance")));
-        assistButton.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_assist")));
-        pageButton.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_page")));
-        paymentButton.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_payment")));
+        checkingInLabel.setText(title);
 
         balanceValueLabel.setText(StringUtil.getFormattedBalanceAmount(getPatientBalance()));
         patientNameLabel.setText(StringUtil.getFormatedLabal(context, appointmentPayloadDTO.getPatient().getFullName()));
@@ -290,10 +298,8 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
     /**
      * Sets hour label background.
-     *
      * If the appointment start time has passed curent time, then show the appointment time label background in red.
      * If the appointment start time is in future, then show the appointment time label background in green.
-     *
      */
     private void setHourLabelBackground(Date appointmentDateTime) {
 
@@ -312,7 +318,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         @Override
         public void onClick(View view) {
             pickerWindow.dismiss();
-            getPatientBalanceDetails();
+            getPatientBalanceDetails(false);
         }
     };
 
@@ -326,7 +332,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
     private View.OnClickListener pageActionListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            int offset = view.getWidth()/2-pickerWindow.getWidth()/2;
+            int offset = view.getWidth() / 2 - pickerWindow.getWidth() / 2;
             pickerWindow.showAsDropDown(view, offset, 10);
         }
     };
@@ -338,75 +344,33 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         if (checkInDTO != null && checkInDTO.getMetadata().getLinks() != null &&
                 checkInDTO.getMetadata().getLinks().getCheckinStatus() != null) {
 
-            JsonObject queryStringObject;
-            Gson gson = new Gson();
-            QueryStrings queryStrings;
-            TransitionDTO transition;
-            Map<String, String> querymap;
-            WorkflowServiceCallback callback;
+            TransitionDTO transition = null;
+            Map<String, String> queryMap = new HashMap<>();
+            WorkflowServiceCallback callback = null;
+            queryMap.put("appointment_id", appointmentPayloadDTO.getId());
 
-            if (isWaitingRoom) {
-                queryStringObject = checkInDTO.getMetadata().getLinks().getQueueStatus().getQueryString();
-                queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
-                querymap = getQueueQueryParam(queryStrings);
+            if (theRoom == CheckedInAppointmentAdapter.CHECKING_IN) {
+                updateCheckinStatus(appointmentPayloadDTO.getAppointmentStatus().getCheckinStatusDTO());
+                transition = checkInDTO.getMetadata().getLinks().getAppointmentStatus();
+                callback = getAppointmentStatusCallback(true);
+            } else if (theRoom == CheckedInAppointmentAdapter.CHECKED_IN) {
+                queryMap.put("patient_id", appointmentPayloadDTO.getPatient().getPatientId());
                 transition = checkInDTO.getMetadata().getLinks().getQueueStatus();
                 callback = getQueueCallBack;
-            } else {
-                queryStringObject = checkInDTO.getMetadata().getLinks().getCheckinStatus().getQueryString();
-                queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
-                querymap = getStatusQueryParam(queryStrings);
-                transition = checkInDTO.getMetadata().getLinks().getCheckinStatus();
-                callback = getStatusCallBack;
+            } else if (theRoom == CheckedInAppointmentAdapter.CHECKING_OUT) {
+                updateCheckoutStatus(appointmentPayloadDTO.getAppointmentStatus().getCheckinStatusDTO());
+                transition = checkInDTO.getMetadata().getLinks().getAppointmentStatus();
+                callback = getAppointmentStatusCallback(false);
+            } else if (theRoom == CheckedInAppointmentAdapter.CHECKED_OUT) {
+                getPatientBalanceDetails(true);
             }
 
-            ((ISession) context).getWorkflowServiceHelper().execute(transition, callback, querymap);
+            if(transition != null && callback != null) {
+                ((ISession) context).getWorkflowServiceHelper().execute(transition, callback, queryMap);
+            }
         }
     }
 
-    /**
-     * @param queryStrings the query strings for the queue url
-     * @return queryMap
-     */
-    private Map<String, String> getQueueQueryParam(QueryStrings queryStrings) {
-        Map<String, String> queryMap = new HashMap<>();
-        if (appointmentPayloadDTO != null) {
-            queryMap.put(queryStrings.getPatientId().getName(), appointmentPayloadDTO.getPatient().getPatientId());
-            queryMap.put(queryStrings.getAppointmentId().getName(), appointmentPayloadDTO.getId());
-        }
-
-        return queryMap;
-    }
-
-    /**
-     * @param queryStrings the query strings for the status url
-     * @return queryMap
-     */
-    private Map<String, String> getStatusQueryParam(QueryStrings queryStrings) {
-        Map<String, String> queryMap = new HashMap<>();
-        if (appointmentPayloadDTO != null) {
-            queryMap.put(queryStrings.getAppointmentId().getName(), appointmentPayloadDTO.getId());
-        }
-
-        return queryMap;
-    }
-
-    private WorkflowServiceCallback getStatusCallBack = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            updatePageOptions(workflowDTO);
-            updateCheckinStatus(workflowDTO);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            callback.onFailure(exceptionMessage);
-            Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
 
     private WorkflowServiceCallback getQueueCallBack = new WorkflowServiceCallback() {
         @Override
@@ -426,6 +390,32 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         }
     };
 
+
+    private WorkflowServiceCallback getAppointmentStatusCallback(final boolean isCheckin) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                AppointmentDTO appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, workflowDTO);
+                if(isCheckin) {
+                    updateCheckinStatus(appointmentDTO.getPayload().getAppointmentStatus().getCheckinStatusDTO());
+                }else{
+                    updateCheckoutStatus(appointmentDTO.getPayload().getAppointmentStatus().getCheckinStatusDTO());
+                }
+                updatePageOptions(workflowDTO);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            }
+        };
+    }
+
     /**
      * @param workflowDTO workflow model returned by server.
      */
@@ -437,24 +427,23 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         QueueDTO placeInQueue = findPlaceInQueue(queueList, appointmentPayloadDTO.getId(), queueMap);
 
         String[] sufixes = getOrdinalSufix();
-        if(placeInQueue!=null){
-            String place = ordinal(placeInQueue.getRank(), sufixes)+" "+Label.getLabel("practice_checkin_detail_dialog_in_queue");
+        if (placeInQueue != null) {
+            String place = ordinal(placeInQueue.getRank(), sufixes) + " " + Label.getLabel("practice_checkin_detail_dialog_in_queue");
             int rank = placeInQueue.getRank();
-            switch (rank){
-                case 1:
-                {
+            switch (rank) {
+                case 1: {
                     //show single place in queue
                     queueTextLayout.setVisibility(View.VISIBLE);
                     checkboxLayout.setVisibility(View.GONE);
                     queueText.setText(place);
                     break;
                 }
-                case 2:{
+                case 2: {
                     queueTextLayout.setVisibility(View.GONE);
                     checkboxLayout.setVisibility(View.VISIBLE);
 
                     //current user
-                    CheckBox checkBox =  checkBoxes.get(3);
+                    CheckBox checkBox = checkBoxes.get(3);
                     checkBox.setChecked(true);
                     checkBox.setText(place);
                     checkBox.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
@@ -462,23 +451,20 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                     //first user
                     checkBox = checkBoxes.get(0);
                     placeInQueue = queueMap.get(1);
-                    place = ordinal(1, sufixes)+"\n"+placeInQueue.getFirstName();
+                    place = ordinal(1, sufixes) + "\n" + placeInQueue.getFirstName();
                     checkBox.setText(place);
 
                     //hide other checkboxes
                     checkBoxes.get(1).setVisibility(View.GONE);
                     checkBoxes.get(2).setVisibility(View.GONE);
-                    spacers.get(1).setVisibility(View.GONE);
-                    spacers.get(2).setVisibility(View.GONE);
                     break;
                 }
-                case 3:
-                {
+                case 3: {
                     queueTextLayout.setVisibility(View.GONE);
                     checkboxLayout.setVisibility(View.VISIBLE);
 
                     //current user
-                    CheckBox checkBox =  checkBoxes.get(3);
+                    CheckBox checkBox = checkBoxes.get(3);
                     checkBox.setChecked(true);
                     checkBox.setText(place);
                     checkBox.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
@@ -486,39 +472,37 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                     //first user
                     checkBox = checkBoxes.get(0);
                     placeInQueue = queueMap.get(1);
-                    place = ordinal(1, sufixes)+"\n"+placeInQueue.getFirstName();
+                    place = ordinal(1, sufixes) + "\n" + placeInQueue.getFirstName();
                     checkBox.setText(place);
 
                     //second user
                     checkBox = checkBoxes.get(1);
                     placeInQueue = queueMap.get(2);
-                    place = ordinal(2, sufixes)+"\n"+placeInQueue.getFirstName();
+                    place = ordinal(2, sufixes) + "\n" + placeInQueue.getFirstName();
                     checkBox.setText(place);
 
 
                     //hide other checkboxes
                     checkBoxes.get(2).setVisibility(View.GONE);
-                    spacers.get(2).setVisibility(View.GONE);
 
                     break;
                 }
 
-                default:
-                {
+                default: {
                     //show checkbox bar
                     queueTextLayout.setVisibility(View.GONE);
                     checkboxLayout.setVisibility(View.VISIBLE);
                     int counter = 3;
-                    CheckBox checkBox =  checkBoxes.get(counter);
+                    CheckBox checkBox = checkBoxes.get(counter);
                     checkBox.setChecked(true);
                     checkBox.setText(place);
                     checkBox.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
 
                     counter--;
                     rank--;
-                    while (counter > -1){
+                    while (counter > -1) {
                         placeInQueue = queueMap.get(rank);
-                        place = ordinal(rank, sufixes)+"\n"+placeInQueue.getFirstName();
+                        place = ordinal(rank, sufixes) + "\n" + placeInQueue.getFirstName();
                         checkBox = checkBoxes.get(counter);
                         checkBox.setText(place);
 
@@ -530,30 +514,106 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         }
     }
 
-    /**
-     * @param workflowDTO workflow model returned by server.
-     */
-    private void updateCheckinStatus(WorkflowDTO workflowDTO) {
-        try {
-            CheckInStatusPayloadDTO checkInStatusPayloadDTO = workflowDTO.getPayload(CheckInStatusPayloadDTO.class);
 
-            if (checkInStatusPayloadDTO != null) {
-                CheckInStatusDataPayloadValueDTO payloadValueDTO = checkInStatusPayloadDTO
-                        .getCheckInStatusData().getPayload();
-                demographicsCheckbox.setChecked(payloadValueDTO.getDemographicsVerifyComplete()
-                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
-                consentFormsCheckbox.setChecked(payloadValueDTO.getConsentFormsComplete()
-                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
-                intakeCheckbox.setChecked(payloadValueDTO.getIntakeFormsComplete()
-                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
-                responsibilityCheckbox.setChecked(payloadValueDTO.getRespsonsibility()
-                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
+    private void updateCheckinStatus(CheckinStatusDTO checkinStatusDTO) {
+        final boolean demographicsComplete = CarePayConstants.APPOINTMENTS_STATUS_COMPLETED
+                .equalsIgnoreCase(checkinStatusDTO.getDemographicsStatus());
+        final boolean consentComplete = CarePayConstants.APPOINTMENTS_STATUS_COMPLETED
+                .equalsIgnoreCase(checkinStatusDTO.getConsentFormsStatus());
+        final boolean medicationsComplete = CarePayConstants.APPOINTMENTS_STATUS_COMPLETED
+                .equalsIgnoreCase(checkinStatusDTO.getMedicationsStatus());
+        final boolean intakeComplete = CarePayConstants.APPOINTMENTS_STATUS_COMPLETED
+                .equalsIgnoreCase(checkinStatusDTO.getIntakeStatus());
+
+        if (demographicsComplete) {
+            demographicsCheckbox.setChecked(true);
+        } else {
+            demographicsCheckbox.setChecked(false);
+            demographicsCheckbox.setSelected(true);
+        }
+        if (consentComplete) {
+            consentFormsCheckbox.setChecked(true);
+        } else {
+            consentFormsCheckbox.setChecked(false);
+            if (demographicsComplete) {
+                consentFormsCheckbox.setSelected(true);
             }
-        } catch (Exception ex) {
-            callback.onFailure(ex.getMessage());
-            Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), ex.getMessage());
+        }
+        if (medicationsComplete) {
+            medicationsCheckbox.setChecked(true);
+        } else {
+            medicationsCheckbox.setChecked(false);
+            if (consentComplete) {
+                medicationsCheckbox.setSelected(true);
+            }
+        }
+        if (intakeComplete) {
+            intakeCheckbox.setChecked(true);
+        } else {
+            intakeCheckbox.setChecked(false);
+            if (medicationsComplete) {
+                intakeCheckbox.setSelected(true);
+            }
+        }
+
+        //checking in will never display payment as completed because by this point it will be considered checked in
+        responsibilityCheckbox.setChecked(false);
+        if (intakeComplete) {
+            responsibilityCheckbox.setSelected(true);
+        }
+
+    }
+
+    private void updateCheckoutStatus(CheckinStatusDTO checkinStatusDTO) {
+        final boolean appointmentsComplete = CarePayConstants.APPOINTMENTS_STATUS_COMPLETED
+                .equalsIgnoreCase(checkinStatusDTO.getCheckoutAppointmentStatus());
+        final boolean formsComplete = CarePayConstants.APPOINTMENTS_STATUS_COMPLETED
+                .equalsIgnoreCase(checkinStatusDTO.getCheckoutFormsStatus());
+        final boolean paymentComplete = CarePayConstants.APPOINTMENTS_STATUS_COMPLETED
+                .equalsIgnoreCase(checkinStatusDTO.getCheckoutPaymentStatus());
+
+        if (appointmentsComplete) {
+            demographicsCheckbox.setChecked(true);
+        } else {
+            demographicsCheckbox.setChecked(false);
+            demographicsCheckbox.setSelected(true);
+        }
+        if (formsComplete) {
+            medicationsCheckbox.setChecked(true);
+        } else {
+            medicationsCheckbox.setChecked(false);
+            if (appointmentsComplete) {
+                medicationsCheckbox.setSelected(true);
+            }
+        }
+        if (paymentComplete) {
+            responsibilityCheckbox.setChecked(true);
+        } else {
+            responsibilityCheckbox.setChecked(false);
+            if (formsComplete) {
+                responsibilityCheckbox.setSelected(true);
+            }
+        }
+
+    }
+
+    private void updatePatientBalanceStatus(PaymentsModel paymentsModel){
+        List<PendingBalanceDTO> pendingBalances = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances();
+        if(!pendingBalances.isEmpty()){
+            patientBalancesLayout.setVisibility(View.VISIBLE);
+            PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(getContext(), getAllPendingBalancePayloads(pendingBalances), null);
+            patientBalancesRecycler.setAdapter(adapter);
         }
     }
+
+    protected List<PendingBalancePayloadDTO> getAllPendingBalancePayloads(List<PendingBalanceDTO> pendingBalances){
+        List<PendingBalancePayloadDTO> pendingBalancePayloads = new ArrayList<>();
+        for(PendingBalanceDTO pendingBalance : pendingBalances){
+            pendingBalancePayloads.addAll(pendingBalance.getPayload());
+        }
+        return pendingBalancePayloads;
+    }
+
 
     private double getPatientBalance() {
         if (pendingBalanceDTO != null && !pendingBalanceDTO.getPayload().isEmpty()) {
@@ -571,18 +631,18 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         return new String[]{th, st, nd, rd, th, th, th, th, th, th};
     }
 
-    private QueueDTO findPlaceInQueue(List<QueueDTO> queueDTOList, String appointmentId, Map<Integer, QueueDTO> placeMap){
+    private QueueDTO findPlaceInQueue(List<QueueDTO> queueDTOList, String appointmentId, Map<Integer, QueueDTO> placeMap) {
         QueueDTO patientQueueDTO = null;
-        for(QueueDTO queueDTO: queueDTOList){
+        for (QueueDTO queueDTO : queueDTOList) {
             placeMap.put(queueDTO.getRank(), queueDTO);
-            if(queueDTO.getAppointmentId().equals(appointmentId)){
+            if (queueDTO.getAppointmentId().equals(appointmentId)) {
                 patientQueueDTO = queueDTO;
             }
         }
         return patientQueueDTO;
     }
 
-    private void updatePageOptions(final WorkflowDTO workflowDTO){
+    private void updatePageOptions(final WorkflowDTO workflowDTO) {
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -603,67 +663,79 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         }
     }
 
-    private void getPatientBalanceDetails() {
+    private void getPatientBalanceDetails(boolean showInline) {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("patient_id", appointmentPayloadDTO.getPatient().getPatientId());
 
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getPatientBalances();
         sessionHandler.getWorkflowServiceHelper().interrupt();
-        sessionHandler.getWorkflowServiceHelper().execute(transitionDTO, patientBalancesCallback, queryMap);
+        sessionHandler.getWorkflowServiceHelper().execute(transitionDTO, getPatientBalancesCallback(showInline), queryMap);
 
     }
 
-    private boolean canSendPage(){
-        String userId = pendingBalanceDTO.getMetadata().getUserId();
-        String checkUserId;
-        for(PatientBalanceDTO patientBalanceDTO : checkInDTO.getPayload().getPatientBalances()){
-            checkUserId = patientBalanceDTO.getDemographics().getMetadata().getUserId();
-            if(userId.equals(checkUserId)){
-                pushUserId = checkUserId;
-                return patientBalanceDTO.getDemographics().getPayload().getNotificationOptions().hasPushNotification();
+    private boolean canSendPage() {
+        if (pendingBalanceDTO != null) {
+            String userId = pendingBalanceDTO.getMetadata().getUserId();
+            String checkUserId;
+            for (PatientBalanceDTO patientBalanceDTO : checkInDTO.getPayload().getPatientBalances()) {
+                checkUserId = patientBalanceDTO.getDemographics().getMetadata().getUserId();
+                if (userId.equals(checkUserId)) {
+                    pushUserId = checkUserId;
+                    return patientBalanceDTO.getDemographics().getPayload().getNotificationOptions()
+                            .hasPushNotification();
+                }
             }
         }
         return false;
     }
 
 
-    private WorkflowServiceCallback patientBalancesCallback = new WorkflowServiceCallback() {
+    private WorkflowServiceCallback getPatientBalancesCallback(final boolean showInline) {
+        return new WorkflowServiceCallback() {
 
-        @Override
-        public void onPreExecute() {
-            sessionHandler.showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            sessionHandler.hideProgressDialog();
-            PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
-            if (patientDetails != null && !patientDetails.getPaymentPayload().getPatientBalances().isEmpty()) {
-
-                PatientBalanceDTO patientBalanceDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
-                if (patientBalanceDTO.getBalances().get(0).getPayload().isEmpty()) {
-                    Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show();
-                } else {
-                    patientDetails.getPaymentPayload().setLocations(checkInDTO.getPayload().getLocations());
-                    patientDetails.getPaymentPayload().setLocationIndex(checkInDTO.getPayload().getLocationIndex());
-                    patientDetails.getPaymentPayload().setProviders(checkInDTO.getPayload().getProviders());
-                    patientDetails.getPaymentPayload().setProviderIndex(checkInDTO.getPayload().getProviderIndex());
-                    callback.showPaymentDistributionDialog(patientDetails);
-                    cancel();
+            @Override
+            public void onPreExecute() {
+                if(!showInline) {
+                    sessionHandler.showProgressDialog();
                 }
-            } else {
-                Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show();
             }
-        }
 
-        @Override
-        public void onFailure(String exceptionMessage) {
-            sessionHandler.hideProgressDialog();
-            callback.onFailure(exceptionMessage);
-            Log.e(TAG, exceptionMessage);
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                sessionHandler.hideProgressDialog();
+                PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
+                if(showInline){
+                    updatePatientBalanceStatus(patientDetails);
+                    pageButton.setEnabled(patientDetails.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getNotificationOptions().hasPushNotification());
+                    return;
+                }
+                if (patientDetails != null && !patientDetails.getPaymentPayload().getPatientBalances().isEmpty()) {
 
-        }
-    };
+                    PatientBalanceDTO patientBalanceDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
+                    if (patientBalanceDTO.getBalances().get(0).getPayload().isEmpty()) {
+                        Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show();
+                    } else {
+                        patientDetails.getPaymentPayload().setLocations(checkInDTO.getPayload().getLocations());
+                        patientDetails.getPaymentPayload().setLocationIndex(checkInDTO.getPayload().getLocationIndex());
+                        patientDetails.getPaymentPayload().setProviders(checkInDTO.getPayload().getProviders());
+                        patientDetails.getPaymentPayload().setProviderIndex(checkInDTO.getPayload().getProviderIndex());
+                        callback.showPaymentDistributionDialog(patientDetails);
+                        cancel();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                sessionHandler.hideProgressDialog();
+                callback.onFailure(exceptionMessage);
+                Log.e(TAG, exceptionMessage);
+
+            }
+        };
+    }
 
     @Override
     public void sendMessage(String message) {

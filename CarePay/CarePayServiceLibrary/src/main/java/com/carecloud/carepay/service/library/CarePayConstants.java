@@ -22,6 +22,7 @@ public class CarePayConstants {
     public static final String REQUESTED = "R";
     public static final String CHECKING_IN = "CI";
     public static final String CHECKED_OUT = "O";
+    public static final String CHECKING_OUT = "CO";
     public static final String BILLED = "B";
     public static final String MANUALLY_BILLED = "M";
     public static final String IN_PROGRESS_IN_ROOM = "PR";
@@ -112,6 +113,7 @@ public class CarePayConstants {
     //Clover Constants
     public static final String CLOVER_DEVICE = "Clover";
     public static final String CLOVER_PAYMENT_INTENT = "com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity";
+    public static final String CLOVER_REFUND_INTENT = "com.carecloud.carepay.practice.clover.payments.CloverRefundActivity";
     public static final int CLOVER_PAYMENT_INTENT_REQUEST_CODE = 0x37;
     public static final String CLOVER_PAYMENT_AMOUNT = "clover_payment_amount";
     public static final String CLOVER_PAYMENT_METADATA = "clover_payment_metadata";
@@ -119,6 +121,7 @@ public class CarePayConstants {
     public static final String CLOVER_PAYMENT_LINE_ITEMS = "clover_payment_line_items";
     public static final String CLOVER_PAYMENT_POST_MODEL = "clover_payment_post_model";
     public static final String CLOVER_PAYMENT_SUCCESS_INTENT_DATA = "clover_payment_success_intent_data";
+    public static final String CLOVER_PAYMENT_TRANSACTION_RESPONSE = "clover_payment_transaction_response";
 
     public static final String CLOVER_QUEUE_PAYMENT_TRANSITION = "clover_queue_payment_transition";
     public static final int PAYMENT_RETRY_PENDING_RESULT_CODE = 0x777;
@@ -145,5 +148,11 @@ public class CarePayConstants {
 
     //AdHoc
     public static final String ADHOC_FORMS = "adhocForms";
+
+    //Patient Mode Login
+    public static final String LOGIN_OPTION_QR = "login_option_qr";
+    public static final String LOGIN_OPTION_SEARCH = "login_option_search";
+
+    public static final String CRASH = "crash";
 
 }

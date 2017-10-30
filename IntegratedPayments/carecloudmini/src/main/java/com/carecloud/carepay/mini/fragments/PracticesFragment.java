@@ -33,7 +33,7 @@ public class PracticesFragment extends RegistrationFragment implements Practices
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
         if(userPractices == null){
-            userPractices = new ArrayList<>(callback.getPreRegisterDataModel().getUserPracticeDTOList());
+            userPractices = new ArrayList<>(callback.getPreRegisterDataModel().getSortedPractices());
         }
     }
 

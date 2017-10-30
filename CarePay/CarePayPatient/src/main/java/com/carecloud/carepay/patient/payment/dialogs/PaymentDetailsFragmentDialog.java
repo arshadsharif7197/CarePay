@@ -42,7 +42,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        onInitialization(view);
+//        onInitialization(view);
     }
 
     protected void onInitialization(View view) {
@@ -57,12 +57,15 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         });
 
         if (paymentReceiptModel != null) {
+            String practiceName = paymentReceiptModel.getPaymentPayload().getPatientBalances()
+                    .get(0).getBalances().get(0).getMetadata().getPracticeName();
             String totalAmount = StringUtil.getFormattedBalanceAmount(paymentPayload.getAmount());
             ((TextView) view.findViewById(R.id.payment_details_total_paid)).setText(totalAmount);
-            ((TextView) view.findViewById(R.id.payment_receipt_title)).setText(Label.getLabel("payment_receipt_title"));
-            ((TextView) view.findViewById(R.id.payment_receipt_total_label)).setText(Label.getLabel("payment_details_patient_balance_label"));
+            ((TextView) view.findViewById(R.id.payment_receipt_title)).setText(practiceName);
+            ((TextView) view.findViewById(R.id.payment_receipt_total_label))
+                    .setText(Label.getLabel("payment_details_patient_balance_label"));
             ((TextView) view.findViewById(R.id.payment_receipt_total_value)).setText(totalAmount);
-            ((TextView) view.findViewById(R.id.avTextView)).setText(StringUtil.getShortName(Label.getLabel("payment_receipt_title")));
+            ((TextView) view.findViewById(R.id.avTextView)).setText(StringUtil.getShortName(practiceName));
 
             payNowButton.setText(Label.getLabel("payment_details_pay_now"));
 
@@ -79,10 +82,12 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
 
         }
 
-        RecyclerView paymentDetailsRecyclerView = ((RecyclerView) view.findViewById(R.id.payment_receipt_details_view));
+        RecyclerView paymentDetailsRecyclerView = ((RecyclerView) view
+                .findViewById(R.id.payment_receipt_details_view));
         paymentDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        PaymentItemsListAdapter adapter = new PaymentItemsListAdapter(getContext(), paymentPayload.getDetails());
+        PaymentItemsListAdapter adapter = new PaymentItemsListAdapter(getContext(),
+                paymentPayload.getDetails());
         paymentDetailsRecyclerView.setAdapter(adapter);
     }
 

@@ -2,6 +2,7 @@
           package="com.carecloud.carepay.mini">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".MiniApplication"
@@ -11,6 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:fullBackupContent="false">
+
+        <meta-data android:name="DATABASE" android:value="carepay.db" />
+        <meta-data android:name="VERSION" android:value="0" />
+        <meta-data android:name="QUERY_LOG" android:value="true" />
+        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.carecloud.carepay.mini" />
 
         <activity
             android:name=".activities.SplashActivity"
@@ -29,6 +35,13 @@
         <activity
             android:name=".activities.WelcomeActivity"
             android:screenOrientation="sensorLandscape" />
+
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:screenOrientation="sensorLandscape"
+            android:windowSoftInputMode="stateUnchanged"/>
+
+        <service android:name=".services.QueueUploadService" />
 
     </application>
 

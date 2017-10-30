@@ -4,7 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by sudhir_pingale on 11/11/2016.
+ * Created by sudhir_pingale on 11/11/2016
  */
 
 public class CheckInStatusDataPayloadValueDTO {
@@ -24,6 +24,10 @@ public class CheckInStatusDataPayloadValueDTO {
     @SerializedName("respsonsibility")
     @Expose
     private String respsonsibility;
+
+    @SerializedName("medications_allergies_complete")
+    @Expose
+    private String medicationsComplete;
 
     /**
      * @return The intakeFormsComplete
@@ -79,5 +83,13 @@ public class CheckInStatusDataPayloadValueDTO {
      */
     public void setRespsonsibility(String respsonsibility) {
         this.respsonsibility = respsonsibility;
+    }
+
+    public String getMedicationsComplete() {
+        return medicationsComplete;
+    }
+
+    public void setMedicationsComplete(String medicationsComplete) {
+        this.medicationsComplete = medicationsComplete;
     }
 }

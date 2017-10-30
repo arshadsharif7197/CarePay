@@ -1,7 +1,6 @@
 
 package com.carecloud.carepaylibray.appointments.models;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -10,14 +9,19 @@ import com.google.gson.annotations.SerializedName;
 public class AppointmentStatusDTO {
 
     @SerializedName("id")
-    @Expose
     private Integer id;
+
     @SerializedName("code")
-    @Expose
     private String code;
+
     @SerializedName("name")
-    @Expose
     private String name;
+
+    @SerializedName("updated_at")
+    private String lastUpdated;
+
+    @SerializedName(value = "status", alternate = "payload")
+    private CheckinStatusDTO checkinStatusDTO = new CheckinStatusDTO();
 
     /**
      * 
@@ -73,4 +77,19 @@ public class AppointmentStatusDTO {
         this.name = name;
     }
 
+    public String getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(String lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public CheckinStatusDTO getCheckinStatusDTO() {
+        return checkinStatusDTO;
+    }
+
+    public void setCheckinStatusDTO(CheckinStatusDTO checkinStatusDTO) {
+        this.checkinStatusDTO = checkinStatusDTO;
+    }
 }

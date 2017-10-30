@@ -21,14 +21,15 @@ import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
@@ -85,8 +86,11 @@ public class WorkflowServiceHelper {
             if ((applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE ||
                     applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) &&
                     applicationMode.getUserPracticeDTO() != null) {
-
-                userAuthHeaders.put("username", applicationMode.getUserPracticeDTO().getUserName());
+                String username = applicationMode.getUserPracticeDTO().getUserName();
+                if (username == null) {
+                    username = appAuthorizationHelper.getCurrUser();
+                }
+                userAuthHeaders.put("username", username);
 
                 if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
                     userAuthHeaders.put("username_patient", appAuthorizationHelper.getCurrUser());
@@ -165,29 +169,42 @@ public class WorkflowServiceHelper {
         execute(transitionDTO, callback, null, null, getApplicationStartHeaders());
     }
 
-    public void execute(@NonNull TransitionDTO transitionDTO, @NonNull WorkflowServiceCallback callback) {
+    public void execute(@NonNull TransitionDTO transitionDTO,
+                        @NonNull WorkflowServiceCallback callback) {
         execute(transitionDTO, callback, null, null, null);
     }
 
-    public void execute(@NonNull TransitionDTO transitionDTO, @NonNull final WorkflowServiceCallback callback, String jsonBody) {
+    public void execute(@NonNull TransitionDTO transitionDTO,
+                        @NonNull final WorkflowServiceCallback callback,
+                        String jsonBody) {
         execute(transitionDTO, callback, jsonBody, null);
     }
 
-    public void execute(@NonNull TransitionDTO transitionDTO, @NonNull final WorkflowServiceCallback callback, Map<String, String> queryMap) {
+    public void execute(@NonNull TransitionDTO transitionDTO,
+                        @NonNull final WorkflowServiceCallback callback,
+                        Map<String, String> queryMap) {
         execute(transitionDTO, callback, null, queryMap, null);
     }
 
-    public void execute(@NonNull TransitionDTO transitionDTO, @NonNull final WorkflowServiceCallback callback, String jsonBody, Map<String, String> queryMap) {
+    public void execute(@NonNull TransitionDTO transitionDTO,
+                        @NonNull final WorkflowServiceCallback callback,
+                        String jsonBody,
+                        Map<String, String> queryMap) {
         execute(transitionDTO, callback, jsonBody, queryMap, null);
     }
 
-    public void execute(@NonNull TransitionDTO transitionDTO, @NonNull final WorkflowServiceCallback callback,
-                        Map<String, String> queryMap, Map<String, String> customHeaders) {
+    public void execute(@NonNull TransitionDTO transitionDTO,
+                        @NonNull final WorkflowServiceCallback callback,
+                        Map<String, String> queryMap,
+                        Map<String, String> customHeaders) {
         execute(transitionDTO, callback, null, queryMap, customHeaders);
     }
 
-    public void execute(@NonNull TransitionDTO transitionDTO, @NonNull final WorkflowServiceCallback callback,
-                        String jsonBody, Map<String, String> queryMap, Map<String, String> customHeaders) {
+    public void execute(@NonNull TransitionDTO transitionDTO,
+                        @NonNull final WorkflowServiceCallback callback,
+                        String jsonBody,
+                        Map<String, String> queryMap,
+                        Map<String, String> customHeaders) {
         executeRequest(transitionDTO, callback, jsonBody, queryMap, getHeaders(customHeaders), 0);
     }
 
@@ -212,9 +229,9 @@ public class WorkflowServiceHelper {
 
         callback.onPreExecute();
         queryMap = updateQueryMapWithDefault(queryMap);
-        WorkflowService workflowService = ServiceGenerator.getInstance().createService(WorkflowService.class, headers); //, String token, String searchString
+        //, String token, String searchString
+        WorkflowService workflowService = ServiceGenerator.getInstance().createService(WorkflowService.class, headers);
         Call<WorkflowDTO> call;
-
         if (transitionDTO.isGet()) {
             if (jsonBody != null && queryMap == null) {
                 call = workflowService.executeGet(transitionDTO.getUrl(), jsonBody);
@@ -260,7 +277,6 @@ public class WorkflowServiceHelper {
                 call = workflowService.executePut(transitionDTO.getUrl());
             }
         }
-
         executeCallback(transitionDTO, callback, jsonBody, queryMap, headers, attemptCount, call);
     }
 
@@ -273,10 +289,14 @@ public class WorkflowServiceHelper {
                                  final Call<WorkflowDTO> call) {
 
         call.enqueue(new Callback<WorkflowDTO>() {
+            boolean shouldRetryRequest = false;
+            final String retryErrorCodes = "403|408|409";
+
             @Override
             public void onResponse(Call<WorkflowDTO> call, Response<WorkflowDTO> response) {
                 callStack.remove(call);
                 try {
+                    shouldRetryRequest = retryErrorCodes.contains(String.valueOf(response.code())) || response.code() > 422;
                     switch (response.code()) {
                         case STATUS_CODE_OK:
                             onResponseOk(response);
@@ -288,7 +308,7 @@ public class WorkflowServiceHelper {
                             onResponseBadRequest(response);
                             break;
                         case STATUS_CODE_UNPROCESSABLE_ENTITY:
-                            onValidationError(response);
+                            onFailure(response);
                             break;
                         default:
                             onFailure(response);
@@ -330,7 +350,8 @@ public class WorkflowServiceHelper {
                 if (!(message.contains(TOKEN) && message.contains(EXPIRED)) && !message.contains(UNAUTHORIZED) &&
                         !(errorBodyString.contains(TOKEN) && errorBodyString.contains(EXPIRED))) {
                     onFailure(response);
-                } else if (!HttpConstants.isUseUnifiedAuth() && !appAuthorizationHelper.refreshToken(getCognitoActionCallback(transitionDTO, callback, jsonBody, queryMap, headers))) {
+                } else if (!HttpConstants.isUseUnifiedAuth() && !appAuthorizationHelper
+                        .refreshToken(getCognitoActionCallback(transitionDTO, callback, jsonBody, queryMap, headers))) {
                     callback.onFailure("No User found to refresh token");
                 } else if (HttpConstants.isUseUnifiedAuth()) {
                     executeRefreshTokenRequest(getRefreshTokenCallback(transitionDTO, callback, jsonBody, queryMap, headers));
@@ -347,25 +368,11 @@ public class WorkflowServiceHelper {
                 }
 
                 if ((message.contains(TOKEN) && message.contains(REVOKED))
-                        || (errorBodyString.toLowerCase().contains(TOKEN) && errorBodyString.toLowerCase().contains(REVOKED))) {
+                        || (errorBodyString.toLowerCase().contains(TOKEN)
+                        && errorBodyString.toLowerCase().contains(REVOKED))) {
                     atomicAppRestart();
                 } else {
-                    try {
-                        JSONObject json = new JSONObject(errorBodyString);
-                        if (json.has("exception")) {
-                            JSONObject exceptionJson = json.getJSONObject("exception");
-                            if (exceptionJson.has("body")) {
-                                JSONObject bodyJson = exceptionJson.getJSONObject("body");
-                                if (bodyJson.has("error")) {
-                                    errorBodyString = bodyJson.getString("error");
-                                }
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    onFailure(errorBodyString);
+                    onFailure(parseError(message, errorBodyString, "message", "exception", "error"));
                 }
             }
 
@@ -389,7 +396,7 @@ public class WorkflowServiceHelper {
              * @param <S>      Dynamic class to convert
              * @return Dynamic converted class object
              */
-            private  <S> S getConvertedDTO(Class<S> dtoClass, String jsonString) {
+            private <S> S getConvertedDTO(Class<S> dtoClass, String jsonString) {
 
                 Gson gson = new Gson();
                 return gson.fromJson(jsonString, dtoClass);
@@ -397,8 +404,14 @@ public class WorkflowServiceHelper {
             }
 
             private void onFailure(Response<WorkflowDTO> response) throws IOException {
-                if (null != response.errorBody()) {
-                    onFailure(response.errorBody().string());
+                if (response.errorBody() != null) {
+                    String errorBodyString = "";
+                    try {
+                        errorBodyString = response.errorBody().string();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    onFailure(parseError(response.message(), errorBodyString, "message", "data", "error", "exception"));
                 } else {
                     onFailure("");
                 }
@@ -406,16 +419,17 @@ public class WorkflowServiceHelper {
 
             @Override
             public void onFailure(Call<WorkflowDTO> call, Throwable throwable) {
+                shouldRetryRequest = true;
                 callStack.remove(call);
                 onFailure(throwable.getMessage());
             }
 
             void onFailure(String errorMessage) {
-                if (attemptCount < 2) {
+                if (attemptCount < 2 && shouldRetryRequest) {
                     // Re-try failed request with increased attempt count
                     executeRequest(transitionDTO, callback, jsonBody, queryMap, headers, attemptCount + 1);
                 } else {
-                    callback.onFailure(errorMessage);
+                    callback.onFailure("" + errorMessage);
                 }
             }
         });
@@ -442,7 +456,7 @@ public class WorkflowServiceHelper {
 
             @Override
             public void onLoginFailure(String exceptionMessage) {
-                callback.onFailure(exceptionMessage);
+                callback.onFailure("" + exceptionMessage);
             }
         };
     }
@@ -476,7 +490,8 @@ public class WorkflowServiceHelper {
                 String signInResponseString = gson.toJson(workflowDTO);
                 UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString, UnifiedSignInResponse.class);
                 if (signInResponse != null) {
-                    UnifiedAuthenticationTokens authTokens = signInResponse.getPayload().getAuthorizationModel().getCognito().getAuthenticationTokens();
+                    UnifiedAuthenticationTokens authTokens = signInResponse.getPayload()
+                            .getAuthorizationModel().getCognito().getAuthenticationTokens();
                     appAuthorizationHelper.setAuthorizationTokens(authTokens);
                 }
 
@@ -486,7 +501,7 @@ public class WorkflowServiceHelper {
 
             @Override
             public void onFailure(String exceptionMessage) {
-                callback.onFailure(exceptionMessage);
+                callback.onFailure("" + exceptionMessage);
             }
         };
     }
@@ -510,34 +525,82 @@ public class WorkflowServiceHelper {
     private void atomicAppRestart() {
         if (applicationMode != null) {
             applicationMode.clearUserPracticeDTO();
+            applicationMode.setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
         }
         Intent intent = new Intent();
         intent.setAction("com.carecloud.carepay.restart");
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
         Context context = applicationPreferences.getContext();
-        Toast.makeText(context, "Login Authorization has Expired!\nPlease Login to Application again", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Login Authorization has Expired!\nPlease Login to Application again",
+                Toast.LENGTH_LONG).show();
         context.startActivity(intent);
     }
 
     /**
      * Persist all Labels contained in Workflow DTO
+     *
      * @param workflowDTO workflow dto
      */
     public void saveLabels(WorkflowDTO workflowDTO) {
         JsonObject labels = workflowDTO.getMetadata().getAsJsonObject("labels");
         String state = workflowDTO.getState();
-        boolean contains = ((AndroidPlatform) Platform.get()).openSharedPreferences(AndroidPlatform.LABELS_FILE_NAME).contains("labelFor" + state);
+        boolean contains = ((AndroidPlatform) Platform.get())
+                .openSharedPreferences(AndroidPlatform.LABELS_FILE_NAME).contains("labelFor" + state);
         if (labels != null && !contains) {
             Set<Map.Entry<String, JsonElement>> set = labels.entrySet();
             for (Map.Entry<String, JsonElement> entry : set) {
-                Log.d(state, "Saving Label "+entry.getKey());
                 Label.putLabelAsync(entry.getKey(), entry.getValue().getAsString());
             }
             Label.applyAsyncLabels();
             SharedPreferences.Editor editor = ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences().edit();
             editor.putBoolean("labelFor" + state, true).apply();
         }
+    }
+
+    private static String parseError(String message, String errorBodyString, @NonNull String... errorFields) {
+        try {
+            JsonElement jsonElement = new JsonParser().parse(errorBodyString);
+            String error;
+            for (String errorField : errorFields) {
+                error = findErrorElement(jsonElement, errorField);
+                if (error != null) {
+                    message = error;
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return message;
+    }
+
+    private static String findErrorElement(JsonElement jsonElement, String errorFieldName) {
+        if (jsonElement instanceof JsonObject) {
+            JsonObject jsonObject = (JsonObject) jsonElement;
+            Set<Map.Entry<String, JsonElement>> entrySet = jsonObject.entrySet();
+            for (Map.Entry<String, JsonElement> entry : entrySet) {
+                if (entry.getKey().equals(errorFieldName) && entry.getValue() instanceof JsonPrimitive) {
+                    return entry.getValue().getAsString();
+                }
+                if (entry.getValue() instanceof JsonObject) {
+                    String error = findErrorElement(entry.getValue(), errorFieldName);
+                    if (error != null) {
+                        return error;
+                    }
+                }
+            }
+        } else if (jsonElement instanceof JsonArray) {
+            JsonArray array = (JsonArray) jsonElement;
+            Iterator<JsonElement> iterator = array.iterator();
+            while (iterator.hasNext()) {
+                String error = findErrorElement(iterator.next(), errorFieldName);
+                if (error != null) {
+                    return error;
+                }
+            }
+        }
+        return null;
     }
 
 }

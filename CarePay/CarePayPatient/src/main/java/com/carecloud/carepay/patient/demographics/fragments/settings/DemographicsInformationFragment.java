@@ -63,9 +63,6 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
     private TextView stateEditText;
     private View nextButton;
 
-    private String stateAbbr = null;
-    private City smartyStreetsResponse;
-
     private DemographicsSettingsFragmentListener callback;
 
     private DemographicsOption selectedGender = new DemographicsOption();
@@ -147,7 +144,8 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         TextInputLayout dateBirthLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
         dateOfBirth = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
         dateOfBirth.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(dateBirthLayout, null));
-        setVisibility(dateBirthLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getDateOfBirth().isDisplayed());
+        setVisibility(dateBirthLayout, dataModel.getDemographic().getPersonalDetails().getProperties()
+                .getDateOfBirth().isDisplayed());
         dateOfBirth.addTextChangedListener(dateInputFormatter);
 
         String dateString = demographicPayload.getPersonalDetails().getFormattedDateOfBirth();
@@ -189,7 +187,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
                         getDefaultOnOptionsSelectedListener(chooseGender, selectedGender, genderOptional),
                         Label.getLabel("demographics_review_gender")));
         String gender = demographicPayload.getPersonalDetails().getGender();
-        initSelectableInput(chooseGender, selectedGender, gender, personalInfoSection.getProperties().getGender().isRequired()?null:genderOptional);
+        initSelectableInput(chooseGender, selectedGender, gender, personalInfoSection.getProperties().getGender().isRequired() ? null : genderOptional);
 
 
         View raceLayout = view.findViewById(R.id.raceDemographicsLayout);
@@ -201,7 +199,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
                         getDefaultOnOptionsSelectedListener(chooseRace, selectedRace, raceOptional),
                         Label.getLabel("demographics_review_race")));
         String race = demographicPayload.getPersonalDetails().getPrimaryRace();
-        initSelectableInput(chooseRace, selectedRace, race, personalInfoSection.getProperties().getPrimaryRace().isRequired()?null:raceOptional);
+        initSelectableInput(chooseRace, selectedRace, race, personalInfoSection.getProperties().getPrimaryRace().isRequired() ? null : raceOptional);
 
 
         View secondaryRaceLayout = view.findViewById(R.id.secondaryRaceDemographicsLayout);
@@ -213,7 +211,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
                         getDefaultOnOptionsSelectedListener(chooseSecondaryRace, selectedSecondaryRace, secondaryRaceOptional),
                         Label.getLabel("demographics_secondary_race")));
         String secondaryRace = demographicPayload.getPersonalDetails().getSecondaryRace();
-        initSelectableInput(chooseSecondaryRace, selectedSecondaryRace, secondaryRace, personalInfoSection.getProperties().getSecondaryRace().isRequired()?null:secondaryRaceOptional);
+        initSelectableInput(chooseSecondaryRace, selectedSecondaryRace, secondaryRace, personalInfoSection.getProperties().getSecondaryRace().isRequired() ? null : secondaryRaceOptional);
 
 
         View ethnicityLayout = view.findViewById(R.id.ethnicityDemographicsLayout);
@@ -225,7 +223,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
                         getDefaultOnOptionsSelectedListener(chooseEthnicity, selectedEthnicity, ethnicityOptional),
                         Label.getLabel("demographics_review_ethnicity")));
         String ethnicity = demographicPayload.getPersonalDetails().getEthnicity();
-        initSelectableInput(chooseEthnicity, selectedEthnicity, ethnicity, personalInfoSection.getProperties().getEthnicity().isRequired()?null:ethnicityOptional);
+        initSelectableInput(chooseEthnicity, selectedEthnicity, ethnicity, personalInfoSection.getProperties().getEthnicity().isRequired() ? null : ethnicityOptional);
     }
 
     private void initAddressInfo(View view, DemographicPayloadDTO demographicPayload) {
@@ -280,7 +278,8 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
 
         TextInputLayout zipCodeInputLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
         zipCode = (EditText) view.findViewById(R.id.zipCodeId);
-        zipCode.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeInputLayout, getZipCodeFocusListener(zipCode)));
+        zipCode.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeInputLayout,
+                getZipCodeFocusListener(zipCode)));
         setVisibility(zipCodeInputLayout, addressSection.getProperties().getZipcode().isDisplayed());
         zipCode.addTextChangedListener(zipInputFormatter);
         zipCode.setText(demographicPayload.getAddress().getZipcode());
@@ -386,11 +385,14 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         TextInputLayout dateBirthLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
         EditText dateOfBirth = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
         if (dateBirthLayout.getVisibility() == View.VISIBLE &&
-                !StringUtil.isNullOrEmpty(dateOfBirth.getText().toString().trim()) &&
-                !DateUtil.isValidateStringDateOfBirth(dateOfBirth.getText().toString().trim())) {
-            dateBirthLayout.setErrorEnabled(true);
-            dateBirthLayout.setError(Label.getLabel("demographics_date_validation_msg"));
-            return false;
+                !StringUtil.isNullOrEmpty(dateOfBirth.getText().toString().trim())) {
+            String dateValidationResult = DateUtil
+                    .getDateOfBirthValidationResultMessage(dateOfBirth.getText().toString().trim());
+            if (dateValidationResult != null) {
+                dateBirthLayout.setErrorEnabled(true);
+                dateBirthLayout.setError(dateValidationResult);
+                return false;
+            }
         }
 
         TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
@@ -424,30 +426,28 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
      * The response is a com.smartystreets.api.us_zipcode.City object,
      * that contains city, mailableCity, stateAbbreviation and state.
      */
-    private void getCityAndState(String zipcode) {
+    private void getCityAndState(String zipCode) {
 
-        new AsyncTask<String, Void, Void>() {
+        new AsyncTask<String, Void, City>() {
 
             @Override
-            protected Void doInBackground(String... params) {
-                smartyStreetsResponse = AddressUtil.getCityAndStateByZipCode(params[0]);
-                return null;
+            protected City doInBackground(String... params) {
+                return AddressUtil.getCityAndStateByZipCode(params[0]);
             }
 
             @Override
-            protected void onPostExecute(Void result) {
-                super.onPostExecute(result);
+            protected void onPostExecute(City smartyStreetsResponse) {
+                super.onPostExecute(smartyStreetsResponse);
 
                 if (smartyStreetsResponse != null) {
                     cityEditText.setText(smartyStreetsResponse.getCity());
-
-                    stateAbbr = smartyStreetsResponse.getStateAbbreviation();
+                    String stateAbbr = smartyStreetsResponse.getStateAbbreviation();
                     stateEditText.setText(stateAbbr);
                 }
             }
 
 
-        }.execute(zipcode);
+        }.execute(zipCode);
     }
 
     private View.OnFocusChangeListener getZipCodeFocusListener(final EditText zipCode) {

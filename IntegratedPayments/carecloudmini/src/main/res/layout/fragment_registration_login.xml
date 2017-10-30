@@ -59,6 +59,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/registration_login_password_hint"
                 android:inputType="textPassword"
+                android:imeOptions="actionDone"
                 app:customFont="gotham_rounded_light.otf"/>
 
         </LinearLayout>

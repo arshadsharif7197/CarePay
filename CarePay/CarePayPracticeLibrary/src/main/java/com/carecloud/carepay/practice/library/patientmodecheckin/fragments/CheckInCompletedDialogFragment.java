@@ -22,7 +22,8 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
-import com.carecloud.carepaylibray.payments.models.PatientPaymentPayload;
+import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
+import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -31,6 +32,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,7 +46,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
     private AppointmentDTO selectedAppointment;
     private String userImageUrl;
     private CheckCompleteInterface callback;
-    private PatientPaymentPayload patientPaymentPayload;
+    private IntegratedPatientPaymentPayload patientPaymentPayload;
     private List<String> filledForms;
 
     private
@@ -68,18 +70,18 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
     }
 
     /**
-     * @param appointmentsPayloadDTO the appointment balances
-     * @param hasPayment             boolean indicating if there has been a payment in the process
-     * @param isAdHocForms           indicates if its in the adhoc flow
+     * @param appointmentDTO the appointment balances
+     * @param hasPayment     boolean indicating if there has been a payment in the process
+     * @param isAdHocForms   indicates if its in the adhoc flow
      * @return an instance of CheckInCompletedDialogFragment
      */
-    public static CheckInCompletedDialogFragment newInstance(AppointmentDTO appointmentsPayloadDTO,
+    public static CheckInCompletedDialogFragment newInstance(AppointmentDTO appointmentDTO,
                                                              boolean hasPayment, boolean isAdHocForms) {
         Bundle args = new Bundle();
         args.putBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, hasPayment);
         args.putBoolean(CarePayConstants.ADHOC_FORMS, isAdHocForms);
-        if (appointmentsPayloadDTO != null) {
-            DtoHelper.bundleDto(args, appointmentsPayloadDTO);
+        if (appointmentDTO != null) {
+            DtoHelper.bundleDto(args, appointmentDTO);
         }
         CheckInCompletedDialogFragment fragment = new CheckInCompletedDialogFragment();
         fragment.setArguments(args);
@@ -89,28 +91,40 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        setRetainInstance(true);
         hasPayment = getArguments().getBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, false);
         isAdHocForms = getArguments().getBoolean(CarePayConstants.ADHOC_FORMS, false);
         DTO dto = callback.getDto();
-        selectedAppointment = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
-        if (hasPayment) {
-            patientPaymentPayload = ((PaymentsModel) dto).getPaymentPayload().getPatientPayments().getPayload().get(0);
-            userImageUrl = ((PaymentsModel) dto).getPaymentPayload().getPatientBalances().get(0)
-                    .getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
-        } else if (isAdHocForms) {
-            selectedAppointment = ((AppointmentsResultModel) dto).getPayload().getAppointments().get(0);
-            filledForms = ((AppointmentsResultModel) dto).getPayload().getFilledForms();
-        } else {
+        if (dto != null) {
+            selectedAppointment = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
             if (selectedAppointment == null) {
-                selectedAppointment = ((AppointmentsResultModel) dto).getPayload().getAppointments().get(0);
+                selectedAppointment = DtoHelper.getConvertedDTO(AppointmentDTO.class, icicle);
             }
-            if (!((AppointmentsResultModel) dto).getPayload().getPatientBalances().isEmpty()) {
-                userImageUrl = ((AppointmentsResultModel) dto).getPayload().getPatientBalances().get(0)
+            if (hasPayment) {
+                patientPaymentPayload = ((PaymentsModel) dto).getPaymentPayload().getPatientPayments().getPayload();
+                userImageUrl = ((PaymentsModel) dto).getPaymentPayload().getPatientBalances().get(0)
                         .getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
+            } else if (isAdHocForms) {
+//                selectedAppointment = ((AppointmentsResultModel) dto).getPayload().getAppointments().get(0);
+                filledForms = ((AppointmentsResultModel) dto).getPayload().getFilledForms();
+                userImageUrl = ((AppointmentsResultModel) dto).getPayload().getDemographicDTO().getPayload()
+                        .getPersonalDetails().getProfilePhoto();
+            } else {
+                if (selectedAppointment == null) {
+                    selectedAppointment = ((AppointmentsResultModel) dto).getPayload().getAppointments().get(0);
+                }
+                if (!((AppointmentsResultModel) dto).getPayload().getPatientBalances().isEmpty()) {
+                    userImageUrl = ((AppointmentsResultModel) dto).getPayload().getPatientBalances().get(0)
+                            .getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
+                }
             }
         }
         appointmentNavigationType = getApplicationPreferences().getAppointmentNavigationOption();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle icicle) {
+        DtoHelper.bundleDto(icicle, selectedAppointment);
+        super.onSaveInstanceState(icicle);
     }
 
     @Override
@@ -120,6 +134,10 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        if (selectedAppointment == null && !isAdHocForms) {
+            return;
+        }
+
         view.findViewById(R.id.paymentInformation).setVisibility(hasPayment ? View.VISIBLE : View.GONE);
 
         final ImageView userImage = (ImageView) view.findViewById(R.id.userImage);
@@ -141,24 +159,32 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
                 });
 
         TextView userNameTextView = (TextView) view.findViewById(R.id.userNameTextView);
-        userNameTextView.setText(selectedAppointment.getPayload().getPatient().getFirstName() + " "
-                + selectedAppointment.getPayload().getPatient().getLastName());
         TextView appointmentHourTextView = (TextView) view.findViewById(R.id.appointmentHourTextView);
-        appointmentHourTextView.setText(DateUtil.getHoursFormatted(selectedAppointment.getPayload()
-                .getStartTime()));
-        TextView appointmentProviderTextView = (TextView) view.findViewById(R.id.appointmentProviderTextView);
-        appointmentProviderTextView.setText(String.format(Label.getLabel("checkin_complete_provider_label"),
-                selectedAppointment.getPayload().getProvider().getName()));
-
-        TextView appointmentStatusTextView = (TextView) view.findViewById(R.id.appointmentStatusTextView);
-        String status = selectedAppointment.getPayload().getAppointmentStatus().getName();
-        if ("checked-in".equals(status.toLowerCase()) || "checked-out".equals(status.toLowerCase())) {
-            status = String.format(Label.getLabel("confirm_appointment_checkout_status"), status);
+        if (isAdHocForms) {
+            userNameTextView.setText(((AppointmentsResultModel) callback.getDto()).getPayload().getDemographicDTO().getPayload()
+                    .getPersonalDetails().getFullName());
+            appointmentHourTextView.setText(DateUtil.getInstance().getHoursFormatted(new Date()));
+            view.findViewById(R.id.statusContainer).setVisibility(View.GONE);
+            view.findViewById(R.id.separator1).setVisibility(View.GONE);
+            view.findViewById(R.id.visitTypeContainer).setVisibility(View.GONE);
+            view.findViewById(R.id.separator2).setVisibility(View.GONE);
+        } else {
+            userNameTextView.setText(selectedAppointment.getPayload().getPatient().getFirstName() + " "
+                    + selectedAppointment.getPayload().getPatient().getLastName());
+            appointmentHourTextView.setText(DateUtil.getHoursFormatted(selectedAppointment.getPayload()
+                    .getStartTime()));
+            TextView appointmentProviderTextView = (TextView) view.findViewById(R.id.appointmentProviderTextView);
+            appointmentProviderTextView.setText(String.format(Label.getLabel("checkin_complete_provider_label"),
+                    selectedAppointment.getPayload().getProvider().getName()));
+            TextView appointmentStatusTextView = (TextView) view.findViewById(R.id.appointmentStatusTextView);
+            String status = selectedAppointment.getPayload().getAppointmentStatus().getName();
+            if ("checked-in".equals(status.toLowerCase()) || "checked-out".equals(status.toLowerCase())) {
+                status = String.format(Label.getLabel("confirm_appointment_checkout_status"), status);
+            }
+            appointmentStatusTextView.setText(status);
+            TextView appointmentVisitTypeTextView = (TextView) view.findViewById(R.id.appointmentVisitTypeTextView);
+            appointmentVisitTypeTextView.setText(selectedAppointment.getPayload().getVisitType().getName());
         }
-        appointmentStatusTextView.setText(status);
-
-        TextView appointmentVisitTypeTextView = (TextView) view.findViewById(R.id.appointmentVisitTypeTextView);
-        appointmentVisitTypeTextView.setText(selectedAppointment.getPayload().getVisitType().getName());
 
         TextView continueTextView = (TextView) view.findViewById(R.id.continueTextView);
         continueTextView.setOnClickListener(new View.OnClickListener() {
@@ -167,7 +193,6 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
                 callback.logout();
             }
         });
-
         ImageView homeModeSwitchImageView = (ImageView) view.findViewById(R.id.homeModeSwitchImageView);
         homeModeSwitchImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,17 +204,19 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
 
         TextView paymentTypeTextView = (TextView) view.findViewById(R.id.paymentTypeTextView);
         if (hasPayment) {
-            paymentTypeTextView.setText(patientPaymentPayload.getType());
+            paymentTypeTextView.setText(Label.getLabel("payment_type_one_time"));
 
             TextView paymentMethodTextView = (TextView) view.findViewById(R.id.paymentMethodTextView);
-            paymentMethodTextView.setText(patientPaymentPayload.getMethod());
+            paymentMethodTextView.setText(PaymentConfirmationFragment.getPaymentMethod(patientPaymentPayload));
 
             TextView confirmationNumberTextView = (TextView) view.findViewById(R.id.confirmationNumberTextView);
             confirmationNumberTextView.setText(patientPaymentPayload.getConfirmation());
 
             NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
             TextView totalPaidTextView = (TextView) view.findViewById(R.id.totalPaidTextView);
-            totalPaidTextView.setText(currencyFormatter.format(patientPaymentPayload.getTotal()));
+            totalPaidTextView.setText(currencyFormatter.format(patientPaymentPayload.getTotalPaid()));
+
+            //todo display possible errors
 
         } else if (isAdHocForms) {
             setUpForAdHocForms(view);

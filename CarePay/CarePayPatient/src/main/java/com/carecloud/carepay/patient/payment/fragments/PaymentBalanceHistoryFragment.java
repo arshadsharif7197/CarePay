@@ -2,24 +2,25 @@ package com.carecloud.carepay.patient.payment.fragments;
 
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.payment.adapters.PaymentsSectionsPagerAdapter;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.utils.StringUtil;
 
 /**
- * Created by jorge on 29/12/16.
+ * Created by jorge on 29/12/16
  */
 public class PaymentBalanceHistoryFragment extends BaseFragment {
 
@@ -54,27 +55,43 @@ public class PaymentBalanceHistoryFragment extends BaseFragment {
         tabs.setTabTextColors(Color.LTGRAY, Color.WHITE);
         tabs.setupWithViewPager(viewPager);
 
-        if (ViewPaymentBalanceHistoryActivity.isPaymentDone()) {
-            TabLayout.Tab tab = tabs.getTabAt(1);
-            if (tab != null) {
-                tab.select();
-            }
-            ViewPaymentBalanceHistoryActivity.setIsPaymentDone(false);
-        }
+        setShadow(tabs);
+
         PaymentsSectionsPagerAdapter adapter = new PaymentsSectionsPagerAdapter(getChildFragmentManager());
-        PatientPaymentHistoryFragment pendingPaymentsFragment = PatientPaymentHistoryFragment.newInstance(PatientPaymentHistoryFragment.SECTION_PENDING);
-        PatientPaymentHistoryFragment paymentHistoryFragment = PatientPaymentHistoryFragment.newInstance(PatientPaymentHistoryFragment.SECTION_HISTORY);
+        PatientPendingPaymentFragment pendingPaymentsFragment = new PatientPendingPaymentFragment();
+        PatientPaymentHistoryFragment paymentHistoryFragment = new PatientPaymentHistoryFragment();
         pendingPaymentsFragment.setTargetFragment(this, 1);
         paymentHistoryFragment.setTargetFragment(this, 1);
 
         String pendingTabTitle = Label.getLabel("payment_patient_balance_tab");
         String historyTabTitle = Label.getLabel("payment_patient_history_tab");
 
-        adapter.addFragment(pendingPaymentsFragment, StringUtil.isNullOrEmpty(pendingTabTitle) ?
-                CarePayConstants.NOT_DEFINED : pendingTabTitle);
-        adapter.addFragment(paymentHistoryFragment, StringUtil.isNullOrEmpty(historyTabTitle) ?
-                CarePayConstants.NOT_DEFINED : historyTabTitle);
+        adapter.addFragment(pendingPaymentsFragment, pendingTabTitle);
+        adapter.addFragment(paymentHistoryFragment, historyTabTitle);
         viewPager.setAdapter(adapter);
+
+        TabLayout.Tab pending = tabs.getTabAt(0);
+        if(pending != null){
+            pending.setCustomView(R.layout.page_tab_layout);
+            setTabTitle(pending, pendingTabTitle);
+        }
+        TabLayout.Tab history = tabs.getTabAt(1);
+        if(history != null){
+            history.setCustomView(R.layout.page_tab_layout);
+            setTabTitle(history, historyTabTitle);
+        }
+
+    }
+
+    private void setShadow(View view){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            view.setElevation(getResources().getDimension(R.dimen.respons_toolbar_elevation));
+        }
+    }
+
+    private void setTabTitle(TabLayout.Tab tab, String title){
+        TextView textView = (TextView) tab.getCustomView().findViewById(R.id.tab_title);
+        textView.setText(title);
 
     }
 
@@ -82,7 +99,14 @@ public class PaymentBalanceHistoryFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         if (getActivity() instanceof ViewPaymentBalanceHistoryActivity) {
-            ((ViewPaymentBalanceHistoryActivity) this.getActivity()).displayToolbar(true, null);
+            ViewPaymentBalanceHistoryActivity activity = (ViewPaymentBalanceHistoryActivity) this.getActivity();
+            activity.displayToolbar(true, null);
+
+            ActionBar supportActionBar = activity.getSupportActionBar();
+            if(supportActionBar != null){
+                supportActionBar.setElevation(0);
+            }
+
         }
     }
 

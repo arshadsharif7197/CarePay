@@ -25,10 +25,12 @@ import com.carecloud.carepaylibray.appointments.interfaces.AvailableHoursInterfa
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
+import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseActivity;
@@ -38,7 +40,6 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -55,7 +56,7 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
     private Date endDate;
     private AppointmentAvailabilityDTO availabilityDTO;
     private VisitTypeDTO selectedVisitTypeDTO;
-    private AppointmentsResultModel resourcesToScheduleDTO;
+    private AppointmentsResultModel appointmentsResultModel;
     private AppointmentResourcesItemDTO selectedResource;
 
     private RecyclerView availableHoursRecycleView;
@@ -68,7 +69,6 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
     private View locationsLayout;
 
     private Map<String, LocationDTO> selectedLocations = new HashMap<>();
-    private SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
 
     private AvailableHoursInterface callback;
 
@@ -102,11 +102,11 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
             selectedResource = new AppointmentResourcesItemDTO();
             selectedResource.setId(appointmentDTO.getPayload().getResourceId());
             selectedResource.setProvider(appointmentDTO.getPayload().getProvider());
-            resourcesToScheduleDTO = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, bundle);
+            appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, bundle);
         } else {
             selectedVisitTypeDTO = DtoHelper.getConvertedDTO(VisitTypeDTO.class, bundle);
             selectedResource = DtoHelper.getConvertedDTO(AppointmentResourcesItemDTO.class, bundle);
-            resourcesToScheduleDTO = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, bundle);
+            appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, bundle);
         }
         startDate = (Date) bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE);
         endDate = (Date) bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE);
@@ -267,7 +267,7 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
 
 
     protected void selectDateRange() {
-        callback.selectDateRange(startDate, endDate, selectedVisitTypeDTO, selectedResource, resourcesToScheduleDTO);
+        callback.selectDateRange(startDate, endDate, selectedVisitTypeDTO, selectedResource, appointmentsResultModel);
     }
 
     private void resetLocationSelections(boolean clearAll) {
@@ -314,10 +314,11 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
 
 
     private void getAvailableHoursTimeSlots() {
+        ResourcesToScheduleDTO selectedResourcesToSchedule = getSelectedResourcesToSchedule(selectedResource);
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("language", getApplicationPreferences().getUserLanguage());
-        queryMap.put("practice_mgmt", resourcesToScheduleDTO.getPayload().getResourcesToSchedule().get(0).getPractice().getPracticeMgmt());
-        queryMap.put("practice_id", resourcesToScheduleDTO.getPayload().getResourcesToSchedule().get(0).getPractice().getPracticeId());
+        queryMap.put("practice_mgmt", selectedResourcesToSchedule.getPractice().getPracticeMgmt());
+        queryMap.put("practice_id", selectedResourcesToSchedule.getPractice().getPracticeId());
         queryMap.put("visit_reason_id", selectedVisitTypeDTO.getId() + "");
         queryMap.put("resource_ids", selectedResource.getId() + "");
         if (startDate != null) {
@@ -329,7 +330,7 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
             queryMap.put("end_date", DateUtil.getInstance().toStringWithFormatYyyyDashMmDashDd());
         }
 
-        TransitionDTO transitionDTO = resourcesToScheduleDTO.getMetadata().getLinks().getAppointmentAvailability();
+        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getLinks().getAppointmentAvailability();
 
         getWorkflowServiceHelper().execute(transitionDTO, getAppointmentsAvailabilitySlotsCallback, queryMap);
     }
@@ -403,6 +404,22 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
         }
         return appointmentsSlots;
     }
+
+    private ResourcesToScheduleDTO getSelectedResourcesToSchedule(AppointmentResourcesItemDTO selectedResource){
+        List<ResourcesToScheduleDTO> resourcesToScheduleDTOList = appointmentsResultModel.getPayload().getResourcesToSchedule();
+        for(ResourcesToScheduleDTO resourcesToScheduleDTO : resourcesToScheduleDTOList){
+            for(AppointmentResourcesDTO appointmentResourcesDTO : resourcesToScheduleDTO.getResources()){
+                if(appointmentResourcesDTO.getResource().getBusinessEntityId().equals(selectedResource.getBusinessEntityId())){
+                    return resourcesToScheduleDTO;
+                }
+            }
+        }
+        if(appointmentsResultModel.getPayload().getResourcesToSchedule().isEmpty()){
+            return new ResourcesToScheduleDTO();
+        }
+        return appointmentsResultModel.getPayload().getResourcesToSchedule().get(0);
+    }
+
 
     protected abstract void setupEditDateButton(View view);
 }

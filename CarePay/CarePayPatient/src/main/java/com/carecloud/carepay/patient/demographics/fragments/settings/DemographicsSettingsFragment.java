@@ -106,7 +106,6 @@ public class DemographicsSettingsFragment extends BaseFragment {
         PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload().getDemographics()
                 .getPayload().getPersonalDetails();
         String imageUrl = demographicsPersonalDetails.getProfilePhoto();
-        getApplicationPreferences().setUserPhotoUrl(imageUrl);
         if (!StringUtil.isNullOrEmpty(imageUrl)) {
             ImageView profileImageview = (ImageView) view.findViewById(R.id.providerPicImageView);
             Picasso.with(getContext())
@@ -213,6 +212,12 @@ public class DemographicsSettingsFragment extends BaseFragment {
                 .getPayload().getPersonalDetails();
         String firstName = demographicsPersonalDetails.getFirstName();
         String lastName = demographicsPersonalDetails.getLastName();
+        if(firstName == null){
+            firstName = "";
+        }
+        if(lastName == null){
+            lastName = "";
+        }
         return (StringUtil.capitalize(firstName + " " + lastName));
     }
 
@@ -264,7 +269,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
             pushNotificationCheckBox.setChecked(demographicsSettingsDTO.getPayload()
                     .getDemographicSettingsNotificationDTO().getPayload().isPush());
             emailNotificationCheckBox.setChecked(demographicsSettingsDTO.getPayload()

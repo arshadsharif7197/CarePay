@@ -17,6 +17,13 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <supports-screens android:smallScreens="false"
+                      android:normalScreens="false"
+                      android:largeScreens="true"
+                      android:xlargeScreens="true"
+                      android:anyDensity="true"
+                      android:requiresSmallestWidthDp="600"/>
+
     <application
         android:name="com.carecloud.carepay.practice.tablet.CarePayPracticeApplication"
         android:allowBackup="true"
@@ -50,7 +57,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.carecloud.carepay.practice.library.checkin.PracticeModePracticeCheckInActivity"
+            android:name="com.carecloud.carepay.practice.library.checkin.PracticeModeCheckInActivity"
             android:parentActivityName="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity"
             android:screenOrientation="sensorLandscape">
             <meta-data

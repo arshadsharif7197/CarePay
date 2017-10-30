@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.base;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,9 +19,14 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.platform.AndroidPlatform;
+import com.carecloud.carepay.service.library.platform.Platform;
+import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
+import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -30,14 +36,15 @@ import java.util.Map;
  * Created by jorge on 10/01/17
  */
 
-public abstract class MenuPatientActivity extends BasePatientActivity implements NavigationView.OnNavigationItemSelectedListener {
+public abstract class MenuPatientActivity extends BasePatientActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     //transitions
     private static TransitionDTO transitionBalance;
     private static TransitionDTO transitionProfile;
     private static TransitionDTO transitionAppointments;
     private static TransitionDTO transitionLogout;
-    private static TransitionDTO transitionNotifications;
+    protected static TransitionDTO transitionNotifications;
     private static TransitionDTO transitionMyHealth;
 
     protected ActionBarDrawerToggle toggle;
@@ -64,6 +71,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         setSupportActionBar(toolbar);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, com.carecloud.carepaylibrary.R.string.navigation_drawer_open, com.carecloud.carepaylibrary.R.string.navigation_drawer_close);
+        toggle.getDrawerArrowDrawable().setColor(ContextCompat.getColor(this, R.color.white));
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
@@ -112,6 +120,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         TransitionDTO transition;
         Map<String, String> headersMap = new HashMap<>();
         Map<String, String> queryMap = new HashMap<>();
+        String payload = null;
 
         int id = item.getItemId();
         switch (id) {
@@ -149,6 +158,15 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
                 callback = logoutWorkflowCallback;
                 headersMap.put("x-api-key", HttpConstants.getApiStartKey());
                 headersMap.put("transition", "true");
+
+                UnifiedSignInUser user = new UnifiedSignInUser();
+                user.setEmail(getApplicationPreferences().getUserId());
+                user.setDeviceToken(((AndroidPlatform) Platform.get()).openDefaultSharedPreferences()
+                        .getString(CarePayConstants.FCM_TOKEN, null));
+                UnifiedSignInDTO signInDTO = new UnifiedSignInDTO();
+                signInDTO.setUser(user);
+
+                payload = new Gson().toJson(signInDTO);
                 break;
             default:
                 drawer.closeDrawer(GravityCompat.START);
@@ -160,7 +178,11 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
             return false;
         }
 
-        if (headersMap.isEmpty()) {
+        if(payload != null){
+            //do transition with payload
+            getWorkflowServiceHelper().execute(transition, callback, payload, queryMap, headersMap);
+        }
+        else if (headersMap.isEmpty()) {
             //do regular transition
             getWorkflowServiceHelper().execute(transition, callback, queryMap);
         } else {
@@ -279,7 +301,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         }
     };
 
-    private WorkflowServiceCallback purchaseWorkflowCallback = new WorkflowServiceCallback() {//TODO this is currently pointed at appointments endpoint
+    //TODO this is currently pointed at appointments endpoint
+    private WorkflowServiceCallback purchaseWorkflowCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();
@@ -302,7 +325,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         }
     };
 
-    private WorkflowServiceCallback notificationsWorkflowCallback = new WorkflowServiceCallback() {
+    protected WorkflowServiceCallback notificationsWorkflowCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();
@@ -375,6 +398,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         if (visibility) {
             setSupportActionBar(toolbar);
             if (getSupportActionBar() != null) {
+                getSupportActionBar().setElevation(getResources().getDimension(R.dimen.respons_toolbar_elevation));
                 getSupportActionBar().show();
             }
         } else if (getSupportActionBar() != null) {

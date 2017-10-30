@@ -1,6 +1,6 @@
 package com.carecloud.carepay.patient.myhealth.dtos;
 
-import com.carecloud.carepay.patient.base.PagingDto;
+import com.carecloud.carepaylibray.base.models.PagingDto;
 
 import java.util.ArrayList;
 import java.util.List;

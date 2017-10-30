@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CarePay</string>
+    <string name="app_name">CareCloud Payments</string>
 
     <string name="registrations_start_text">This device is not registered. In order to register please log in to your CareCloud account.</string>
     <string name="registration_start_button">Start</string>
@@ -44,6 +44,9 @@
     <string name="registration_progress_text">%1$d of %2$d</string>
     <string name="registration_complete_text">This device is ready to accept payments.</string>
     <string name="registration_complete_button">Let\'s go</string>
+    <string name="settings_exit">Exit</string>
+    <string name="settings_save">Save</string>
+    <string name="settings_title">Settings</string>
 
     <string name="welcome_waiting">Waiting for payment</string>
     <string name="welcome_connecting">Connecting&#8230;</string>
@@ -66,6 +69,7 @@
     <string name="error_select_practice">Please select a practice to continue.</string>
     <string name="error_select_location">Please select a location to continue.</string>
     <string name="error_device_in_use">Device is currently in use.</string>
+    <string name="error_user_access_practice">This user does not have access to the current practice settings.</string>
 
     <string name="image_unavailable">Unavailable</string>
 </resources>

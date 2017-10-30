@@ -11,11 +11,11 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 /**
- * Created by lmenendez on 3/8/17.
+ * Created by lmenendez on 3/8/17
  */
 public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
 
@@ -41,9 +41,13 @@ public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        String name = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getPersonalDetails().getFirstName();
-        String label = Label.getLabel("payment_user_credit_card_title");
-        titleLabel = name + label;
+        if(!paymentsModel.getPaymentPayload().getPatientBalances().isEmpty()) {
+            String name = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getPersonalDetails().getFirstName();
+            String label = Label.getLabel("payment_user_credit_card_title");
+            titleLabel = name + label;
+        }else{
+            titleLabel = Label.getLabel("payment_choose_credit_card");
+        }
     }
 
     @Override
@@ -61,7 +65,7 @@ public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
         @Override
         public void onClick(View view) {
             CloverPaymentAdapter cloverPaymentAdapter = new CloverPaymentAdapter(getActivity(), paymentsModel, callback.getAppointmentId());
-            PaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
+            IntegratedPaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
             if (paymentPostModel == null) {
                 cloverPaymentAdapter.setCloverPayment(amountToMakePayment);
             } else {

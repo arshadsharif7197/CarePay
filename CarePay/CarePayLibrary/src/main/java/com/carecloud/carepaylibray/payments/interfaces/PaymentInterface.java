@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.payments.interfaces;
 
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 
 /**
@@ -15,4 +16,6 @@ public interface PaymentInterface {
      * @param paymentsModel the payment model
      */
     void onPayButtonClicked(double amount, PaymentsModel paymentsModel);
+
+    void navigateToWorkflow(WorkflowDTO workflowDTO);
 }

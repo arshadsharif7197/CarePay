@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
@@ -41,6 +42,7 @@ import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTo
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
@@ -98,6 +100,14 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         setEditTexts();
         setClickables();
         changeScreenMode(signinScreenMode);
+
+        Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
+        if(extra != null) {
+            boolean crash = extra.getBoolean(CarePayConstants.CRASH, false);
+            if (crash) {
+                Toast.makeText(this, Label.getLabel("crash_handled_error_message"), Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     /**
@@ -136,12 +146,12 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
 
     }
 
-    private void displayVersionNumber(){
+    private void displayVersionNumber() {
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             TextView versionNumber = (TextView) findViewById(R.id.version_number);
             versionNumber.setText(packageInfo.versionName);
-        }catch (PackageManager.NameNotFoundException nne){
+        } catch (PackageManager.NameNotFoundException nne) {
             nne.printStackTrace();
         }
     }
@@ -503,7 +513,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             hideProgressDialog();
             getWorkflowServiceHelper().setAppAuthorizationHelper(null);
             setSignInButtonClickable(true);
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -526,7 +536,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             setSignInButtonClickable(true);
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

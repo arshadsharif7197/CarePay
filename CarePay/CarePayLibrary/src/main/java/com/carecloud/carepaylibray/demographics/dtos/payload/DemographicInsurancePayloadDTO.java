@@ -49,6 +49,14 @@ public class DemographicInsurancePayloadDTO extends PatientModel {
     @Expose
     private String policyLastNameHolder;
 
+    @SerializedName("policy_holder_date_of_birth")
+    @Expose
+    private String policyDateOfBirthHolder;
+
+    @SerializedName("policy_holder_gender")
+    @Expose
+    private String policyGenderHolder;
+
     @SerializedName("delete")
     @Expose
     private boolean deleted = false;
@@ -153,6 +161,22 @@ public class DemographicInsurancePayloadDTO extends PatientModel {
 
     public void setPolicyLastNameHolder(String policyLastNameHolder) {
         this.policyLastNameHolder = policyLastNameHolder;
+    }
+
+    public String getPolicyDateOfBirthHolder() {
+        return policyDateOfBirthHolder;
+    }
+
+    public void setPolicyDateOfBirthHolder(String policyDateOfBirthHolder) {
+        this.policyDateOfBirthHolder = policyDateOfBirthHolder;
+    }
+
+    public String getPolicyGenderHolder() {
+        return policyGenderHolder;
+    }
+
+    public void setPolicyGenderHolder(String policyGenderHolder) {
+        this.policyGenderHolder = policyGenderHolder;
     }
 
     public String getInsuranceId() {

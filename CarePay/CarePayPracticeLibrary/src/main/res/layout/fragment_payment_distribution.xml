@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -57,17 +58,26 @@
             android:padding="@dimen/dimen_8dp">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/patient_name"
-                android:layout_width="0dp"
+                android:id="@+id/button_history"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="@dimen/dimen_8dp"
-                android:layout_marginStart="@dimen/dimen_8dp"
-                android:layout_weight="1"
-                android:gravity="start"
+                android:layout_margin="@dimen/dimen_8dp"
+                android:background="@drawable/bg_white_border_trans"
+                android:paddingTop="@dimen/dimen_8dp"
+                android:paddingBottom="@dimen/dimen_8dp"
+                android:paddingStart="@dimen/dimen_20dp"
+                android:paddingEnd="@dimen/dimen_20dp"
+                tools:text="History"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_28sp"
-                app:customAssetFont="proxima_nova_regular"/>
+                android:textSize="@dimen/text_size_16sp"
+                breeze:textKey="payment_history"
+                app:customAssetFont="proxima_nova_semi_bold"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -90,6 +100,7 @@
                         android:layout_gravity="center_vertical"
                         android:textColor="@color/light_gray"
                         android:textSize="@dimen/text_size_16sp"
+                        tools:text="Unapplied Credit"
                         breeze:textKey="payment_total_unapplied"
                         app:customAssetFont="proxima_nova_regular"/>
 
@@ -111,6 +122,7 @@
                         android:layout_marginStart="@dimen/dimen_8dp"
                         android:textColor="@color/light_gray_dialog"
                         android:textSize="@dimen/text_size_16sp"
+                        tools:text="$999.99"
                         app:customAssetFont="proxima_nova_semi_bold"/>
 
                     <View
@@ -135,6 +147,7 @@
                         android:layout_gravity="center_vertical"
                         android:textColor="@color/light_gray"
                         android:textSize="@dimen/text_size_16sp"
+                        tools:text="Balance Owed"
                         breeze:textKey="payment_balance_owed_label"
                         app:customAssetFont="proxima_nova_regular"/>
 
@@ -156,6 +169,7 @@
                         android:layout_marginStart="@dimen/dimen_8dp"
                         android:textColor="@color/light_gray_dialog"
                         android:textSize="@dimen/text_size_16sp"
+                        tools:text="$999.99"
                         app:customAssetFont="proxima_nova_semi_bold"/>
 
                     <View
@@ -182,6 +196,7 @@
                         android:layout_marginStart="@dimen/dimen_8dp"
                         android:textColor="@color/light_gray"
                         android:textSize="@dimen/text_size_16sp"
+                        tools:text="Total Being Paid"
                         breeze:textKey="payment_total_paid_label"
                         app:customAssetFont="proxima_nova_regular"/>
 
@@ -205,7 +220,7 @@
                         android:paddingBottom="@dimen/dimen_8dp"
                         android:paddingStart="@dimen/dimen_20dp"
                         android:paddingEnd="@dimen/dimen_20dp"
-                        android:text="$325.00"
+                        tools:text="$325.00"
                         android:textColor="@color/emerald"
                         android:textSize="@dimen/text_size_16sp"
                         app:customAssetFont="proxima_nova_semi_bold"/>
@@ -218,119 +233,171 @@
 
         </LinearLayout>
 
-
-        <android.support.v4.widget.NestedScrollView
-            android:id="@+id/nested_scroller"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/white">
+            android:layout_weight="1">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/balances_recycler"
+                <android.support.v4.widget.NestedScrollView
+                    android:id="@+id/nested_scroller"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@color/white">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/balances_recycler"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/dimen_20dp"/>
+
+
+                        <LinearLayout
+                            android:id="@+id/new_charges_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/dimen_24dp"
+                                android:layout_marginTop="@dimen/dimen_20dp"
+                                android:layout_marginBottom="@dimen/dimen_10dp"
+                                android:textColor="@color/textview_default_textcolor"
+                                android:textSize="@dimen/text_size_18sp"
+                                android:textAllCaps="true"
+                                breeze:textKey="payment_new_charges_header"
+                                app:customAssetFont="proxima_nova_semi_bold"/>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/dimen_1dp"
+                                android:background="@color/light_gray"/>
+
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/new_charges_recycler"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+
+                        </LinearLayout>
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            android:padding="@dimen/dimen_8dp">
+
+                            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                                android:id="@+id/add_item_button"
+                                style="@style/BreezeButtonStyleDark"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end"
+                                android:background="@drawable/blue_border_rounded_button_selector"
+                                android:paddingEnd="@dimen/dimen_20dp"
+                                android:paddingStart="@dimen/dimen_20dp"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="@dimen/text_size_14"
+                                breeze:textKey="payment_add_item_button"
+                                app:customAssetFont="gotham_rounded_medium"/>
+
+                        </FrameLayout>
+
+                    </LinearLayout>
+                </android.support.v4.widget.NestedScrollView>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_1dp"
+                    android:background="@color/light_gray" />
 
                 <LinearLayout
-                    android:id="@+id/new_charges_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:background="@drawable/patient_mode_dialog_body_bg"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/dimen_10dp">
 
-                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                        android:layout_width="wrap_content"
+                    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                        android:id="@+id/payment_left_button"
+                        style="@style/BreezeButtonStyleDark"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/dimen_24dp"
-                        android:layout_marginTop="@dimen/dimen_40dp"
-                        android:layout_marginBottom="@dimen/dimen_10dp"
-                        android:textColor="@color/textview_default_textcolor"
-                        android:textSize="@dimen/text_size_18sp"
-                        android:textAllCaps="true"
-                        breeze:textKey="payment_new_charges_header"
-                        app:customAssetFont="proxima_nova_semi_bold"/>
+                        android:layout_margin="@dimen/dimen_10dp"
+                        android:layout_weight="2"
+                        android:background="@drawable/blue_border_rounded_button_selector"
+                        android:textColor="@color/colorPrimary"
+                        breeze:textKey="practice_payments_detail_dialog_payment_plan"
+                        app:customAssetFont="gotham_rounded_medium"
+                        android:visibility="gone"/>
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dimen_1dp"
-                        android:background="@color/light_gray"/>
+                    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                        android:id="@+id/payment_pay_button"
+                        style="@style/BreezeButtonStyleDark"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/dimen_10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/green_rounded_button_selector"
+                        breeze:textKey="practice_payments_detail_dialog_pay"
+                        app:customAssetFont="gotham_rounded_medium"/>
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/new_charges_recycler"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
 
                 </LinearLayout>
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/empty_balance_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@drawable/patient_mode_dialog_body_bg"
+                android:visibility="visible">
+
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:padding="@dimen/dimen_8dp">
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:paddingTop="@dimen/dimen_40dp">
 
-                    <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                        android:id="@+id/add_item_button"
-                        style="@style/BreezeButtonStyleDark"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:background="@drawable/blue_border_rounded_button_selector"
-                        android:paddingEnd="@dimen/dimen_20dp"
-                        android:paddingStart="@dimen/dimen_20dp"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/text_size_14"
-                        breeze:textKey="payment_add_item_button"
-                        app:customAssetFont="gotham_rounded_medium"/>
+                    <include layout="@layout/patient_balance_empty" />
 
                 </FrameLayout>
 
+                <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                    android:id="@+id/add_item_button_empty"
+                    style="@style/BreezeButtonStyleDark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_40dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/blue_border_rounded_button_selector"
+                    android:paddingEnd="@dimen/dimen_60dp"
+                    android:paddingStart="@dimen/dimen_60dp"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size_22"
+                    tools:text="Add Item"
+                    breeze:textKey="payment_add_item"
+                    app:customAssetFont="gotham_rounded_medium"/>
+
             </LinearLayout>
-        </android.support.v4.widget.NestedScrollView>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_1dp"
-            android:background="@color/light_gray" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/patient_mode_dialog_body_bg"
-            android:orientation="horizontal"
-            android:padding="@dimen/dimen_10dp">
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/payment_left_button"
-                style="@style/BreezeButtonStyleDark"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_10dp"
-                android:layout_weight="2"
-                android:background="@drawable/blue_border_rounded_button_selector"
-                android:textColor="@color/colorPrimary"
-                breeze:textKey="practice_payments_detail_dialog_payment_plan"
-                app:customAssetFont="gotham_rounded_medium"
-                android:visibility="gone"/>
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/payment_pay_button"
-                style="@style/BreezeButtonStyleDark"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_10dp"
-                android:layout_weight="1"
-                android:background="@drawable/green_rounded_button_selector"
-                breeze:textKey="practice_payments_detail_dialog_pay"
-                app:customAssetFont="gotham_rounded_medium"/>
 
 
-        </LinearLayout>
+
+        </FrameLayout>
 
     </LinearLayout>
 

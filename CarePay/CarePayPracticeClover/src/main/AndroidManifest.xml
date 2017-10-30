@@ -51,7 +51,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.carecloud.carepay.practice.library.checkin.PracticeModePracticeCheckInActivity"
+            android:name="com.carecloud.carepay.practice.library.checkin.PracticeModeCheckInActivity"
             android:parentActivityName="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity"
             android:screenOrientation="sensorLandscape">
             <meta-data
@@ -113,7 +113,16 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name="com.carecloud.carepay.practice.clover.payments.CloverRefundActivity"
+            android:label="@string/clover_payment_activity"
+            android:theme="@style/Theme.AppCompat.Translucent"
+            android:configChanges="orientation|screenSize">
+            <intent-filter>
+                <action android:name="com.carecloud.carepay.practice.clover.payments.CloverRefundActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <service android:name=".CloverQueueUploadService" android:enabled="true" />
     </application>
 

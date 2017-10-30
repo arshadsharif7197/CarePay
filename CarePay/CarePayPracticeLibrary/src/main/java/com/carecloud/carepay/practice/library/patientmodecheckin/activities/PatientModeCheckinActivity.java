@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
+import com.carecloud.carepay.practice.library.checkin.dialog.HomeAlertDialogFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.PatientModeDemographicsPresenter;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
@@ -35,6 +37,7 @@ import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.media.MediaResultListener;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -103,8 +106,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
         Bundle extra = new Bundle();
         extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
-//        extra.putString(CarePayConstants.EXTRA_WORKFLOW, workflowDTO.toString());
         intent.putExtra(CarePayConstants.EXTRA_BUNDLE, extra);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
@@ -135,8 +138,17 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             @Override
             public void onClick(View view) {
                 if (!presenter.handleHomeButtonClick()) {
-                    setResult(CarePayConstants.HOME_PRESSED);
-                    finish();
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment.newInstance();
+                    homeAlertDialogFragment.setCallback(new HomeAlertDialogFragment.HomeAlertInterface() {
+                        @Override
+                        public void onAcceptExit() {
+                            setResult(CarePayConstants.HOME_PRESSED);
+                            finish();
+                        }
+                    });
+                    String tag = homeAlertDialogFragment.getClass().getName();
+                    homeAlertDialogFragment.show(ft, tag);
                 }
             }
         });
@@ -193,7 +205,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onPartialPaymentClicked(double owedAmount) {
+    public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
         PracticePartialPaymentDialogFragment dialog = PracticePartialPaymentDialogFragment
                 .newInstance(paymentDTO, owedAmount);
         displayDialogFragment(dialog, false);
@@ -244,6 +256,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             DtoHelper.bundleDto(extra, presenter.getAppointmentPayload());
             Intent completeIntent = new Intent(this, CompleteCheckActivity.class);
             completeIntent.putExtra(CarePayConstants.EXTRA_BUNDLE, extra);
+            completeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(completeIntent);
         } else {
             setResult(CarePayConstants.HOME_PRESSED, intent);
@@ -297,8 +310,21 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
-        getIntent().putExtra(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
-        completePaymentProcess(workflowDTO);
+        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
+        if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
+            StringBuilder builder = new StringBuilder();
+            for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
+                builder.append(processingError.getError());
+                builder.append("\n");
+            }
+            int last = builder.lastIndexOf("\n");
+            builder.replace(last, builder.length(), "");
+            showErrorNotification(builder.toString());
+        } else {
+            getIntent().putExtra(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
+            completePaymentProcess(workflowDTO);
+        }
     }
 
     @Override
@@ -374,7 +400,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             }
             default:
                 //nothing
-                return;
         }
     }
 

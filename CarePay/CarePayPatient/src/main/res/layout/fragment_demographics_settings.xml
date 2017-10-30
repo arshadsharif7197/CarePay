@@ -249,6 +249,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_40dp"
+                android:foreground="?android:selectableItemBackground"
                 android:textAllCaps="true"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="signout_button_label"

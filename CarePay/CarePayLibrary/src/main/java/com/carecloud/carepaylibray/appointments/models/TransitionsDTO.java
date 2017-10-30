@@ -62,6 +62,13 @@ public class TransitionsDTO {
     @Expose
     private TransitionDTO adHocFormsPatientMode = new TransitionDTO();
 
+    @SerializedName("make_payment")
+    @Expose
+    private TransitionDTO makePayment = new TransitionDTO();
+    @SerializedName("add_credit_card")
+    @Expose
+    private TransitionDTO addCreditCard = new TransitionDTO();
+
     /**
      * @return The checkingIn
      */
@@ -204,5 +211,21 @@ public class TransitionsDTO {
 
     public void setAdHocFormsPatientMode(TransitionDTO adHocFormsPatientMode) {
         this.adHocFormsPatientMode = adHocFormsPatientMode;
+    }
+
+    public TransitionDTO getMakePayment() {
+        return makePayment;
+    }
+
+    public void setMakePayment(TransitionDTO makePayment) {
+        this.makePayment = makePayment;
+    }
+
+    public TransitionDTO getAddCreditCard() {
+        return addCreditCard;
+    }
+
+    public void setAddCreditCard(TransitionDTO addCreditCard) {
+        this.addCreditCard = addCreditCard;
     }
 }

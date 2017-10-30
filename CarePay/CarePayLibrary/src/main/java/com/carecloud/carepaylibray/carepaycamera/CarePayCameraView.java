@@ -22,6 +22,7 @@ public class CarePayCameraView extends RelativeLayout {
 
     private CarePayCameraPreview carePayCameraPreview;
     private int currentCameraId = CarePayCameraPreview.NO_DEFINED_CAMERA;
+    private Button flashButton;
 
     /**
      * Public constructor with context
@@ -103,8 +104,7 @@ public class CarePayCameraView extends RelativeLayout {
         carePayCameraPreview.setCameraType(cameraType);
         buttonCapture.setOnClickListener(onCaptureClick);
 
-        final Button flashButton = (Button) findViewById(R.id.button_flash);
-        flashButton.setEnabled(carePayCameraPreview.hasFlash());
+        flashButton = (Button) findViewById(R.id.button_flash);
         flashButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -142,11 +142,22 @@ public class CarePayCameraView extends RelativeLayout {
         }
     };
 
+    /**
+     * @param currentCameraId current camera Id
+     */
     public void start(int currentCameraId) {
         carePayCameraPreview.start(currentCameraId);
+        carePayCameraPreview.setVisibility(View.VISIBLE);
+        flashButton.setEnabled(carePayCameraPreview.hasFlash());
+        buttonCapture.setEnabled(true);
     }
 
+    /**
+     * stop camera preview
+     */
     public void stop() {
+        buttonCapture.setEnabled(false);
+        carePayCameraPreview.setVisibility(View.GONE);
         carePayCameraPreview.stop();
     }
 }

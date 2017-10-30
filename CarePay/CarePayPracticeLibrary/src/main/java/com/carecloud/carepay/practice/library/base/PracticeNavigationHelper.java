@@ -9,7 +9,7 @@ import com.carecloud.carepay.practice.library.adhocforms.AdHocFormsActivity;
 import com.carecloud.carepay.practice.library.appointments.PatientModePracticeAppointmentActivity;
 import com.carecloud.carepay.practice.library.appointments.PracticeModePracticeAppointmentsActivity;
 import com.carecloud.carepay.practice.library.checkin.PatientModeCheckInCheckOutActivity;
-import com.carecloud.carepay.practice.library.checkin.PracticeModePracticeCheckInActivity;
+import com.carecloud.carepay.practice.library.checkin.PracticeModeCheckInActivity;
 import com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInActivity;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
@@ -137,7 +137,7 @@ public class PracticeNavigationHelper {
             }
 
             case NavigationStateConstants.PRACTICE_CHECKIN: {
-                intent = new Intent(context, PracticeModePracticeCheckInActivity.class);
+                intent = new Intent(context, PracticeModeCheckInActivity.class);
                 break;
             }
 

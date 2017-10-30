@@ -36,7 +36,7 @@ public class PaymentCreditCardsPayloadDTO {
     private boolean isDefault;
     @SerializedName("billing_information")
     @Expose
-    private PaymentsCreditCardBillingInformationDTO billingInformation = new PaymentsCreditCardBillingInformationDTO();
+    private CreditCardBillingInformationDTO billingInformation = new CreditCardBillingInformationDTO();
     @SerializedName("tokenization_service")
     @Expose
     private TokenizationService tokenizationService;
@@ -128,14 +128,14 @@ public class PaymentCreditCardsPayloadDTO {
     /**
      * @return The billingInformation
      */
-    public PaymentsCreditCardBillingInformationDTO getBillingInformation() {
+    public CreditCardBillingInformationDTO getBillingInformation() {
         return billingInformation;
     }
 
     /**
      * @param billingInformation The billing_information
      */
-    public void setBillingInformation(PaymentsCreditCardBillingInformationDTO billingInformation) {
+    public void setBillingInformation(CreditCardBillingInformationDTO billingInformation) {
         this.billingInformation = billingInformation;
     }
 

@@ -149,16 +149,30 @@ public class ReviewInfoFragment extends RegistrationFragment {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.button_edit_image:
-                    popToFragment(ImageSelectFragment.class.getName());
+                    if(isSettingsActivity()){
+                        callback.replaceFragment(new ImageSelectFragment(), true);
+                    }else {
+                        popToFragment(ImageSelectFragment.class.getName());
+                    }
                     break;
                 case R.id.button_edit_location:
-                    popToFragment(LocationsFragment.class.getName());
+                    if(isSettingsActivity()){
+                        callback.replaceFragment(new LocationsFragment(), true);
+                    }else {
+                        popToFragment(LocationsFragment.class.getName());
+                    }
                     break;
                 case R.id.button_edit_name:
-                    popToFragment(DeviceFragment.class.getName());
+                    if(isSettingsActivity()){
+                        callback.replaceFragment(new DeviceFragment(), true);
+                    }else {
+                        popToFragment(DeviceFragment.class.getName());
+                    }
                     break;
                 case R.id.button_edit_practice:
-                    popToFragment(PracticesFragment.class.getName());
+                    if(!isSettingsActivity()) {
+                        popToFragment(PracticesFragment.class.getName());
+                    }
                     break;
                 case R.id.button_register:
                     registerDevice();
@@ -214,6 +228,7 @@ public class ReviewInfoFragment extends RegistrationFragment {
         OutputStream outputStream;
         try {
             outputStream = new FileOutputStream(imageFile);
+            practiceLogo.buildDrawingCache();
             Bitmap bitmap = practiceLogo.getDrawingCache();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             outputStream.flush();
@@ -239,9 +254,12 @@ public class ReviewInfoFragment extends RegistrationFragment {
             ApplicationPreferences applicationPreferences = getApplicationHelper().getApplicationPreferences();
             applicationPreferences.setDeviceId(registration.getId());
 
-            getFragmentManager().popBackStackImmediate(LoginFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            callback.replaceFragment(new CompleteRegistrationFragment(), false);
-
+            if(isSettingsActivity()){
+                getActivity().finish();
+            }else {
+                getFragmentManager().popBackStackImmediate(LoginFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                callback.replaceFragment(new CompleteRegistrationFragment(), false);
+            }
         }
 
 

@@ -15,9 +15,8 @@ import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
-import com.carecloud.carepaylibray.payments.models.postmodel.ResponsibilityType;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
@@ -32,20 +31,20 @@ import java.util.List;
 public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDialogFragment {
 
     private PaymentsModel paymentsModel;
-    private double amount;
+    private double fullAmount;
     private PaymentNavigationCallback callback;
     private TextView pendingAmountTextView;
     private double minimumPayment;
 
     /**
      * @param paymentResultModel the payment model
-     * @param owedAmount         amount owed
+     * @param owedAmount         fullAmount owed
      * @return an instance of PracticePartialPaymentDialogFragment
      */
     public static PracticePartialPaymentDialogFragment newInstance(PaymentsModel paymentResultModel, double owedAmount) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentResultModel);
-        args.putDouble("amount", owedAmount);
+        args.putDouble("fullAmount", owedAmount);
         PracticePartialPaymentDialogFragment fragment = new PracticePartialPaymentDialogFragment();
         fragment.setArguments(args);
         return fragment;
@@ -66,7 +65,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
-        amount = arguments.getDouble("amount");
+        fullAmount = arguments.getDouble("fullAmount");
     }
 
     @Override
@@ -74,7 +73,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
         super.onViewCreated(view, icicle);
         pendingAmountTextView = (TextView) view.findViewById(R.id.pendingAmountTextView);
         pendingAmountTextView.setVisibility(View.VISIBLE);
-        updatePendingAmountText(amount);
+        updatePendingAmountText(fullAmount);
 
         minimumPayment = getMinimumPayment();
         if(minimumPayment > 0){
@@ -87,7 +86,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
     @Override
     protected void updateLayout() {
         double entry = StringUtil.isNullOrEmpty(numberStr) ? 0D : Double.parseDouble(numberStr);
-        updatePendingAmountText(amount - entry);
+        updatePendingAmountText(fullAmount - entry);
     }
 
     @Override
@@ -95,6 +94,12 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
         super.onClick(view);
         if ((view.getId() == R.id.enter_amount_button) && !StringUtil.isNullOrEmpty(numberStr)) {
             double amount = Double.parseDouble(numberStr);
+            if(amount > fullAmount){
+                String errorMessage = Label.getLabel("payment_partial_max_error") + NumberFormat.getCurrencyInstance().format(fullAmount);
+                CustomMessageToast toast = new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
+                toast.show();
+                return;
+            }
             if(minimumPayment > 0 && amount < minimumPayment){
                 String errorMessage = Label.getLabel("payment_partial_minimum_error") + NumberFormat.getCurrencyInstance().format(minimumPayment);
                 CustomMessageToast toast = new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
@@ -112,11 +117,12 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
     }
 
     private void createPaymentModel(double payAmount) {
-        PaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
+        IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
         if (postModel == null) {
-            postModel = new PaymentPostModel();
+            postModel = new IntegratedPaymentPostModel();
         }
         postModel.setAmount(payAmount);
+        postModel.getLineItems().clear();
 
         List<PendingBalancePayloadDTO> responsibilityTypes = getPendingResponsibilityTypes();
         for (PendingBalancePayloadDTO responsibility : responsibilityTypes) {
@@ -129,37 +135,40 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
                 }
                 payAmount = (double) Math.round((payAmount - itemAmount) * 100) / 100;
 
-                PaymentObject paymentObject = new PaymentObject();
-                paymentObject.setAmount(itemAmount);
+                IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
+                paymentLineItem.setAmount(itemAmount);
 
                 AppointmentDTO appointmentDTO = callback.getAppointment();
-                if(appointmentDTO != null){
-                    paymentObject.setProviderID(appointmentDTO.getPayload().getProvider().getGuid());
-                    paymentObject.setLocationID(appointmentDTO.getPayload().getLocation().getGuid());
+                if (appointmentDTO != null) {
+                    paymentLineItem.setProviderID(appointmentDTO.getPayload().getProvider().getGuid());
+                    paymentLineItem.setLocationID(appointmentDTO.getPayload().getLocation().getGuid());
                 }
 
-                switch (responsibility.getType()) {
+                switch (responsibility.getType()){
                     case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
-                        paymentObject.setResponsibilityType(ResponsibilityType.co_insurance);
+                        paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_COINSURANCE);
                         break;
                     case PendingBalancePayloadDTO.DEDUCTIBLE_TYPE:
-                        paymentObject.setResponsibilityType(ResponsibilityType.deductable);
+                        paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_DEDUCTABLE);
                         break;
                     case PendingBalancePayloadDTO.CO_PAY_TYPE:
                     default:
-                        paymentObject.setResponsibilityType(ResponsibilityType.co_pay);
+                        paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_COPAY);
                         break;
                 }
-                postModel.addPaymentMethod(paymentObject);
+
+                postModel.addLineItem(paymentLineItem);
+
             }
         }
 
         if (payAmount > 0) {//payment is greater than any responsibility types
-            PaymentObject paymentObject = new PaymentObject();
-            paymentObject.setAmount(payAmount);
-            paymentObject.setDescription("Unapplied Amount");
+            IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
+            paymentLineItem.setAmount(payAmount);
+            paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_UNAPPLIED);
+            paymentLineItem.setDescription("Unapplied Amount");
 
-            postModel.addPaymentMethod(paymentObject);
+            postModel.addLineItem(paymentLineItem);
         }
 
         paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);

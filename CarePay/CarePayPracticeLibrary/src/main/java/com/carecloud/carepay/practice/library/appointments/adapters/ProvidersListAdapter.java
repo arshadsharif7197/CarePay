@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -25,9 +25,10 @@ public class ProvidersListAdapter extends RecyclerView.Adapter<ProvidersListAdap
 
     /**
      * This will create a list of appointments
-     * @param context context
+     *
+     * @param context            context
      * @param providersArrayList providersArrayList
-     * @param listener listener
+     * @param listener           listener
      */
     public ProvidersListAdapter(Context context, List<AppointmentResourcesDTO> providersArrayList,
                                 AppointmentsResultModel appointmentInfo,
@@ -54,15 +55,7 @@ public class ProvidersListAdapter extends RecyclerView.Adapter<ProvidersListAdap
         holder.shortName.setText(StringUtil.getShortName(providerName));
         holder.doctorName.setText(providerName);
         holder.doctorType.setText(resource.getResource().getProvider().getSpecialty().getName());
-
-        //Endpoint not support location for individual resource,
-        //Hence used 0th item from location array
-//        LocationDTO location = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getLocations().get(0);
-//        holder.placeName.setText(location.getName());
-//        holder.address.setText(location.getAddress().getPlaceAddressString());
-
-        AppointmentLabelDTO label = appointmentsResultModel.getMetadata().getLabel();
-        holder.scheduleAppointment.setText(label.getProviderListScheduleAppointmentButton());
+        holder.scheduleAppointment.setText(Label.getLabel("provider_list_schedule_appointment_button"));
         holder.scheduleAppointment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

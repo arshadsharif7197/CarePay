@@ -27,6 +27,14 @@ public class StartRegistrationFragment extends RegistrationFragment {
                 startRegistration();
             }
         });
+
+        View exitButton = view.findViewById(R.id.button_exit);
+        exitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().finish();
+            }
+        });
     }
 
     private void startRegistration(){
