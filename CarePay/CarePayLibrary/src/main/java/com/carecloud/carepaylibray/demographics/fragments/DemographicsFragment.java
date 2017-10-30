@@ -635,7 +635,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
         }
 
         if (selectedEmployer != null) {
-            if (enableEmployerData && !employerNameEditText.getText().toString().trim().isEmpty()) {
+            if (enableEmployerData && !StringUtil.isNullOrEmpty(employerNameEditText.getText().toString().trim())) {
                 selectedEmployer.setName(employerNameEditText.getText().toString().trim());
                 selectedEmployer.getAddress().setAddress1(addressEditText.getText().toString().trim());
                 selectedEmployer.getAddress().setAddress2(addressEditText2.getText().toString().trim());
