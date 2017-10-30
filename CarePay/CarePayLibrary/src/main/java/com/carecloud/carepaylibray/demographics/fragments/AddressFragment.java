@@ -283,6 +283,8 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         updatableDemographicDTO.getPayload().getDemographics().getPayload().setAddress(demographicAddressPayloadDTO);
         updatableDemographicDTO.setMetadata(demographicDTO.getMetadata());
         updatableDemographicDTO.getPayload().setAppointmentpayloaddto(demographicDTO.getPayload().getAppointmentpayloaddto());
+        updatableDemographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails()
+                .setEmployer(demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails().getEmployer());
         return updatableDemographicDTO;
     }
 
@@ -312,9 +314,9 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         TextInputLayout zipLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
         EditText zipCode = (EditText) view.findViewById(R.id.zipCodeId);
 
-        if(zipLayout.getVisibility() == View.VISIBLE &&
+        if (zipLayout.getVisibility() == View.VISIBLE &&
                 !StringUtil.isNullOrEmpty(zipCode.getText().toString().trim()) &&
-                !ValidationHelper.isValidString(zipCode.getText().toString().trim(), ValidationHelper.ZIP_CODE_PATTERN)){
+                !ValidationHelper.isValidString(zipCode.getText().toString().trim(), ValidationHelper.ZIP_CODE_PATTERN)) {
             zipLayout.setErrorEnabled(true);
             zipLayout.setError(Label.getLabel("demographics_zip_code_validation_msg"));
             return false;
