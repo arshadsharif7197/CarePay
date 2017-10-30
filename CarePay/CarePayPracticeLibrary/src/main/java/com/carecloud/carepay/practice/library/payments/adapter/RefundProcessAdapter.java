@@ -12,10 +12,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryLineItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Callback;
@@ -75,7 +77,7 @@ public class RefundProcessAdapter extends RecyclerView.Adapter<RefundProcessAdap
         final PaymentHistoryLineItem lineItem = lineItems.get(position);
 
         holder.amount.setText(NumberFormat.getCurrencyInstance().format(lineItem.getAmount()));
-        holder.description.setText(lineItem.getDescription());
+        holder.description.setText(parseDescription(lineItem.getDescription()));
 
         LocationDTO locationDTO = locationMap.get(lineItem.getLocationID());
         holder.location.setText(locationDTO.getName());
@@ -190,6 +192,23 @@ public class RefundProcessAdapter extends RecyclerView.Adapter<RefundProcessAdap
             }
         }
         return groupItems;
+    }
+
+    private static String parseDescription(String description){
+        switch (description){
+            case IntegratedPaymentLineItem.TYPE_COPAY:
+                return Label.getLabel("payment_history_item_copay");
+            case IntegratedPaymentLineItem.TYPE_COINSURANCE:
+                return Label.getLabel("payment_history_item_coinsurance");
+            case IntegratedPaymentLineItem.TYPE_DEDUCTABLE:
+                return Label.getLabel("payment_history_item_deductible");
+            case IntegratedPaymentLineItem.TYPE_PREPAYMENT:
+                return Label.getLabel("payment_history_item_prepayment");
+            case IntegratedPaymentLineItem.TYPE_CANCELLATION:
+                return Label.getLabel("payment_history_item_cancellation");
+            default:
+                return description;
+        }
     }
 
 

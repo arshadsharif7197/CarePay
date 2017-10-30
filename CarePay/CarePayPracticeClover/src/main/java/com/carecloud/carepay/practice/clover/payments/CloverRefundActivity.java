@@ -25,6 +25,7 @@ import com.clover.connector.sdk.v3.PaymentConnector;
 import com.clover.connector.sdk.v3.PaymentV3Connector;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.util.CloverAuth;
+import com.clover.sdk.v1.Intents;
 import com.clover.sdk.v1.ServiceConnector;
 import com.clover.sdk.v1.printer.Category;
 import com.clover.sdk.v1.printer.Printer;
@@ -32,7 +33,6 @@ import com.clover.sdk.v1.printer.PrinterConnector;
 import com.clover.sdk.v1.printer.job.PrintJob;
 import com.clover.sdk.v1.printer.job.PrintJobsConnector;
 import com.clover.sdk.v1.printer.job.StaticReceiptPrintJob;
-import com.clover.sdk.v3.base.Reference;
 import com.clover.sdk.v3.employees.EmployeeConnector;
 import com.clover.sdk.v3.order.LineItem;
 import com.clover.sdk.v3.order.Order;
@@ -43,8 +43,10 @@ import com.clover.sdk.v3.remotepay.RefundPaymentRequest;
 import com.clover.sdk.v3.remotepay.RefundPaymentResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -72,7 +74,7 @@ public class CloverRefundActivity extends BaseActivity {
     private CloverAuth.AuthResult authResult;
 
     private Long amountLong = 0L;
-    private PaymentLineItem[] paymentLineItems;
+    private List<PaymentLineItem> paymentLineItems = new ArrayList<>();
     private String paymentId;
     private String orderId;
 
@@ -92,7 +94,7 @@ public class CloverRefundActivity extends BaseActivity {
 
         Gson gson = new Gson();
         String lineItemString = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS);
-        paymentLineItems = gson.fromJson(lineItemString, PaymentLineItem[].class);
+        paymentLineItems = gson.fromJson(lineItemString, new TypeToken<List<PaymentLineItem>>(){}.getType());
 
         String transactionResponse = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_TRANSACTION_RESPONSE);
         if(transactionResponse != null){
@@ -384,6 +386,7 @@ public class CloverRefundActivity extends BaseActivity {
             protected String doInBackground(Void... params) {
                 PrintJobsConnector printJobsConnector = new PrintJobsConnector(CloverRefundActivity.this);
                 Printer printer;
+                Order order = null;
                 boolean shouldPrint = false;
                 try {
                     if(authResult != null) {
@@ -397,48 +400,83 @@ public class CloverRefundActivity extends BaseActivity {
                         }
                     }
 
+                    order = orderConnector.getOrder(orderId);
+                    if(order.getRefunds() == null){
+                        order.setRefunds(new ArrayList<Refund>());
+                    }
+                    if(order.getRefunds().isEmpty() || !containsRefund(order, response.getRefund())){
+                        order.getRefunds().add(response.getRefund());
+                    }
+
+//                        order.setCredits(getCreditItems());
+
+                    for(LineItem lineItem : order.getLineItems()){
+                        if(containsLineItem(lineItem)) {
+                            lineItem.setRefunded(true);
+                        }
+                    }
+
+                    Log.d(TAG, order.getJSONObject().toString());
+
                     if(shouldPrint=true) {
                         printer = printerConnector.getPrinters(Category.RECEIPT).get(0);
-                        Order order = new Order();
-                        order.setLineItems(getLineItems());
-                        order.setId(response.getRefund().getId());
-                        order.setTotal(amountLong * -1);
-                        order.setCurrency("USD");
-                        order.setTestMode(false);
-
-//                        Payment payment = new Payment();
-//                        payment.setAmount(amountLong * -1);
-//                        payment.setId(response.getRefund().getPayment().getId());
-//
-//                        List<Payment> payments = new ArrayList<>();
-//                        payments.add(payment);
-//                        order.setPayments(payments);
-
-                        List<Refund> refunds = new ArrayList<Refund>();
-                        refunds.add(response.getRefund());
-                        order.setRefunds(refunds);
-
-                        order.setCredits(getCreditItems());
-
-                        Reference employee = new Reference();
-                        employee.setId(employeeConnector.getEmployee().getId());
-                        order.setEmployee(employee);
-
-
-
-                        Log.d(TAG, order.getJSONObject().toString());
 
                         PrintJob printJob = new StaticReceiptPrintJob.Builder().order(order).build();
                         printJobsConnector.print(printer, printJob);
+                    }else{
+                        promptPrinting(order);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    if(order != null){
+                        promptPrinting(order);
+                    }
                 }
                 finish();
                 return null;
             }
         }.execute();
 
+    }
+
+    private void promptPrinting(Order order){
+        Intent intent = new Intent(Intents.ACTION_START_PRINT_RECEIPTS);
+
+        intent.putExtra(Intents.EXTRA_ORDER_ID, order.getId());
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        } else {
+            String message = "No Activity found to respond to intent: " + Intents.ACTION_START_PRINT_RECEIPTS;
+            Log.d(TAG, message);
+        }
+    }
+
+
+    boolean containsLineItem(LineItem lineItem){
+        Iterator<PaymentLineItem> iterator = paymentLineItems.iterator();
+        while (iterator.hasNext()){
+            PaymentLineItem paymentLineItem = iterator.next();
+            if(paymentLineItem.getDescription()!=null &&
+                    paymentLineItem.getDescription().equals(lineItem.getName()) &&
+                    lineItem.getPrice() >= paymentLineItem.getAmount() * 100){
+                iterator.remove();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    boolean containsRefund(Order order, Refund checkRefund){
+        if(order == null || checkRefund == null){
+            return false;
+        }
+        for(Refund refund : order.getRefunds()){
+            if(refund.getId().equals(checkRefund.getId())){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

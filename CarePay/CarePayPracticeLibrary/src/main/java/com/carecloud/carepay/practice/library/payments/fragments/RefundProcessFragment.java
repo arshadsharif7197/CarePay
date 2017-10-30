@@ -15,7 +15,10 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.RefundProcessAdapter;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentNavigationCallback;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
@@ -25,13 +28,17 @@ import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryLineIte
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
+import com.carecloud.carepaylibray.payments.models.refund.RefundLineItem;
+import com.carecloud.carepaylibray.payments.models.refund.RefundPostModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lmenendez on 10/25/17
@@ -100,7 +107,7 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
         setupToolbar(view);
         setupButtons(view);
 
-        String date = DateUtil.getInstance().setDateRaw(historyItem.getPayload().getDate()).getFullDateTime();
+        String date = DateUtil.getInstance().setDateRaw(historyItem.getPayload().getDate().replaceAll("\\.\\d\\d\\dZ", "-00:00")).getFullDateTime();
         TextView paymentDate = (TextView) view.findViewById(R.id.total_paid_date);
         paymentDate.setText(String.format(Label.getLabel("payment_refund_total_paid"), date));
 
@@ -193,7 +200,7 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
     private void processCloverRefund(){
         Intent intent = new Intent();
         intent.setAction(CarePayConstants.CLOVER_REFUND_INTENT);
-        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, historyItem.getPayload().getAmount());
+        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, calcCurrentRefundAmount());
 
         Gson gson = new Gson();
         intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(getPaymentLineItems()));
@@ -205,12 +212,39 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
     }
 
     private void processStandardRefund(){
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("patient_id", historyItem.getPayload().getMetadata().getPatientId());
 
+        RefundPostModel refundPostModel = new RefundPostModel();
+        refundPostModel.setPaymentRequestId(historyItem.getPayload().getDeepstreamRecordId());
+        refundPostModel.setRefundLineItems(getRefundItems());
+
+        Gson gson = new Gson();
+        TransitionDTO transition = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getRefundPayment();
+        getWorkflowServiceHelper().execute(transition, refundCallback, gson.toJson(refundPostModel), queryMap);
     }
+
+    private WorkflowServiceCallback refundCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+        }
+    };
 
     private List<PaymentLineItem> getPaymentLineItems(){
         List<PaymentLineItem> paymentLineItems = new ArrayList<>();
-        for (IntegratedPaymentLineItem lineItem : historyItem.getPayload().getLineItems()) {
+        for (IntegratedPaymentLineItem lineItem : refundLineItems) {
             PaymentLineItem paymentLineItem = new PaymentLineItem();
             paymentLineItem.setAmount(lineItem.getAmount());
             paymentLineItem.setDescription(lineItem.getDescription());
@@ -219,6 +253,19 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
 
         }
         return paymentLineItems;
+    }
+
+    private List<RefundLineItem> getRefundItems(){
+        List<RefundLineItem> refundItems = new ArrayList<>();
+        for(PaymentHistoryLineItem lineItem : refundLineItems){
+            RefundLineItem refundItem = new RefundLineItem();
+            refundItem.setAmount(lineItem.getAmount());
+            refundItem.setDescription(lineItem.getDescription());
+            refundItem.setLineItemId(lineItem.getLineItemId());
+
+            refundItems.add(refundItem);
+        }
+        return refundItems;
     }
 
 
