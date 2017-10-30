@@ -137,7 +137,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/provider_no_list_margin"
-                android:src="@drawable/icn_empty_state_appointments" />
+                android:src="@drawable/icn_empty_state_appointments_white" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/schedule_appt_button"
