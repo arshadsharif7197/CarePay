@@ -399,6 +399,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
         stateTextInputLayout = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
         phoneTextInputLayout = (TextInputLayout) view.findViewById(R.id.phoneTextInputLayout);
         cityAndStateLayoutContainer = view.findViewById(R.id.cityAndStateLayoutContainer);
+        employerNameEditText = (EditText) view.findViewById(R.id.employerNameEditText);
 
         boolean isEmployerStuffVisible = personalInfoSection.getProperties().getEmployer().isDisplayed();
         if (isEmployerStuffVisible) {
@@ -409,7 +410,6 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
             }
 
 
-            employerNameEditText = (EditText) view.findViewById(R.id.employerNameEditText);
             employerNameEditText.setOnFocusChangeListener(SystemUtil
                     .getHintFocusChangeListener(employerNameTextInputLayout, null));
             employerNameEditText.setText(selectedEmployer.getName());
