@@ -106,7 +106,7 @@ public class PatientModel {
 
     @SerializedName("employer")
     @Expose
-    private EmployerDto employer = new EmployerDto();
+    private EmployerDto employer;
 
     @SerializedName("ec_relationship_type")
     @Expose
