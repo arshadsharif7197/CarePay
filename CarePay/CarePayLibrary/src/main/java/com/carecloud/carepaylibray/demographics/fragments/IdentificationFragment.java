@@ -22,13 +22,13 @@ import com.carecloud.carepaylibray.media.MediaScannerPresenter;
 import com.carecloud.carepaylibray.media.MediaViewInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
+import java.util.List;
+
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_DTO;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_BACK;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_FRONT;
-
-import java.util.List;
 
 
 public class IdentificationFragment extends CheckInDemographicsBaseFragment implements MediaViewInterface {
@@ -89,7 +89,7 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
     @Override
     public void onResume() {
         super.onResume();
-        stepProgressBar.setCurrentProgressDot(CheckinFlowCallback.IDENTITY-1);
+        stepProgressBar.setCurrentProgressDot(CheckinFlowCallback.IDENTITY - 1);
         checkinFlowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, checkinFlowCallback.getTotalSteps(), CheckinFlowCallback.IDENTITY);
         checkinFlowCallback.setCurrentStep(CheckinFlowCallback.IDENTITY);
     }
@@ -112,8 +112,6 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
         updatableDemographicDTO.getPayload()
                 .setAppointmentpayloaddto(demographicDTO.getPayload().getAppointmentpayloaddto());
         updatableDemographicDTO.setMetadata(demographicDTO.getMetadata());
-        updatableDemographicDTO.getPayload().getDemographics().getPayload()
-                .setPersonalDetails(demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails());
         return updatableDemographicDTO;
     }
 

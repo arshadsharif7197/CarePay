@@ -283,8 +283,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         updatableDemographicDTO.getPayload().getDemographics().getPayload().setAddress(demographicAddressPayloadDTO);
         updatableDemographicDTO.setMetadata(demographicDTO.getMetadata());
         updatableDemographicDTO.getPayload().setAppointmentpayloaddto(demographicDTO.getPayload().getAppointmentpayloaddto());
-        updatableDemographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails()
-                .setEmployer(demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails().getEmployer());
         return updatableDemographicDTO;
     }
 

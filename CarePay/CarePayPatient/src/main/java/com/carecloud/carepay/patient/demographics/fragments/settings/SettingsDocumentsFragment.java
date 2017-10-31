@@ -171,8 +171,6 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         inflateNewImages();
         updatableDemographicDTO.getPayload().getDemographics().getPayload()
                 .setInsurances(demographicDTO.getPayload().getDemographics().getPayload().getInsurances());
-        updatableDemographicDTO.getPayload().getDemographics().getPayload()
-                .setPersonalDetails(demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails());
         return updatableDemographicDTO;
     }
 
