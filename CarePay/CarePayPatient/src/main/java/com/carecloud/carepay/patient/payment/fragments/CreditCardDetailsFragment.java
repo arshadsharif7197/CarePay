@@ -25,9 +25,9 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.CreditCardBillingInformationDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -45,7 +45,7 @@ import java.util.Map;
  */
 public class CreditCardDetailsFragment extends BaseFragment {
 
-    private DemographicsSettingsDTO demographicsSettingsDTO = null;
+    private DemographicDTO demographicsSettingsDTO = null;
     private DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO = null;
     private static final String TAG = CreditCardDetailsFragment.class.getName();
 
@@ -54,10 +54,11 @@ public class CreditCardDetailsFragment extends BaseFragment {
 
     /**
      * Instantiate new CreditCardDetailsFragment
+     *
      * @param creditCardsPayloadDTO creditCard info
      * @return new fragment
      */
-    public static CreditCardDetailsFragment newInstance(DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO){
+    public static CreditCardDetailsFragment newInstance(DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO) {
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
         String creditCardsPayloadDTOString = gson.toJson(creditCardsPayloadDTO);
@@ -91,7 +92,7 @@ public class CreditCardDetailsFragment extends BaseFragment {
         Bundle arguments = getArguments();
         if (arguments != null) {
             Gson gson = new Gson();
-            demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
+            demographicsSettingsDTO = (DemographicDTO) callback.getDto();
 
             String demographicsSettingsDTOString = arguments.getString(CarePayConstants.CREDIT_CARD_BUNDLE);
             creditCardsPayloadDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsCreditCardsPayloadDTO.class);
@@ -105,7 +106,7 @@ public class CreditCardDetailsFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(StringUtil.getFormattedCardNumber(
@@ -121,7 +122,7 @@ public class CreditCardDetailsFragment extends BaseFragment {
 
     private void initializeViews(View view) {
 
-        if (demographicsSettingsDTO != null && creditCardsPayloadDTO!=null) {
+        if (demographicsSettingsDTO != null && creditCardsPayloadDTO != null) {
             TextView nameOnCardValue = (TextView) view.findViewById(R.id.nameOnCardValue);
             nameOnCardValue.setText(creditCardsPayloadDTO.getPayload().getNameOnCard());
 
@@ -137,17 +138,17 @@ public class CreditCardDetailsFragment extends BaseFragment {
             TextView stateValue = (TextView) view.findViewById(R.id.stateValue);
 
             CreditCardBillingInformationDTO billingInformationDTO = creditCardsPayloadDTO.getPayload().getBillingInformation();
-            if(StringUtil.isNullOrEmpty(billingInformationDTO.getLine1()) && billingInformationDTO.getSameAsPatient()){
+            if (StringUtil.isNullOrEmpty(billingInformationDTO.getLine1()) && billingInformationDTO.getSameAsPatient()) {
                 DemographicAddressPayloadDTO addressDTO = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getAddress();
-                if(!StringUtil.isNullOrEmpty(addressDTO.getAddress1())) {
+                if (!StringUtil.isNullOrEmpty(addressDTO.getAddress1())) {
                     String fullAddress = addressDTO.getAddress1() + (!StringUtil.isNullOrEmpty(addressDTO.getAddress2()) ? addressDTO.getAddress2() : "");
                     addressValue.setText(fullAddress);
                 }
                 zipcodeValue.setText(addressDTO.getZipcode());
                 cityValue.setText(addressDTO.getCity());
                 stateValue.setText(addressDTO.getState());
-            }else {
-                if(!StringUtil.isNullOrEmpty(billingInformationDTO.getLine1())) {
+            } else {
+                if (!StringUtil.isNullOrEmpty(billingInformationDTO.getLine1())) {
                     String fullAddress = billingInformationDTO.getLine1() + (!StringUtil.isNullOrEmpty(billingInformationDTO.getLine2()) ? billingInformationDTO.getLine2() : "");
                     addressValue.setText(fullAddress);
                 }
@@ -164,7 +165,7 @@ public class CreditCardDetailsFragment extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if(!creditCardsPayloadDTO.getPayload().isDefault()) {
+        if (!creditCardsPayloadDTO.getPayload().isDefault()) {
             inflater.inflate(R.menu.setting_credit_card, menu);
             menu.getItem(0).setTitle(Label.getLabel("edit_credit_card_remove_label"));
         }
@@ -180,27 +181,27 @@ public class CreditCardDetailsFragment extends BaseFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private String  getMaskedCardNumber(String cardNumber, String cardType){
-        if(cardNumber == null){
+    private String getMaskedCardNumber(String cardNumber, String cardType) {
+        if (cardNumber == null) {
             cardNumber = "";
         }
         String formatted = "";
         int maxlength = maxLength(cardType);
-        for(int i=0; i<maxlength-cardNumber.length(); i++){
-            if(((i == 10 || i == 4)&& maxlength == 15) || ((i%4 == 0) && maxlength == 16)){
-                formatted+=" ";
+        for (int i = 0; i < maxlength - cardNumber.length(); i++) {
+            if (((i == 10 || i == 4) && maxlength == 15) || ((i % 4 == 0) && maxlength == 16)) {
+                formatted += " ";
             }
             formatted += "X";
         }
-        if(maxlength == 16) {
+        if (maxlength == 16) {
             formatted += " ";
         }
         formatted += cardNumber;
         return formatted;
     }
 
-    private int maxLength(String cardType){
-        if(cardType.toLowerCase().contains("amex") || (cardType.toLowerCase().contains("american") && cardType.toLowerCase().contains("express"))){
+    private int maxLength(String cardType) {
+        if (cardType.toLowerCase().contains("amex") || (cardType.toLowerCase().contains("american") && cardType.toLowerCase().contains("express"))) {
             return 15;
         }
         return 16;
@@ -248,8 +249,8 @@ public class CreditCardDetailsFragment extends BaseFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             try {
-                DemographicsSettingsDTO removeCreditCardResponseDTO = DtoHelper
-                        .getConvertedDTO(DemographicsSettingsDTO.class, workflowDTO);
+                DemographicDTO removeCreditCardResponseDTO = DtoHelper
+                        .getConvertedDTO(DemographicDTO.class, workflowDTO);
                 demographicsSettingsDTO.getPayload()
                         .setPatientCreditCards(removeCreditCardResponseDTO.getPayload().getPatientCreditCards());
                 callback.onCreditCardOperation(demographicsSettingsDTO);

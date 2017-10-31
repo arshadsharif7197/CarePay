@@ -32,6 +32,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.EmergencyContactInterface;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
@@ -40,7 +41,6 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.Demograp
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -60,7 +60,7 @@ import java.util.Map;
 public class EmergencyContactFragment extends BaseDialogFragment {
 
     private EmergencyContactInterface callback;
-    private DemographicsSettingsDTO dto;
+    private DemographicDTO dto;
     private EditText stateEditText;
     private EditText cityEditText;
     private EditText genderEditText;
@@ -90,7 +90,11 @@ public class EmergencyContactFragment extends BaseDialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (EmergencyContactInterface) context;
+            if (context instanceof DemographicsView) {
+                callback = ((DemographicsView) context).getPresenter();
+            } else {
+                callback = (EmergencyContactInterface) context;
+            }
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement EmergencyContactInterface");
@@ -100,7 +104,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        dto = (DemographicsSettingsDTO) callback.getDto();
+        dto = (DemographicDTO) callback.getDto();
     }
 
     @Nullable
@@ -496,8 +500,8 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            DemographicsSettingsDTO updatedModel = DtoHelper
-                    .getConvertedDTO(DemographicsSettingsDTO.class, workflowDTO);
+            DemographicDTO updatedModel = DtoHelper
+                    .getConvertedDTO(DemographicDTO.class, workflowDTO);
             dto.getPayload().getDemographics().getPayload()
                     .setEmergencyContact(updatedModel.getPayload().getDemographics()
                             .getPayload().getEmergencyContact());

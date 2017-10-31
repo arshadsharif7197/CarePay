@@ -32,7 +32,6 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPho
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.media.MediaScannerPresenter;
 import com.carecloud.carepaylibray.media.MediaViewInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -50,7 +49,7 @@ import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAd
  */
 
 public class SettingsDocumentsFragment extends BaseFragment implements InsuranceLineItemsListAdapter.OnInsuranceEditClickListener, MediaViewInterface {
-    private DemographicsSettingsDTO demographicsSettingsDTO;
+    private DemographicDTO demographicsSettingsDTO;
     private DemographicDTO demographicDTO;
 
     private MediaScannerPresenter mediaScannerPresenter;
@@ -84,7 +83,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
+        demographicsSettingsDTO = (DemographicDTO) callback.getDto();
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, DtoHelper.getStringDTO(demographicsSettingsDTO));
     }
 
@@ -214,7 +213,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
 
-            DemographicsSettingsDTO updatedModel = DtoHelper.getConvertedDTO(DemographicsSettingsDTO.class, workflowDTO);
+            DemographicDTO updatedModel = DtoHelper.getConvertedDTO(DemographicDTO.class, workflowDTO);
             demographicsSettingsDTO.getPayload().getDemographics().getPayload().setIdDocument(updatedModel.getPayload().getDemographics().getPayload().getIdDocument());
             demographicsSettingsDTO.getPayload().getDemographics().getPayload().setInsurances(updatedModel.getPayload().getDemographics().getPayload().getInsurances());
 

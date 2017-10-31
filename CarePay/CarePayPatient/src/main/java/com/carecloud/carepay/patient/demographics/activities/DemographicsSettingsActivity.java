@@ -28,7 +28,6 @@ import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.fragments.EmergencyContactFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -39,7 +38,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         DemographicsSettingsFragmentListener, InsuranceEditDialog.InsuranceEditDialogListener,
         EmergencyContactInterface {
 
-    DemographicsSettingsDTO demographicsSettingsDTO;
+    DemographicDTO demographicsSettingsDTO;
 
     private View rootView;
 
@@ -48,7 +47,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demographics_settings);
 
-        demographicsSettingsDTO = getConvertedDTO(DemographicsSettingsDTO.class);
+        demographicsSettingsDTO = getConvertedDTO(DemographicDTO.class);
         rootView = findViewById(R.id.activity_demographics_settings);
 
         getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE,
@@ -83,7 +82,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     }
 
     @Override
-    public void onCreditCardOperation(DemographicsSettingsDTO demographicsSettingsDTO) {
+    public void onCreditCardOperation(DemographicDTO demographicsSettingsDTO) {
         if (getSupportFragmentManager().findFragmentByTag(CreditCardListFragment.class.getName()) != null) {
             ((CreditCardListFragment) getSupportFragmentManager()
                     .findFragmentByTag(CreditCardListFragment.class.getName()))

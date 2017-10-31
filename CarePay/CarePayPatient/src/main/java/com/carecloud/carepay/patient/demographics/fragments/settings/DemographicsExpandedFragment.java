@@ -30,7 +30,6 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadD
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -48,7 +47,7 @@ import java.util.Map;
  */
 public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragment {
 
-    private DemographicsSettingsDTO demographicsSettingsDTO;
+    private DemographicDTO demographicsSettingsDTO;
     private DemographicDataModel dataModel;
 
     private View nextButton;
@@ -107,7 +106,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
+        demographicsSettingsDTO = (DemographicDTO) callback.getDto();
         dataModel = demographicsSettingsDTO.getMetadata().getNewDataModel();
     }
 
@@ -724,8 +723,8 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
 
-            DemographicsSettingsDTO updatedModel = DtoHelper
-                    .getConvertedDTO(DemographicsSettingsDTO.class, workflowDTO);
+            DemographicDTO updatedModel = DtoHelper
+                    .getConvertedDTO(DemographicDTO.class, workflowDTO);
             demographicsSettingsDTO.getPayload().getDemographics().getPayload()
                     .setPersonalDetails(updatedModel.getPayload().getDemographics()
                             .getPayload().getPersonalDetails());
