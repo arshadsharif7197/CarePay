@@ -379,8 +379,10 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
             initSelectableInput(chooseEmploymentStatus, selectedEmploymentStatus, employmentStatus,
                     personalInfoSection.getProperties().getEmploymentStatus().isRequired()
                             ? null : employmentStatusOptional);
-            enableEmployerData = employmentStatus.toLowerCase().equals("employed")
-                    || employmentStatus.toLowerCase().equals("part time");
+            if (employmentStatus != null) {
+                enableEmployerData = employmentStatus.toLowerCase().equals("employed")
+                        || employmentStatus.toLowerCase().equals("part time");
+            }
             if (!personalInfoSection.getProperties().getEmploymentStatus().isRequired()) {
                 view.findViewById(R.id.employmentInfoOptionalTextView).setVisibility(View.VISIBLE);
             }
@@ -633,14 +635,14 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
         }
 
         if (selectedEmployer != null) {
-            if (enableEmployerData) {
-                selectedEmployer.setName(employerNameEditText.getText().toString());
-                selectedEmployer.getAddress().setAddress1(addressEditText.getText().toString());
-                selectedEmployer.getAddress().setAddress2(addressEditText2.getText().toString());
-                selectedEmployer.getAddress().setZipcode(zipCodeEditText.getText().toString());
-                selectedEmployer.getAddress().setCity(cityEditText.getText().toString());
-                selectedEmployer.getAddress().setState(stateEditText.getText().toString());
-                selectedEmployer.getAddress().setPhone(phoneEditText.getText().toString());
+            if (enableEmployerData && !StringUtil.isNullOrEmpty(employerNameEditText.getText().toString().trim())) {
+                selectedEmployer.setName(employerNameEditText.getText().toString().trim());
+                selectedEmployer.getAddress().setAddress1(addressEditText.getText().toString().trim());
+                selectedEmployer.getAddress().setAddress2(addressEditText2.getText().toString().trim());
+                selectedEmployer.getAddress().setZipcode(zipCodeEditText.getText().toString().trim());
+                selectedEmployer.getAddress().setCity(cityEditText.getText().toString().trim());
+                selectedEmployer.getAddress().setState(stateEditText.getText().toString().trim());
+                selectedEmployer.getAddress().setPhone(phoneEditText.getText().toString().trim());
                 demographicPersDetailsPayloadDTO.setEmployer(selectedEmployer);
             } else {
                 demographicPersDetailsPayloadDTO.setEmployer(null);
@@ -666,108 +668,125 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
 
     @Override
     protected boolean passConstraints(View view) {
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getGender().isRequired()
-                && StringUtil.isNullOrEmpty(selectedGender.getName())) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getPrimaryRace().isRequired()
-                && StringUtil.isNullOrEmpty(selectedRace.getName())) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryRace().isRequired()
-                && StringUtil.isNullOrEmpty(selectedSecondaryRace.getName())) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getEthnicity().isRequired()
-                && StringUtil.isNullOrEmpty(selectedEthnicity.getName())) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getPreferredName().isRequired()
-                && checkTextEmptyValue(R.id.preferredName, view)) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getSocialSecurityNumber().isRequired()
-                && checkTextEmptyValue(R.id.socialSecurityNumber, view)) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getEmailAddress().isRequired()
-                && checkTextEmptyValue(R.id.email, view)) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getPreferredLanguage().isRequired()
-                && StringUtil.isNullOrEmpty(selectedPreferredLanguage.getName())) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getDriversLicenseNumber().isRequired()
-                && checkTextEmptyValue(R.id.driverLicense, view)) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getDriversLicenseState().isRequired()
-                && StringUtil.isNullOrEmpty(selectedDriverLicenseState.getName())) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryPhoneNumber().isRequired()
-                && checkTextEmptyValue(R.id.secondaryPhone, view)) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryPhoneNumberType().isRequired()
-                && StringUtil.isNullOrEmpty(selectedSecondaryPhoneType.getName())) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getPreferredContact().isRequired()
-                && StringUtil.isNullOrEmpty(selectedContactMethod.getName())) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getMaritalStatus().isRequired()
-                && StringUtil.isNullOrEmpty(selectedMaritalStatus.getName())) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getEmploymentStatus().isRequired()
-                && StringUtil.isNullOrEmpty(selectedEmploymentStatus.getName())) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getEmployer().isRequired()
-                && StringUtil.isNullOrEmpty(selectedEmployer.getName())) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties()
-                .getEmergencyContactRelationship().isRequired()
-                && StringUtil.isNullOrEmpty(selectedEmergencyContactRelationship.getName())) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getReferralSource().isRequired()
-                && StringUtil.isNullOrEmpty(selectedReferralSource.getName())) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getEmployer().isRequired()
-                && (selectedEmployer == null || StringUtil.isNullOrEmpty(selectedEmployer.getName()))) {
-            return false;
-        }
+        try {
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getGender().isRequired()
+                    && StringUtil.isNullOrEmpty(selectedGender.getName())) {
+                return false;
+            }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getPrimaryRace().isRequired()
+                    && StringUtil.isNullOrEmpty(selectedRace.getName())) {
+                return false;
+            }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryRace().isRequired()
+                    && StringUtil.isNullOrEmpty(selectedSecondaryRace.getName())) {
+                return false;
+            }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getEthnicity().isRequired()
+                    && StringUtil.isNullOrEmpty(selectedEthnicity.getName())) {
+                return false;
+            }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getPreferredName().isRequired()
+                    && checkTextEmptyValue(R.id.preferredName, view)) {
+                if(isUserAction()){
+                    setDefaultError(view, R.id.preferredNameInputLayout);
+                }
+                return false;
+            }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getSocialSecurityNumber().isRequired()
+                    && checkTextEmptyValue(R.id.socialSecurityNumber, view)) {
+                if(isUserAction()){
+                    setDefaultError(view, R.id.socialSecurityInputLayout);
+                }
+                return false;
+            }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getEmailAddress().isRequired()
+                    && checkTextEmptyValue(R.id.email, view)) {
+                if(isUserAction()){
+                    setDefaultError(view, R.id.emailInputLayout);
+                }
+                return false;
+            }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getPreferredLanguage().isRequired()
+                    && StringUtil.isNullOrEmpty(selectedPreferredLanguage.getName())) {
+                return false;
+            }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getDriversLicenseNumber().isRequired()
+                    && checkTextEmptyValue(R.id.driverLicense, view)) {
+                if(isUserAction()){
+                    setDefaultError(view, R.id.driverLicenseInputLayout);
+                }
+                return false;
+            }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getDriversLicenseState().isRequired()
+                    && StringUtil.isNullOrEmpty(selectedDriverLicenseState.getName())) {
+                return false;
+            }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryPhoneNumber().isRequired()
+                    && checkTextEmptyValue(R.id.secondaryPhone, view)) {
+                if(isUserAction()){
+                    setDefaultError(view, R.id.secondaryPhoneInputLayout);
+                }
+                return false;
+            }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryPhoneNumberType().isRequired()
+                    && StringUtil.isNullOrEmpty(selectedSecondaryPhoneType.getName())) {
+                return false;
+            }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getPreferredContact().isRequired()
+                    && StringUtil.isNullOrEmpty(selectedContactMethod.getName())) {
+                return false;
+            }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getMaritalStatus().isRequired()
+                    && StringUtil.isNullOrEmpty(selectedMaritalStatus.getName())) {
+                return false;
+            }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getEmploymentStatus().isRequired()
+                    && StringUtil.isNullOrEmpty(selectedEmploymentStatus.getName())) {
+                return false;
+            }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getEmployer().isRequired()
+                    && StringUtil.isNullOrEmpty(selectedEmployer.getName())) {
+                return false;
+            }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties()
+                    .getEmergencyContactRelationship().isRequired()
+                    && StringUtil.isNullOrEmpty(selectedEmergencyContactRelationship.getName())) {
+                return false;
+            }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getReferralSource().isRequired()
+                    && StringUtil.isNullOrEmpty(selectedReferralSource.getName())) {
+                return false;
+            }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getEmployer().isRequired()
+                    && (selectedEmployer == null || StringUtil.isNullOrEmpty(selectedEmployer.getName()))) {//// TODO: 10/30/17
+                return false;
+            }
 
 
-        TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.secondaryPhoneInputLayout);
-        EditText secondaryPhoneNumber = (EditText) view.findViewById(R.id.secondaryPhone);
-        if (phoneLayout.getVisibility() == View.VISIBLE &&
-                !StringUtil.isNullOrEmpty(secondaryPhoneNumber.getText().toString().trim()) &&
-                !ValidationHelper.isValidString(secondaryPhoneNumber.getText().toString().trim(),
-                        ValidationHelper.PHONE_NUMBER_PATTERN)) {
-            phoneLayout.setErrorEnabled(true);
-            phoneLayout.setError(Label.getLabel("demographics_phone_number_validation_msg"));
-            return false;
-        }
+            TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.secondaryPhoneInputLayout);
+            EditText secondaryPhoneNumber = (EditText) view.findViewById(R.id.secondaryPhone);
+            if (phoneLayout.getVisibility() == View.VISIBLE &&
+                    !StringUtil.isNullOrEmpty(secondaryPhoneNumber.getText().toString().trim()) &&
+                    !ValidationHelper.isValidString(secondaryPhoneNumber.getText().toString().trim(),
+                            ValidationHelper.PHONE_NUMBER_PATTERN)) {
+                setFieldError(phoneLayout, Label.getLabel("demographics_phone_number_validation_msg"));
+                return false;
+            }
 
-        TextInputLayout emailLayout = (TextInputLayout) view.findViewById(R.id.emailInputLayout);
-        EditText emailAddress = (EditText) view.findViewById(R.id.email);
-        if (emailLayout.getVisibility() == View.VISIBLE &&
-                !StringUtil.isNullOrEmpty(emailAddress.getText().toString().trim()) &&
-                !ValidationHelper.isValidString(emailAddress.getText().toString().trim(),
-                        ValidationHelper.EMAIL_PATTERN)) {
-            emailLayout.setErrorEnabled(true);
-            emailLayout.setError(Label.getLabel("demographics_email_validation_msg"));
-            return false;
-        }
+            TextInputLayout emailLayout = (TextInputLayout) view.findViewById(R.id.emailInputLayout);
+            EditText emailAddress = (EditText) view.findViewById(R.id.email);
+            if (emailLayout.getVisibility() == View.VISIBLE &&
+                    !StringUtil.isNullOrEmpty(emailAddress.getText().toString().trim()) &&
+                    !ValidationHelper.isValidString(emailAddress.getText().toString().trim(),
+                            ValidationHelper.EMAIL_PATTERN)) {
+                setFieldError(emailLayout, Label.getLabel("demographics_email_validation_msg"));
+                return false;
+            }
 
-        return true;
+            return true;
+        }finally {
+            setUserAction(false);
+        }
     }
 
     @Override

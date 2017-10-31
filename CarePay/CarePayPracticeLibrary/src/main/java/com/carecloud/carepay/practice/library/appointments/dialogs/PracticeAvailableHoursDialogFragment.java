@@ -18,10 +18,12 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import java.util.Date;
 
 /**
- * Created by lmenendez on 4/17/17.
+ * Created by lmenendez on 4/17/17
  */
 
 public class PracticeAvailableHoursDialogFragment extends BaseAvailableHoursFragment {
+
+    private TextView editRangeButton;
 
     /**
      * Create Instance with Data
@@ -80,7 +82,7 @@ public class PracticeAvailableHoursDialogFragment extends BaseAvailableHoursFrag
 
     @Override
     protected void setupEditDateButton(View view) {
-        TextView editRangeButton = (TextView) view.findViewById(R.id.edit_date_range_button);
+        editRangeButton = (TextView) view.findViewById(R.id.edit_date_range_button);
         String range = Label.getLabel("appoitment_edit_date_range_button");
         editRangeButton.setText(range != null ? range : getString(R.string.edit_date_range_button_label));
         editRangeButton.setOnClickListener(new View.OnClickListener() {
@@ -90,6 +92,15 @@ public class PracticeAvailableHoursDialogFragment extends BaseAvailableHoursFrag
             }
         });
 
+    }
+
+    @Override
+    protected void onAdapterRefresh(int count){
+        if(count < 1){
+            editRangeButton.setText(Label.getLabel("change_date_range_label"));
+        }else{
+            editRangeButton.setText(Label.getLabel("appoitment_edit_date_range_button"));
+        }
     }
 
     @Override

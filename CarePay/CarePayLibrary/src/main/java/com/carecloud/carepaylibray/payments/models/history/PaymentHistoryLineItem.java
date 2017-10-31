@@ -20,6 +20,9 @@ public class PaymentHistoryLineItem extends IntegratedPatientPaymentLineItem {
     @Retention(RetentionPolicy.SOURCE)
     public @interface LineItemStatus{}
 
+    @SerializedName("processing_id")
+    private String lineItemId;
+
     @SerializedName("papi_processing_exhausted")
     private boolean papiProcessingExhausted = false;
 
@@ -106,6 +109,15 @@ public class PaymentHistoryLineItem extends IntegratedPatientPaymentLineItem {
     public void setChecked(boolean checked) {
         this.checked = checked;
     }
+
+    public String getLineItemId() {
+        return lineItemId;
+    }
+
+    public void setLineItemId(String lineItemId) {
+        this.lineItemId = lineItemId;
+    }
+
 
 
 }

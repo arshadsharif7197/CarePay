@@ -194,7 +194,7 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler {
                 }
 
                 if (tags != null) {
-                    if (hasFocus || !StringUtil.isNullOrEmpty(textView.getText().toString())) {
+                    if (hasFocus || !StringUtil.isNullOrEmpty(textView.getText().toString()) || textInputLayout.isErrorEnabled()) {
                         textInputLayout.setHint(tags[0]);
                     } else {
                         textInputLayout.setHint(tags[1]);

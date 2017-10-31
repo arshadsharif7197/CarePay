@@ -37,6 +37,9 @@ public class PaymentsTransitionsDTO {
     @SerializedName("practice_payments")
     @Expose
     private TransitionDTO practicePayments = new TransitionDTO();
+    @SerializedName("refund_payment")
+    @Expose
+    private TransitionDTO refundPayment = new TransitionDTO();
 
     /**
      * @return The makePayment
@@ -158,5 +161,13 @@ public class PaymentsTransitionsDTO {
 
     public void setPracticePayments(TransitionDTO practicePayments) {
         this.practicePayments = practicePayments;
+    }
+
+    public TransitionDTO getRefundPayment() {
+        return refundPayment;
+    }
+
+    public void setRefundPayment(TransitionDTO refundPayment) {
+        this.refundPayment = refundPayment;
     }
 }
