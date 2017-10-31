@@ -1,6 +1,5 @@
 package com.carecloud.carepaylibray.demographics;
 
-import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 
 /**
@@ -9,5 +8,5 @@ import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 
 public interface EmergencyContactInterface extends FragmentActivityInterface {
 
-    void showAddEditEmergencyContactDialog(PatientModel emergencyContact);
+    void showAddEditEmergencyContactDialog();
 }

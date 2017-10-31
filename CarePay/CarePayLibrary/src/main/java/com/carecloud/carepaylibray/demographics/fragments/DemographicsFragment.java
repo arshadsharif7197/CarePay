@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.demographics.DemographicsView;
+import com.carecloud.carepaylibray.demographics.EmergencyContactInterface;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicEmergencyContactSection;
@@ -68,6 +71,27 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
     private EditText phoneEditText;
     private EditText cityEditText;
     private EditText stateEditText;
+    private EmergencyContactInterface callback;
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            if (context instanceof DemographicsView) {
+                callback = ((DemographicsView) context).getPresenter();
+            }
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement EmergencyContactInterface");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        callback = null;
+        super.onDetach();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -353,7 +377,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
         view.findViewById(R.id.emergencyContactContainer).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.showAddEditEmergencyContactDialog(emergencyContact);
+                callback.showAddEditEmergencyContactDialog();
             }
         });
     }
