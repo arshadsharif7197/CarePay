@@ -109,8 +109,11 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
         DemographicDTO updatableDemographicDTO = new DemographicDTO();
         updatableDemographicDTO.getPayload().getDemographics().getPayload().setIdDocument(getPostModel());
 
-        updatableDemographicDTO.getPayload().setAppointmentpayloaddto(demographicDTO.getPayload().getAppointmentpayloaddto());
+        updatableDemographicDTO.getPayload()
+                .setAppointmentpayloaddto(demographicDTO.getPayload().getAppointmentpayloaddto());
         updatableDemographicDTO.setMetadata(demographicDTO.getMetadata());
+        updatableDemographicDTO.getPayload().getDemographics().getPayload()
+                .setPersonalDetails(demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails());
         return updatableDemographicDTO;
     }
 
