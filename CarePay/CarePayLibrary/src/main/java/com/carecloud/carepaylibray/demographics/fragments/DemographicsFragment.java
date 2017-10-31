@@ -388,6 +388,9 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
             }
 
             selectedEmployer = demographicPayload.getPersonalDetails().getEmployer();
+            if (selectedEmployer == null) {
+                selectedEmployer = new EmployerDto();
+            }
 
             employerNameTextLayout = (TextInputLayout) view
                     .findViewById(R.id.employerNameTextInputLayout);
@@ -687,21 +690,21 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
             }
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getPreferredName().isRequired()
                     && checkTextEmptyValue(R.id.preferredName, view)) {
-                if(isUserAction()){
+                if (isUserAction()) {
                     setDefaultError(view, R.id.preferredNameInputLayout);
                 }
                 return false;
             }
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getSocialSecurityNumber().isRequired()
                     && checkTextEmptyValue(R.id.socialSecurityNumber, view)) {
-                if(isUserAction()){
+                if (isUserAction()) {
                     setDefaultError(view, R.id.socialSecurityInputLayout);
                 }
                 return false;
             }
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getEmailAddress().isRequired()
                     && checkTextEmptyValue(R.id.email, view)) {
-                if(isUserAction()){
+                if (isUserAction()) {
                     setDefaultError(view, R.id.emailInputLayout);
                 }
                 return false;
@@ -712,7 +715,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
             }
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getDriversLicenseNumber().isRequired()
                     && checkTextEmptyValue(R.id.driverLicense, view)) {
-                if(isUserAction()){
+                if (isUserAction()) {
                     setDefaultError(view, R.id.driverLicenseInputLayout);
                 }
                 return false;
@@ -723,7 +726,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
             }
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryPhoneNumber().isRequired()
                     && checkTextEmptyValue(R.id.secondaryPhone, view)) {
-                if(isUserAction()){
+                if (isUserAction()) {
                     setDefaultError(view, R.id.secondaryPhoneInputLayout);
                 }
                 return false;
@@ -784,7 +787,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
             }
 
             return true;
-        }finally {
+        } finally {
             setUserAction(false);
         }
     }

@@ -381,6 +381,9 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
             }
 
             selectedEmployer = demographicPayload.getPersonalDetails().getEmployer();
+            if (selectedEmployer == null) {
+                selectedEmployer = new EmployerDto();
+            }
 
             employerNameTextLayout = (TextInputLayout) view
                     .findViewById(R.id.employerNameTextInputLayout);
