@@ -243,52 +243,69 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
 
     @Override
     protected boolean passConstraints(View view) {
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getFirstName().isRequired()
-                && checkTextEmptyValue(R.id.reviewdemogrFirstNameEdit, view)) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getLastName().isRequired()
-                && checkTextEmptyValue(R.id.reviewdemogrLastNameEdit, view)) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isRequired()
-                && checkTextEmptyValue(R.id.reviewdemogrMiddleNameEdit, view)) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getDateOfBirth().isRequired()
-                && checkTextEmptyValue(R.id.revewidemogrDOBEdit, view)) {
-            return false;
-        }
-        if (dataModel.getDemographic().getAddress().getProperties().getPhone().isRequired()
-                && checkTextEmptyValue(R.id.reviewgrdemoPhoneNumberEdit, view)) {
-            return false;
-        }
-
-        //This validation is required regardless of whether fields are required
-        TextInputLayout dateBirthLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
-        EditText dateOfBirth = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
-        if (dateBirthLayout.getVisibility() == View.VISIBLE &&
-                !StringUtil.isNullOrEmpty(dateOfBirth.getText().toString().trim())) {
-            String dateValidationResult = DateUtil
-                    .getDateOfBirthValidationResultMessage(dateOfBirth.getText().toString().trim());
-            if (dateValidationResult != null) {
-                dateBirthLayout.setErrorEnabled(true);
-                dateBirthLayout.setError(dateValidationResult);
+        try {
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getFirstName().isRequired()
+                    && checkTextEmptyValue(R.id.reviewdemogrFirstNameEdit, view)) {
+                if (isUserAction()) {
+                    setDefaultError(view, R.id.reviewdemogrFirstNameTextInput);
+                }
                 return false;
             }
-        }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getLastName().isRequired()
+                    && checkTextEmptyValue(R.id.reviewdemogrLastNameEdit, view)) {
+                if (isUserAction()) {
+                    setDefaultError(view, R.id.reviewdemogrLastNameTextInput);
+                }
+                return false;
+            }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isRequired()
+                    && checkTextEmptyValue(R.id.reviewdemogrMiddleNameEdit, view)) {
+                if (isUserAction()) {
+                    setDefaultError(view, R.id.reviewdemogrMiddleNameTextInputLayout);
+                }
+                return false;
+            }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getDateOfBirth().isRequired()
+                    && checkTextEmptyValue(R.id.revewidemogrDOBEdit, view)) {
+                if (isUserAction()) {
+                    setDefaultError(view, R.id.reviewdemogrDOBTextInput);
+                }
+                return false;
+            }
+            if (dataModel.getDemographic().getAddress().getProperties().getPhone().isRequired()
+                    && checkTextEmptyValue(R.id.reviewgrdemoPhoneNumberEdit, view)) {
+                if (isUserAction()) {
+                    setDefaultError(view, R.id.reviewdemogrPhoneNumberTextInput);
+                }
+                return false;
+            }
 
-        TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
-        EditText phoneNumber = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
-        if (phoneLayout.getVisibility() == View.VISIBLE &&
-                !StringUtil.isNullOrEmpty(phoneNumber.getText().toString().trim()) &&
-                !ValidationHelper.isValidString(phoneNumber.getText().toString().trim(), ValidationHelper.PHONE_NUMBER_PATTERN)) {
-            phoneLayout.setErrorEnabled(true);
-            phoneLayout.setError(Label.getLabel("demographics_phone_number_validation_msg"));
-            return false;
-        }
+            //This validation is required regardless of whether fields are required
+            TextInputLayout dateBirthLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
+            EditText dateOfBirth = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
+            if (dateBirthLayout.getVisibility() == View.VISIBLE &&
+                    !StringUtil.isNullOrEmpty(dateOfBirth.getText().toString().trim())) {
+                String dateValidationResult = DateUtil
+                        .getDateOfBirthValidationResultMessage(dateOfBirth.getText().toString().trim());
+                if (dateValidationResult != null) {
+                    setFieldError(dateBirthLayout, dateValidationResult);
+                    return false;
+                }
+            }
 
-        return true;
+            TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
+            EditText phoneNumber = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
+            if (phoneLayout.getVisibility() == View.VISIBLE &&
+                    !StringUtil.isNullOrEmpty(phoneNumber.getText().toString().trim()) &&
+                    !ValidationHelper.isValidString(phoneNumber.getText().toString().trim(), ValidationHelper.PHONE_NUMBER_PATTERN)) {
+                setFieldError(phoneLayout, Label.getLabel("demographics_phone_number_validation_msg"));
+                return false;
+            }
+
+            return true;
+        }finally {
+            setUserAction(false);
+        }
     }
 
     @Override
