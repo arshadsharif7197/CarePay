@@ -192,8 +192,8 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         });
         nextButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_DOWN && !v.isSelected()){
+            public boolean onTouch(View buttonView, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN && !buttonView.isSelected()){
                     setUserAction(true);
                     checkIfEnableButton(view);
                     return true;
