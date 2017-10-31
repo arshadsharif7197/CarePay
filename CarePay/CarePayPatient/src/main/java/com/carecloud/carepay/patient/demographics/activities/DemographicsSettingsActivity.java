@@ -66,7 +66,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         }
-        if (item.getItemId() == R.id.action_remove_credit_card || item.getItemId() == R.id.deleteEmployer) {
+        if (item.getItemId() == R.id.action_remove_credit_card || item.getItemId() == R.id.deleteEmergencyContact) {
             return false;
         }
         return true;

@@ -98,6 +98,12 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
     }
 
     @Override
+    public void onDetach() {
+        callback = null;
+        super.onDetach();
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();

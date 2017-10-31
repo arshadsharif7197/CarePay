@@ -14,6 +14,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicEmergencyContactSection;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsPersonalSection;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
@@ -319,20 +320,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
         initSelectableInput(chooseEmploymentStatus, selectedEmploymentStatus, employmentStatus,
                 personalInfoSection.getProperties().getEmploymentStatus().isRequired() ? null : employmentStatusOptional);
 
+        setUpEmergencyContact(view, demographicPayload);
         setUpEmployer(view, demographicPayload, personalInfoSection);
-
-//        View emergencyContactRelationshipLayout = view.findViewById(R.id.emergencyContactRelationshipDemographicsLayout);
-//        TextView chooseEmergencyContactRelationship = (TextView) view.findViewById(R.id.chooseEmergencyContactRelationship);
-//        View emergencyContactRelationshipOptional = view.findViewById(R.id.emergencyContactRelationshipOptional);
-//        setVisibility(emergencyContactRelationshipLayout, personalInfoSection.getProperties().getEmergencyContactRelationship().isDisplayed());
-//        chooseEmergencyContactRelationship.setOnClickListener(
-//                getOptionsListener(personalInfoSection.getProperties().getEmergencyContactRelationship().getOptions(),
-//                        getDefaultOnOptionsSelectedListener(chooseEmergencyContactRelationship, selectedEmergencyContactRelationship, emergencyContactRelationshipOptional),
-//                        Label.getLabel("demographics_emergency_contact_relationship")));
-//        String emergencyContactRelationship = demographicPayload.getPersonalDetails().getEmergencyContactRelationship();
-//        initSelectableInput(chooseEmergencyContactRelationship, selectedEmergencyContactRelationship,
-//                emergencyContactRelationship, personalInfoSection.getProperties()
-//                        .getEmergencyContactRelationship().isRequired() ? null : emergencyContactRelationshipOptional);
 
 
         View referralSourceLayout = view.findViewById(R.id.referralSourceDemographicsLayout);
@@ -346,6 +335,27 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
         String referralSource = demographicPayload.getPersonalDetails().getReferralSource();
         initSelectableInput(chooseReferralSource, selectedReferralSource, referralSource, personalInfoSection.getProperties().getReferralSource().isRequired() ? null : referralSourceOptional);
 
+    }
+
+    private void setUpEmergencyContact(View view, DemographicPayloadDTO demographicPayload) {
+        DemographicEmergencyContactSection emergencyContactSection = dataModel.getDemographic().getEmergencyContact();
+        TextInputLayout emergencyContactInputLayout = (TextInputLayout) view.findViewById(R.id.emergencyContactInputLayout);
+        emergencyContactInputLayout.setVisibility(emergencyContactSection.isDisplay() ? View.VISIBLE : View.GONE);
+        final PatientModel emergencyContact = demographicPayload.getEmergencyContact();
+        EditText emergencyContactEditText = (EditText) view.findViewById(R.id.emergencyContactEditText);
+        emergencyContactEditText.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(emergencyContactInputLayout, null));
+        emergencyContactEditText.setText(emergencyContact.getFullName());
+        emergencyContactEditText.getOnFocusChangeListener().onFocusChange(emergencyContactEditText,
+                !StringUtil.isNullOrEmpty(emergencyContactEditText.getText().toString().trim()));
+        view.findViewById(R.id.emergencyContactOptionalLabel)
+                .setVisibility(emergencyContactSection.isRequired() ? View.GONE : View.VISIBLE);
+        view.findViewById(R.id.emergencyContactContainer).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.showAddEditEmergencyContactDialog(emergencyContact);
+            }
+        });
     }
 
     private void setUpEmployer(final View view, DemographicPayloadDTO demographicPayload, DemographicsPersonalSection personalInfoSection) {
@@ -687,21 +697,21 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
             }
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getPreferredName().isRequired()
                     && checkTextEmptyValue(R.id.preferredName, view)) {
-                if(isUserAction()){
+                if (isUserAction()) {
                     setDefaultError(view, R.id.preferredNameInputLayout);
                 }
                 return false;
             }
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getSocialSecurityNumber().isRequired()
                     && checkTextEmptyValue(R.id.socialSecurityNumber, view)) {
-                if(isUserAction()){
+                if (isUserAction()) {
                     setDefaultError(view, R.id.socialSecurityInputLayout);
                 }
                 return false;
             }
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getEmailAddress().isRequired()
                     && checkTextEmptyValue(R.id.email, view)) {
-                if(isUserAction()){
+                if (isUserAction()) {
                     setDefaultError(view, R.id.emailInputLayout);
                 }
                 return false;
@@ -712,7 +722,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
             }
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getDriversLicenseNumber().isRequired()
                     && checkTextEmptyValue(R.id.driverLicense, view)) {
-                if(isUserAction()){
+                if (isUserAction()) {
                     setDefaultError(view, R.id.driverLicenseInputLayout);
                 }
                 return false;
@@ -723,7 +733,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
             }
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryPhoneNumber().isRequired()
                     && checkTextEmptyValue(R.id.secondaryPhone, view)) {
-                if(isUserAction()){
+                if (isUserAction()) {
                     setDefaultError(view, R.id.secondaryPhoneInputLayout);
                 }
                 return false;
@@ -784,7 +794,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
             }
 
             return true;
-        }finally {
+        } finally {
             setUserAction(false);
         }
     }

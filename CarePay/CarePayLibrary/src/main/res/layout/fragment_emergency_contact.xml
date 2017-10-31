@@ -140,12 +140,12 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/dimen_30dp"
                 android:layout_height="wrap_content">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                     android:id="@+id/primaryPhoneTextInputLayout"
                     style="@style/SigninSignupTextInputStyle"
-                    android:layout_marginTop="@dimen/dimen_30dp"
                     app:customAssetFont="proxima_nova_semi_bold"
                     app:hintTextAppearance="@style/FloatingLabelStyle">
 

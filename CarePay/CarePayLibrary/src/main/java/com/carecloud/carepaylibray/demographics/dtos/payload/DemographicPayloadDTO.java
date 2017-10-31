@@ -22,7 +22,7 @@ public class DemographicPayloadDTO {
 
     @SerializedName("emergency_contact")
     @Expose
-    private PatientModel emergencyContact = new PatientModel();
+    private PatientModel emergencyContact;
 
     @SerializedName("insurances")
     @Expose
