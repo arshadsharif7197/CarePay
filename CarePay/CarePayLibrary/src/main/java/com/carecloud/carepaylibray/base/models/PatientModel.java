@@ -7,7 +7,6 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PatientModel {
@@ -107,7 +106,7 @@ public class PatientModel {
 
     @SerializedName("employer")
     @Expose
-    private EmployerDto employer = new EmployerDto();
+    private EmployerDto employer;
 
     @SerializedName("ec_relationship_type")
     @Expose
@@ -119,7 +118,7 @@ public class PatientModel {
 
     @SerializedName("phones")
     @Expose
-    private List<String> phones = new ArrayList<>();
+    private List<String> phones;
 
     @SerializedName("address")
     @Expose

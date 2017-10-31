@@ -32,6 +32,7 @@ import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.EmergencyContactInterface;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicEmergencyContactSection;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
@@ -71,6 +72,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
     private EditText addressEditText2;
     private EditText zipCodeEditText;
     private EditText socialSecurityEditText;
+    private EditText emergencyContactRelationshipEditText;
 
     public EmergencyContactFragment() {
 
@@ -138,6 +140,9 @@ public class EmergencyContactFragment extends BaseDialogFragment {
             firstNameEditText.setText(emergencyContact.getFirstName());
             firstNameEditText.getOnFocusChangeListener().onFocusChange(firstNameEditText,
                     !StringUtil.isNullOrEmpty(firstNameEditText.getText().toString().trim()));
+            view.findViewById(R.id.firstNameOptionalTextView)
+                    .setVisibility(dataModel.getDemographic().getEmergencyContact().getProperties()
+                            .getFirstName().isRequired() ? View.GONE : View.VISIBLE);
 
             TextInputLayout middleNameInputLayout = (TextInputLayout) view
                     .findViewById(R.id.middleNameInputLayout);
@@ -147,6 +152,9 @@ public class EmergencyContactFragment extends BaseDialogFragment {
             middleNameEditText.setText(emergencyContact.getMiddleName());
             middleNameEditText.getOnFocusChangeListener().onFocusChange(middleNameEditText,
                     !StringUtil.isNullOrEmpty(middleNameEditText.getText().toString().trim()));
+            view.findViewById(R.id.middleNameOptionalTextView)
+                    .setVisibility(dataModel.getDemographic().getEmergencyContact().getProperties()
+                            .getMiddleName().isRequired() ? View.GONE : View.VISIBLE);
 
             TextInputLayout lastNameInputLayout = (TextInputLayout) view
                     .findViewById(R.id.lastNameInputLayout);
@@ -156,17 +164,26 @@ public class EmergencyContactFragment extends BaseDialogFragment {
             lastNameEditText.setText(emergencyContact.getLastName());
             lastNameEditText.getOnFocusChangeListener().onFocusChange(lastNameEditText,
                     !StringUtil.isNullOrEmpty(lastNameEditText.getText().toString().trim()));
+            view.findViewById(R.id.lastNameOptionalTextView)
+                    .setVisibility(dataModel.getDemographic().getEmergencyContact().getProperties()
+                            .getLastName().isRequired() ? View.GONE : View.VISIBLE);
 
             TextInputLayout primaryPhoneTextInputLayout = (TextInputLayout) view
                     .findViewById(R.id.primaryPhoneTextInputLayout);
             primaryPhoneEditText = (EditText) view.findViewById(R.id.primaryPhoneEditText);
             primaryPhoneEditText.setOnFocusChangeListener(SystemUtil
                     .getHintFocusChangeListener(primaryPhoneTextInputLayout, null));
+            if (emergencyContact.getPhones() == null) {
+                emergencyContact.setPhones(new ArrayList<String>());
+            }
             if (emergencyContact.getPhones().size() > 0) {
                 primaryPhoneEditText.setText(emergencyContact.getPhones().get(0));
             }
             primaryPhoneEditText.getOnFocusChangeListener().onFocusChange(primaryPhoneEditText,
                     !StringUtil.isNullOrEmpty(primaryPhoneEditText.getText().toString().trim()));
+            view.findViewById(R.id.primaryPhoneEditText)
+                    .setVisibility(dataModel.getDemographic().getEmergencyContact().getProperties()
+                            .getPrimaryPhoneNumber().isRequired() ? View.GONE : View.VISIBLE);
 
             TextInputLayout secondaryPhoneTextInputLayout = (TextInputLayout) view
                     .findViewById(R.id.secondaryPhoneTextInputLayout);
@@ -178,6 +195,9 @@ public class EmergencyContactFragment extends BaseDialogFragment {
             }
             secondaryPhoneEditText.getOnFocusChangeListener().onFocusChange(secondaryPhoneEditText,
                     !StringUtil.isNullOrEmpty(secondaryPhoneEditText.getText().toString().trim()));
+            view.findViewById(R.id.secondaryPhoneEditText)
+                    .setVisibility(dataModel.getDemographic().getEmergencyContact().getProperties()
+                            .getSecondaryPhoneNumber().isRequired() ? View.GONE : View.VISIBLE);
 
             TextInputLayout address1TextInputLayout = (TextInputLayout) view
                     .findViewById(R.id.address1TextInputLayout);
@@ -185,6 +205,8 @@ public class EmergencyContactFragment extends BaseDialogFragment {
             addressEditText.setOnFocusChangeListener(SystemUtil
                     .getHintFocusChangeListener(address1TextInputLayout, null));
             addressEditText.setText(emergencyContact.getAddress().getAddress1());
+            addressEditText.getOnFocusChangeListener().onFocusChange(addressEditText,
+                    !StringUtil.isNullOrEmpty(addressEditText.getText().toString().trim()));
 
 
             TextInputLayout address2TextInputLayout = (TextInputLayout) view
@@ -193,6 +215,8 @@ public class EmergencyContactFragment extends BaseDialogFragment {
             addressEditText2.setOnFocusChangeListener(SystemUtil
                     .getHintFocusChangeListener(address2TextInputLayout, null));
             addressEditText2.setText(emergencyContact.getAddress().getAddress2());
+            addressEditText2.getOnFocusChangeListener().onFocusChange(addressEditText2,
+                    !StringUtil.isNullOrEmpty(addressEditText2.getText().toString().trim()));
 
 
             TextInputLayout zipCodeTextInputLayout = (TextInputLayout) view
@@ -201,6 +225,8 @@ public class EmergencyContactFragment extends BaseDialogFragment {
             zipCodeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeTextInputLayout,
                     getZipCodeFocusListener(zipCodeEditText)));
             zipCodeEditText.setText(emergencyContact.getAddress().getZipcode());
+            zipCodeEditText.getOnFocusChangeListener().onFocusChange(zipCodeEditText,
+                    !StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString().trim()));
 
 
             TextInputLayout cityTextInputLayout = (TextInputLayout) view
@@ -209,6 +235,8 @@ public class EmergencyContactFragment extends BaseDialogFragment {
             cityEditText.setOnFocusChangeListener(SystemUtil
                     .getHintFocusChangeListener(cityTextInputLayout, null));
             cityEditText.setText(emergencyContact.getAddress().getCity());
+            cityEditText.getOnFocusChangeListener().onFocusChange(cityEditText,
+                    !StringUtil.isNullOrEmpty(cityEditText.getText().toString().trim()));
 
 
             TextInputLayout stateTextInputLayout = (TextInputLayout) view
@@ -227,6 +255,8 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                                 }
                             },
                             Label.getLabel("demographics_documents_title_select_state")));
+            stateEditText.getOnFocusChangeListener().onFocusChange(stateEditText,
+                    !StringUtil.isNullOrEmpty(stateEditText.getText().toString().trim()));
 
             TextInputLayout emailInputLayout = (TextInputLayout) view.findViewById(R.id.emailInputLayout);
             emailEditText = (EditText) view.findViewById(R.id.emailEditText);
@@ -267,6 +297,31 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                             },
                             Label.getLabel("demographics_review_gender")));
             genderEditText.setText(emergencyContact.getGender());
+            genderEditText.getOnFocusChangeListener().onFocusChange(genderEditText,
+                    !StringUtil.isNullOrEmpty(dateString));
+
+            TextInputLayout emergencyContactRelationshipInputLayout = (TextInputLayout) view
+                    .findViewById(R.id.emergencyContactRelationshipInputLayout);
+            emergencyContactRelationshipEditText = (EditText) view.findViewById(R.id.emergencyContactRelationshipEditText);
+            emergencyContactRelationshipEditText.setOnFocusChangeListener(SystemUtil
+                    .getHintFocusChangeListener(emergencyContactRelationshipInputLayout, null));
+            emergencyContactRelationshipEditText.setOnClickListener(
+                    getOptionsListener(dataModel.getDemographic()
+                                    .getEmergencyContact().getProperties().getRelationshipType().getOptions(),
+                            new CheckInDemographicsBaseFragment.OnOptionSelectedListener() {
+                                @Override
+                                public void onOptionSelected(DemographicsOption option) {
+                                    emergencyContactRelationshipEditText.setText(option.getLabel());
+                                }
+                            },
+                            Label.getLabel("demographics_review_gender")));
+            emergencyContactRelationshipEditText.setText(emergencyContact.getEmergencyContactRelationship());
+            emergencyContactRelationshipEditText.getOnFocusChangeListener().onFocusChange(emergencyContactRelationshipEditText,
+                    !StringUtil.isNullOrEmpty(dateString));
+
+            view.findViewById(R.id.additionalInfoOptionalTextView).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.addressInfoOptionalTextView).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.firstNameOptionalTextView).setVisibility(View.VISIBLE);
 
         }
     }
@@ -356,6 +411,10 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         if (!StringUtil.isNullOrEmpty(gender)) {
             emergencyContact.setGender(gender);
         }
+        String relationShip = emergencyContactRelationshipEditText.getText().toString().trim();
+        if (!StringUtil.isNullOrEmpty(relationShip)) {
+            emergencyContact.setEmergencyContactRelationship(relationShip);
+        }
         updatableDemographicDTO.getPayload().getDemographics().getPayload().setEmergencyContact(emergencyContact);
 
         return updatableDemographicDTO;
@@ -373,8 +432,8 @@ public class EmergencyContactFragment extends BaseDialogFragment {
             DemographicsSettingsDTO updatedModel = DtoHelper
                     .getConvertedDTO(DemographicsSettingsDTO.class, workflowDTO);
             dto.getPayload().getDemographics().getPayload()
-                    .setPersonalDetails(updatedModel.getPayload().getDemographics()
-                            .getPayload().getPersonalDetails());
+                    .setEmergencyContact(updatedModel.getPayload().getDemographics()
+                            .getPayload().getEmergencyContact());
 
             getActivity().onBackPressed();
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
@@ -389,6 +448,44 @@ public class EmergencyContactFragment extends BaseDialogFragment {
     };
 
     private boolean passConstraints() {
+        DemographicEmergencyContactSection dataModel = dto.getMetadata().getNewDataModel()
+                .getDemographic().getEmergencyContact();
+        if (dataModel.getProperties().getFirstName().isRequired()
+                && StringUtil.isNullOrEmpty(firstNameEditText.getText().toString())) {
+            return false;
+        }
+        if (dataModel.getProperties().getMiddleName().isRequired()
+                && StringUtil.isNullOrEmpty(middleNameEditText.getText().toString())) {
+            return false;
+        }
+        if (dataModel.getProperties().getLastName().isRequired()
+                && StringUtil.isNullOrEmpty(lastNameEditText.getText().toString())) {
+            return false;
+        }
+        if (dataModel.getProperties().getEmailAddress().isRequired()
+                && StringUtil.isNullOrEmpty(emailEditText.getText().toString())) {
+            return false;
+        }
+        if (dataModel.getProperties().getDateOfBirth().isRequired()
+                && StringUtil.isNullOrEmpty(dateOfBirthEditText.getText().toString())) {
+            return false;
+        }
+        if (dataModel.getProperties().getGender().isRequired()
+                && StringUtil.isNullOrEmpty(genderEditText.getText().toString())) {
+            return false;
+        }
+        if (dataModel.getProperties().getPrimaryPhoneNumber().isRequired()
+                && StringUtil.isNullOrEmpty(primaryPhoneEditText.getText().toString())) {
+            return false;
+        }
+        if (dataModel.getProperties().getSecondaryPhoneNumber().isRequired()
+                && StringUtil.isNullOrEmpty(secondaryPhoneEditText.getText().toString())) {
+            return false;
+        }
+        if (dataModel.getProperties().getRelationshipType().isRequired()
+                && StringUtil.isNullOrEmpty(emergencyContactRelationshipEditText.getText().toString())) {
+            return false;
+        }
         return true;
     }
 
@@ -424,6 +521,10 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                 if (smartyStreetsResponse != null) {
                     cityEditText.setText(smartyStreetsResponse.getCity());
                     stateEditText.setText(smartyStreetsResponse.getStateAbbreviation());
+                    stateEditText.getOnFocusChangeListener().onFocusChange(stateEditText,
+                            !StringUtil.isNullOrEmpty(stateEditText.getText().toString().trim()));
+                    cityEditText.getOnFocusChangeListener().onFocusChange(cityEditText,
+                            !StringUtil.isNullOrEmpty(cityEditText.getText().toString().trim()));
                 }
             }
 

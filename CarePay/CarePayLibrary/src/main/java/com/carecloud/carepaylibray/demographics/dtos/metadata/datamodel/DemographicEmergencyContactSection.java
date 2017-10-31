@@ -76,6 +76,10 @@ public class DemographicEmergencyContactSection {
         @Expose
         private DemographicsField firstName = new DemographicsField();
 
+        @SerializedName("middle_name")
+        @Expose
+        private DemographicsField middleName = new DemographicsField();
+
         @SerializedName("last_name")
         @Expose
         private DemographicsField lastName = new DemographicsField();
@@ -95,6 +99,14 @@ public class DemographicEmergencyContactSection {
         @SerializedName("relationship_type")
         @Expose
         private DemographicsField relationshipType = new DemographicsField();
+
+        @SerializedName("phone_number")
+        @Expose
+        private DemographicsField primaryPhoneNumber = new DemographicsField();
+
+        @SerializedName("secondary_phone_number")
+        @Expose
+        private DemographicsField secondaryPhoneNumber = new DemographicsField();
 
         @SerializedName("address")
         @Expose
@@ -155,6 +167,30 @@ public class DemographicEmergencyContactSection {
 
         public void setAddress(DemographicsAddressSection address) {
             this.address = address;
+        }
+
+        public DemographicsField getMiddleName() {
+            return middleName;
+        }
+
+        public void setMiddleName(DemographicsField middleName) {
+            this.middleName = middleName;
+        }
+
+        public DemographicsField getPrimaryPhoneNumber() {
+            return primaryPhoneNumber;
+        }
+
+        public void setPrimaryPhoneNumber(DemographicsField primaryPhoneNumber) {
+            this.primaryPhoneNumber = primaryPhoneNumber;
+        }
+
+        public DemographicsField getSecondaryPhoneNumber() {
+            return secondaryPhoneNumber;
+        }
+
+        public void setSecondaryPhoneNumber(DemographicsField secondaryPhoneNumber) {
+            this.secondaryPhoneNumber = secondaryPhoneNumber;
         }
     }
 }
