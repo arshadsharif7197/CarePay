@@ -53,7 +53,7 @@ public class PurchaseFragment extends BaseFragment {
         Bundle args = getArguments();
         appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, args);
 
-//        initSsoPayload();
+        initSsoPayload();
     }
 
     @Override
@@ -90,21 +90,22 @@ public class PurchaseFragment extends BaseFragment {
         profile.setBillingPerson(person);
 
         SsoModel ssoModel = new SsoModel();
-        ssoModel.setAppId("my-store-11831089");
+        ssoModel.setAppId("breeze-shopping");
         ssoModel.setUserId(getApplicationPreferences().getUserId());
         ssoModel.setProfile(profile);
 
         String ssoString = new Gson().toJson(ssoModel);
-        String ssoEncoded = Base64.encodeToString(ssoString.getBytes(), Base64.DEFAULT);
+        String ssoEncoded = Base64.encodeToString(ssoString.getBytes(), Base64.NO_WRAP);
 
         long timeStamp = System.currentTimeMillis() / 1000;
 
         try {
-            String signature = hmacSha1(ssoEncoded + " " + timeStamp, "DSDFDFDSFDSF");
+            String signature = hmacSha1(ssoEncoded + " " + timeStamp, "9xasKgFMZbDErsGgQeCN3EHawKeydaNW");
 
             ssoProfile = ssoEncoded + " " +
                     signature + " " +
                     timeStamp;
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -112,11 +113,11 @@ public class PurchaseFragment extends BaseFragment {
     }
 
     private String getHtmlData(){
-        return "<div id=\"my-store-11831089\"></div>" +
+        return "<div id=\"My Breeze Clinic\"></div>" +
                 "<div> " +
-                "<script type=\"text/javascript\" src=\"https://app.ecwid.com/script.js?11831089\" charset=\"utf-8\"></script>" +
-                "<script type=\"text/javascript\"> xProductBrowser(\"categoriesPerRow=1\",\"views=grid(60,1) list(60)\",\"categoryView=grid\",\"searchView=list\",\"id=my-store-11831089\");</script>" +
-                "<script type=\"text/javascript\"> var ecwid_sso_profile = '" + ssoProfile + "' </script>" +
+                "<script type=\"text/javascript\" src=\"https://app.ecwid.com/script.js?12522068\" charset=\"utf-8\"></script>" +
+                "<script type=\"text/javascript\"> xProductBrowser(\"categoriesPerRow=1\",\"views=grid(60,1) list(60)\",\"categoryView=grid\",\"searchView=list\",\"id=My Breeze Clinic\");</script>" +
+                "<script> var ecwid_sso_profile = '" + ssoProfile + "' </script>" +
                 "</div>";
     }
 
