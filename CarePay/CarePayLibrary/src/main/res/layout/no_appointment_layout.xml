@@ -12,6 +12,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_100dp"
         android:id="@+id/no_apt_placeholder_icon"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/icn_empty_state_appointments"/>

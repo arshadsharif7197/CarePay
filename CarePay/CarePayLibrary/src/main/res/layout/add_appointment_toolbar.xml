@@ -16,13 +16,15 @@
             style="@style/ResponsibilityToolbarTextStyle"
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:layout_gravity="center_vertical"
             app:customAssetFont="gotham_rounded_medium"/>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/add_appointment_toolbar_other"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0.3"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:padding="@dimen/dimen_10dp"
             android:gravity="center"
             android:text="@string/Other"
             android:textColor="@color/white"

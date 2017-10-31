@@ -372,8 +372,10 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
             initSelectableInput(chooseEmploymentStatus, selectedEmploymentStatus, employmentStatus,
                     personalInfoSection.getProperties().getEmploymentStatus().isRequired()
                             ? null : employmentStatusOptional);
-            enableEmployerData = employmentStatus.toLowerCase().equals("employed")
-                    || employmentStatus.toLowerCase().equals("part time");
+            if (employmentStatus != null) {
+                enableEmployerData = employmentStatus.toLowerCase().equals("employed")
+                        || employmentStatus.toLowerCase().equals("part time");
+            }
             if (!personalInfoSection.getProperties().getEmploymentStatus().isRequired()) {
                 view.findViewById(R.id.employmentInfoOptionalTextView).setVisibility(View.VISIBLE);
             }
@@ -700,14 +702,14 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         }
 
         if (selectedEmployer != null) {
-            if (enableEmployerData) {
-                selectedEmployer.setName(employerNameEditText.getText().toString());
-                selectedEmployer.getAddress().setAddress1(addressEditText.getText().toString());
-                selectedEmployer.getAddress().setAddress2(addressEditText2.getText().toString());
-                selectedEmployer.getAddress().setZipcode(zipCodeEditText.getText().toString());
-                selectedEmployer.getAddress().setCity(cityEditText.getText().toString());
-                selectedEmployer.getAddress().setState(stateEditText.getText().toString());
-                selectedEmployer.getAddress().setPhone(phoneEditText.getText().toString());
+            if (enableEmployerData && !StringUtil.isNullOrEmpty(employerNameEditText.getText().toString().trim())) {
+                selectedEmployer.setName(employerNameEditText.getText().toString().trim());
+                selectedEmployer.getAddress().setAddress1(addressEditText.getText().toString().trim());
+                selectedEmployer.getAddress().setAddress2(addressEditText2.getText().toString().trim());
+                selectedEmployer.getAddress().setZipcode(zipCodeEditText.getText().toString().trim());
+                selectedEmployer.getAddress().setCity(cityEditText.getText().toString().trim());
+                selectedEmployer.getAddress().setState(stateEditText.getText().toString().trim());
+                selectedEmployer.getAddress().setPhone(phoneEditText.getText().toString().trim());
                 patientModel.setEmployer(selectedEmployer);
             } else {
                 patientModel.setEmployer(null);
