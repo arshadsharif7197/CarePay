@@ -391,8 +391,6 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
                     .setVisibility(View.GONE);
         }
 
-        boolean isEmployerStuffVisible = personalInfoSection.getProperties().getEmployer().isDisplayed();
-
         employerNameTextInputLayout = (TextInputLayout) view.findViewById(R.id.employerNameTextInputLayout);
         address1TextInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
         address2TextInputLayout = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
@@ -400,8 +398,9 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
         cityTextInputLayout = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
         stateTextInputLayout = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
         phoneTextInputLayout = (TextInputLayout) view.findViewById(R.id.phoneTextInputLayout);
-        cityAndStateLayoutContainer =  view.findViewById(R.id.cityAndStateLayoutContainer);
+        cityAndStateLayoutContainer = view.findViewById(R.id.cityAndStateLayoutContainer);
 
+        boolean isEmployerStuffVisible = personalInfoSection.getProperties().getEmployer().isDisplayed();
         if (isEmployerStuffVisible) {
 
             selectedEmployer = demographicPayload.getPersonalDetails().getEmployer();
