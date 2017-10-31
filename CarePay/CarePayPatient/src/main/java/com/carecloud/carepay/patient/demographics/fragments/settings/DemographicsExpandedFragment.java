@@ -702,14 +702,14 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         }
 
         if (selectedEmployer != null) {
-            if (enableEmployerData && !employerNameEditText.getText().toString().isEmpty()) {
-                selectedEmployer.setName(employerNameEditText.getText().toString());
-                selectedEmployer.getAddress().setAddress1(addressEditText.getText().toString());
-                selectedEmployer.getAddress().setAddress2(addressEditText2.getText().toString());
-                selectedEmployer.getAddress().setZipcode(zipCodeEditText.getText().toString());
-                selectedEmployer.getAddress().setCity(cityEditText.getText().toString());
-                selectedEmployer.getAddress().setState(stateEditText.getText().toString());
-                selectedEmployer.getAddress().setPhone(phoneEditText.getText().toString());
+            if (enableEmployerData && !StringUtil.isNullOrEmpty(employerNameEditText.getText().toString().trim())) {
+                selectedEmployer.setName(employerNameEditText.getText().toString().trim());
+                selectedEmployer.getAddress().setAddress1(addressEditText.getText().toString().trim());
+                selectedEmployer.getAddress().setAddress2(addressEditText2.getText().toString().trim());
+                selectedEmployer.getAddress().setZipcode(zipCodeEditText.getText().toString().trim());
+                selectedEmployer.getAddress().setCity(cityEditText.getText().toString().trim());
+                selectedEmployer.getAddress().setState(stateEditText.getText().toString().trim());
+                selectedEmployer.getAddress().setPhone(phoneEditText.getText().toString().trim());
                 patientModel.setEmployer(selectedEmployer);
             } else {
                 patientModel.setEmployer(null);
