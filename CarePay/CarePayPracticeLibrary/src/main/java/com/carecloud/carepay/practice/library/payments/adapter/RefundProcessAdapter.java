@@ -76,7 +76,7 @@ public class RefundProcessAdapter extends RecyclerView.Adapter<RefundProcessAdap
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final PaymentHistoryLineItem lineItem = lineItems.get(position);
 
-        holder.amount.setText(NumberFormat.getCurrencyInstance().format(lineItem.getAmount()));
+        holder.amount.setText(NumberFormat.getCurrencyInstance().format(lineItem.getRefundableBalance()));
         holder.description.setText(parseDescription(lineItem.getDescription()));
 
         LocationDTO locationDTO = locationMap.get(lineItem.getLocationID());

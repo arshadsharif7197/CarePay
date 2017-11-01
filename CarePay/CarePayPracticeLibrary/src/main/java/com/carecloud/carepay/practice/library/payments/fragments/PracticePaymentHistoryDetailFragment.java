@@ -16,14 +16,10 @@ import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymen
 import com.carecloud.carepaylibray.payments.fragments.PaymentHistoryDetailFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
-import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by lmenendez on 9/29/17
@@ -125,37 +121,20 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
             }
         });
 
+        if(historyItem.getPayload().getTotalRefunded() > 0D){
+            View refundLayout = view.findViewById(R.id.refund_layout);
+            refundLayout.setVisibility(View.VISIBLE);
+
+            TextView refundAmount = (TextView) view.findViewById(R.id.transaction_refunded);
+            refundAmount.setText(NumberFormat.getCurrencyInstance().format(historyItem.getPayload().getTotalRefunded()));
+        }
+
     }
 
     private void processRefund(){
         dismiss();
         callback.startRefundProcess(historyItem, paymentsModel);
-
-//        if(historyItem.getPayload().getMetadata().isExternallyProcessed()){
-//            Intent intent = new Intent();
-//            intent.setAction(CarePayConstants.CLOVER_REFUND_INTENT);
-//            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, historyItem.getPayload().getAmount());
-//
-//            Gson gson = new Gson();
-//            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(getPaymentLineItems()));
-//
-//            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSACTION_RESPONSE, gson.toJson(historyItem.getPayload().getTransactionResponse()));
-//
-//            startActivity(intent);
-//        }
     }
 
 
-    private List<PaymentLineItem> getPaymentLineItems(){
-        List<PaymentLineItem> paymentLineItems = new ArrayList<>();
-        for (IntegratedPaymentLineItem lineItem : historyItem.getPayload().getLineItems()) {
-            PaymentLineItem paymentLineItem = new PaymentLineItem();
-            paymentLineItem.setAmount(lineItem.getAmount());
-            paymentLineItem.setDescription(lineItem.getDescription());
-
-            paymentLineItems.add(paymentLineItem);
-
-        }
-        return paymentLineItems;
-    }
 }
