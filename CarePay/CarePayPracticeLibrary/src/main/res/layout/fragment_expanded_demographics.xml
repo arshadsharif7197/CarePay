@@ -420,48 +420,6 @@
             breeze:textKey="demographics_details_optional_hint" />
     </FrameLayout>
 
-    <!--<LinearLayout-->
-    <!--android:id="@+id/emergencyContactRelationshipDemographicsLayout"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:orientation="vertical">-->
-
-    <!--<LinearLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"-->
-    <!--android:orientation="horizontal">-->
-
-    <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
-    <!--style="@style/DemographicsReviewLabelStyle"-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_weight="1"-->
-    <!--app:customAssetFont="gotham_rounded_book"-->
-    <!--breeze:textKey="demographics_emergency_contact_relationship"-->
-    <!--tools:text="EC Relationship" />-->
-
-    <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
-    <!--android:id="@+id/emergencyContactRelationshipOptional"-->
-    <!--style="@style/DemographicsOptionalLabelStyle"-->
-    <!--app:customAssetFont="proxima_nova_semi_bold"-->
-    <!--breeze:textKey="demographics_details_optional_hint"-->
-    <!--tools:text="Optional" />-->
-
-    <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
-    <!--android:id="@+id/chooseEmergencyContactRelationship"-->
-    <!--style="@style/DemographicsReviewClickableStyle"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--app:customAssetFont="gotham_rounded_medium"-->
-    <!--tools:text="Choose" />-->
-
-    <!--</LinearLayout>-->
-
-    <!--<View-->
-    <!--style="@style/Consent_Form_View_Style"-->
-    <!--android:layout_width="match_parent" />-->
-
-    <!--</LinearLayout>-->
-
     <LinearLayout
         android:id="@+id/referralSourceDemographicsLayout"
         android:layout_width="match_parent"
