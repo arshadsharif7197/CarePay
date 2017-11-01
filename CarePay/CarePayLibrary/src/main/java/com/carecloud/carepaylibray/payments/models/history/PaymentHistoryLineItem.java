@@ -44,6 +44,9 @@ public class PaymentHistoryLineItem extends IntegratedPatientPaymentLineItem {
     @SerializedName("status")
     private @LineItemStatus String status;
 
+    @SerializedName("refunded_amount")
+    private double refundedAmount;
+
     private transient boolean checked = true;
 
     public boolean isPapiProcessingExhausted() {
@@ -118,6 +121,20 @@ public class PaymentHistoryLineItem extends IntegratedPatientPaymentLineItem {
         this.lineItemId = lineItemId;
     }
 
+    public double getRefundedAmount() {
+        return refundedAmount;
+    }
 
+    public void setRefundedAmount(double refundedAmount) {
+        this.refundedAmount = refundedAmount;
+    }
+
+    /**
+     * Get refundable balance for line item
+     * @return amount - refund amount
+     */
+    public double getRefundableBalance(){
+        return getAmount() - getRefundedAmount();
+    }
 
 }
