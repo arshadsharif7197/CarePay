@@ -365,7 +365,6 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     }
 
     private void setUpEmergencyContact(View view, PatientModel emergencyContact) {
-        DemographicEmergencyContactSection emergencyContactSection = dataModel.getDemographic().getEmergencyContact();
         TextInputLayout emergencyContactInputLayout = (TextInputLayout) view.findViewById(R.id.emergencyContactInputLayout);
 //        emergencyContactInputLayout.setVisibility(emergencyContactSection.isDisplay() ? View.VISIBLE : View.GONE);
         EditText emergencyContactEditText = (EditText) view.findViewById(R.id.emergencyContactEditText);
@@ -376,6 +375,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         }
         emergencyContactEditText.getOnFocusChangeListener().onFocusChange(emergencyContactEditText,
                 !StringUtil.isNullOrEmpty(emergencyContactEditText.getText().toString().trim()));
+        DemographicEmergencyContactSection emergencyContactSection = dataModel.getDemographic().getEmergencyContact();
         view.findViewById(R.id.emergencyContactOptionalLabel)
                 .setVisibility(emergencyContactSection.isRequired() ? View.GONE : View.VISIBLE);
         emergencyContactEditText.setOnClickListener(new View.OnClickListener() {

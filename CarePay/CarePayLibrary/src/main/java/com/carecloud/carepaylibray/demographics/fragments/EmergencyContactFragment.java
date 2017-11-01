@@ -127,7 +127,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
             title.setText(Label.getLabel("demographics_emergency_contact_title"));
             view.findViewById(R.id.edit_insurance_close_button).setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View view) {
                     dismiss();
                 }
             });
@@ -154,12 +154,11 @@ public class EmergencyContactFragment extends BaseDialogFragment {
 
         DemographicPayloadDTO demographicPayload = dto.getPayload().getDemographics().getPayload();
         PatientModel emergencyContact = demographicPayload.getEmergencyContact();
-        DemographicDataModel dataModel = dto.getMetadata().getNewDataModel();
 
         saveButton = (Button) view.findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 updateEmergencyContactInfo();
             }
         });
@@ -187,6 +186,8 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         middleNameEditText.setText(emergencyContact.getMiddleName());
         middleNameEditText.getOnFocusChangeListener().onFocusChange(middleNameEditText,
                 !StringUtil.isNullOrEmpty(middleNameEditText.getText().toString().trim()));
+
+        DemographicDataModel dataModel = dto.getMetadata().getNewDataModel();
         boolean middleNameRequired = dataModel.getDemographic().getEmergencyContact().getProperties()
                 .getMiddleName().isRequired();
         if (middleNameRequired) {
