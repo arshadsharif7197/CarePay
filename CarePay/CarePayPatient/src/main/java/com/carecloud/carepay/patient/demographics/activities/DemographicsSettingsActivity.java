@@ -23,7 +23,9 @@ import com.carecloud.carepay.patient.payment.fragments.CreditCardDetailsFragment
 import com.carecloud.carepay.patient.payment.fragments.CreditCardListFragment;
 import com.carecloud.carepay.patient.payment.fragments.SettingAddCreditCardFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.EmergencyContactInterface;
+import com.carecloud.carepaylibray.demographics.EmergencyContactInterfaceFragment;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.fragments.EmergencyContactFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
@@ -210,5 +212,14 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     @Override
     public void showAddEditEmergencyContactDialog() {
         addFragment(EmergencyContactFragment.newInstance(), true);
+    }
+
+    @Override
+    public void updateEmergencyContact(PatientModel emergencyContact) {
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentById(R.id.activity_demographics_settings);
+        if (fragment instanceof EmergencyContactInterfaceFragment) {
+            ((EmergencyContactInterfaceFragment) fragment).updateEmergencyContact(emergencyContact);
+        }
     }
 }

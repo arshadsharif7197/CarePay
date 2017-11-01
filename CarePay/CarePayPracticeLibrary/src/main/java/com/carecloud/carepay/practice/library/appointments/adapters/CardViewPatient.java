@@ -76,8 +76,6 @@ public class CardViewPatient {
         this.name = patientModel.getFullName();
         this.initials = patientModel.getShortName();
         this.photoUrl = patientModel.getProfilePhoto();
-        this.providerId = dto.getProvider().getId().toString();
-        this.providerName = dto.getProvider().getName();
         this.appointmentStartTime = DateUtil.getInstance().setDateRaw(dto.getStartTime()).getDate();
         this.isAppointmentOver = dto.isAppointmentOver();
         this.balance = getFormattedBalance(balance);
@@ -94,6 +92,8 @@ public class CardViewPatient {
                 code.equalsIgnoreCase(CarePayConstants.BILLED) ||
                 code.equalsIgnoreCase(CarePayConstants.MANUALLY_BILLED);
         this.checkinStatus = dto.getAppointmentStatus().getCheckinStatusDTO();
+        this.providerId = dto.getProvider().getId().toString();
+        this.providerName = dto.getProvider().getName();
         if (dto.getAppointmentStatus().getLastUpdated() != null) {
             this.lastUpdate = DateUtil.getInstance().setDateRaw(dto.getAppointmentStatus().getLastUpdated().replaceAll("\\.\\d\\d\\dZ", "-00:00")).getDate();
         }

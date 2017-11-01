@@ -13,7 +13,9 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
@@ -417,51 +419,33 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
     @Override
     public DTO getDto() {
-        return null;
-    }
-
-    @Override
-    public void replaceFragment(Fragment fragment, boolean addToBackStack) {
-
-    }
-
-    @Override
-    public void addFragment(Fragment fragment, boolean addToBackStack) {
-
-    }
-
-    @Override
-    public void showErrorToast(String exceptionMessage) {
-
+        return demographicDTO;
     }
 
     @Override
     public void setToolbar(Toolbar toolbar) {
-
-    }
-
-    @Override
-    public void showSuccessToast(String successMessage) {
-
-    }
-
-    @Override
-    public void setActionBarTitle(String title) {
-
-    }
-
-    @Override
-    public void displayDialogFragment(DialogFragment fragment, boolean addToBackStack) {
-
+        ((BaseActivity) demographicsView).setToolbar(toolbar);
     }
 
     @Override
     public void showAddEditEmergencyContactDialog() {
-        EmergencyContactFragment fragment = EmergencyContactFragment.newInstance();
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-        transaction.add(R.id.root_layout, fragment, fragment.getClass().getCanonicalName());
-        transaction.addToBackStack(null);
-        transaction.commitAllowingStateLoss();
+        EmergencyContactFragment fragment = EmergencyContactFragment.newInstance();
+        if (isPatientMode) {
+            fragment.show(transaction, fragment.getClass().getCanonicalName());
+        } else {
+            transaction.add(R.id.root_layout, fragment, fragment.getClass().getCanonicalName());
+            transaction.addToBackStack(null);
+            transaction.commitAllowingStateLoss();
+        }
+    }
+
+    @Override
+    public void updateEmergencyContact(PatientModel emergencyContact) {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
+        if (fragment instanceof EmergencyContactInterfaceFragment) {
+            ((EmergencyContactInterfaceFragment) fragment).updateEmergencyContact(emergencyContact);
+        }
     }
 }

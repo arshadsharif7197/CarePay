@@ -15,6 +15,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.EmergencyContactInterface;
+import com.carecloud.carepaylibray.demographics.EmergencyContactInterfaceFragment;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicEmergencyContactSection;
@@ -36,7 +37,8 @@ import com.smartystreets.api.us_zipcode.City;
 /**
  * A simple {@link CheckInDemographicsBaseFragment} subclass.
  */
-public class DemographicsFragment extends CheckInDemographicsBaseFragment {
+public class DemographicsFragment extends CheckInDemographicsBaseFragment
+        implements EmergencyContactInterfaceFragment {
 
     private DemographicDTO demographicDTO;
     private DemographicDataModel dataModel;
@@ -345,7 +347,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
         initSelectableInput(chooseEmploymentStatus, selectedEmploymentStatus, employmentStatus,
                 personalInfoSection.getProperties().getEmploymentStatus().isRequired() ? null : employmentStatusOptional);
 
-        setUpEmergencyContact(view, demographicPayload);
+        setUpEmergencyContact(view, demographicPayload.getEmergencyContact());
         setUpEmployer(view, demographicPayload, personalInfoSection);
 
 
@@ -362,20 +364,21 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
 
     }
 
-    private void setUpEmergencyContact(View view, DemographicPayloadDTO demographicPayload) {
+    private void setUpEmergencyContact(View view, PatientModel emergencyContact) {
         DemographicEmergencyContactSection emergencyContactSection = dataModel.getDemographic().getEmergencyContact();
         TextInputLayout emergencyContactInputLayout = (TextInputLayout) view.findViewById(R.id.emergencyContactInputLayout);
-        emergencyContactInputLayout.setVisibility(emergencyContactSection.isDisplay() ? View.VISIBLE : View.GONE);
-        final PatientModel emergencyContact = demographicPayload.getEmergencyContact();
+//        emergencyContactInputLayout.setVisibility(emergencyContactSection.isDisplay() ? View.VISIBLE : View.GONE);
         EditText emergencyContactEditText = (EditText) view.findViewById(R.id.emergencyContactEditText);
         emergencyContactEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(emergencyContactInputLayout, null));
-        emergencyContactEditText.setText(emergencyContact.getFullName());
+        if (emergencyContact != null) {
+            emergencyContactEditText.setText(emergencyContact.getFullName());
+        }
         emergencyContactEditText.getOnFocusChangeListener().onFocusChange(emergencyContactEditText,
                 !StringUtil.isNullOrEmpty(emergencyContactEditText.getText().toString().trim()));
         view.findViewById(R.id.emergencyContactOptionalLabel)
                 .setVisibility(emergencyContactSection.isRequired() ? View.GONE : View.VISIBLE);
-        view.findViewById(R.id.emergencyContactContainer).setOnClickListener(new View.OnClickListener() {
+        emergencyContactEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 callback.showAddEditEmergencyContactDialog();
@@ -435,6 +438,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
         cityAndStateLayoutContainer = view.findViewById(R.id.cityAndStateLayoutContainer);
 
         boolean isEmployerStuffVisible = personalInfoSection.getProperties().getEmployer().isDisplayed();
+        employerNameEditText = (EditText) view.findViewById(R.id.employerNameEditText);
         if (isEmployerStuffVisible) {
 
             selectedEmployer = demographicPayload.getPersonalDetails().getEmployer();
@@ -442,8 +446,6 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
                 selectedEmployer = new EmployerDto();
             }
 
-
-            employerNameEditText = (EditText) view.findViewById(R.id.employerNameEditText);
             employerNameEditText.setOnFocusChangeListener(SystemUtil
                     .getHintFocusChangeListener(employerNameTextInputLayout, null));
             employerNameEditText.setText(selectedEmployer.getName());
@@ -769,7 +771,9 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
             if (phoneLayout.getVisibility() == View.VISIBLE &&
                     !StringUtil.isNullOrEmpty(secondaryPhoneNumber.getText().toString().trim()) &&
                     !ValidationHelper.isValidString(secondaryPhoneNumber.getText().toString().trim(),
-                            ValidationHelper.PHONE_NUMBER_PATTERN)) {
+                            ValidationHelper.PHONE_NUMBER_PATTERN)
+                    && dataModel.getDemographic().getPersonalDetails().getProperties()
+                    .getSecondaryPhoneNumber().isRequired()) {
                 setFieldError(phoneLayout, Label.getLabel("demographics_phone_number_validation_msg"));
                 return false;
             }
@@ -836,5 +840,11 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment {
 
 
         }.execute(zipCode);
+    }
+
+    @Override
+    public void updateEmergencyContact(PatientModel emergencyContact) {
+        setUpEmergencyContact(getView(), emergencyContact);
+        checkIfEnableButton(getView());
     }
 }

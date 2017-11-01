@@ -21,6 +21,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.EmergencyContactInterface;
+import com.carecloud.carepaylibray.demographics.EmergencyContactInterfaceFragment;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicEmergencyContactSection;
@@ -45,7 +46,8 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragment {
+public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragment
+        implements EmergencyContactInterfaceFragment {
 
     private DemographicDTO demographicsSettingsDTO;
     private DemographicDataModel dataModel;
@@ -311,7 +313,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 personalInfoSection.getProperties().getMaritalStatus().isRequired()
                         ? null : maritalStatusOptional);
 
-        setUpEmergencyContact(view, demographicPayload);
+        setUpEmergencyContact(view, demographicPayload.getEmergencyContact());
 
         setUpEmployer(view, demographicPayload, personalInfoSection);
 
@@ -331,20 +333,21 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
 
     }
 
-    private void setUpEmergencyContact(View view, DemographicPayloadDTO demographicPayload) {
+    private void setUpEmergencyContact(View view, PatientModel emergencyContact) {
         DemographicEmergencyContactSection emergencyContactSection = dataModel.getDemographic().getEmergencyContact();
         TextInputLayout emergencyContactInputLayout = (TextInputLayout) view.findViewById(R.id.emergencyContactInputLayout);
         emergencyContactInputLayout.setVisibility(emergencyContactSection.isDisplay() ? View.VISIBLE : View.GONE);
-        final PatientModel emergencyContact = demographicPayload.getEmergencyContact();
         EditText emergencyContactEditText = (EditText) view.findViewById(R.id.emergencyContactEditText);
         emergencyContactEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(emergencyContactInputLayout, null));
-        emergencyContactEditText.setText(emergencyContact.getFullName());
+        if (emergencyContact != null) {
+            emergencyContactEditText.setText(emergencyContact.getFullName());
+        }
         emergencyContactEditText.getOnFocusChangeListener().onFocusChange(emergencyContactEditText,
                 !StringUtil.isNullOrEmpty(emergencyContactEditText.getText().toString().trim()));
         view.findViewById(R.id.emergencyContactOptionalLabel)
                 .setVisibility(emergencyContactSection.isRequired() ? View.GONE : View.VISIBLE);
-        view.findViewById(R.id.emergencyContactContainer).setOnClickListener(new View.OnClickListener() {
+        emergencyContactEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 callback.showAddEditEmergencyContactDialog();
@@ -445,7 +448,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
             zipCodeEditText.setText(selectedEmployer.getAddress().getZipcode());
         }
 
-        cityAndStateLayoutContainer =  view.findViewById(com.carecloud.carepaylibrary.R.id.cityAndStateLayoutContainer);
+        cityAndStateLayoutContainer = view.findViewById(com.carecloud.carepaylibrary.R.id.cityAndStateLayoutContainer);
 
         cityTextInputLayout = (TextInputLayout) view
                 .findViewById(R.id.cityTextInputLayout);
@@ -782,5 +785,10 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
 
 
         }.execute(zipCode);
+    }
+
+    @Override
+    public void updateEmergencyContact(PatientModel emergencyContact) {
+        setUpEmergencyContact(getView(), emergencyContact);
     }
 }
