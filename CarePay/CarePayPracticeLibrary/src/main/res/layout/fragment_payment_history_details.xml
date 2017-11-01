@@ -207,6 +207,53 @@
                     android:layout_height="@dimen/dimen_1dp"
                     android:background="@color/light_gray" />
 
+                <LinearLayout
+                    android:id="@+id/refund_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="@dimen/dimen_13dp"
+                        android:paddingEnd="@dimen/dimen_13dp"
+                        android:paddingTop="@dimen/dimen_22dp"
+                        android:paddingBottom="@dimen/dimen_22dp">
+
+                        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="start"
+                            android:textColor="@color/textview_default_textcolor"
+                            android:textSize="@dimen/text_size_24sp"
+                            tools:text="Refunded"
+                            breeze:textKey="payment_history_detail_refunded"
+                            app:customAssetFont="gotham_rounded_book"/>
+
+                        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                            android:id="@+id/transaction_refunded"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="end"
+                            android:textColor="@color/textview_default_textcolor"
+                            android:textSize="@dimen/text_size_17"
+                            tools:text="$189.00"
+                            app:customAssetFont="gotham_rounded_medium"/>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_1dp"
+                        android:background="@color/light_gray" />
+
+                </LinearLayout>
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
