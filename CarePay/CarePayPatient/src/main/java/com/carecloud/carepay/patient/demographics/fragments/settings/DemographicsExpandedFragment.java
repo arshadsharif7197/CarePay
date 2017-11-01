@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -391,6 +393,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         }
         if (!personalInfoSection.getProperties().getEmploymentStatus().isRequired()) {
             view.findViewById(R.id.employmentInfoOptionalTextView).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.employmentInfoContainer).setVisibility(View.GONE);
         }
 
         selectedEmployer = demographicPayload.getPersonalDetails().getEmployer();
@@ -406,6 +409,23 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         employerNameEditText.setText(selectedEmployer.getName());
         employerNameEditText.getOnFocusChangeListener().onFocusChange(employerNameEditText,
                 !StringUtil.isNullOrEmpty(employerNameEditText.getText().toString().trim()));
+        employerNameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                selectedEmployer.setName(editable.toString());
+                checkIfEnableButton();
+            }
+        });
 
         address1TextInputLayout = (TextInputLayout) view
                 .findViewById(R.id.address1TextInputLayout);
@@ -565,7 +585,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
             return false;
         }
         if (dataModel.getDemographic().getPersonalDetails().getProperties().getEmployer().isRequired()
-                && StringUtil.isNullOrEmpty(selectedEmployer.getName())) {
+                && StringUtil.isNullOrEmpty(selectedEmployer.getName()) && showEmployerFields) {
             return false;
         }
         if (dataModel.getDemographic().getPersonalDetails().getProperties()

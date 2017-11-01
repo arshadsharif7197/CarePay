@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -424,8 +426,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 view.findViewById(R.id.employmentInfoOptionalTextView).setVisibility(View.VISIBLE);
             }
         } else {
-            view.findViewById(R.id.employmentStatusDemographicsLayout)
-                    .setVisibility(View.GONE);
+            view.findViewById(R.id.employmentStatusDemographicsLayout).setVisibility(View.GONE);
+            view.findViewById(R.id.employmentInfoContainer).setVisibility(View.GONE);
         }
 
         employerNameTextInputLayout = (TextInputLayout) view.findViewById(R.id.employerNameTextInputLayout);
@@ -451,7 +453,23 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             employerNameEditText.setText(selectedEmployer.getName());
             employerNameEditText.getOnFocusChangeListener().onFocusChange(employerNameEditText,
                     !StringUtil.isNullOrEmpty(employerNameEditText.getText().toString().trim()));
+            employerNameEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
 
+                }
+
+                @Override
+                public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    selectedEmployer.setName(editable.toString());
+                    checkIfEnableButton(getView());
+                }
+            });
 
             addressEditText = (EditText) view.findViewById(R.id.addressEditText);
             addressEditText.setOnFocusChangeListener(SystemUtil
@@ -748,7 +766,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 return false;
             }
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getEmployer().isRequired()
-                    && StringUtil.isNullOrEmpty(selectedEmployer.getName())) {
+                    && StringUtil.isNullOrEmpty(selectedEmployer.getName()) && showEmployerFields) {
                 return false;
             }
             if (dataModel.getDemographic().getPersonalDetails().getProperties()
@@ -758,10 +776,6 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             }
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getReferralSource().isRequired()
                     && StringUtil.isNullOrEmpty(selectedReferralSource.getName())) {
-                return false;
-            }
-            if (dataModel.getDemographic().getPersonalDetails().getProperties().getEmployer().isRequired()
-                    && (selectedEmployer == null || StringUtil.isNullOrEmpty(selectedEmployer.getName()))) {//// TODO: 10/30/17
                 return false;
             }
 
