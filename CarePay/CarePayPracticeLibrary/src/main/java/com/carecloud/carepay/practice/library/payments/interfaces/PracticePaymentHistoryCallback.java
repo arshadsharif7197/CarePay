@@ -15,5 +15,7 @@ public interface PracticePaymentHistoryCallback {
     void displayHistoryItemDetails(PaymentHistoryItem item, PaymentsModel paymentsModel);
 
     void startRefundProcess(PaymentHistoryItem historyItem, PaymentsModel paymentsModel);
+
+    void completeRefundProcess(PaymentHistoryItem historyItem, PaymentsModel paymentsModel);
 }
 

@@ -64,6 +64,7 @@
             android:layout_marginStart="@dimen/dimen_10dp"
             android:background="@drawable/button_rounded_gray_background"
             android:textSize="@dimen/text_size_13"
+            android:textColor="@color/white"
             android:paddingTop="@dimen/dimen_1dp"
             android:paddingBottom="@dimen/dimen_1dp"
             android:paddingStart="@dimen/dimen_7dp"

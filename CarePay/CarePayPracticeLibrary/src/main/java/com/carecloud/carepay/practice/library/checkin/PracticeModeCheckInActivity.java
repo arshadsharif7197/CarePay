@@ -34,6 +34,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewC
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentHistoryDetailFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.RefundDetailFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.RefundProcessFragment;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentNavigationCallback;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
@@ -103,6 +104,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     CarePayTextView waitingCounterTextView;
     CarePayTextView checkingOutCounterTextView;
     CarePayTextView checkedOutCounterTextView;
+
+    private PaymentsModel selectedPaymentModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -533,7 +536,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
         PaymentDistributionFragment fragment = new PaymentDistributionFragment();
         fragment.setArguments(args);
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        displayDialogFragment(fragment, true);
     }
 
     @Override
@@ -545,7 +548,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         PracticePaymentMethodDialogFragment fragment = PracticePaymentMethodDialogFragment
                 .newInstance(paymentsModel, amount);
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        displayDialogFragment(fragment, false);
     }
 
     @Override
@@ -555,7 +558,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                 && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel,
                     selectedPaymentMethod.getLabel(), amount);
-            fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+            displayDialogFragment(fragment, false);
         } else {
             showAddCard(amount, paymentsModel);
         }
@@ -600,8 +603,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
         DialogFragment fragment = new PracticeAddNewCreditCardFragment();
         fragment.setArguments(args);
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
-
+        displayDialogFragment(fragment, false);
     }
 
     @Override
@@ -612,17 +614,19 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         String patientBalance = gson.toJson(balance);
         UpdatePatientBalancesDTO updatePatientBalance = gson.fromJson(patientBalance, UpdatePatientBalancesDTO.class);
 
-        showPaymentDistributionFragment(updatePatientBalance);
+        hidePaymentDistributionFragment(updatePatientBalance);
     }
 
-    private void showPaymentDistributionFragment(UpdatePatientBalancesDTO updatePatientBalance) {
+    private void hidePaymentDistributionFragment(UpdatePatientBalancesDTO updatePatientBalance) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager
-                .findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
+                .findFragmentByTag(PaymentDistributionFragment.class.getName());
         if (fragment != null) {
             fragment.dismiss();
         }
-        updatePatientBalance(updatePatientBalance);
+        if (updatePatientBalance != null) {
+            updatePatientBalance(updatePatientBalance);
+        }
     }
 
     @Override
@@ -654,6 +658,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     @Override
     public void showPaymentDistributionDialog(PaymentsModel paymentsModel) {
         startPaymentProcess(paymentsModel);
+        selectedPaymentModel = paymentsModel;
     }
 
     @Override
@@ -674,7 +679,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
             fragment.setArguments(args);
         }
 
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        displayDialogFragment(fragment, false);
     }
 
     @Override
@@ -689,18 +694,31 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         }
 
         entryFragment.setCallback(callback);
-        entryFragment.show(getSupportFragmentManager(), entryFragment.getClass().getSimpleName());
+        displayDialogFragment(entryFragment, false);
     }
 
     @Override
     protected void processExternalPayment(PaymentExecution execution, Intent data) {
         switch (execution) {
             case clover: {
-                String jsonPayload = data.getStringExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA);
+                boolean isRefund = data.getBooleanExtra(CarePayConstants.CLOVER_REFUND_INTENT_FLAG, false);
+                final String jsonPayload = data.getStringExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA);
                 if (jsonPayload != null) {
-                    Gson gson = new Gson();
-                    WorkflowDTO workflowDTO = gson.fromJson(jsonPayload, WorkflowDTO.class);
-                    showPaymentConfirmation(workflowDTO);
+                    if(isRefund){
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                PaymentHistoryItem historyItem = DtoHelper.getConvertedDTO(PaymentHistoryItem.class, jsonPayload);
+                                completeRefundProcess(historyItem, selectedPaymentModel);
+
+                            }
+                        }, 500);
+                    }else {
+                        Gson gson = new Gson();
+                        WorkflowDTO workflowDTO = gson.fromJson(jsonPayload, WorkflowDTO.class);
+                        showPaymentConfirmation(workflowDTO);
+                    }
+
                 }
                 break;
             }
@@ -717,7 +735,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
             DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    showPaymentDistributionFragment(new UpdatePatientBalancesDTO());
+                    hidePaymentDistributionFragment(new UpdatePatientBalancesDTO());
                 }
             };
             dialogFragment.setOnDismissListener(dismissListener);
@@ -760,7 +778,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager
-                .findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
+                .findFragmentByTag(PaymentDistributionFragment.class.getName());
         if (fragment != null) {
             fragment.showDialog();
         }
@@ -776,7 +794,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     @Override
     public void onDismissPaymentHistory() {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
+        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getName());
         if (fragment != null) {
             fragment.showDialog();
         }
@@ -790,8 +808,18 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void startRefundProcess(PaymentHistoryItem historyItem, PaymentsModel paymentsModel) {
+//        getSupportFragmentManager().popBackStack(PaymentDistributionFragment.class.getName(), 0);
         RefundProcessFragment fragment = RefundProcessFragment.newInstance(historyItem, paymentsModel);
         displayDialogFragment(fragment, true);
+    }
+
+    @Override
+    public void completeRefundProcess(PaymentHistoryItem historyItem, PaymentsModel paymentsModel) {
+//        getSupportFragmentManager().popBackStackImmediate(PaymentDistributionFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+        RefundDetailFragment fragment = RefundDetailFragment.newInstance(historyItem, paymentsModel);
+        displayDialogFragment(fragment, false);
+
     }
 
     private void refreshLists(boolean isBlocking){
