@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.payments;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -23,11 +24,12 @@ import com.carecloud.carepay.practice.library.payments.fragments.AddPaymentItemF
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionEntryFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentHistoryDetailFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentHistoryFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentHistoryDetailFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.RefundDetailFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.RefundProcessFragment;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentNavigationCallback;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
@@ -320,13 +322,23 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     protected void processExternalPayment(PaymentExecution execution, Intent data) {
         switch (execution) {
             case clover: {
-                String jsonPayload = data.getStringExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA);
+                boolean isRefund = data.getBooleanExtra(CarePayConstants.CLOVER_REFUND_INTENT_FLAG, false);
+                final String jsonPayload = data.getStringExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA);
                 if (jsonPayload != null) {
-                    Gson gson = new Gson();
-//                    PaymentsModel paymentsModel = gson.fromJson(jsonPayload, PaymentsModel.class);
-                    WorkflowDTO workflowDTO = gson.fromJson(jsonPayload, WorkflowDTO.class);
-                    showPaymentConfirmation(workflowDTO);
+                    if(isRefund){
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                PaymentHistoryItem historyItem = DtoHelper.getConvertedDTO(PaymentHistoryItem.class, jsonPayload);
+                                completeRefundProcess(historyItem, paymentsModel);
 
+                            }
+                        }, 500);
+                    }else {
+                        Gson gson = new Gson();
+                        WorkflowDTO workflowDTO = gson.fromJson(jsonPayload, WorkflowDTO.class);
+                        showPaymentConfirmation(workflowDTO);
+                    }
 
                 }
                 break;
@@ -397,7 +409,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
         PaymentDistributionFragment fragment = new PaymentDistributionFragment();
         fragment.setArguments(args);
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        displayDialogFragment(fragment, true);
 
     }
 
@@ -410,15 +422,14 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         PracticePaymentMethodDialogFragment fragment = PracticePaymentMethodDialogFragment
                 .newInstance(paymentsModel, amount);
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        displayDialogFragment(fragment, false);
     }
 
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
-//        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
         if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel, selectedPaymentMethod.getLabel(), amount);
-            fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+            displayDialogFragment(fragment, false);
         } else {
             showAddCard(amount, paymentsModel);
         }
@@ -471,8 +482,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
         DialogFragment fragment = new PracticeAddNewCreditCardFragment();
         fragment.setArguments(args);
-//        navigateToFragment(fragment, true);
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        displayDialogFragment(fragment, false);
     }
 
     @Override
@@ -488,7 +498,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     private void hidePaymentDistributionFragment(UpdatePatientBalancesDTO updatePatientBalance) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
+        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getName());
         if (fragment != null) {
             fragment.dismiss();
         }
@@ -535,7 +545,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             fragment.setArguments(args);
         }
 
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        displayDialogFragment(fragment, false);
     }
 
     @Override
@@ -549,7 +559,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         }
 
         entryFragment.setCallback(callback);
-        entryFragment.show(getSupportFragmentManager(), entryFragment.getClass().getSimpleName());
+        displayDialogFragment(entryFragment, false);
     }
 
     @Override
@@ -560,7 +570,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     @Override
     public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
+        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getName());
         if (fragment != null) {
             fragment.showDialog();
         }
@@ -576,7 +586,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     @Override
     public void onDismissPaymentHistory() {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
+        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getName());
         if (fragment != null) {
             fragment.showDialog();
         }
@@ -585,14 +595,23 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     @Override
     public void displayHistoryItemDetails(PaymentHistoryItem item, PaymentsModel paymentsModel) {
         PracticePaymentHistoryDetailFragment fragment = PracticePaymentHistoryDetailFragment.newInstance(item, paymentsModel);
-        displayDialogFragment(fragment, true);
+        displayDialogFragment(fragment, false);
     }
 
     @Override
     public void startRefundProcess(PaymentHistoryItem historyItem, PaymentsModel paymentsModel) {
-        getSupportFragmentManager().popBackStack(PaymentDistributionFragment.class.getName(), 0);
+//        getSupportFragmentManager().popBackStack(PaymentDistributionFragment.class.getName(), 0);
         RefundProcessFragment fragment = RefundProcessFragment.newInstance(historyItem, paymentsModel);
-        displayDialogFragment(fragment, true);
+        displayDialogFragment(fragment, false);
+    }
+
+    @Override
+    public void completeRefundProcess(PaymentHistoryItem historyItem, PaymentsModel paymentsModel) {
+//        getSupportFragmentManager().popBackStackImmediate(PaymentDistributionFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+        RefundDetailFragment fragment = RefundDetailFragment.newInstance(historyItem, paymentsModel);
+        displayDialogFragment(fragment, false);
+
     }
 
     private View.OnClickListener selectDateRange = new View.OnClickListener() {

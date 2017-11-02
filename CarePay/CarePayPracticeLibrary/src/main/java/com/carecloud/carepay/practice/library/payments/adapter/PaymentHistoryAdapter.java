@@ -1,7 +1,6 @@
 package com.carecloud.carepay.practice.library.payments.adapter;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
-import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
+import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItemPayload;
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
@@ -72,6 +71,8 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
             return;
         }
 
+        holder.transactionFlag.setVisibility(View.GONE);
+
         final PaymentHistoryItem item = paymentHistoryItems.get(position);
 
         DateUtil dateInstance = DateUtil.getInstance().setDateRaw(item.getPayload().getDate()).shiftDateToGMT();
@@ -85,10 +86,35 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
         if(totalPaid == 0 && !item.getPayload().getProcessingErrors().isEmpty()){
             holder.transactionAmount.setText(currencyFormatter.format(amount));
             holder.transactionFlag.setText(Label.getLabel("payment_history_failed_flag"));
+            holder.transactionFlag.setBackgroundResource(R.drawable.button_rounded_gray_background);
             holder.transactionFlag.setVisibility(View.VISIBLE);
         }else {
             holder.transactionAmount.setText(currencyFormatter.format(totalPaid));
-            holder.transactionFlag.setVisibility(View.GONE);
+        }
+
+        if(item.getPayload().getState().equals(PaymentHistoryItemPayload.STATE_PROCESSING)){
+            holder.transactionFlag.setText(Label.getLabel("payment_history_processing_flag"));
+            holder.transactionFlag.setBackgroundResource(R.drawable.button_rounded_yellow_background);
+            holder.transactionFlag.setVisibility(View.VISIBLE);
+        }
+
+        if(item.getPayload().getState().equals(PaymentHistoryItemPayload.STATE_ERRORED)){
+            holder.transactionFlag.setText(Label.getLabel("payment_history_errored_flag"));
+            holder.transactionFlag.setBackgroundResource(R.drawable.button_rounded_red_background);
+            holder.transactionFlag.setVisibility(View.VISIBLE);
+        }
+
+
+        double refunded = item.getPayload().getTotalRefunded();
+        if(refunded > 0){
+            if(refunded < totalPaid){
+                holder.transactionFlag.setText(Label.getLabel("payment_history_partial_refund_flag"));
+                holder.transactionFlag.setBackgroundResource(R.drawable.button_rounded_med_gray_background);
+            }else{
+                holder.transactionFlag.setText(Label.getLabel("payment_history_full_refund_flag"));
+                holder.transactionFlag.setBackgroundResource(R.drawable.button_rounded_dark_gray_background);
+            }
+            holder.transactionFlag.setVisibility(View.VISIBLE);
         }
 
 
@@ -99,12 +125,6 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
             }
         });
 
-        //Todo remove this... using it just to easily identify clover transactions in the list
-        if(isCloverDevice && item.getPayload().getMetadata().isExternallyProcessed() && item.getPayload().getExecution().equals(IntegratedPaymentPostModel.EXECUTION_CLOVER)){
-            holder.transactionAmount.setTextColor(ContextCompat.getColor(context, R.color.emerald));
-        }else{
-            holder.transactionAmount.setTextColor(ContextCompat.getColor(context, R.color.textview_default_textcolor));
-        }
     }
 
     @Override

@@ -13,9 +13,14 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentHistoryCallback;
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.payments.fragments.PaymentHistoryDetailFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
@@ -79,8 +84,8 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dismiss();
                 callback.showPaymentHistory(paymentsModel);
+                dismiss();
             }
         });
 
@@ -132,8 +137,14 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
     }
 
     private void processRefund(){
-        dismiss();
-        callback.startRefundProcess(historyItem, paymentsModel);
+        boolean isCloverPayment = historyItem.getPayload().getMetadata().isExternallyProcessed() && historyItem.getPayload().getExecution().equals(IntegratedPaymentPostModel.EXECUTION_CLOVER);
+        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
+        if(isCloverPayment && !isCloverDevice){
+            new CustomMessageToast(getContext(), Label.getLabel("payment_refund_clover_error"), CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
+        }else {
+            dismiss();
+            callback.startRefundProcess(historyItem, paymentsModel);
+        }
     }
 
 

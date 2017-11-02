@@ -115,7 +115,7 @@
         </activity>
         <activity
             android:name="com.carecloud.carepay.practice.clover.payments.CloverRefundActivity"
-            android:label="@string/clover_payment_activity"
+            android:label="@string/clover_refund_activity"
             android:theme="@style/Theme.AppCompat.Translucent"
             android:configChanges="orientation|screenSize">
             <intent-filter>

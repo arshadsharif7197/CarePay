@@ -78,6 +78,9 @@ public class PaymentHistoryItemPayload {
     @SerializedName("refund_requests")
     private List<String> refundRequests = new ArrayList<>();
 
+    @SerializedName("most_recent_refund_request")
+    private String lastRefundRequest;
+
     public double getAmount() {
         return amount;
     }
@@ -196,6 +199,14 @@ public class PaymentHistoryItemPayload {
 
     public void setRefundRequests(List<String> refundRequests) {
         this.refundRequests = refundRequests;
+    }
+
+    public String getLastRefundRequest() {
+        return lastRefundRequest;
+    }
+
+    public void setLastRefundRequest(String lastRefundRequest) {
+        this.lastRefundRequest = lastRefundRequest;
     }
 
 

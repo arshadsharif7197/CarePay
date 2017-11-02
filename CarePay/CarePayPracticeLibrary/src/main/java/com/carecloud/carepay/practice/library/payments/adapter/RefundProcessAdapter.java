@@ -195,6 +195,9 @@ public class RefundProcessAdapter extends RecyclerView.Adapter<RefundProcessAdap
     }
 
     private static String parseDescription(String description){
+        if(description == null){
+            return "";
+        }
         switch (description){
             case IntegratedPaymentLineItem.TYPE_COPAY:
                 return Label.getLabel("payment_history_item_copay");
