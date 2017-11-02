@@ -198,6 +198,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             @Override
             public void onClick(View view) {
                 callback.lookupChargeItem(paymentsModel.getPaymentPayload().getSimpleChargeItems(), PaymentDistributionFragment.this);
+                hideDialog();
             }
         };
         addButton.setOnClickListener(addItem);
@@ -232,6 +233,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             @Override
             public void onClick(View view) {
                 callback.showAmountEntry(PaymentDistributionFragment.this, null, null);
+                hideDialog();
             }
         });
 
@@ -306,11 +308,14 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
         if(balanceItems.isEmpty() && chargeItems.isEmpty()){
             emptyBalanceLayout.setVisibility(View.VISIBLE);
+            paymentTotal.setClickable(false);
         }else{
             if(balanceItems.isEmpty()){
                 balanceDetailsRecycler.setVisibility(View.GONE);
+                paymentTotal.setClickable(false);
             }else{
                 balanceDetailsRecycler.setVisibility(View.VISIBLE);
+                paymentTotal.setClickable(true);
             }
             emptyBalanceLayout.setVisibility(View.GONE);
         }
@@ -565,6 +570,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     @Override
     public void pickAmount(BalanceItemDTO balanceItem) {
         callback.showAmountEntry(this, balanceItem, null);
+        hideDialog();
     }
 
     @Override
@@ -578,6 +584,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
     @Override
     public void addNewCharge(double amount, SimpleChargeItem chargeItem){
+        showDialog();
         BalanceItemDTO balanceItemDTO = new BalanceItemDTO();
         balanceItemDTO.setNewCharge(true);
         balanceItemDTO.setId(chargeItem.getId());
@@ -600,12 +607,24 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     }
 
     @Override
+    public void onDismissEntryDialog() {
+        showDialog();
+    }
+
+    @Override
     public void addChargeItem(SimpleChargeItem chargeItem) {
         callback.showAmountEntry(this, null, chargeItem);
+        hideDialog();
+    }
+
+    @Override
+    public void onDismissAddItemFragment() {
+        showDialog();
     }
 
     @Override
     public void applyNewDistributionAmount(double amount) {
+        showDialog();
         paymentAmount = amount;
         chargesAmount = 0D;
         updatePaymentAmount();
@@ -623,6 +642,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
     @Override
     public void applyAmountToBalanceItem(double amount, BalanceItemDTO balanceItem){
+        showDialog();
         modifyLineItem(balanceItem, null, null, amount);
         setAdapter();
     }

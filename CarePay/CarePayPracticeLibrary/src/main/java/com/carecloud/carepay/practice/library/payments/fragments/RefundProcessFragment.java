@@ -172,7 +172,9 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
         for(PaymentHistoryLineItem lineItem : historyItem.getPayload().getLineItems()){
             if(lineItem.isProcessed()){
                 successfulAmount += lineItem.getAmount();
-                lineItems.add(lineItem);
+                if(lineItem.getRefundableBalance() > 0) {
+                    lineItems.add(lineItem);
+                }
             }
         }
         refundLineItems.addAll(lineItems);
@@ -216,12 +218,13 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
         intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, calcCurrentRefundAmount());
 
         Gson gson = new Gson();
-        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(getPaymentLineItems()));
-
+        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(getRefundItems()));
         intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSACTION_RESPONSE, gson.toJson(historyItem.getPayload().getTransactionResponse()));
+        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION, gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getRefundPayment()));
+        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_HISTORY_ITEM, gson.toJson(historyItem));
 
-        startActivity(intent);
-
+        getActivity().startActivityForResult(intent, CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE);
+        dismiss();
     }
 
     private void processStandardRefund(){
@@ -250,9 +253,9 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
             PaymentHistoryItemPayload refundPayload = refundPaymentModel.getPaymentPayload().getPatientRefund();
             historyItem.setPayload(refundPayload);
 
-            new CustomMessageToast(getContext(), "Refund Success", CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
+            new CustomMessageToast(getContext(), Label.getLabel("payment_refund_success"), CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
             dismiss();
-            callback.displayHistoryItemDetails(historyItem, paymentsModel);
+            callback.completeRefundProcess(historyItem, paymentsModel);
         }
 
         @Override
@@ -279,7 +282,7 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
         List<RefundLineItem> refundItems = new ArrayList<>();
         for(PaymentHistoryLineItem lineItem : refundLineItems){
             RefundLineItem refundItem = new RefundLineItem();
-            refundItem.setAmount(lineItem.getAmount());
+            refundItem.setAmount(lineItem.getRefundableBalance());//TODO handle partial refund
             refundItem.setDescription(lineItem.getDescription());
             refundItem.setLineItemId(lineItem.getLineItemId());
 
