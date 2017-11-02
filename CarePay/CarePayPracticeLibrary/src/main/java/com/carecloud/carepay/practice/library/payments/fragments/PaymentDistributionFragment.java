@@ -749,7 +749,12 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             paymentLineItem.setAmount(overPaymentAmount);
             paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_UNAPPLIED);
             paymentLineItem.setDescription("Unapplied Amount");
-
+            if(defaultProvider != null) {
+                paymentLineItem.setProviderID(defaultProvider.getGuid());
+            }
+            if(defaultLocation != null) {
+                paymentLineItem.setLocationID(defaultLocation.getGuid());
+            }
             postModel.addLineItem(paymentLineItem);
         }
 
