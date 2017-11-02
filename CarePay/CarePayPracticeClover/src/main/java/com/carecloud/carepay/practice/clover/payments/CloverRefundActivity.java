@@ -419,27 +419,6 @@ public class CloverRefundActivity extends BaseActivity {
 //endregion
 
 
-//    private List<LineItem> getLineItems() {
-//        List<LineItem> lineItems = new LinkedList<>();
-//        for (PaymentLineItem paymentLineItem : refundLineItems) {
-//            LineItem item = new LineItem();
-//            item.setName(paymentLineItem.getDescription());
-//            item.setPrice(Math.round(paymentLineItem.getAmount() * -100D));
-//            lineItems.add(item);
-//        }
-//        return lineItems;
-//    }
-//
-//    private List<Refund> getRefundItems(){
-//        List<Refund> refunds = new LinkedList<>();
-//        for(PaymentLineItem paymentLineItem : refundLineItems){
-//            Refund refund = new Refund();
-//            refund.setAmount(Math.round(paymentLineItem.getAmount() * 100D));
-//            refunds.add(refund);
-//        }
-//        return refunds;
-//    }
-
     private List<Credit> getCreditItems(){
         List<Credit> credits = new LinkedList<>();
         for(RefundLineItem refundlineItem : refundLineItems){
