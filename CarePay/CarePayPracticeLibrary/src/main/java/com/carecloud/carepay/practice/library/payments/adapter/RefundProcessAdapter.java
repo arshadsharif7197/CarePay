@@ -80,31 +80,35 @@ public class RefundProcessAdapter extends RecyclerView.Adapter<RefundProcessAdap
         holder.description.setText(parseDescription(lineItem.getDescription()));
 
         LocationDTO locationDTO = locationMap.get(lineItem.getLocationID());
-        holder.location.setText(locationDTO.getName());
+        if(locationDTO != null) {
+            holder.location.setText(locationDTO.getName());
+        }
 
         ProviderDTO providerDTO = providerMap.get(lineItem.getProviderID());
-        holder.provider.setText(providerDTO.getName());
-        holder.providerInitials.setText(StringUtil.getShortName(providerDTO.getName()));
+        if(providerDTO != null) {
+            holder.provider.setText(providerDTO.getName());
+            holder.providerInitials.setText(StringUtil.getShortName(providerDTO.getName()));
 
-        int size = context.getResources().getDimensionPixelSize(R.dimen.payment_details_dialog_icon_size);
-        Picasso.with(context)
-                .load(providerDTO.getPhoto())
-                .resize(size, size)
-                .centerCrop()
-                .transform(new CircleImageTransform())
-                .into(holder.providerImage, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        holder.providerImage.setVisibility(View.VISIBLE);
-                        holder.providerInitials.setVisibility(View.GONE);
-                    }
+            int size = context.getResources().getDimensionPixelSize(R.dimen.payment_details_dialog_icon_size);
+            Picasso.with(context)
+                    .load(providerDTO.getPhoto())
+                    .resize(size, size)
+                    .centerCrop()
+                    .transform(new CircleImageTransform())
+                    .into(holder.providerImage, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            holder.providerImage.setVisibility(View.VISIBLE);
+                            holder.providerInitials.setVisibility(View.GONE);
+                        }
 
-                    @Override
-                    public void onError() {
-                        holder.providerInitials.setVisibility(View.VISIBLE);
-                        holder.providerImage.setVisibility(View.GONE);
-                    }
-                });
+                        @Override
+                        public void onError() {
+                            holder.providerInitials.setVisibility(View.VISIBLE);
+                            holder.providerImage.setVisibility(View.GONE);
+                        }
+                    });
+        }
 
         boolean isGroupHeader = false;
         boolean isGrouped = false;
