@@ -649,7 +649,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
             int year = Integer.parseInt(selectedDate[1]);
             datePickerDialogFragment = SimpleDatePickerDialogFragment.getInstance(year, month - 1);
         } else {
-            DateUtil instance = DateUtil.getInstance();
+            DateUtil instance = DateUtil.getInstance().setToCurrent();
             datePickerDialogFragment = SimpleDatePickerDialogFragment.getInstance(instance.getYear(),
                     instance.getMonth());
         }
