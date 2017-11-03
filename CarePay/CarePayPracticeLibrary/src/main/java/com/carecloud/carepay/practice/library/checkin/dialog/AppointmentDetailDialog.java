@@ -2,9 +2,13 @@ package com.carecloud.carepay.practice.library.checkin.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +25,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.adapters.CheckedInAppointmentAdapter;
 import com.carecloud.carepay.practice.library.checkin.adapters.PagePickerAdapter;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
+import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerWindow;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -33,6 +38,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.CheckinStatusDTO;
 import com.carecloud.carepaylibray.appointments.models.QueueDTO;
 import com.carecloud.carepaylibray.appointments.models.QueueStatusPayloadDTO;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
@@ -58,7 +64,7 @@ import java.util.Vector;
 /**
  * Created by sudhir_pingale on 10/26/2016
  */
-public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter.PagePickerCallback {
+public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter.PagePickerCallback, PaymentLineItemsListAdapter.PaymentLineItemCallback {
 
     private static final String TAG = "AppointmentDetailDialog";
 
@@ -107,6 +113,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
     private SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
 
     private Handler handler;
+    private PaymentsModel paymentDetailsModel;
 
     /**
      * Constructor.
@@ -601,7 +608,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         List<PendingBalanceDTO> pendingBalances = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances();
         if(!pendingBalances.isEmpty()){
             patientBalancesLayout.setVisibility(View.VISIBLE);
-            PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(getContext(), getAllPendingBalancePayloads(pendingBalances), null);
+            PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(getContext(), getAllPendingBalancePayloads(pendingBalances), this);
             patientBalancesRecycler.setAdapter(adapter);
         }
     }
@@ -705,6 +712,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                 sessionHandler.hideProgressDialog();
                 PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
                 if(showInline){
+                    paymentDetailsModel = patientDetails;
                     updatePatientBalanceStatus(patientDetails);
                     pageButton.setEnabled(patientDetails.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getNotificationOptions().hasPushNotification());
                     return;
@@ -766,5 +774,27 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
             sessionHandler.showErrorNotification(Label.getLabel("push_notification_failed"));
         }
     };
+
+    @Override
+    public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
+        String tag = PaymentDetailsFragmentDialog.class.getSimpleName();
+        FragmentManager fragmentManager = ((BaseActivity) context).getSupportFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        Fragment prev = fragmentManager.findFragmentByTag(tag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
+                .newInstance( paymentDetailsModel, paymentLineItem, true);
+        dialog.addOnDismissListener(new OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                show();
+            }
+        });
+        dialog.show(ft, tag);
+        hide();
+    }
+
 
 }
