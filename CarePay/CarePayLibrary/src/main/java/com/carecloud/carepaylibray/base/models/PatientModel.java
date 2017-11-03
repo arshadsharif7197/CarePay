@@ -68,7 +68,7 @@ public class PatientModel {
     @Expose
     private String preferredName;
 
-    @SerializedName(value = "email_address")
+    @SerializedName("email_address")
     @Expose
     private String emailAddress;
 

@@ -78,10 +78,9 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     private View cityAndStateLayoutContainer;
     private EmergencyContactInterface callback;
 
-
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void attachCallback(Context context) {
+        super.attachCallback(context);
         try {
             if (context instanceof DemographicsView) {
                 callback = ((DemographicsView) context).getPresenter();
@@ -90,12 +89,6 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             throw new ClassCastException(context.toString()
                     + " must implement EmergencyContactInterface");
         }
-    }
-
-    @Override
-    public void onDetach() {
-        callback = null;
-        super.onDetach();
     }
 
     @Override
@@ -785,9 +778,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             if (phoneLayout.getVisibility() == View.VISIBLE &&
                     !StringUtil.isNullOrEmpty(secondaryPhoneNumber.getText().toString().trim()) &&
                     !ValidationHelper.isValidString(secondaryPhoneNumber.getText().toString().trim(),
-                            ValidationHelper.PHONE_NUMBER_PATTERN)
-                    && dataModel.getDemographic().getPersonalDetails().getProperties()
-                    .getSecondaryPhoneNumber().isRequired()) {
+                            ValidationHelper.PHONE_NUMBER_PATTERN)) {
                 setFieldError(phoneLayout, Label.getLabel("demographics_phone_number_validation_msg"));
                 return false;
             }
