@@ -12,9 +12,17 @@ import java.util.List;
  * Model for Demographics payload
  */
 public class DemographicPayloadDTO {
+    @SerializedName("address")
+    @Expose
+    private DemographicAddressPayloadDTO address = new DemographicAddressPayloadDTO();
+
     @SerializedName("personal_details")
     @Expose
     private PatientModel personalDetails = new PatientModel();
+
+    @SerializedName("emergency_contact")
+    @Expose
+    private PatientModel emergencyContact;
 
     @SerializedName("insurances")
     @Expose
@@ -23,10 +31,6 @@ public class DemographicPayloadDTO {
     @SerializedName("identity_document")
     @Expose
     private DemographicIdDocPayloadDTO idDocument = new DemographicIdDocPayloadDTO();
-
-    @SerializedName("address")
-    @Expose
-    private DemographicAddressPayloadDTO address = new DemographicAddressPayloadDTO();
 
     @SerializedName("notifications")
     @Expose
@@ -71,6 +75,7 @@ public class DemographicPayloadDTO {
 
     /**
      * Setter
+     *
      * @param idDocument The id documents
      */
     public void setIdDocument(DemographicIdDocPayloadDTO idDocument) {
@@ -97,5 +102,13 @@ public class DemographicPayloadDTO {
 
     public void setNotificationOptions(NotificationOptions notificationOptions) {
         this.notificationOptions = notificationOptions;
+    }
+
+    public PatientModel getEmergencyContact() {
+        return emergencyContact;
+    }
+
+    public void setEmergencyContact(PatientModel emergencyContact) {
+        this.emergencyContact = emergencyContact;
     }
 }

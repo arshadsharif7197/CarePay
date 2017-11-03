@@ -17,21 +17,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.demographics.EmergencyContactInterface;
+import com.carecloud.carepaylibray.demographics.EmergencyContactInterfaceFragment;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicEmergencyContactSection;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsPersonalSection;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -47,13 +48,14 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragment {
+public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragment
+        implements EmergencyContactInterfaceFragment {
 
-    private DemographicsSettingsDTO demographicsSettingsDTO;
+    private DemographicDTO demographicsSettingsDTO;
     private DemographicDataModel dataModel;
 
     private View nextButton;
-    private DemographicsSettingsFragmentListener callback;
+    private EmergencyContactInterface callback;
 
     private DemographicsOption selectedPreferredLanguage = new DemographicsOption();
     private DemographicsOption selectedDriverLicenseState = new DemographicsOption();
@@ -88,21 +90,29 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         return new DemographicsExpandedFragment();
     }
 
+
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (DemographicsSettingsFragmentListener) context;
+            callback = (EmergencyContactInterface) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement DemographicsSettingsFragmentListener");
+                    + " must implement EmergencyContactInterface");
         }
+    }
+
+    @Override
+    public void onDetach() {
+        callback = null;
+        super.onDetach();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
+        demographicsSettingsDTO = (DemographicDTO) callback.getDto();
         dataModel = demographicsSettingsDTO.getMetadata().getNewDataModel();
     }
 
@@ -307,23 +317,9 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 personalInfoSection.getProperties().getMaritalStatus().isRequired()
                         ? null : maritalStatusOptional);
 
+        setUpEmergencyContact(view, demographicPayload.getEmergencyContact());
+
         setUpEmployer(view, demographicPayload, personalInfoSection);
-
-        View emergencyContactRelationshipLayout = view.findViewById(R.id.emergencyContactRelationshipDemographicsLayout);
-        TextView chooseEmergencyContactRelationship = (TextView) view
-                .findViewById(R.id.chooseEmergencyContactRelationship);
-        View emergencyContactRelationshipOptional = view.findViewById(R.id.emergencyContactRelationshipOptional);
-        setVisibility(emergencyContactRelationshipLayout, false);//todo re-enable this when ready
-        chooseEmergencyContactRelationship.setOnClickListener(
-                getSelectOptionsListener(personalInfoSection.getProperties().getEmergencyContactRelationship().getOptions(),
-                        getDefaultOnOptionsSelectedListener(chooseEmergencyContactRelationship,
-                                selectedEmergencyContactRelationship, emergencyContactRelationshipOptional),
-                        Label.getLabel("demographics_emergency_contact_relationship")));
-        String emergencyContactRelationship = demographicPayload.getPersonalDetails().getEmergencyContactRelationship();
-        initSelectableInput(chooseEmergencyContactRelationship, selectedEmergencyContactRelationship,
-                emergencyContactRelationship, personalInfoSection.getProperties()
-                        .getEmergencyContactRelationship().isRequired() ? null : emergencyContactRelationshipOptional);
-
 
         View referralSourceLayout = view.findViewById(R.id.referralSourceDemographicsLayout);
         TextView chooseReferralSource = (TextView) view.findViewById(R.id.chooseReferralSource);
@@ -339,6 +335,28 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 personalInfoSection.getProperties().getReferralSource().isRequired()
                         ? null : referralSourceOptional);
 
+    }
+
+    private void setUpEmergencyContact(View view, PatientModel emergencyContact) {
+        DemographicEmergencyContactSection emergencyContactSection = dataModel.getDemographic().getEmergencyContact();
+        TextInputLayout emergencyContactInputLayout = (TextInputLayout) view.findViewById(R.id.emergencyContactInputLayout);
+        emergencyContactInputLayout.setVisibility(emergencyContactSection.isDisplay() ? View.VISIBLE : View.GONE);
+        EditText emergencyContactEditText = (EditText) view.findViewById(R.id.emergencyContactEditText);
+        emergencyContactEditText.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(emergencyContactInputLayout, null));
+        if (emergencyContact != null) {
+            emergencyContactEditText.setText(emergencyContact.getFullName());
+        }
+        emergencyContactEditText.getOnFocusChangeListener().onFocusChange(emergencyContactEditText,
+                !StringUtil.isNullOrEmpty(emergencyContactEditText.getText().toString().trim()));
+        view.findViewById(R.id.emergencyContactOptionalLabel)
+                .setVisibility(emergencyContactSection.isRequired() ? View.GONE : View.VISIBLE);
+        emergencyContactEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.showAddEditEmergencyContactDialog();
+            }
+        });
     }
 
     private void setUpEmployer(final View view, DemographicPayloadDTO demographicPayload,
@@ -720,7 +738,6 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         }
     }
 
-
     private WorkflowServiceCallback updateDemographicsCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -731,8 +748,8 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
 
-            DemographicsSettingsDTO updatedModel = DtoHelper
-                    .getConvertedDTO(DemographicsSettingsDTO.class, workflowDTO);
+            DemographicDTO updatedModel = DtoHelper
+                    .getConvertedDTO(DemographicDTO.class, workflowDTO);
             demographicsSettingsDTO.getPayload().getDemographics().getPayload()
                     .setPersonalDetails(updatedModel.getPayload().getDemographics()
                             .getPayload().getPersonalDetails());
@@ -790,5 +807,10 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
 
 
         }.execute(zipCode);
+    }
+
+    @Override
+    public void updateEmergencyContact(PatientModel emergencyContact) {
+        setUpEmergencyContact(getView(), emergencyContact);
     }
 }
