@@ -127,6 +127,7 @@ public class CarePayConstants {
 
     public static final String CLOVER_QUEUE_PAYMENT_TRANSITION = "clover_queue_payment_transition";
     public static final int PAYMENT_RETRY_PENDING_RESULT_CODE = 0x777;
+    public static final int REFUND_RETRY_PENDING_RESULT_CODE = 0x888;
 
     //Shared Preference Keys
     public static final String KEY_PRACTICE_PATIENT_IDS = "practice_patient_ids";
