@@ -3,11 +3,11 @@ package com.carecloud.carepay.practice.library.payments;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -326,14 +326,10 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 final String jsonPayload = data.getStringExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA);
                 if (jsonPayload != null) {
                     if(isRefund){
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                PaymentHistoryItem historyItem = DtoHelper.getConvertedDTO(PaymentHistoryItem.class, jsonPayload);
-                                completeRefundProcess(historyItem, paymentsModel);
+                        Log.d("Process Refund Success", jsonPayload);
+                        PaymentHistoryItem historyItem = DtoHelper.getConvertedDTO(PaymentHistoryItem.class, jsonPayload);
+                        completeRefundProcess(historyItem, paymentsModel);
 
-                            }
-                        }, 500);
                     }else {
                         Gson gson = new Gson();
                         WorkflowDTO workflowDTO = gson.fromJson(jsonPayload, WorkflowDTO.class);

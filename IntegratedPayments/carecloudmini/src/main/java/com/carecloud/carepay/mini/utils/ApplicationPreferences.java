@@ -19,6 +19,7 @@ public class ApplicationPreferences {
     private static final String KEY_IMAGE_STYLE = "key_icon_style";
     private static final String KEY_PRACTICE_INFO = "key_practice_info";
     private static final String KEY_DEVICE_ID = "key_device_id";
+    private static final String KEY_SUPPORT_MID = "key_support_mid";
 
     private SharedPreferences sharedPreferences;
 
@@ -81,6 +82,14 @@ public class ApplicationPreferences {
 
     public void setImageStyle(@Defs.ImageStyles int imageStyle){
         sharedPreferences.edit().putInt(KEY_IMAGE_STYLE, imageStyle).apply();
+    }
+
+    public String getSupportMid(){
+        return sharedPreferences.getString(KEY_SUPPORT_MID, "");
+    }
+
+    public void setSupportMid(String supportMid){
+        sharedPreferences.edit().putString(KEY_SUPPORT_MID, supportMid).apply();
     }
 
     /**
