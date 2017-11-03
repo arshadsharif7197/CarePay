@@ -22,9 +22,9 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.DemographicMetadataDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.transitions.DemographicTransitionsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -40,7 +40,7 @@ import java.util.Map;
  */
 public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
 
-    private DemographicsSettingsDTO demographicsSettingsDTO;
+    private DemographicDTO demographicsSettingsDTO;
     private DemographicsSettingsFragmentListener callback;
 
     private EditText currentPasswordEditText = null;
@@ -71,7 +71,7 @@ public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
+        demographicsSettingsDTO = (DemographicDTO) callback.getDto();
     }
 
     @Override

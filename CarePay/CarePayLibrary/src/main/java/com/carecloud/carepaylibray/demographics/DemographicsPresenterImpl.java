@@ -2,20 +2,25 @@ package com.carecloud.carepaylibray.demographics;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.EmergencyContactFragment;
 import com.carecloud.carepaylibray.demographics.fragments.FormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment;
@@ -23,6 +28,7 @@ import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.IntakeFormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearchFragment;
 import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
@@ -409,5 +415,37 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
     protected boolean shouldPreventBackNav() {
         return false;
+    }
+
+    @Override
+    public DTO getDto() {
+        return demographicDTO;
+    }
+
+    @Override
+    public void setToolbar(Toolbar toolbar) {
+        ((BaseActivity) demographicsView).setToolbar(toolbar);
+    }
+
+    @Override
+    public void showAddEditEmergencyContactDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        EmergencyContactFragment fragment = EmergencyContactFragment.newInstance();
+        if (isPatientMode) {
+            fragment.show(transaction, fragment.getClass().getCanonicalName());
+        } else {
+            transaction.add(R.id.root_layout, fragment, fragment.getClass().getCanonicalName());
+            transaction.addToBackStack(null);
+            transaction.commitAllowingStateLoss();
+        }
+    }
+
+    @Override
+    public void updateEmergencyContact(PatientModel emergencyContact) {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
+        if (fragment instanceof EmergencyContactInterfaceFragment) {
+            ((EmergencyContactInterfaceFragment) fragment).updateEmergencyContact(emergencyContact);
+        }
     }
 }

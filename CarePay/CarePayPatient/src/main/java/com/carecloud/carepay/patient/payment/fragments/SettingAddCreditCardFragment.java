@@ -17,7 +17,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.payments.fragments.BaseAddCreditCardFragment;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment implements BaseAddCreditCardFragment.IAuthoriseCreditCardResponse {
 
-    private DemographicsSettingsDTO demographicsSettingsDTO = null;
+    private DemographicDTO demographicsSettingsDTO = null;
     private DemographicsSettingsFragmentListener callback;
 
     @Override
@@ -46,7 +46,7 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
+        demographicsSettingsDTO = (DemographicDTO) callback.getDto();
         merchantServicesList = demographicsSettingsDTO.getPayload().getMerchantServices();
     }
 
@@ -57,7 +57,7 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         title.setText(Label.getLabel("new_credit_card_heading"));
         nextButton.setText(Label.getLabel("credit_card_add_new"));
         nextButton.setBackgroundResource(R.drawable.bg_green_selector);
@@ -78,8 +78,8 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             Gson gson = new Gson();
-            DemographicsSettingsDTO removeCreditCardResponseDTO = gson.fromJson(workflowDTO.toString(),
-                    DemographicsSettingsDTO.class);
+            DemographicDTO removeCreditCardResponseDTO = gson.fromJson(workflowDTO.toString(),
+                    DemographicDTO.class);
             demographicsSettingsDTO.getPayload().setPatientCreditCards(removeCreditCardResponseDTO.getPayload().getPatientCreditCards());
             callback.onCreditCardOperation(demographicsSettingsDTO);
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
