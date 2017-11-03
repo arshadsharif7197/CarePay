@@ -11,15 +11,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include layout="@layout/toolbar_registration_titleonly"
-                 android:id="@+id/registration_toolbar" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical">
+            <include layout="@layout/toolbar_registration_titleonly"
+                     android:id="@+id/registration_toolbar" />
+        </FrameLayout>
 
         <ImageView
             android:id="@+id/button_exit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/close_blue"
-            android:layout_margin="@dimen/dp_20"
+            android:padding="@dimen/dp_30"
             android:layout_gravity="top|start"/>
 
         <com.electapps.fontviews.FontButton
@@ -123,18 +128,20 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dp_130"
             android:orientation="horizontal"
             android:layout_marginTop="@dimen/dp_20">
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <com.carecloud.carepay.mini.views.CarePayTextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
                     android:lines="1"
                     android:maxLines="1"
                     android:textColor="@color/whiteText"
@@ -144,8 +151,9 @@
 
                 <com.carecloud.carepay.mini.views.CarePayTextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_20"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
                     android:lines="1"
                     android:maxLines="1"
                     android:textColor="@color/whiteText"
@@ -155,8 +163,9 @@
 
                 <com.carecloud.carepay.mini.views.CarePayTextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_20"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
                     android:lines="1"
                     android:maxLines="1"
                     android:textColor="@color/whiteText"
@@ -175,12 +184,13 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
 
@@ -225,8 +235,8 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_20"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
 
@@ -271,8 +281,8 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_20"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
 
