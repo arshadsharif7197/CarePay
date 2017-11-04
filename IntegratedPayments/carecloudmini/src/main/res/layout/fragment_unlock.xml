@@ -11,24 +11,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include layout="@layout/toolbar_registration_titleonly"
-                 android:id="@+id/registration_toolbar"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical">
+
+            <include layout="@layout/toolbar_registration_titleonly"
+                     android:id="@+id/registration_toolbar"/>
+
+        </FrameLayout>
 
         <ImageView
             android:id="@+id/button_exit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/close_blue"
-            android:layout_margin="@dimen/dp_20"
+            android:padding="@dimen/dp_30"
             android:layout_gravity="top|start"/>
-
-        <!--<com.electapps.fontviews.FontButton-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginEnd="@dimen/dp_20"-->
-            <!--style="@style/ButtonRoundedOutlineSmall"-->
-            <!--android:text="@string/settings_sign_out"-->
-            <!--android:layout_gravity="center_vertical|end"-->
-            <!--app:customFont="gotham_rounded_medium.otf"/>-->
 
     </FrameLayout>
 

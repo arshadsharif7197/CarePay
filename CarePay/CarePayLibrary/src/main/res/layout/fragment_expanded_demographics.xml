@@ -395,49 +395,40 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/emergencyContactRelationshipDemographicsLayout"
+    <FrameLayout
+        android:id="@+id/emergencyContactContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:clickable="true">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
-            android:orientation="horizontal">
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+            android:id="@+id/emergencyContactInputLayout"
+            style="@style/TextInputLayoutStyle"
+            android:clickable="false"
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                style="@style/DemographicsDocsLabelStyle"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                android:id="@+id/emergencyContactEditText"
+                style="@style/EditTextStyle"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:drawableEnd="@drawable/icon_drop_down"
+                android:editable="false"
+                android:focusableInTouchMode="false"
+                android:imeOptions="actionNext"
                 app:customAssetFont="proxima_nova_regular"
-                breeze:textKey="demographics_emergency_contact_relationship"
-                tools:text="EC Relationship" />
+                breeze:hintKey="demographics_emergency_contact_hint" />
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/emergencyContactRelationshipOptional"
-                style="@style/DemographicsOptionalLabelStyle"
-                app:customAssetFont="proxima_nova_semi_bold"
-                breeze:textKey="demographics_details_optional_hint"
-                tools:text="Optional" />
+        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/chooseEmergencyContactRelationship"
-                style="@style/DemographicsDocsClickableTextStyle"
-                android:layout_width="wrap_content"
-                android:layout_marginStart="@dimen/dimen_10dp"
-                android:gravity="end"
-                app:customAssetFont="proxima_nova_regular"
-                tools:text="Choose" />
-
-        </LinearLayout>
-
-        <View
-            style="@style/Consent_Form_View_Style"
-            android:layout_width="match_parent" />
-
-    </LinearLayout>
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/emergencyContactOptionalLabel"
+            style="@style/SignupRequireHintStyle"
+            android:textColor="@color/cadet_gray"
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="demographics_details_optional_hint" />
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/referralSourceDemographicsLayout"

@@ -18,8 +18,8 @@ import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSetting
 import com.carecloud.carepay.patient.payment.adapters.CreditCardListAdapter;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.List;
@@ -31,12 +31,12 @@ public class CreditCardListFragment extends BaseFragment implements CreditCardLi
 
     private RecyclerView creditCardsListRecyclerView;
     private LinearLayout noCreditCardsView;
-    private DemographicsSettingsDTO demographicsSettingsDTO;
+    private DemographicDTO demographicsSettingsDTO;
 
     private DemographicsSettingsFragmentListener callback;
 
 
-    public static CreditCardListFragment newInstance(){
+    public static CreditCardListFragment newInstance() {
         return new CreditCardListFragment();
     }
 
@@ -57,7 +57,7 @@ public class CreditCardListFragment extends BaseFragment implements CreditCardLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
+        demographicsSettingsDTO = (DemographicDTO) callback.getDto();
     }
 
     @Override
@@ -67,7 +67,7 @@ public class CreditCardListFragment extends BaseFragment implements CreditCardLi
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(Label.getLabel("credit_cards_label"));
@@ -100,7 +100,7 @@ public class CreditCardListFragment extends BaseFragment implements CreditCardLi
      *
      * @param demographicsSettingsDTO the demographics settings dto
      */
-    public void loadCreditCardsList(DemographicsSettingsDTO demographicsSettingsDTO) {
+    public void loadCreditCardsList(DemographicDTO demographicsSettingsDTO) {
         if (demographicsSettingsDTO != null) {
             List<DemographicsSettingsCreditCardsPayloadDTO> creditCardList = demographicsSettingsDTO.getPayload().getPatientCreditCards();
 

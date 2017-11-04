@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start|top"
-        android:layout_margin="@dimen/dp_30"
+        android:padding="@dimen/dp_30"
         android:src="@drawable/settings_icon"
         android:scaleType="centerInside"
         android:contentDescription="@string/content_settings_button"/>
