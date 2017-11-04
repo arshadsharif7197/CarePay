@@ -21,6 +21,7 @@ import com.carecloud.carepaylibray.demographics.EmergencyContactInterfaceFragmen
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicEmergencyContactSection;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicEmploymentInfo;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsPersonalSection;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
@@ -329,22 +330,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         String maritalStatus = demographicPayload.getPersonalDetails().getMaritalStatus();
         initSelectableInput(chooseMaritalStatus, selectedMaritalStatus, maritalStatus, personalInfoSection.getProperties().getMaritalStatus().isRequired() ? null : maritalStatusOptional);
 
-
-        View employmentStatusLayout = view.findViewById(R.id.employmentStatusDemographicsLayout);
-        TextView chooseEmploymentStatus = (TextView) view.findViewById(R.id.chooseEmploymentStatus);
-        View employmentStatusOptional = view.findViewById(R.id.employmentStatusOptional);
-        setVisibility(employmentStatusLayout, personalInfoSection.getProperties().getEmploymentStatus().isDisplayed());
-        chooseEmploymentStatus.setOnClickListener(
-                getSelectOptionsListener(personalInfoSection.getProperties().getEmploymentStatus().getOptions(),
-                        getDefaultOnOptionsSelectedListener(chooseEmploymentStatus, selectedEmploymentStatus, employmentStatusOptional),
-                        Label.getLabel("demographics_employment_status")));
-        String employmentStatus = demographicPayload.getPersonalDetails().getEmploymentStatus();
-        initSelectableInput(chooseEmploymentStatus, selectedEmploymentStatus, employmentStatus,
-                personalInfoSection.getProperties().getEmploymentStatus().isRequired() ? null : employmentStatusOptional);
-
         setUpEmergencyContact(view, demographicPayload.getEmergencyContact());
-        setUpEmployer(view, demographicPayload, personalInfoSection);
-
+        setUpEmployer(view, demographicPayload, dataModel.getDemographic().getEmploymentInfo());
 
         View referralSourceLayout = view.findViewById(R.id.referralSourceDemographicsLayout);
         TextView chooseReferralSource = (TextView) view.findViewById(R.id.chooseReferralSource);
@@ -381,14 +368,15 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         });
     }
 
-    private void setUpEmployer(final View view, DemographicPayloadDTO demographicPayload, DemographicsPersonalSection personalInfoSection) {
-        boolean isEmploymentStuffVisible = personalInfoSection.getProperties().getEmploymentStatus().isDisplayed();
+    private void setUpEmployer(final View view, DemographicPayloadDTO demographicPayload,
+                               DemographicEmploymentInfo employmentInfo) {
+        boolean isEmploymentStuffVisible = employmentInfo.getProperties().getEmploymentStatus().isDisplayed();
         if (isEmploymentStuffVisible) {
             final TextView chooseEmploymentStatus = (TextView) view.findViewById(R.id.chooseEmploymentStatus);
             final View employmentStatusOptional = view.findViewById(R.id.employmentStatusOptional);
 
             chooseEmploymentStatus.setOnClickListener(
-                    getSelectOptionsListener(personalInfoSection.getProperties().getEmploymentStatus().getOptions(),
+                    getSelectOptionsListener(employmentInfo.getProperties().getEmploymentStatus().getOptions(),
                             new OnOptionSelectedListener() {
                                 @Override
                                 public void onOptionSelected(DemographicsOption option) {
@@ -409,13 +397,13 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
             String employmentStatus = demographicPayload.getPersonalDetails().getEmploymentStatus();
             initSelectableInput(chooseEmploymentStatus, selectedEmploymentStatus, employmentStatus,
-                    personalInfoSection.getProperties().getEmploymentStatus().isRequired()
+                    employmentInfo.getProperties().getEmploymentStatus().isRequired()
                             ? null : employmentStatusOptional);
             if (employmentStatus != null) {
                 showEmployerFields = employmentStatus.toLowerCase().equals("employed")
                         || employmentStatus.toLowerCase().equals("part time");
             }
-            if (!personalInfoSection.getProperties().getEmploymentStatus().isRequired()) {
+            if (!employmentInfo.getProperties().getEmploymentStatus().isRequired()) {
                 view.findViewById(R.id.employmentInfoOptionalTextView).setVisibility(View.VISIBLE);
             }
         } else {
@@ -433,7 +421,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         cityAndStateLayoutContainer = view.findViewById(R.id.cityAndStateLayoutContainer);
         employerNameEditText = (EditText) view.findViewById(R.id.employerNameEditText);
 
-        boolean isEmployerStuffVisible = personalInfoSection.getProperties().getEmployer().isDisplayed();
+        boolean isEmployerStuffVisible = employmentInfo.getProperties().getEmployer().isDisplayed();
         employerNameEditText = (EditText) view.findViewById(R.id.employerNameEditText);
         if (isEmployerStuffVisible) {
 
@@ -754,16 +742,16 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                     && StringUtil.isNullOrEmpty(selectedMaritalStatus.getName())) {
                 return false;
             }
-            if (dataModel.getDemographic().getPersonalDetails().getProperties().getEmploymentStatus().isRequired()
+            if (dataModel.getDemographic().getEmploymentInfo().getProperties().getEmploymentStatus().isRequired()
                     && StringUtil.isNullOrEmpty(selectedEmploymentStatus.getName())) {
                 return false;
             }
-            if (dataModel.getDemographic().getPersonalDetails().getProperties().getEmployer().isRequired()
+            if (dataModel.getDemographic().getEmploymentInfo().getProperties().getEmployer().isRequired()
                     && StringUtil.isNullOrEmpty(selectedEmployer.getName()) && showEmployerFields) {
                 return false;
             }
-            if (dataModel.getDemographic().getPersonalDetails().getProperties()
-                    .getEmergencyContactRelationship().isRequired()
+            if (dataModel.getDemographic().getEmergencyContact().getProperties()
+                    .getRelationshipType().isRequired()
                     && StringUtil.isNullOrEmpty(selectedEmergencyContactRelationship.getName())) {
                 return false;
             }

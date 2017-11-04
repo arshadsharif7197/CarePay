@@ -99,18 +99,6 @@ public class DemographicsPersonalSection {
         @Expose
         private DemographicsField maritalStatus = new DemographicsField();
 
-        @SerializedName("employment_status")
-        @Expose
-        private DemographicsField employmentStatus = new DemographicsField();
-
-        @SerializedName("employer")
-        @Expose
-        private DemographicsField employer = new DemographicsField();
-
-        @SerializedName("ec_relationship_type")
-        @Expose
-        private DemographicsField emergencyContactRelationship = new DemographicsField();
-
         @SerializedName("referral_source")
         @Expose
         private DemographicsField referralSource = new DemographicsField();
@@ -266,30 +254,6 @@ public class DemographicsPersonalSection {
 
         public void setMaritalStatus(DemographicsField maritalStatus) {
             this.maritalStatus = maritalStatus;
-        }
-
-        public DemographicsField getEmploymentStatus() {
-            return employmentStatus;
-        }
-
-        public void setEmploymentStatus(DemographicsField employmentStatus) {
-            this.employmentStatus = employmentStatus;
-        }
-
-        public DemographicsField getEmployer() {
-            return employer;
-        }
-
-        public void setEmployer(DemographicsField employer) {
-            this.employer = employer;
-        }
-
-        public DemographicsField getEmergencyContactRelationship() {
-            return emergencyContactRelationship;
-        }
-
-        public void setEmergencyContactRelationship(DemographicsField emergencyContactRelationship) {
-            this.emergencyContactRelationship = emergencyContactRelationship;
         }
 
         public DemographicsField getReferralSource() {
