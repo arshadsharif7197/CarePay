@@ -9,8 +9,10 @@ import android.os.IInterface;
 import android.os.RemoteException;
 import android.util.Log;
 
+import com.carecloud.carepay.practice.clover.CloverQueueUploadService;
 import com.carecloud.carepay.practice.clover.R;
 import com.carecloud.carepay.practice.clover.models.CloverPaymentDTO;
+import com.carecloud.carepay.practice.clover.models.CloverQueuePaymentRecord;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.RestCallService;
 import com.carecloud.carepay.service.library.RestCallServiceHelper;
@@ -27,6 +29,8 @@ import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItemPay
 import com.carecloud.carepaylibray.payments.models.refund.RefundLineItem;
 import com.carecloud.carepaylibray.payments.models.refund.RefundPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.EncryptionUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.clover.connector.sdk.v3.PaymentConnector;
 import com.clover.connector.sdk.v3.PaymentV3Connector;
@@ -52,6 +56,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.newrelic.agent.android.NewRelic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,6 +97,8 @@ public class CloverRefundActivity extends BaseActivity {
 
 
     private Handler handler;
+
+    private RefundPostModel refundPostModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +148,7 @@ public class CloverRefundActivity extends BaseActivity {
                 authenticateCloverAccount();
             }else{
                 SystemUtil.showErrorToast(CloverRefundActivity.this, getString(R.string.no_account));
+                logRefundFail(getString(R.string.no_account), false);
                 finish();
             }
         }
@@ -200,6 +208,7 @@ public class CloverRefundActivity extends BaseActivity {
                 processRefund(response);
             }else{
                 new CustomMessageToast(CloverRefundActivity.this, response.getMessage(), CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
+                logRefundFail(response.getMessage(), false);
                 setResult(RESULT_CANCELED);
                 finish();
             }
@@ -280,6 +289,7 @@ public class CloverRefundActivity extends BaseActivity {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            logRefundFail(Label.getLabel("clover_account_not_authorized"), false);
                             finish();
                         }
                     }, 3000);
@@ -307,7 +317,7 @@ public class CloverRefundActivity extends BaseActivity {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("patient_id", historyItem.getPayload().getMetadata().getPatientId());
 
-        RefundPostModel refundPostModel = new RefundPostModel();
+        refundPostModel = new RefundPostModel();
         refundPostModel.setPaymentRequestId(historyItem.getPayload().getDeepstreamRecordId());
         refundPostModel.setRefundLineItems(refundLineItems);
 
@@ -353,7 +363,7 @@ public class CloverRefundActivity extends BaseActivity {
 
                 printReceipt(response);
 
-                //TODO retry logic
+                logRefundFail("Failed to reach make payment endpoint", true, response.getJSONObject(), exceptionMessage);
             }
         };
     }
@@ -529,6 +539,107 @@ public class CloverRefundActivity extends BaseActivity {
             }
         }
         return false;
+    }
+
+    private void logRefundFail(String message, boolean refundSuccess){
+        logRefundFail(message, refundSuccess, null, null);
+    }
+
+    private void logRefundFail(String message, boolean refundSuccess, Object refundJson, String error) {
+        double amountDouble = (double) amountLong/100;
+
+        Map<String, Object> eventMap = new HashMap<>();
+        eventMap.put("Successful Refund", refundSuccess);
+        eventMap.put("Fail Reason", message);
+        eventMap.put("Amount", amountDouble);
+        eventMap.put("Patient Id", historyItem.getPayload().getMetadata().getPatientId());
+        eventMap.put("Practice Id", historyItem.getPayload().getMetadata().getBusinessEntityId());
+        eventMap.put("Practice Mgmt", historyItem.getPayload().getMetadata().getPracticeMgmt());
+
+        Gson gson = new Gson();
+        eventMap.put("Refund Model", gson.toJson(refundPostModel));
+
+        if(refundJson == null){
+            refundJson = "";
+        }else{
+            eventMap.put("Payment Object", refundJson.toString());
+        }
+
+        if(error == null){
+            error = "";
+        }else{
+            eventMap.put("Error Message", error);
+        }
+
+        NewRelic.recordCustomEvent("CloverPaymentFail", eventMap);
+
+        if(refundSuccess){
+            //sent to Pay Queue API endpoint
+            queueRefund(
+                    amountDouble,
+                    refundPostModel,
+                    historyItem.getPayload().getMetadata().getPatientId(),
+                    historyItem.getPayload().getMetadata().getBusinessEntityId(),
+                    historyItem.getPayload().getMetadata().getPracticeMgmt(),
+                    refundJson.toString(),
+                    error);
+
+            setResult(CarePayConstants.PAYMENT_RETRY_PENDING_RESULT_CODE);
+            finish();
+
+        }
+    }
+
+    private void queueRefund(double amount, RefundPostModel refundPostModel, String patientID, String practiceId, String practiceMgmt, String refundJson, String errorMessage){
+        if(refundPostModel!=null){
+
+            if(refundPostModel.getTransactionResponse()==null){
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("Refund Response", refundJson);
+                jsonObject.addProperty("Error Message", errorMessage);
+                refundPostModel.setTransactionResponse(jsonObject);
+            }else{
+                if(!refundPostModel.getTransactionResponse().has("Refund Response")) {
+                    refundPostModel.getTransactionResponse().addProperty("Payment Response", refundJson);
+                }
+                if(!refundPostModel.getTransactionResponse().has("Error Message")) {
+                    refundPostModel.getTransactionResponse().addProperty("Error Message", errorMessage);
+                }
+            }
+
+        }
+
+
+        Gson gson = new Gson();
+        String refundModelJson = refundJson;
+        try{
+            refundModelJson = gson.toJson(refundPostModel);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+
+
+        //store in local DB
+        CloverQueuePaymentRecord paymentRecord = new CloverQueuePaymentRecord();
+        paymentRecord.setPatientID(patientID);
+        paymentRecord.setPracticeID(practiceId);
+        paymentRecord.setPracticeMgmt(practiceMgmt);
+        paymentRecord.setQueueTransition(gson.toJson(refundTransition));
+        paymentRecord.setUsername(getApplicationMode().getUserPracticeDTO().getUserName());
+
+        String paymentModelJsonEnc = EncryptionUtil.encrypt(getContext(), refundModelJson, practiceId);
+        paymentRecord.setPaymentModelJsonEnc(paymentModelJsonEnc);
+
+        if(StringUtil.isNullOrEmpty(paymentModelJsonEnc)){
+            paymentRecord.setPaymentModelJson(refundModelJson);
+        }
+        paymentRecord.save();
+
+        Intent intent = new Intent(getContext(), CloverQueueUploadService.class);
+        startService(intent);
+
+
     }
 
 }
