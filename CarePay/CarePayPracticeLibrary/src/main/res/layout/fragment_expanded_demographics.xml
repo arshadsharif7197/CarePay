@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:breeze="http://schemas.carecloud.com/breeze"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:breeze="http://schemas.carecloud.com/breeze"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -147,12 +147,18 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <include
-            android:id="@+id/preferredLanguageError"
-            layout="@layout/demographics_select_error"
+        <FrameLayout
             android:layout_width="@dimen/dimen_57dp"
             android:layout_height="match_parent"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            android:tag="@string/tag_demographics_error_show_inv">
+
+            <include
+                layout="@layout/demographics_select_error"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -248,12 +254,18 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <include
-            android:id="@+id/driverLicenseStateError"
-            layout="@layout/demographics_select_error"
+        <FrameLayout
             android:layout_width="@dimen/dimen_57dp"
             android:layout_height="match_parent"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            android:tag="@string/tag_demographics_error_show_inv">
+
+            <include
+                layout="@layout/demographics_select_error"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -349,13 +361,18 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <include
-            android:id="@+id/secondaryPhoneError"
-            layout="@layout/demographics_select_error"
+        <FrameLayout
             android:layout_width="@dimen/dimen_57dp"
             android:layout_height="match_parent"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            android:tag="@string/tag_demographics_error_show_inv">
 
+            <include
+                layout="@layout/demographics_select_error"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -406,12 +423,18 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <include
-            android:id="@+id/preferredContactMethodError"
-            layout="@layout/demographics_select_error"
+        <FrameLayout
             android:layout_width="@dimen/dimen_57dp"
             android:layout_height="match_parent"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            android:tag="@string/tag_demographics_error_show_inv">
+
+            <include
+                layout="@layout/demographics_select_error"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -462,12 +485,18 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <include
-            android:id="@+id/maritalStatusError"
-            layout="@layout/demographics_select_error"
+        <FrameLayout
             android:layout_width="@dimen/dimen_57dp"
             android:layout_height="match_parent"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            android:tag="@string/tag_demographics_error_show_inv">
+
+            <include
+                layout="@layout/demographics_select_error"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -511,8 +540,26 @@
         </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <FrameLayout
-            android:id="@+id/emergencyContactContainer"
+            android:layout_width="@dimen/dimen_57dp"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            android:tag="@string/tag_demographics_error_show_inv">
+
+            <include
+                layout="@layout/demographics_select_error"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/emergencyContactDemographicsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true">
@@ -533,8 +580,9 @@
                     android:editable="false"
                     android:focusableInTouchMode="false"
                     android:imeOptions="actionNext"
-                    app:customAssetFont="proxima_nova_regular"
-                    breeze:hintKey="demographics_emergency_contact_hint" />
+                    app:customAssetFont="gotham_rounded_book"
+                    breeze:hintKey="demographics_emergency_contact_hint"
+                    tools:hint="Emergency Contact"/>
 
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -547,18 +595,26 @@
         </FrameLayout>
 
 
+    </LinearLayout>
+
     <LinearLayout
         android:id="@+id/referralSourceDemographicsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <include
-            android:id="@+id/referralSourceError"
-            layout="@layout/demographics_select_error"
+        <FrameLayout
             android:layout_width="@dimen/dimen_57dp"
             android:layout_height="match_parent"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            android:tag="@string/tag_demographics_error_show_inv">
+
+            <include
+                layout="@layout/demographics_select_error"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -650,12 +706,18 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <include
-            android:id="@+id/employmentStatusError"
-            layout="@layout/demographics_select_error"
+        <FrameLayout
             android:layout_width="@dimen/dimen_57dp"
             android:layout_height="match_parent"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            android:tag="@string/tag_demographics_error_show_inv">
+
+            <include
+                layout="@layout/demographics_select_error"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -701,6 +763,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/employerDependentLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -730,7 +793,8 @@
                     android:nextFocusForward="@+id/addressEditText"
                     app:customAssetFont="gotham_rounded_book"
                     app:hintTextAppearance="@style/FloatingLabelStyle"
-                    breeze:hintKey="demographics_employer_name_hint" />
+                    breeze:hintKey="demographics_employer_name_hint"
+                    tools:hint="Employer Name"/>
 
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 

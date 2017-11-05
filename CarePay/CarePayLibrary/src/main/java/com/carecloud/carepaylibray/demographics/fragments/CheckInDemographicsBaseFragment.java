@@ -452,5 +452,42 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         void onOptionSelected(DemographicsOption option);
     }
 
+    protected void showErrorViews(boolean isError, ViewGroup container){
+        final String TAG_ERROR_HIDE_INV = getString(R.string.tag_demographics_error_hide_inv);
+        final String TAG_ERROR_HIDE_GONE = getString(R.string.tag_demographics_error_hide_gone);
+        final String TAG_ERROR_SHOW_INV = getString(R.string.tag_demographics_error_show_inv);
+        final String TAG_ERROR_SHOW_GONE = getString(R.string.tag_demographics_error_show_gone);
+
+        for(int i=0; i < container.getChildCount(); i++){
+            View view = container.getChildAt(i);
+            if(view instanceof ViewGroup){
+                showErrorViews(isError, (ViewGroup) view);
+            }
+            String tag = (String) view.getTag();
+            if(tag != null){
+                if(isError){
+                    if(tag.equals(TAG_ERROR_HIDE_GONE)){
+                        view.setVisibility(View.GONE);
+                    }else if(tag.equals(TAG_ERROR_HIDE_INV)){
+                        view.setVisibility(View.INVISIBLE);
+                    }else if(tag.equals(TAG_ERROR_SHOW_GONE) || tag.equals(TAG_ERROR_SHOW_INV)){
+                        view.setVisibility(View.VISIBLE);
+                    }
+                    view.setFocusable(true);
+                    view.setFocusableInTouchMode(true);
+                    view.requestFocus();
+                }else{
+                    if(tag.equals(TAG_ERROR_SHOW_GONE)){
+                        view.setVisibility(View.GONE);
+                    }else if(tag.equals(TAG_ERROR_SHOW_INV)){
+                        view.setVisibility(View.INVISIBLE);
+                    }else if(tag.equals(TAG_ERROR_HIDE_GONE) || tag.equals(TAG_ERROR_HIDE_INV)){
+                        view.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        }
+
+    }
 
 }

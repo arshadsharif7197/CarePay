@@ -40,6 +40,10 @@ public class DemographicDataModel {
         @Expose
         private DemographicEmergencyContactSection emergencyContact = new DemographicEmergencyContactSection();
 
+        @SerializedName("employment_info")
+        @Expose
+        private DemographicEmploymentInfoSection employmentInfo = new DemographicEmploymentInfoSection();
+
         public DemographicsAddressSection getAddress() {
             return address;
         }
@@ -70,6 +74,14 @@ public class DemographicDataModel {
 
         public void setEmergencyContact(DemographicEmergencyContactSection emergencyContact) {
             this.emergencyContact = emergencyContact;
+        }
+
+        public DemographicEmploymentInfoSection getEmploymentInfo() {
+            return employmentInfo;
+        }
+
+        public void setEmploymentInfo(DemographicEmploymentInfoSection employmentInfo) {
+            this.employmentInfo = employmentInfo;
         }
     }
 }
