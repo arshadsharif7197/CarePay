@@ -141,7 +141,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         address.getOnFocusChangeListener().onFocusChange(address,
                 !StringUtil.isNullOrEmpty(address.getText().toString().trim()));
         if (addressSection.getProperties().getAddress1().isRequired()) {
-            address.addTextChangedListener(getValidateEmptyTextWatcher(address2InputLayout));
+            address.addTextChangedListener(getValidateEmptyTextWatcher(addressInputLayout));
         }
         address.addTextChangedListener(new TextWatcher() {
             @Override

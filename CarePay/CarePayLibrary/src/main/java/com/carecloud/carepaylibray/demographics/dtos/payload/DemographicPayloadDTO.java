@@ -20,6 +20,10 @@ public class DemographicPayloadDTO {
     @Expose
     private PatientModel personalDetails = new PatientModel();
 
+    @SerializedName("employment_info")
+    @Expose
+    private EmploymentInfoModel employmentInfoModel = new EmploymentInfoModel();
+
     @SerializedName("emergency_contact")
     @Expose
     private PatientModel emergencyContact;
@@ -110,5 +114,13 @@ public class DemographicPayloadDTO {
 
     public void setEmergencyContact(PatientModel emergencyContact) {
         this.emergencyContact = emergencyContact;
+    }
+
+    public EmploymentInfoModel getEmploymentInfoModel() {
+        return employmentInfoModel;
+    }
+
+    public void setEmploymentInfoModel(EmploymentInfoModel employmentInfoModel) {
+        this.employmentInfoModel = employmentInfoModel;
     }
 }

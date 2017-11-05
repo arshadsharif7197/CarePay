@@ -26,7 +26,19 @@
                 android:layout_weight="1"
                 tools:text="Gender"
                 breeze:textKey="demographics_review_gender"
-                app:customAssetFont="proxima_nova_regular"/>
+                app:customAssetFont="proxima_nova_regular"
+                android:tag="@string/tag_demographics_error_hide_gone"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                style="@style/DemographicsDocsLabelStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textColor="@color/remove_red"
+                tools:text="Gender"
+                breeze:textKey="demographics_review_gender"
+                app:customAssetFont="proxima_nova_regular"
+                android:tag="@string/tag_demographics_error_show_gone"
+                android:visibility="gone"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/genderOptional"
@@ -48,7 +60,15 @@
 
         <View
             style="@style/Consent_Form_View_Style"
-            android:layout_width="match_parent" />
+            android:layout_width="match_parent"
+            android:tag="@string/tag_demographics_error_hide_gone"/>
+
+        <View
+            style="@style/Consent_Form_View_Style"
+            android:layout_width="match_parent"
+            android:background="@color/remove_red"
+            android:tag="@string/tag_demographics_error_show_gone"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
@@ -65,13 +85,24 @@
             android:orientation="horizontal">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/raceDataTextView"
                 style="@style/DemographicsDocsLabelStyle"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 tools:text="Race"
                 breeze:textKey="demographics_review_race"
-                app:customAssetFont="proxima_nova_regular"/>
+                app:customAssetFont="proxima_nova_regular"
+                android:tag="@string/tag_demographics_error_hide_gone"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                style="@style/DemographicsDocsLabelStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textColor="@color/remove_red"
+                tools:text="Race"
+                breeze:textKey="demographics_review_race"
+                app:customAssetFont="proxima_nova_regular"
+                android:tag="@string/tag_demographics_error_show_gone"
+                android:visibility="gone"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/raceOptional"
@@ -93,7 +124,15 @@
 
         <View
             style="@style/Consent_Form_View_Style"
-            android:layout_width="match_parent" />
+            android:layout_width="match_parent"
+            android:tag="@string/tag_demographics_error_hide_gone"/>
+
+        <View
+            style="@style/Consent_Form_View_Style"
+            android:layout_width="match_parent"
+            android:background="@color/remove_red"
+            android:tag="@string/tag_demographics_error_show_gone"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
@@ -115,7 +154,19 @@
                 android:layout_weight="1"
                 tools:text="Secondary Race"
                 breeze:textKey="demographics_secondary_race"
-                app:customAssetFont="proxima_nova_regular"/>
+                app:customAssetFont="proxima_nova_regular"
+                android:tag="@string/tag_demographics_error_hide_gone"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                style="@style/DemographicsDocsLabelStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textColor="@color/remove_red"
+                tools:text="Secondary Race"
+                breeze:textKey="demographics_secondary_race"
+                app:customAssetFont="proxima_nova_regular"
+                android:tag="@string/tag_demographics_error_show_gone"
+                android:visibility="gone"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/secondaryRaceOptional"
@@ -137,7 +188,15 @@
 
         <View
             style="@style/Consent_Form_View_Style"
-            android:layout_width="match_parent" />
+            android:layout_width="match_parent"
+            android:tag="@string/tag_demographics_error_hide_gone"/>
+
+        <View
+            style="@style/Consent_Form_View_Style"
+            android:layout_width="match_parent"
+            android:background="@color/remove_red"
+            android:tag="@string/tag_demographics_error_show_gone"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
@@ -159,7 +218,19 @@
                 android:layout_weight="1"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="demographics_review_ethnicity"
-                tools:text="Ethnicity"/>
+                tools:text="Ethnicity"
+                android:tag="@string/tag_demographics_error_hide_gone"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                style="@style/DemographicsDocsLabelStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textColor="@color/remove_red"
+                app:customAssetFont="proxima_nova_regular"
+                breeze:textKey="demographics_review_ethnicity"
+                tools:text="Ethnicity"
+                android:tag="@string/tag_demographics_error_show_gone"
+                android:visibility="gone"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/ethnicityOptional"
@@ -181,7 +252,15 @@
 
         <View
             style="@style/Consent_Form_View_Style"
-            android:layout_width="match_parent"/>
+            android:layout_width="match_parent"
+            android:tag="@string/tag_demographics_error_hide_gone"/>
+
+        <View
+            style="@style/Consent_Form_View_Style"
+            android:layout_width="match_parent"
+            android:background="@color/remove_red"
+            android:tag="@string/tag_demographics_error_show_gone"
+            android:visibility="gone"/>
 
     </LinearLayout>
 </LinearLayout>

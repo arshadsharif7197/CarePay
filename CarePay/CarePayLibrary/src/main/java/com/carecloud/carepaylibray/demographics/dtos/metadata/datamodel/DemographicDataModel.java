@@ -42,7 +42,7 @@ public class DemographicDataModel {
 
         @SerializedName("employment_info")
         @Expose
-        private DemographicEmploymentInfo employmentInfo = new DemographicEmploymentInfo();
+        private DemographicEmploymentInfoSection employmentInfo = new DemographicEmploymentInfoSection();
 
         public DemographicsAddressSection getAddress() {
             return address;
@@ -76,11 +76,11 @@ public class DemographicDataModel {
             this.emergencyContact = emergencyContact;
         }
 
-        public DemographicEmploymentInfo getEmploymentInfo() {
+        public DemographicEmploymentInfoSection getEmploymentInfo() {
             return employmentInfo;
         }
 
-        public void setEmploymentInfo(DemographicEmploymentInfo employmentInfo) {
+        public void setEmploymentInfo(DemographicEmploymentInfoSection employmentInfo) {
             this.employmentInfo = employmentInfo;
         }
     }

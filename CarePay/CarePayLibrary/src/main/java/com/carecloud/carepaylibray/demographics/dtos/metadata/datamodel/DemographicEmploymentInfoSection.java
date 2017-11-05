@@ -4,10 +4,10 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * @author pjohnson on 3/11/17.
+ * @author pjohnson on 27/10/17.
  */
 
-public class DemographicEmploymentInfo {
+public class DemographicEmploymentInfoSection {
 
     @Expose
     @SerializedName("display")
@@ -27,7 +27,8 @@ public class DemographicEmploymentInfo {
 
     @Expose
     @SerializedName("properties")
-    private DemographicEmploymentInfo.Properties properties = new Properties();
+    private DemographicEmploymentInfoSection.Properties properties = new DemographicEmploymentInfoSection
+            .Properties();
 
     public boolean isDisplay() {
         return display;
@@ -61,11 +62,11 @@ public class DemographicEmploymentInfo {
         this.order = order;
     }
 
-    public Properties getProperties() {
+    public DemographicEmploymentInfoSection.Properties getProperties() {
         return properties;
     }
 
-    public void setProperties(Properties properties) {
+    public void setProperties(DemographicEmploymentInfoSection.Properties properties) {
         this.properties = properties;
     }
 
@@ -77,7 +78,7 @@ public class DemographicEmploymentInfo {
 
         @SerializedName("employer")
         @Expose
-        private DemographicsField employer = new DemographicsField();
+        private DemographicEmployerModel demographicEmployerModel = new DemographicEmployerModel();
 
         public DemographicsField getEmploymentStatus() {
             return employmentStatus;
@@ -87,12 +88,12 @@ public class DemographicEmploymentInfo {
             this.employmentStatus = employmentStatus;
         }
 
-        public DemographicsField getEmployer() {
-            return employer;
+        public DemographicEmployerModel getDemographicEmployerModel() {
+            return demographicEmployerModel;
         }
 
-        public void setEmployer(DemographicsField employer) {
-            this.employer = employer;
+        public void setDemographicEmployerModel(DemographicEmployerModel demographicEmployerModel) {
+            this.demographicEmployerModel = demographicEmployerModel;
         }
     }
 }
