@@ -414,7 +414,6 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         if (emergencyContact == null) {
             emergencyContact = new PatientModel();
         }
-        emergencyContact.setEmployer(null);
 
         String firstName = firstNameEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(firstName)) {

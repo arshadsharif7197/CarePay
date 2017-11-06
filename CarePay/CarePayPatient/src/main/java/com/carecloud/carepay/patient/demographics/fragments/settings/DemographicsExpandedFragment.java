@@ -82,7 +82,6 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
     }
 
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -375,7 +374,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                             }
                         }, Label.getLabel("demographics_employment_status")));
 
-        String employmentStatus = demographicPayload.getPersonalDetails().getEmploymentStatus();
+        String employmentStatus = demographicPayload.getEmploymentInfoModel().getEmploymentStatus();
         initSelectableInput(chooseEmploymentStatus, selectedEmploymentStatus, employmentStatus,
                 employmentInfoSection.getProperties().getEmploymentStatus().isRequired()
                         ? null : employmentStatusOptional);
@@ -392,7 +391,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
 
     }
 
-    private void setEmployerInfoFields(View view, DemographicPayloadDTO demographicPayload){
+    private void setEmployerInfoFields(View view, DemographicPayloadDTO demographicPayload) {
         employerDependentFieldsLayout = view.findViewById(R.id.employerDependentLayout);
 
         selectedEmployer = demographicPayload.getEmploymentInfoModel().getEmployerDto();
