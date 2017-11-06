@@ -469,8 +469,6 @@ public class CloverRefundActivity extends BaseActivity {
                         order.getRefunds().add(response.getRefund());
                     }
 
-//                        order.setCredits(getCreditItems());
-
                     for(LineItem lineItem : order.getLineItems()){
                         if(containsLineItem(lineItem)) {
                             lineItem.setRefunded(true);
@@ -478,8 +476,10 @@ public class CloverRefundActivity extends BaseActivity {
                     }
 
                     Log.d(TAG, order.getJSONObject().toString());
+                    orderConnector.updateOrder(order);
+                    orderConnector.updateLineItems(orderId, order.getLineItems());
 
-                    if(shouldPrint=true) {
+                    if(shouldPrint) {
                         printer = printerConnector.getPrinters(Category.RECEIPT).get(0);
 
                         PrintJob printJob = new StaticReceiptPrintJob.Builder().order(order).build();
