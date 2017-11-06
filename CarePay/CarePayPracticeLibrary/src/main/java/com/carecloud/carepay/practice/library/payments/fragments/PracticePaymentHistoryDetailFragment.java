@@ -20,6 +20,7 @@ import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.payments.fragments.PaymentHistoryDetailFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
+import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItemPayload;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -125,6 +126,8 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
                 processRefund();
             }
         });
+
+        refundButton.setEnabled(totalPaid > 0 && !historyItem.getPayload().getState().equals(PaymentHistoryItemPayload.STATE_ERRORED));
 
         double refundedAmount = historyItem.getPayload().getTotalRefunded();
         if(refundedAmount > 0D){
