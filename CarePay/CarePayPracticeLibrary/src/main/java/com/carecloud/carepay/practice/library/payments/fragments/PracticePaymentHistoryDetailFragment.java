@@ -126,12 +126,17 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
             }
         });
 
-        if(historyItem.getPayload().getTotalRefunded() > 0D){
+        double refundedAmount = historyItem.getPayload().getTotalRefunded();
+        if(refundedAmount > 0D){
             View refundLayout = view.findViewById(R.id.refund_layout);
             refundLayout.setVisibility(View.VISIBLE);
 
             TextView refundAmount = (TextView) view.findViewById(R.id.transaction_refunded);
             refundAmount.setText(NumberFormat.getCurrencyInstance().format(historyItem.getPayload().getTotalRefunded()));
+
+            if(refundedAmount >= totalPaid){
+                refundButton.setVisibility(View.GONE);
+            }
         }
 
     }
