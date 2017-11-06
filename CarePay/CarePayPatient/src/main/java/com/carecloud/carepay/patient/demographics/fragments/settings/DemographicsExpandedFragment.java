@@ -327,6 +327,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
     }
 
     private void setUpEmergencyContact(View view, PatientModel emergencyContact) {
+/*
         DemographicEmergencyContactSection emergencyContactSection = dataModel.getDemographic().getEmergencyContact();
         TextInputLayout emergencyContactInputLayout = (TextInputLayout) view.findViewById(R.id.emergencyContactInputLayout);
         emergencyContactInputLayout.setVisibility(emergencyContactSection.isDisplay() ? View.VISIBLE : View.GONE);
@@ -346,6 +347,23 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 callback.showAddEditEmergencyContactDialog();
             }
         });
+*/
+
+        DemographicEmergencyContactSection emergencyContactSection = dataModel.getDemographic().getEmergencyContact();
+        View emergencyContactLayout = view.findViewById(R.id.emergencyContactDemographicsLayout);
+        TextView chooseEmergencyContact = (TextView) view.findViewById(R.id.emergencyContactEditText);
+        View EmergencyContactOptional = view.findViewById(R.id.emergencyContactOptionalLabel);
+        setVisibility(emergencyContactLayout, emergencyContactSection.isDisplay());
+        chooseEmergencyContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.showAddEditEmergencyContactDialog();
+            }
+        });
+        String emergencyContactName = emergencyContact.getFullName();
+        initSelectableInput(chooseEmergencyContact, selectedMaritalStatus, emergencyContactName, emergencyContactSection.isRequired() ? null : EmergencyContactOptional);
+
+
     }
 
     private void setUpEmployer(final View view, DemographicPayloadDTO demographicPayload,
