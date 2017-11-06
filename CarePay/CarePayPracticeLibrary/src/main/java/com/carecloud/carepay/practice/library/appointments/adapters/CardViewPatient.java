@@ -2,6 +2,7 @@ package com.carecloud.carepay.practice.library.appointments.adapters;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
+import com.carecloud.carepaylibray.appointments.models.CheckinStatusDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
@@ -31,7 +32,10 @@ public class CardViewPatient {
     public Boolean isCheckedIn;
     public Boolean isCheckingIn;
     public Boolean isPending;
+    public Boolean isCheckingOut;
     public Boolean isCheckedOut;
+    public CheckinStatusDTO checkinStatus;
+    public Date lastUpdate;
     int headCount;
 
     CardViewPatient(Object raw, String id, ProviderIndexDTO provider, LocationIndexDTO location, Double balance, PatientModel dto) {
@@ -47,11 +51,13 @@ public class CardViewPatient {
         this.isRequested = false;
         this.isCheckedIn = false;
         this.isCheckingIn = false;
+        this.isCheckingOut = false;
+        this.isCheckedOut = false;
         this.isPending = false;
     }
 
     /**
-     * @param dto Appointment Payload DTO
+     * @param dto     Appointment Payload DTO
      * @param balance owed
      */
     public CardViewPatient(AppointmentsPayloadDTO dto, Double balance) {
@@ -59,8 +65,8 @@ public class CardViewPatient {
     }
 
     /**
-     * @param raw main DTO
-     * @param dto Appointment Payload DTO
+     * @param raw     main DTO
+     * @param dto     Appointment Payload DTO
      * @param balance owed
      */
     public CardViewPatient(Object raw, AppointmentsPayloadDTO dto, Double balance) {
@@ -70,8 +76,6 @@ public class CardViewPatient {
         this.name = patientModel.getFullName();
         this.initials = patientModel.getShortName();
         this.photoUrl = patientModel.getProfilePhoto();
-        this.providerId = dto.getProvider().getId().toString();
-        this.providerName = dto.getProvider().getName();
         this.appointmentStartTime = DateUtil.getInstance().setDateRaw(dto.getStartTime()).getDate();
         this.isAppointmentOver = dto.isAppointmentOver();
         this.balance = getFormattedBalance(balance);
@@ -79,13 +83,20 @@ public class CardViewPatient {
         String code = dto.getAppointmentStatus().getCode();
         this.isRequested = code.equalsIgnoreCase(CarePayConstants.REQUESTED);
         this.isCheckedIn = code.equalsIgnoreCase(CarePayConstants.CHECKED_IN) ||
-            code.equalsIgnoreCase(CarePayConstants.IN_PROGRESS_IN_ROOM) ||
-            code.equalsIgnoreCase(CarePayConstants.IN_PROGRESS_OUT_ROOM);
+                code.equalsIgnoreCase(CarePayConstants.IN_PROGRESS_IN_ROOM) ||
+                code.equalsIgnoreCase(CarePayConstants.IN_PROGRESS_OUT_ROOM);
         this.isCheckingIn = code.equalsIgnoreCase(CarePayConstants.CHECKING_IN);
         this.isPending = code.equalsIgnoreCase(CarePayConstants.PENDING);
+        this.isCheckingOut = code.equalsIgnoreCase(CarePayConstants.CHECKING_OUT);
         this.isCheckedOut = code.equalsIgnoreCase(CarePayConstants.CHECKED_OUT) ||
                 code.equalsIgnoreCase(CarePayConstants.BILLED) ||
                 code.equalsIgnoreCase(CarePayConstants.MANUALLY_BILLED);
+        this.checkinStatus = dto.getAppointmentStatus().getCheckinStatusDTO();
+        this.providerId = dto.getProvider().getId().toString();
+        this.providerName = dto.getProvider().getName();
+        if (dto.getAppointmentStatus().getLastUpdated() != null) {
+            this.lastUpdate = DateUtil.getInstance().setDateRaw(dto.getAppointmentStatus().getLastUpdated().replaceAll("\\.\\d\\d\\dZ", "-00:00")).getDate();
+        }
     }
 
     /**

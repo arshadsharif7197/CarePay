@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<android.support.v7.widget.Toolbar
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar_layout"
     style="@style/CustomToolbarStyle"
     android:background="@color/transparent_apt"
-    android:paddingTop="@dimen/dimen_10dp"
-    android:paddingBottom="@dimen/dimen_10dp">
+    android:paddingBottom="@dimen/dimen_10dp"
+    android:paddingTop="@dimen/dimen_10dp">
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/toolbar_title"
-        android:layout_width="match_parent"
         style="@style/ResponsibilityToolbarTextStyle"
-        app:customAssetFont="gotham_rounded_medium"
+        android:layout_width="match_parent"
         android:gravity="center"
-        android:visibility="visible"/>
+        android:visibility="visible"
+        app:customAssetFont="gotham_rounded_medium" />
 
 </android.support.v7.widget.Toolbar>

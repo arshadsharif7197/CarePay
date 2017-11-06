@@ -20,7 +20,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.carecloud.carepaylibray.qrcodescanner.ScannerQRActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="sensorLandscape" />
         <activity android:name="com.carecloud.carepaylibray.media.MediaCameraActivity"
                   android:screenOrientation="sensor"
                   android:windowSoftInputMode="stateAlwaysHidden"/>

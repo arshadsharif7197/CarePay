@@ -2,6 +2,7 @@
           package="com.carecloud.carepay.mini">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".MiniApplication"
@@ -34,6 +35,11 @@
         <activity
             android:name=".activities.WelcomeActivity"
             android:screenOrientation="sensorLandscape" />
+
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:screenOrientation="sensorLandscape"
+            android:windowSoftInputMode="stateUnchanged"/>
 
         <service android:name=".services.QueueUploadService" />
 

@@ -35,12 +35,13 @@ import java.util.Map;
  * Use the {@link AdHocFormsListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AdHocFormsListFragment extends BaseDialogFragment implements AdHocFormRecyclerViewAdapter.AdHocFormsListInterface {
+public class AdHocFormsListFragment extends BaseDialogFragment
+        implements AdHocFormRecyclerViewAdapter.AdHocFormsListInterface {
 
     private AppointmentsResultModel dto;
     private SelectedAdHocForms selectedForms;
     private Button fillNowFormButton;
-    private String appointmentId;
+    private String patientId;
 
     public AdHocFormsListFragment() {
         // Required empty public constructor
@@ -48,15 +49,15 @@ public class AdHocFormsListFragment extends BaseDialogFragment implements AdHocF
 
     /**
      * @param appointmentsResultModel the appoinment model
-     * @param appointmentId           the appointment id
+     * @param patientId           the appointment id
      * @return a new instance of AdHocFormsListFragment
      */
     public static AdHocFormsListFragment newInstance(AppointmentsResultModel appointmentsResultModel,
-                                                     String appointmentId) {
+                                                     String patientId) {
         AdHocFormsListFragment fragment = new AdHocFormsListFragment();
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, appointmentsResultModel);
-        args.putString("appointmentId", appointmentId);
+        args.putString("patientId", patientId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,7 +66,7 @@ public class AdHocFormsListFragment extends BaseDialogFragment implements AdHocF
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dto = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, getArguments());
-        appointmentId = getArguments().getString("appointmentId");
+        patientId = getArguments().getString("patientId");
     }
 
     @Override
@@ -93,8 +94,8 @@ public class AdHocFormsListFragment extends BaseDialogFragment implements AdHocF
                 @Override
                 public void onClick(View view) {
                     Map<String, String> queryMap = new HashMap<>();
-                    queryMap.put("appointment_id", appointmentId);
-                    TransitionDTO adHocForms = dto.getMetadata().getTransitions().getAdHocFormsPatientMode();
+                    queryMap.put("patient_id", patientId);
+                    TransitionDTO adHocFormsTransition = dto.getMetadata().getTransitions().getAdHocFormsPatientMode();
                     JsonObject jsonObject = new JsonObject();
                     JsonArray jsonArray = new JsonArray();
                     for (String uuidForm : selectedForms.getForms()) {
@@ -103,7 +104,7 @@ public class AdHocFormsListFragment extends BaseDialogFragment implements AdHocF
                         jsonArray.add(uuiiJson);
                     }
                     jsonObject.add("adhoc_forms", jsonArray);
-                    getWorkflowServiceHelper().execute(adHocForms, adHocServiceCallback,
+                    getWorkflowServiceHelper().execute(adHocFormsTransition, adHocServiceCallback,
                             jsonObject.toString(), queryMap);
                 }
             });

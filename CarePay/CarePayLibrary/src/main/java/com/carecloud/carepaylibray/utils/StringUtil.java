@@ -10,6 +10,7 @@ import com.carecloud.carepaylibrary.R;
 import static com.carecloud.carepaylibray.utils.SystemUtil.isNotEmptyString;
 
 import java.text.DecimalFormat;
+import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -347,5 +348,29 @@ public class StringUtil {
         }
 
         return capMatcher.appendTail(capBuffer).toString();
+    }
+
+    /**
+     * Convenience method for exporting collection contents to comma delimited string
+     * @param collection collection to export
+     * @return comma delimited string
+     */
+    public static String getListAsCommaDelimitedString(Collection<?> collection){
+        return getListAsDelimitedString(collection, ',');
+    }
+
+    /**
+     * Method for exporting contents of a collection to a delimited string
+     * @param collection collection to export
+     * @param delimiter character to use as a delimiter
+     * @return delimited string
+     */
+    public static String getListAsDelimitedString(Collection<?> collection, char delimiter){
+        StringBuilder builder = new StringBuilder();
+        for(Object obj : collection){
+            builder.append(obj.toString());
+            builder.append(delimiter);
+        }
+        return builder.length() > 0 ? builder.substring(0, builder.length()-1) : "";
     }
 }

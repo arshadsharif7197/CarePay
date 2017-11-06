@@ -50,9 +50,15 @@ public class CarePayPatientApplication extends CarePayApplication {
         HttpConstants.setPushNotificationWebclientUrl(BuildConfig.WEBCLIENT_URL);
         HttpConstants.setUseUnifiedAuth(BuildConfig.useUnifiedAuth);
         HttpConstants.setMixpanelAPI(mixpanelAPI);
+        HttpConstants.setEnvironment(BuildConfig.ENVIRONMENT);
     }
 
-
+    @Override
+    public void onAtomicRestart(){
+        super.onAtomicRestart();
+        applicationMode.clearUserPracticeDTO();
+        applicationMode = null;
+    }
 
     @Override
     public ApplicationMode getApplicationMode() {

@@ -50,7 +50,6 @@
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/careTeamImageView"
                 android:layout_toStartOf="@id/careTeamSeeAllTextView"
-                android:background="@color/myHealthRecyclerViewBackground"
                 android:ellipsize="end"
                 android:gravity="start"
                 android:lines="1"

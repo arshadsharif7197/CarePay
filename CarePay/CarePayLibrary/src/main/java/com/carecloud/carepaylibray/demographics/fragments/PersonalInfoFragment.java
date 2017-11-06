@@ -67,7 +67,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
     private String base64ProfileImage;
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
         dataModel = demographicDTO.getMetadata().getNewDataModel();
@@ -106,7 +106,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
     }
 
 
-    private void initViews(View view){
+    private void initViews(View view) {
         DemographicPayloadDTO demographicPayload = demographicDTO.getPayload().getDemographics().getPayload();
 
         TextInputLayout firstNameLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrFirstNameTextInput);
@@ -116,7 +116,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         firstName.setText(demographicPayload.getPersonalDetails().getFirstName());
         firstName.getOnFocusChangeListener().onFocusChange(firstName,
                 !StringUtil.isNullOrEmpty(firstName.getText().toString().trim()));
-        if(dataModel.getDemographic().getPersonalDetails().getProperties().getFirstName().isRequired()) {
+        if (dataModel.getDemographic().getPersonalDetails().getProperties().getFirstName().isRequired()) {
             firstName.addTextChangedListener(getValidateEmptyTextWatcher(firstNameLayout));
         }
 
@@ -128,7 +128,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         lastName.setText(demographicPayload.getPersonalDetails().getLastName());
         lastName.getOnFocusChangeListener().onFocusChange(lastName,
                 !StringUtil.isNullOrEmpty(lastName.getText().toString().trim()));
-        if(dataModel.getDemographic().getPersonalDetails().getProperties().getLastName().isRequired()) {
+        if (dataModel.getDemographic().getPersonalDetails().getProperties().getLastName().isRequired()) {
             lastName.addTextChangedListener(getValidateEmptyTextWatcher(lastNameLayout));
         }
 
@@ -140,7 +140,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         middleName.setText(demographicPayload.getPersonalDetails().getMiddleName());
         middleName.getOnFocusChangeListener().onFocusChange(middleName,
                 !StringUtil.isNullOrEmpty(middleName.getText().toString().trim()));
-        if(dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isRequired()) {
+        if (dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isRequired()) {
             middleName.addTextChangedListener(getValidateEmptyTextWatcher(middleNameLayout));
             View middleNameOptional = view.findViewById(R.id.reviewdemogrMiddleNameOptionalLabel);
             middleNameOptional.setVisibility(View.GONE);
@@ -157,9 +157,9 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         String dateString = demographicPayload.getPersonalDetails().getFormattedDateOfBirth();
         dateOfBirth.setText(dateString);
         dateOfBirth.getOnFocusChangeListener().onFocusChange(dateOfBirth, !StringUtil.isNullOrEmpty(dateString));
-        if(dataModel.getDemographic().getPersonalDetails().getProperties().getDateOfBirth().isRequired()) {
+        if (dataModel.getDemographic().getPersonalDetails().getProperties().getDateOfBirth().isRequired()) {
             dateOfBirth.addTextChangedListener(getValidateEmptyTextWatcher(dateBirthLayout));
-        }else{
+        } else {
             dateOfBirth.addTextChangedListener(clearValidationErrorsOnTextChange(dateBirthLayout));
         }
 
@@ -174,24 +174,24 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         String phoneNumberString = demographicPayload.getAddress().getPhone();
         phoneNumber.setText(StringUtil.formatPhoneNumber(phoneNumberString));
         phoneNumber.getOnFocusChangeListener().onFocusChange(phoneNumber, !StringUtil.isNullOrEmpty(phoneNumberString));
-        if(dataModel.getDemographic().getAddress().getProperties().getPhone().isRequired()) {
+        if (dataModel.getDemographic().getAddress().getProperties().getPhone().isRequired()) {
             phoneNumber.addTextChangedListener(getValidateEmptyTextWatcher(phoneNumberLayout));
-        }else {
+        } else {
             phoneNumber.addTextChangedListener(clearValidationErrorsOnTextChange(phoneNumberLayout));
         }
 
     }
 
-    private void initCameraViews(View view){
+    private void initCameraViews(View view) {
         ImageView profileImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
         mediaScannerPresenter = new MediaScannerPresenter(getContext(), this, profileImage,
                 CarePayCameraPreview.CameraType.CAPTURE_PHOTO);
 
         buttonChangeCurrentPhoto = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
-        if(isCloverDevice){
+        if (isCloverDevice) {
             buttonChangeCurrentPhoto.setVisibility(View.INVISIBLE);
-        }else {
+        } else {
             buttonChangeCurrentPhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -204,7 +204,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
 
         if (demographicDTO != null) {
             String profilePicURL = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
-            if(!StringUtil.isNullOrEmpty(profilePicURL)) {
+            if (!StringUtil.isNullOrEmpty(profilePicURL)) {
                 displayProfileImage(profilePicURL, profileImage);
             }
         }
@@ -241,52 +241,71 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
     };
 
 
-
     @Override
     protected boolean passConstraints(View view) {
-        if(dataModel.getDemographic().getPersonalDetails().getProperties().getFirstName().isRequired()
-                && checkTextEmptyValue(R.id.reviewdemogrFirstNameEdit, view)) {
-            return false;
-        }
-        if(dataModel.getDemographic().getPersonalDetails().getProperties().getLastName().isRequired()
-                && checkTextEmptyValue(R.id.reviewdemogrLastNameEdit, view)){
-            return false;
-        }
-        if(dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isRequired()
-                && checkTextEmptyValue(R.id.reviewdemogrMiddleNameEdit, view)){
-            return false;
-        }
-        if(dataModel.getDemographic().getPersonalDetails().getProperties().getDateOfBirth().isRequired()
-                && checkTextEmptyValue(R.id.revewidemogrDOBEdit, view)) {
-            return false;
-        }
-        if(dataModel.getDemographic().getAddress().getProperties().getPhone().isRequired()
-                && checkTextEmptyValue(R.id.reviewgrdemoPhoneNumberEdit, view)) {
-            return false;
-        }
+        try {
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getFirstName().isRequired()
+                    && checkTextEmptyValue(R.id.reviewdemogrFirstNameEdit, view)) {
+                if (isUserAction()) {
+                    setDefaultError(view, R.id.reviewdemogrFirstNameTextInput);
+                }
+                return false;
+            }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getLastName().isRequired()
+                    && checkTextEmptyValue(R.id.reviewdemogrLastNameEdit, view)) {
+                if (isUserAction()) {
+                    setDefaultError(view, R.id.reviewdemogrLastNameTextInput);
+                }
+                return false;
+            }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isRequired()
+                    && checkTextEmptyValue(R.id.reviewdemogrMiddleNameEdit, view)) {
+                if (isUserAction()) {
+                    setDefaultError(view, R.id.reviewdemogrMiddleNameTextInputLayout);
+                }
+                return false;
+            }
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getDateOfBirth().isRequired()
+                    && checkTextEmptyValue(R.id.revewidemogrDOBEdit, view)) {
+                if (isUserAction()) {
+                    setDefaultError(view, R.id.reviewdemogrDOBTextInput);
+                }
+                return false;
+            }
+            if (dataModel.getDemographic().getAddress().getProperties().getPhone().isRequired()
+                    && checkTextEmptyValue(R.id.reviewgrdemoPhoneNumberEdit, view)) {
+                if (isUserAction()) {
+                    setDefaultError(view, R.id.reviewdemogrPhoneNumberTextInput);
+                }
+                return false;
+            }
 
-        //This validation is required regardless of whether fields are required
-        TextInputLayout dateBirthLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
-        EditText dateOfBirth = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
-        if(dateBirthLayout.getVisibility() == View.VISIBLE &&
-                !StringUtil.isNullOrEmpty(dateOfBirth.getText().toString().trim()) &&
-                !DateUtil.isValidateStringDateOfBirth(dateOfBirth.getText().toString().trim())) {
-            dateBirthLayout.setErrorEnabled(true);
-            dateBirthLayout.setError(Label.getLabel("demographics_date_validation_msg"));
-            return false;
-        }
+            //This validation is required regardless of whether fields are required
+            TextInputLayout dateBirthLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
+            EditText dateOfBirth = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
+            if (dateBirthLayout.getVisibility() == View.VISIBLE &&
+                    !StringUtil.isNullOrEmpty(dateOfBirth.getText().toString().trim())) {
+                String dateValidationResult = DateUtil
+                        .getDateOfBirthValidationResultMessage(dateOfBirth.getText().toString().trim());
+                if (dateValidationResult != null) {
+                    setFieldError(dateBirthLayout, dateValidationResult);
+                    return false;
+                }
+            }
 
-        TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
-        EditText phoneNumber = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
-        if(phoneLayout.getVisibility() == View.VISIBLE &&
-                !StringUtil.isNullOrEmpty(phoneNumber.getText().toString().trim()) &&
-                !ValidationHelper.isValidString(phoneNumber.getText().toString().trim(), ValidationHelper.PHONE_NUMBER_PATTERN)){
-            phoneLayout.setErrorEnabled(true);
-            phoneLayout.setError(Label.getLabel("demographics_phone_number_validation_msg"));
-            return false;
-        }
+            TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
+            EditText phoneNumber = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
+            if (phoneLayout.getVisibility() == View.VISIBLE &&
+                    !StringUtil.isNullOrEmpty(phoneNumber.getText().toString().trim()) &&
+                    !ValidationHelper.isValidString(phoneNumber.getText().toString().trim(), ValidationHelper.PHONE_NUMBER_PATTERN)) {
+                setFieldError(phoneLayout, Label.getLabel("demographics_phone_number_validation_msg"));
+                return false;
+            }
 
-        return true;
+            return true;
+        }finally {
+            setUserAction(false);
+        }
     }
 
     @Override
@@ -355,27 +374,27 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         handleRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
     public void handleRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if(mediaScannerPresenter!=null){
+        if (mediaScannerPresenter != null) {
             mediaScannerPresenter.handleRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(!handleActivityResult(requestCode, resultCode, data)){
+        if (!handleActivityResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
     @Override
     public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
-        return mediaScannerPresenter!=null && mediaScannerPresenter.handleActivityResult(requestCode, resultCode, data);
+        return mediaScannerPresenter != null && mediaScannerPresenter.handleActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -390,25 +409,25 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         }
     }
 
-    void displayProfileImage(final String filePath, View view){
+    void displayProfileImage(final String filePath, View view) {
         final ImageView imageView = (ImageView) view;
 
-        imageView.measure(0,0);
+        imageView.measure(0, 0);
         ViewGroup.LayoutParams lp = imageView.getLayoutParams();
         final int width = Math.max(imageView.getMeasuredWidth(), lp.width);
         final int height = Math.max(imageView.getMeasuredHeight(), lp.height);
 
         File file = new File(filePath);
         Uri fileUri;
-        if(file.exists()){
+        if (file.exists()) {
             fileUri = Uri.fromFile(file);
-        }else{
+        } else {
             //check if we have a base64 image instead of an URI
             Bitmap bitmap = SystemUtil.convertStringToBitmap(filePath);
-            if(bitmap!=null) {
-                File temp = ImageCaptureHelper.getBitmapFileUrl(getContext(), bitmap, "temp_"+System.currentTimeMillis());
+            if (bitmap != null) {
+                File temp = ImageCaptureHelper.getBitmapFileUrl(getContext(), bitmap, "temp_" + System.currentTimeMillis());
                 fileUri = Uri.fromFile(temp);
-            }else {
+            } else {
                 fileUri = Uri.parse(filePath);
             }
         }
@@ -448,21 +467,21 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
     @Override
     public void setupImageBase64() {
         PatientModel demographicsPersonalDetails = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
-        if(hasNewImage){
+        if (hasNewImage) {
             String filePath = demographicsPersonalDetails.getProfilePhoto();
             File file = new File(filePath);
             Bitmap bitmap = null;
-            if(file.exists()) {
+            if (file.exists()) {
                 bitmap = BitmapFactory.decodeFile(filePath);
-            }else{
+            } else {
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.parse(filePath));
-                }catch (IOException ioe){
+                } catch (IOException ioe) {
                     //do nothing
                 }
             }
 
-            if(bitmap != null){
+            if (bitmap != null) {
                 base64ProfileImage = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 hasNewImage = false;
             }

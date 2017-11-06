@@ -13,7 +13,7 @@ import java.util.List;
  * Created by lmenendez on 3/16/17
  */
 
-public interface PracticePaymentNavigationCallback extends PaymentNavigationCallback, PaymentMethodDialogInterface {
+public interface PracticePaymentNavigationCallback extends PaymentNavigationCallback, PaymentMethodDialogInterface, PracticePaymentHistoryCallback {
     void lookupChargeItem(List<SimpleChargeItem> simpleChargeItems, AddPaymentItemFragment.AddItemCallback callback);
 
     void showAmountEntry(PaymentDistributionEntryFragment.PaymentDistributionAmountCallback callback, BalanceItemDTO balanceItemDTO, SimpleChargeItem chargeItem);

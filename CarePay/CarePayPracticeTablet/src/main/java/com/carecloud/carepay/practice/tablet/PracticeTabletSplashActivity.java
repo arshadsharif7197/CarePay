@@ -7,9 +7,8 @@ import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.newrelic.agent.android.NewRelic;
 
 /**
- * Created by kkannan on 4/12/17.
+ * Created by kkannan on 4/12/17
  */
-
 public class PracticeTabletSplashActivity extends SplashActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {

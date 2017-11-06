@@ -23,14 +23,6 @@ public class DemographicsAddressSection {
 
     public class Properties {
 
-        @SerializedName("phone")
-        @Expose
-        private DemographicsField phone = new DemographicsField();
-
-        @SerializedName("zipcode")
-        @Expose
-        private DemographicsField zipcode = new DemographicsField();
-
         @SerializedName("address1")
         @Expose
         private DemographicsField address1 = new DemographicsField();
@@ -43,6 +35,10 @@ public class DemographicsAddressSection {
         @Expose
         private DemographicsField city = new DemographicsField();
 
+        @SerializedName("zipcode")
+        @Expose
+        private DemographicsField zipcode = new DemographicsField();
+
         @SerializedName("state")
         @Expose
         private DemographicsField state = new DemographicsField();
@@ -50,6 +46,10 @@ public class DemographicsAddressSection {
         @SerializedName("country")
         @Expose
         private DemographicsField country = new DemographicsField();
+
+        @SerializedName("phone")
+        @Expose
+        private DemographicsField phone = new DemographicsField();
 
         public DemographicsField getPhone() {
             return phone;

@@ -22,7 +22,7 @@ public class DemographicDataModel {
     }
 
 
-    public class Demographic{
+    public class Demographic {
 
         @SerializedName("address")
         @Expose
@@ -35,6 +35,14 @@ public class DemographicDataModel {
         @SerializedName("insurances")
         @Expose
         private DemographicInsuranceSection insurances = new DemographicInsuranceSection();
+
+        @SerializedName("emergency_contact")
+        @Expose
+        private DemographicEmergencyContactSection emergencyContact = new DemographicEmergencyContactSection();
+
+        @SerializedName("employment_info")
+        @Expose
+        private DemographicEmploymentInfoSection employmentInfo = new DemographicEmploymentInfoSection();
 
         public DemographicsAddressSection getAddress() {
             return address;
@@ -58,6 +66,22 @@ public class DemographicDataModel {
 
         public void setInsurances(DemographicInsuranceSection insurances) {
             this.insurances = insurances;
+        }
+
+        public DemographicEmergencyContactSection getEmergencyContact() {
+            return emergencyContact;
+        }
+
+        public void setEmergencyContact(DemographicEmergencyContactSection emergencyContact) {
+            this.emergencyContact = emergencyContact;
+        }
+
+        public DemographicEmploymentInfoSection getEmploymentInfo() {
+            return employmentInfo;
+        }
+
+        public void setEmploymentInfo(DemographicEmploymentInfoSection employmentInfo) {
+            this.employmentInfo = employmentInfo;
         }
     }
 }

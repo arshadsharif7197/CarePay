@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.base;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -35,7 +36,8 @@ import java.util.Map;
  * Created by jorge on 10/01/17
  */
 
-public abstract class MenuPatientActivity extends BasePatientActivity implements NavigationView.OnNavigationItemSelectedListener {
+public abstract class MenuPatientActivity extends BasePatientActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     //transitions
     private static TransitionDTO transitionBalance;
@@ -69,6 +71,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         setSupportActionBar(toolbar);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, com.carecloud.carepaylibrary.R.string.navigation_drawer_open, com.carecloud.carepaylibrary.R.string.navigation_drawer_close);
+        toggle.getDrawerArrowDrawable().setColor(ContextCompat.getColor(this, R.color.white));
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
@@ -298,7 +301,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         }
     };
 
-    private WorkflowServiceCallback purchaseWorkflowCallback = new WorkflowServiceCallback() {//TODO this is currently pointed at appointments endpoint
+    //TODO this is currently pointed at appointments endpoint
+    private WorkflowServiceCallback purchaseWorkflowCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();
@@ -394,6 +398,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         if (visibility) {
             setSupportActionBar(toolbar);
             if (getSupportActionBar() != null) {
+                getSupportActionBar().setElevation(getResources().getDimension(R.dimen.respons_toolbar_elevation));
                 getSupportActionBar().show();
             }
         } else if (getSupportActionBar() != null) {

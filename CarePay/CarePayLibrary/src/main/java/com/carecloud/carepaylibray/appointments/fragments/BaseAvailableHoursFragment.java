@@ -246,6 +246,7 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
             availableHoursRecycleView.setVisibility(View.VISIBLE);
         }
 
+        onAdapterRefresh(hoursAdapter.getItemCount());
     }
 
     private void updateDateRange() {
@@ -269,6 +270,8 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
     protected void selectDateRange() {
         callback.selectDateRange(startDate, endDate, selectedVisitTypeDTO, selectedResource, appointmentsResultModel);
     }
+
+    protected void onAdapterRefresh(int count){}
 
     private void resetLocationSelections(boolean clearAll) {
         RecyclerView.LayoutManager layoutManager = availableLocationsRecycleView.getLayoutManager();
@@ -413,6 +416,9 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
                     return resourcesToScheduleDTO;
                 }
             }
+        }
+        if(appointmentsResultModel.getPayload().getResourcesToSchedule().isEmpty()){
+            return new ResourcesToScheduleDTO();
         }
         return appointmentsResultModel.getPayload().getResourcesToSchedule().get(0);
     }

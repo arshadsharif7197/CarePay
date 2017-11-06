@@ -5,88 +5,176 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.payment.dialogs.PaymentAmountReceiptDialog;
-import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by jorge on 31/12/16.
+ * Created by jorge on 31/12/16
  */
 
-public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAdapter.PaymentHistoryViewHolder> {
+public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAdapter.ViewHolder> {
+    public interface HistoryItemClickListener{
+        void onHistoryItemClicked(PaymentHistoryItem item);
+    }
+
+    private static final int VIEW_TYPE_LOADING = 1;
 
     private Context context;
-    private PaymentsModel paymentsModel;
-    private List<BalanceItemDTO> historyList;
+    private HistoryItemClickListener callback;
+    private List<PaymentHistoryItem> paymentHistoryItems = new ArrayList<>();
+    private List<UserPracticeDTO> userPractices = new ArrayList<>();
+
+    private boolean isLoading = false;
+    private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
 
     /**
      * Constructor
      * @param context context
-     * @param paymentsModel payment model
+     * @param paymentHistoryItems payment history
      */
-    public PaymentHistoryAdapter(Context context, PaymentsModel paymentsModel) {
-
+    public PaymentHistoryAdapter(Context context, List<PaymentHistoryItem> paymentHistoryItems, List<UserPracticeDTO> userPractices, HistoryItemClickListener callback) {
         this.context = context;
-        this.paymentsModel = paymentsModel;
-        this.historyList = paymentsModel.getPaymentPayload().getPatientHistory()
-                .getPaymentsPatientCharges().getCharges();
-
+        this.paymentHistoryItems = paymentHistoryItems;
+        this.userPractices = userPractices;
+        this.callback = callback;
     }
 
     @Override
-    public PaymentHistoryAdapter.PaymentHistoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View paymentHistoryListItemView = LayoutInflater.from(context).inflate(
-                R.layout.history_list_item, parent, false);
-        return new PaymentHistoryAdapter.PaymentHistoryViewHolder(paymentHistoryListItemView);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view;
+        if(viewType == VIEW_TYPE_LOADING){
+            view = LayoutInflater.from(context).inflate(R.layout.item_loading, parent, false);
+        }else {
+            view = LayoutInflater.from(context).inflate(R.layout.history_list_item, parent, false);
+        }
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final PaymentHistoryAdapter.PaymentHistoryViewHolder holder, int position) {
-        final BalanceItemDTO charge = historyList.get(position);
-        String locationName = CarePayConstants.NOT_DEFINED;//charge.getLocation().getName();
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+        if(position >= paymentHistoryItems.size()){
+            return;
+        }
 
-        holder.shortName.setText(StringUtil.getShortName(locationName));
-        holder.locationName.setText(locationName);
-        holder.amount.setText(StringUtil.getFormattedBalanceAmount(charge.getAmount()));
-        holder.paymentDate.setText(DateUtil.getInstance().setDateRaw(charge.getPostingDate())
-                .getDateAsMonthLiteralDayOrdinalYear());
+        final PaymentHistoryItem item = paymentHistoryItems.get(position);
+
+        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(item.getPayload().getDate()).shiftDateToGMT();
+        holder.paymentDate.setText(dateUtil.getDateAsMonthLiteralDayOrdinalYear());
+        holder.amount.setText(currencyFormatter.format(item.getPayload().getTotalPaid()));
+
+        holder.image.setVisibility(View.GONE);
+        UserPracticeDTO userPracticeDTO = getUserPractice(item.getMetadata().getPracticeId());
+        if(userPracticeDTO != null) {
+            holder.locationName.setText(userPracticeDTO.getPracticeName());
+            holder.shortName.setText(StringUtil.getShortName(userPracticeDTO.getPracticeName()));
+            Picasso.with(context)
+                    .load(userPracticeDTO.getPracticePhoto())
+                    .resize(60,60)
+                    .centerCrop()
+                    .transform(new CircleImageTransform())
+                    .into(holder.image, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            holder.image.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onError() {
+                            holder.image.setVisibility(View.GONE);
+                        }
+                    });
+
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(context, paymentsModel);
-                receiptDialog.show();
+                callback.onHistoryItemClicked(item);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return historyList.size();
+        if(isLoading && !paymentHistoryItems.isEmpty()){
+            return paymentHistoryItems.size()+1;
+        }
+        return paymentHistoryItems.size();
     }
 
-    static class PaymentHistoryViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public int getItemViewType(int position){
+        if(position >= paymentHistoryItems.size()){
+            return VIEW_TYPE_LOADING;
+        }
+        return 0;
+    }
 
-        private CarePayTextView shortName;
-        private CarePayTextView locationName;
-        private CarePayTextView amount;
-        private CarePayTextView paymentDate;
+    /**
+     * Set the list
+     * @param paymentHistoryItems list items
+     */
+    public void setPaymentHistoryItems(List<PaymentHistoryItem> paymentHistoryItems){
+        this.paymentHistoryItems = paymentHistoryItems;
+        notifyDataSetChanged();
+    }
 
-        PaymentHistoryViewHolder(View itemView) {
+    /**
+     * Add items to existing list
+     * @param newItems new items
+     */
+    public void addHistoryList(List<PaymentHistoryItem> newItems){
+        this.paymentHistoryItems.addAll(newItems);
+        notifyDataSetChanged();
+    }
+
+    /**
+     * sets loading progress bar
+     * @param isLoading true to show progress bar
+     */
+    public void setLoading(boolean isLoading){
+        this.isLoading = isLoading;
+        notifyDataSetChanged();
+    }
+
+    private UserPracticeDTO getUserPractice(String practiceId){
+        for(UserPracticeDTO userPracticeDTO : userPractices){
+            if(userPracticeDTO.getPracticeId() != null && userPracticeDTO.getPracticeId().equals(practiceId)){
+                return userPracticeDTO;
+            }
+        }
+        return null;
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView shortName;
+        private TextView locationName;
+        private TextView amount;
+        private TextView paymentDate;
+        private ImageView image;
+
+        ViewHolder(View itemView) {
             super(itemView);
 
-            locationName = (CarePayTextView) itemView.findViewById(com.carecloud.carepaylibrary.R.id.historyLocation);
-            amount = (CarePayTextView) itemView.findViewById(com.carecloud.carepaylibrary.R.id.historyTotalAmount);
-            paymentDate = (CarePayTextView) itemView.findViewById(com.carecloud.carepaylibrary.R.id.historyDateTextView);
-            shortName = (CarePayTextView) itemView.findViewById(com.carecloud.carepaylibrary.R.id.historyAvatarTextView);
+            locationName = (TextView) itemView.findViewById(R.id.historyLocation);
+            amount = (TextView) itemView.findViewById(R.id.historyTotalAmount);
+            paymentDate = (TextView) itemView.findViewById(R.id.historyDateTextView);
+            shortName = (TextView) itemView.findViewById(R.id.historyAvatarTextView);
+            image = (ImageView) itemView.findViewById(R.id.historyImageView);
         }
     }
 }

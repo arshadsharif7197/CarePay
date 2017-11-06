@@ -29,7 +29,7 @@ import com.carecloud.carepay.service.library.dtos.DemographicsSettingsProposedEm
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -45,7 +45,7 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  */
 public class UpdateEmailFragment extends BaseFragment {
-    private DemographicsSettingsDTO demographicsSettingsDTO;
+    private DemographicDTO demographicsSettingsDTO;
     private DemographicsSettingsFragmentListener callback;
 
     private EditText emailEditText;
@@ -81,7 +81,7 @@ public class UpdateEmailFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
+        demographicsSettingsDTO = (DemographicDTO) callback.getDto();
     }
 
     @Nullable
@@ -239,7 +239,7 @@ public class UpdateEmailFragment extends BaseFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             updateEmailButton.setEnabled(true);
-            DemographicsSettingsDTO updatedSettings = DtoHelper.getConvertedDTO(DemographicsSettingsDTO.class, workflowDTO);
+            DemographicDTO updatedSettings = DtoHelper.getConvertedDTO(DemographicDTO.class, workflowDTO);
             String newEmail = updatedSettings.getPayload().getCurrentEmail();
             demographicsSettingsDTO.getPayload().setCurrentEmail(newEmail);
             getApplicationPreferences().setUserId(newEmail);

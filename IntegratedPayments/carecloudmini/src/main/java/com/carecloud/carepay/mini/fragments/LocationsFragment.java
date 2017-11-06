@@ -30,7 +30,7 @@ public class LocationsFragment extends RegistrationFragment implements Locations
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
         String selectedPractice = getApplicationHelper().getApplicationPreferences().getPracticeId();
-        locations = callback.getPreRegisterDataModel().getPracticeById(selectedPractice).getLocationsDTOList();
+        locations = callback.getPreRegisterDataModel().getPracticeById(selectedPractice).getSortedLocations();
 
     }
 
@@ -83,7 +83,11 @@ public class LocationsFragment extends RegistrationFragment implements Locations
             return;
         }
         getApplicationHelper().getApplicationPreferences().setLocationId(selectedLocationId);
-        callback.replaceFragment(new DeviceFragment(), true);
+        if(isSettingsActivity()){
+            callback.replaceFragment(new SettingsFragment(), false);
+        }else {
+            callback.replaceFragment(new DeviceFragment(), true);
+        }
     }
 
     @Override

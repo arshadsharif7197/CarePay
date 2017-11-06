@@ -53,7 +53,6 @@ import java.util.List;
 public class PaymentDistributionFragment extends BaseDialogFragment implements PaymentDistributionAdapter.PaymentDistributionCallback, PopupPickerAdapter.PopupPickCallback,
         AddPaymentItemFragment.AddItemCallback, PaymentDistributionEntryFragment.PaymentDistributionAmountCallback, BounceHelper.BounceHelperListener {
 
-    private TextView patientName;
     private TextView balance;
     private TextView paymentTotal;
     private TextView unapplied;
@@ -64,6 +63,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     private View newChargesLayout;
     private RecyclerView newChargesRecycler;
     private Button payButton;
+    private View emptyBalanceLayout;
 
     private BounceHelper balanceViewSwipeHelper;
     private BounceHelper chargeViewSwipeHelper;
@@ -127,7 +127,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
         setupButtons(view);
 
-        patientName = (TextView) view.findViewById(R.id.patient_name);
         balance = (TextView) view.findViewById(R.id.balance_value);
         unapplied = (TextView) view.findViewById(R.id.unapplied_value);
 
@@ -154,6 +153,10 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         chargeViewSwipeHelper = new BounceHelper(this);
         ItemTouchHelper chargesTouchHelper = new ItemTouchHelper(chargeViewSwipeHelper);
         chargesTouchHelper.attachToRecyclerView(newChargesRecycler);
+
+        emptyBalanceLayout = view.findViewById(R.id.empty_balance_layout);
+        TextView emptyMessage = (TextView) view.findViewById(R.id.no_payment_message);
+        emptyMessage.setText(Label.getLabel("payment_balance_empty_payment_screen"));
 
         setInitialValues(view);
         setAdapter();
@@ -189,13 +192,17 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             }
         });
 
-        Button addButton = (Button) view.findViewById(R.id.add_item_button);
-        addButton.setOnClickListener(new View.OnClickListener() {
+        View addButton = view.findViewById(R.id.add_item_button);
+        View addButtonEmpty = view.findViewById(R.id.add_item_button_empty);
+        View.OnClickListener addItem = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 callback.lookupChargeItem(paymentsModel.getPaymentPayload().getSimpleChargeItems(), PaymentDistributionFragment.this);
+                hideDialog();
             }
-        });
+        };
+        addButton.setOnClickListener(addItem);
+        addButtonEmpty.setOnClickListener(addItem);
 
         Button leftButton = (Button) view.findViewById(R.id.payment_left_button);
         leftButton.setOnClickListener(new View.OnClickListener() {
@@ -226,6 +233,17 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             @Override
             public void onClick(View view) {
                 callback.showAmountEntry(PaymentDistributionFragment.this, null, null);
+                hideDialog();
+            }
+        });
+
+        View historyButton = view.findViewById(R.id.button_history);
+        historyButton.setVisibility(paymentsModel.getPaymentPayload().getTransactionHistory().getPaymentHistoryList().isEmpty() ? View.INVISIBLE : View.VISIBLE);
+        historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.showPaymentHistory(paymentsModel);
+                hideDialog();
             }
         });
 
@@ -286,6 +304,20 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             PaymentDistributionAdapter adapter = (PaymentDistributionAdapter) newChargesRecycler.getAdapter();
             adapter.setBalanceItems(chargeItems);
             adapter.notifyDataSetChanged();
+        }
+
+        if(balanceItems.isEmpty() && chargeItems.isEmpty()){
+            emptyBalanceLayout.setVisibility(View.VISIBLE);
+            paymentTotal.setClickable(false);
+        }else{
+            if(balanceItems.isEmpty()){
+                balanceDetailsRecycler.setVisibility(View.GONE);
+                paymentTotal.setClickable(false);
+            }else{
+                balanceDetailsRecycler.setVisibility(View.VISIBLE);
+                paymentTotal.setClickable(true);
+            }
+            emptyBalanceLayout.setVisibility(View.GONE);
         }
     }
 
@@ -413,8 +445,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         }
     }
 
-    private void modifyLineItem(BalanceItemDTO updateBalanceItem, ProviderDTO updateProvider, LocationDTO updateLocation, Double updateAmount){
-        BalanceItemDTO balanceItem = updateBalanceItem;
+    private void modifyLineItem(BalanceItemDTO balanceItem, ProviderDTO updateProvider, LocationDTO updateLocation, Double updateAmount){
         if(updateAmount!=null){
             double difference;
             double currentAmount = balanceItem.getBalance();
@@ -539,6 +570,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     @Override
     public void pickAmount(BalanceItemDTO balanceItem) {
         callback.showAmountEntry(this, balanceItem, null);
+        hideDialog();
     }
 
     @Override
@@ -552,6 +584,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
     @Override
     public void addNewCharge(double amount, SimpleChargeItem chargeItem){
+        showDialog();
         BalanceItemDTO balanceItemDTO = new BalanceItemDTO();
         balanceItemDTO.setNewCharge(true);
         balanceItemDTO.setId(chargeItem.getId());
@@ -574,12 +607,24 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     }
 
     @Override
+    public void onDismissEntryDialog() {
+        showDialog();
+    }
+
+    @Override
     public void addChargeItem(SimpleChargeItem chargeItem) {
         callback.showAmountEntry(this, null, chargeItem);
+        hideDialog();
+    }
+
+    @Override
+    public void onDismissAddItemFragment() {
+        showDialog();
     }
 
     @Override
     public void applyNewDistributionAmount(double amount) {
+        showDialog();
         paymentAmount = amount;
         chargesAmount = 0D;
         updatePaymentAmount();
@@ -597,6 +642,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
     @Override
     public void applyAmountToBalanceItem(double amount, BalanceItemDTO balanceItem){
+        showDialog();
         modifyLineItem(balanceItem, null, null, amount);
         setAdapter();
     }
@@ -703,7 +749,12 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             paymentLineItem.setAmount(overPaymentAmount);
             paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_UNAPPLIED);
             paymentLineItem.setDescription("Unapplied Amount");
-
+            if(defaultProvider != null) {
+                paymentLineItem.setProviderID(defaultProvider.getGuid());
+            }
+            if(defaultLocation != null) {
+                paymentLineItem.setLocationID(defaultLocation.getGuid());
+            }
             postModel.addLineItem(paymentLineItem);
         }
 
@@ -718,18 +769,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             lineItem.setAmount(balanceItem.getAmount());
             if(balanceItem.getResponsibilityType()!=null){
                 //this is a responsibility item
-                switch (balanceItem.getResponsibilityType()){
-                    case co_insurance:
-                        lineItem.setItemType(IntegratedPaymentLineItem.TYPE_COINSURANCE);
-                        break;
-                    case deductable:
-                        lineItem.setItemType(IntegratedPaymentLineItem.TYPE_DEDUCTABLE);
-                        break;
-                    case co_pay:
-                    default:
-                        lineItem.setItemType(IntegratedPaymentLineItem.TYPE_COPAY);
-                        break;
-                }
+                lineItem.setItemType(balanceItem.getResponsibilityType());
             }else if(balanceItem.isNewCharge()){
                 lineItem.setItemType(IntegratedPaymentLineItem.TYPE_NEWCHARGE);
                 lineItem.setId(balanceItem.getId().toString());

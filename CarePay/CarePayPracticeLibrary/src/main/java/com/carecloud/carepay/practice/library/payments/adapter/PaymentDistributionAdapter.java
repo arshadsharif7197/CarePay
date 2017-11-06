@@ -14,8 +14,10 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.customcomponents.SwipeViewHolder;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
@@ -23,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by lmenendez on 3/14/17.
+ * Created by lmenendez on 3/14/17
  */
 
 public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDistributionAdapter.BalanceViewHolder> {
@@ -107,16 +109,28 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
             amountTextView.setText(currencyFormat.format(amount));
         }
 
-        if(StringUtil.isNullOrEmpty(balanceItem.getProvider().getPhoto())){
-            holder.getProviderInitials().setVisibility(View.VISIBLE);
-            holder.getProviderPhoto().setVisibility(View.GONE);
-        }else{
-            holder.getProviderInitials().setVisibility(View.GONE);
-            holder.getProviderPhoto().setVisibility(View.VISIBLE);
-            Picasso.with(context)
-                    .load(balanceItem.getProvider().getPhoto())
-                    .into(holder.getProviderPhoto());
-        }
+
+
+        int size = context.getResources().getDimensionPixelSize(R.dimen.payment_details_dialog_icon_size);
+        Picasso.with(context)
+                .load(balanceItem.getProvider().getPhoto())
+                .resize(size, size)
+                .centerCrop()
+                .transform(new CircleImageTransform())
+                .into(holder.getProviderPhoto(), new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        holder.getProviderInitials().setVisibility(View.GONE);
+                        holder.getProviderPhoto().setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        holder.getProviderInitials().setVisibility(View.VISIBLE);
+                        holder.getProviderPhoto().setVisibility(View.GONE);
+                    }
+                });
+
 
         amountTextView.setFocusable(false);
         amountTextView.setOnClickListener(new View.OnClickListener() {

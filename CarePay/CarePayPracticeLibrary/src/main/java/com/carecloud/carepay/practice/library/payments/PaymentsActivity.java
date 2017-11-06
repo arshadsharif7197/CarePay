@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -23,9 +24,13 @@ import com.carecloud.carepay.practice.library.payments.fragments.AddPaymentItemF
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionEntryFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PaymentHistoryFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentHistoryDetailFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.RefundDetailFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.RefundProcessFragment;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentNavigationCallback;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -47,6 +52,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
+import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -63,7 +69,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-public class PaymentsActivity extends BasePracticeActivity implements FilterDialog.FilterDialogListener, PracticePaymentNavigationCallback, DateRangePickerDialog.DateRangePickerDialogListener {
+public class PaymentsActivity extends BasePracticeActivity implements FilterDialog.FilterDialogListener,
+        PracticePaymentNavigationCallback, DateRangePickerDialog.DateRangePickerDialogListener {
 
     private PaymentsModel paymentsModel;
     private FilterModel filter;
@@ -305,18 +312,29 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         patientListView.applyFilter(filter);
     }
 
+    @Override
+    public void refreshData() {
+        onRangeSelected(startDate, endDate);
+    }
+
 
     @Override
     protected void processExternalPayment(PaymentExecution execution, Intent data) {
         switch (execution) {
             case clover: {
-                String jsonPayload = data.getStringExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA);
+                boolean isRefund = data.getBooleanExtra(CarePayConstants.CLOVER_REFUND_INTENT_FLAG, false);
+                final String jsonPayload = data.getStringExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA);
                 if (jsonPayload != null) {
-                    Gson gson = new Gson();
-//                    PaymentsModel paymentsModel = gson.fromJson(jsonPayload, PaymentsModel.class);
-                    WorkflowDTO workflowDTO = gson.fromJson(jsonPayload, WorkflowDTO.class);
-                    showPaymentConfirmation(workflowDTO);
+                    if(isRefund){
+                        Log.d("Process Refund Success", jsonPayload);
+                        PaymentHistoryItem historyItem = DtoHelper.getConvertedDTO(PaymentHistoryItem.class, jsonPayload);
+                        completeRefundProcess(historyItem, paymentsModel);
 
+                    }else {
+                        Gson gson = new Gson();
+                        WorkflowDTO workflowDTO = gson.fromJson(jsonPayload, WorkflowDTO.class);
+                        showPaymentConfirmation(workflowDTO);
+                    }
 
                 }
                 break;
@@ -387,7 +405,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
         PaymentDistributionFragment fragment = new PaymentDistributionFragment();
         fragment.setArguments(args);
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        displayDialogFragment(fragment, true);
 
     }
 
@@ -400,15 +418,14 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         PracticePaymentMethodDialogFragment fragment = PracticePaymentMethodDialogFragment
                 .newInstance(paymentsModel, amount);
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        displayDialogFragment(fragment, false);
     }
 
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
-//        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
         if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel, selectedPaymentMethod.getLabel(), amount);
-            fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+            displayDialogFragment(fragment, false);
         } else {
             showAddCard(amount, paymentsModel);
         }
@@ -432,7 +449,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-        if(!payload.getProcessingErrors().isEmpty() && PaymentConfirmationFragment.getTotalPaid(payload)==0D){
+        if(!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid()==0D){
             StringBuilder builder = new StringBuilder();
             for(IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()){
                 builder.append(processingError.getError());
@@ -461,8 +478,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
         DialogFragment fragment = new PracticeAddNewCreditCardFragment();
         fragment.setArguments(args);
-//        navigateToFragment(fragment, true);
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        displayDialogFragment(fragment, false);
     }
 
     @Override
@@ -478,7 +494,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     private void hidePaymentDistributionFragment(UpdatePatientBalancesDTO updatePatientBalance) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
+        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getName());
         if (fragment != null) {
             fragment.dismiss();
         }
@@ -525,7 +541,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             fragment.setArguments(args);
         }
 
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        displayDialogFragment(fragment, false);
     }
 
     @Override
@@ -539,9 +555,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         }
 
         entryFragment.setCallback(callback);
-        entryFragment.show(getSupportFragmentManager(), entryFragment.getClass().getSimpleName());
+        displayDialogFragment(entryFragment, false);
     }
-
 
     @Override
     public void onDetailCancelClicked(PaymentsModel paymentsModel) {
@@ -551,10 +566,48 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     @Override
     public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
+        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getName());
         if (fragment != null) {
             fragment.showDialog();
         }
+    }
+
+    @Override
+    public void showPaymentHistory(PaymentsModel paymentsModel) {
+        PaymentHistoryFragment fragment = PaymentHistoryFragment.newInstance(paymentsModel);
+        displayDialogFragment(fragment, false);
+    }
+
+
+    @Override
+    public void onDismissPaymentHistory() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getName());
+        if (fragment != null) {
+            fragment.showDialog();
+        }
+    }
+
+    @Override
+    public void displayHistoryItemDetails(PaymentHistoryItem item, PaymentsModel paymentsModel) {
+        PracticePaymentHistoryDetailFragment fragment = PracticePaymentHistoryDetailFragment.newInstance(item, paymentsModel);
+        displayDialogFragment(fragment, false);
+    }
+
+    @Override
+    public void startRefundProcess(PaymentHistoryItem historyItem, PaymentsModel paymentsModel) {
+//        getSupportFragmentManager().popBackStack(PaymentDistributionFragment.class.getName(), 0);
+        RefundProcessFragment fragment = RefundProcessFragment.newInstance(historyItem, paymentsModel);
+        displayDialogFragment(fragment, false);
+    }
+
+    @Override
+    public void completeRefundProcess(PaymentHistoryItem historyItem, PaymentsModel paymentsModel) {
+//        getSupportFragmentManager().popBackStackImmediate(PaymentDistributionFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+        RefundDetailFragment fragment = RefundDetailFragment.newInstance(historyItem, paymentsModel);
+        displayDialogFragment(fragment, false);
+
     }
 
     private View.OnClickListener selectDateRange = new View.OnClickListener() {
@@ -579,6 +632,14 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("start_date", getFormattedDate(start));
         queryMap.put("end_date", getFormattedDate(end));
+
+        String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
+        String userId = getApplicationMode().getUserPracticeDTO().getUserId();
+        Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
+
+        if(locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()){
+            queryMap.put("location_ids", StringUtil.getListAsCommaDelimitedString(locationsSavedFilteredIds));
+        }
 
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getPracticePayments();
         getWorkflowServiceHelper().execute(transitionDTO, getChangeDateCallback(start, end), queryMap);

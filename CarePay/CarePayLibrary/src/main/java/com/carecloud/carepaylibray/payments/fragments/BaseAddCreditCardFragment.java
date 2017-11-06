@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -29,9 +28,9 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialog;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialogFragment;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiAccountsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.MerchantServiceMetadataDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.MerchantServicesDTO;
+import com.carecloud.carepaylibray.payments.models.PapiAccountsDTO;
+import com.carecloud.carepaylibray.payments.models.MerchantServiceMetadataDTO;
+import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
 import com.carecloud.carepaylibray.payments.models.CreditCardBillingInformationDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
@@ -95,7 +94,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     private City smartyStreetsResponse;
     protected double amountToMakePayment;
     protected DemographicAddressPayloadDTO addressPayloadDTO;
-    private List<DemographicsSettingsPapiAccountsDTO> papiAccountsDTO;
+    private List<PapiAccountsDTO> papiAccountsDTO;
     protected PaymentCreditCardsPayloadDTO creditCardsPayloadDTO;
     protected CreditCardBillingInformationDTO billingInformationDTO;
     protected IAuthoriseCreditCardResponse authoriseCreditCardResponseCallback;
@@ -528,7 +527,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
             stateAutoCompleteTextView.getOnFocusChangeListener().onFocusChange(stateAutoCompleteTextView,
                     !StringUtil.isNullOrEmpty(addressPayloadDTO.getState()));
         } else {
-            useProfileAddressCheckBox.setChecked(false);
+//            useProfileAddressCheckBox.setChecked(false);
             useProfileAddressCheckBox.setEnabled(false);
             useProfileAddressCheckBox.setVisibility(View.GONE);
             setAddressFieldsEnabled(true);
@@ -650,7 +649,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
             int year = Integer.parseInt(selectedDate[1]);
             datePickerDialogFragment = SimpleDatePickerDialogFragment.getInstance(year, month - 1);
         } else {
-            DateUtil instance = DateUtil.getInstance();
+            DateUtil instance = DateUtil.getInstance().setToCurrent();
             datePickerDialogFragment = SimpleDatePickerDialogFragment.getInstance(instance.getYear(),
                     instance.getMonth());
         }

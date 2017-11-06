@@ -40,8 +40,6 @@ import java.util.Arrays;
 
 public class SystemUtil implements Thread.UncaughtExceptionHandler {
 
-    private static final String LOG_TAG = SystemUtil.class.getSimpleName();
-
     /**
      * Check device is tablet or not
      *
@@ -71,12 +69,6 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler {
     }
 
     @Deprecated
-    public static void setProximaNovaExtraboldTypeface(Context context, TextView view) {
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/ProximaNova-Extrabld.otf");
-        view.setTypeface(typeface);
-    }
-
-    @Deprecated
     public static void setProximaNovaExtraboldTypefaceInput(Context context, TextInputLayout view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/ProximaNova-Extrabld.otf");
         view.setTypeface(typeface);
@@ -89,52 +81,9 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler {
     }
 
     @Deprecated
-    public static void setProximaNovaSemiboldTextInputLayout(Context context, TextInputLayout view) {
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");
-        view.setTypeface(typeface);
-    }
-
-    @Deprecated
-    public static void setGothamRoundedBookTypeface(Context context, TextView view) {
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_book.otf");
-        view.setTypeface(typeface);
-    }
-
-    @Deprecated
     public static void setGothamRoundedMediumTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_medium.otf");
         view.setTypeface(typeface);
-    }
-
-    @Deprecated
-    public static void setGothamRoundedBoldTypeface(Context context, TextView view) {
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_bold.otf");
-        view.setTypeface(typeface);
-    }
-
-    @Deprecated
-    public static void setProximaNovaSemiboldTypefaceEdittext(Context context, EditText view) {
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");
-        view.setTypeface(typeface);
-    }
-
-    @Deprecated
-    public static void setProximaNovaLightTypeface(Context context, TextView view) {
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_light.otf");
-        view.setTypeface(typeface);
-    }
-
-
-    @Deprecated
-    /**
-     * Set the type face of a text input layout
-     *
-     * @param context The context
-     * @param layout  The layout
-     */
-    public static void setProximaNovaRegularTypefaceLayout(Context context, TextInputLayout layout) {
-        Typeface proximaNovaRegular = Typeface.createFromAsset(context.getResources().getAssets(), "fonts/proximanova_regular.otf");
-        layout.setTypeface(proximaNovaRegular);
     }
 
     /**
@@ -164,7 +113,7 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler {
      * @param activity The activity
      */
     public static void showSoftKeyboard(Activity activity) {
-        showSoftKeyboard((Context)activity);
+        showSoftKeyboard((Context) activity);
     }
 
     /**
@@ -231,19 +180,21 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler {
      * @param optionalListener Set if the view needs to do additional work on focus change
      * @return focus change listener
      */
-    public static View.OnFocusChangeListener getHintFocusChangeListener(final TextInputLayout textInputLayout, final View.OnFocusChangeListener optionalListener) {
+    public static View.OnFocusChangeListener getHintFocusChangeListener(final TextInputLayout textInputLayout,
+                                                                        final View.OnFocusChangeListener optionalListener) {
         return new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 TextView textView = (TextView) view;
                 String[] tags = (String[]) view.getTag();
                 if (tags == null && textInputLayout.getHint() != null) {
-                    tags = new String[]{textInputLayout.getHint().toString().toUpperCase(), textInputLayout.getHint().toString()};
+                    tags = new String[]{textInputLayout.getHint().toString().toUpperCase(),
+                            textInputLayout.getHint().toString()};
                     view.setTag(tags);
                 }
 
                 if (tags != null) {
-                    if (hasFocus || !StringUtil.isNullOrEmpty(textView.getText().toString())) {
+                    if (hasFocus || !StringUtil.isNullOrEmpty(textView.getText().toString()) || textInputLayout.isErrorEnabled()) {
                         textInputLayout.setHint(tags[0]);
                     } else {
                         textInputLayout.setHint(tags[1]);
@@ -360,7 +311,6 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler {
         TextView titleTextView = (TextView) customView.findViewById(R.id.title_view);
         titleTextView.setText(title);
         titleTextView.setVisibility(View.VISIBLE);
-
 
 
         // create the adapter

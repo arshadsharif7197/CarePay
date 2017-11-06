@@ -13,7 +13,7 @@ import java.util.List;
  * Created by Jahirul Bhuiyan on 9/28/2016.
  * Model for payload of response
  */
-public class DemographicPayloadResponseDTO extends DemographicsSettingsPayloadDTO{
+public class DemographicPayloadResponseDTO extends DemographicsSettingsPayloadDTO {
 
     @SerializedName("qrcode")
     @Expose

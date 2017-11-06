@@ -18,28 +18,31 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.appointments.adapters.ProviderAdapter;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.interfaces.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentFragment;
+import com.carecloud.carepaylibray.appointments.interfaces.ProviderInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentPayloadModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class ChooseProviderFragment extends BaseAppointmentFragment implements ProviderAdapter.OnProviderListItemClickListener {
+public class ChooseProviderFragment extends BaseAppointmentFragment
+        implements ProviderAdapter.OnProviderListItemClickListener {
 
     private RecyclerView providersRecyclerView;
     private ProgressBar appointmentProgressBar;
@@ -49,7 +52,23 @@ public class ChooseProviderFragment extends BaseAppointmentFragment implements P
     private ChooseProviderFragment chooseProviderFragment;
     private List<AppointmentResourcesDTO> resources;
 
-    private AppointmentNavigationCallback callback;
+    private ProviderInterface callback;
+
+    /**
+     * @param appointmentsResultModel the model
+     * @param practiceMgmt
+     * @param practiceId              @return a new instance of ChooseProviderFragment
+     */
+    public static ChooseProviderFragment newInstance(AppointmentsResultModel appointmentsResultModel,
+                                                     String practiceMgmt, String practiceId) {
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, appointmentsResultModel);
+        args.putString("practiceMgmt", practiceMgmt);
+        args.putString("practiceId", practiceId);
+        ChooseProviderFragment fragment = new ChooseProviderFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -60,20 +79,20 @@ public class ChooseProviderFragment extends BaseAppointmentFragment implements P
     @Override
     protected void attachCallback(Context context) {
         try {
-            if(context instanceof AppointmentViewHandler){
+            if (context instanceof AppointmentViewHandler) {
                 callback = ((AppointmentViewHandler) context).getAppointmentPresenter();
-            }else {
-                callback = (AppointmentNavigationCallback) context;
+            } else {
+                callback = (ProviderInterface) context;
             }
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached context must implement AppointmentNavigationCallback");
+            throw new ClassCastException("Attached context must implement ProviderInterface");
         }
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(callback == null){
+        if (callback == null) {
             attachCallback(getContext());
         }
     }
@@ -82,27 +101,23 @@ public class ChooseProviderFragment extends BaseAppointmentFragment implements P
     @SuppressLint("InflateParams")
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, getArguments());
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_choose_provider, container, false);
+    }
 
-        final View chooseProviderView = inflater.inflate(R.layout.fragment_choose_provider, container, false);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         chooseProviderFragment = this;
 
-        Bundle args = getArguments();
-        if (args != null && args.containsKey(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE)) {
-            Gson gson = new Gson();
-            String appointmentInfoString = args.getString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE);
-            appointmentsResultModel = gson.fromJson(appointmentInfoString, AppointmentsResultModel.class);
-        }
 
-        // set the toolbar
-        hideDefaultActionBar();
-
-        Toolbar toolbar = (Toolbar) chooseProviderView.findViewById(R.id.add_appointment_toolbar);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.add_appointment_toolbar);
         TextView titleView = (TextView) toolbar.findViewById(R.id.add_appointment_toolbar_title);
         titleView.setText(Label.getLabel("choose_provider_heading"));
         titleView.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
@@ -114,23 +129,32 @@ public class ChooseProviderFragment extends BaseAppointmentFragment implements P
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                showDefaultActionBar();
                 getActivity().onBackPressed();
             }
         });
 
-        providersRecyclerView = ((RecyclerView) chooseProviderView.findViewById(R.id.providers_recycler_view));
-        appointmentProgressBar = (ProgressBar) chooseProviderView.findViewById(R.id.providers_progress_bar);
+        providersRecyclerView = ((RecyclerView) view.findViewById(R.id.providers_recycler_view));
+        appointmentProgressBar = (ProgressBar) view.findViewById(R.id.providers_progress_bar);
         appointmentProgressBar.setVisibility(View.GONE);
 
         //Fetch provider data
         getResourcesInformation();
-
-        return chooseProviderView;
     }
 
     private void getResourcesInformation() {
-        TransitionDTO resourcesToSchedule = appointmentsResultModel.getMetadata().getLinks().getResourcesToSchedule();
-        getWorkflowServiceHelper().execute(resourcesToSchedule, scheduleResourcesCallback);
+        TransitionDTO resourcesToSchedule = appointmentsResultModel.getMetadata()
+                .getLinks().getResourcesToSchedule();
+        Map<String, String> queryMap = new HashMap<>();
+        String practiceId = getArguments().getString("practiceId");
+        String practiceMgmt = getArguments().getString("practiceMgmt");
+        if (practiceId != null) {
+            queryMap.put("practice_id", practiceId);
+        }
+        if (practiceMgmt != null) {
+            queryMap.put("practice_mgmt", practiceMgmt);
+        }
+        getWorkflowServiceHelper().execute(resourcesToSchedule, scheduleResourcesCallback, queryMap);
     }
 
     private WorkflowServiceCallback scheduleResourcesCallback = new WorkflowServiceCallback() {
@@ -146,9 +170,8 @@ public class ChooseProviderFragment extends BaseAppointmentFragment implements P
             Gson gson = new Gson();
             resourcesToScheduleModel = gson.fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
 
-            if (resourcesToScheduleModel != null && !resourcesToScheduleModel.getPayload().getResourcesToSchedule().isEmpty()) {
-
-//                resources = resourcesToScheduleModel.getPayload().getResourcesToSchedule().get(0).getResources();
+            if (resourcesToScheduleModel != null && !resourcesToScheduleModel.getPayload()
+                    .getResourcesToSchedule().isEmpty()) {
                 resources = getResourcesFromPayload(resourcesToScheduleModel.getPayload());
                 if (resources.size() > 0) {
                     Collections.sort(resources, new Comparator<AppointmentResourcesDTO>() {
@@ -198,22 +221,24 @@ public class ChooseProviderFragment extends BaseAppointmentFragment implements P
     @Override
     public void onProviderListItemClickListener(int position) {
         AppointmentResourcesDTO selectedResource = resources.get(position - 1);
-        callback.onProviderSelected(selectedResource, resourcesToScheduleModel, getSelectedResourcesToSchedule(selectedResource));
+        callback.onProviderSelected(selectedResource, resourcesToScheduleModel,
+                getSelectedResourcesToSchedule(selectedResource));
     }
 
-    private List<AppointmentResourcesDTO> getResourcesFromPayload(AppointmentPayloadModel payloadModel){
+    private List<AppointmentResourcesDTO> getResourcesFromPayload(AppointmentPayloadModel payloadModel) {
         List<AppointmentResourcesDTO> resources = new ArrayList<>();
-        for(ResourcesToScheduleDTO resourcesToScheduleDTO : payloadModel.getResourcesToSchedule()){
+        for (ResourcesToScheduleDTO resourcesToScheduleDTO : payloadModel.getResourcesToSchedule()) {
             resources.addAll(resourcesToScheduleDTO.getResources());
         }
         return resources;
     }
 
-    private ResourcesToScheduleDTO getSelectedResourcesToSchedule(AppointmentResourcesDTO selectedResource){
-        List<ResourcesToScheduleDTO> resourcesToScheduleDTOList = resourcesToScheduleModel.getPayload().getResourcesToSchedule();
-        for(ResourcesToScheduleDTO resourcesToScheduleDTO : resourcesToScheduleDTOList){
-            for(AppointmentResourcesDTO appointmentResourcesDTO : resourcesToScheduleDTO.getResources()){
-                if(appointmentResourcesDTO == selectedResource){
+    private ResourcesToScheduleDTO getSelectedResourcesToSchedule(AppointmentResourcesDTO selectedResource) {
+        List<ResourcesToScheduleDTO> resourcesToScheduleDTOList = resourcesToScheduleModel
+                .getPayload().getResourcesToSchedule();
+        for (ResourcesToScheduleDTO resourcesToScheduleDTO : resourcesToScheduleDTOList) {
+            for (AppointmentResourcesDTO appointmentResourcesDTO : resourcesToScheduleDTO.getResources()) {
+                if (appointmentResourcesDTO == selectedResource) {
                     return resourcesToScheduleDTO;
                 }
             }

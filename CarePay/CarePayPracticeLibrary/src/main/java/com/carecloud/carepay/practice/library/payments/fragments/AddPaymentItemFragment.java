@@ -16,7 +16,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
-import com.carecloud.carepaylibray.payments.models.postmodel.ResponsibilityType;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -25,12 +25,14 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by lmenendez on 3/16/17.
+ * Created by lmenendez on 3/16/17
  */
 
 public class AddPaymentItemFragment extends BaseDialogFragment implements AddPaymentItemAdapter.AddPaymentItemCallback {
     public interface AddItemCallback{
         void addChargeItem(SimpleChargeItem chargeItem);
+
+        void onDismissAddItemFragment();
     }
 
     private SearchView searchView;
@@ -69,6 +71,7 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
             @Override
             public void onClick(View view) {
                 dismiss();
+                callback.onDismissAddItemFragment();
             }
         });
 
@@ -122,13 +125,15 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
     };
 
     private void getBaseTemplateItems(){
-        addTemplateItem(Label.getLabel("practice_payments_detail_dialog_insurance_copay"), 0, ResponsibilityType.co_pay);
-        addTemplateItem(Label.getLabel("practice_payments_detail_dialog_co_insurance"), 0, ResponsibilityType.co_insurance);
-        addTemplateItem(Label.getLabel("practice_payments_detail_dialog_insurance_deductible"), 0, ResponsibilityType.deductable);
-        addTemplateItem(Label.getLabel("practice_payments_detail_dialog_pre_payment"), 0, ResponsibilityType.prepayment);
+        addTemplateItem(Label.getLabel("practice_payments_detail_dialog_insurance_copay"), 0D, IntegratedPaymentLineItem.TYPE_COPAY);
+        addTemplateItem(Label.getLabel("practice_payments_detail_dialog_co_insurance"), 0D, IntegratedPaymentLineItem.TYPE_COINSURANCE);
+        addTemplateItem(Label.getLabel("practice_payments_detail_dialog_insurance_deductible"), 0D, IntegratedPaymentLineItem.TYPE_DEDUCTABLE);
+        addTemplateItem(Label.getLabel("practice_payments_detail_dialog_pre_payment"), 0D, IntegratedPaymentLineItem.TYPE_PREPAYMENT);
+        addTemplateItem(Label.getLabel("practice_payments_detail_dialog_cancellation_fee"), 0D, IntegratedPaymentLineItem.TYPE_CANCELLATION);
+        addTemplateItem(Label.getLabel("practice_payments_detail_dialog_other"), 0D, IntegratedPaymentLineItem.TYPE_OTHER);
 }
 
-    private void addTemplateItem(String description, double amount, ResponsibilityType responsibilityType){
+    private void addTemplateItem(String description, double amount, @IntegratedPaymentLineItem.LineItemType String responsibilityType){
         SimpleChargeItem templateItem = new SimpleChargeItem();
         templateItem.setDescription(description);
         templateItem.setAmount(amount);

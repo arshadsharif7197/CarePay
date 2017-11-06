@@ -16,11 +16,18 @@ import java.util.Date;
 
 public interface CheckOutInterface extends AppointmentPrepaymentCallback, FragmentActivityInterface {
 
-    void showAvailableHoursFragment(Date startDate, Date endDate, AppointmentsResultModel appointmentsResultModel, AppointmentResourcesItemDTO resourcesItemDTO, VisitTypeDTO visitTypeDTO);
+    void showAvailableHoursFragment(Date startDate, Date endDate,
+                                    AppointmentsResultModel appointmentsResultModel,
+                                    AppointmentResourcesItemDTO resourcesItemDTO,
+                                    VisitTypeDTO visitTypeDTO);
+
+
 
     void showAllDone(WorkflowDTO workflowDTO);
 
     void navigateToWorkflow(WorkflowDTO workflowDTO);
 
     boolean shouldAllowNavigateBack();
+
+    void showChooseProviderFragment();
 }

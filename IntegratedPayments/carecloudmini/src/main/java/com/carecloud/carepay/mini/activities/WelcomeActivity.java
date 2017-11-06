@@ -1,6 +1,11 @@
 package com.carecloud.carepay.mini.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -47,6 +52,7 @@ public class WelcomeActivity extends FullScreenActivity {
     private static final int CONNECTION_RETRY_DELAY = 1000 * 3;
     private static final int PAYMENT_COMPLETE_RESET = 1000 * 3;
     private static final int POST_RETRY_DELAY = 1000 * 10;
+    private static final int DEVICE_KEEP_ALIVE_PERIOD = 1000 * 30;
 
     private ApplicationHelper applicationHelper;
     private TextView message;
@@ -56,6 +62,8 @@ public class WelcomeActivity extends FullScreenActivity {
 
     private int paymentAttempt = 0;
     private boolean isDisconnecting = false;
+    private boolean isResumed = false;
+
 
     @Override
     protected void onCreate(Bundle icicle){
@@ -64,18 +72,23 @@ public class WelcomeActivity extends FullScreenActivity {
         handler = new Handler();
 
         setContentView(R.layout.activity_welcome);
-        setPracticeDetails();
 
         message = (TextView) findViewById(R.id.welcome_message);
         TextView environment = (TextView) findViewById(R.id.environment_label);
         environment.setText(HttpConstants.getEnvironment());
+
+
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(connectionStateChangedReceiver, intentFilter);
     }
 
     @Override
     protected void onStart(){
         super.onStart();
+        setPracticeDetails();
         if(connectedDevice == null || !connectedDevice.isProcessing()) {
             connectDevice();
+            scheduleDeviceRefresh();
         }
     }
 
@@ -83,8 +96,27 @@ public class WelcomeActivity extends FullScreenActivity {
     protected void onStop(){
         if(connectedDevice == null || !connectedDevice.isProcessing()) {
             disconnectDevice();
+            handler.removeCallbacks(deviceStateRefresh);
         }
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy(){
+        unregisterReceiver(connectionStateChangedReceiver);
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        isResumed = true;
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        isResumed = false;
     }
 
     private void setPracticeDetails(){
@@ -140,7 +172,8 @@ public class WelcomeActivity extends FullScreenActivity {
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toggleCustomerMode();
+                Intent intent = new Intent(WelcomeActivity.this, SettingsActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -501,4 +534,30 @@ public class WelcomeActivity extends FullScreenActivity {
 //        reconnectDevice();
     }
 
+    private BroadcastReceiver connectionStateChangedReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction()!= null && intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)){
+                ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+                if(isResumed && networkInfo != null && networkInfo.isConnected()){
+                    connectDevice();
+                }
+            }
+        }
+    };
+
+    private void scheduleDeviceRefresh(){
+        handler.postDelayed(deviceStateRefresh, DEVICE_KEEP_ALIVE_PERIOD);
+    }
+
+    private Runnable deviceStateRefresh = new Runnable() {
+        @Override
+        public void run() {
+            if(connectedDevice == null || !connectedDevice.getState().equals(Device.STATE_IN_USE)){
+                connectDevice();
+            }
+            scheduleDeviceRefresh();
+        }
+    };
 }

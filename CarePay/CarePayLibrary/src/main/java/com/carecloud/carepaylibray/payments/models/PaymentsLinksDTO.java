@@ -34,6 +34,12 @@ public class PaymentsLinksDTO {
     @SerializedName("find_patient")
     @Expose
     private TransitionDTO findPatient = new TransitionDTO();
+    @SerializedName("payment_summary")
+    @Expose
+    private TransitionDTO paymentTransactionHistory = new TransitionDTO();
+    @SerializedName("list_papi_accounts_by_practice")
+    @Expose
+    private TransitionDTO papiAccounts = new TransitionDTO();
 
     /**
      * 
@@ -185,5 +191,21 @@ public class PaymentsLinksDTO {
 
     public void setFindPatient(TransitionDTO findPatient) {
         this.findPatient = findPatient;
+    }
+
+    public TransitionDTO getPaymentTransactionHistory() {
+        return paymentTransactionHistory;
+    }
+
+    public void setPaymentTransactionHistory(TransitionDTO paymentTransactionHistory) {
+        this.paymentTransactionHistory = paymentTransactionHistory;
+    }
+
+    public TransitionDTO getPapiAccounts() {
+        return papiAccounts;
+    }
+
+    public void setPapiAccounts(TransitionDTO papiAccounts) {
+        this.papiAccounts = papiAccounts;
     }
 }

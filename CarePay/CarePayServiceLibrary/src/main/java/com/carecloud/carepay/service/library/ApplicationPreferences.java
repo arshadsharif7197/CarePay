@@ -59,6 +59,7 @@ public class ApplicationPreferences {
     private
     @Defs.AppointmentNavigationTypeDef
     Integer navigationOption;
+    private String userName;
 
     public ApplicationPreferences(Context context) {
         this.context = context;
@@ -368,5 +369,13 @@ public class ApplicationPreferences {
 
     public Set<String> getSelectedLocationsIds(String practiceId, String userId) {
         return readStringSetFromSharedPref(practiceId + userId + PREFERENCE_FILTERED_LOCATIONS);
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

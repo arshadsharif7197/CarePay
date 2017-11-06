@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/reviewdemographicsDemographicContainer"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="-57dp"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/demogr_details_section_top_margin">
+
+    <include layout="@layout/fragment_base_demographics" />
+
+    <include layout="@layout/fragment_expanded_demographics"/>
+
+</LinearLayout>

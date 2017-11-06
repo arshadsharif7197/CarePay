@@ -141,7 +141,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         address.getOnFocusChangeListener().onFocusChange(address,
                 !StringUtil.isNullOrEmpty(address.getText().toString().trim()));
         if (addressSection.getProperties().getAddress1().isRequired()) {
-            address.addTextChangedListener(getValidateEmptyTextWatcher(address2InputLayout));
+            address.addTextChangedListener(getValidateEmptyTextWatcher(addressInputLayout));
         }
         address.addTextChangedListener(new TextWatcher() {
             @Override
@@ -288,39 +288,56 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
     @Override
     protected boolean passConstraints(View view) {
-        if (dataModel.getDemographic().getAddress().getProperties().getAddress1().isRequired()
-                && checkTextEmptyValue(R.id.addressEditTextId, view)) {
-            return false;
-        }
-        if (dataModel.getDemographic().getAddress().getProperties().getAddress2().isRequired()
-                && checkTextEmptyValue(R.id.addressEditText2Id, view)) {
-            return false;
-        }
-        if (dataModel.getDemographic().getAddress().getProperties().getZipcode().isRequired()
-                && checkTextEmptyValue(R.id.zipCodeId, view)) {
-            return false;
-        }
-        if (dataModel.getDemographic().getAddress().getProperties().getCity().isRequired()
-                && checkTextEmptyValue(R.id.cityId, view)) {
-            return false;
-        }
-        if (dataModel.getDemographic().getAddress().getProperties().getState().isRequired()
-                && StringUtil.isNullOrEmpty(selectedState.getName())) {
-            return false;
-        }
+        try {
+            if (dataModel.getDemographic().getAddress().getProperties().getAddress1().isRequired()
+                    && checkTextEmptyValue(R.id.addressEditTextId, view)) {
+                if(isUserAction()){
+                    setDefaultError(view, R.id.address1TextInputLayout);
+                }
+                return false;
+            }
+            if (dataModel.getDemographic().getAddress().getProperties().getAddress2().isRequired()
+                    && checkTextEmptyValue(R.id.addressEditText2Id, view)) {
+                if(isUserAction()){
+                    setDefaultError(view, R.id.address2TextInputLayout);
+                }
+                return false;
+            }
+            if (dataModel.getDemographic().getAddress().getProperties().getZipcode().isRequired()
+                    && checkTextEmptyValue(R.id.zipCodeId, view)) {
+                if(isUserAction()){
+                    setDefaultError(view, R.id.zipCodeTextInputLayout);
+                }
+                return false;
+            }
+            if (dataModel.getDemographic().getAddress().getProperties().getCity().isRequired()
+                    && checkTextEmptyValue(R.id.cityId, view)) {
+                if(isUserAction()){
+                    setDefaultError(view, R.id.cityTextInputLayout);
+                }
+                return false;
+            }
+            if (dataModel.getDemographic().getAddress().getProperties().getState().isRequired()
+                    && StringUtil.isNullOrEmpty(selectedState.getName())) {
+                if(isUserAction()){
+                    setDefaultError(view, R.id.stateTextInputLayout);
+                }
+                return false;
+            }
 
-        TextInputLayout zipLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
-        EditText zipCode = (EditText) view.findViewById(R.id.zipCodeId);
+            TextInputLayout zipLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
+            EditText zipCode = (EditText) view.findViewById(R.id.zipCodeId);
+            if (zipLayout.getVisibility() == View.VISIBLE &&
+                    !StringUtil.isNullOrEmpty(zipCode.getText().toString().trim()) &&
+                    !ValidationHelper.isValidString(zipCode.getText().toString().trim(), ValidationHelper.ZIP_CODE_PATTERN)) {
+                setFieldError(zipLayout, Label.getLabel("demographics_zip_code_validation_msg"));
+                return false;
+            }
 
-        if(zipLayout.getVisibility() == View.VISIBLE &&
-                !StringUtil.isNullOrEmpty(zipCode.getText().toString().trim()) &&
-                !ValidationHelper.isValidString(zipCode.getText().toString().trim(), ValidationHelper.ZIP_CODE_PATTERN)){
-            zipLayout.setErrorEnabled(true);
-            zipLayout.setError(Label.getLabel("demographics_zip_code_validation_msg"));
-            return false;
+            return true;
+        }finally {
+            setUserAction(false);
         }
-
-        return true;
     }
 
     @Override

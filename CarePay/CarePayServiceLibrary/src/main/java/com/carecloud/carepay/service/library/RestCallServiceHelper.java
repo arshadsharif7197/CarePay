@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -113,7 +114,90 @@ public class RestCallServiceHelper {
                                String jsonBody,
                                String... pathParams) {
 
-        executeRequest(method, baseUrl, callback, authQueryParams, authTokenName, queryMap, headerMap, jsonBody, null, pathParams);
+        executeRequest(method, baseUrl, callback, true, authQueryParams, authTokenName, queryMap, headerMap, jsonBody, null, null, pathParams);
+    }
+
+    /**
+     * Make Rest service call with option to set authorization headers as query params
+     *
+     * @param method          REST method
+     * @param baseUrl         base url
+     * @param callback        callback method
+     * @param fullHeaders     use full auth headers in addition to supplied headers
+     * @param authQueryParams optionally pass header auths as query params
+     * @param authTokenName   optional name to pass for the auth token in query param
+     * @param queryMap        optional query params
+     * @param headerMap       optional headers
+     * @param jsonBody        optional request body
+     * @param pathParams      optional path params, must be passed in order
+     */
+    public void executeRequest(@RestDef.RestMethod String method,
+                               @NonNull String baseUrl,
+                               @NonNull final RestCallServiceCallback callback,
+                               boolean fullHeaders,
+                               boolean authQueryParams,
+                               String authTokenName,
+                               Map<String, String> queryMap,
+                               Map<String, String> headerMap,
+                               String jsonBody,
+                               String... pathParams) {
+
+        executeRequest(method, baseUrl, callback, fullHeaders, authQueryParams, authTokenName, queryMap, headerMap, jsonBody, null, null, pathParams);
+    }
+
+
+    /**
+     * Make Rest service call with option to set authorization headers as query params
+     *
+     * @param method          REST method
+     * @param baseUrl         base url
+     * @param callback        callback method
+     * @param authQueryParams optionally pass header auths as query params
+     * @param authTokenName   optional name to pass for the auth token in query param
+     * @param queryMap        optional query params
+     * @param headerMap       optional headers
+     * @param requestBody     optional requestBody
+     * @param pathParams      optional path params, must be passed in order
+     */
+    public void executeRequest(@RestDef.RestMethod String method,
+                               @NonNull String baseUrl,
+                               @NonNull final RestCallServiceCallback callback,
+                               boolean authQueryParams,
+                               String authTokenName,
+                               Map<String, String> queryMap,
+                               Map<String, String> headerMap,
+                               RequestBody requestBody,
+                               String... pathParams) {
+
+        executeRequest(method, baseUrl, callback, true, authQueryParams, authTokenName, queryMap, headerMap, requestBody, pathParams);
+    }
+
+    /**
+     * Make Rest service call with option to set authorization headers as query params
+     *
+     * @param method          REST method
+     * @param baseUrl         base url
+     * @param callback        callback method
+     * @param fullHeaders     use full auth headers in addition to supplied headers
+     * @param authQueryParams optionally pass header auths as query params
+     * @param authTokenName   optional name to pass for the auth token in query param
+     * @param queryMap        optional query params
+     * @param headerMap       optional headers
+     * @param requestBody     optional requestBody
+     * @param pathParams      optional path params, must be passed in order
+     */
+    public void executeRequest(@RestDef.RestMethod String method,
+                               @NonNull String baseUrl,
+                               @NonNull final RestCallServiceCallback callback,
+                               boolean fullHeaders,
+                               boolean authQueryParams,
+                               String authTokenName,
+                               Map<String, String> queryMap,
+                               Map<String, String> headerMap,
+                               RequestBody requestBody,
+                               String... pathParams) {
+
+        executeRequest(method, baseUrl, callback, fullHeaders, authQueryParams, authTokenName, queryMap, headerMap, null, null, requestBody, pathParams);
     }
 
     /**
@@ -139,18 +223,20 @@ public class RestCallServiceHelper {
                                Map<String, String> fieldMap,
                                String... pathParams) {
 
-        executeRequest(method, baseUrl, callback, authQueryParams, authTokenName, queryMap, headerMap, null, fieldMap, pathParams);
+        executeRequest(method, baseUrl, callback, true, authQueryParams, authTokenName, queryMap, headerMap, null, fieldMap, null, pathParams);
     }
 
     private void executeRequest(@RestDef.RestMethod String method,
                                 @NonNull String baseUrl,
                                 @NonNull final RestCallServiceCallback callback,
+                                boolean fullHeaders,
                                 boolean authQueryParams,
                                 String authTokenName,
                                 Map<String, String> queryMap,
                                 Map<String, String> headerMap,
                                 String jsonBody,
                                 Map<String, String> fieldMap,
+                                RequestBody requestBody,
                                 String... pathParams) {
 
         callback.onPreExecute();
@@ -158,7 +244,7 @@ public class RestCallServiceHelper {
         if (authQueryParams) {
             queryMap = getAuthQueryParams(queryMap, authTokenName);
         }
-        Call<JsonElement> requestCall = getServiceCall(method, baseUrl, urlPath, headerMap, queryMap, jsonBody, fieldMap);
+        Call<JsonElement> requestCall = getServiceCall(method, baseUrl, urlPath, fullHeaders, headerMap, queryMap, jsonBody, fieldMap, requestBody);
         requestCall.enqueue(new Callback<JsonElement>() {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
@@ -213,21 +299,26 @@ public class RestCallServiceHelper {
     private Call<JsonElement> getServiceCall(@RestDef.RestMethod String method,
                                              String baseUrl,
                                              String urlPath,
+                                             boolean fullHeaders,
                                              Map<String, String> headerMap,
                                              Map<String, String> queryMap,
                                              String jsonBody,
-                                             Map<String, String> fieldMap) {
-        RestCallService restCallService = RestServiceGenerator.getInstance().createService(RestCallService.class, getFullHeaders(headerMap), baseUrl);
+                                             Map<String, String> fieldMap,
+                                             RequestBody requestBody) {
+        if (fullHeaders) {
+            headerMap = getFullHeaders(headerMap);
+        }
+        RestCallService restCallService = RestServiceGenerator.getInstance().createService(RestCallService.class, headerMap, baseUrl);
         switch (method) {
             default:
             case RestDef.GET:
-                return getGetCall(restCallService, urlPath, queryMap, jsonBody, fieldMap);
+                return getGetCall(restCallService, urlPath, queryMap, jsonBody, fieldMap, requestBody);
             case RestDef.POST:
-                return getPostCall(restCallService, urlPath, queryMap, jsonBody, fieldMap);
+                return getPostCall(restCallService, urlPath, queryMap, jsonBody, fieldMap, requestBody);
             case RestDef.DELETE:
-                return getDeleteCall(restCallService, urlPath, queryMap, jsonBody, fieldMap);
+                return getDeleteCall(restCallService, urlPath, queryMap, jsonBody, fieldMap, requestBody);
             case RestDef.PUT:
-                return getPutCall(restCallService, urlPath, queryMap, jsonBody, fieldMap);
+                return getPutCall(restCallService, urlPath, queryMap, jsonBody, fieldMap, requestBody);
         }
     }
 
@@ -235,7 +326,12 @@ public class RestCallServiceHelper {
                                          String urlPath,
                                          Map<String, String> queryMap,
                                          String jsonBody,
-                                         Map<String, String> fieldMap) {
+                                         Map<String, String> fieldMap,
+                                         RequestBody requestBody) {
+
+        if (requestBody != null && queryMap != null && !queryMap.isEmpty()) {
+            return restCallService.executeGet(urlPath, requestBody, queryMap);
+        }
 
         if (jsonBody != null && queryMap != null && !queryMap.isEmpty()) {
             return restCallService.executeGet(urlPath, jsonBody, queryMap);
@@ -249,6 +345,10 @@ public class RestCallServiceHelper {
             return restCallService.executeGet(urlPath, queryMap);
         }
 
+        if (requestBody != null) {
+            return restCallService.executeGet(urlPath, requestBody);
+        }
+
         if (jsonBody != null) {
             return restCallService.executeGet(urlPath, jsonBody);
         }
@@ -260,7 +360,12 @@ public class RestCallServiceHelper {
                                           String urlPath,
                                           Map<String, String> queryMap,
                                           String jsonBody,
-                                          Map<String, String> fieldMap) {
+                                          Map<String, String> fieldMap,
+                                          RequestBody requestBody) {
+
+        if (requestBody != null && queryMap != null && !queryMap.isEmpty()) {
+            return restCallService.executePost(urlPath, requestBody, queryMap);
+        }
 
         if (jsonBody != null && queryMap != null && !queryMap.isEmpty()) {
             return restCallService.executePost(urlPath, jsonBody, queryMap);
@@ -272,6 +377,10 @@ public class RestCallServiceHelper {
 
         if (queryMap != null && !queryMap.isEmpty()) {
             return restCallService.executePost(urlPath, queryMap);
+        }
+
+        if (requestBody != null) {
+            return restCallService.executePost(urlPath, requestBody);
         }
 
         if (jsonBody != null) {
@@ -286,7 +395,12 @@ public class RestCallServiceHelper {
                                             String urlPath,
                                             Map<String, String> queryMap,
                                             String jsonBody,
-                                            Map<String, String> fieldMap) {
+                                            Map<String, String> fieldMap,
+                                            RequestBody requestBody) {
+
+        if (requestBody != null && queryMap != null && !queryMap.isEmpty()) {
+            return restCallService.executeDelete(urlPath, requestBody, queryMap);
+        }
 
         if (jsonBody != null && queryMap != null && !queryMap.isEmpty()) {
             return restCallService.executeDelete(urlPath, jsonBody, queryMap);
@@ -298,6 +412,10 @@ public class RestCallServiceHelper {
 
         if (queryMap != null && !queryMap.isEmpty()) {
             return restCallService.executeDelete(urlPath, queryMap);
+        }
+
+        if (requestBody != null) {
+            return restCallService.executeDelete(urlPath, requestBody);
         }
 
         if (jsonBody != null) {
@@ -312,7 +430,12 @@ public class RestCallServiceHelper {
                                          String urlPath,
                                          Map<String, String> queryMap,
                                          String jsonBody,
-                                         Map<String, String> fieldMap) {
+                                         Map<String, String> fieldMap,
+                                         RequestBody requestBody) {
+
+        if (requestBody != null && queryMap != null && !queryMap.isEmpty()) {
+            return restCallService.executePut(urlPath, requestBody, queryMap);
+        }
 
         if (jsonBody != null && queryMap != null && !queryMap.isEmpty()) {
             return restCallService.executePut(urlPath, jsonBody, queryMap);
@@ -324,6 +447,10 @@ public class RestCallServiceHelper {
 
         if (queryMap != null && !queryMap.isEmpty()) {
             return restCallService.executePut(urlPath, queryMap);
+        }
+
+        if (requestBody != null) {
+            return restCallService.executePut(urlPath, requestBody);
         }
 
         if (jsonBody != null) {
@@ -363,7 +490,7 @@ public class RestCallServiceHelper {
         return message;
     }
 
-    private static String findErrorElement(JsonElement jsonElement, String errorFieldName) {
+    public static String findErrorElement(JsonElement jsonElement, String errorFieldName) {
         if (jsonElement instanceof JsonObject) {
             JsonObject jsonObject = (JsonObject) jsonElement;
             Set<Map.Entry<String, JsonElement>> entrySet = jsonObject.entrySet();

@@ -10,17 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.payment.adapters.PaymentBalancesAdapter;
 import com.carecloud.carepay.patient.payment.adapters.PaymentHistoryAdapter;
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
-import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
+import com.carecloud.carepaylibray.base.models.NextPagingDTO;
+import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
-import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
+import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,27 +29,18 @@ import java.util.List;
 /**
  * Created by jorge on 02/01/17
  */
-public class PatientPaymentHistoryFragment extends BaseFragment implements PaymentBalancesAdapter.OnBalanceListItemClickListener {
+public class PatientPaymentHistoryFragment extends BaseFragment
+        implements PaymentHistoryAdapter.HistoryItemClickListener {
+    private static final int BOTTOM_ROW_OFFSET = 2;
 
-    public static final int SECTION_PENDING = 1;
-    public static final int SECTION_HISTORY = 2;
-
-    private PaymentsModel paymentsDTO;
-    private int sectionNumber;
-    private View noPaymentsLayout;
+    private PaymentsModel paymentsModel;
+    private Paging paging;
+    private List<PaymentHistoryItem> paymentHistoryItems = new ArrayList<>();
     private PaymentFragmentActivityInterface callback;
 
-    /**
-     * @param sectionNumber the section number
-     * @return an instance of PatientPaymentHistoryFragment
-     */
-    public static PatientPaymentHistoryFragment newInstance(int sectionNumber) {
-        PatientPaymentHistoryFragment fragment = new PatientPaymentHistoryFragment();
-        Bundle args = new Bundle();
-        args.putInt(CarePayConstants.TAB_SECTION_NUMBER, sectionNumber);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private RecyclerView historyRecyclerView;
+    private View noPaymentsLayout;
+    private boolean isPaging = false;
 
     @Override
     public void onAttach(Context context) {
@@ -69,8 +61,10 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        paymentsDTO = (PaymentsModel) callback.getDto();
-        sectionNumber = getArguments().getInt(CarePayConstants.TAB_SECTION_NUMBER);
+        paymentsModel = (PaymentsModel) callback.getDto();
+        paging = paymentsModel.getPaymentPayload().getTransactionHistory().getPageDetails();
+        paymentHistoryItems = filterPaymentHistory(paymentsModel.getPaymentPayload()
+                .getTransactionHistory().getPaymentHistoryList());
     }
 
     @Override
@@ -87,32 +81,30 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
     }
 
     private void setUpRecyclerView(View view) {
-        RecyclerView historyRecyclerView = (RecyclerView) view.findViewById(R.id.history_recycler_view);
+        historyRecyclerView = (RecyclerView) view.findViewById(R.id.payment_list_recycler);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        historyRecyclerView.addOnScrollListener(scrollListener);
 
-        switch (sectionNumber) {
-            case SECTION_PENDING: {
-                if (hasPayments()) {
-                    PaymentBalancesAdapter paymentBalancesAdapter = new PaymentBalancesAdapter(
-                            getActivity(), getPendingBalancesList(paymentsDTO), PatientPaymentHistoryFragment.this);
-                    historyRecyclerView.setAdapter(paymentBalancesAdapter);
-                } else {
-                    showNoPaymentsLayout();
-                }
-                break;
+        if (hasCharges()) {
+            setAdapter(null);
+        } else {
+            showNoPaymentsLayout();
+        }
+
+    }
+
+    private void setAdapter(List<PaymentHistoryItem> newItems) {
+        PaymentHistoryAdapter historyAdapter = (PaymentHistoryAdapter) historyRecyclerView.getAdapter();
+        if (historyAdapter != null) {
+            if (newItems != null && !newItems.isEmpty()) {
+                historyAdapter.addHistoryList(newItems);
+            } else {
+                historyAdapter.setPaymentHistoryItems(paymentHistoryItems);
             }
-            case SECTION_HISTORY: {
-                if (hasCharges()) {
-                    PaymentHistoryAdapter historyAdapter = new PaymentHistoryAdapter(getActivity(), paymentsDTO);
-                    historyRecyclerView.setAdapter(historyAdapter);
-                } else {
-                    showNoPaymentsLayout();
-                }
-                break;
-            }
-            default: {
-                break;
-            }
+        } else {
+            historyAdapter = new PaymentHistoryAdapter(getContext(), paymentHistoryItems,
+                    paymentsModel.getPaymentPayload().getUserPractices(), this);
+            historyRecyclerView.setAdapter(historyAdapter);
         }
     }
 
@@ -120,48 +112,85 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
         noPaymentsLayout.setVisibility(View.VISIBLE);
     }
 
-
-    @Override
-    public void onBalanceListItemClickListener(int position) {
-        PaymentsBalancesItem selectedBalancesItem = getPendingBalancesList(paymentsDTO).get(position);
-        callback.loadPaymentAmountScreen(selectedBalancesItem, paymentsDTO);
-    }
-
-    private List<PaymentsBalancesItem> getPendingBalancesList(PaymentsModel paymentModel) {
-        List<PaymentsBalancesItem> list = new ArrayList<>();
-        for (PatientBalanceDTO patientBalanceDTO : paymentModel.getPaymentPayload().getPatientBalances()) {
-            for (PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()) {
-                PendingBalanceMetadataDTO metadataDTO = pendingBalanceDTO.getMetadata();
-                for (PendingBalancePayloadDTO pendingBalancePayloadDTO : pendingBalanceDTO.getPayload()) {
-                    PaymentsBalancesItem paymentsBalancesItem = new PaymentsBalancesItem();
-                    paymentsBalancesItem.setMetadata(metadataDTO);
-                    paymentsBalancesItem.setBalance(pendingBalancePayloadDTO);
-                    list.add(paymentsBalancesItem);
-                }
+    private List<PaymentHistoryItem> filterPaymentHistory(List<PaymentHistoryItem> paymentHistoryItems) {
+        List<PaymentHistoryItem> output = new ArrayList<>();
+        for (PaymentHistoryItem item : paymentHistoryItems) {
+            if (item.getPayload().getTotalPaid() > 0 || item.getPayload().getProcessingErrors().isEmpty()) {
+                output.add(item);
             }
         }
-        return list;
+        return output;
     }
 
     private boolean hasCharges() {
-        return !paymentsDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges()
-                .getCharges().isEmpty();
+        return !paymentsModel.getPaymentPayload().getTransactionHistory().getPaymentHistoryList().isEmpty();
     }
 
-    private boolean hasPayments() {
-        if(!paymentsDTO.getPaymentPayload().getPatientBalances().isEmpty()){
-            for(PatientBalanceDTO patientBalanceDTO : paymentsDTO.getPaymentPayload().getPatientBalances()){
-                if(!patientBalanceDTO.getBalances().isEmpty()){
-                    for(PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()){
-                        if(!pendingBalanceDTO.getPayload().isEmpty()){
-                            return true;
-                        }
-                    }
+    private boolean hasMorePages() {
+        return paging.getCurrentPage() != paging.getTotalPages();
+    }
+
+    private void loadNextPage() {
+        NextPagingDTO next = new NextPagingDTO();
+        next.setNextPage(paging.getCurrentPage() + 1);
+        next.setPageCount(paging.getResultsPerPage());
+
+        TransitionDTO nextPageTransition = paymentsModel.getPaymentsMetadata().getPaymentsLinks()
+                .getPaymentTransactionHistory();
+        String payload = new Gson().toJson(next);
+        getWorkflowServiceHelper().execute(nextPageTransition, nextPageCallback, payload);
+    }
+
+    private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            super.onScrolled(recyclerView, dx, dy);
+            if (hasMorePages()) {
+                int last = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+                if (last > recyclerView.getAdapter().getItemCount() - BOTTOM_ROW_OFFSET && !isPaging) {
+                    loadNextPage();
+                    isPaging = true;
                 }
             }
+
+        }
+    };
+
+    private WorkflowServiceCallback nextPageCallback = new WorkflowServiceCallback() {
+        PaymentHistoryAdapter adapter;
+
+        @Override
+        public void onPreExecute() {
+            adapter = (PaymentHistoryAdapter) historyRecyclerView.getAdapter();
+            adapter.setLoading(true);
         }
 
-        return false;
-    }
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            adapter.setLoading(false);
+            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            Paging nextPage = paymentsModel.getPaymentPayload().getTransactionHistory().getPageDetails();
+            if (nextPage.getCurrentPage() != paging.getCurrentPage()) {
+                paging = nextPage;
+                List<PaymentHistoryItem> newItems = paymentsModel.getPaymentPayload()
+                        .getTransactionHistory().getPaymentHistoryList();
+                setAdapter(newItems);
+                paymentHistoryItems.addAll(filterPaymentHistory(newItems));
+            }
+            isPaging = false;
+        }
 
+        @Override
+        public void onFailure(String exceptionMessage) {
+            adapter.setLoading(false);
+            isPaging = false;
+            showErrorNotification(exceptionMessage);
+        }
+    };
+
+    @Override
+    public void onHistoryItemClicked(PaymentHistoryItem item) {
+        callback.displayPaymentHistoryDetails(item);
+    }
 }

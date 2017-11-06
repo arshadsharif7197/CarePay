@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.appointments.presenter;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,11 +14,14 @@ import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDia
 import com.carecloud.carepay.patient.appointments.fragments.AvailableHoursFragment;
 import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragment;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
+import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.appointment.DataDTO;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -40,6 +44,7 @@ import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.customdialogs.QrCodeViewDialog;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
@@ -54,6 +59,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPo
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.android.gms.wallet.MaskedWallet;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -67,7 +73,7 @@ import java.util.Map;
  */
 
 public class PatientAppointmentPresenter extends AppointmentPresenter
-        implements PatientAppointmentNavigationCallback {
+        implements PatientAppointmentNavigationCallback, PatientPaymentMethodInterface {
     private String patientId;
     private String practiceId;
     private String practiceMgmt;
@@ -75,6 +81,10 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     private VisitTypeDTO selectedVisitTypeDTO;
     private AppointmentDTO appointmentDTO;
     private AppointmentsSlotsDTO appointmentSlot;
+
+    private Fragment androidPayTargetFragment;
+
+    private boolean startCancelationFeePayment = false;
 
 
     public PatientAppointmentPresenter(AppointmentViewHandler viewHandler,
@@ -85,15 +95,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void newAppointment() {
-        Bundle args = new Bundle();
-        Gson gson = new Gson();
-
-        args.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(appointmentsResultModel));
-
-        ChooseProviderFragment chooseProviderFragment = new ChooseProviderFragment();
-        chooseProviderFragment.setArguments(args);
-
-        viewHandler.navigateToFragment(chooseProviderFragment, true);
+        ChooseProviderFragment fragment = ChooseProviderFragment.newInstance(appointmentsResultModel,
+                null, null);
+        viewHandler.navigateToFragment(fragment, true);
     }
 
     @Override
@@ -255,7 +259,12 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void onAppointmentRequestSuccess() {
-        viewHandler.confirmAppointment();
+        viewHandler.confirmAppointment(true);
+    }
+
+    @Override
+    public ApplicationMode getApplicationMode() {
+        return viewHandler.getApplicationMode();
     }
 
     @Override
@@ -414,6 +423,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                         if (cancellationFee == null) {
                             onCancelAppointment(appointmentDTO, cancellationReason, cancellationReasonComment);
                         } else {
+                            startCancelationFeePayment = true;
                             IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
                             postModel.setAmount(Double.parseDouble(cancellationFee.getAmount()));
                             IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
@@ -553,8 +563,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void onPaymentDismissed() {
+        startCancelationFeePayment = false;
         if (appointmentDTO != null) {
             onHoursAndLocationSelected(appointmentSlot, null);
+        }else{
+            viewHandler.refreshAppointments();
         }
     }
 
@@ -626,7 +639,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload()
                 .getPatientPayments().getPayload();
         if (!payload.getProcessingErrors().isEmpty()
-                && PaymentConfirmationFragment.getTotalPaid(payload) == 0D) {
+                && payload.getTotalPaid() == 0D) {
             StringBuilder builder = new StringBuilder();
             for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
                 builder.append(processingError.getError());
@@ -643,6 +656,22 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             confirmationFragment.setArguments(args);
             viewHandler.displayDialogFragment(confirmationFragment, false);
         }
+    }
+
+    @Override
+    public void showPaymentPendingConfirmation(PaymentsModel paymentsModel) {
+        new CustomMessageToast(getContext(), Label.getLabel("payments_external_pending"), CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
+        onAppointmentRequestSuccess();
+    }
+
+    @Override
+    public void setAndroidPayTargetFragment(Fragment fragment) {
+        androidPayTargetFragment = fragment;
+    }
+
+    @Override
+    public Fragment getAndroidPayTargetFragment() {
+        return androidPayTargetFragment;
     }
 
     @Override
@@ -675,6 +704,25 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
-        onAppointmentRequestSuccess();
+        if(startCancelationFeePayment){
+            SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_cancellation_success_message_HTML"));
+            viewHandler.confirmAppointment(false);
+        }else {
+            onAppointmentRequestSuccess();
+        }
+        startCancelationFeePayment = false;
+    }
+
+    @Override
+    public void createWalletFragment(MaskedWallet maskedWallet, Double amount) {
+        viewHandler.navigateToFragment(AndroidPayDialogFragment.newInstance(maskedWallet, paymentsModel, amount), true);
+    }
+
+    @Override
+    public void forwardAndroidPayResult(int requestCode, int resultCode, Intent data) {
+        Fragment targetFragment = getAndroidPayTargetFragment();
+        if (targetFragment != null) {
+            targetFragment.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

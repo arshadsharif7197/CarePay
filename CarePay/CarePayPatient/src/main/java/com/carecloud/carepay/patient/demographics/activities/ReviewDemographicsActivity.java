@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.patient.demographics.fragments.ConfirmExitDialogFragment;
 import com.carecloud.carepay.patient.payment.PatientPaymentPresenter;
+import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -28,7 +30,9 @@ import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-public class ReviewDemographicsActivity extends BasePatientActivity implements DemographicsView, PaymentViewHandler {
+public class ReviewDemographicsActivity extends BasePatientActivity implements DemographicsView,
+        PaymentViewHandler, ConfirmExitDialogFragment.ExitConfirmationCallback {
+
 
     private static final String KEY_PAYMENT_DTO = "KEY_PAYMENT_DTO";
     private DemographicsPresenter demographicsPresenter;
@@ -49,6 +53,23 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
+            case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
+            case PaymentConstants.REQUEST_CODE_FULL_WALLET:
+                paymentPresenter.forwardAndroidPayResult(requestCode, resultCode, data);
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+                break;
+        }
+        if (resultListener != null) {
+            resultListener.handleActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.check_in_menu, menu);
@@ -58,7 +79,8 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.exitFlow) {
-            finish();
+            displayDialogFragment(new ConfirmExitDialogFragment(), false);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -131,8 +153,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
     private PaymentsModel initPaymentPresenter(String workflowJson) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowJson);
-        String patientID = demographicsPresenter.getDemographicDTO().getPayload().getDemographics()
-                .getMetadata().getPatientId();
+        String patientID = demographicsPresenter.getAppointment().getMetadata().getPatientId();
         paymentPresenter = new PatientPaymentPresenter(this, paymentsModel, patientID);
         return paymentsModel;
     }
@@ -152,14 +173,6 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         SystemUtil.showSuccessToast(getContext(), Label.getLabel("confirm_appointment_checkin"));
         finish();
         navigateToWorkflow(workflowDTO);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultListener != null) {
-            resultListener.handleActivityResult(requestCode, resultCode, data);
-        }
     }
 
     @Override
@@ -211,6 +224,11 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
             cce.printStackTrace();
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onExit() {
+        finish();
     }
 
 }

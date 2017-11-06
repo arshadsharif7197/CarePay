@@ -6,6 +6,8 @@
     android:layout_gravity="center_vertical"
     android:orientation="vertical"
     android:paddingBottom="@dimen/dimen_10dp"
+    android:paddingEnd="@dimen/dimen_20dp"
+    android:paddingStart="@dimen/dimen_20dp"
     android:paddingTop="@dimen/dimen_10dp">
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -13,7 +15,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
+        android:ellipsize="end"
         android:gravity="center"
+        android:maxLines="2"
+        android:paddingEnd="@dimen/dimen_5dp"
+        android:paddingStart="@dimen/dimen_5dp"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_20"
         app:customAssetFont="proxima_nova_regular" />

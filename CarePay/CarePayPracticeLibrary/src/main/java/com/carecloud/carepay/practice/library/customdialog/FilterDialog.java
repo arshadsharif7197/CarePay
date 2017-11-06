@@ -52,6 +52,8 @@ public class FilterDialog extends PopupWindow
 
     public interface FilterDialogListener {
         void applyFilter();
+
+        void refreshData();
     }
 
     /**
@@ -179,11 +181,17 @@ public class FilterDialog extends PopupWindow
         clearFiltersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final Set<String> lastLocationFilter = getFilteredLocationsIds();
                 clearSearchImageView.performClick();
                 filterModel.clear();
                 saveFilter();
+                doctorsLocationsAdapter = new CustomFilterListAdapter(filterModel, FilterDialog.this);
                 filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
-                callBack.applyFilter();
+                if(lastLocationFilter.isEmpty()) {
+                    callBack.applyFilter();
+                }else{
+                    callBack.refreshData();
+                }
             }
         });
     }
@@ -193,8 +201,14 @@ public class FilterDialog extends PopupWindow
     }
 
     @Override
-    public void onFilterChanged() {
-        applyFilter();
+    public void onFilterChanged(FilterDataDTO filterDataDTO) {
+        switch (filterDataDTO.getFilterDataType()){
+            case LOCATION:
+                applyFilterAndRefresh();
+                break;
+            default:
+                applyFilter();
+        }
     }
 
     @Override
@@ -207,6 +221,12 @@ public class FilterDialog extends PopupWindow
         clearFiltersButton.setVisibility(View.VISIBLE);
         callBack.applyFilter();
         saveFilter();
+    }
+
+    private void applyFilterAndRefresh(){
+        clearFiltersButton.setVisibility(View.VISIBLE);
+        saveFilter();
+        callBack.refreshData();
     }
 
     private void saveFilter() {

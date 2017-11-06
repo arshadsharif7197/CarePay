@@ -33,7 +33,7 @@ public class AppointmentStatusCardView extends LinearLayout {
     private CarePayTextView providerNameTextView;
     private CarePayTextView amountTextView;
     private CarePayTextView timeTextView;
-    private ViewGroup containerLayout;
+    public ViewGroup containerLayout;
     private String appointmentId;
     private CarePayTextView shortNameTextView;
     private boolean isWaitingRoom;

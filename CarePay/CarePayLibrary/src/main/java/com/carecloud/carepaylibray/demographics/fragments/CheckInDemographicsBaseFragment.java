@@ -11,9 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -57,6 +55,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     StepProgressBar stepProgressBar;
     boolean preventNavBack = false;
+    private boolean userAction = false;
 
     protected CheckinFlowCallback checkinFlowCallback;
 
@@ -184,10 +183,22 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View buttonView) {
-                if (passConstraints(view)) {
+                setUserAction(true);
+                if (buttonView.isSelected() && passConstraints(view)) {
                     DemographicDTO demographicDTO = updateDemographicDTO(view);
                     openNextFragment(demographicDTO, (checkinFlowCallback.getCurrentStep() + 1) > checkinFlowCallback.getTotalSteps());
                 }
+            }
+        });
+        nextButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View buttonView, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN && !buttonView.isSelected()){
+                    setUserAction(true);
+                    checkIfEnableButton(view);
+                    return true;
+                }
+                return false;
             }
         });
     }
@@ -197,7 +208,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
             boolean isEnabled = passConstraints(view);
             if (nextButton != null) {
-                nextButton.setEnabled(isEnabled);
+                nextButton.setSelected(isEnabled);
                 nextButton.setClickable(isEnabled);
             }
         }
@@ -412,9 +423,71 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         listView.setOnItemClickListener(clickListener);
     }
 
+    protected boolean isUserAction() {
+        return userAction;
+    }
+
+    protected void setUserAction(boolean userAction) {
+        this.userAction = userAction;
+    }
+
+    protected void setDefaultError(View baseView, int id){
+        setFieldError(baseView, id, Label.getLabel("demographics_required_validation_msg"));
+    }
+
+    protected void setFieldError(View baseView, int id, String error){
+        TextInputLayout inputLayout = (TextInputLayout) baseView.findViewById(id);
+        setFieldError(inputLayout, error);
+    }
+
+    protected void setFieldError(TextInputLayout inputLayout, String error){
+        if(inputLayout != null){
+            inputLayout.setErrorEnabled(true);
+            inputLayout.setError(error);
+        }
+
+    }
+
     public interface OnOptionSelectedListener {
         void onOptionSelected(DemographicsOption option);
     }
 
+    protected void showErrorViews(boolean isError, ViewGroup container){
+        final String TAG_ERROR_HIDE_INV = getString(R.string.tag_demographics_error_hide_inv);
+        final String TAG_ERROR_HIDE_GONE = getString(R.string.tag_demographics_error_hide_gone);
+        final String TAG_ERROR_SHOW_INV = getString(R.string.tag_demographics_error_show_inv);
+        final String TAG_ERROR_SHOW_GONE = getString(R.string.tag_demographics_error_show_gone);
+
+        for(int i=0; i < container.getChildCount(); i++){
+            View view = container.getChildAt(i);
+            if(view instanceof ViewGroup){
+                showErrorViews(isError, (ViewGroup) view);
+            }
+            String tag = (String) view.getTag();
+            if(tag != null){
+                if(isError){
+                    if(tag.equals(TAG_ERROR_HIDE_GONE)){
+                        view.setVisibility(View.GONE);
+                    }else if(tag.equals(TAG_ERROR_HIDE_INV)){
+                        view.setVisibility(View.INVISIBLE);
+                    }else if(tag.equals(TAG_ERROR_SHOW_GONE) || tag.equals(TAG_ERROR_SHOW_INV)){
+                        view.setVisibility(View.VISIBLE);
+                    }
+                    view.setFocusable(true);
+                    view.setFocusableInTouchMode(true);
+                    view.requestFocus();
+                }else{
+                    if(tag.equals(TAG_ERROR_SHOW_GONE)){
+                        view.setVisibility(View.GONE);
+                    }else if(tag.equals(TAG_ERROR_SHOW_INV)){
+                        view.setVisibility(View.INVISIBLE);
+                    }else if(tag.equals(TAG_ERROR_HIDE_GONE) || tag.equals(TAG_ERROR_HIDE_INV)){
+                        view.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        }
+
+    }
 
 }

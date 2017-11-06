@@ -27,6 +27,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
+                <ImageView
+                    android:id="@+id/historyImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"/>
+
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/historyAvatarTextView"
                     android:layout_width="wrap_content"
@@ -54,7 +60,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/Feldgrau"
                     android:textSize="@dimen/textview_default_textsize"
                     android:textStyle="bold"
                     app:customAssetFont="proxima_nova_semi_bold" />

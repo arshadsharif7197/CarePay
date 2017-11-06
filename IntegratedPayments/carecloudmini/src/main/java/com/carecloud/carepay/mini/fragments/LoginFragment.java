@@ -1,14 +1,20 @@
 package com.carecloud.carepay.mini.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
+import com.carecloud.carepay.mini.HttpConstants;
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.models.data.UserDTO;
 import com.carecloud.carepay.mini.models.response.Authentication;
@@ -16,6 +22,7 @@ import com.carecloud.carepay.mini.models.response.PreRegisterDataModel;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
 import com.carecloud.carepay.mini.services.carepay.RestCallServiceCallback;
 import com.carecloud.carepay.mini.utils.DtoHelper;
+import com.carecloud.carepay.mini.utils.KeyboardUtil;
 import com.carecloud.carepay.mini.utils.StringUtil;
 import com.carecloud.carepay.mini.views.CustomErrorToast;
 import com.carecloud.shamrocksdk.registrations.DeviceRegistration;
@@ -65,6 +72,14 @@ public class LoginFragment extends RegistrationFragment {
 
         passwordInput = (EditText) view.findViewById(R.id.input_password);
         passwordInput.addTextChangedListener(emptyTextWatcher);
+        passwordInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
+                KeyboardUtil.hideSoftKeyboard(getContext(), textView);
+                signInUser();
+                return false;
+            }
+        });
 
         backButton = view.findViewById(R.id.button_back);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -99,24 +114,29 @@ public class LoginFragment extends RegistrationFragment {
     }
 
     private void getPreRegistration(){
-        DeviceRegistration.getAccountInfo(getContext(), accountInfoAdapter);
+        String environment = HttpConstants.getEnvironment();
+        if(environment.equals("Support")){
+               setSupportDeviceMid();
+        }else {
+            DeviceRegistration.getAccountInfo(getContext(), accountInfoAdapter);
+        }
     }
 
-    private void displayNextStep(){
-            PreRegisterDataModel preRegisterDataModel = callback.getPreRegisterDataModel();
-            if(!preRegisterDataModel.getUserPracticeDTOList().isEmpty()){
-                if(preRegisterDataModel.getUserPracticeDTOList().size() > 1){
-                    //show practice selection
-                    callback.replaceFragment(new PracticesFragment(), true);
-                }else{
-                    //show practice confirmation Fragment
-                    String practiceId = preRegisterDataModel.getUserPracticeDTOList().get(0).getPracticeId();
-                    getApplicationHelper().getApplicationPreferences().setPracticeId(practiceId);
-                    callback.replaceFragment(new ConfirmPracticesFragment(), true);
-                }
+    protected void displayNextStep(){
+        PreRegisterDataModel preRegisterDataModel = callback.getPreRegisterDataModel();
+        if(!preRegisterDataModel.getUserPracticeDTOList().isEmpty()){
+            if(preRegisterDataModel.getUserPracticeDTOList().size() > 1){
+                //show practice selection
+                callback.replaceFragment(new PracticesFragment(), true);
             }else{
-                CustomErrorToast.showWithMessage(getContext(), getString(R.string.error_login));
+                //show practice confirmation Fragment
+                String practiceId = preRegisterDataModel.getUserPracticeDTOList().get(0).getPracticeId();
+                getApplicationHelper().getApplicationPreferences().setPracticeId(practiceId);
+                callback.replaceFragment(new ConfirmPracticesFragment(), true);
             }
+        }else{
+            CustomErrorToast.showWithMessage(getContext(), getString(R.string.error_login));
+        }
 
     }
 
@@ -244,4 +264,44 @@ public class LoginFragment extends RegistrationFragment {
             }
         }
     };
+
+    private void setSupportDeviceMid(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Title");
+        builder.setMessage("Enter Client MID");
+
+        final EditText input = new EditText(getContext());
+        input.setText(getApplicationHelper().getApplicationPreferences().getSupportMid());
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+        builder.setView(input);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                KeyboardUtil.hideSoftKeyboard(getContext(), input);
+                dialog.dismiss();
+                String merchantId = input.getText().toString();
+                getApplicationHelper().getApplicationPreferences().setSupportMid(merchantId);
+                getRestHelper().executePreRegister(preRegisterCallback, merchantId);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                KeyboardUtil.hideSoftKeyboard(getContext(), input);
+                dialog.cancel();
+                enableFields(true);
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                input.selectAll();
+            }
+        });
+        dialog.show();
+
+    }
 }

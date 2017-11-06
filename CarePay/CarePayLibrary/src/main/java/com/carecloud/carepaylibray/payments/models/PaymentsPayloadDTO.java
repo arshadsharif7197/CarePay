@@ -5,8 +5,8 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiAccountsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.MerchantServicesDTO;
+import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItemPayload;
+import com.carecloud.carepaylibray.payments.models.history.PaymentsTransactionHistory;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -43,7 +43,6 @@ public class PaymentsPayloadDTO implements Serializable {
     @SerializedName("patient_credit_cards")
     @Expose
     private List<PaymentsPatientsCreditCardsPayloadListDTO> patientCreditCards = new ArrayList<>();
-
     @SerializedName("intake_forms")
     @Expose
     private PaymentsPayloadIntakeFormsDTO intakeForms = new PaymentsPayloadIntakeFormsDTO();
@@ -70,13 +69,19 @@ public class PaymentsPayloadDTO implements Serializable {
     private List<PatientModel> patients = new ArrayList<>();
     @SerializedName("papi_accounts")
     @Expose
-    private List<DemographicsSettingsPapiAccountsDTO> papiAccounts = new ArrayList<>();
+    private List<PapiAccountsDTO> papiAccounts = new ArrayList<>();
     @SerializedName("payment_post_model")
     @Expose
     private IntegratedPaymentPostModel paymentPostModel;
     @SerializedName("simple_charge_types")
     @Expose
     private List<SimpleChargeItem> simpleChargeItems = new ArrayList<>();
+    @SerializedName("transactions")
+    @Expose
+    private PaymentsTransactionHistory transactionHistory = new PaymentsTransactionHistory();
+    @SerializedName("patient_refunds")
+    @Expose
+    private PaymentHistoryItemPayload patientRefund = new PaymentHistoryItemPayload();
 
     public List<PatientModel> getPatients() {
         return patients;
@@ -203,7 +208,7 @@ public class PaymentsPayloadDTO implements Serializable {
      *
      * @return the papi accounts
      */
-    public List<DemographicsSettingsPapiAccountsDTO> getPapiAccounts() {
+    public List<PapiAccountsDTO> getPapiAccounts() {
         return papiAccounts;
     }
 
@@ -212,8 +217,8 @@ public class PaymentsPayloadDTO implements Serializable {
      *
      * @return the papi account
      */
-    public DemographicsSettingsPapiAccountsDTO getPapiAccountByType(String accountType) {
-        for (DemographicsSettingsPapiAccountsDTO papiAccountDTO : getPapiAccounts()) {
+    public PapiAccountsDTO getPapiAccountByType(String accountType) {
+        for (PapiAccountsDTO papiAccountDTO : getPapiAccounts()) {
             if (papiAccountDTO.getType().contains(accountType)) {
                return papiAccountDTO ;
             }
@@ -226,7 +231,7 @@ public class PaymentsPayloadDTO implements Serializable {
      *
      * @param papiAccounts the papi accounts
      */
-    public void setPapiAccounts(List<DemographicsSettingsPapiAccountsDTO> papiAccounts) {
+    public void setPapiAccounts(List<PapiAccountsDTO> papiAccounts) {
         this.papiAccounts = papiAccounts;
     }
 
@@ -278,5 +283,21 @@ public class PaymentsPayloadDTO implements Serializable {
 
     public void setSimpleChargeItems(List<SimpleChargeItem> simpleChargeItems) {
         this.simpleChargeItems = simpleChargeItems;
+    }
+
+    public PaymentsTransactionHistory getTransactionHistory() {
+        return transactionHistory;
+    }
+
+    public void setTransactionHistory(PaymentsTransactionHistory transactionHistory) {
+        this.transactionHistory = transactionHistory;
+    }
+
+    public PaymentHistoryItemPayload getPatientRefund() {
+        return patientRefund;
+    }
+
+    public void setPatientRefund(PaymentHistoryItemPayload patientRefund) {
+        this.patientRefund = patientRefund;
     }
 }

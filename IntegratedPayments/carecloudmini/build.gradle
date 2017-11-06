@@ -8,8 +8,8 @@ android {
         applicationId "com.carecloud.carepay.mini"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 4
-        versionName "1.0.0"
+        versionCode 6
+        versionName "1.1.0"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -48,6 +48,13 @@ android {
             buildConfigField 'String', 'API_BASE_URL', '"https://payments.carecloud.com/"'
             buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream.carecloud.com:443"'
             buildConfigField 'String', 'ENVIRONMENT', '""'
+        }
+        production_support{
+            applicationId "com.carecloud.carepay.mini"
+            buildConfigField 'String', 'X_API_KEY', '"m4I4rb4DW5469Jzn1Glev3kKl6RvWT6o8guq2NA9"'
+            buildConfigField 'String', 'API_BASE_URL', '"https://payments.carecloud.com/"'
+            buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream.carecloud.com:443"'
+            buildConfigField 'String', 'ENVIRONMENT', '"Support"'
         }
     }
 }

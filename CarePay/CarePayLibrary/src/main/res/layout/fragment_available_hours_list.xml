@@ -72,13 +72,13 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4">
+        android:layout_weight="4"
+        android:background="@color/white">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/available_hours_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
             android:paddingLeft="@dimen/apt_available_hours_list_padding"
             android:paddingRight="@dimen/apt_available_hours_list_padding" />
 
