@@ -450,7 +450,8 @@
                 android:layout_weight="1"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="demographics_marital_status"
-                tools:text="Marital Status" />
+                tools:text="Marital Status"
+                android:tag="@string/tag_demographics_error_hide_gone"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 style="@style/DemographicsDocsLabelStyle"
@@ -460,7 +461,7 @@
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="demographics_marital_status"
                 tools:text="Marital Status"
-                android:tag="@string/tag_demographics_error_hide_gone"
+                android:tag="@string/tag_demographics_error_show_gone"
                 android:visibility="gone"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -560,7 +561,7 @@
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="demographics_referral_source"
                 tools:text="Referral Source"
-                android:tag="@string/tag_demographics_error_hide_gone"
+                android:tag="@string/tag_demographics_error_show_gone"
                 android:visibility="gone"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -590,7 +591,7 @@
             style="@style/Consent_Form_View_Style"
             android:layout_width="match_parent"
             android:background="@color/remove_red"
-            android:tag="@string/tag_demographics_error_hide_gone"
+            android:tag="@string/tag_demographics_error_show_gone"
             android:visibility="gone"/>
 
     </LinearLayout>
@@ -683,7 +684,7 @@
             style="@style/Consent_Form_View_Style"
             android:layout_width="match_parent"
             android:background="@color/remove_red"
-            android:tag="@string/tag_demographics_error_hide_gone"
+            android:tag="@string/tag_demographics_error_show_gone"
             android:visibility="gone"/>
 
     </LinearLayout>
