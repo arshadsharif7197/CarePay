@@ -49,6 +49,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
     private PatientModel demographicPersDetailsPayloadDTO;
     private EmploymentInfoModel demographicEmploymentInfoModel;
+    private PatientModel demographicsEmergencyContactModel;
 
     private DemographicsOption selectedGender = new DemographicsOption();
     private DemographicsOption selectedRace = new DemographicsOption();
@@ -341,6 +342,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     }
 
     private void setUpEmergencyContact(View view, PatientModel emergencyContact) {
+/*
         TextInputLayout emergencyContactInputLayout = (TextInputLayout) view.findViewById(R.id.emergencyContactInputLayout);
 //        emergencyContactInputLayout.setVisibility(emergencyContactSection.isDisplay() ? View.VISIBLE : View.GONE);
         EditText emergencyContactEditText = (EditText) view.findViewById(R.id.emergencyContactEditText);
@@ -360,6 +362,22 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 callback.showAddEditEmergencyContactDialog();
             }
         });
+*/
+        demographicsEmergencyContactModel = emergencyContact;
+        DemographicEmergencyContactSection emergencyContactSection = dataModel.getDemographic().getEmergencyContact();
+        View emergencyContactLayout = view.findViewById(R.id.emergencyContactDemographicsLayout);
+        TextView chooseEmergencyContact = (TextView) view.findViewById(R.id.emergencyContactEditText);
+        View EmergencyContactOptional = view.findViewById(R.id.emergencyContactOptionalLabel);
+        setVisibility(emergencyContactLayout, emergencyContactSection.isDisplay());
+        chooseEmergencyContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.showAddEditEmergencyContactDialog();
+            }
+        });
+        String emergencyContactName = emergencyContact.getFullName();
+        initSelectableInput(chooseEmergencyContact, selectedMaritalStatus, emergencyContactName, emergencyContactSection.isRequired() ? null : EmergencyContactOptional);
+
     }
 
     private void setUpEmployer(final View view, DemographicPayloadDTO demographicPayload, DemographicEmploymentInfoSection employmentInfoSection) {
@@ -390,7 +408,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
             String employmentStatus = demographicPayload.getEmploymentInfoModel().getEmploymentStatus();
             initSelectableInput(chooseEmploymentStatus, selectedEmploymentStatus, employmentStatus,
-                    employmentInfoSection.getProperties().getEmploymentStatus().isRequired()
+                    employmentInfoSection.isRequired()
                             ? null : employmentStatusOptional);
 
             if (employmentStatus != null) {
@@ -779,6 +797,18 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 showErrorViews(false, (ViewGroup) view.findViewById(R.id.maritalStatusDemographicsLayout));
             }
 
+            if (dataModel.getDemographic().getEmergencyContact().isRequired()
+                    && (StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getFirstName())
+                    || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getLastName())
+                    || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getPrimaryPhoneNumber())
+                    || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getEmergencyContactRelationship()))) {
+                if(isUserAction()) {
+                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.emergencyContactDemographicsLayout));
+                }
+                return false;
+            }else{
+                showErrorViews(false, (ViewGroup) view.findViewById(R.id.emergencyContactDemographicsLayout));
+            }
 
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getReferralSource().isRequired()
                     && StringUtil.isNullOrEmpty(selectedReferralSource.getName())) {
@@ -789,7 +819,6 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             }else{
                 showErrorViews(false, (ViewGroup) view.findViewById(R.id.referralSourceDemographicsLayout));
             }
-
 
             if (dataModel.getDemographic().getEmploymentInfo().isRequired()
                     && StringUtil.isNullOrEmpty(selectedEmploymentStatus.getName())) {
@@ -809,19 +838,6 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 }
                 return false;
             }
-
-//            if (dataModel.getDemographic().getPersonalDetails().getProperties()//todo validation for emergency contact, also in settings frag
-//                    .getEmergencyContactRelationship().isRequired()
-//                    && StringUtil.isNullOrEmpty(selectedEmergencyContactRelationship.getName())) {
-//                if(isUserAction()) {
-//                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.emergencyContactDemographicsLayout));
-//                }
-//                return false;
-//            }else{
-//                showErrorViews(false, (ViewGroup) view.findViewById(R.id.emergencyContactDemographicsLayout));
-//            }
-
-
 
             TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.secondaryPhoneInputLayout);
             EditText secondaryPhoneNumber = (EditText) view.findViewById(R.id.secondaryPhone);

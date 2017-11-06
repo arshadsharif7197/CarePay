@@ -144,6 +144,7 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/preferredLanguageOptional"
                 style="@style/DemographicsOptionalLabelStyle"
+                android:layout_marginEnd="@dimen/dimen_10dp"
                 app:customAssetFont="proxima_nova_semi_bold"
                 breeze:textKey="demographics_details_optional_hint"
                 tools:text="Optional" />
@@ -241,6 +242,7 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/driverLicenseStateOptional"
                 style="@style/DemographicsOptionalLabelStyle"
+                android:layout_marginEnd="@dimen/dimen_10dp"
                 app:customAssetFont="proxima_nova_semi_bold"
                 breeze:textKey="demographics_details_optional_hint"
                 tools:text="Optional" />
@@ -339,6 +341,7 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/secondaryPhoneTypeOptional"
                 style="@style/DemographicsOptionalLabelStyle"
+                android:layout_marginEnd="@dimen/dimen_10dp"
                 app:customAssetFont="proxima_nova_semi_bold"
                 breeze:textKey="demographics_details_optional_hint"
                 tools:text="Optional" />
@@ -403,6 +406,7 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/contactMethodOptional"
                 style="@style/DemographicsOptionalLabelStyle"
+                android:layout_marginEnd="@dimen/dimen_10dp"
                 app:customAssetFont="proxima_nova_semi_bold"
                 breeze:textKey="demographics_details_optional_hint"
                 tools:text="Optional" />
@@ -467,6 +471,7 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/maritalStatusOptional"
                 style="@style/DemographicsOptionalLabelStyle"
+                android:layout_marginEnd="@dimen/dimen_10dp"
                 app:customAssetFont="proxima_nova_semi_bold"
                 breeze:textKey="demographics_details_optional_hint"
                 tools:text="Optional" />
@@ -496,6 +501,72 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/emergencyContactDemographicsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
+            android:orientation="horizontal">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                style="@style/DemographicsDocsLabelStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                app:customAssetFont="proxima_nova_regular"
+                breeze:textKey="demographics_emergency_contact_hint"
+                tools:text="Emergency Contact"
+                android:tag="@string/tag_demographics_error_hide_gone"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                style="@style/DemographicsDocsLabelStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textColor="@color/remove_red"
+                app:customAssetFont="proxima_nova_regular"
+                breeze:textKey="demographics_emergency_contact_hint"
+                tools:text="Emergency Contact"
+                android:tag="@string/tag_demographics_error_show_gone"
+                android:visibility="gone"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/emergencyContactOptionalLabel"
+                style="@style/DemographicsOptionalLabelStyle"
+                android:layout_marginEnd="@dimen/dimen_10dp"
+                app:customAssetFont="proxima_nova_semi_bold"
+                breeze:textKey="demographics_details_optional_hint"
+                tools:text="Optional" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/emergencyContactEditText"
+                style="@style/DemographicsDocsClickableTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:gravity="end"
+                app:customAssetFont="proxima_nova_regular"
+                tools:text="Choose" />
+
+        </LinearLayout>
+
+        <View
+            style="@style/Consent_Form_View_Style"
+            android:layout_width="match_parent"
+            android:tag="@string/tag_demographics_error_hide_gone"/>
+
+        <View
+            style="@style/Consent_Form_View_Style"
+            android:layout_width="match_parent"
+            android:background="@color/remove_red"
+            android:tag="@string/tag_demographics_error_show_gone"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+<!--
     <FrameLayout
         android:id="@+id/emergencyContactDemographicsLayout"
         android:layout_width="match_parent"
@@ -531,6 +602,7 @@
             app:customAssetFont="proxima_nova_regular"
             breeze:textKey="demographics_details_optional_hint" />
     </FrameLayout>
+-->
 
     <LinearLayout
         android:id="@+id/referralSourceDemographicsLayout"
@@ -567,6 +639,7 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/referralSourceOptional"
                 style="@style/DemographicsOptionalLabelStyle"
+                android:layout_marginEnd="@dimen/dimen_10dp"
                 app:customAssetFont="proxima_nova_semi_bold"
                 breeze:textKey="demographics_details_optional_hint"
                 tools:text="Optional" />
@@ -660,6 +733,7 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/employmentStatusOptional"
                 style="@style/DemographicsOptionalLabelStyle"
+                android:layout_marginEnd="@dimen/dimen_10dp"
                 app:customAssetFont="proxima_nova_semi_bold"
                 breeze:textKey="demographics_details_optional_hint"
                 tools:text="Optional" />
