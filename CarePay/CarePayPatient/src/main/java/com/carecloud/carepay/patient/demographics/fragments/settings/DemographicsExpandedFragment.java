@@ -361,7 +361,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
             }
         });
         String emergencyContactName = emergencyContact!=null?emergencyContact.getFullName():null;
-        initSelectableInput(chooseEmergencyContact, selectedMaritalStatus, emergencyContactName, emergencyContactSection.isRequired() ? null : EmergencyContactOptional);
+        initSelectableInput(chooseEmergencyContact, new DemographicsOption(), emergencyContactName, emergencyContactSection.isRequired() ? null : EmergencyContactOptional);
 
 
     }
