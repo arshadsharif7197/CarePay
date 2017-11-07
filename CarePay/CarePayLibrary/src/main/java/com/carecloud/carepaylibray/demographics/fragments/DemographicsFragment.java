@@ -375,8 +375,9 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 callback.showAddEditEmergencyContactDialog();
             }
         });
-        String emergencyContactName = emergencyContact.getFullName();
-        initSelectableInput(chooseEmergencyContact, selectedMaritalStatus, emergencyContactName, emergencyContactSection.isRequired() ? null : EmergencyContactOptional);
+
+        String emergencyContactName = emergencyContact!=null?emergencyContact.getFullName():null;
+        initSelectableInput(chooseEmergencyContact, new DemographicsOption(), emergencyContactName, emergencyContactSection.isRequired() ? null : EmergencyContactOptional);
 
     }
 

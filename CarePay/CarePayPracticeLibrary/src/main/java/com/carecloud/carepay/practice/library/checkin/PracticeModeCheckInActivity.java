@@ -128,7 +128,11 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     public void onPostResume(){
         super.onPostResume();
         if(recentRefundItem != null){
-            completeRefundProcess(recentRefundItem, selectedPaymentModel);
+            if(recentRefundItem.getPayload() != null) {
+                completeRefundProcess(recentRefundItem, selectedPaymentModel);
+            }else{
+                displayPendingTransactionDialog(true);
+            }
         }
         recentRefundItem = null;
     }
@@ -742,18 +746,29 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     protected void processExternalPaymentFailure(PaymentExecution paymentExecution, int resultCode) {
         if (resultCode == CarePayConstants.PAYMENT_RETRY_PENDING_RESULT_CODE) {
             //Display a success notification and do some cleanup
-            PaymentQueuedDialogFragment dialogFragment = new PaymentQueuedDialogFragment();
-            DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    hidePaymentDistributionFragment(new UpdatePatientBalancesDTO());
-                }
-            };
-            dialogFragment.setOnDismissListener(dismissListener);
-            dialogFragment.show(getSupportFragmentManager(), dialogFragment.getClass().getName());
-
+            displayPendingTransactionDialog(false);
+        } else if(resultCode == CarePayConstants.REFUND_RETRY_PENDING_RESULT_CODE) {
+            if(isVisible()){
+                displayPendingTransactionDialog(true);
+            }else{
+                recentRefundItem = new PaymentHistoryItem();
+                recentRefundItem.setPayload(null);
+            }
         }
     }
+
+    private void displayPendingTransactionDialog(boolean isRefund){
+        PaymentQueuedDialogFragment dialogFragment = PaymentQueuedDialogFragment.newInstance(isRefund);
+        DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                hidePaymentDistributionFragment(new UpdatePatientBalancesDTO());
+            }
+        };
+        dialogFragment.setOnDismissListener(dismissListener);
+        displayDialogFragment(dialogFragment, false);
+    }
+
 
     private void updatePatientBalance(UpdatePatientBalancesDTO updateBalance) {
         ListIterator<PatientBalanceDTO> iterator = checkInDTO.getPayload()
