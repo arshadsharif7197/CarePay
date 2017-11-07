@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.base.models;
 
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
@@ -52,7 +51,7 @@ public class PatientModel {
     private String profilePhoto;
     private transient String localUriPhoto;
 
-    @SerializedName("primary_phone_number")
+    @SerializedName(value = "primary_phone_number", alternate = "phone_number")
     @Expose
     private String primaryPhoneNumber;
 
