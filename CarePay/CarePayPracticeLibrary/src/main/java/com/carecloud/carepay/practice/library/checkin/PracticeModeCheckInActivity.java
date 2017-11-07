@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -107,6 +108,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     private PaymentsModel selectedPaymentModel;
 
+    private PaymentHistoryItem recentRefundItem;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,6 +122,15 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         initializationView();
         populateLists();
         setAdapter();
+    }
+
+    @Override
+    public void onPostResume(){
+        super.onPostResume();
+        if(recentRefundItem != null){
+            completeRefundProcess(recentRefundItem, selectedPaymentModel);
+        }
+        recentRefundItem = null;
     }
 
     @Override
@@ -705,14 +717,13 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                 final String jsonPayload = data.getStringExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA);
                 if (jsonPayload != null) {
                     if(isRefund){
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                PaymentHistoryItem historyItem = DtoHelper.getConvertedDTO(PaymentHistoryItem.class, jsonPayload);
-                                completeRefundProcess(historyItem, selectedPaymentModel);
-
-                            }
-                        }, 500);
+                        Log.d("Process Refund Success", jsonPayload);
+                        PaymentHistoryItem historyItem = DtoHelper.getConvertedDTO(PaymentHistoryItem.class, jsonPayload);
+                        if(isVisible()) {
+                            completeRefundProcess(historyItem, selectedPaymentModel);
+                        }else{
+                            recentRefundItem = historyItem;
+                        }
                     }else {
                         Gson gson = new Gson();
                         WorkflowDTO workflowDTO = gson.fromJson(jsonPayload, WorkflowDTO.class);
@@ -815,7 +826,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void completeRefundProcess(PaymentHistoryItem historyItem, PaymentsModel paymentsModel) {
-//        getSupportFragmentManager().popBackStackImmediate(PaymentDistributionFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        getSupportFragmentManager().popBackStackImmediate(PaymentDistributionFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         RefundDetailFragment fragment = RefundDetailFragment.newInstance(historyItem, paymentsModel);
         displayDialogFragment(fragment, false);

@@ -20,6 +20,7 @@ import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.payments.fragments.PaymentHistoryDetailFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
+import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItemPayload;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -89,7 +90,7 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
             }
         });
 
-        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(historyItem.getPayload().getDate()).shiftDateToGMT();
+        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(historyItem.getPayload().getDate());
 
         TextView transactionDate = (TextView) view.findViewById(R.id.transaction_date);
         transactionDate.setText(dateUtil.getDateAsMonthLiteralDayOrdinalYear());
@@ -126,12 +127,19 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
             }
         });
 
-        if(historyItem.getPayload().getTotalRefunded() > 0D){
+        refundButton.setEnabled(totalPaid > 0 && !historyItem.getPayload().getState().equals(PaymentHistoryItemPayload.STATE_ERRORED));
+
+        double refundedAmount = historyItem.getPayload().getTotalRefunded();
+        if(refundedAmount > 0D){
             View refundLayout = view.findViewById(R.id.refund_layout);
             refundLayout.setVisibility(View.VISIBLE);
 
             TextView refundAmount = (TextView) view.findViewById(R.id.transaction_refunded);
             refundAmount.setText(NumberFormat.getCurrencyInstance().format(historyItem.getPayload().getTotalRefunded()));
+
+            if(refundedAmount >= totalPaid){
+                refundButton.setVisibility(View.GONE);
+            }
         }
 
     }

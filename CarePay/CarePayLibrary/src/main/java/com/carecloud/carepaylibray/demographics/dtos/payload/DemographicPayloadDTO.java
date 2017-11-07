@@ -22,7 +22,7 @@ public class DemographicPayloadDTO {
 
     @SerializedName("employment_info")
     @Expose
-    private EmploymentInfoModel employmentInfoModel = new EmploymentInfoModel();
+    private EmploymentInfoModel employmentInfoModel;
 
     @SerializedName("emergency_contact")
     @Expose
@@ -117,6 +117,9 @@ public class DemographicPayloadDTO {
     }
 
     public EmploymentInfoModel getEmploymentInfoModel() {
+        if(employmentInfoModel == null){
+            employmentInfoModel = new EmploymentInfoModel();
+        }
         return employmentInfoModel;
     }
 

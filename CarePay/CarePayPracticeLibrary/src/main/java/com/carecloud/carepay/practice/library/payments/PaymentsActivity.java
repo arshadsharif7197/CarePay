@@ -82,6 +82,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     private Date startDate;
     private Date endDate;
 
+    private PaymentHistoryItem recentRefundItem;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +97,15 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
         setLabels();
         populateList();
+    }
+
+    @Override
+    public void onPostResume(){
+        super.onPostResume();
+        if(recentRefundItem != null){
+            completeRefundProcess(recentRefundItem, paymentsModel);
+        }
+        recentRefundItem = null;
     }
 
     private void setLabels() {
@@ -328,8 +339,11 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                     if(isRefund){
                         Log.d("Process Refund Success", jsonPayload);
                         PaymentHistoryItem historyItem = DtoHelper.getConvertedDTO(PaymentHistoryItem.class, jsonPayload);
-                        completeRefundProcess(historyItem, paymentsModel);
-
+                        if(isVisible()) {
+                            completeRefundProcess(historyItem, paymentsModel);
+                        }else{
+                            recentRefundItem = historyItem;
+                        }
                     }else {
                         Gson gson = new Gson();
                         WorkflowDTO workflowDTO = gson.fromJson(jsonPayload, WorkflowDTO.class);
@@ -603,7 +617,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void completeRefundProcess(PaymentHistoryItem historyItem, PaymentsModel paymentsModel) {
-//        getSupportFragmentManager().popBackStackImmediate(PaymentDistributionFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        getSupportFragmentManager().popBackStackImmediate(PaymentDistributionFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         RefundDetailFragment fragment = RefundDetailFragment.newInstance(historyItem, paymentsModel);
         displayDialogFragment(fragment, false);
