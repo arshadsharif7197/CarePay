@@ -584,7 +584,7 @@ public class CloverRefundActivity extends BaseActivity {
                     refundJson.toString(),
                     error);
 
-            setResult(CarePayConstants.PAYMENT_RETRY_PENDING_RESULT_CODE);
+            setResult(CarePayConstants.REFUND_RETRY_PENDING_RESULT_CODE);
             finish();
 
         }
