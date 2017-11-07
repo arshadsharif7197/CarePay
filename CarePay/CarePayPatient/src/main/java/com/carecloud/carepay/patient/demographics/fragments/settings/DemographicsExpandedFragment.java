@@ -360,7 +360,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 callback.showAddEditEmergencyContactDialog();
             }
         });
-        String emergencyContactName = emergencyContact.getFullName();
+        String emergencyContactName = emergencyContact!=null?emergencyContact.getFullName():null;
         initSelectableInput(chooseEmergencyContact, selectedMaritalStatus, emergencyContactName, emergencyContactSection.isRequired() ? null : EmergencyContactOptional);
 
 

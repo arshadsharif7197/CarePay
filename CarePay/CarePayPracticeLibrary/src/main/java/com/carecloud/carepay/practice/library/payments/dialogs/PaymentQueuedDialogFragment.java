@@ -13,11 +13,32 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 
 /**
- * Created by lmenendez on 4/18/17.
+ * Created by lmenendez on 4/18/17
  */
 
 public class PaymentQueuedDialogFragment extends BaseDialogFragment {
+    private static final String KEY_IS_REFUND = "key_is_refund";
+
     int displayTimeMillis = 2000;
+    boolean isRefund = false;
+
+    public static PaymentQueuedDialogFragment newInstance(boolean isRefund){
+        Bundle args = new Bundle();
+        args.putBoolean(KEY_IS_REFUND, isRefund);
+
+        PaymentQueuedDialogFragment fragment = new PaymentQueuedDialogFragment();
+        fragment.setArguments(args);
+        return fragment;
+    };
+
+    @Override
+    public void onCreate(Bundle icicle){
+        super.onCreate(icicle);
+        Bundle args = getArguments();
+        if(args != null){
+            isRefund = args.getBoolean(KEY_IS_REFUND, false);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
@@ -28,7 +49,11 @@ public class PaymentQueuedDialogFragment extends BaseDialogFragment {
     public void onViewCreated(View view, Bundle icicle){
         TextView message = (TextView) view.findViewById(R.id.success_message);
         if(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE){
-            message.setText(Label.getLabel("payment_queued_practice"));
+            if(isRefund){
+                message.setText(Label.getLabel("refund_queued_practice"));
+            }else {
+                message.setText(Label.getLabel("payment_queued_practice"));
+            }
             displayTimeMillis = 4000;
         }else{
             message.setText(Label.getLabel("payment_queued_patient"));
