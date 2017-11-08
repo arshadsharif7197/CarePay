@@ -2,7 +2,6 @@ package com.carecloud.carepaylibray.utils;
 
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.util.Patterns;
 import android.widget.EditText;
 
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataEntityDTO;
@@ -23,10 +22,13 @@ public class ValidationHelper {
     public static String VALIDATION_TYPE_IS_OPTION = "is_in_options";
     public static String VALIDATION_TYPE_PATTERN = "pattern";
 
+    public static final String EMAIL_PATTERN = "^([a-zA-Z0-9_\\-\\.])+@([a-zA-Z0-9_\\-\\.])+\\.([a-zA-Z]{2,5})$";
 //    public static final String EMAIL_PATTERN = "^[A-Z0-9a-z\\\\._%+-]+@([A-Za-z0-9-]+\\\\.)+[A-Za-z]{2,4}$";
     public static final String PHONE_NUMBER_PATTERN = "\\d{3}-\\d{3}-\\d{4}";
     public static final String ZIP_CODE_PATTERN = "^[0-9]{5}(?:-[0-9]{4})?$";
-    public static final String EMAIL_PATTERN = Patterns.EMAIL_ADDRESS.pattern();
+//    public static final String EMAIL_PATTERN = Patterns.EMAIL_ADDRESS.pattern();
+    public static final String PASSWORD_REGEX_VALIDATION = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@!%*?&_-])[A-Za-z\\d$@!%*?&_-]{8,}";
+
 
     /**
      * Applies a pattern validate to an edit text wrapped into textinput layout
@@ -151,4 +153,30 @@ public class ValidationHelper {
 
         boolean validate(MetadataValidationDTO validation);
     }
+
+    /**
+     * Test if a password respect the standard pattern, id, at least 8 chars,
+     * at least 1 number, 1 upper case, 1 lower case, 1 special character.
+     *
+     * @param password The passwrod as a string
+     * @return Whether the password matches the pattern.
+     */
+    public static boolean isValidPassword(String password) {
+        if (password != null) {
+            Pattern pattern = Pattern.compile(PASSWORD_REGEX_VALIDATION);
+            Matcher matcher = pattern.matcher(password);
+            return matcher.matches();
+        }
+        return false;
+    }
+
+    /**
+     * Convinience method for validating emails
+     * @param email email
+     * @return true if valid email
+     */
+    public static boolean isValidEmail(String email){
+        return isValidString(email, EMAIL_PATTERN);
+    }
+
 }

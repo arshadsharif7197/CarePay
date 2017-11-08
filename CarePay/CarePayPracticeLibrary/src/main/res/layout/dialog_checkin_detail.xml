@@ -113,9 +113,10 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/checkingInLabel"
-                android:layout_width="@dimen/checkin_info_label_width"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_26dp"
+                android:minWidth="@dimen/checkin_info_label_width"
                 android:background="@drawable/right_rounded_background_gray"
                 android:gravity="center"
                 android:textColor="@color/white"
@@ -186,9 +187,8 @@
             <RelativeLayout
                 android:id="@+id/checkbox_layout"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingTop="@dimen/custom_appointment_dialog_layout_margin"
                 android:background="@color/white"
                 android:orientation="horizontal">
 
@@ -216,7 +216,7 @@
                     android:drawablePadding="@dimen/custom_appointment_dialog_view_padding"
                     android:drawableTop="@drawable/custom_checkbox_selector"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/charcoal"
+                    android:textColor="@color/appointment_dialog_checkbox_text_color"
                     android:textSize="@dimen/custom_appointment_dialog_checkbox_textsize"
                     tools:text="Patient\nInfo"
                     app:customAssetFont="proxima_nova_light"/>
@@ -234,7 +234,7 @@
                     android:drawablePadding="@dimen/custom_appointment_dialog_view_padding"
                     android:drawableTop="@drawable/custom_checkbox_selector"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/charcoal"
+                    android:textColor="@color/appointment_dialog_checkbox_text_color"
                     android:textSize="@dimen/custom_appointment_dialog_checkbox_textsize"
                     android:visibility="visible"
                     tools:text="Patient\nForms"
@@ -253,7 +253,7 @@
                     android:drawablePadding="@dimen/custom_appointment_dialog_view_padding"
                     android:drawableTop="@drawable/custom_checkbox_selector"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/charcoal"
+                    android:textColor="@color/appointment_dialog_checkbox_text_color"
                     android:textSize="@dimen/custom_appointment_dialog_checkbox_textsize"
                     android:visibility="visible"
                     tools:text="Meds &amp;\nAllergies"
@@ -271,7 +271,7 @@
                     android:drawablePadding="@dimen/custom_appointment_dialog_view_padding"
                     android:drawableTop="@drawable/custom_checkbox_selector"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/charcoal"
+                    android:textColor="@color/appointment_dialog_checkbox_text_color"
                     android:textSize="@dimen/custom_appointment_dialog_checkbox_textsize"
                     android:visibility="visible"
                     tools:text="Patient\nIntake"
@@ -289,7 +289,7 @@
                     android:drawablePadding="@dimen/custom_appointment_dialog_view_padding"
                     android:drawableTop="@drawable/custom_checkbox_selector"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/charcoal"
+                    android:textColor="@color/appointment_dialog_checkbox_text_color"
                     android:textSize="@dimen/custom_appointment_dialog_checkbox_textsize"
                     android:visibility="visible"
                     tools:text="Payment"
@@ -338,23 +338,27 @@
             android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
-            android:padding="@dimen/dimen_10dp"
+            android:paddingTop="@dimen/dimen_10dp"
+            android:paddingBottom="@dimen/dimen_10dp"
+            android:paddingStart="@dimen/dimen_20dp"
+            android:paddingEnd="@dimen/dimen_20dp"
             android:background="@drawable/patient_mode_dialog_body_bg">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/paymentButton"
+                android:id="@+id/pageButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/custom_appointment_dialog_checkbox_margin"
                 android:layout_weight="1"
-                android:background="@drawable/green_rounded_button_selector"
+                android:background="@drawable/primary_rounded_button_selector"
                 android:padding="@dimen/custom_appointment_dialog_view_padding"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/custom_appointment_dialog_button_textsize"
-                tools:text="Payment"
-                breeze:textKey="practice_checkin_detail_dialog_payment"
-                app:customAssetFont="gotham_rounded_medium" />
+                tools:text="Page"
+                breeze:textKey="practice_checkin_detail_dialog_page"
+                app:customAssetFont="gotham_rounded_medium"
+                android:visibility="visible"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/assistButton"
@@ -374,20 +378,19 @@
                 android:visibility="gone"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/pageButton"
+                android:id="@+id/paymentButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/custom_appointment_dialog_checkbox_margin"
                 android:layout_weight="1"
-                android:background="@drawable/rose_rounded_button_selector"
+                android:background="@drawable/green_rounded_button_selector"
                 android:padding="@dimen/custom_appointment_dialog_view_padding"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/custom_appointment_dialog_button_textsize"
-                tools:text="Page"
-                breeze:textKey="practice_checkin_detail_dialog_page"
-                app:customAssetFont="gotham_rounded_medium"
-                android:visibility="visible"/>
+                tools:text="Payment"
+                breeze:textKey="practice_checkin_detail_dialog_payment"
+                app:customAssetFont="gotham_rounded_medium" />
         </LinearLayout>
 
     </LinearLayout>
