@@ -22,11 +22,11 @@ public class ValidationHelper {
     public static String VALIDATION_TYPE_IS_OPTION = "is_in_options";
     public static String VALIDATION_TYPE_PATTERN = "pattern";
 
-    public static final String EMAIL_PATTERN = "^([a-zA-Z0-9_\\-\\.])+@([a-zA-Z0-9_\\-\\.])+\\.([a-zA-Z]{2,5})$";
-//    public static final String EMAIL_PATTERN = "^[A-Z0-9a-z\\\\._%+-]+@([A-Za-z0-9-]+\\\\.)+[A-Za-z]{2,4}$";
+    public static final String EMAIL_PATTERN = "^([a-zA-Z0-9_\\-\\.+])+@([a-zA-Z0-9_\\-\\.])+\\.([a-zA-Z]{2,5})$";
+    //    public static final String EMAIL_PATTERN = "^[A-Z0-9a-z\\\\._%+-]+@([A-Za-z0-9-]+\\\\.)+[A-Za-z]{2,4}$";
     public static final String PHONE_NUMBER_PATTERN = "\\d{3}-\\d{3}-\\d{4}";
     public static final String ZIP_CODE_PATTERN = "^[0-9]{5}(?:-[0-9]{4})?$";
-//    public static final String EMAIL_PATTERN = Patterns.EMAIL_ADDRESS.pattern();
+    //    public static final String EMAIL_PATTERN = Patterns.EMAIL_ADDRESS.pattern();
     public static final String PASSWORD_REGEX_VALIDATION = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@!%*?&_-])[A-Za-z\\d$@!%*?&_-]{8,}";
 
 
@@ -172,10 +172,11 @@ public class ValidationHelper {
 
     /**
      * Convinience method for validating emails
+     *
      * @param email email
      * @return true if valid email
      */
-    public static boolean isValidEmail(String email){
+    public static boolean isValidEmail(String email) {
         return isValidString(email, EMAIL_PATTERN);
     }
 
