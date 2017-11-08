@@ -31,6 +31,8 @@ import java.util.List;
 public class AddPaymentItemFragment extends BaseDialogFragment implements AddPaymentItemAdapter.AddPaymentItemCallback {
     public interface AddItemCallback{
         void addChargeItem(SimpleChargeItem chargeItem);
+
+        void onDismissAddItemFragment();
     }
 
     private SearchView searchView;
@@ -69,6 +71,7 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
             @Override
             public void onClick(View view) {
                 dismiss();
+                callback.onDismissAddItemFragment();
             }
         });
 

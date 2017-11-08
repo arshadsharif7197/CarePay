@@ -22,6 +22,8 @@ public class PaymentDistributionEntryFragment extends PartialPaymentBaseDialogFr
         void applyAmountToBalanceItem(double amount, BalanceItemDTO balanceItemDTO);
 
         void addNewCharge(double amount, SimpleChargeItem chargeItem);
+
+        void onDismissEntryDialog();
     }
 
     private PaymentDistributionAmountCallback callback;
@@ -60,7 +62,6 @@ public class PaymentDistributionEntryFragment extends PartialPaymentBaseDialogFr
 
     @Override
     public void onClick(View view) {
-        super.onClick(view);
         int id = view.getId();
         if (id == R.id.enter_amount_button && callback != null) {
             if (balanceItem != null) {
@@ -71,6 +72,9 @@ public class PaymentDistributionEntryFragment extends PartialPaymentBaseDialogFr
                 callback.applyNewDistributionAmount(getDoubleAmountForEntry());
             }
             dismiss();
+        }else if(id == R.id.closeViewLayout){
+            dismiss();
+            callback.onDismissEntryDialog();
         }
 
     }

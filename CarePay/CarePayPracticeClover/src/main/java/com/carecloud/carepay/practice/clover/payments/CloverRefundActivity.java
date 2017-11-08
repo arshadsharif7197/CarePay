@@ -9,17 +9,28 @@ import android.os.IInterface;
 import android.os.RemoteException;
 import android.util.Log;
 
+import com.carecloud.carepay.practice.clover.CloverQueueUploadService;
 import com.carecloud.carepay.practice.clover.R;
 import com.carecloud.carepay.practice.clover.models.CloverPaymentDTO;
+import com.carecloud.carepay.practice.clover.models.CloverQueuePaymentRecord;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.RestCallService;
 import com.carecloud.carepay.service.library.RestCallServiceHelper;
 import com.carecloud.carepay.service.library.ServiceGenerator;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
+import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItemPayload;
+import com.carecloud.carepaylibray.payments.models.refund.RefundLineItem;
+import com.carecloud.carepaylibray.payments.models.refund.RefundPostModel;
+import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.EncryptionUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.clover.connector.sdk.v3.PaymentConnector;
 import com.clover.connector.sdk.v3.PaymentV3Connector;
@@ -43,12 +54,16 @@ import com.clover.sdk.v3.remotepay.RefundPaymentRequest;
 import com.clover.sdk.v3.remotepay.RefundPaymentResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.newrelic.agent.android.NewRelic;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -74,13 +89,16 @@ public class CloverRefundActivity extends BaseActivity {
     private CloverAuth.AuthResult authResult;
 
     private Long amountLong = 0L;
-    private List<PaymentLineItem> paymentLineItems = new ArrayList<>();
+    private List<RefundLineItem> refundLineItems = new ArrayList<>();
+    private PaymentHistoryItem historyItem;
+    private TransitionDTO refundTransition;
     private String paymentId;
     private String orderId;
 
 
-
     private Handler handler;
+
+    private RefundPostModel refundPostModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,13 +112,23 @@ public class CloverRefundActivity extends BaseActivity {
 
         Gson gson = new Gson();
         String lineItemString = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS);
-        paymentLineItems = gson.fromJson(lineItemString, new TypeToken<List<PaymentLineItem>>(){}.getType());
+        refundLineItems = gson.fromJson(lineItemString, new TypeToken<List<RefundLineItem>>(){}.getType());
 
         String transactionResponse = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_TRANSACTION_RESPONSE);
         if(transactionResponse != null){
             CloverPaymentDTO cloverPayment = gson.fromJson(transactionResponse, CloverPaymentDTO.class);
             paymentId = cloverPayment.getId();
             orderId = cloverPayment.getOrder().getId();
+        }
+
+        String historyItemString = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_HISTORY_ITEM);
+        if(historyItemString != null){
+            historyItem = gson.fromJson(historyItemString, PaymentHistoryItem.class);
+        }
+
+        String refundTransitionString = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION);
+        if(refundTransitionString != null){
+            refundTransition = gson.fromJson(refundTransitionString, TransitionDTO.class);
         }
 
         account = CloverAccount.getAccount(this);
@@ -120,6 +148,7 @@ public class CloverRefundActivity extends BaseActivity {
                 authenticateCloverAccount();
             }else{
                 SystemUtil.showErrorToast(CloverRefundActivity.this, getString(R.string.no_account));
+                logRefundFail(getString(R.string.no_account), false);
                 finish();
             }
         }
@@ -172,13 +201,14 @@ public class CloverRefundActivity extends BaseActivity {
         }
     }
 
-    PaymentV3Connector.PaymentServiceListener paymentServiceListener = new RefundServiceAdapter() {
+    private PaymentV3Connector.PaymentServiceListener paymentServiceListener = new RefundServiceAdapter() {
         @Override
         public void onRefundPaymentResponse(RefundPaymentResponse response) {
             if(response.getSuccess()){
                 processRefund(response);
             }else{
                 new CustomMessageToast(CloverRefundActivity.this, response.getMessage(), CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
+                logRefundFail(response.getMessage(), false);
                 setResult(RESULT_CANCELED);
                 finish();
             }
@@ -259,6 +289,7 @@ public class CloverRefundActivity extends BaseActivity {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            logRefundFail(Label.getLabel("clover_account_not_authorized"), false);
                             finish();
                         }
                     }, 3000);
@@ -283,96 +314,126 @@ public class CloverRefundActivity extends BaseActivity {
 
 
     private void processRefund(RefundPaymentResponse response){
-        //TODO post refund to middleware
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("patient_id", historyItem.getPayload().getMetadata().getPatientId());
 
-        printReceipt(response);
+        refundPostModel = new RefundPostModel();
+        refundPostModel.setPaymentRequestId(historyItem.getPayload().getDeepstreamRecordId());
+        refundPostModel.setRefundLineItems(refundLineItems);
 
-        setResult(RESULT_OK);
-//        finish();
+        Gson gson = new Gson();
+        String jsonString = response.getJSONObject().toString();
+        refundPostModel.setTransactionResponse(gson.fromJson(jsonString, JsonObject.class));
+
+        getWorkflowServiceHelper().execute(refundTransition, getRefundCallback(response), gson.toJson(refundPostModel), queryMap);
+
     }
 
 
-//    private void startRefundIntent(Order order) {
-//        Intent intent = new Intent(Intents.ACTION_SECURE_PAY);
-//        intent.putExtra(Intents.EXTRA_TRANSACTION_TYPE, Intents.TRANSACTION_TYPE_CREDIT);
-//        try {
-//            if (amountLong != null) {
-//                intent.putExtra(Intents.EXTRA_AMOUNT, amountLong*-1);
-//            } else {
-//                SystemUtil.showErrorToast(getApplicationContext(), Label.getLabel("clover_payment_amount_error"));
-//                throw new IllegalArgumentException("amount must not be null");
-//            }
-//
-//            String orderId = order.getId();
-//            if (orderId != null) {
-//                intent.putExtra(Intents.EXTRA_ORDER_ID, orderId);
-//                //If no order id were passed to EXTRA_ORDER_ID a new empty order would be generated for the payment
-//            }
-//
-//            dumpIntentLog(intent);
-//
-//            if (intent.resolveActivity(getPackageManager()) != null) {
-//                startActivityForResult(intent, refundIntentID);
-//            } else {
-//                SystemUtil.showErrorToast(CloverRefundActivity.this, Label.getLabel("clover_payment_app_missing_error"));
-//                throw new IllegalArgumentException("No Activity found to respond to intent: " + Intents.ACTION_SECURE_PAY);
-//            }
-//
-//        } catch (IllegalArgumentException iae) {
-//            iae.printStackTrace();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            SystemUtil.showErrorToast(getContext(), Label.getLabel("clover_payment_unknown_error"));
-//        }
-//    }
+    private WorkflowServiceCallback getRefundCallback(final RefundPaymentResponse response) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == refundIntentID) {
-//            if (resultCode == RESULT_OK) {
-//                Payment payment = data.getParcelableExtra(Intents.EXTRA_PAYMENT);
-//
-//            } else if (resultCode == RESULT_CANCELED) {
-//                SystemUtil.showErrorToast(getContext(), Label.getLabel("clover_payment_canceled"));
-//                setResult(resultCode);
-//                finish();
-//
-//            } else {
-//                SystemUtil.showErrorToast(getContext(), Label.getLabel("clover_payment_failed"));
-//                setResult(resultCode);
-//                finish();
-//            }
-//        }
-//    }
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                PaymentsModel refundPaymentModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+                PaymentHistoryItemPayload refundPayload = refundPaymentModel.getPaymentPayload().getPatientRefund();
+                historyItem.setPayload(refundPayload);
+
+                new CustomMessageToast(getContext(), Label.getLabel("payment_refund_success"), CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();//todo need to figure out if refund was actualy successful
+
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA, DtoHelper.getStringDTO(historyItem));
+                resultIntent.putExtra(CarePayConstants.CLOVER_REFUND_INTENT_FLAG, true);
+                setResult(RESULT_OK, resultIntent);
+
+                printReceipt(response);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+
+                setResult(RESULT_CANCELED);
+
+                printReceipt(response);
+
+                logRefundFail("Failed to reach make payment endpoint", true, response.getJSONObject(), exceptionMessage);
+            }
+        };
+    }
 
 
-    private List<LineItem> getLineItems() {
-        List<LineItem> lineItems = new LinkedList<>();
-        for (PaymentLineItem paymentLineItem : paymentLineItems) {
-            LineItem item = new LineItem();
-            item.setName(paymentLineItem.getDescription());
-            item.setPrice(Math.round(paymentLineItem.getAmount() * -100D));
-            lineItems.add(item);
+//region naked refund
+/*
+    private void startRefundIntent(Order order) {
+        Intent intent = new Intent(Intents.ACTION_SECURE_PAY);
+        intent.putExtra(Intents.EXTRA_TRANSACTION_TYPE, Intents.TRANSACTION_TYPE_CREDIT);
+        try {
+            if (amountLong != null) {
+                intent.putExtra(Intents.EXTRA_AMOUNT, amountLong*-1);
+            } else {
+                SystemUtil.showErrorToast(getApplicationContext(), Label.getLabel("clover_payment_amount_error"));
+                throw new IllegalArgumentException("amount must not be null");
+            }
+
+            String orderId = order.getId();
+            if (orderId != null) {
+                intent.putExtra(Intents.EXTRA_ORDER_ID, orderId);
+                //If no order id were passed to EXTRA_ORDER_ID a new empty order would be generated for the payment
+            }
+
+            dumpIntentLog(intent);
+
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(intent, refundIntentID);
+            } else {
+                SystemUtil.showErrorToast(CloverRefundActivity.this, Label.getLabel("clover_payment_app_missing_error"));
+                throw new IllegalArgumentException("No Activity found to respond to intent: " + Intents.ACTION_SECURE_PAY);
+            }
+
+        } catch (IllegalArgumentException iae) {
+            iae.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+            SystemUtil.showErrorToast(getContext(), Label.getLabel("clover_payment_unknown_error"));
         }
-        return lineItems;
     }
 
-    private List<Refund> getRefundItems(){
-        List<Refund> refunds = new LinkedList<>();
-        for(PaymentLineItem paymentLineItem : paymentLineItems){
-            Refund refund = new Refund();
-            refund.setAmount(Math.round(paymentLineItem.getAmount() * 100D));
-            refunds.add(refund);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == refundIntentID) {
+            if (resultCode == RESULT_OK) {
+                Payment payment = data.getParcelableExtra(Intents.EXTRA_PAYMENT);
+
+            } else if (resultCode == RESULT_CANCELED) {
+                SystemUtil.showErrorToast(getContext(), Label.getLabel("clover_payment_canceled"));
+                setResult(resultCode);
+                finish();
+
+            } else {
+                SystemUtil.showErrorToast(getContext(), Label.getLabel("clover_payment_failed"));
+                setResult(resultCode);
+                finish();
+            }
         }
-        return refunds;
     }
+*/
+
+//endregion
+
 
     private List<Credit> getCreditItems(){
         List<Credit> credits = new LinkedList<>();
-        for(PaymentLineItem paymentLineItem : paymentLineItems){
+        for(RefundLineItem refundlineItem : refundLineItems){
             Credit credit = new Credit();
-            credit.setAmount(Math.round(paymentLineItem.getAmount() * 100D));
+            credit.setAmount(Math.round(refundlineItem.getAmount() * 100D));
             credits.add(credit);
         }
         return credits;
@@ -408,8 +469,6 @@ public class CloverRefundActivity extends BaseActivity {
                         order.getRefunds().add(response.getRefund());
                     }
 
-//                        order.setCredits(getCreditItems());
-
                     for(LineItem lineItem : order.getLineItems()){
                         if(containsLineItem(lineItem)) {
                             lineItem.setRefunded(true);
@@ -417,8 +476,10 @@ public class CloverRefundActivity extends BaseActivity {
                     }
 
                     Log.d(TAG, order.getJSONObject().toString());
+                    orderConnector.updateOrder(order);
+                    orderConnector.updateLineItems(orderId, order.getLineItems());
 
-                    if(shouldPrint=true) {
+                    if(shouldPrint) {
                         printer = printerConnector.getPrinters(Category.RECEIPT).get(0);
 
                         PrintJob printJob = new StaticReceiptPrintJob.Builder().order(order).build();
@@ -431,8 +492,9 @@ public class CloverRefundActivity extends BaseActivity {
                     if(order != null){
                         promptPrinting(order);
                     }
+                }finally {
+                    finish();
                 }
-                finish();
                 return null;
             }
         }.execute();
@@ -454,12 +516,12 @@ public class CloverRefundActivity extends BaseActivity {
 
 
     boolean containsLineItem(LineItem lineItem){
-        Iterator<PaymentLineItem> iterator = paymentLineItems.iterator();
+        Iterator<RefundLineItem> iterator = refundLineItems.iterator();
         while (iterator.hasNext()){
-            PaymentLineItem paymentLineItem = iterator.next();
-            if(paymentLineItem.getDescription()!=null &&
-                    paymentLineItem.getDescription().equals(lineItem.getName()) &&
-                    lineItem.getPrice() >= paymentLineItem.getAmount() * 100){
+            RefundLineItem refundLineItem = iterator.next();
+            if(refundLineItem.getDescription()!=null &&
+                    refundLineItem.getDescription().equals(lineItem.getName()) &&
+                    lineItem.getPrice() >= refundLineItem.getAmount() * 100){
                 iterator.remove();
                 return true;
             }
@@ -477,6 +539,107 @@ public class CloverRefundActivity extends BaseActivity {
             }
         }
         return false;
+    }
+
+    private void logRefundFail(String message, boolean refundSuccess){
+        logRefundFail(message, refundSuccess, null, null);
+    }
+
+    private void logRefundFail(String message, boolean refundSuccess, Object refundJson, String error) {
+        double amountDouble = (double) amountLong/100;
+
+        Map<String, Object> eventMap = new HashMap<>();
+        eventMap.put("Successful Refund", refundSuccess);
+        eventMap.put("Fail Reason", message);
+        eventMap.put("Amount", amountDouble);
+        eventMap.put("Patient Id", historyItem.getPayload().getMetadata().getPatientId());
+        eventMap.put("Practice Id", historyItem.getPayload().getMetadata().getBusinessEntityId());
+        eventMap.put("Practice Mgmt", historyItem.getPayload().getMetadata().getPracticeMgmt());
+
+        Gson gson = new Gson();
+        eventMap.put("Refund Model", gson.toJson(refundPostModel));
+
+        if(refundJson == null){
+            refundJson = "";
+        }else{
+            eventMap.put("Payment Object", refundJson.toString());
+        }
+
+        if(error == null){
+            error = "";
+        }else{
+            eventMap.put("Error Message", error);
+        }
+
+        NewRelic.recordCustomEvent("CloverPaymentFail", eventMap);
+
+        if(refundSuccess){
+            //sent to Pay Queue API endpoint
+            queueRefund(
+                    amountDouble,
+                    refundPostModel,
+                    historyItem.getPayload().getMetadata().getPatientId(),
+                    historyItem.getPayload().getMetadata().getBusinessEntityId(),
+                    historyItem.getPayload().getMetadata().getPracticeMgmt(),
+                    refundJson.toString(),
+                    error);
+
+            setResult(CarePayConstants.REFUND_RETRY_PENDING_RESULT_CODE);
+            finish();
+
+        }
+    }
+
+    private void queueRefund(double amount, RefundPostModel refundPostModel, String patientID, String practiceId, String practiceMgmt, String refundJson, String errorMessage){
+        if(refundPostModel!=null){
+
+            if(refundPostModel.getTransactionResponse()==null){
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("Refund Response", refundJson);
+                jsonObject.addProperty("Error Message", errorMessage);
+                refundPostModel.setTransactionResponse(jsonObject);
+            }else{
+                if(!refundPostModel.getTransactionResponse().has("Refund Response")) {
+                    refundPostModel.getTransactionResponse().addProperty("Payment Response", refundJson);
+                }
+                if(!refundPostModel.getTransactionResponse().has("Error Message")) {
+                    refundPostModel.getTransactionResponse().addProperty("Error Message", errorMessage);
+                }
+            }
+
+        }
+
+
+        Gson gson = new Gson();
+        String refundModelJson = refundJson;
+        try{
+            refundModelJson = gson.toJson(refundPostModel);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+
+
+        //store in local DB
+        CloverQueuePaymentRecord paymentRecord = new CloverQueuePaymentRecord();
+        paymentRecord.setPatientID(patientID);
+        paymentRecord.setPracticeID(practiceId);
+        paymentRecord.setPracticeMgmt(practiceMgmt);
+        paymentRecord.setQueueTransition(gson.toJson(refundTransition));
+        paymentRecord.setUsername(getApplicationMode().getUserPracticeDTO().getUserName());
+
+        String paymentModelJsonEnc = EncryptionUtil.encrypt(getContext(), refundModelJson, practiceId);
+        paymentRecord.setPaymentModelJsonEnc(paymentModelJsonEnc);
+
+        if(StringUtil.isNullOrEmpty(paymentModelJsonEnc)){
+            paymentRecord.setPaymentModelJson(refundModelJson);
+        }
+        paymentRecord.save();
+
+        Intent intent = new Intent(getContext(), CloverQueueUploadService.class);
+        startService(intent);
+
+
     }
 
 }

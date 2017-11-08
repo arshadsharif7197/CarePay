@@ -123,7 +123,9 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
 
     @Override
     public void onSaveInstanceState(Bundle icicle) {
-        DtoHelper.bundleDto(icicle, selectedAppointment);
+        if (selectedAppointment != null) {
+            DtoHelper.bundleDto(icicle, selectedAppointment);
+        }
         super.onSaveInstanceState(icicle);
     }
 

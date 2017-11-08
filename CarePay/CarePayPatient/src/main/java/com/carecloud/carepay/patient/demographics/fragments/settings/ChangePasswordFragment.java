@@ -17,17 +17,17 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.DemographicMetadataDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.transitions.DemographicTransitionsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.api.client.util.Base64;
 
 import org.json.JSONObject;
@@ -40,7 +40,7 @@ import java.util.Map;
  */
 public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
 
-    private DemographicsSettingsDTO demographicsSettingsDTO;
+    private DemographicDTO demographicsSettingsDTO;
     private DemographicsSettingsFragmentListener callback;
 
     private EditText currentPasswordEditText = null;
@@ -71,7 +71,7 @@ public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
+        demographicsSettingsDTO = (DemographicDTO) callback.getDto();
     }
 
     @Override
@@ -186,18 +186,27 @@ public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
 
     @Override
     protected boolean passConstraints() {
-        if (StringUtil.isNullOrEmpty(currentPasswordEditText.getText().toString().trim())) {
-            return false;
-        }
-        if (StringUtil.isNullOrEmpty(newPasswordEditText.getText().toString().trim())) {
-            return false;
-        }
-        if (StringUtil.isNullOrEmpty(repeatPasswordEditText.getText().toString().trim())) {
+        View view = getView();
+        if (view == null) {
             return false;
         }
 
-        View view = getView();
-        if (view == null) {
+        if (StringUtil.isNullOrEmpty(currentPasswordEditText.getText().toString().trim())) {
+            return false;
+        }
+
+        if (StringUtil.isNullOrEmpty(newPasswordEditText.getText().toString().trim())) {
+            return false;
+        }
+
+        if(!ValidationHelper.isValidPassword(newPasswordEditText.getText().toString().trim())){
+            TextInputLayout passwordLayout = (TextInputLayout) view.findViewById(R.id.newPasswordTextInputLayout);
+            passwordLayout.setErrorEnabled(true);
+            passwordLayout.setError(Label.getLabel("password_hint_text"));
+            return false;
+        }
+
+        if (StringUtil.isNullOrEmpty(repeatPasswordEditText.getText().toString().trim())) {
             return false;
         }
 

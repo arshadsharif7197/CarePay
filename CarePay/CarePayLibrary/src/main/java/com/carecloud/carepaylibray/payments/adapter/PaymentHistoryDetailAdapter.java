@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.payments.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +50,20 @@ public class PaymentHistoryDetailAdapter extends RecyclerView.Adapter<PaymentHis
         holder.amount.setText(currencyFormatter.format(amount));
         holder.description.setText(parseDescription(lineItem.getDescription()));
 
+        double refundedAmount = lineItem.getRefundedAmount();
+        if( refundedAmount > 0){
+            holder.refundAmount.setText(currencyFormatter.format(-refundedAmount));
+            holder.refundAmount.setVisibility(View.VISIBLE);
+            if(refundedAmount < amount){
+                holder.refundAmount.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));
+            }else {
+                holder.refundAmount.setTextColor(ContextCompat.getColor(context, R.color.remove_red));
+            }
+
+        }else{
+            holder.refundAmount.setVisibility(View.GONE);
+        }
+
     }
 
     @Override
@@ -66,6 +81,9 @@ public class PaymentHistoryDetailAdapter extends RecyclerView.Adapter<PaymentHis
     }
 
     private static String parseDescription(String description){
+        if(description == null){
+            return "";
+        }
         switch (description){
             case IntegratedPaymentLineItem.TYPE_COPAY:
                 return Label.getLabel("payment_history_item_copay");
@@ -85,11 +103,13 @@ public class PaymentHistoryDetailAdapter extends RecyclerView.Adapter<PaymentHis
     class ViewHolder extends RecyclerView.ViewHolder{
         TextView description;
         TextView amount;
+        TextView refundAmount;
 
         public ViewHolder(View itemView) {
             super(itemView);
             description = (TextView) itemView.findViewById(R.id.charge_item_description);
             amount = (TextView) itemView.findViewById(R.id.charge_item_amount);
+            refundAmount = (TextView) itemView.findViewById(R.id.refund_item_amount);
         }
     }
 }

@@ -72,14 +72,14 @@ public class PaymentHistoryItemPayload {
     @SerializedName("confirmation")
     private String confirmation;
 
-    @SerializedName("first_name")
-    private String firstName;
-
-    @SerializedName("last_name")
-    private String lastName;
-
     @SerializedName("date")
     private String date;
+
+    @SerializedName("refund_requests")
+    private List<String> refundRequests = new ArrayList<>();
+
+    @SerializedName("most_recent_refund_request")
+    private String lastRefundRequest;
 
     public double getAmount() {
         return amount;
@@ -177,22 +177,6 @@ public class PaymentHistoryItemPayload {
         this.confirmation = confirmation;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
     public String getDate() {
         return date;
     }
@@ -208,6 +192,23 @@ public class PaymentHistoryItemPayload {
     public void setProcessingErrors(List<IntegratedPatientPaymentPayload.ProcessingError> processingErrors) {
         this.processingErrors = processingErrors;
     }
+
+    public List<String> getRefundRequests() {
+        return refundRequests;
+    }
+
+    public void setRefundRequests(List<String> refundRequests) {
+        this.refundRequests = refundRequests;
+    }
+
+    public String getLastRefundRequest() {
+        return lastRefundRequest;
+    }
+
+    public void setLastRefundRequest(String lastRefundRequest) {
+        this.lastRefundRequest = lastRefundRequest;
+    }
+
 
 
     /**
@@ -225,6 +226,19 @@ public class PaymentHistoryItemPayload {
             if(lineItem.isProcessed()){
                 total+=lineItem.getAmount();
             }
+        }
+        return total;
+    }
+
+    /**
+     * Calculate total refunded amount
+     * @return refund total
+     */
+    public double getTotalRefunded(){
+        double total = 0D;
+
+        for(PaymentHistoryLineItem lineItem : getLineItems()){
+            total+=lineItem.getRefundedAmount();
         }
         return total;
     }

@@ -16,11 +16,6 @@ import java.util.regex.Pattern;
 
 public class StringUtil {
 
-    private static final String EMAIL_PATTERN =
-            "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-    private static final String PASSWORD_REGEX_VALIDATION
-            = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@!%*?&_-])[A-Za-z\\d$@!%*?&_-]{8,}";
-
     /**
      * Determines if the specified String object is null or equal to
      * an empty string.
@@ -31,26 +26,6 @@ public class StringUtil {
      */
     public static boolean isNullOrEmpty(String string) {
         return (string == null || string.trim().equals(""));
-    }
-
-    public static boolean isValidmail(String email) {
-        return !isNullOrEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-
-    /**
-     * Test if a password respect the standard pattern, id, at least 8 chars,
-     * at least 1 number, 1 upper case, 1 lower case, 1 special character.
-     *
-     * @param password The passwrod as a string
-     * @return Whether the password matches the pattern.
-     */
-    public static boolean isValidPassword(String password) {
-        if (password != null) {
-            Pattern pattern = Pattern.compile(PASSWORD_REGEX_VALIDATION);
-            Matcher matcher = pattern.matcher(password);
-            return matcher.matches();
-        }
-        return false;
     }
 
 

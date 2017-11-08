@@ -29,18 +29,38 @@
             tools:text="Test Item Name"
             app:customAssetFont="gotham_rounded_book"/>
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/charge_item_amount"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_10dp"
             android:layout_gravity="center_vertical"
-            android:gravity="start"
-            android:textColor="@color/lightSlateGray"
-            android:textSize="@dimen/text_size_14"
-            tools:text="$99.99"
-            app:customAssetFont="gotham_rounded_medium"/>
+            android:orientation="vertical">
 
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/charge_item_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:gravity="end"
+                android:textColor="@color/lightSlateGray"
+                android:textSize="@dimen/text_size_14"
+                tools:text="$99.99"
+                app:customAssetFont="gotham_rounded_medium"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/refund_item_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="@dimen/dimen_3dp"
+                android:gravity="end"
+                android:textColor="@color/remove_red"
+                android:textSize="@dimen/text_size_14"
+                tools:text="$99.99"
+                app:customAssetFont="gotham_rounded_medium"
+                android:visibility="gone"/>
+
+        </LinearLayout>
     </LinearLayout>
 
     <View

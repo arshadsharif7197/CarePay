@@ -420,4 +420,9 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
 
     <string name="payment_failed">Payment Not Successful</string>
 
+    <string name="tag_demographics_error_show_inv">demographics_error_show_inv</string>
+    <string name="tag_demographics_error_show_gone">demographics_error_show_gone</string>
+    <string name="tag_demographics_error_hide_inv">demographics_error_hide_inv</string>
+    <string name="tag_demographics_error_hide_gone">demographics_error_hide_gone</string>
+
 </resources>

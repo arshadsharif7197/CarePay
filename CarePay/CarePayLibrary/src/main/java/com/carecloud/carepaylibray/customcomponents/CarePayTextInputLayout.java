@@ -144,5 +144,12 @@ public class CarePayTextInputLayout extends TextInputLayout {
         this.setTypeface(tf);
     }
 
+    @Override
+    public void setError(CharSequence errorMessage){
+        super.setError(errorMessage);
+        if(errorMessage != null) {
+            requestFocus();
+        }
+    }
 
 }

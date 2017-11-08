@@ -13,17 +13,19 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentHistoryCallback;
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.payments.fragments.PaymentHistoryDetailFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
-import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
+import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItemPayload;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by lmenendez on 9/29/17
@@ -83,12 +85,12 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dismiss();
                 callback.showPaymentHistory(paymentsModel);
+                dismiss();
             }
         });
 
-        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(historyItem.getPayload().getDate()).shiftDateToGMT();
+        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(historyItem.getPayload().getDate());
 
         TextView transactionDate = (TextView) view.findViewById(R.id.transaction_date);
         transactionDate.setText(dateUtil.getDateAsMonthLiteralDayOrdinalYear());
@@ -125,37 +127,33 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
             }
         });
 
+        refundButton.setEnabled(totalPaid > 0 && !historyItem.getPayload().getState().equals(PaymentHistoryItemPayload.STATE_ERRORED));
+
+        double refundedAmount = historyItem.getPayload().getTotalRefunded();
+        if(refundedAmount > 0D){
+            View refundLayout = view.findViewById(R.id.refund_layout);
+            refundLayout.setVisibility(View.VISIBLE);
+
+            TextView refundAmount = (TextView) view.findViewById(R.id.transaction_refunded);
+            refundAmount.setText(NumberFormat.getCurrencyInstance().format(historyItem.getPayload().getTotalRefunded()));
+
+            if(refundedAmount >= totalPaid){
+                refundButton.setVisibility(View.GONE);
+            }
+        }
+
     }
 
     private void processRefund(){
-        dismiss();
-        callback.startRefundProcess(historyItem, paymentsModel);
-
-//        if(historyItem.getPayload().getMetadata().isExternallyProcessed()){
-//            Intent intent = new Intent();
-//            intent.setAction(CarePayConstants.CLOVER_REFUND_INTENT);
-//            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, historyItem.getPayload().getAmount());
-//
-//            Gson gson = new Gson();
-//            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(getPaymentLineItems()));
-//
-//            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSACTION_RESPONSE, gson.toJson(historyItem.getPayload().getTransactionResponse()));
-//
-//            startActivity(intent);
-//        }
-    }
-
-
-    private List<PaymentLineItem> getPaymentLineItems(){
-        List<PaymentLineItem> paymentLineItems = new ArrayList<>();
-        for (IntegratedPaymentLineItem lineItem : historyItem.getPayload().getLineItems()) {
-            PaymentLineItem paymentLineItem = new PaymentLineItem();
-            paymentLineItem.setAmount(lineItem.getAmount());
-            paymentLineItem.setDescription(lineItem.getDescription());
-
-            paymentLineItems.add(paymentLineItem);
-
+        boolean isCloverPayment = historyItem.getPayload().getMetadata().isExternallyProcessed() && historyItem.getPayload().getExecution().equals(IntegratedPaymentPostModel.EXECUTION_CLOVER);
+        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
+        if(isCloverPayment && !isCloverDevice){
+            new CustomMessageToast(getContext(), Label.getLabel("payment_refund_clover_error"), CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
+        }else {
+            dismiss();
+            callback.startRefundProcess(historyItem, paymentsModel);
         }
-        return paymentLineItems;
     }
+
+
 }

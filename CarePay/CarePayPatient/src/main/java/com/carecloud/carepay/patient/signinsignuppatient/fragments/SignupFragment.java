@@ -29,7 +29,6 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserCodeDel
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -41,9 +40,12 @@ import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+
 
 import static android.app.Activity.RESULT_OK;
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 /**
  * Created by harish_revuri on 9/7/2016.
@@ -381,7 +383,7 @@ public class SignupFragment extends BaseFragment {
     private boolean checkEmail() {
         String email = emailText.getText().toString();
         isEmailEmpty = StringUtil.isNullOrEmpty(email);
-        boolean isEmailValid = StringUtil.isValidmail(email);
+        boolean isEmailValid = ValidationHelper.isValidEmail(email);
         emailInputLayout.setErrorEnabled(isEmailEmpty || !isEmailValid); // enable for error if either empty or invalid email
         if (isEmailEmpty) {
             emailInputLayout.setError(Label.getLabel("signup_please_enter_email"));
@@ -396,7 +398,7 @@ public class SignupFragment extends BaseFragment {
     private boolean checkPassword() {
         String passwordString = passwordText.getText().toString();
         isPasswordEmpty = StringUtil.isNullOrEmpty(passwordString);
-        boolean isPasswordValid = StringUtil.isValidPassword(passwordString);
+        boolean isPasswordValid = ValidationHelper.isValidPassword(passwordString);
 
         passwordInputLayout.setErrorEnabled(isPasswordEmpty || !isPasswordValid);
         String error;

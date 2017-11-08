@@ -37,9 +37,9 @@ import java.util.List;
 
 public class ResponsibilityFragmentDialog extends BaseDialogFragment
         implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
-    private static final String KEY_LEFT_BUTTON = "leftLabel";
-    private static final String KEY_RIGHT_BUTTON = "rightLabel";
-    private static final String KEY_EMPTY_MESSAGE = "messageLabel";
+    protected static final String KEY_LEFT_BUTTON = "leftLabel";
+    protected static final String KEY_RIGHT_BUTTON = "rightLabel";
+    protected static final String KEY_EMPTY_MESSAGE = "messageLabel";
 
     private String leftLabel;
     private String rightLabel;

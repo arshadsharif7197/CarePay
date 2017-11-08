@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
+import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItemPayload;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
@@ -59,6 +60,9 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
     private RecyclerView refundItemsRecycler;
 
     private double totalPaid;
+    private boolean isCloverPayment = false;
+    private boolean isCloverDevice = false;
+
 
     /**
      * Create a new instance of RefundProcessFragment
@@ -94,7 +98,9 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
         paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
         if(historyItem != null) {
             initLineItems();
+            isCloverPayment = historyItem.getPayload().getMetadata().isExternallyProcessed() && historyItem.getPayload().getExecution().equals(IntegratedPaymentPostModel.EXECUTION_CLOVER);
         }
+        isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
     }
 
     @Override
@@ -147,7 +153,13 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
                 processRefund();
             }
         });
+//        disableCloverRefunds();
+    }
 
+    private void disableCloverRefunds(){
+        if(isCloverPayment && !isCloverDevice){
+            refundButton.setEnabled(false);
+        }
     }
 
     private void setAdapter(){
@@ -160,7 +172,9 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
         for(PaymentHistoryLineItem lineItem : historyItem.getPayload().getLineItems()){
             if(lineItem.isProcessed()){
                 successfulAmount += lineItem.getAmount();
-                lineItems.add(lineItem);
+                if(lineItem.getRefundableBalance() > 0) {
+                    lineItems.add(lineItem);
+                }
             }
         }
         refundLineItems.addAll(lineItems);
@@ -170,13 +184,15 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
     private double calcCurrentRefundAmount(){
         double total = 0D;
         for(PaymentHistoryLineItem lineItem : refundLineItems){
-            total += lineItem.getAmount();
+            total += lineItem.getRefundableBalance();
         }
         return total;
     }
 
     private void setRefundAmount(){
         refundAmount.setText(currencyFormatter.format(calcCurrentRefundAmount()));
+        refundButton.setEnabled(!refundLineItems.isEmpty());
+//        disableCloverRefunds();
         if(refundLineItems.size() < lineItems.size()){
             refundButton.setText(Label.getLabel("payment_refund_button_partial"));
         }else{
@@ -185,8 +201,7 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
     }
 
     private void processRefund() {
-        if(historyItem.getPayload().getMetadata().isExternallyProcessed() && historyItem.getPayload().getExecution().equals(IntegratedPaymentPostModel.EXECUTION_CLOVER)){
-            boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
+        if(isCloverPayment){
             if(isCloverDevice){
                 processCloverRefund();
             }else{
@@ -203,12 +218,13 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
         intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, calcCurrentRefundAmount());
 
         Gson gson = new Gson();
-        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(getPaymentLineItems()));
-
+        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(getRefundItems()));
         intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSACTION_RESPONSE, gson.toJson(historyItem.getPayload().getTransactionResponse()));
+        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION, gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getRefundPayment()));
+        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_HISTORY_ITEM, gson.toJson(historyItem));
 
-        startActivity(intent);
-
+        getActivity().startActivityForResult(intent, CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE);
+        dismiss();
     }
 
     private void processStandardRefund(){
@@ -233,6 +249,13 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
+            PaymentsModel refundPaymentModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            PaymentHistoryItemPayload refundPayload = refundPaymentModel.getPaymentPayload().getPatientRefund();
+            historyItem.setPayload(refundPayload);
+
+            new CustomMessageToast(getContext(), Label.getLabel("payment_refund_success"), CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
+            dismiss();
+            callback.completeRefundProcess(historyItem, paymentsModel);
         }
 
         @Override
@@ -259,7 +282,7 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
         List<RefundLineItem> refundItems = new ArrayList<>();
         for(PaymentHistoryLineItem lineItem : refundLineItems){
             RefundLineItem refundItem = new RefundLineItem();
-            refundItem.setAmount(lineItem.getAmount());
+            refundItem.setAmount(lineItem.getRefundableBalance());//TODO handle partial refund
             refundItem.setDescription(lineItem.getDescription());
             refundItem.setLineItemId(lineItem.getLineItemId());
 

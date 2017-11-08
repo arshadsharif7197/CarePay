@@ -86,8 +86,9 @@ public class DateUtil {
     public DateUtil setDateRaw(String dateString) {
         if (dateString == null) {
             Log.e(TAG, "Date string is NULL");
-            return this;
+            return this.setToCurrent();
         }
+        dateString = hackDate(dateString);
         for (String format : formats) {
             try {
                 SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.getDefault());
@@ -1123,4 +1124,7 @@ public class DateUtil {
         return toStringWithFormat(FORMAT_MONTH_DAY_TIME12);
     }
 
+    private String hackDate(String dateString){
+        return dateString.replaceAll("\\.\\d\\d\\dZ", "-00:00");
+    }
 }

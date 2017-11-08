@@ -51,6 +51,7 @@ import com.carecloud.carepaylibray.signinsignup.fragments.ResetPasswordFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.Gson;
 import com.newrelic.agent.android.NewRelic;
 
@@ -568,7 +569,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
 
     private boolean checkEmail(String email) {
         boolean isEmptyEmail = StringUtil.isNullOrEmpty(email);
-        boolean isEmailValid = StringUtil.isValidmail(email);
+        boolean isEmailValid = ValidationHelper.isValidEmail(email);
         if (isEmptyEmail || !isEmailValid) {
             if (isEmptyEmail) {
                 setEmailError(getString(com.carecloud.carepaylibrary.R.string.signin_signup_error_empty_email));

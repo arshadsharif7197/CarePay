@@ -30,7 +30,7 @@ import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPaymentSettingsDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -46,7 +46,7 @@ import com.squareup.picasso.Picasso;
 public class DemographicsSettingsFragment extends BaseFragment {
 
 
-    private DemographicsSettingsDTO demographicsSettingsDTO;
+    private DemographicDTO demographicsSettingsDTO;
     private Button signOutButton;
     private DemographicsSettingsFragmentListener callback;
     private CheckBox pushNotificationCheckBox;
@@ -73,7 +73,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
+        demographicsSettingsDTO = (DemographicDTO) callback.getDto();
     }
 
     @Nullable

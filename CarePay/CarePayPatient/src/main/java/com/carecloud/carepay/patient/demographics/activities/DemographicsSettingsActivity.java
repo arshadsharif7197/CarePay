@@ -23,10 +23,13 @@ import com.carecloud.carepay.patient.payment.fragments.CreditCardDetailsFragment
 import com.carecloud.carepay.patient.payment.fragments.CreditCardListFragment;
 import com.carecloud.carepay.patient.payment.fragments.SettingAddCreditCardFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.demographics.EmergencyContactInterface;
+import com.carecloud.carepaylibray.demographics.EmergencyContactInterfaceFragment;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.fragments.EmergencyContactFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -34,9 +37,10 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
  * Main activity for Settings workflow
  */
 public class DemographicsSettingsActivity extends BasePatientActivity implements
-        DemographicsSettingsFragmentListener, InsuranceEditDialog.InsuranceEditDialogListener {
+        DemographicsSettingsFragmentListener, InsuranceEditDialog.InsuranceEditDialogListener,
+        EmergencyContactInterface {
 
-    DemographicsSettingsDTO demographicsSettingsDTO;
+    DemographicDTO demographicsSettingsDTO;
 
     private View rootView;
 
@@ -45,7 +49,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demographics_settings);
 
-        demographicsSettingsDTO = getConvertedDTO(DemographicsSettingsDTO.class);
+        demographicsSettingsDTO = getConvertedDTO(DemographicDTO.class);
         rootView = findViewById(R.id.activity_demographics_settings);
 
         getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE,
@@ -62,7 +66,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         }
-        if (item.getItemId() == R.id.action_remove_credit_card || item.getItemId() == R.id.deleteEmployer) {
+        if (item.getItemId() == R.id.action_remove_credit_card || item.getItemId() == R.id.deleteEmergencyContact) {
             return false;
         }
         return true;
@@ -80,7 +84,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     }
 
     @Override
-    public void onCreditCardOperation(DemographicsSettingsDTO demographicsSettingsDTO) {
+    public void onCreditCardOperation(DemographicDTO demographicsSettingsDTO) {
         if (getSupportFragmentManager().findFragmentByTag(CreditCardListFragment.class.getName()) != null) {
             ((CreditCardListFragment) getSupportFragmentManager()
                     .findFragmentByTag(CreditCardListFragment.class.getName()))
@@ -203,5 +207,19 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
 
     public void addFragment(Fragment fragment, boolean addToBackStack) {
         addFragment(R.id.activity_demographics_settings, fragment, addToBackStack);
+    }
+
+    @Override
+    public void showAddEditEmergencyContactDialog() {
+        addFragment(EmergencyContactFragment.newInstance(), true);
+    }
+
+    @Override
+    public void updateEmergencyContact(PatientModel emergencyContact) {
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentById(R.id.activity_demographics_settings);
+        if (fragment instanceof EmergencyContactInterfaceFragment) {
+            ((EmergencyContactInterfaceFragment) fragment).updateEmergencyContact(emergencyContact);
+        }
     }
 }

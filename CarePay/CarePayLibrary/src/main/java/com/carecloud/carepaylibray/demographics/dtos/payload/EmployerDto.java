@@ -15,7 +15,7 @@ public class EmployerDto {
 
     @Expose
     @SerializedName("address")
-    private EmployerAddressDto address = new EmployerAddressDto();
+    private DemographicAddressPayloadDTO address = new DemographicAddressPayloadDTO();
 
     public String getName() {
         return name;
@@ -25,11 +25,11 @@ public class EmployerDto {
         this.name = name;
     }
 
-    public EmployerAddressDto getAddress() {
+    public DemographicAddressPayloadDTO getAddress() {
         return address;
     }
 
-    public void setAddress(EmployerAddressDto address) {
+    public void setAddress(DemographicAddressPayloadDTO address) {
         this.address = address;
     }
 }

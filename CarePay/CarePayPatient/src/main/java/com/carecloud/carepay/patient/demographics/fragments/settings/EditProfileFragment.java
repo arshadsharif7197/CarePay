@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -31,8 +30,8 @@ import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.media.MediaScannerPresenter;
 import com.carecloud.carepaylibray.media.MediaViewInterface;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
@@ -52,7 +51,7 @@ import java.io.IOException;
  * A simple {@link Fragment} subclass.
  */
 public class EditProfileFragment extends BaseFragment implements MediaViewInterface {
-    private DemographicsSettingsDTO demographicsSettingsDTO = null;
+    private DemographicDTO demographicsSettingsDTO = null;
 
     private ImageView profileImageView;
     private TextView patientNameValue;
@@ -85,7 +84,7 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
+        demographicsSettingsDTO = (DemographicDTO) callback.getDto();
     }
 
     @Nullable
@@ -190,8 +189,8 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            DemographicsSettingsDTO updatedModel = DtoHelper
-                    .getConvertedDTO(DemographicsSettingsDTO.class, workflowDTO);
+            DemographicDTO updatedModel = DtoHelper
+                    .getConvertedDTO(DemographicDTO.class, workflowDTO);
             demographicsSettingsDTO.getPayload().getDemographics().getPayload()
                     .setPersonalDetails(updatedModel.getPayload().getDemographics().getPayload()
                             .getPersonalDetails());
