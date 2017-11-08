@@ -31,6 +31,12 @@ public class HttpConstants {
 
     private static String environment;
 
+    private static String deepStreamUrl;
+
+    private static String paymentsUrl;
+
+    private static String paymentsApiKey;
+
 
     private static DeviceIdentifierDTO deviceInformation;
     private static String formsUrl;
@@ -114,5 +120,29 @@ public class HttpConstants {
 
     public static void setEnvironment(String environment) {
         HttpConstants.environment = environment;
+    }
+
+    public static String getDeepStreamUrl() {
+        return deepStreamUrl;
+    }
+
+    public static void setDeepStreamUrl(String deepStreamUrl) {
+        HttpConstants.deepStreamUrl = deepStreamUrl;
+    }
+
+    public static String getPaymentsUrl() {
+        return paymentsUrl;
+    }
+
+    public static void setPaymentsUrl(String paymentsUrl) {
+        HttpConstants.paymentsUrl = paymentsUrl;
+    }
+
+    public static String getPaymentsApiKey() {
+        return paymentsApiKey;
+    }
+
+    public static void setPaymentsApiKey(String paymentsApiKey) {
+        HttpConstants.paymentsApiKey = paymentsApiKey;
     }
 }

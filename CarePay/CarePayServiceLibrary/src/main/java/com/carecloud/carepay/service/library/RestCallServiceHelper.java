@@ -244,6 +244,9 @@ public class RestCallServiceHelper {
         if (authQueryParams) {
             queryMap = getAuthQueryParams(queryMap, authTokenName);
         }
+        if(jsonBody != null && jsonBody.length() == 0){
+            jsonBody = null;
+        }
         Call<JsonElement> requestCall = getServiceCall(method, baseUrl, urlPath, fullHeaders, headerMap, queryMap, jsonBody, fieldMap, requestBody);
         requestCall.enqueue(new Callback<JsonElement>() {
             @Override
