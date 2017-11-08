@@ -48,6 +48,7 @@
                 android:background="@color/gray_white" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/adhoc_forms_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/separator"
