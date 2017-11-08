@@ -22,6 +22,7 @@ import com.carecloud.carepay.practice.library.customdialog.FilterDialog;
 import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog;
+import com.carecloud.carepay.practice.library.payments.dialogs.FormsResponsibilityFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
@@ -531,10 +532,10 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private void showResponsibilityFragment(PaymentsModel paymentsModel) {
         String tag = ResponsibilityFragmentDialog.class.getSimpleName();
         ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(paymentsModel);
-        ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
+        FormsResponsibilityFragmentDialog dialog = FormsResponsibilityFragmentDialog
                 .newInstance(paymentsModel,
                         Label.getLabel("adhoc_show_forms_button_label"),
-                        Label.getLabel("create_appointment_label"),
+                        Label.getLabel("add_appointment_label"),
                         Label.getLabel("payment_balance_empty_appointment_screen"),
                         headerModel);
         dialog.setShowLeftButtonAlways(true);
