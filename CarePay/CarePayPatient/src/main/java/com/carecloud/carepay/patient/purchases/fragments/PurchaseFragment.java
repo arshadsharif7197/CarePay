@@ -14,6 +14,7 @@ import com.carecloud.carepay.patient.purchases.models.sso.Profile;
 import com.carecloud.carepay.patient.purchases.models.sso.SsoModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
@@ -82,8 +83,14 @@ public class PurchaseFragment extends BaseFragment {
     }
 
     private void initSsoPayload(){
+        DemographicPayloadDTO demographics = appointmentsResultModel.getPayload().getDemographicDTO().getPayload();
         Person person = new Person();
-        person.setName(appointmentsResultModel.getPayload().getDemographicDTO().getPayload().getPersonalDetails().getFullName());
+        person.setName(demographics.getPersonalDetails().getFullName());
+        person.setStreet(demographics.getAddress().getAddress1());
+        person.setCity(demographics.getAddress().getCity());
+        person.setState(demographics.getAddress().getState());
+        person.setPostalCode(demographics.getAddress().getZipcode());
+        person.setPhone(demographics.getPersonalDetails().getPrimaryPhoneNumber());
 
         Profile profile = new Profile();
         profile.setEmail(getApplicationPreferences().getUserId());
