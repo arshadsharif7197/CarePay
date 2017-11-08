@@ -28,6 +28,7 @@ import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicEmergencyContactSection;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicEmploymentInfoSection;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsField;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsPersonalSection;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
@@ -44,6 +45,7 @@ import com.google.gson.Gson;
 import com.smartystreets.api.us_zipcode.City;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -135,58 +137,62 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
 
     private void initViews(View view) {
         DemographicPayloadDTO demographicPayload = demographicsSettingsDTO.getPayload().getDemographics().getPayload();
-        initDemographicInfo(view, demographicPayload);
+        DemographicsPersonalSection personalInfoSection = dataModel.getDemographic().getPersonalDetails();
+        setUpExtendedDemographicFields(view, demographicPayload, personalInfoSection);
+
+        setUpEmergencyContact(view, demographicPayload.getEmergencyContact());
+        setUpEmployer(view, demographicPayload, dataModel.getDemographic().getEmploymentInfo());
+        //initDemographicInfo(view, demographicPayload);
     }
 
     private void initDemographicInfo(View view, DemographicPayloadDTO demographicPayload) {
-        DemographicsPersonalSection personalInfoSection = dataModel.getDemographic().getPersonalDetails();
 
-        TextInputLayout preferredNameLayout = (TextInputLayout) view.findViewById(R.id.preferredNameInputLayout);
-        EditText preferredName = (EditText) view.findViewById(R.id.preferredName);
-        preferredName.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(preferredNameLayout, null));
-        setVisibility(preferredNameLayout, personalInfoSection.getProperties().getPreferredName().isDisplayed());
-        preferredName.setText(demographicPayload.getPersonalDetails().getPreferredName());
-        preferredName.getOnFocusChangeListener().onFocusChange(preferredName,
-                !StringUtil.isNullOrEmpty(preferredName.getText().toString().trim()));
-        if (personalInfoSection.getProperties().getPreferredName().isRequired()) {
-            preferredName.addTextChangedListener(getValidateEmptyTextWatcher(preferredNameLayout));
-        } else if (personalInfoSection.getProperties().getPreferredName().isDisplayed() &&
-                StringUtil.isNullOrEmpty(demographicPayload.getPersonalDetails().getPreferredName())) {
-            View preferredNameOptional = view.findViewById(R.id.preferredNameOptional);
-            preferredNameOptional.setVisibility(View.VISIBLE);
-        }
-
-
-        TextInputLayout socialSecurityLayout = (TextInputLayout) view.findViewById(R.id.socialSecurityInputLayout);
-        EditText socialSecurity = (EditText) view.findViewById(R.id.socialSecurityNumber);
-        socialSecurity.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(socialSecurityLayout, null));
-        setVisibility(socialSecurityLayout, personalInfoSection.getProperties().getSocialSecurityNumber().isDisplayed());
-        socialSecurity.setText(demographicPayload.getPersonalDetails().getSocialSecurityNumber());
-        socialSecurity.getOnFocusChangeListener().onFocusChange(socialSecurity,
-                !StringUtil.isNullOrEmpty(socialSecurity.getText().toString().trim()));
-        if (personalInfoSection.getProperties().getSocialSecurityNumber().isRequired()) {
-            socialSecurity.addTextChangedListener(getValidateEmptyTextWatcher(socialSecurityLayout));
-        } else if (personalInfoSection.getProperties().getSocialSecurityNumber().isDisplayed() &&
-                StringUtil.isNullOrEmpty(demographicPayload.getPersonalDetails().getSocialSecurityNumber())) {
-            View socialSecurityOptional = view.findViewById(R.id.socialSecurityOptional);
-            socialSecurityOptional.setVisibility(View.VISIBLE);
-        }
-
-
-        TextInputLayout emailAddressLayout = (TextInputLayout) view.findViewById(R.id.emailInputLayout);
-        EditText emailAddress = (EditText) view.findViewById(R.id.email);
-        emailAddress.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(emailAddressLayout, null));
-        setVisibility(emailAddressLayout, personalInfoSection.getProperties().getEmailAddress().isDisplayed());
-        emailAddress.setText(demographicPayload.getPersonalDetails().getEmailAddress());
-        emailAddress.getOnFocusChangeListener().onFocusChange(emailAddress,
-                !StringUtil.isNullOrEmpty(emailAddress.getText().toString().trim()));
-        if (personalInfoSection.getProperties().getEmailAddress().isRequired()) {
-            emailAddress.addTextChangedListener(getValidateEmptyTextWatcher(emailAddressLayout));
-        } else if (personalInfoSection.getProperties().getEmailAddress().isDisplayed() &&
-                StringUtil.isNullOrEmpty(demographicPayload.getPersonalDetails().getEmailAddress())) {
-            View emailAddressOptional = view.findViewById(R.id.emailOptional);
-            emailAddressOptional.setVisibility(View.VISIBLE);
-        }
+//        TextInputLayout preferredNameLayout = (TextInputLayout) view.findViewById(R.id.preferredNameInputLayout);
+//        EditText preferredName = (EditText) view.findViewById(R.id.preferredName);
+//        preferredName.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(preferredNameLayout, null));
+//        setVisibility(preferredNameLayout, personalInfoSection.getProperties().getPreferredName().isDisplayed());
+//        preferredName.setText(demographicPayload.getPersonalDetails().getPreferredName());
+//        preferredName.getOnFocusChangeListener().onFocusChange(preferredName,
+//                !StringUtil.isNullOrEmpty(preferredName.getText().toString().trim()));
+//        if (personalInfoSection.getProperties().getPreferredName().isRequired()) {
+//            preferredName.addTextChangedListener(getValidateEmptyTextWatcher(preferredNameLayout));
+//        } else if (personalInfoSection.getProperties().getPreferredName().isDisplayed() &&
+//                StringUtil.isNullOrEmpty(demographicPayload.getPersonalDetails().getPreferredName())) {
+//            View preferredNameOptional = view.findViewById(R.id.preferredNameOptional);
+//            preferredNameOptional.setVisibility(View.VISIBLE);
+//        }
+//
+//
+//        TextInputLayout socialSecurityLayout = (TextInputLayout) view.findViewById(R.id.socialSecurityInputLayout);
+//        EditText socialSecurity = (EditText) view.findViewById(R.id.socialSecurityNumber);
+//        socialSecurity.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(socialSecurityLayout, null));
+//        setVisibility(socialSecurityLayout, personalInfoSection.getProperties().getSocialSecurityNumber().isDisplayed());
+//        socialSecurity.setText(demographicPayload.getPersonalDetails().getSocialSecurityNumber());
+//        socialSecurity.getOnFocusChangeListener().onFocusChange(socialSecurity,
+//                !StringUtil.isNullOrEmpty(socialSecurity.getText().toString().trim()));
+//        if (personalInfoSection.getProperties().getSocialSecurityNumber().isRequired()) {
+//            socialSecurity.addTextChangedListener(getValidateEmptyTextWatcher(socialSecurityLayout));
+//        } else if (personalInfoSection.getProperties().getSocialSecurityNumber().isDisplayed() &&
+//                StringUtil.isNullOrEmpty(demographicPayload.getPersonalDetails().getSocialSecurityNumber())) {
+//            View socialSecurityOptional = view.findViewById(R.id.socialSecurityOptional);
+//            socialSecurityOptional.setVisibility(View.VISIBLE);
+//        }
+//
+//
+//        TextInputLayout emailAddressLayout = (TextInputLayout) view.findViewById(R.id.emailInputLayout);
+//        EditText emailAddress = (EditText) view.findViewById(R.id.email);
+//        emailAddress.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(emailAddressLayout, null));
+//        setVisibility(emailAddressLayout, personalInfoSection.getProperties().getEmailAddress().isDisplayed());
+//        emailAddress.setText(demographicPayload.getPersonalDetails().getEmailAddress());
+//        emailAddress.getOnFocusChangeListener().onFocusChange(emailAddress,
+//                !StringUtil.isNullOrEmpty(emailAddress.getText().toString().trim()));
+//        if (personalInfoSection.getProperties().getEmailAddress().isRequired()) {
+//            emailAddress.addTextChangedListener(getValidateEmptyTextWatcher(emailAddressLayout));
+//        } else if (personalInfoSection.getProperties().getEmailAddress().isDisplayed() &&
+//                StringUtil.isNullOrEmpty(demographicPayload.getPersonalDetails().getEmailAddress())) {
+//            View emailAddressOptional = view.findViewById(R.id.emailOptional);
+//            emailAddressOptional.setVisibility(View.VISIBLE);
+//        }
 
 
 //        View preferredLanguageLayout = view.findViewById(R.id.preferredLanguageDemographicsLayout);
@@ -326,9 +332,127 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         setUpEmployer(view, demographicPayload, dataModel.getDemographic().getEmploymentInfo());
     }
 
+    private void setUpExtendedDemographicFields(View view, DemographicPayloadDTO demographicPayload,
+                                                DemographicsPersonalSection personalInfoSection) {
+        setUpDemographicField(view, demographicPayload.getPersonalDetails().getPreferredName(),
+                personalInfoSection.getProperties().getPreferredName(), R.id.preferredNameContainer,
+                com.carecloud.carepaylibrary.R.id.preferredNameInputLayout, com.carecloud.carepaylibrary.R.id.preferredName, R.id.preferredNameOptional, null, null);
+
+        setUpDemographicField(view, demographicPayload.getPersonalDetails().getSocialSecurityNumber(),
+                personalInfoSection.getProperties().getSocialSecurityNumber(),
+                R.id.socialSecurityContainer, R.id.socialSecurityInputLayout,
+                R.id.socialSecurityNumber, R.id.socialSecurityOptional, null, null);
+
+        setUpDemographicField(view, demographicPayload.getPersonalDetails().getEmailAddress(),
+                personalInfoSection.getProperties().getEmailAddress(), R.id.emailContainer, R.id.emailInputLayout,
+                R.id.email, R.id.emailOptional, null, null);
+
+        setUpDemographicField(view, demographicPayload.getPersonalDetails().getPreferredLanguage(),
+                personalInfoSection.getProperties().getPreferredLanguage(),
+                R.id.preferredLanguageDemographicsLayout, R.id.preferredLanguageInputLayout,
+                R.id.preferredLanguageEditText, R.id.preferredLanguageOptional, selectedPreferredLanguage,
+                Label.getLabel("demographics_preferred_language"));
+
+        setUpDemographicField(view, demographicPayload.getPersonalDetails().getDriversLicenseNumber(),
+                personalInfoSection.getProperties().getDriversLicenseNumber(),
+                R.id.driverLicenseContainer, R.id.driverLicenseInputLayout,
+                R.id.driverLicense, R.id.driverLicenseOptional, null, null);
+
+        setUpDemographicField(view, demographicPayload.getPersonalDetails().getDriversLicenseState(),
+                personalInfoSection.getProperties().getDriversLicenseState(),
+                R.id.driverLicenseStateDemographicsLayout, R.id.driverLicenseStateInputLayout,
+                R.id.driverLicenseStateEditText, R.id.driverLicenseStateOptional, selectedDriverLicenseState,
+                Label.getLabel("demographics_driver_license_state"));
+
+        setUpDemographicField(view, demographicPayload.getPersonalDetails().getSecondaryPhoneNumber(),
+                personalInfoSection.getProperties().getSecondaryPhoneNumber(),
+                R.id.secondaryPhoneContainer, R.id.secondaryPhoneInputLayout,
+                R.id.secondaryPhone, R.id.secondaryPhoneOptional, null, null);
+        EditText secondaryPhoneEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.secondaryPhone);
+        secondaryPhoneEditText.addTextChangedListener(phoneInputFormatter);
+        if (!dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryPhoneNumber().isRequired()) {
+            secondaryPhoneEditText.addTextChangedListener(
+                    clearValidationErrorsOnTextChange((TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.secondaryPhoneInputLayout)));
+        }
+
+        setUpDemographicField(view, demographicPayload.getPersonalDetails().getSecondaryPhoneNumberType(),
+                personalInfoSection.getProperties().getSecondaryPhoneNumberType(),
+                R.id.secondaryPhoneTypeDemographicsLayout, R.id.secondaryPhoneTypeInputLayout,
+                R.id.secondaryPhoneTypeEditText, R.id.secondaryPhoneTypeOptional, selectedSecondaryPhoneType,
+                Label.getLabel("demographics_secondary_phone_type"));
+
+        setUpDemographicField(view, demographicPayload.getPersonalDetails().getPreferredContact(),
+                personalInfoSection.getProperties().getPreferredContact(),
+                R.id.preferredContactMethodDemographicsLayout, R.id.preferredContactMethodInputLayout,
+                R.id.preferredContactMethodEditText, R.id.contactMethodOptional, selectedContactMethod,
+                Label.getLabel("demographics_preferred_contact_method"));
+
+        setUpDemographicField(view, demographicPayload.getPersonalDetails().getMaritalStatus(),
+                personalInfoSection.getProperties().getMaritalStatus(),
+                R.id.maritalStatusDemographicsLayout, R.id.maritalStatusInputLayout,
+                R.id.maritalStatusEditText, R.id.maritalStatusOptional, selectedMaritalStatus,
+                Label.getLabel("demographics_marital_status"));
+
+        setUpDemographicField(view, demographicPayload.getPersonalDetails().getReferralSource(),
+                personalInfoSection.getProperties().getReferralSource(), R.id.referralSourceDemographicsLayout,
+                R.id.referralSourceInputLayout, R.id.referralSourceEditText,
+                R.id.referralSourceOptional, selectedReferralSource, Label.getLabel("demographics_referral_source"));
+
+    }
+
+    private View.OnClickListener getEditTextClickListener(List<DemographicsOption> options,
+                                                          final TextInputLayout inputLayout,
+                                                          final EditText editText,
+                                                          final View optionalLabel,
+                                                          final DemographicsOption demographicsOption,
+                                                          final String dialogTitle) {
+        return getSelectOptionsListener(options, new OnOptionSelectedListener() {
+                    @Override
+                    public void onOptionSelected(DemographicsOption option) {
+                        if (demographicsOption != null) {
+                            demographicsOption.setLabel(option.getLabel());
+                            demographicsOption.setName(option.getName());
+                            demographicsOption.setId(option.getId());
+                        }
+                        editText.setText(option.getLabel());
+                        editText.getOnFocusChangeListener()
+                                .onFocusChange(editText, !StringUtil.isNullOrEmpty(editText.getText().toString()));
+                        inputLayout.setError(null);
+                        inputLayout.setErrorEnabled(false);
+                        optionalLabel.setVisibility(View.GONE);
+                        checkIfEnableButton();
+                    }
+                },
+                dialogTitle);
+    }
+
+    private void setUpDemographicField(View view, String value, DemographicsField demographicsField,
+                                       int containerLayout, int inputLayoutId, int editTextId, int optionalViewId,
+                                       DemographicsOption demographicsOption, String optionDialogTitle) {
+        view.findViewById(containerLayout).setVisibility(demographicsField.isDisplayed() ? View.VISIBLE : View.GONE);
+        final TextInputLayout inputLayout = (TextInputLayout) view.findViewById(inputLayoutId);
+        final EditText editText = (EditText) view.findViewById(editTextId);
+        editText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(inputLayout, null));
+        editText.setText(value);
+        editText.getOnFocusChangeListener().onFocusChange(editText,
+                !StringUtil.isNullOrEmpty(editText.getText().toString().trim()));
+        final View optionalView = view.findViewById(optionalViewId);
+        optionalView.setVisibility(!demographicsField.isRequired()
+                && StringUtil.isNullOrEmpty(value) ? View.VISIBLE : View.GONE);
+        if (demographicsOption != null) {
+            editText.setOnClickListener(getEditTextClickListener(demographicsField.getOptions(),
+                    inputLayout, editText, optionalView,
+                    demographicsOption, optionDialogTitle));
+            demographicsOption.setName(editText.getText().toString());
+            demographicsOption.setLabel(editText.getText().toString());
+        } else if (demographicsField.isRequired()) {
+            editText.addTextChangedListener(getValidateEmptyTextWatcher(inputLayout));
+        }
+    }
+
     private void setUpEmergencyContact(View view, PatientModel emergencyContact) {
         selectedEmergencyContact = emergencyContact;
-/*
+
         DemographicEmergencyContactSection emergencyContactSection = dataModel.getDemographic().getEmergencyContact();
         TextInputLayout emergencyContactInputLayout = (TextInputLayout) view.findViewById(R.id.emergencyContactInputLayout);
         emergencyContactInputLayout.setVisibility(emergencyContactSection.isDisplay() ? View.VISIBLE : View.GONE);
@@ -348,21 +472,21 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 callback.showAddEditEmergencyContactDialog();
             }
         });
-*/
 
-        DemographicEmergencyContactSection emergencyContactSection = dataModel.getDemographic().getEmergencyContact();
-        View emergencyContactLayout = view.findViewById(R.id.emergencyContactDemographicsLayout);
-        TextView chooseEmergencyContact = (TextView) view.findViewById(R.id.emergencyContactEditText);
-        View EmergencyContactOptional = view.findViewById(R.id.emergencyContactOptionalLabel);
-        setVisibility(emergencyContactLayout, emergencyContactSection.isDisplay());
-        chooseEmergencyContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.showAddEditEmergencyContactDialog();
-            }
-        });
-        String emergencyContactName = emergencyContact != null ? emergencyContact.getFullName() : null;
-        initSelectableInput(chooseEmergencyContact, new DemographicsOption(), emergencyContactName, emergencyContactSection.isRequired() ? null : EmergencyContactOptional);
+//
+//        DemographicEmergencyContactSection emergencyContactSection = dataModel.getDemographic().getEmergencyContact();
+//        View emergencyContactLayout = view.findViewById(R.id.emergencyContactDemographicsLayout);
+//        TextView chooseEmergencyContact = (TextView) view.findViewById(R.id.emergencyContactEditText);
+//        View EmergencyContactOptional = view.findViewById(R.id.emergencyContactOptionalLabel);
+//        setVisibility(emergencyContactLayout, emergencyContactSection.isDisplay());
+//        chooseEmergencyContact.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                callback.showAddEditEmergencyContactDialog();
+//            }
+//        });
+//        String emergencyContactName = emergencyContact != null ? emergencyContact.getFullName() : null;
+//        initSelectableInput(chooseEmergencyContact, new DemographicsOption(), emergencyContactName, emergencyContactSection.isRequired() ? null : EmergencyContactOptional);
 
 
     }
@@ -370,20 +494,17 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
     private void setUpEmployer(final View view, DemographicPayloadDTO demographicPayload,
                                DemographicEmploymentInfoSection employmentInfoSection) {
 
-        final TextView chooseEmploymentStatus = (TextView) view.findViewById(R.id.chooseEmploymentStatus);
+        final TextView employmentStatusEditText = (TextView) view.findViewById(R.id.employmentStatusEditText);
         final View employmentStatusOptional = view.findViewById(R.id.employmentStatusOptional);
 
-        chooseEmploymentStatus.setOnClickListener(
+        employmentStatusEditText.setOnClickListener(
                 getSelectOptionsListener(employmentInfoSection.getProperties().getEmploymentStatus().getOptions(),
                         new OnOptionSelectedListener() {
                             @Override
                             public void onOptionSelected(DemographicsOption option) {
-                                if (chooseEmploymentStatus != null) {
-                                    chooseEmploymentStatus.setText(option.getLabel());
-                                }
-                                if (employmentStatusOptional != null) {
-                                    employmentStatusOptional.setVisibility(View.GONE);
-                                }
+                                employmentStatusEditText.setText(option.getLabel());
+                                employmentStatusOptional.setVisibility(View.GONE);
+
                                 selectedEmploymentStatus.setLabel(option.getLabel());
                                 selectedEmploymentStatus.setName(option.getName());
                                 showEmployerFields = option.getLabel().toLowerCase().equals("employed")
@@ -394,12 +515,16 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                         }, Label.getLabel("demographics_employment_status")));
 
         String employmentStatus = demographicPayload.getEmploymentInfoModel().getEmploymentStatus();
-        initSelectableInput(chooseEmploymentStatus, selectedEmploymentStatus, employmentStatus,
-                employmentInfoSection.getProperties().getEmploymentStatus().isRequired()
-                        ? null : employmentStatusOptional);
+        selectedEmploymentStatus.setName(employmentStatus);
+        selectedEmploymentStatus.setLabel(employmentStatus);
         if (employmentStatus != null) {
             showEmployerFields = employmentStatus.toLowerCase().equals("employed")
                     || employmentStatus.toLowerCase().equals("part time");
+        }
+
+        if (!employmentInfoSection.getProperties().getEmploymentStatus().isRequired()
+                && StringUtil.isNullOrEmpty(employmentStatus)) {
+            employmentStatusOptional.setVisibility(View.VISIBLE);
         }
         if (!employmentInfoSection.isRequired()) {
             view.findViewById(R.id.employmentInfoOptionalTextView).setVisibility(View.VISIBLE);
@@ -447,32 +572,34 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         TextInputLayout address1TextInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
         EditText addressEditText = (EditText) view.findViewById(R.id.addressEditText);
         addressEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address1TextInputLayout, null));
-        if (selectedEmployer.getAddress() != null) {
-            addressEditText.setText(selectedEmployer.getAddress().getAddress1());
-        }
+        addressEditText.setText(selectedEmployer.getAddress().getAddress1());
+        addressEditText.getOnFocusChangeListener()
+                .onFocusChange(addressEditText, !StringUtil.isNullOrEmpty(addressEditText.getText().toString()));
+
 
         TextInputLayout address2TextInputLayout = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
         EditText addressEditText2 = (EditText) view.findViewById(R.id.addressEditText2);
         addressEditText2.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address2TextInputLayout, null));
-        if (selectedEmployer.getAddress() != null) {
-            addressEditText2.setText(selectedEmployer.getAddress().getAddress2());
-        }
+        addressEditText2.setText(selectedEmployer.getAddress().getAddress2());
+        addressEditText2.getOnFocusChangeListener()
+                .onFocusChange(addressEditText2, !StringUtil.isNullOrEmpty(addressEditText2.getText().toString()));
+
 
         TextInputLayout zipCodeTextInputLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
         EditText zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeTextView);
         zipCodeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeTextInputLayout,
                 getZipCodeFocusListener(zipCodeEditText)));
-        if (selectedEmployer.getAddress() != null) {
-            zipCodeEditText.setText(selectedEmployer.getAddress().getZipcode());
-        }
+        zipCodeEditText.setText(selectedEmployer.getAddress().getZipcode());
+        zipCodeEditText.getOnFocusChangeListener()
+                .onFocusChange(zipCodeEditText, !StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString()));
 
         TextInputLayout cityTextInputLayout = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
         cityEditText = (EditText) view.findViewById(R.id.cityTextView);
         cityEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(cityTextInputLayout, null));
-        if (selectedEmployer.getAddress() != null) {
-            cityEditText.setText(selectedEmployer.getAddress().getCity());
-        }
+        cityEditText.setText(selectedEmployer.getAddress().getCity());
+        cityEditText.getOnFocusChangeListener()
+                .onFocusChange(cityEditText, !StringUtil.isNullOrEmpty(cityEditText.getText().toString()));
 
         TextInputLayout stateTextInputLayout = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
         stateEditText = (EditText) view.findViewById(R.id.stateTextView);
@@ -491,6 +618,8 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                         },
                         Label.getLabel("demographics_documents_title_select_state")));
         stateEditText.setText(selectedEmployer.getAddress().getState());
+        stateEditText.getOnFocusChangeListener()
+                .onFocusChange(stateEditText, !StringUtil.isNullOrEmpty(stateEditText.getText().toString()));
 
         TextInputLayout phoneTextInputLayout = (TextInputLayout) view.findViewById(R.id.phoneTextInputLayout);
         EditText phoneEditText = (EditText) view.findViewById(R.id.phoneTextView);
@@ -604,7 +733,6 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
 
         return true;
     }
-
 
     private DemographicDTO getUpdateModel() {
         DemographicDTO updatableDemographicDTO = new DemographicDTO();
@@ -788,9 +916,13 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 if (smartyStreetsResponse != null) {
                     selectedEmployer.getAddress().setCity(smartyStreetsResponse.getCity());
                     cityEditText.setText(smartyStreetsResponse.getCity());
+                    cityEditText.getOnFocusChangeListener()
+                            .onFocusChange(cityEditText, !StringUtil.isNullOrEmpty(cityEditText.getText().toString()));
                     String stateAbbr = smartyStreetsResponse.getStateAbbreviation();
                     selectedEmployer.getAddress().setState(stateAbbr);
                     stateEditText.setText(stateAbbr);
+                    stateEditText.getOnFocusChangeListener()
+                            .onFocusChange(stateEditText, !StringUtil.isNullOrEmpty(stateEditText.getText().toString()));
                 }
             }
 

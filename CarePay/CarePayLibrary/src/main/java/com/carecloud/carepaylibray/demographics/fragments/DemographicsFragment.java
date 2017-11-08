@@ -293,38 +293,21 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             }
         });
 
-//        demographicsEmergencyContactModel = emergencyContact;
-//        DemographicEmergencyContactSection emergencyContactSection = dataModel.getDemographic().getEmergencyContact();
-//        View emergencyContactLayout = view.findViewById(R.id.emergencyContactDemographicsLayout);
-//        TextView chooseEmergencyContact = (TextView) view.findViewById(R.id.emergencyContactEditText);
-//        View EmergencyContactOptional = view.findViewById(R.id.emergencyContactOptionalLabel);
-//        setVisibility(emergencyContactLayout, emergencyContactSection.isDisplay());
-//        chooseEmergencyContact.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                callback.showAddEditEmergencyContactDialog();
-//            }
-//        });
-//
-//        String emergencyContactName = emergencyContact != null ? emergencyContact.getFullName() : null;
-//        initSelectableInput(chooseEmergencyContact, new DemographicsOption(), emergencyContactName, emergencyContactSection.isRequired() ? null : EmergencyContactOptional);
-
     }
 
     private void setUpEmployer(final View view, DemographicPayloadDTO demographicPayload, DemographicEmploymentInfoSection employmentInfoSection) {
         boolean isEmploymentStuffVisible = employmentInfoSection.isDisplay();
         if (isEmploymentStuffVisible) {
-            final TextView chooseEmploymentStatus = (TextView) view.findViewById(R.id.chooseEmploymentStatus);
+            final TextView employmentStatusEditText = (TextView) view.findViewById(R.id.employmentStatusEditText);
             final View employmentStatusOptional = view.findViewById(R.id.employmentStatusOptional);
 
-            chooseEmploymentStatus.setOnClickListener(
+            employmentStatusEditText.setOnClickListener(
                     getSelectOptionsListener(employmentInfoSection.getProperties().getEmploymentStatus().getOptions(),
                             new OnOptionSelectedListener() {
                                 @Override
                                 public void onOptionSelected(DemographicsOption option) {
-                                    if (chooseEmploymentStatus != null) {
-                                        chooseEmploymentStatus.setText(option.getLabel());
-                                    }
+                                    employmentStatusEditText.setText(option.getLabel());
+
                                     if (employmentStatusOptional != null) {
                                         employmentStatusOptional.setVisibility(View.GONE);
                                     }
@@ -333,22 +316,21 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                                     showEmployerFields = option.getLabel().toLowerCase().equals("employed")
                                             || option.getLabel().toLowerCase().equals("part time");
                                     manageEmployerFieldsVisibility(showEmployerFields);
-                                    checkIfEnableButton(view);
+                                    checkIfEnableButton(getView());
                                 }
                             }, Label.getLabel("demographics_employment_status")));
 
             String employmentStatus = demographicPayload.getEmploymentInfoModel().getEmploymentStatus();
-            initSelectableInput(chooseEmploymentStatus, selectedEmploymentStatus, employmentStatus,
-                    employmentInfoSection.isRequired()
-                            ? null : employmentStatusOptional);
-
-            if (employmentStatus != null) {
+            selectedEmploymentStatus.setName(employmentStatus);
+            selectedEmploymentStatus.setLabel(employmentStatus);
+            if (StringUtil.isNullOrEmpty(employmentStatus)) {
+                employmentStatusOptional.setVisibility(View.VISIBLE);
                 showEmployerFields = employmentStatus.toLowerCase().equals("employed")
                         || employmentStatus.toLowerCase().equals("part time");
             }
-
             if (!employmentInfoSection.isRequired()) {
                 view.findViewById(R.id.employmentInfoOptionalTextView).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.employmentInfoContainer).setVisibility(View.GONE);
             }
 
         } else {
