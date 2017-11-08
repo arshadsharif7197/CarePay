@@ -165,7 +165,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
         if (isAdHocForms) {
             userNameTextView.setText(((AppointmentsResultModel) callback.getDto()).getPayload().getDemographicDTO().getPayload()
                     .getPersonalDetails().getFullName());
-            appointmentHourTextView.setText(DateUtil.getInstance().getHoursFormatted(new Date()));
+            appointmentHourTextView.setText(DateUtil.getHoursFormatted(new Date()));
             view.findViewById(R.id.statusContainer).setVisibility(View.GONE);
             view.findViewById(R.id.separator1).setVisibility(View.GONE);
             view.findViewById(R.id.visitTypeContainer).setVisibility(View.GONE);
@@ -234,10 +234,11 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
     }
 
     private void setUpForAdHocForms(View view) {
+        boolean isPlural = filledForms.size() > 1;
         ((TextView) view.findViewById(R.id.paymentDetailsLabel))
-                .setText(Label.getLabel("adhoc_final_step_signed_forms_label"));
+                .setText(Label.getLabel(isPlural ? "adhoc_final_step_signed_forms_label" : "adhoc_final_step_signed_forms_label_singular"));
         ((TextView) view.findViewById(R.id.successMessage))
-                .setText(Label.getLabel("adhoc_final_step_message"));
+                .setText(Label.getLabel(isPlural ? "adhoc_final_step_message" : "adhoc_final_step_message_singular"));
         view.findViewById(R.id.paymentTypeLayout).setVisibility(View.GONE);
         view.findViewById(R.id.continueTextView).setVisibility(View.GONE);
         view.findViewById(R.id.separator3).setVisibility(View.GONE);
