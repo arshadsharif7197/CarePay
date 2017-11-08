@@ -596,8 +596,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         EditText emailAddress = (EditText) view.findViewById(R.id.email);
         if (emailLayout.getVisibility() == View.VISIBLE &&
                 !StringUtil.isNullOrEmpty(emailAddress.getText().toString().trim()) &&
-                !ValidationHelper.isValidString(emailAddress.getText().toString().trim(),
-                        ValidationHelper.EMAIL_PATTERN)) {
+                !ValidationHelper.isValidEmail(emailAddress.getText().toString().trim())) {
             emailLayout.setErrorEnabled(true);
             emailLayout.setError(Label.getLabel("demographics_email_validation_msg"));
             return false;

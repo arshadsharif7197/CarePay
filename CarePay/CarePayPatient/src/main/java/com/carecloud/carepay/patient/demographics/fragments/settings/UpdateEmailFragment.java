@@ -20,7 +20,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.DemographicSettingsCurrentPasswordDTO;
 import com.carecloud.carepay.service.library.dtos.DemographicsSettingsEmailProperties;
@@ -34,6 +33,7 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.api.client.util.Base64;
 
 import org.json.JSONObject;
@@ -160,7 +160,7 @@ public class UpdateEmailFragment extends BaseFragment {
 
     private boolean isEmailValid() {
         String email = emailEditText.getText().toString().trim();
-        boolean isEmailValid = StringUtil.isValidmail(email);
+        boolean isEmailValid = ValidationHelper.isValidEmail(email);
         emailLabelLayout.setErrorEnabled(!isEmailValid); // enable for error if either empty or invalid email
         if (!isEmailValid) {
             emailLabelLayout.setError(Label.getLabel("demographics_invalid_email_error"));
