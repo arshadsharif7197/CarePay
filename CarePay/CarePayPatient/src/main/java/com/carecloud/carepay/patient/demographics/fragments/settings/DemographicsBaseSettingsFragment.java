@@ -18,8 +18,10 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsField;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.List;
 
@@ -246,6 +248,57 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
 
     public interface OnOptionSelectedListener{
         void  onOptionSelected(DemographicsOption option);
+    }
+
+    protected void setUpDemographicField(View view, String value, DemographicsField demographicsField,
+                                       int containerLayout, int inputLayoutId, int editTextId, int optionalViewId,
+                                       DemographicsOption demographicsOption, String optionDialogTitle) {
+        view.findViewById(containerLayout).setVisibility(demographicsField.isDisplayed() ? View.VISIBLE : View.GONE);
+        final TextInputLayout inputLayout = (TextInputLayout) view.findViewById(inputLayoutId);
+        final EditText editText = (EditText) view.findViewById(editTextId);
+        editText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(inputLayout, null));
+        editText.setText(value);
+        editText.getOnFocusChangeListener().onFocusChange(editText,
+                !StringUtil.isNullOrEmpty(editText.getText().toString().trim()));
+        final View optionalView = view.findViewById(optionalViewId);
+        optionalView.setVisibility(!demographicsField.isRequired()
+                && StringUtil.isNullOrEmpty(value) ? View.VISIBLE : View.GONE);
+        if (demographicsOption != null) {
+            editText.setOnClickListener(getEditTextClickListener(demographicsField.getOptions(),
+                    inputLayout, editText, optionalView,
+                    demographicsOption, optionDialogTitle));
+            demographicsOption.setName(editText.getText().toString());
+            demographicsOption.setLabel(editText.getText().toString());
+        } else if (demographicsField.isRequired()) {
+            editText.addTextChangedListener(getValidateEmptyTextWatcher(inputLayout));
+        }
+    }
+
+    private View.OnClickListener getEditTextClickListener(List<DemographicsOption> options,
+                                                          final TextInputLayout inputLayout,
+                                                          final EditText editText,
+                                                          final View optionalLabel,
+                                                          final DemographicsOption demographicsOption,
+                                                          final String dialogTitle) {
+        return getSelectOptionsListener(options,
+                new OnOptionSelectedListener() {
+                    @Override
+                    public void onOptionSelected(DemographicsOption option) {
+                        if (demographicsOption != null) {
+                            demographicsOption.setLabel(option.getLabel());
+                            demographicsOption.setName(option.getName());
+                            demographicsOption.setId(option.getId());
+                        }
+                        editText.setText(option.getLabel());
+                        editText.getOnFocusChangeListener()
+                                .onFocusChange(editText, !StringUtil.isNullOrEmpty(editText.getText().toString()));
+                        inputLayout.setError(null);
+                        inputLayout.setErrorEnabled(false);
+                        optionalLabel.setVisibility(View.GONE);
+                        checkIfEnableButton();
+                    }
+                },
+                dialogTitle);
     }
 
 }

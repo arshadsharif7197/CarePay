@@ -130,12 +130,12 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
 
     }
 
-
     private void initViews(View view) {
         DemographicPayloadDTO demographicPayload = demographicsSettingsDTO.getPayload().getDemographics().getPayload();
 
         initPersonalInfo(view, demographicPayload);
-        initDemographicInfo(view, demographicPayload);
+        setUpBaseDemographicFields(view, demographicPayload, demographicsSettingsDTO.getMetadata()
+                .getNewDataModel().getDemographic().getPersonalDetails());
         initAddressInfo(view, demographicPayload);
     }
 
@@ -174,55 +174,27 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
 
     }
 
-    private void initDemographicInfo(View view, DemographicPayloadDTO demographicPayload) {
-        DemographicsPersonalSection personalInfoSection = dataModel.getDemographic().getPersonalDetails();
+    private void setUpBaseDemographicFields(View view, DemographicPayloadDTO demographicPayload,
+                                            DemographicsPersonalSection personalInfoSection) {
+        setUpDemographicField(view, demographicPayload.getPersonalDetails().getGender(),
+                personalInfoSection.getProperties().getGender(), com.carecloud.carepaylibrary.R.id.genderDemographicsLayout,
+                com.carecloud.carepaylibrary.R.id.genderInputLayout, com.carecloud.carepaylibrary.R.id.genderEditText,
+                com.carecloud.carepaylibrary.R.id.genderOptionalLabel, selectedGender, Label.getLabel("demographics_review_gender"));
 
-//        View genderLayout = view.findViewById(R.id.genderDemographicsLayout);
-//        TextView chooseGender = (TextView) view.findViewById(R.id.chooseGenderTextView);
-//        View genderOptional = view.findViewById(R.id.genderOptional);
-//        setVisibility(genderLayout, personalInfoSection.getProperties().getGender().isDisplayed());
-//        chooseGender.setOnClickListener(
-//                getSelectOptionsListener(personalInfoSection.getProperties().getGender().getOptions(),
-//                        getDefaultOnOptionsSelectedListener(chooseGender, selectedGender, genderOptional),
-//                        Label.getLabel("demographics_review_gender")));
-//        String gender = demographicPayload.getPersonalDetails().getGender();
-//        initSelectableInput(chooseGender, selectedGender, gender, personalInfoSection.getProperties().getGender().isRequired() ? null : genderOptional);
-//
-//
-//        View raceLayout = view.findViewById(R.id.raceDemographicsLayout);
-//        TextView chooseRace = (TextView) view.findViewById(R.id.chooseRaceTextView);
-//        View raceOptional = view.findViewById(R.id.raceOptionalLabel);
-//        setVisibility(raceLayout, personalInfoSection.getProperties().getPrimaryRace().isDisplayed());
-//        chooseRace.setOnClickListener(
-//                getSelectOptionsListener(personalInfoSection.getProperties().getPrimaryRace().getOptions(),
-//                        getDefaultOnOptionsSelectedListener(chooseRace, selectedRace, raceOptional),
-//                        Label.getLabel("demographics_review_race")));
-//        String race = demographicPayload.getPersonalDetails().getPrimaryRace();
-//        initSelectableInput(chooseRace, selectedRace, race, personalInfoSection.getProperties().getPrimaryRace().isRequired() ? null : raceOptional);
-//
-//
-//        View secondaryRaceLayout = view.findViewById(R.id.secondaryRaceDemographicsLayout);
-//        TextView chooseSecondaryRace = (TextView) view.findViewById(R.id.chooseSecondaryRace);
-//        View secondaryRaceOptional = view.findViewById(R.id.secondaryRaceOptional);
-//        setVisibility(secondaryRaceLayout, personalInfoSection.getProperties().getSecondaryRace().isDisplayed());
-//        chooseSecondaryRace.setOnClickListener(
-//                getSelectOptionsListener(personalInfoSection.getProperties().getSecondaryRace().getOptions(),
-//                        getDefaultOnOptionsSelectedListener(chooseSecondaryRace, selectedSecondaryRace, secondaryRaceOptional),
-//                        Label.getLabel("demographics_secondary_race")));
-//        String secondaryRace = demographicPayload.getPersonalDetails().getSecondaryRace();
-//        initSelectableInput(chooseSecondaryRace, selectedSecondaryRace, secondaryRace, personalInfoSection.getProperties().getSecondaryRace().isRequired() ? null : secondaryRaceOptional);
-//
-//
-//        View ethnicityLayout = view.findViewById(R.id.ethnicityDemographicsLayout);
-//        TextView chooseEthnicity = (TextView) view.findViewById(R.id.chooseEthnicityTextView);
-//        View ethnicityOptional = view.findViewById(R.id.ethnicityOptional);
-//        setVisibility(ethnicityLayout, personalInfoSection.getProperties().getEthnicity().isDisplayed());
-//        chooseEthnicity.setOnClickListener(
-//                getSelectOptionsListener(personalInfoSection.getProperties().getEthnicity().getOptions(),
-//                        getDefaultOnOptionsSelectedListener(chooseEthnicity, selectedEthnicity, ethnicityOptional),
-//                        Label.getLabel("demographics_review_ethnicity")));
-//        String ethnicity = demographicPayload.getPersonalDetails().getEthnicity();
-//        initSelectableInput(chooseEthnicity, selectedEthnicity, ethnicity, personalInfoSection.getProperties().getEthnicity().isRequired() ? null : ethnicityOptional);
+        setUpDemographicField(view, demographicPayload.getPersonalDetails().getPrimaryRace(),
+                personalInfoSection.getProperties().getPrimaryRace(), com.carecloud.carepaylibrary.R.id.raceDemographicsLayout,
+                com.carecloud.carepaylibrary.R.id.raceInputLayout, com.carecloud.carepaylibrary.R.id.raceEditText,
+                com.carecloud.carepaylibrary.R.id.raceOptionalLabel, selectedRace, Label.getLabel("demographics_review_race"));
+
+        setUpDemographicField(view, demographicPayload.getPersonalDetails().getSecondaryRace(),
+                personalInfoSection.getProperties().getSecondaryRace(), com.carecloud.carepaylibrary.R.id.secondaryRaceDemographicsLayout,
+                com.carecloud.carepaylibrary.R.id.secondaryRaceInputLayout, com.carecloud.carepaylibrary.R.id.secondaryRaceEditText, com.carecloud.carepaylibrary.R.id.secondaryRaceOptional,
+                selectedSecondaryRace, Label.getLabel("demographics_secondary_race"));
+
+        setUpDemographicField(view, demographicPayload.getPersonalDetails().getEthnicity(),
+                personalInfoSection.getProperties().getEthnicity(), com.carecloud.carepaylibrary.R.id.ethnicityDemographicsLayout,
+                com.carecloud.carepaylibrary.R.id.ethnicityInputLayout, com.carecloud.carepaylibrary.R.id.ethnicityEditText,
+                com.carecloud.carepaylibrary.R.id.ethnicityOptional, selectedEthnicity, Label.getLabel("demographics_review_ethnicity"));
     }
 
     private void initAddressInfo(View view, DemographicPayloadDTO demographicPayload) {
@@ -415,7 +387,6 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
             return false;
         }
 
-
         return true;
     }
 
@@ -444,7 +415,6 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
                     stateEditText.setText(stateAbbr);
                 }
             }
-
 
         }.execute(zipCode);
     }
@@ -541,8 +511,6 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
     private void updateDemographics() {
         if (passConstraints()) {
             Map<String, String> header = new HashMap<>();
-//            header.put("transition", "true");
-
             DemographicDTO updateModel = getUpdateModel();
             Gson gson = new Gson();
             String jsonPayload = gson.toJson(updateModel.getPayload().getDemographics().getPayload());
