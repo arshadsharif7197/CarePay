@@ -51,9 +51,13 @@ public class PatientModel {
     private String profilePhoto;
     private transient String localUriPhoto;
 
-    @SerializedName(value = "primary_phone_number", alternate = "phone_number")
+    @SerializedName(value = "primary_phone_number")
     @Expose
     private String primaryPhoneNumber;
+
+    @SerializedName("phone_number")
+    @Expose
+    private String phoneNumber;
 
     @SerializedName("secondary_phone_number")
     @Expose
@@ -355,5 +359,13 @@ public class PatientModel {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

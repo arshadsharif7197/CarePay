@@ -212,7 +212,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         primaryPhoneEditText = (EditText) view.findViewById(R.id.primaryPhoneEditText);
         primaryPhoneEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(primaryPhoneTextInputLayout, null));
-        primaryPhoneEditText.setText(emergencyContact.getPrimaryPhoneNumber());
+        primaryPhoneEditText.setText(emergencyContact.getPhoneNumber());
 
         primaryPhoneEditText.getOnFocusChangeListener().onFocusChange(primaryPhoneEditText,
                 !StringUtil.isNullOrEmpty(primaryPhoneEditText.getText().toString().trim()));
@@ -365,7 +365,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
     private boolean isEmptyEC(PatientModel emergencyContact) {
         return emergencyContact == null || (emergencyContact.getFirstName() == null
                 && emergencyContact.getLastName() == null
-                && emergencyContact.getPrimaryPhoneNumber() == null
+                && emergencyContact.getPhoneNumber() == null
                 && emergencyContact.getEmergencyContactRelationship() == null);
     }
 
