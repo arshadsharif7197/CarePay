@@ -448,7 +448,12 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                         }, Label.getLabel("demographics_employment_status")));
 
         String employmentStatus = demographicPayload.getEmploymentInfoModel().getEmploymentStatus();
+        TextInputLayout employmentStatusInputLayout = (TextInputLayout) view.findViewById(R.id.employmentStatusInputLayout);
+        employmentStatusEditText.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(employmentStatusInputLayout, null));
         employmentStatusEditText.setText(employmentStatus);
+        employmentStatusEditText.getOnFocusChangeListener()
+                .onFocusChange(employmentStatusEditText, !StringUtil.isNullOrEmpty(employmentStatusEditText.getText().toString()));
         selectedEmploymentStatus.setName(employmentStatus);
         selectedEmploymentStatus.setLabel(employmentStatus);
         if (employmentStatus != null) {
@@ -561,6 +566,8 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         if (selectedEmployer.getAddress() != null) {
             phoneEditText.setText(selectedEmployer.getAddress().getPhone());
         }
+        phoneEditText.getOnFocusChangeListener()
+                .onFocusChange(phoneEditText, !StringUtil.isNullOrEmpty(phoneEditText.getText().toString()));
 
         manageEmployerFieldsVisibility(showEmployerFields);
     }
