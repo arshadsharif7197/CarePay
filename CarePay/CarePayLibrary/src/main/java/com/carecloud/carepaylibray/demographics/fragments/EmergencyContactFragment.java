@@ -416,7 +416,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
 
         String primaryPhone = primaryPhoneEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(primaryPhone)) {
-            emergencyContact.setPrimaryPhoneNumber(primaryPhone);
+            emergencyContact.setPhoneNumber(primaryPhone);
         }
         String secondaryPhone = secondaryPhoneEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(secondaryPhone)) {
