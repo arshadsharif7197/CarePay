@@ -132,14 +132,16 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
     private void setUpExtendedDemographicFields(View view, DemographicPayloadDTO demographicPayload,
                                                 DemographicsPersonalSection personalInfoSection) {
-        setUpDemographicField(view, demographicPayload.getPersonalDetails().getPreferredName(),
-                personalInfoSection.getProperties().getPreferredName(), R.id.preferredNameContainer,
-                R.id.preferredNameInputLayout, R.id.preferredName, R.id.preferredNameOptional, null, null);
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getSocialSecurityNumber(),
                 personalInfoSection.getProperties().getSocialSecurityNumber(),
                 R.id.socialSecurityContainer, R.id.socialSecurityInputLayout,
                 R.id.socialSecurityNumber, R.id.socialSecurityOptional, null, null);
+
+        setUpDemographicField(view, demographicPayload.getPersonalDetails().getPreferredName(),
+                personalInfoSection.getProperties().getPreferredName(), R.id.preferredNameContainer,
+                R.id.preferredNameInputLayout, R.id.preferredName, R.id.preferredNameOptional, null, null);
+
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getEmailAddress(),
                 personalInfoSection.getProperties().getEmailAddress(), R.id.emailContainer, R.id.emailInputLayout,
@@ -323,7 +325,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             String employmentStatus = demographicPayload.getEmploymentInfoModel().getEmploymentStatus();
             selectedEmploymentStatus.setName(employmentStatus);
             selectedEmploymentStatus.setLabel(employmentStatus);
-            if (StringUtil.isNullOrEmpty(employmentStatus)) {
+            if (!StringUtil.isNullOrEmpty(employmentStatus)) {
                 employmentStatusOptional.setVisibility(View.VISIBLE);
                 showEmployerFields = employmentStatus.toLowerCase().equals("employed")
                         || employmentStatus.toLowerCase().equals("part time");
