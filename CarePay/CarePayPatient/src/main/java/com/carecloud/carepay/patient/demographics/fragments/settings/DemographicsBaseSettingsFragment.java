@@ -35,10 +35,10 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
 
     protected abstract boolean passConstraints();
 
-    protected void setVisibility(View view, boolean isDisplayed){
-        if(isDisplayed){
+    protected void setVisibility(View view, boolean isDisplayed) {
+        if (isDisplayed) {
             view.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             view.setVisibility(View.GONE);
         }
     }
@@ -49,13 +49,13 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
     }
 
     protected void initSelectableInput(TextView textView, DemographicsOption storeOption,
-                                       String value, View optional){
+                                       String value, View optional) {
         storeOption.setName(value);
         storeOption.setLabel(value);
 
-        if(StringUtil.isNullOrEmpty(value)){
+        if (StringUtil.isNullOrEmpty(value)) {
             value = Label.getLabel("demographics_choose");
-            if(optional!=null) {
+            if (optional != null) {
                 optional.setVisibility(View.VISIBLE);
             }
         }
@@ -82,7 +82,7 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
         }
     };
 
-    protected TextWatcher getValidateEmptyTextWatcher(final TextInputLayout inputLayout){
+    protected TextWatcher getValidateEmptyTextWatcher(final TextInputLayout inputLayout) {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
@@ -95,10 +95,10 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if(StringUtil.isNullOrEmpty(editable.toString())){
+                if (StringUtil.isNullOrEmpty(editable.toString())) {
                     inputLayout.setErrorEnabled(true);
                     inputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
-                }else{
+                } else {
                     inputLayout.setError(null);
                 }
                 checkIfEnableButton();
@@ -106,7 +106,30 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
         };
     }
 
-    protected TextWatcher clearValidationErrorsOnTextChange(final TextInputLayout inputLayout){
+    protected TextWatcher getOptionalViewTextWatcher(final View optionalView) {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (StringUtil.isNullOrEmpty(editable.toString())) {
+                    optionalView.setVisibility(View.VISIBLE);
+                } else {
+                    optionalView.setVisibility(View.GONE);
+                }
+                checkIfEnableButton();
+            }
+        };
+    }
+
+    protected TextWatcher clearValidationErrorsOnTextChange(final TextInputLayout inputLayout) {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
@@ -120,7 +143,7 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if(!StringUtil.isNullOrEmpty(editable.toString())) {
+                if (!StringUtil.isNullOrEmpty(editable.toString())) {
                     inputLayout.setError(null);
                     inputLayout.setErrorEnabled(false);
                 }
@@ -168,14 +191,14 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
 
     protected OnOptionSelectedListener getDefaultOnOptionsSelectedListener(final TextView textView,
                                                                            final DemographicsOption storeOption,
-                                                                           final View optional){
+                                                                           final View optional) {
         return new OnOptionSelectedListener() {
             @Override
             public void onOptionSelected(DemographicsOption option) {
-                if(textView!=null){
+                if (textView != null) {
                     textView.setText(option.getLabel());
                 }
-                if(optional != null){
+                if (optional != null) {
                     optional.setVisibility(View.GONE);
                 }
                 storeOption.setLabel(option.getLabel());
@@ -246,13 +269,13 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
         listView.setOnItemClickListener(clickListener);
     }
 
-    public interface OnOptionSelectedListener{
-        void  onOptionSelected(DemographicsOption option);
+    public interface OnOptionSelectedListener {
+        void onOptionSelected(DemographicsOption option);
     }
 
     protected void setUpDemographicField(View view, String value, DemographicsField demographicsField,
-                                       int containerLayout, int inputLayoutId, int editTextId, int optionalViewId,
-                                       DemographicsOption demographicsOption, String optionDialogTitle) {
+                                         int containerLayout, int inputLayoutId, int editTextId, int optionalViewId,
+                                         DemographicsOption demographicsOption, String optionDialogTitle) {
         view.findViewById(containerLayout).setVisibility(demographicsField.isDisplayed() ? View.VISIBLE : View.GONE);
         final TextInputLayout inputLayout = (TextInputLayout) view.findViewById(inputLayoutId);
         final EditText editText = (EditText) view.findViewById(editTextId);
@@ -271,6 +294,8 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
             demographicsOption.setLabel(editText.getText().toString());
         } else if (demographicsField.isRequired()) {
             editText.addTextChangedListener(getValidateEmptyTextWatcher(inputLayout));
+        } else {
+            editText.addTextChangedListener(getOptionalViewTextWatcher(optionalView));
         }
     }
 
