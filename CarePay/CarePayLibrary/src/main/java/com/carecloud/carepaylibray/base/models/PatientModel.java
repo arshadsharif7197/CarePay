@@ -99,17 +99,13 @@ public class PatientModel {
     @Expose
     private String maritalStatus;
 
-    @SerializedName("ec_relationship_type")
+    @SerializedName("relationship_type")
     @Expose
     private String emergencyContactRelationship;
 
     @SerializedName("referral_source")
     @Expose
     private String referralSource;
-
-    @SerializedName("phones")
-    @Expose
-    private List<String> phones;
 
     @SerializedName("address")
     @Expose
@@ -343,14 +339,6 @@ public class PatientModel {
 
     public void setLocalUriPhoto(String localUriPhoto) {
         this.localUriPhoto = localUriPhoto;
-    }
-
-    public List<String> getPhones() {
-        return phones;
-    }
-
-    public void setPhones(List<String> phones) {
-        this.phones = phones;
     }
 
     public DemographicAddressPayloadDTO getAddress() {

@@ -48,7 +48,6 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.smartystreets.api.us_zipcode.City;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +73,6 @@ public class EmergencyContactFragment extends BaseDialogFragment {
     private EditText emailEditText;
     private EditText addressEditText2;
     private EditText zipCodeEditText;
-    private EditText socialSecurityEditText;
     private EditText emergencyContactRelationshipEditText;
     private Button saveButton;
 
@@ -214,12 +212,8 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         primaryPhoneEditText = (EditText) view.findViewById(R.id.primaryPhoneEditText);
         primaryPhoneEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(primaryPhoneTextInputLayout, null));
-        if (emergencyContact.getPhones() == null) {
-            emergencyContact.setPhones(new ArrayList<String>());
-        }
-        if (emergencyContact.getPhones().size() > 0) {
-            primaryPhoneEditText.setText(emergencyContact.getPhones().get(0));
-        }
+        primaryPhoneEditText.setText(emergencyContact.getPrimaryPhoneNumber());
+
         primaryPhoneEditText.getOnFocusChangeListener().onFocusChange(primaryPhoneEditText,
                 !StringUtil.isNullOrEmpty(primaryPhoneEditText.getText().toString().trim()));
         primaryPhoneEditText.addTextChangedListener(getValidateRequiredEmptyTextWatcher(primaryPhoneTextInputLayout));
@@ -229,9 +223,8 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         secondaryPhoneEditText = (EditText) view.findViewById(R.id.secondaryPhoneEditText);
         secondaryPhoneEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(secondaryPhoneTextInputLayout, null));
-        if (emergencyContact.getPhones().size() > 1) {
-            secondaryPhoneEditText.setText(emergencyContact.getPhones().get(1));
-        }
+        secondaryPhoneEditText.setText(emergencyContact.getSecondaryPhoneNumber());
+
         secondaryPhoneEditText.getOnFocusChangeListener().onFocusChange(secondaryPhoneEditText,
                 !StringUtil.isNullOrEmpty(secondaryPhoneEditText.getText().toString().trim()));
         boolean secondaryPhoneRequired = dataModel.getDemographic().getEmergencyContact().getProperties()
@@ -311,14 +304,6 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         emailEditText.getOnFocusChangeListener().onFocusChange(emailEditText,
                 !StringUtil.isNullOrEmpty(emailEditText.getText().toString().trim()));
 
-        TextInputLayout socialSecurityInputLayout = (TextInputLayout) view.findViewById(R.id.socialSecurityInputLayout);
-        socialSecurityEditText = (EditText) view.findViewById(R.id.socialSecurityEditText);
-        socialSecurityEditText.setOnFocusChangeListener(SystemUtil
-                .getHintFocusChangeListener(socialSecurityInputLayout, null));
-        socialSecurityEditText.setText(emergencyContact.getSocialSecurityNumber());
-        socialSecurityEditText.getOnFocusChangeListener().onFocusChange(socialSecurityEditText,
-                !StringUtil.isNullOrEmpty(socialSecurityEditText.getText().toString().trim()));
-
         TextInputLayout dateBirthTextInput = (TextInputLayout) view.findViewById(R.id.dateOfBirthInputLayout);
         dateOfBirthEditText = (EditText) view.findViewById(R.id.dateOfBirthEditText);
         dateOfBirthEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(dateBirthTextInput, null));
@@ -378,8 +363,9 @@ public class EmergencyContactFragment extends BaseDialogFragment {
     }
 
     private boolean isEmptyEC(PatientModel emergencyContact) {
-        return emergencyContact == null || (emergencyContact.getFirstName() == null && emergencyContact.getLastName() == null
-                && (emergencyContact.getPhones() == null || emergencyContact.getPhones().isEmpty())
+        return emergencyContact == null || (emergencyContact.getFirstName() == null
+                && emergencyContact.getLastName() == null
+                && emergencyContact.getPrimaryPhoneNumber() == null
                 && emergencyContact.getEmergencyContactRelationship() == null);
     }
 
@@ -427,16 +413,16 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         if (!StringUtil.isNullOrEmpty(lastName)) {
             emergencyContact.setLastName(lastName);
         }
-        List<String> phones = new ArrayList<>();
+
         String primaryPhone = primaryPhoneEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(primaryPhone)) {
-            phones.add(primaryPhone);
+            emergencyContact.setPrimaryPhoneNumber(primaryPhone);
         }
         String secondaryPhone = secondaryPhoneEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(secondaryPhone)) {
-            phones.add(secondaryPhone);
+            emergencyContact.setSecondaryPhoneNumber(secondaryPhone);
         }
-        emergencyContact.setPhones(phones);
+
         String addressLine1 = addressEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(addressLine1)) {
             emergencyContact.getAddress().setAddress1(addressLine1);
@@ -460,10 +446,6 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         String email = emailEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(email)) {
             emergencyContact.setEmail(email);
-        }
-        String ssn = socialSecurityEditText.getText().toString().trim();
-        if (!StringUtil.isNullOrEmpty(ssn)) {
-            emergencyContact.setSocialSecurityNumber(ssn);
         }
         String dateOfBirth = dateOfBirthEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(dateOfBirth)) {
