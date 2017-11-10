@@ -717,7 +717,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             if (dataModel.getDemographic().getEmergencyContact().isRequired()
                     && (StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getFirstName())
                     || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getLastName())
-                    || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getPrimaryPhoneNumber())
+                    || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getPhoneNumber())
                     || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getEmergencyContactRelationship()))) {
                 if (isUserAction()) {
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.emergencyContactDemographicsLayout));
