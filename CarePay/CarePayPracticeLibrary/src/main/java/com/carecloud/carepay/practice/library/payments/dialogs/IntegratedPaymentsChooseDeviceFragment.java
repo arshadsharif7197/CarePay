@@ -41,6 +41,9 @@ import com.carecloud.shamrocksdk.connections.DeviceInfo;
 import com.carecloud.shamrocksdk.connections.interfaces.ConnectionActionCallback;
 import com.carecloud.shamrocksdk.connections.interfaces.ListDeviceCallback;
 import com.carecloud.shamrocksdk.connections.models.Device;
+import com.carecloud.shamrocksdk.payment.ClientPayment;
+import com.carecloud.shamrocksdk.payment.interfaces.PaymentRequestCallback;
+import com.carecloud.shamrocksdk.payment.models.PaymentRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
@@ -218,7 +221,8 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         });
     }
 
-    private void toggleRecycler(final boolean processing){
+    private void toggleSelectDevice(final boolean processing){
+        Log.d("Toggle Selectable", "Processing: "+processing);
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -226,6 +230,8 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
                 if(adapter != null){
                     adapter.setProcessing(processing);
                 }
+                selectedLocationText.setClickable(!processing);
+                refreshProcessButton();
             }
         });
     }
@@ -254,7 +260,6 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         Gson gson = new Gson();
         RestCallServiceHelper restCallServiceHelper = new RestCallServiceHelper(getAppAuthorizationHelper(), getApplicationMode());
         restCallServiceHelper.executeRequest(RestDef.POST, url, initPaymentCallback, true, false, null, null, headers, gson.toJson(shamrockPaymentsPostModel), endpoint);
-        toggleRecycler(true);
     }
 
     private RestCallServiceCallback initPaymentCallback = new RestCallServiceCallback() {
@@ -277,7 +282,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         @Override
         public void onFailure(String errorMessage) {
             hideProgressDialog();
-            toggleRecycler(false);
+            toggleSelectDevice(false);
             new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
         }
     };
@@ -430,20 +435,45 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
             findDevice.setProcessing(device.isProcessing());
             findDevice.setPaymentRequestId(device.getPaymentRequestId());
             setAdapter();
-            if(selectedDevice != null && selectedDevice.getDeviceId().equals(deviceName)){
+            if(selectedDevice != null && selectedDevice.getDeviceId().equals(device.getDeviceId())){
                 selectedDevice = findDevice;
-                refreshProcessButton();
                 if(selectedDevice.getState().equals(Device.STATE_IN_USE)){
-                    //// TODO: 11/9/17 start tracking payment request status
+                    toggleSelectDevice(true);
+                    ClientPayment.trackPaymentRequest(userId, authToken, device.getPaymentRequestId(), paymentRequestCallback);
                 }else{
-                    toggleRecycler(false);
+                    toggleSelectDevice(false);
                 }
+                refreshProcessButton();
             }
-
         }
 
         @Override
         public void onConnectionUpdateFail(String deviceName, JsonElement recordObject) {
+
+        }
+    };
+
+    private PaymentRequestCallback paymentRequestCallback = new PaymentRequestCallback() {
+
+        @Override
+        public void onPaymentRequestUpdate(String paymentRequestId, PaymentRequest paymentRequest) {
+            //// TODO: 11/9/17 send payment to carepay when ready
+
+            //todo stop tracking Payment Request
+        }
+
+        @Override
+        public void onPaymentRequestUpdateFail(String paymentRequestId, JsonElement recordObject) {
+
+        }
+
+        @Override
+        public void onPaymentConnectionFailure(String message) {
+
+        }
+
+        @Override
+        public void onPaymentRequestDestroyed(String paymentRequestId) {
 
         }
     };
