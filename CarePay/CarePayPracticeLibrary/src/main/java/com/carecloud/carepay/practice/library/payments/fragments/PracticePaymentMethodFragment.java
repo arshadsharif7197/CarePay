@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -10,10 +11,12 @@ import android.widget.Button;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.CloverPaymentAdapter;
+import com.carecloud.carepay.practice.library.payments.interfaces.ShamrockPaymentsCallback;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.RestCallServiceCallback;
 import com.carecloud.carepay.service.library.RestCallServiceHelper;
 import com.carecloud.carepay.service.library.RestDef;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -30,8 +33,7 @@ import java.util.Map;
  */
 public class PracticePaymentMethodFragment extends PaymentMethodFragment {
 
-    private Button swipeCreditCarNowButton;
-    private View swipeCreditCardNowLayout;
+    private ShamrockPaymentsCallback shamrockCallback;
 
     /**
      * @param paymentsModel the payments model
@@ -65,26 +67,37 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
     }
 
     @Override
+    public void attachCallback(Context context){
+        super.attachCallback(context);
+        try{
+            shamrockCallback = (ShamrockPaymentsCallback) context;
+        }catch (ClassCastException cce){
+            throw new ClassCastException("Attached context must implement ShamrockPaymentsCallback");
+        }
+    }
+
+    @Override
     protected void setupTitleViews(View view) {
         super.setupTitleViews(view);
     }
 
     private void setSwipeCardNowVisibility(View view) {
-        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
-        swipeCreditCarNowButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
-        swipeCreditCardNowLayout = view.findViewById(R.id.swipeCreditCardNowLayout);
-        swipeCreditCarNowButton.setEnabled(isCloverDevice);
-        swipeCreditCardNowLayout.setVisibility(isCloverDevice ? View.VISIBLE : View.GONE);
+        final boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
+        final boolean isPracticeMode = getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE;
+        Button swipeCreditCarNowButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
+        View swipeCreditCardNowLayout = view.findViewById(R.id.swipeCreditCardNowLayout);
+        swipeCreditCarNowButton.setEnabled(isCloverDevice || isPracticeMode);
+        swipeCreditCardNowLayout.setVisibility(isCloverDevice || isPracticeMode ? View.VISIBLE : View.GONE);
         swipeCreditCarNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                handleSwipeCard();
+                if(isCloverDevice) {
+                    handleSwipeCard();
+                }else if(isPracticeMode){
+                    handleIntegratedPayment();
+                }
             }
         });
-
-        if(!isCloverDevice){
-            checkIntegratedPayments();
-        }
 
     }
 
@@ -110,7 +123,7 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
     }
 
     protected void handleIntegratedPayment(){
-
+        shamrockCallback.showChooseDeviceList(paymentsModel, amountToMakePayment);
     }
 
     private RestCallServiceCallback integratedPaymentsReadyCallback = new RestCallServiceCallback() {
