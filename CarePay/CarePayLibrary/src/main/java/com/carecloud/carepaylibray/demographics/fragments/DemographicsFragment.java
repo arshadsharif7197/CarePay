@@ -715,11 +715,9 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             }
 
             if (dataModel.getDemographic().getEmergencyContact().isRequired()
-                    && (demographicsEmergencyContactModel == null
-                    || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getFirstName())
+                    && (StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getFirstName())
                     || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getLastName())
-                    || demographicsEmergencyContactModel.getPhones() == null
-                    || demographicsEmergencyContactModel.getPhones().isEmpty()
+                    || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getPrimaryPhoneNumber())
                     || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getEmergencyContactRelationship()))) {
                 if (isUserAction()) {
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.emergencyContactDemographicsLayout));
