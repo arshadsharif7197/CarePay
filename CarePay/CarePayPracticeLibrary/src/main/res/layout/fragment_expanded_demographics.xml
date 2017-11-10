@@ -297,8 +297,10 @@
                 <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                     android:id="@+id/secondaryPhone"
                     style="@style/DemographicsReviewEditTextStyle"
+                    android:digits="0123456789-"
                     android:imeOptions="actionNext"
-                    android:inputType="number"
+                    android:inputType="phone"
+                    android:maxLength="12"
                     app:customAssetFont="proxima_nova_regular"
                     app:hintTextAppearance="@style/FloatingLabelStyle"
                     breeze:hintKey="demographics_secondary_phone"
@@ -696,7 +698,7 @@
                                 layout="@layout/layout_optional_text_view" />
 
                         </FrameLayout>
-                        
+
 
                     </LinearLayout>
 

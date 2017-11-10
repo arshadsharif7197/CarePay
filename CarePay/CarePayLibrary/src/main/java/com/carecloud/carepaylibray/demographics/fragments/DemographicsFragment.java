@@ -90,6 +90,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        demographicDTO = (DemographicDTO) callback.getDto();
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
         dataModel = demographicDTO.getMetadata().getNewDataModel();
 
@@ -164,12 +165,13 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 R.id.driverLicenseStateEditText, R.id.driverLicenseStateOptional, selectedDriverLicenseState,
                 Label.getLabel("demographics_driver_license_state"));
 
+        EditText secondaryPhoneEditText = (EditText) view.findViewById(R.id.secondaryPhone);
+        secondaryPhoneEditText.addTextChangedListener(phoneInputFormatter);
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getSecondaryPhoneNumber(),
                 personalInfoSection.getProperties().getSecondaryPhoneNumber(),
                 R.id.secondaryPhoneContainer, R.id.secondaryPhoneInputLayout,
                 R.id.secondaryPhone, R.id.secondaryPhoneOptional, null, null);
-        EditText secondaryPhoneEditText = (EditText) view.findViewById(R.id.secondaryPhone);
-        secondaryPhoneEditText.addTextChangedListener(phoneInputFormatter);
+
         if (!dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryPhoneNumber().isRequired()) {
             secondaryPhoneEditText.addTextChangedListener(
                     clearValidationErrorsOnTextChange((TextInputLayout) view.findViewById(R.id.secondaryPhoneInputLayout)));
@@ -243,6 +245,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             demographicsOption.setLabel(editText.getText().toString());
         } else if (demographicsField.isRequired()) {
             editText.addTextChangedListener(getValidateEmptyTextWatcher(inputLayout));
+        } else {
+            editText.addTextChangedListener(getOptionalViewTextWatcher(optionalView));
         }
     }
 
@@ -274,7 +278,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     }
 
     private void setUpEmergencyContact(View view, PatientModel emergencyContact) {
-
+        demographicsEmergencyContactModel = emergencyContact;
         TextInputLayout emergencyContactInputLayout = (TextInputLayout) view.findViewById(R.id.emergencyContactInputLayout);
 //        emergencyContactInputLayout.setVisibility(emergencyContactSection.isDisplay() ? View.VISIBLE : View.GONE);
         EditText emergencyContactEditText = (EditText) view.findViewById(R.id.emergencyContactEditText);
@@ -287,7 +291,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 !StringUtil.isNullOrEmpty(emergencyContactEditText.getText().toString().trim()));
         DemographicEmergencyContactSection emergencyContactSection = dataModel.getDemographic().getEmergencyContact();
         view.findViewById(R.id.emergencyContactOptionalLabel)
-                .setVisibility(emergencyContactSection.isRequired() ? View.GONE : View.VISIBLE);
+                .setVisibility(!emergencyContactSection.isRequired() && emergencyContact == null ? View.VISIBLE : View.GONE);
         emergencyContactEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -297,10 +301,11 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
     }
 
-    private void setUpEmployer(final View view, DemographicPayloadDTO demographicPayload, DemographicEmploymentInfoSection employmentInfoSection) {
+    private void setUpEmployer(final View view, DemographicPayloadDTO demographicPayload,
+                               DemographicEmploymentInfoSection employmentInfoSection) {
         boolean isEmploymentStuffVisible = employmentInfoSection.isDisplay();
         if (isEmploymentStuffVisible) {
-            final TextView employmentStatusEditText = (TextView) view.findViewById(R.id.employmentStatusEditText);
+            final EditText employmentStatusEditText = (EditText) view.findViewById(R.id.employmentStatusEditText);
             final View employmentStatusOptional = view.findViewById(R.id.employmentStatusOptional);
 
             employmentStatusEditText.setOnClickListener(
@@ -323,12 +328,20 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                             }, Label.getLabel("demographics_employment_status")));
 
             String employmentStatus = demographicPayload.getEmploymentInfoModel().getEmploymentStatus();
+            TextInputLayout employmentStatusInputLayout = (TextInputLayout) view.findViewById(R.id.employmentStatusInputLayout);
+            employmentStatusEditText.setOnFocusChangeListener(SystemUtil
+                    .getHintFocusChangeListener(employmentStatusInputLayout, null));
+            employmentStatusEditText.setText(employmentStatus);
+            employmentStatusEditText.getOnFocusChangeListener()
+                    .onFocusChange(employmentStatusEditText,
+                            !StringUtil.isNullOrEmpty(employmentStatusEditText.getText().toString()));
             selectedEmploymentStatus.setName(employmentStatus);
             selectedEmploymentStatus.setLabel(employmentStatus);
             if (!StringUtil.isNullOrEmpty(employmentStatus)) {
-                employmentStatusOptional.setVisibility(View.VISIBLE);
                 showEmployerFields = employmentStatus.toLowerCase().equals("employed")
                         || employmentStatus.toLowerCase().equals("part time");
+            } else if (!employmentInfoSection.isRequired()) {
+                employmentStatusOptional.setVisibility(View.VISIBLE);
             }
             if (!employmentInfoSection.isRequired()) {
                 view.findViewById(R.id.employmentInfoOptionalTextView).setVisibility(View.VISIBLE);
@@ -381,32 +394,33 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         TextInputLayout address1TextInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
         EditText addressEditText = (EditText) view.findViewById(R.id.addressEditText);
         addressEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address1TextInputLayout, null));
-        if (selectedEmployer.getAddress() != null) {
-            addressEditText.setText(selectedEmployer.getAddress().getAddress1());
-        }
+        addressEditText.setText(selectedEmployer.getAddress().getAddress1());
+        addressEditText.getOnFocusChangeListener()
+                .onFocusChange(addressEditText, !StringUtil.isNullOrEmpty(addressEditText.getText().toString()));
+
 
         TextInputLayout address2TextInputLayout = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
         EditText addressEditText2 = (EditText) view.findViewById(R.id.addressEditText2);
         addressEditText2.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address2TextInputLayout, null));
-        if (selectedEmployer.getAddress() != null) {
-            addressEditText2.setText(selectedEmployer.getAddress().getAddress2());
-        }
+        addressEditText2.setText(selectedEmployer.getAddress().getAddress2());
+        addressEditText2.getOnFocusChangeListener()
+                .onFocusChange(addressEditText2, !StringUtil.isNullOrEmpty(addressEditText2.getText().toString()));
 
         TextInputLayout zipCodeTextInputLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
         EditText zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeTextView);
         zipCodeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeTextInputLayout,
                 getZipCodeFocusListener(zipCodeEditText)));
-        if (selectedEmployer.getAddress() != null) {
-            zipCodeEditText.setText(selectedEmployer.getAddress().getZipcode());
-        }
+        zipCodeEditText.setText(selectedEmployer.getAddress().getZipcode());
+        zipCodeEditText.getOnFocusChangeListener()
+                .onFocusChange(zipCodeEditText, !StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString()));
 
         TextInputLayout cityTextInputLayout = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
         cityEditText = (EditText) view.findViewById(R.id.cityTextView);
         cityEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(cityTextInputLayout, null));
-        if (selectedEmployer.getAddress() != null) {
-            cityEditText.setText(selectedEmployer.getAddress().getCity());
-        }
+        cityEditText.setText(selectedEmployer.getAddress().getCity());
+        cityEditText.getOnFocusChangeListener()
+                .onFocusChange(cityEditText, !StringUtil.isNullOrEmpty(cityEditText.getText().toString()));
 
         TextInputLayout stateTextInputLayout = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
         stateEditText = (EditText) view.findViewById(R.id.stateTextView);
@@ -425,13 +439,15 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                         },
                         Label.getLabel("demographics_documents_title_select_state")));
         stateEditText.setText(selectedEmployer.getAddress().getState());
+        stateEditText.getOnFocusChangeListener()
+                .onFocusChange(stateEditText, !StringUtil.isNullOrEmpty(stateEditText.getText().toString()));
 
         TextInputLayout phoneTextInputLayout = (TextInputLayout) view.findViewById(R.id.phoneTextInputLayout);
         EditText phoneEditText = (EditText) view.findViewById(R.id.phoneTextView);
         phoneEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(phoneTextInputLayout, null));
-        if (selectedEmployer.getAddress() != null) {
-            phoneEditText.setText(selectedEmployer.getAddress().getPhone());
-        }
+        phoneEditText.setText(selectedEmployer.getAddress().getPhone());
+        phoneEditText.getOnFocusChangeListener()
+                .onFocusChange(phoneEditText, !StringUtil.isNullOrEmpty(phoneEditText.getText().toString()));
 
         manageEmployerFieldsVisibility(showEmployerFields && isEmploymentStuffVisible);
 
@@ -560,8 +576,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             demographicEmploymentInfoModel.setEmployerDto(null);
         }
 
-
-        String emergencyContactRelationship = selectedEmergencyContactRelationship.getName();//todo need to move this from personal info
+        String emergencyContactRelationship = selectedEmergencyContactRelationship.getName();
         if (!StringUtil.isNullOrEmpty(emergencyContactRelationship)) {
             demographicPersDetailsPayloadDTO.setEmergencyContactRelationship(emergencyContactRelationship);
         }
@@ -715,9 +730,10 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             }
 
             if (dataModel.getDemographic().getEmergencyContact().isRequired()
-                    && (StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getFirstName())
+                    && (demographicsEmergencyContactModel == null
+                    || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getFirstName())
                     || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getLastName())
-                    || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getPrimaryPhoneNumber())
+                    || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getPhoneNumber())
                     || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getEmergencyContactRelationship()))) {
                 if (isUserAction()) {
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.emergencyContactDemographicsLayout));
@@ -829,6 +845,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     @Override
     public void updateEmergencyContact(PatientModel emergencyContact) {
         setUpEmergencyContact(getView(), emergencyContact);
+        demographicDTO.getPayload().getDemographics().getPayload().setEmergencyContact(emergencyContact);
         checkIfEnableButton(getView());
     }
 }

@@ -96,7 +96,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_review_demographic_base, container, false);
         stepProgressBar = (StepProgressBar) view.findViewById(R.id.stepProgressBarCheckin);
-        stepProgressBar.setNumDots(checkinFlowCallback.getTotalSteps());
         inflateContent(inflater, view);
         inflateToolbarViews(view);
 
@@ -112,6 +111,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         if (checkinFlowCallback == null) {
             attachCallback(getContext());
         }
+        stepProgressBar.setNumDots(checkinFlowCallback.getTotalSteps());
     }
 
     private void inflateToolbarViews(View view) {
@@ -301,6 +301,29 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                     inputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
                 } else {
                     inputLayout.setError(null);
+                }
+                checkIfEnableButton(getView());
+            }
+        };
+    }
+
+    protected TextWatcher getOptionalViewTextWatcher(final View optionalView) {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (StringUtil.isNullOrEmpty(editable.toString())) {
+                    optionalView.setVisibility(View.VISIBLE);
+                } else {
+                    optionalView.setVisibility(View.GONE);
                 }
                 checkIfEnableButton(getView());
             }
