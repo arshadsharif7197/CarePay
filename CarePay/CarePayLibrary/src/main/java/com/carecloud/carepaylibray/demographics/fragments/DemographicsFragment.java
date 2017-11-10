@@ -90,6 +90,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        demographicDTO = (DemographicDTO) callback.getDto();
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
         dataModel = demographicDTO.getMetadata().getNewDataModel();
 
@@ -729,7 +730,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             }
 
             if (dataModel.getDemographic().getEmergencyContact().isRequired()
-                    && (StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getFirstName())
+                    && (demographicsEmergencyContactModel == null
+                    || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getFirstName())
                     || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getLastName())
                     || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getPhoneNumber())
                     || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getEmergencyContactRelationship()))) {
@@ -843,6 +845,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     @Override
     public void updateEmergencyContact(PatientModel emergencyContact) {
         setUpEmergencyContact(getView(), emergencyContact);
+        demographicDTO.getPayload().getDemographics().getPayload().setEmergencyContact(emergencyContact);
         checkIfEnableButton(getView());
     }
 }
