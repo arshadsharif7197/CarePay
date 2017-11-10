@@ -413,25 +413,6 @@
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
-            android:id="@+id/socialSecurityInputLayout"
-            style="@style/SigninSignupTextInputStyle"
-            app:customAssetFont="proxima_nova_semi_bold"
-            app:hintTextAppearance="@style/FloatingLabelStyle">
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
-                android:id="@+id/socialSecurityEditText"
-                style="@style/SigninSignupEditStyle"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:maxLength="10"
-                app:customAssetFont="proxima_nova_regular"
-                app:hintTextAppearance="@style/FloatingLabelStyle"
-                breeze:hintKey="demographics_social_security"
-                tools:hint="Social Security Number" />
-
-        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
-
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
