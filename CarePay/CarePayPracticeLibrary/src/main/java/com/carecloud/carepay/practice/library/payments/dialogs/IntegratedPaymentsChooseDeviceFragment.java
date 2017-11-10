@@ -218,11 +218,14 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         });
     }
 
-    private void toggleRecycler(final boolean enabled){
+    private void toggleRecycler(final boolean processing){
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                deviceRecycler.setEnabled(enabled);
+                IntegratedPaymentsChooseDeviceAdapter adapter = (IntegratedPaymentsChooseDeviceAdapter) deviceRecycler.getAdapter();
+                if(adapter != null){
+                    adapter.setProcessing(processing);
+                }
             }
         });
     }
@@ -251,7 +254,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         Gson gson = new Gson();
         RestCallServiceHelper restCallServiceHelper = new RestCallServiceHelper(getAppAuthorizationHelper(), getApplicationMode());
         restCallServiceHelper.executeRequest(RestDef.POST, url, initPaymentCallback, true, false, null, null, headers, gson.toJson(shamrockPaymentsPostModel), endpoint);
-        toggleRecycler(false);
+        toggleRecycler(true);
     }
 
     private RestCallServiceCallback initPaymentCallback = new RestCallServiceCallback() {
@@ -274,7 +277,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         @Override
         public void onFailure(String errorMessage) {
             hideProgressDialog();
-            toggleRecycler(true);
+            toggleRecycler(false);
             new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
         }
     };
@@ -433,7 +436,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
                 if(selectedDevice.getState().equals(Device.STATE_IN_USE)){
                     //// TODO: 11/9/17 start tracking payment request status
                 }else{
-                    toggleRecycler(true);
+                    toggleRecycler(false);
                 }
             }
 

@@ -28,6 +28,8 @@ public class IntegratedPaymentsChooseDeviceAdapter extends RecyclerView.Adapter<
     private List<Device> deviceList = new ArrayList<>();
     private ChooseDeviceCallback callback;
 
+    private boolean processing = false;
+
     private View lastSelectedView;
 
     /**
@@ -71,6 +73,9 @@ public class IntegratedPaymentsChooseDeviceAdapter extends RecyclerView.Adapter<
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(processing){
+                    return;
+                }
                 if(lastSelectedView != null){
                     lastSelectedView.setSelected(false);
                 }
@@ -95,6 +100,16 @@ public class IntegratedPaymentsChooseDeviceAdapter extends RecyclerView.Adapter<
         this.deviceList = deviceList;
         notifyDataSetChanged();
     }
+
+
+    /**
+     * Set recycler to processing to prevent clicking on any other devices
+     * @param processing processing
+     */
+    public void setProcessing(boolean processing) {
+        this.processing = processing;
+    }
+
 
     class ViewHolder extends RecyclerView.ViewHolder{
 
