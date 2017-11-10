@@ -33,6 +33,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.EmploymentInfoModel
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.utils.AddressUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
@@ -89,7 +90,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        demographicDTO = (DemographicDTO) callback.getDto();//DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
+//        demographicDTO = (DemographicDTO) callback.getDto();
+        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
         dataModel = demographicDTO.getMetadata().getNewDataModel();
 
         if (demographicDTO.getPayload().getDemographics() != null) {
@@ -843,6 +845,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     @Override
     public void updateEmergencyContact(PatientModel emergencyContact) {
         setUpEmergencyContact(getView(), emergencyContact);
+        demographicDTO.getPayload().getDemographics().getPayload().setEmergencyContact(emergencyContact);
         checkIfEnableButton(getView());
     }
 }
