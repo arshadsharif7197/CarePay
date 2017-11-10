@@ -33,7 +33,6 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.EmploymentInfoModel
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.utils.AddressUtil;
-import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
@@ -90,7 +89,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
+        demographicDTO = (DemographicDTO) callback.getDto();//DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
         dataModel = demographicDTO.getMetadata().getNewDataModel();
 
         if (demographicDTO.getPayload().getDemographics() != null) {
@@ -715,7 +714,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             }
 
             if (dataModel.getDemographic().getEmergencyContact().isRequired()
-                    && (StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getFirstName())
+                    && (demographicsEmergencyContactModel == null
+                    || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getFirstName())
                     || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getLastName())
                     || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getPhoneNumber())
                     || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getEmergencyContactRelationship()))) {
