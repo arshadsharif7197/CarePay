@@ -32,7 +32,6 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.EmploymentInfoModel
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.utils.AddressUtil;
-import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
@@ -87,7 +86,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
+        demographicDTO = (DemographicDTO) callback.getDto();//DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
         dataModel = demographicDTO.getMetadata().getNewDataModel();
 
         if (demographicDTO.getPayload().getDemographics() != null) {
@@ -376,7 +375,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             }
         });
 
-        String emergencyContactName = emergencyContact!=null?emergencyContact.getFullName():null;
+        String emergencyContactName = emergencyContact != null ? emergencyContact.getFullName() : null;
         initSelectableInput(chooseEmergencyContact, new DemographicsOption(), emergencyContactName, emergencyContactSection.isRequired() ? null : EmergencyContactOptional);
 
     }
@@ -430,7 +429,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
     }
 
-    private void setEmployerInfoFields(View view, DemographicPayloadDTO demographicPayload, boolean isEmploymentStuffVisible){
+    private void setEmployerInfoFields(View view, DemographicPayloadDTO demographicPayload, boolean isEmploymentStuffVisible) {
         employerDependentFieldsLayout = view.findViewById(R.id.employerDependentLayout);
 
         selectedEmployer = demographicPayload.getEmploymentInfoModel().getEmployerDto();
@@ -670,41 +669,41 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         try {
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getGender().isRequired()
                     && StringUtil.isNullOrEmpty(selectedGender.getName())) {
-                if(isUserAction()) {
+                if (isUserAction()) {
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.genderDemographicsLayout));
                 }
                 return false;
-            }else{
+            } else {
                 showErrorViews(false, (ViewGroup) view.findViewById(R.id.genderDemographicsLayout));
             }
 
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getPrimaryRace().isRequired()
                     && StringUtil.isNullOrEmpty(selectedRace.getName())) {
-                if(isUserAction()) {
+                if (isUserAction()) {
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.raceDemographicsLayout));
                 }
                 return false;
-            }else{
+            } else {
                 showErrorViews(false, (ViewGroup) view.findViewById(R.id.raceDemographicsLayout));
             }
 
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryRace().isRequired()
                     && StringUtil.isNullOrEmpty(selectedSecondaryRace.getName())) {
-                if(isUserAction()) {
+                if (isUserAction()) {
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.secondaryRaceDemographicsLayout));
                 }
                 return false;
-            }else{
+            } else {
                 showErrorViews(false, (ViewGroup) view.findViewById(R.id.secondaryRaceDemographicsLayout));
             }
 
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getEthnicity().isRequired()
                     && StringUtil.isNullOrEmpty(selectedEthnicity.getName())) {
-                if(isUserAction()) {
+                if (isUserAction()) {
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.ethnicityDemographicsLayout));
                 }
                 return false;
-            }else{
+            } else {
                 showErrorViews(false, (ViewGroup) view.findViewById(R.id.ethnicityDemographicsLayout));
             }
 
@@ -734,11 +733,11 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getPreferredLanguage().isRequired()
                     && StringUtil.isNullOrEmpty(selectedPreferredLanguage.getName())) {
-                if(isUserAction()) {
+                if (isUserAction()) {
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.preferredLanguageDemographicsLayout));
                 }
                 return false;
-            }else{
+            } else {
                 showErrorViews(false, (ViewGroup) view.findViewById(R.id.preferredLanguageDemographicsLayout));
             }
 
@@ -752,11 +751,11 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getDriversLicenseState().isRequired()
                     && StringUtil.isNullOrEmpty(selectedDriverLicenseState.getName())) {
-                if(isUserAction()) {
+                if (isUserAction()) {
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.driverLicenseStateDemographicsLayout));
                 }
                 return false;
-            }else{
+            } else {
                 showErrorViews(false, (ViewGroup) view.findViewById(R.id.driverLicenseStateDemographicsLayout));
             }
 
@@ -770,68 +769,69 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryPhoneNumberType().isRequired()
                     && StringUtil.isNullOrEmpty(selectedSecondaryPhoneType.getName())) {
-                if(isUserAction()) {
+                if (isUserAction()) {
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.secondaryPhoneTypeDemographicsLayout));
                 }
                 return false;
-            }else{
+            } else {
                 showErrorViews(false, (ViewGroup) view.findViewById(R.id.secondaryPhoneTypeDemographicsLayout));
             }
 
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getPreferredContact().isRequired()
                     && StringUtil.isNullOrEmpty(selectedContactMethod.getName())) {
-                if(isUserAction()) {
+                if (isUserAction()) {
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.preferredContactMethodDemographicsLayout));
                 }
                 return false;
-            }else{
+            } else {
                 showErrorViews(false, (ViewGroup) view.findViewById(R.id.preferredContactMethodDemographicsLayout));
             }
 
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getMaritalStatus().isRequired()
                     && StringUtil.isNullOrEmpty(selectedMaritalStatus.getName())) {
-                if(isUserAction()) {
+                if (isUserAction()) {
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.maritalStatusDemographicsLayout));
                 }
                 return false;
-            }else{
+            } else {
                 showErrorViews(false, (ViewGroup) view.findViewById(R.id.maritalStatusDemographicsLayout));
             }
 
             if (dataModel.getDemographic().getEmergencyContact().isRequired()
-                    && (StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getFirstName())
+                    && (demographicsEmergencyContactModel == null
+                    || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getFirstName())
                     || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getLastName())
-                    || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getPrimaryPhoneNumber())
+                    || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getPhoneNumber())
                     || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getEmergencyContactRelationship()))) {
-                if(isUserAction()) {
+                if (isUserAction()) {
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.emergencyContactDemographicsLayout));
                 }
                 return false;
-            }else{
+            } else {
                 showErrorViews(false, (ViewGroup) view.findViewById(R.id.emergencyContactDemographicsLayout));
             }
 
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getReferralSource().isRequired()
                     && StringUtil.isNullOrEmpty(selectedReferralSource.getName())) {
-                if(isUserAction()) {
+                if (isUserAction()) {
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.referralSourceDemographicsLayout));
                 }
                 return false;
-            }else{
+            } else {
                 showErrorViews(false, (ViewGroup) view.findViewById(R.id.referralSourceDemographicsLayout));
             }
 
             if (dataModel.getDemographic().getEmploymentInfo().isRequired()
                     && StringUtil.isNullOrEmpty(selectedEmploymentStatus.getName())) {
-                if(isUserAction()) {
+                if (isUserAction()) {
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.employmentStatusDemographicsLayout));
                 }
                 return false;
-            }else{
+            } else {
                 showErrorViews(false, (ViewGroup) view.findViewById(R.id.employmentStatusDemographicsLayout));
             }
 
-            if(dataModel.getDemographic().getEmploymentInfo().isRequired()
+            if (dataModel.getDemographic().getEmploymentInfo().isRequired()
                     && StringUtil.isNullOrEmpty(selectedEmployer.getName())
                     && showEmployerFields) {
                 if (isUserAction()) {
