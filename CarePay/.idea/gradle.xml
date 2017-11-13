@@ -15,7 +15,6 @@
             <option value="$PROJECT_DIR$/CarePayPracticeTablet" />
             <option value="$PROJECT_DIR$/CarePayServiceLibrary" />
             <option value="$PROJECT_DIR$/payeezysdk" />
-            <option value="$PROJECT_DIR$/../../shamrock_android_sdk/shamrocksdk" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
