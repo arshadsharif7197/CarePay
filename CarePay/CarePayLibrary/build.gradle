@@ -64,5 +64,5 @@ dependencies {
     androidTestCompile 'com.android.support.test:rules:0.5'
     compile project(':payeezysdk')
     compile project(':shamrocksdk')
-
+//    compile 'com.github.Carecloud:shamrock_android_sdk:JitPack'
 }
