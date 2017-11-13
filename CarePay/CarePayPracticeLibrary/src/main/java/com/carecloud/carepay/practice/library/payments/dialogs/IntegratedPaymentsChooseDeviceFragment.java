@@ -28,12 +28,15 @@ import com.carecloud.carepay.service.library.RestCallServiceCallback;
 import com.carecloud.carepay.service.library.RestCallServiceHelper;
 import com.carecloud.carepay.service.library.RestDef;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
+import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
+import com.carecloud.carepaylibray.payments.models.PatientPaymentsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -42,7 +45,7 @@ import com.carecloud.shamrocksdk.connections.interfaces.ConnectionActionCallback
 import com.carecloud.shamrocksdk.connections.interfaces.ListDeviceCallback;
 import com.carecloud.shamrocksdk.connections.models.Device;
 import com.carecloud.shamrocksdk.payment.ClientPayment;
-import com.carecloud.shamrocksdk.payment.interfaces.PaymentRequestCallback;
+import com.carecloud.shamrocksdk.payment.interfaces.ClientPaymentRequestCallback;
 import com.carecloud.shamrocksdk.payment.models.PaymentRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -221,6 +224,36 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         });
     }
 
+    @Override
+    public void showProgressDialog(){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                IntegratedPaymentsChooseDeviceFragment.super.showProgressDialog();
+            }
+        });
+    }
+
+    @Override
+    public void hideProgressDialog(){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                IntegratedPaymentsChooseDeviceFragment.super.hideProgressDialog();
+            }
+        });
+    }
+
+    @Override
+    public void dismiss(){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                IntegratedPaymentsChooseDeviceFragment.super.dismiss();
+            }
+        });
+    }
+
     private void toggleSelectDevice(final boolean processing){
         Log.d("Toggle Selectable", "Processing: "+processing);
         getActivity().runOnUiThread(new Runnable() {
@@ -276,7 +309,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
             ShamrockPaymentsPostModel postModel = gson.fromJson(jsonElement, ShamrockPaymentsPostModel.class);
             selectedDevice.setPaymentRequestId(postModel.getDeepstreamId());
             DeviceInfo.updateDevice(userId, authToken, selectedDevice.getDeviceId(), selectedDevice);
-
+            ClientPayment.trackPaymentRequest(userId, authToken, selectedDevice.getPaymentRequestId(), paymentRequestCallback);
         }
 
         @Override
@@ -342,6 +375,41 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
 
     }
 
+    private void getAvailableDevices(){
+        if(selectedLocation == null || groupMap.isEmpty()){
+            return;
+        }
+
+        userId = getApplicationMode().getUserPracticeDTO().getUserId();
+        authToken = getAppAuthorizationHelper().getIdToken();
+        IntegratedPaymentDeviceGroup deviceGroup = groupMap.get(selectedLocation.getGuid());
+        if(deviceGroup != null) {
+            DeviceInfo.listDevices(userId, authToken, deviceGroup.getGroupId(), listDeviceCallback, connectionActionCallback);
+        }
+    }
+
+    private void onPaymentCompleted(String paymentRequestId, JsonElement recordObject){
+        //todo post to middleware
+        releasePaymentRequest(paymentRequestId);
+        selectedDevice = null;
+        DeviceInfo.releaseAllDevices(userId, authToken);
+
+        Gson gson = new Gson();
+        IntegratedPatientPaymentPayload patientPaymentPayload = gson.fromJson(recordObject, IntegratedPatientPaymentPayload.class);
+        PatientPaymentsDTO patientPayment = new PatientPaymentsDTO();
+        patientPayment.setPayload(patientPaymentPayload);
+
+        paymentsModel.getPaymentPayload().setPatientPayments(patientPayment);
+        WorkflowDTO workflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class, DtoHelper.getStringDTO(paymentsModel));
+        callback.showPaymentConfirmation(workflowDTO);
+
+        dismiss();
+    }
+
+    private void releasePaymentRequest(String paymentRequestId){
+        ClientPayment.releasePaymentRequest(userId, authToken, paymentRequestId);
+    }
+
     private RestCallServiceCallback deviceGroupCallback = new RestCallServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -369,19 +437,6 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         }
     };
 
-
-    private void getAvailableDevices(){
-        if(selectedLocation == null || groupMap.isEmpty()){
-            return;
-        }
-
-        userId = getApplicationMode().getUserPracticeDTO().getUserId();
-        authToken = getAppAuthorizationHelper().getIdToken();
-        IntegratedPaymentDeviceGroup deviceGroup = groupMap.get(selectedLocation.getGuid());
-        if(deviceGroup != null) {
-            DeviceInfo.listDevices(userId, authToken, deviceGroup.getGroupId(), listDeviceCallback, connectionActionCallback);
-        }
-    }
 
     private ListDeviceCallback listDeviceCallback = new ListDeviceCallback() {
         @Override
@@ -439,7 +494,6 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
                 selectedDevice = findDevice;
                 if(selectedDevice.getState().equals(Device.STATE_IN_USE)){
                     toggleSelectDevice(true);
-                    ClientPayment.trackPaymentRequest(userId, authToken, device.getPaymentRequestId(), paymentRequestCallback);
                 }else{
                     toggleSelectDevice(false);
                 }
@@ -453,13 +507,28 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         }
     };
 
-    private PaymentRequestCallback paymentRequestCallback = new PaymentRequestCallback() {
+    private ClientPaymentRequestCallback paymentRequestCallback = new ClientPaymentRequestCallback() {
 
         @Override
-        public void onPaymentRequestUpdate(String paymentRequestId, PaymentRequest paymentRequest) {
-            //// TODO: 11/9/17 send payment to carepay when ready
+        public void onPaymentRequestUpdate(String paymentRequestId, PaymentRequest paymentRequest, JsonElement recordObject) {
+            switch (paymentRequest.getState()){
+                default:
+                case PaymentRequest.STATE_ACKNOWLEDGED:
+                case PaymentRequest.STATE_CAPTURED:
+                    showProgressDialog();
+                    break;
+                case PaymentRequest.STATE_CANCELED:
+                    releasePaymentRequest(paymentRequestId);
+                    hideProgressDialog();
+                    break;
+                case PaymentRequest.STATE_COMPLETED:
+                case PaymentRequest.STATE_PROCESSING:
+                case PaymentRequest.STATE_RECORDING:
+                    hideProgressDialog();
+                    onPaymentCompleted(paymentRequestId, recordObject);
+                    break;
+            }
 
-            //todo stop tracking Payment Request
         }
 
         @Override
