@@ -8,6 +8,7 @@ import com.carecloud.carepay.patient.BuildConfig;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.patientsplash.dtos.SelectLanguageDTO;
+import com.carecloud.carepay.patient.payment.androidpay.AndroidPayQueueUploadService;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
@@ -44,6 +45,9 @@ public class SplashActivity extends BasePatientActivity {
 
         Intent intent = new Intent(this, RegistrationIntentService.class);
         startService(intent);
+
+        Intent queueIntent = new Intent(getContext(), AndroidPayQueueUploadService.class);
+        startService(queueIntent);//send any pending android pay payments
 
         setUncaughtExceptionHandler();
     }
