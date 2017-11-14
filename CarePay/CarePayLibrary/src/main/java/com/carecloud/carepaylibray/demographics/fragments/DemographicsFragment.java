@@ -167,7 +167,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
         EditText secondaryPhoneEditText = (EditText) view.findViewById(R.id.secondaryPhone);
         secondaryPhoneEditText.addTextChangedListener(phoneInputFormatter);
-        setUpDemographicField(view, demographicPayload.getPersonalDetails().getSecondaryPhoneNumber(),
+        setUpDemographicField(view, StringUtil
+                        .formatPhoneNumber(demographicPayload.getPersonalDetails().getSecondaryPhoneNumber()),
                 personalInfoSection.getProperties().getSecondaryPhoneNumber(),
                 R.id.secondaryPhoneContainer, R.id.secondaryPhoneInputLayout,
                 R.id.secondaryPhone, R.id.secondaryPhoneOptional, null, null);
@@ -280,7 +281,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     private void setUpEmergencyContact(View view, PatientModel emergencyContact) {
         demographicsEmergencyContactModel = emergencyContact;
         TextInputLayout emergencyContactInputLayout = (TextInputLayout) view.findViewById(R.id.emergencyContactInputLayout);
-//        emergencyContactInputLayout.setVisibility(emergencyContactSection.isDisplay() ? View.VISIBLE : View.GONE);
+        emergencyContactInputLayout.setVisibility(demographicDTO.getMetadata().getNewDataModel()
+                .getDemographic().getEmergencyContact().isDisplay() ? View.VISIBLE : View.GONE);
         EditText emergencyContactEditText = (EditText) view.findViewById(R.id.emergencyContactEditText);
         emergencyContactEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(emergencyContactInputLayout, null));
@@ -345,7 +347,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             }
             if (!employmentInfoSection.isRequired()) {
                 view.findViewById(R.id.employmentInfoOptionalTextView).setVisibility(View.VISIBLE);
-                view.findViewById(R.id.employmentInfoContainer).setVisibility(View.GONE);
+//                view.findViewById(R.id.employmentInfoContainer).setVisibility(View.GONE);
             }
 
         } else {
@@ -357,7 +359,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
     }
 
-    private void setEmployerInfoFields(View view, DemographicPayloadDTO demographicPayload, boolean isEmploymentStuffVisible) {
+    private void setEmployerInfoFields(View view, DemographicPayloadDTO demographicPayload,
+                                       boolean isEmploymentStuffVisible) {
         employerDependentFieldsLayout = view.findViewById(R.id.employerDependentLayout);
 
         selectedEmployer = demographicPayload.getEmploymentInfoModel().getEmployerDto();
@@ -410,7 +413,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         EditText zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeTextView);
         zipCodeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeTextInputLayout,
                 getZipCodeFocusListener(zipCodeEditText)));
-        zipCodeEditText.setText(selectedEmployer.getAddress().getZipcode());
+        zipCodeEditText.setText(StringUtil.formatZipCode(selectedEmployer.getAddress().getZipcode()));
         zipCodeEditText.getOnFocusChangeListener()
                 .onFocusChange(zipCodeEditText, !StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString()));
 
@@ -444,8 +447,9 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
         TextInputLayout phoneTextInputLayout = (TextInputLayout) view.findViewById(R.id.phoneTextInputLayout);
         EditText phoneEditText = (EditText) view.findViewById(R.id.phoneTextView);
+        phoneEditText.addTextChangedListener(phoneInputFormatter);
         phoneEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(phoneTextInputLayout, null));
-        phoneEditText.setText(selectedEmployer.getAddress().getPhone());
+        phoneEditText.setText(StringUtil.formatPhoneNumber(selectedEmployer.getAddress().getPhone()));
         phoneEditText.getOnFocusChangeListener()
                 .onFocusChange(phoneEditText, !StringUtil.isNullOrEmpty(phoneEditText.getText().toString()));
 
@@ -560,7 +564,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             selectedEmployer.getAddress().setAddress2(address2);
 
             String zipCode = ((TextView) findViewById(R.id.zipCodeTextView)).getText().toString().trim();
-            selectedEmployer.getAddress().setZipcode(zipCode);
+            selectedEmployer.getAddress().setZipcode(StringUtil.revertZipToRawFormat(zipCode));
 
             String city = ((TextView) findViewById(R.id.cityTextView)).getText().toString().trim();
             selectedEmployer.getAddress().setCity(city);
@@ -768,6 +772,9 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                     && showEmployerFields) {
                 if (isUserAction()) {
                     setDefaultError(view, R.id.employerNameTextInputLayout);
+                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.employerNameDemographicsLayout));
+                } else {
+                    showErrorViews(false, (ViewGroup) view.findViewById(R.id.employerNameDemographicsLayout));
                 }
                 return false;
             }
