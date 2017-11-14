@@ -2,6 +2,7 @@ package com.carecloud.carepay.practice.library.payments.dialogs;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,10 +18,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.payments.IntegratedPaymentsQueueUploadService;
 import com.carecloud.carepay.practice.library.payments.adapter.IntegratedPaymentsChooseDeviceAdapter;
 import com.carecloud.carepay.practice.library.payments.interfaces.ShamrockPaymentsCallback;
 import com.carecloud.carepay.practice.library.payments.models.IntegratedPaymentDeviceGroup;
 import com.carecloud.carepay.practice.library.payments.models.IntegratedPaymentDeviceGroupPayload;
+import com.carecloud.carepay.practice.library.payments.models.IntegratedPaymentQueueRecord;
 import com.carecloud.carepay.practice.library.payments.models.ShamrockPaymentMetadata;
 import com.carecloud.carepay.practice.library.payments.models.ShamrockPaymentsPostModel;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -38,6 +41,8 @@ import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
+import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
+import com.carecloud.carepaylibray.payments.models.PatientPaymentsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -411,23 +416,40 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         }
     }
 
-    private void onPaymentCompleted(String paymentRequestId){
-        //todo post to middleware
+    private void onPaymentCompleted(String paymentRequestId, JsonElement recordObject){
         releasePaymentRequest(paymentRequestId);
         selectedDevice = null;
         DeviceInfo.releaseAllDevices(userId, authToken);
 
-        postCompletedPayment(paymentRequestId);
+        postCompletedPayment(paymentRequestId, recordObject);
 
     }
 
-    private void postCompletedPayment(String paymentRequestId){
+    private void postCompletedPayment(String paymentRequestId, JsonElement recordObject){
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("patient_id", practiceInfo.getPatientId());
         queryMap.put("deepstream_record_id", paymentRequestId);
 
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getRecordPayment();
-        getWorkflowServiceHelper().execute(transitionDTO, postPaymentCallback, queryMap);
+        getWorkflowServiceHelper().execute(transitionDTO, getPostPaymentCallback(paymentRequestId, recordObject), queryMap);
+    }
+
+    private void queuePayment(String paymentRequestId){
+        IntegratedPaymentQueueRecord paymentQueueRecord = new IntegratedPaymentQueueRecord();
+        paymentQueueRecord.setPracticeID(practiceInfo.getPracticeId());
+        paymentQueueRecord.setPracticeMgmt(practiceInfo.getPracticeMgmt());
+        paymentQueueRecord.setPatientID(practiceInfo.getPatientId());
+        paymentQueueRecord.setDeepstreamId(paymentRequestId);
+        paymentQueueRecord.setUsername(userId);
+
+        Gson gson = new Gson();
+        paymentQueueRecord.setQueueTransition(gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getQueuePayment()));
+
+        paymentQueueRecord.save();
+
+        Intent intent = new Intent(getContext(), IntegratedPaymentsQueueUploadService.class);
+        getContext().startService(intent);
+
     }
 
     private void releasePaymentRequest(String paymentRequestId){
@@ -461,25 +483,37 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         }
     };
 
-    private WorkflowServiceCallback postPaymentCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
+    private WorkflowServiceCallback getPostPaymentCallback(final String paymentRequestId, final JsonElement recordObject){
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
 
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            callback.showPaymentConfirmation(workflowDTO);
-            dismiss();
-        }
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                callback.showPaymentConfirmation(workflowDTO);
+                dismiss();
+            }
 
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            //todo need some retry logic
-        }
-    };
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+
+                queuePayment(paymentRequestId);
+
+                Gson gson = new Gson();
+                IntegratedPatientPaymentPayload patientPaymentPayload = gson.fromJson(recordObject, IntegratedPatientPaymentPayload.class);
+                PatientPaymentsDTO patientPayment = new PatientPaymentsDTO();
+                patientPayment.setPayload(patientPaymentPayload);
+                paymentsModel.getPaymentPayload().setPatientPayments(patientPayment);
+                WorkflowDTO workflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class, DtoHelper.getStringDTO(paymentsModel));
+                callback.showPaymentConfirmation(workflowDTO);
+                dismiss();
+            }
+        };
+    }
 
     private ListDeviceCallback listDeviceCallback = new ListDeviceCallback() {
         @Override
@@ -568,7 +602,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
                 case PaymentRequest.STATE_PROCESSING:
                 case PaymentRequest.STATE_RECORDING:
                     hideProgressDialog();
-                    onPaymentCompleted(paymentRequestId);
+                    onPaymentCompleted(paymentRequestId, recordObject);
                     break;
             }
 

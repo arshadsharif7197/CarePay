@@ -12,8 +12,7 @@ public class IntegratedPaymentQueueRecord extends SugarRecord {
     private String practiceID;
     private String practiceMgmt;
     private String queueTransition;
-    private String paymentModelJsonEnc;
-    private String paymentModelJson;
+    private String deepstreamId;
     private String username;
 
     public IntegratedPaymentQueueRecord(){
@@ -53,22 +52,6 @@ public class IntegratedPaymentQueueRecord extends SugarRecord {
         this.queueTransition = queueTransition;
     }
 
-    public String getPaymentModelJsonEnc() {
-        return paymentModelJsonEnc;
-    }
-
-    public void setPaymentModelJsonEnc(String paymentModelJsonEnc) {
-        this.paymentModelJsonEnc = paymentModelJsonEnc;
-    }
-
-    public String getPaymentModelJson() {
-        return paymentModelJson;
-    }
-
-    public void setPaymentModelJson(String paymentModelJson) {
-        this.paymentModelJson = paymentModelJson;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -77,4 +60,11 @@ public class IntegratedPaymentQueueRecord extends SugarRecord {
         this.username = username;
     }
 
+    public String getDeepstreamId() {
+        return deepstreamId;
+    }
+
+    public void setDeepstreamId(String deepstreamId) {
+        this.deepstreamId = deepstreamId;
+    }
 }

@@ -12,8 +12,6 @@ import com.carecloud.carepay.service.library.WorkflowService;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibray.utils.EncryptionUtil;
-import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -51,14 +49,11 @@ public class IntegratedPaymentsQueueUploadService extends IntentService {
             queryMap.put("patient_id", queueRecord.getPatientID());
             queryMap.put("practice_id", queueRecord.getPracticeID());
             queryMap.put("practice_mgmt", queueRecord.getPracticeMgmt());
+            queryMap.put("deepstream_record_id", queueRecord.getDeepstreamId());
 
-            String jsonBody = EncryptionUtil.decrypt(this, queueRecord.getPaymentModelJsonEnc(), queueRecord.getPracticeID());
-            if(jsonBody == null){
-                jsonBody = queueRecord.getPaymentModelJson();
-            }
 
             TransitionDTO transitionDTO = gson.fromJson(queueRecord.getQueueTransition(), TransitionDTO.class);
-            boolean isSubmitted = executeWebCall(transitionDTO, jsonBody, queryMap, queueRecord.getUsername());
+            boolean isSubmitted = executeWebCall(transitionDTO, queryMap, queueRecord.getUsername());
             if(isSubmitted){
                 queueRecord.delete();
             }
@@ -72,17 +67,13 @@ public class IntegratedPaymentsQueueUploadService extends IntentService {
 
     }
 
-    private boolean executeWebCall(TransitionDTO transitionDTO, String jsonBody, Map<String, String> queryMap, String username){
-        if(StringUtil.isNullOrEmpty(jsonBody)){
-            return false;
-        }
-
+    private boolean executeWebCall(TransitionDTO transitionDTO, Map<String, String> queryMap, String username){
         Map<String, String> header = new HashMap<>();
         header.put("x-api-key", HttpConstants.getApiStartKey());
         header.put("username", username);
 
         WorkflowService workflowService = ServiceGenerator.getInstance().createService(WorkflowService.class, header);
-        Call<WorkflowDTO> call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
+        Call<WorkflowDTO> call = workflowService.executePost(transitionDTO.getUrl(), queryMap);
 
         try {
             Response<WorkflowDTO> response = call.execute();

@@ -16,6 +16,7 @@
         <activity
             android:name=".adhocforms.AdHocFormsActivity"
             android:screenOrientation="sensorLandscape" />
+        <service android:name=".payments.IntegratedPaymentsQueueUploadService" android:enabled="true"/>
     </application>
 
 </manifest>
