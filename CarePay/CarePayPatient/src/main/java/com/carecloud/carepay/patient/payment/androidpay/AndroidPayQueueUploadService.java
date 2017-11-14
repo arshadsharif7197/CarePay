@@ -63,12 +63,13 @@ public class AndroidPayQueueUploadService extends IntentService {
             }
         }
 
-        Intent scheduledService = new Intent(getBaseContext(), AndroidPayQueuePaymentRecord.class);
-        PendingIntent pendingIntent = PendingIntent.getService(getBaseContext(), 0x222, scheduledService, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+INTERVAL, pendingIntent);
-
-
+        queueRecords =  AndroidPayQueuePaymentRecord.listAll(AndroidPayQueuePaymentRecord.class);
+        if(!queueRecords.isEmpty()) {//only reschedule the service if required
+            Intent scheduledService = new Intent(getBaseContext(), AndroidPayQueueUploadService.class);
+            PendingIntent pendingIntent = PendingIntent.getService(getBaseContext(), 0x222, scheduledService, PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + INTERVAL, pendingIntent);
+        }
     }
 
     private boolean executeWebCall(TransitionDTO transitionDTO, String jsonBody, Map<String, String> queryMap, String username){
