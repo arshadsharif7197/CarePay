@@ -27,7 +27,10 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.RestCallServiceCallback;
 import com.carecloud.carepay.service.library.RestCallServiceHelper;
 import com.carecloud.carepay.service.library.RestDef;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
@@ -35,8 +38,6 @@ import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
-import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
-import com.carecloud.carepaylibray.payments.models.PatientPaymentsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -61,9 +62,11 @@ import java.util.Set;
  */
 
 public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment implements IntegratedPaymentsChooseDeviceAdapter.ChooseDeviceCallback {
+    public static final String KEY_LAST_SELECTED_LOCATION = "last_selected_payments_location";
 
     private double paymentAmount;
     private PaymentsModel paymentsModel;
+    private UserPracticeDTO practiceInfo;
     private ShamrockPaymentsCallback callback;
     private String userId;
     private String authToken;
@@ -109,6 +112,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         if(args != null){
             paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
             paymentAmount = args.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
+            practiceInfo = paymentsModel.getPaymentPayload().getUserPractices().get(0);
             initLocationsMap();
         }
     }
@@ -165,6 +169,21 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
     }
 
     private void initLocationsMap(){
+        Integer filterLocationId = null;
+        String lastSelectedLocation = getApplicationPreferences().readStringFromSharedPref(KEY_LAST_SELECTED_LOCATION, null);
+        if(lastSelectedLocation == null) {
+            String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
+            String userId = getApplicationMode().getUserPracticeDTO().getUserId();
+            Set<String> locationIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
+            if (locationIds != null && !locationIds.isEmpty()) {
+                try {
+                    filterLocationId = Integer.parseInt(locationIds.iterator().next());
+                } catch (NumberFormatException nfe) {
+                    nfe.printStackTrace();
+                }
+            }
+        }
+
         for(LocationDTO locationDTO : paymentsModel.getPaymentPayload().getLocations()){
             locationsMap.put(locationDTO.getGuid(), locationDTO);
             DemographicsOption option = new DemographicsOption();
@@ -172,14 +191,17 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
             option.setName(locationDTO.getName());
             option.setLabel(locationDTO.getName());
             locationsSelectList.add(option);
+
+            if(filterLocationId != null && locationDTO.getId().equals(filterLocationId)){
+               selectedLocation = locationDTO;
+            }
         }
 
-        String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
-        String userId = getApplicationMode().getUserPracticeDTO().getUserId();
-        Set<String> locationIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
-        if(locationIds != null && !locationIds.isEmpty()){
-            selectedLocation = locationsMap.get(locationIds.iterator().next());
-        }else{
+        if(lastSelectedLocation != null){
+            selectedLocation = locationsMap.get(lastSelectedLocation);
+        }
+
+        if(selectedLocation == null){
             selectedLocation = locationsMap.get(locationsSelectList.get(0).getId());
         }
 
@@ -278,9 +300,9 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         shamrockPaymentsPostModel.setExecution(IntegratedPaymentPostModel.EXECUTION_CLOVER);
 
         ShamrockPaymentMetadata metadata = shamrockPaymentsPostModel.getMetadata();
-        metadata.setPracticeId(getApplicationMode().getUserPracticeDTO().getPracticeId());
-        metadata.setPracticeMgmt(getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
-        metadata.setPatientId(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPatientId());//todo don't hardcode this
+        metadata.setPracticeId(practiceInfo.getPracticeId());
+        metadata.setPracticeMgmt(practiceInfo.getPracticeMgmt());
+        metadata.setPatientId(practiceInfo.getPatientId());
         metadata.setUserId(userId);
         metadata.setBreezeUserId(getAppAuthorizationHelper().getPatientUser());
 
@@ -355,6 +377,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long row) {
                 DemographicsOption selectedOption = (DemographicsOption) adapterView.getAdapter().getItem(position);
                 selectedLocation = locationsMap.get(selectedOption.getId());
+                getApplicationPreferences().writeStringToSharedPref(KEY_LAST_SELECTED_LOCATION, selectedOption.getId());
                 selectedDevice = null;
                 updateSelectedLocation();
                 alert.dismiss();
@@ -388,22 +411,23 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         }
     }
 
-    private void onPaymentCompleted(String paymentRequestId, JsonElement recordObject){
+    private void onPaymentCompleted(String paymentRequestId){
         //todo post to middleware
         releasePaymentRequest(paymentRequestId);
         selectedDevice = null;
         DeviceInfo.releaseAllDevices(userId, authToken);
 
-        Gson gson = new Gson();
-        IntegratedPatientPaymentPayload patientPaymentPayload = gson.fromJson(recordObject, IntegratedPatientPaymentPayload.class);
-        PatientPaymentsDTO patientPayment = new PatientPaymentsDTO();
-        patientPayment.setPayload(patientPaymentPayload);
+        postCompletedPayment(paymentRequestId);
 
-        paymentsModel.getPaymentPayload().setPatientPayments(patientPayment);
-        WorkflowDTO workflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class, DtoHelper.getStringDTO(paymentsModel));
-        callback.showPaymentConfirmation(workflowDTO);
+    }
 
-        dismiss();
+    private void postCompletedPayment(String paymentRequestId){
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("patient_id", practiceInfo.getPatientId());
+        queryMap.put("deepstream_record_id", paymentRequestId);
+
+        TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getRecordPayment();
+        getWorkflowServiceHelper().execute(transitionDTO, postPaymentCallback, queryMap);
     }
 
     private void releasePaymentRequest(String paymentRequestId){
@@ -437,6 +461,25 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         }
     };
 
+    private WorkflowServiceCallback postPaymentCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            callback.showPaymentConfirmation(workflowDTO);
+            dismiss();
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            //todo need some retry logic
+        }
+    };
 
     private ListDeviceCallback listDeviceCallback = new ListDeviceCallback() {
         @Override
@@ -525,7 +568,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
                 case PaymentRequest.STATE_PROCESSING:
                 case PaymentRequest.STATE_RECORDING:
                     hideProgressDialog();
-                    onPaymentCompleted(paymentRequestId, recordObject);
+                    onPaymentCompleted(paymentRequestId);
                     break;
             }
 
