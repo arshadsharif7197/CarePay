@@ -72,7 +72,11 @@ public abstract class PaymentHistoryDetailFragment extends BaseDialogFragment {
     }
 
     protected static String getPaymentMethod(PapiPaymentMethod paymentMethod){
-        switch (paymentMethod.getPaymentMethodType()){
+        String paymentMethodType = paymentMethod.getPaymentMethodType();
+        if(paymentMethodType == null){
+            paymentMethodType = "";
+        }
+        switch (paymentMethodType){
             case PAYMENT_METHOD_ACCOUNT:
                 return Label.getLabel("payment_method_account");
             case PAYMENT_METHOD_CARD:
