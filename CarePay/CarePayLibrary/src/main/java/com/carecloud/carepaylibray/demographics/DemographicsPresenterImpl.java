@@ -2,7 +2,6 @@ package com.carecloud.carepaylibray.demographics;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -27,6 +26,7 @@ import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.IntakeFormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
+import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactFragmentInterface;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearchFragment;
@@ -444,8 +444,8 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     @Override
     public void updateEmergencyContact(PatientModel emergencyContact) {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
-        if (fragment instanceof EmergencyContactInterfaceFragment) {
-            ((EmergencyContactInterfaceFragment) fragment).updateEmergencyContact(emergencyContact);
+        if (fragment instanceof EmergencyContactFragmentInterface) {
+            ((EmergencyContactFragmentInterface) fragment).updateEmergencyContact(emergencyContact);
         }
     }
 }

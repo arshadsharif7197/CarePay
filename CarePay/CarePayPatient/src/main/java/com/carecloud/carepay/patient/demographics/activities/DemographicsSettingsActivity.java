@@ -24,11 +24,14 @@ import com.carecloud.carepay.patient.payment.fragments.CreditCardListFragment;
 import com.carecloud.carepay.patient.payment.fragments.SettingAddCreditCardFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.base.models.PatientModel;
-import com.carecloud.carepaylibray.demographics.EmergencyContactInterface;
-import com.carecloud.carepaylibray.demographics.EmergencyContactInterfaceFragment;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.PhysicianDto;
 import com.carecloud.carepaylibray.demographics.fragments.EmergencyContactFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
+import com.carecloud.carepaylibray.demographics.fragments.PhysicianFragment;
+import com.carecloud.carepaylibray.demographics.interfaces.DemographicExtendedInterface;
+import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactFragmentInterface;
+import com.carecloud.carepaylibray.demographics.interfaces.PhysicianFragmentInterface;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -38,7 +41,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
  */
 public class DemographicsSettingsActivity extends BasePatientActivity implements
         DemographicsSettingsFragmentListener, InsuranceEditDialog.InsuranceEditDialogListener,
-        EmergencyContactInterface {
+        DemographicExtendedInterface {
 
     DemographicDTO demographicsSettingsDTO;
 
@@ -218,8 +221,22 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     public void updateEmergencyContact(PatientModel emergencyContact) {
         Fragment fragment = getSupportFragmentManager()
                 .findFragmentById(R.id.activity_demographics_settings);
-        if (fragment instanceof EmergencyContactInterfaceFragment) {
-            ((EmergencyContactInterfaceFragment) fragment).updateEmergencyContact(emergencyContact);
+        if (fragment instanceof EmergencyContactFragmentInterface) {
+            ((EmergencyContactFragmentInterface) fragment).updateEmergencyContact(emergencyContact);
+        }
+    }
+
+    @Override
+    public void showSearchPhysicianFragmentDialog(PhysicianDto physicianDto, int physicianType) {
+        addFragment(PhysicianFragment.newInstance(physicianDto, physicianType), true);
+    }
+
+    @Override
+    public void onPhysicianSelected(PhysicianDto physician, int physicianType) {
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentById(R.id.activity_demographics_settings);
+        if (fragment instanceof PhysicianFragmentInterface) {
+            ((PhysicianFragmentInterface) fragment).setPhysician(physician, physicianType);
         }
     }
 }

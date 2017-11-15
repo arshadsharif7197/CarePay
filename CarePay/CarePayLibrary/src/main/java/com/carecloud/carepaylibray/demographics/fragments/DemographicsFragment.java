@@ -16,8 +16,8 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
-import com.carecloud.carepaylibray.demographics.EmergencyContactInterface;
-import com.carecloud.carepaylibray.demographics.EmergencyContactInterfaceFragment;
+import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactInterface;
+import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactFragmentInterface;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicEmergencyContactSection;
@@ -45,7 +45,7 @@ import java.util.List;
  * A simple {@link CheckInDemographicsBaseFragment} subclass.
  */
 public class DemographicsFragment extends CheckInDemographicsBaseFragment
-        implements EmergencyContactInterfaceFragment {
+        implements EmergencyContactFragmentInterface {
 
     private DemographicDTO demographicDTO;
     private DemographicDataModel dataModel;
@@ -196,10 +196,10 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 R.id.maritalStatusEditText, R.id.maritalStatusOptional, selectedMaritalStatus,
                 Label.getLabel("demographics_marital_status"));
 
-        setUpDemographicField(view, demographicPayload.getPersonalDetails().getReferralSource(),
-                personalInfoSection.getProperties().getReferralSource(), R.id.referralSourceDemographicsLayout,
-                R.id.referralSourceInputLayout, R.id.referralSourceEditText,
-                R.id.referralSourceOptional, selectedReferralSource, Label.getLabel("demographics_referral_source"));
+//        setUpDemographicField(view, demographicPayload.getPersonalDetails().getReferralSource(),
+//                personalInfoSection.getProperties().getReferralSource(), R.id.referralSourceDemographicsLayout,
+//                R.id.referralSourceInputLayout, R.id.referralSourceEditText,
+//                R.id.referralSourceOptional, selectedReferralSource, Label.getLabel("demographics_referral_source"));
     }
 
     private void setUpBaseDemographicFields(View view, DemographicPayloadDTO demographicPayload,
@@ -747,15 +747,15 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 showErrorViews(false, (ViewGroup) view.findViewById(R.id.emergencyContactDemographicsLayout));
             }
 
-            if (dataModel.getDemographic().getPersonalDetails().getProperties().getReferralSource().isRequired()
-                    && StringUtil.isNullOrEmpty(selectedReferralSource.getName())) {
-                if (isUserAction()) {
-                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.referralSourceDemographicsLayout));
-                }
-                return false;
-            } else {
-                showErrorViews(false, (ViewGroup) view.findViewById(R.id.referralSourceDemographicsLayout));
-            }
+//            if (dataModel.getDemographic().getPersonalDetails().getProperties().getReferralSource().isRequired()
+//                    && StringUtil.isNullOrEmpty(selectedReferralSource.getName())) {
+//                if (isUserAction()) {
+//                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.referralSourceDemographicsLayout));
+//                }
+//                return false;
+//            } else {
+//                showErrorViews(false, (ViewGroup) view.findViewById(R.id.referralSourceDemographicsLayout));
+//            }
 
             if (dataModel.getDemographic().getEmploymentInfo().isRequired()
                     && StringUtil.isNullOrEmpty(selectedEmploymentStatus.getName())) {

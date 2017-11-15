@@ -323,39 +323,6 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/referralSourceDemographicsLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
-            android:id="@+id/referralSourceInputLayout"
-            style="@style/SigninSignupTextInputStyle"
-            app:customAssetFont="proxima_nova_semi_bold"
-            app:hintTextAppearance="@style/FloatingLabelStyle">
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
-                android:id="@+id/referralSourceEditText"
-                style="@style/SigninSignupEditStyle"
-                android:clickable="false"
-                android:cursorVisible="false"
-                android:drawableEnd="@drawable/icon_drop_down"
-                android:editable="false"
-                android:focusableInTouchMode="false"
-                android:imeOptions="actionNext"
-                app:customAssetFont="proxima_nova_regular"
-                app:hintTextAppearance="@style/FloatingLabelStyle"
-                breeze:hintKey="demographics_referral_source"
-                tools:hint="Marital Status" />
-
-        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
-
-        <include
-            android:id="@+id/referralSourceOptional"
-            layout="@layout/layout_optional_text_view" />
-
-    </FrameLayout>
-
-    <FrameLayout
         android:id="@+id/emergencyContactDemographicsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -384,6 +351,72 @@
 
         <include
             android:id="@+id/emergencyContactOptionalLabel"
+            layout="@layout/layout_optional_text_view" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/primaryPhysicianDemographicsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+            android:id="@+id/primaryPhysicianInputLayout"
+            style="@style/SigninSignupTextInputStyle"
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                android:id="@+id/primaryPhysicianEditText"
+                style="@style/SigninSignupEditStyle"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:drawableEnd="@drawable/icon_drop_down"
+                android:editable="false"
+                android:focusableInTouchMode="false"
+                android:imeOptions="actionNext"
+                app:customAssetFont="proxima_nova_regular"
+                app:hintTextAppearance="@style/FloatingLabelStyle"
+                breeze:hintKey="demographics_primary_care_physician"
+                tools:hint="Primary Care Physician" />
+
+        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+        <include
+            android:id="@+id/primaryPhysicianOptional"
+            layout="@layout/layout_optional_text_view" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/referringPhysicianDemographicsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+            android:id="@+id/referringPhysicianInputLayout"
+            style="@style/SigninSignupTextInputStyle"
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                android:id="@+id/referringPhysicianEditText"
+                style="@style/SigninSignupEditStyle"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:drawableEnd="@drawable/icon_drop_down"
+                android:editable="false"
+                android:focusableInTouchMode="false"
+                android:imeOptions="actionNext"
+                app:customAssetFont="proxima_nova_regular"
+                app:hintTextAppearance="@style/FloatingLabelStyle"
+                breeze:hintKey="demographics_referring_physician"
+                tools:hint="Referring Physician" />
+
+        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+        <include
+            android:id="@+id/referringPhysicianOptional"
             layout="@layout/layout_optional_text_view" />
 
     </FrameLayout>
