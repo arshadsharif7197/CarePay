@@ -271,7 +271,9 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         emergencyContactEditText.getOnFocusChangeListener().onFocusChange(emergencyContactEditText,
                 !StringUtil.isNullOrEmpty(emergencyContactEditText.getText().toString().trim()));
         view.findViewById(R.id.emergencyContactOptionalLabel)
-                .setVisibility(emergencyContactSection.isRequired() ? View.GONE : View.VISIBLE);
+                .setVisibility(!emergencyContactSection.isRequired()
+                        && StringUtil.isNullOrEmpty(emergencyContactEditText.getText().toString())
+                        ? View.VISIBLE : View.GONE);
         emergencyContactEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

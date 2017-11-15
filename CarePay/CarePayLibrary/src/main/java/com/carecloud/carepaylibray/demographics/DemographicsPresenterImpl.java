@@ -16,6 +16,7 @@ import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.PhysicianDto;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
@@ -26,7 +27,9 @@ import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.IntakeFormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
+import com.carecloud.carepaylibray.demographics.fragments.PhysicianFragment;
 import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactFragmentInterface;
+import com.carecloud.carepaylibray.demographics.interfaces.PhysicianFragmentInterface;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearchFragment;
@@ -425,6 +428,28 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     @Override
     public void setToolbar(Toolbar toolbar) {
         ((BaseActivity) demographicsView).setToolbar(toolbar);
+    }
+
+    @Override
+    public void showSearchPhysicianFragmentDialog(PhysicianDto physicianDto, int physicianType) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        PhysicianFragment fragment = PhysicianFragment.newInstance(physicianDto, physicianType);
+        if (isPatientMode) {
+            fragment.show(transaction, fragment.getClass().getCanonicalName());
+        } else {
+            transaction.add(R.id.root_layout, fragment, fragment.getClass().getCanonicalName());
+            transaction.addToBackStack(null);
+            transaction.commitAllowingStateLoss();
+        }
+    }
+
+    @Override
+    public void onPhysicianSelected(PhysicianDto physician, int physicianType) {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
+        if (fragment instanceof PhysicianFragmentInterface) {
+            ((PhysicianFragmentInterface) fragment).setPhysician(physician, physicianType);
+        }
     }
 
     @Override

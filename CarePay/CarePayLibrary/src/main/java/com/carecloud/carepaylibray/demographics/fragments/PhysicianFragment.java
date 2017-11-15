@@ -74,7 +74,7 @@ public class PhysicianFragment extends BaseDialogFragment implements PhysicianAd
         super.onAttach(context);
         try {
             if (context instanceof DemographicsView) {
-//                callback = ((DemographicsView) context).getPresenter();
+                callback = ((DemographicsView) context).getPresenter();
             } else {
                 callback = (PhysicianInterface) context;
             }
@@ -235,7 +235,7 @@ public class PhysicianFragment extends BaseDialogFragment implements PhysicianAd
             hideProgressDialog();
             DemographicDTO dto = DtoHelper.getConvertedDTO(DemographicDTO.class, workflowDTO);
             adapter.setData(dto.getPayload().getPhysicians().getPhysicians());
-            SystemUtil.hideSoftKeyboard(getActivity(), getView());
+            SystemUtil.hideSoftKeyboard(getActivity(), searchView);
         }
 
         @Override

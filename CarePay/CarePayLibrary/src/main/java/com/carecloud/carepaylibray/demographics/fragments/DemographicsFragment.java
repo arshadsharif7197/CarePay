@@ -16,12 +16,11 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
-import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactInterface;
-import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactFragmentInterface;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicEmergencyContactSection;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicEmploymentInfoSection;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicPhysicianSection;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsField;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsPersonalSection;
@@ -30,6 +29,10 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadI
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
 import com.carecloud.carepaylibray.demographics.dtos.payload.EmploymentInfoModel;
+import com.carecloud.carepaylibray.demographics.dtos.payload.PhysicianDto;
+import com.carecloud.carepaylibray.demographics.interfaces.DemographicExtendedInterface;
+import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactFragmentInterface;
+import com.carecloud.carepaylibray.demographics.interfaces.PhysicianFragmentInterface;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.utils.AddressUtil;
@@ -45,14 +48,15 @@ import java.util.List;
  * A simple {@link CheckInDemographicsBaseFragment} subclass.
  */
 public class DemographicsFragment extends CheckInDemographicsBaseFragment
-        implements EmergencyContactFragmentInterface {
+        implements EmergencyContactFragmentInterface, PhysicianFragmentInterface {
 
-    private DemographicDTO demographicDTO;
+    private static final int REFERRING_PHYSICIAN = 100;
+    private static final int PRIMARY_PHYSICIAN = 101;
     private DemographicDataModel dataModel;
+    private DemographicDTO demographicDTO;
 
     private PatientModel demographicPersDetailsPayloadDTO;
     private EmploymentInfoModel demographicEmploymentInfoModel;
-    private PatientModel demographicsEmergencyContactModel;
 
     private DemographicsOption selectedGender = new DemographicsOption();
     private DemographicsOption selectedRace = new DemographicsOption();
@@ -67,12 +71,15 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     private DemographicsOption selectedEmergencyContactRelationship = new DemographicsOption();
     private DemographicsOption selectedReferralSource = new DemographicsOption();
     private EmployerDto selectedEmployer = new EmployerDto();
+    private PatientModel emergencyContac;
+    private PhysicianDto primaryPhisician = new PhysicianDto();
+    private PhysicianDto referringPhysician = new PhysicianDto();
     private boolean showEmployerFields;
     private View employerDependentFieldsLayout;
     private EditText cityEditText;
     private EditText stateEditText;
 
-    private EmergencyContactInterface callback;
+    private DemographicExtendedInterface callback;
 
     @Override
     public void attachCallback(Context context) {
@@ -126,13 +133,15 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         DemographicPayloadDTO demographicPayload = demographicDTO.getPayload().getDemographics().getPayload();
         DemographicsPersonalSection personalInfoSection = dataModel.getDemographic().getPersonalDetails();
         setUpBaseDemographicFields(view, demographicPayload, personalInfoSection);
-        setUpExtendedDemographicFields(view, demographicPayload, personalInfoSection);
+        setUpExtendedDemographicFields(view, demographicPayload, dataModel.getDemographic());
         setUpEmergencyContact(view, demographicPayload.getEmergencyContact());
         setUpEmployer(view, demographicPayload, dataModel.getDemographic().getEmploymentInfo());
     }
 
     private void setUpExtendedDemographicFields(View view, DemographicPayloadDTO demographicPayload,
-                                                DemographicsPersonalSection personalInfoSection) {
+                                                DemographicDataModel.Demographic demographic) {
+
+        DemographicsPersonalSection personalInfoSection = demographic.getPersonalDetails();
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getSocialSecurityNumber(),
                 personalInfoSection.getProperties().getSocialSecurityNumber(),
@@ -196,10 +205,47 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 R.id.maritalStatusEditText, R.id.maritalStatusOptional, selectedMaritalStatus,
                 Label.getLabel("demographics_marital_status"));
 
-//        setUpDemographicField(view, demographicPayload.getPersonalDetails().getReferralSource(),
-//                personalInfoSection.getProperties().getReferralSource(), R.id.referralSourceDemographicsLayout,
-//                R.id.referralSourceInputLayout, R.id.referralSourceEditText,
-//                R.id.referralSourceOptional, selectedReferralSource, Label.getLabel("demographics_referral_source"));
+        setUpPrimaryCarePhysician(view, demographicPayload.getPrimaryPhysician(), demographic.getPrimaryPhysician());
+        setUpReferringPhysician(view, demographicPayload.getReferringPhysician(), demographic.getReferringPhysician());
+    }
+
+    private void setUpPrimaryCarePhysician(View view, PhysicianDto primaryPhysician,
+                                           DemographicPhysicianSection physicianMetadata) {
+        this.primaryPhisician = primaryPhysician;
+        setUpPhysicianField(view, primaryPhysician, physicianMetadata,
+                R.id.primaryPhysicianDemographicsLayout, R.id.primaryPhysicianInputLayout,
+                R.id.primaryPhysicianEditText, R.id.primaryPhysicianOptional, PRIMARY_PHYSICIAN);
+    }
+
+    private void setUpReferringPhysician(View view, PhysicianDto referringPhysician,
+                                         DemographicPhysicianSection physicianMetadata) {
+        this.referringPhysician = referringPhysician;
+        setUpPhysicianField(view, referringPhysician, physicianMetadata,
+                R.id.referringPhysicianDemographicsLayout, R.id.referringPhysicianInputLayout,
+                R.id.referringPhysicianEditText, R.id.referringPhysicianOptional, REFERRING_PHYSICIAN);
+    }
+
+    protected void setUpPhysicianField(View view, final PhysicianDto physician,
+                                       DemographicPhysicianSection demographicsField,
+                                       int containerLayout, int inputLayoutId, int editTextId,
+                                       int optionalViewId, final int physicianType) {
+        view.findViewById(containerLayout).setVisibility(demographicsField.isDisplay() ? View.VISIBLE : View.GONE);
+        final TextInputLayout inputLayout = (TextInputLayout) view.findViewById(inputLayoutId);
+        final EditText editText = (EditText) view.findViewById(editTextId);
+        editText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(inputLayout, null));
+        if (physician != null) {
+            editText.setText(physician.getFullName());
+        }
+        editText.getOnFocusChangeListener().onFocusChange(editText,
+                !StringUtil.isNullOrEmpty(editText.getText().toString().trim()));
+        final View optionalView = view.findViewById(optionalViewId);
+        optionalView.setVisibility(!demographicsField.isRequired() && physician == null ? View.VISIBLE : View.GONE);
+        editText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.showSearchPhysicianFragmentDialog(physician, physicianType);
+            }
+        });
     }
 
     private void setUpBaseDemographicFields(View view, DemographicPayloadDTO demographicPayload,
@@ -279,7 +325,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     }
 
     private void setUpEmergencyContact(View view, PatientModel emergencyContact) {
-        demographicsEmergencyContactModel = emergencyContact;
+        emergencyContac = emergencyContact;
         TextInputLayout emergencyContactInputLayout = (TextInputLayout) view.findViewById(R.id.emergencyContactInputLayout);
         emergencyContactInputLayout.setVisibility(demographicDTO.getMetadata().getNewDataModel()
                 .getDemographic().getEmergencyContact().isDisplay() ? View.VISIBLE : View.GONE);
@@ -734,11 +780,11 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             }
 
             if (dataModel.getDemographic().getEmergencyContact().isRequired()
-                    && (demographicsEmergencyContactModel == null
-                    || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getFirstName())
-                    || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getLastName())
-                    || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getPhoneNumber())
-                    || StringUtil.isNullOrEmpty(demographicsEmergencyContactModel.getEmergencyContactRelationship()))) {
+                    && (emergencyContac == null
+                    || StringUtil.isNullOrEmpty(emergencyContac.getFirstName())
+                    || StringUtil.isNullOrEmpty(emergencyContac.getLastName())
+                    || StringUtil.isNullOrEmpty(emergencyContac.getPhoneNumber())
+                    || StringUtil.isNullOrEmpty(emergencyContac.getEmergencyContactRelationship()))) {
                 if (isUserAction()) {
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.emergencyContactDemographicsLayout));
                 }
@@ -854,5 +900,16 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         setUpEmergencyContact(getView(), emergencyContact);
         demographicDTO.getPayload().getDemographics().getPayload().setEmergencyContact(emergencyContact);
         checkIfEnableButton(getView());
+    }
+
+    @Override
+    public void setPhysician(PhysicianDto physician, int physicianType) {
+        if (physicianType == PRIMARY_PHYSICIAN) {
+            setUpPrimaryCarePhysician(getView(), physician,
+                    demographicDTO.getMetadata().getNewDataModel().getDemographic().getPrimaryPhysician());
+        } else {
+            setUpReferringPhysician(getView(), physician,
+                    demographicDTO.getMetadata().getNewDataModel().getDemographic().getReferringPhysician());
+        }
     }
 }

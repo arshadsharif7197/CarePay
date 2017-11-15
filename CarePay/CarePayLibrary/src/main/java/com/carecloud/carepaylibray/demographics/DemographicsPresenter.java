@@ -8,6 +8,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
+import com.carecloud.carepaylibray.demographics.interfaces.DemographicExtendedInterface;
 import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactInterface;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearchFragment;
@@ -18,7 +19,7 @@ public interface DemographicsPresenter extends HealthInsuranceFragment.Insurance
         MedicationAllergySearchFragment.MedicationAllergySearchCallback,
         CheckinFlowCallback,
         InsuranceEditDialog.InsuranceEditDialogListener,
-        EmergencyContactInterface {
+        DemographicExtendedInterface {
 
     void onSaveInstanceState(Bundle icicle);
 
