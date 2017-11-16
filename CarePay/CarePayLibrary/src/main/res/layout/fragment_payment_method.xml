@@ -132,6 +132,17 @@
         android:padding="@dimen/dimen_10dp">
 
         <!--Android Pay-->
+        <ImageView
+            android:id="@+id/google_pay_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dimen_15dp"
+            android:background="@drawable/pay_google_button_border"
+            android:src="@drawable/pay_google_button"
+            android:scaleType="fitCenter"
+            android:visibility="gone"/>
+
+
         <FrameLayout
             android:id="@+id/dynamic_wallet_button_fragment"
             android:layout_width="match_parent"

@@ -55,7 +55,6 @@
         android:id="@+id/list_payment_types"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/dimen_20dp"
         android:layout_weight="3"
         android:background="@color/white"
         android:choiceMode="singleChoice"
@@ -66,9 +65,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:background="@color/white"
         android:padding="@dimen/dimen_10dp">
 
         <!--Android Pay-->
+        <ImageView
+            android:id="@+id/google_pay_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dimen_10dp"
+            android:background="@drawable/pay_google_button_border"
+            android:src="@drawable/pay_google_button"
+            android:visibility="gone"/>
+
         <FrameLayout
             android:id="@+id/dynamic_wallet_button_fragment"
             android:layout_width="match_parent"

@@ -108,6 +108,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
             case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_FULL_WALLET:
+            case PaymentConstants.REQUEST_CODE_GOOGLE_PAYMENT:
                 forwardAndroidPayResult(requestCode, resultCode, data);
                 break;
             default:
