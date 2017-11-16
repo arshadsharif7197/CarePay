@@ -4,7 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by lmenendez on 2/16/17.
+ * Created by lmenendez on 2/16/17
  */
 
 public class MedicationAllergiesPayload {
@@ -13,6 +13,9 @@ public class MedicationAllergiesPayload {
     @Expose
     private MedicationsPayload medications =  new MedicationsPayload();
 
+    @SerializedName("medications_image")
+    @Expose
+    private MedicationsImage medicationsImage = new MedicationsImage();
 
     @SerializedName("searched_medications")
     @Expose
@@ -32,5 +35,13 @@ public class MedicationAllergiesPayload {
 
     public void setSearchMedications(SearchMedicationsPayload searchMedications) {
         this.searchMedications = searchMedications;
+    }
+
+    public MedicationsImage getMedicationsImage() {
+        return medicationsImage;
+    }
+
+    public void setMedicationsImage(MedicationsImage medicationsImage) {
+        this.medicationsImage = medicationsImage;
     }
 }

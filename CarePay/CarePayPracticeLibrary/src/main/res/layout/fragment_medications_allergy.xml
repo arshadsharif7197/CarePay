@@ -299,24 +299,31 @@
 
                     </LinearLayout>
 
-                    <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                        android:id="@+id/medication_list_photo_button"
-                        android:layout_width="wrap_content"
+                    <FrameLayout
+                        android:id="@+id/medication_photo_empty_layout"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:minHeight="0dp"
                         android:layout_marginTop="@dimen/dimen_20dp"
-                        android:paddingTop="@dimen/dimen_10dp"
-                        android:paddingBottom="@dimen/dimen_10dp"
-                        android:paddingStart="@dimen/dimen_30dp"
-                        android:paddingEnd="@dimen/dimen_30dp"
-                        android:background="@drawable/bg_blue_border"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/text_size_13"
-                        app:customAssetFont="gotham_rounded_medium"
-                        tools:text="Take Photo of Medications List"
-                        breeze:textKey="medication_photo_add"
-                        android:visibility="visible"/>
+                        android:visibility="visible">
+
+                        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                            android:id="@+id/medication_list_photo_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:minHeight="0dp"
+                            android:paddingTop="@dimen/dimen_10dp"
+                            android:paddingBottom="@dimen/dimen_10dp"
+                            android:paddingStart="@dimen/dimen_30dp"
+                            android:paddingEnd="@dimen/dimen_30dp"
+                            android:background="@drawable/bg_blue_border"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/text_size_13"
+                            app:customAssetFont="gotham_rounded_medium"
+                            tools:text="Take Photo of Medications List"
+                            breeze:textKey="medication_photo_add"/>
+
+                    </FrameLayout>
 
                     <LinearLayout
                         android:id="@+id/medication_photo_layout"

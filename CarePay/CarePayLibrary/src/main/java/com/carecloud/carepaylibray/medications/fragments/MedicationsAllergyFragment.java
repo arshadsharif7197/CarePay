@@ -1,8 +1,11 @@
 package com.carecloud.carepaylibray.medications.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +19,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -25,9 +29,13 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
+import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter;
+import com.carecloud.carepaylibray.media.MediaScannerPresenter;
+import com.carecloud.carepaylibray.media.MediaViewInterface;
 import com.carecloud.carepaylibray.medications.adapters.MedicationAllergiesAdapter;
 import com.carecloud.carepaylibray.medications.models.MedicationAllergiesAction;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
@@ -48,7 +56,9 @@ import java.util.Map;
  * Created by lmenendez on 2/15/17
  */
 
-public class MedicationsAllergyFragment extends BaseCheckinFragment implements MedicationAllergiesAdapter.MedicationAllergiesAdapterCallback{
+public class MedicationsAllergyFragment extends BaseCheckinFragment implements
+        MedicationAllergiesAdapter.MedicationAllergiesAdapterCallback, MediaViewInterface,
+        DocumentScannerAdapter.ImageLoadCallback{
 
     public interface MedicationAllergyCallback {
         void showMedicationSearch();
@@ -65,6 +75,12 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements M
     private CheckBox assertNoMedications;
     private CheckBox assertNoAllergies;
     private Button continueButton;
+
+    private View emptyPhotoLayout;
+    private View photoLayout;
+    private ImageView medicationPhoto;
+    private MediaScannerPresenter mediaScannerPresenter;
+    private DocumentScannerAdapter documentScannerAdapter;
 
     protected DemographicsPresenter callback;
 
@@ -195,6 +211,36 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements M
         assertNoAllergies.setEnabled(false);
         assertNoAllergies.setChecked(false);
         assertNoAllergies.setOnCheckedChangeListener(assertCheckListener);
+
+        emptyPhotoLayout = view.findViewById(R.id.medication_photo_empty_layout);
+        photoLayout = view.findViewById(R.id.medication_photo_layout);
+        medicationPhoto = (ImageView) view.findViewById(R.id.medications_image);
+
+        View newPhotoButton = view.findViewById(R.id.medication_list_photo_button);
+        newPhotoButton.setOnClickListener(takePhotoListener);
+
+        View changePhotoButton = view.findViewById(R.id.medication_list_photo_change);
+        changePhotoButton.setOnClickListener(takePhotoListener);
+
+        View removePhotoButton = view.findViewById(R.id.medication_list_photo_remove);
+        removePhotoButton.setOnClickListener(removePhotoListener);
+
+        initImageViews(view);
+    }
+
+    private void initImageViews(View view) {
+        mediaScannerPresenter = new MediaScannerPresenter(getContext(), this,
+                CarePayCameraPreview.CameraType.SCAN_DOC);
+        mediaScannerPresenter.setCaptureView(medicationPhoto);
+        documentScannerAdapter = new DocumentScannerAdapter(getContext(), view, mediaScannerPresenter, getApplicationMode().getApplicationType());
+
+        String url =  medicationsAllergiesDTO.getPayload().getMedicationsImage().getPayload().getUrl();
+        if(StringUtil.isNullOrEmpty(url)){
+            emptyPhotoLayout.setVisibility(View.VISIBLE);
+        }else{
+            documentScannerAdapter.setImageView(url, medicationPhoto, false, 0, 0, R.id.placeHolderIconImageViewId, this);
+        }
+
     }
 
     private void setAdapters(){
@@ -298,6 +344,20 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements M
         }
     };
 
+    private View.OnClickListener takePhotoListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            //// TODO: 11/16/17
+        }
+    };
+
+    private View.OnClickListener removePhotoListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            //// TODO: 11/16/17
+        }
+    };
+
     private View.OnClickListener continueClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -381,6 +441,56 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements M
             callback.medicationSubmitFail(exceptionMessage);
         }
     };
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (!handleActivityResult(requestCode, resultCode, data)) {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
+        return mediaScannerPresenter != null && mediaScannerPresenter.handleActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void handleRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+
+    }
+
+    @Override
+    public void setCapturedBitmap(String path, View view) {
+
+    }
+
+    @Override
+    public void handleStartActivityForResult(Intent intent, int requestCode) {
+
+    }
+
+    @Nullable
+    @Override
+    public Fragment getCallingFragment() {
+        return null;
+    }
+
+    @Override
+    public void setupImageBase64() {
+
+    }
+
+    @Override
+    public void onImageLoadCompleted(boolean success) {
+        if(success){
+            emptyPhotoLayout.setVisibility(View.GONE);
+            photoLayout.setVisibility(View.VISIBLE);
+        }else{
+            emptyPhotoLayout.setVisibility(View.VISIBLE);
+            photoLayout.setVisibility(View.GONE);
+        }
+    }
+
 
 }
 
