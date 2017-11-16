@@ -15,6 +15,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.RestCallServiceCallback;
 import com.carecloud.carepay.service.library.RestCallServiceHelper;
 import com.carecloud.carepay.service.library.RestDef;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
@@ -133,7 +134,7 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
                     @Override
                     public void onResult(@NonNull BooleanResult booleanResult) {
                         if (booleanResult.getStatus().isSuccess() && booleanResult.getValue()) {
-                            if(callback != null) {
+                            if(callback != null && !HttpConstants.getEnvironment().equals("Production")) {//HACK disable android pay for release
                                 callback.onAndroidPayReady();
                             }
                         }
