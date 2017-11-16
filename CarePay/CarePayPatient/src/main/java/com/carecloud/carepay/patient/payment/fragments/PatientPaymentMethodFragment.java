@@ -155,7 +155,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     private void initAndroidPay() {
         androidPayAdapter = new AndroidPayAdapter(getActivity(), paymentsModel.getPaymentPayload().getMerchantServices());
         androidPayAdapter.initAndroidPay(this);
-        showOrHideProgressDialog(true);
+//        showOrHideProgressDialog(true);
     }
 
 
