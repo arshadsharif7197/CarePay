@@ -30,9 +30,12 @@ import javax.crypto.spec.SecretKeySpec;
  */
 
 public class PurchaseFragment extends BaseFragment {
+    private static final String APP_CLIENT_SECRET = "9xasKgFMZbDErsGgQeCN3EHawKeydaNW";
+    private static final String APP_ID = "breeze-shopping";
 
     private AppointmentsResultModel appointmentsResultModel;
     private String ssoProfile = "";
+    private String storeId = "12522068";//hardcoded MyBreezeClinic StoreId
 
     private View noPurchaseLayout;// this should be available here to access it for show/hide from other methods
     private WebView shoppingWebView;
@@ -97,7 +100,7 @@ public class PurchaseFragment extends BaseFragment {
         profile.setBillingPerson(person);
 
         SsoModel ssoModel = new SsoModel();
-        ssoModel.setAppId("breeze-shopping");
+        ssoModel.setAppId(APP_ID);
         ssoModel.setUserId(getApplicationPreferences().getUserId());
         ssoModel.setProfile(profile);
 
@@ -107,11 +110,11 @@ public class PurchaseFragment extends BaseFragment {
         long timeStamp = System.currentTimeMillis() / 1000;
 
         try {
-            String signature = hmacSha1(ssoEncoded + " " + timeStamp, "9xasKgFMZbDErsGgQeCN3EHawKeydaNW");
+            String signature = hmacSha1(ssoEncoded + " " + timeStamp, APP_CLIENT_SECRET);
 
             ssoProfile = ssoEncoded + " " +
-                    signature + " " +
-                    timeStamp;
+                        signature + " " +
+                        timeStamp;
 
         }catch (Exception e){
             e.printStackTrace();
@@ -120,10 +123,9 @@ public class PurchaseFragment extends BaseFragment {
     }
 
     private String getHtmlData(){
-        return "<div id=\"My Breeze Clinic\"></div>" +
-                "<div> " +
-                "<script type=\"text/javascript\" src=\"https://app.ecwid.com/script.js?12522068\" charset=\"utf-8\"></script>" +
-                "<script type=\"text/javascript\"> xProductBrowser(\"categoriesPerRow=1\",\"views=grid(60,1) list(60)\",\"categoryView=grid\",\"searchView=list\",\"id=My Breeze Clinic\");</script>" +
+        return  "<div> " +
+                "<script type=\"text/javascript\" src=\"https://app.ecwid.com/script.js?"+storeId+"\" charset=\"utf-8\"></script>" +
+                "<script type=\"text/javascript\"> xProductBrowser(\"categoriesPerRow=1\",\"views=grid(60,1) list(60)\",\"categoryView=grid\",\"searchView=list\");</script>" +
                 "<script> var ecwid_sso_profile = '" + ssoProfile + "' </script>" +
                 "</div>";
     }
