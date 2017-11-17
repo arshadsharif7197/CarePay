@@ -9,9 +9,6 @@ import com.google.gson.annotations.SerializedName;
  */
 public class DemographicAddressPayloadDTO {
 
-    @SerializedName("phone")
-    @Expose
-    private String phone;
     @SerializedName("zipcode")
     @Expose
     private String zipcode;
@@ -30,6 +27,12 @@ public class DemographicAddressPayloadDTO {
     @SerializedName("country")
     @Expose
     private String country;
+    @SerializedName("phone_number")
+    @Expose
+    private String phone;
+    @SerializedName("fax_number")
+    @Expose
+    private String faxNumber;
 
     /**
      * @return The phone
@@ -127,5 +130,13 @@ public class DemographicAddressPayloadDTO {
      */
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public String getFaxNumber() {
+        return faxNumber;
+    }
+
+    public void setFaxNumber(String faxNumber) {
+        this.faxNumber = faxNumber;
     }
 }

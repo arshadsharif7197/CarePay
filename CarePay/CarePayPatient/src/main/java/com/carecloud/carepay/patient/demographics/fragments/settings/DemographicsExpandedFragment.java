@@ -247,7 +247,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         final EditText editText = (EditText) view.findViewById(editTextId);
         editText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(inputLayout, null));
         if (physician != null) {
-            editText.setText(physician.getFullName());
+            editText.setText(physician.getFormattedName());
         }
         editText.getOnFocusChangeListener().onFocusChange(editText,
                 !StringUtil.isNullOrEmpty(editText.getText().toString().trim()));

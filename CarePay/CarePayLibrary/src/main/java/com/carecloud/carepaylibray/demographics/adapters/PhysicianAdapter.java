@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.payload.PhysicianDto;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,13 +42,16 @@ public class PhysicianAdapter extends RecyclerView.Adapter<PhysicianAdapter.View
             holder.physicianSpecialityTextView.setVisibility(View.GONE);
         }
         if (physician.getAddress() != null) {
-            holder.physicianPhoneTextView.setText(physician.getAddress().getPhone());
+            holder.physicianPhoneTextView.setText(StringUtil.formatPhoneNumber(physician.getAddress().getPhone()));
             holder.physicianAddressTextView.setText(physician.getAddress().getAddress1()
                     + " " + physician.getAddress().getAddress2());
-            holder.physicianFaxTextView.setText(physician.getSpeciality());
             holder.physicianZipCodeTextView.setText(physician.getAddress().getZipcode());
             holder.physicianCityTextView.setText(physician.getAddress().getCity()
                     + " " + physician.getAddress().getState());
+            if (physician.getAddress().getFaxNumber() != null) {
+                String fax = StringUtil.formatPhoneNumber(physician.getAddress().getFaxNumber()) + " (Fax)";
+                holder.physicianFaxTextView.setText(fax);
+            }
         } else {
             holder.physicianAddressContainer.setVisibility(View.GONE);
         }

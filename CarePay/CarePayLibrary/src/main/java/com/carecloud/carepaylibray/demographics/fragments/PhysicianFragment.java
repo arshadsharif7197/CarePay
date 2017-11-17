@@ -266,7 +266,7 @@ public class PhysicianFragment extends BaseDialogFragment implements PhysicianAd
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             DemographicDTO dto = DtoHelper.getConvertedDTO(DemographicDTO.class, workflowDTO);
-            adapter.setData(dto.getPayload().getPhysicians().getPhysicians());
+            adapter.setData(dto.getPayload().getPhysicians());
             SystemUtil.hideSoftKeyboard(getActivity(), searchView);
         }
 
