@@ -47,12 +47,16 @@ import java.util.Map;
 
 public class PhysicianFragment extends BaseDialogFragment implements PhysicianAdapter.PhysicianSelectedInterface {
 
+    public static final int REFERRING_PHYSICIAN = 100;
+    public static final int PRIMARY_PHYSICIAN = 101;
+
     private PhysicianInterface callback;
     private DemographicDTO dto;
     private SearchView searchView;
     private TextView stateTextView;
     private PhysicianAdapter adapter;
     private int physicianType;
+    private PhysicianDto physician;
 
     public PhysicianFragment() {
 
@@ -88,6 +92,7 @@ public class PhysicianFragment extends BaseDialogFragment implements PhysicianAd
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         dto = (DemographicDTO) callback.getDto();
+        physician = DtoHelper.getConvertedDTO(PhysicianDto.class, getArguments());
         physicianType = getArguments().getInt("physicianType");
     }
 
@@ -108,32 +113,52 @@ public class PhysicianFragment extends BaseDialogFragment implements PhysicianAd
                 lenImage.setVisibility(View.GONE);
             }
             callback.setToolbar(toolbar);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SystemUtil.hideSoftKeyboard(getActivity());
+                    getActivity().onBackPressed();
+                }
+            });
         } else {
-//            TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
-//            title.setText(Label.getLabel("demographics_emergency_contact_title"));
-//            view.findViewById(R.id.edit_insurance_close_button).setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    dismiss();
-//                }
-//            });
+            searchView = (SearchView) view.findViewById(R.id.search_entry_view);
+            TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+            if (physicianType == PRIMARY_PHYSICIAN) {
+                title.setText(Label.getLabel("demographics_primary_care_physician"));
+            } else {
+                title.setText(Label.getLabel("demographics_referring_physician"));
+            }
+            view.findViewById(R.id.edit_insurance_close_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    SystemUtil.hideSoftKeyboard(getActivity());
+                    dismiss();
+                }
+            });
         }
         setUpView(view);
     }
 
     private void setUpView(View view) {
-        stateTextView = (TextView) view.findViewById(R.id.stateSelectorTextView);
-        stateTextView.setOnClickListener(getOptionsListener(dto.getMetadata().getNewDataModel()
+        List<DemographicsOption> states = new ArrayList<>();
+        DemographicsOption allStatesOption = new DemographicsOption();
+        allStatesOption.setLabel(Label.getLabel("demographics_physician_all_states_label"));
+        allStatesOption.setName(Label.getLabel("demographics_physician_all_states_label"));
+        states.add(allStatesOption);
+        states.addAll(dto.getMetadata().getNewDataModel()
                 .getDemographic().getAddress().getProperties()
-                .getState().getOptions(), new CheckInDemographicsBaseFragment.OnOptionSelectedListener() {
-            @Override
-            public void onOptionSelected(DemographicsOption option) {
-                stateTextView.setText(option.getLabel());
-                if (!StringUtil.isNullOrEmpty(searchView.getQuery().toString())) {
-                    searchPhysicians(searchView.getQuery().toString());
-                }
-            }
-        }, Label.getLabel("demographics_documents_title_select_state")));
+                .getState().getOptions());
+        stateTextView = (TextView) view.findViewById(R.id.stateSelectorTextView);
+        stateTextView.setOnClickListener(getOptionsListener(states,
+                new CheckInDemographicsBaseFragment.OnOptionSelectedListener() {
+                    @Override
+                    public void onOptionSelected(DemographicsOption option) {
+                        stateTextView.setText(option.getLabel());
+                        if (!StringUtil.isNullOrEmpty(searchView.getQuery().toString())) {
+                            searchPhysicians(searchView.getQuery().toString());
+                        }
+                    }
+                }, Label.getLabel("demographics_documents_title_select_state")));
         RecyclerView physicianRecyclerView = (RecyclerView) view.findViewById(R.id.physicianRecyclerView);
         physicianRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new PhysicianAdapter(new ArrayList<PhysicianDto>(), this);
@@ -152,14 +177,21 @@ public class PhysicianFragment extends BaseDialogFragment implements PhysicianAd
                 return false;
             }
         });
-        SystemUtil.showSoftKeyboard(getContext());
-        searchView.requestFocus();
+
+        if (physician != null) {
+            searchView.setQuery(physician.getFullName(), true);
+        } else {
+            SystemUtil.showSoftKeyboard(getContext());
+            searchView.requestFocus();
+        }
     }
 
     private void searchPhysicians(String query) {
         Map<String, String> queries = new HashMap<>();
         queries.put("search", query);
-        queries.put("state_code", stateTextView.getText().toString());
+        if (!Label.getLabel("demographics_physician_all_states_label").equals(stateTextView.getText().toString())) {
+            queries.put("state_code", stateTextView.getText().toString());
+        }
 
         TransitionDTO searchPhysiciansLink = dto.getMetadata().getLinks().getSearchPhysicians();
         getWorkflowServiceHelper().execute(searchPhysiciansLink, updateDemographicsCallback, queries);
@@ -248,6 +280,7 @@ public class PhysicianFragment extends BaseDialogFragment implements PhysicianAd
 
     @Override
     public void onPhysicianSelected(PhysicianDto physician) {
+        SystemUtil.hideSoftKeyboard(getActivity());
         if (getDialog() == null) {
             getActivity().onBackPressed();
         } else {

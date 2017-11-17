@@ -50,8 +50,6 @@ import java.util.List;
 public class DemographicsFragment extends CheckInDemographicsBaseFragment
         implements EmergencyContactFragmentInterface, PhysicianFragmentInterface {
 
-    private static final int REFERRING_PHYSICIAN = 100;
-    private static final int PRIMARY_PHYSICIAN = 101;
     private DemographicDataModel dataModel;
     private DemographicDTO demographicDTO;
 
@@ -72,7 +70,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     private DemographicsOption selectedReferralSource = new DemographicsOption();
     private EmployerDto selectedEmployer = new EmployerDto();
     private PatientModel emergencyContac;
-    private PhysicianDto primaryPhisician = new PhysicianDto();
+    private PhysicianDto primaryPhysician = new PhysicianDto();
     private PhysicianDto referringPhysician = new PhysicianDto();
     private boolean showEmployerFields;
     private View employerDependentFieldsLayout;
@@ -205,16 +203,21 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 R.id.maritalStatusEditText, R.id.maritalStatusOptional, selectedMaritalStatus,
                 Label.getLabel("demographics_marital_status"));
 
+        setUpDemographicField(view, demographicPayload.getPersonalDetails().getReferralSource(),
+                personalInfoSection.getProperties().getReferralSource(), R.id.referralSourceDemographicsLayout,
+                R.id.referralSourceInputLayout, R.id.referralSourceEditText,
+                R.id.referralSourceOptional, selectedReferralSource, Label.getLabel("demographics_referral_source"));
+
         setUpPrimaryCarePhysician(view, demographicPayload.getPrimaryPhysician(), demographic.getPrimaryPhysician());
         setUpReferringPhysician(view, demographicPayload.getReferringPhysician(), demographic.getReferringPhysician());
     }
 
     private void setUpPrimaryCarePhysician(View view, PhysicianDto primaryPhysician,
                                            DemographicPhysicianSection physicianMetadata) {
-        this.primaryPhisician = primaryPhysician;
+        this.primaryPhysician = primaryPhysician;
         setUpPhysicianField(view, primaryPhysician, physicianMetadata,
                 R.id.primaryPhysicianDemographicsLayout, R.id.primaryPhysicianInputLayout,
-                R.id.primaryPhysicianEditText, R.id.primaryPhysicianOptional, PRIMARY_PHYSICIAN);
+                R.id.primaryPhysicianEditText, R.id.primaryPhysicianOptional, PhysicianFragment.PRIMARY_PHYSICIAN);
     }
 
     private void setUpReferringPhysician(View view, PhysicianDto referringPhysician,
@@ -222,7 +225,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         this.referringPhysician = referringPhysician;
         setUpPhysicianField(view, referringPhysician, physicianMetadata,
                 R.id.referringPhysicianDemographicsLayout, R.id.referringPhysicianInputLayout,
-                R.id.referringPhysicianEditText, R.id.referringPhysicianOptional, REFERRING_PHYSICIAN);
+                R.id.referringPhysicianEditText, R.id.referringPhysicianOptional, PhysicianFragment.REFERRING_PHYSICIAN);
     }
 
     protected void setUpPhysicianField(View view, final PhysicianDto physician,
@@ -638,6 +641,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
         updatableDemographicDTO.getPayload().getDemographics().getPayload().setPersonalDetails(demographicPersDetailsPayloadDTO);
         updatableDemographicDTO.getPayload().getDemographics().getPayload().setEmploymentInfoModel(demographicEmploymentInfoModel);
+        updatableDemographicDTO.getPayload().getDemographics().getPayload().setPrimaryPhysician(primaryPhysician);
+        updatableDemographicDTO.getPayload().getDemographics().getPayload().setReferringPhysician(referringPhysician);
         updatableDemographicDTO.setMetadata(demographicDTO.getMetadata());
         updatableDemographicDTO.getPayload().setAppointmentpayloaddto(demographicDTO.getPayload().getAppointmentpayloaddto());
         return updatableDemographicDTO;
@@ -793,15 +798,35 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 showErrorViews(false, (ViewGroup) view.findViewById(R.id.emergencyContactDemographicsLayout));
             }
 
-//            if (dataModel.getDemographic().getPersonalDetails().getProperties().getReferralSource().isRequired()
-//                    && StringUtil.isNullOrEmpty(selectedReferralSource.getName())) {
-//                if (isUserAction()) {
-//                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.referralSourceDemographicsLayout));
-//                }
-//                return false;
-//            } else {
-//                showErrorViews(false, (ViewGroup) view.findViewById(R.id.referralSourceDemographicsLayout));
-//            }
+            if (dataModel.getDemographic().getPrimaryPhysician().isRequired()
+                    && primaryPhysician == null) {
+                if (isUserAction()) {
+                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.primaryPhysicianDemographicsLayout));
+                }
+                return false;
+            } else {
+                showErrorViews(false, (ViewGroup) view.findViewById(R.id.primaryPhysicianDemographicsLayout));
+            }
+
+            if (dataModel.getDemographic().getReferringPhysician().isRequired()
+                    && referringPhysician == null) {
+                if (isUserAction()) {
+                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.referringPhysicianDemographicsLayout));
+                }
+                return false;
+            } else {
+                showErrorViews(false, (ViewGroup) view.findViewById(R.id.referringPhysicianDemographicsLayout));
+            }
+
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getReferralSource().isRequired()
+                    && StringUtil.isNullOrEmpty(selectedReferralSource.getName())) {
+                if (isUserAction()) {
+                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.referralSourceDemographicsLayout));
+                }
+                return false;
+            } else {
+                showErrorViews(false, (ViewGroup) view.findViewById(R.id.referralSourceDemographicsLayout));
+            }
 
             if (dataModel.getDemographic().getEmploymentInfo().isRequired()
                     && StringUtil.isNullOrEmpty(selectedEmploymentStatus.getName())) {
@@ -904,12 +929,13 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
     @Override
     public void setPhysician(PhysicianDto physician, int physicianType) {
-        if (physicianType == PRIMARY_PHYSICIAN) {
+        if (physicianType == PhysicianFragment.PRIMARY_PHYSICIAN) {
             setUpPrimaryCarePhysician(getView(), physician,
                     demographicDTO.getMetadata().getNewDataModel().getDemographic().getPrimaryPhysician());
         } else {
             setUpReferringPhysician(getView(), physician,
                     demographicDTO.getMetadata().getNewDataModel().getDemographic().getReferringPhysician());
         }
+        checkIfEnableButton(getView());
     }
 }
