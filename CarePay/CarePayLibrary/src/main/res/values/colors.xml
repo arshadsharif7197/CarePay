@@ -96,4 +96,6 @@
     <color name="myHealthTextColor">#607D8B</color>
     <color name="providerTextColor">#546E7A</color>
     <color name="newsBackgroundColor">#5F969E</color>
+
+    <color name="physicianFilterBackground">#FF2B6369</color>
 </resources>
