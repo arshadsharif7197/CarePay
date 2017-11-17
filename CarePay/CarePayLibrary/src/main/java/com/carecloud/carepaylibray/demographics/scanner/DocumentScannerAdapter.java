@@ -68,11 +68,25 @@ public class DocumentScannerAdapter {
      * @param applicationType application mode
      */
     public DocumentScannerAdapter(Context context, View view, MediaScannerPresenter mediaScannerPresenter, ApplicationMode.ApplicationType applicationType){
+        this(context, view, mediaScannerPresenter, applicationType, true);
+    }
+
+    /**
+     * Adapter for managing Document Scanner Views
+     * @param context context
+     * @param view base view
+     * @param mediaScannerPresenter media scanner presenter
+     * @param applicationType application mode
+     */
+    public DocumentScannerAdapter(Context context, View view, MediaScannerPresenter mediaScannerPresenter, ApplicationMode.ApplicationType applicationType, boolean initScanViews){
         this.context = context;
         this.mediaScannerPresenter = mediaScannerPresenter;
         this.applicationType = applicationType;
-        initViews(view);
+        if(initScanViews) {
+            initViews(view);
+        }
     }
+
 
     private void initViews(View view){
         imageFront = (ImageView) view.findViewById(R.id.demogrDocsFrontScanImage);
@@ -204,12 +218,13 @@ public class DocumentScannerAdapter {
 
         RequestCreator picassoRequest = Picasso.with(context).load(fileUri)
                 .placeholder(R.drawable.icn_placeholder_document)
-                .centerInside()
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .transform(new RoundedCornersTransformation(10, 0));
 
         if(width > 0 || height > 0){
-            picassoRequest.resize(width, height);
+            picassoRequest = picassoRequest
+                    .resize(width, height)
+                    .centerInside();
         }
 
         picassoRequest.into(imageView, new Callback() {

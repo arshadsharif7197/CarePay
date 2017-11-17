@@ -42,7 +42,9 @@ import com.carecloud.carepaylibray.medications.models.MedicationAllergiesAction;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesQueryStrings;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
+import com.carecloud.carepaylibray.medications.models.MedicationsImagePostModel;
 import com.carecloud.carepaylibray.medications.models.MedicationsObject;
+import com.carecloud.carepaylibray.medications.models.MedicationsPostModel;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -82,10 +84,12 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
     private ImageView medicationPhoto;
     private MediaScannerPresenter mediaScannerPresenter;
     private DocumentScannerAdapter documentScannerAdapter;
+    private String photoPath;
 
     protected DemographicsPresenter callback;
 
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
+    private MedicationsPostModel medicationsPostModel = new MedicationsPostModel();
 
     private List<MedicationsObject> currentMedications = new ArrayList<>();
     private List<MedicationsObject> addMedications = new ArrayList<>();
@@ -233,7 +237,7 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
         mediaScannerPresenter = new MediaScannerPresenter(getContext(), this,
                 CarePayCameraPreview.CameraType.SCAN_DOC);
         mediaScannerPresenter.setCaptureView(medicationPhoto);
-        documentScannerAdapter = new DocumentScannerAdapter(getContext(), view, mediaScannerPresenter, getApplicationMode().getApplicationType());
+        documentScannerAdapter = new DocumentScannerAdapter(getContext(), view, mediaScannerPresenter, getApplicationMode().getApplicationType(), false);
 
         String url =  medicationsAllergiesDTO.getPayload().getMedicationsImage().getPayload().getUrl();
         if(StringUtil.isNullOrEmpty(url)){
@@ -348,14 +352,21 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
     private View.OnClickListener takePhotoListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            //// TODO: 11/16/17
+            mediaScannerPresenter.selectImage(true);
         }
     };
 
     private View.OnClickListener removePhotoListener = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
-            //// TODO: 11/16/17
+        public void onClick(View view) {
+            if(!StringUtil.isNullOrEmpty(medicationsAllergiesDTO.getPayload().getMedicationsImage().getPayload().getUrl())) {
+                MedicationsImagePostModel medicationsImagePostModel = new MedicationsImagePostModel();
+                medicationsImagePostModel.setDelete(true);
+                medicationsPostModel.setMedicationsImage(medicationsImagePostModel);
+            }
+            photoPath = null;
+            medicationPhoto.setImageDrawable(null);
+            onImageLoadCompleted(false);
         }
     };
 
@@ -375,7 +386,9 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
             Map<String, String> headers = ((ISession) getContext()).getWorkflowServiceHelper().getPreferredLanguageHeader();
             headers.put("transition", "true");
 
-            String jsonBody = gson.toJson(getAllModifiedItems());
+            medicationsPostModel.setMedicationsList(getAllModifiedItems());
+            setupImageBase64();
+            String jsonBody = gson.toJson(medicationsPostModel);
             ((ISession) getContext()).getWorkflowServiceHelper().execute(transitionDTO, submitMedicationAllergiesCallback, jsonBody, queryMap, headers);
 
 
@@ -469,7 +482,8 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
 
     @Override
     public void setCapturedBitmap(String path, View view) {
-
+        documentScannerAdapter.setImageView(path, view, false, 0, 0, R.id.placeHolderIconImageViewId, this);
+        photoPath = path;
     }
 
     @Override
@@ -485,7 +499,14 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
 
     @Override
     public void setupImageBase64() {
-
+        if(!StringUtil.isNullOrEmpty(photoPath)) {
+            photoPath = DocumentScannerAdapter.getBase64(getContext(), photoPath);
+            if(!StringUtil.isNullOrEmpty(photoPath)) {
+                MedicationsImagePostModel medicationsImagePostModel = new MedicationsImagePostModel();
+                medicationsImagePostModel.setPhoto(photoPath);
+                medicationsPostModel.setMedicationsImage(medicationsImagePostModel);
+            }
+        }
     }
 
     @Override
