@@ -13,6 +13,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
@@ -435,13 +436,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
         PhysicianFragment fragment = PhysicianFragment.newInstance(physicianDto, physicianType);
-        if (isPatientMode) {
-            fragment.show(transaction, fragment.getClass().getCanonicalName());
-        } else {
-            transaction.add(R.id.root_layout, fragment, fragment.getClass().getCanonicalName());
-            transaction.addToBackStack(null);
-            transaction.commitAllowingStateLoss();
-        }
+        showFragmentAsDialogIfNeeded(transaction, fragment);
     }
 
     @Override
@@ -457,6 +452,10 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
         EmergencyContactFragment fragment = EmergencyContactFragment.newInstance();
+        showFragmentAsDialogIfNeeded(transaction, fragment);
+    }
+
+    private void showFragmentAsDialogIfNeeded(FragmentTransaction transaction, BaseDialogFragment fragment) {
         if (isPatientMode) {
             fragment.show(transaction, fragment.getClass().getCanonicalName());
         } else {

@@ -69,7 +69,7 @@ public class PhysicianAdapter extends RecyclerView.Adapter<PhysicianAdapter.View
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView physicianNameTextView;
         TextView physicianSpecialityTextView;
@@ -81,7 +81,7 @@ public class PhysicianAdapter extends RecyclerView.Adapter<PhysicianAdapter.View
         View physicianAddressContainer;
         View physicianContainer;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             physicianNameTextView = (TextView) itemView.findViewById(R.id.physicianNameTextView);
             physicianSpecialityTextView = (TextView) itemView.findViewById(R.id.physicianSpecialityTextView);

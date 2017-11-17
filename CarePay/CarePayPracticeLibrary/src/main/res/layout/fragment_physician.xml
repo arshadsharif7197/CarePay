@@ -58,6 +58,8 @@
                 android:id="@+id/filterContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
                 android:background="@color/physicianFilterBackground"
                 android:padding="@dimen/dimen_10dp">
 
@@ -68,7 +70,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/dimen_10dp"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_16"
+                    android:textSize="@dimen/text_size_18sp"
                     app:customAssetFont="proxima_nova_regular"
                     breeze:textKey="demographics_physician_state_filter" />
 
@@ -83,9 +85,12 @@
                     android:drawableEnd="@drawable/icon_drop_down_primary"
                     android:drawablePadding="@dimen/dimen_10dp"
                     android:focusable="false"
-                    android:padding="@dimen/dimen_10dp"
+                    android:paddingBottom="@dimen/dimen_10dp"
+                    android:paddingEnd="20dp"
+                    android:paddingStart="@dimen/dimen_20dp"
+                    android:paddingTop="@dimen/dimen_10dp"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/text_size_16"
+                    android:textSize="@dimen/text_size_18sp"
                     app:customAssetFont="proxima_nova_regular"
                     breeze:textKey="demographics_physician_state_filter" />
 
