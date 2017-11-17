@@ -40,6 +40,9 @@ public class PaymentsTransitionsDTO {
     @SerializedName("refund_payment")
     @Expose
     private TransitionDTO refundPayment = new TransitionDTO();
+    @SerializedName("record_payment")
+    @Expose
+    private TransitionDTO recordPayment = new TransitionDTO();
 
     /**
      * @return The makePayment
@@ -169,5 +172,13 @@ public class PaymentsTransitionsDTO {
 
     public void setRefundPayment(TransitionDTO refundPayment) {
         this.refundPayment = refundPayment;
+    }
+
+    public TransitionDTO getRecordPayment() {
+        return recordPayment;
+    }
+
+    public void setRecordPayment(TransitionDTO recordPayment) {
+        this.recordPayment = recordPayment;
     }
 }

@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
@@ -112,8 +111,8 @@ public class AdHocFormsListFragment extends BaseDialogFragment
             view.findViewById(R.id.noFormsContainer).setVisibility(View.VISIBLE);
         }
 
-        ImageView cancelImageView = (ImageView) view.findViewById(R.id.cancel_img);
-        cancelImageView.setOnClickListener(new View.OnClickListener() {
+        View close = view.findViewById(R.id.closeViewLayout);
+        close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();

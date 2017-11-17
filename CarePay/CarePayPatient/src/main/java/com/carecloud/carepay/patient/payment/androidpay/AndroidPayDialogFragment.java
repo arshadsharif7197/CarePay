@@ -528,7 +528,7 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
         paymentRecord.setPracticeID(practiceId);
         paymentRecord.setPracticeMgmt(practiceMgmt);
         paymentRecord.setQueueTransition(gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getQueuePayment()));
-        paymentRecord.setUsername(getApplicationMode().getUserPracticeDTO().getUserName());
+        paymentRecord.setUsername(getApplicationPreferences().getUserId());
 
         String paymentModelJsonEnc = EncryptionUtil.encrypt(getContext(), paymentModelJson, practiceId);
         paymentRecord.setPaymentModelJsonEnc(paymentModelJsonEnc);
