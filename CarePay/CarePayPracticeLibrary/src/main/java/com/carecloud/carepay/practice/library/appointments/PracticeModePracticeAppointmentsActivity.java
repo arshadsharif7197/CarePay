@@ -642,6 +642,9 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                 fragment.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
+                        if(!isVisible()){
+                            return;
+                        }
                         if(appointmentDTO != null){
                             showPracticeAppointmentDialog(appointmentDTO);
                         }else if (paymentsModel != null){

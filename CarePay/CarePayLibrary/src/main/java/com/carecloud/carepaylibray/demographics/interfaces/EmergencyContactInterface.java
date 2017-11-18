@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.demographics;
+package com.carecloud.carepaylibray.demographics.interfaces;
 
 import android.support.v7.widget.Toolbar;
 
