@@ -168,6 +168,7 @@
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/text_size_15"
                 android:gravity="start"
+                android:textAllCaps="true"
                 tools:text="MEDICATIONS YOU'RE TAKING"
                 breeze:textKey="medications_section_header"
                 app:customAssetFont="proxima_nova_semi_bold"/>
@@ -244,13 +245,13 @@
                     android:id="@+id/medication_none_placeholder_text"
                     android:padding="@dimen/padding_large"
                     android:textColor="@color/lightSlateGray"
-                    android:textSize="@dimen/text_size_17"
+                    android:textSize="@dimen/text_size_16"
                     android:imeOptions="actionDone"
                     android:maxLines="1"
                     android:singleLine="true"
                     tools:hint="Add unlisted medication"
                     breeze:hintKey="medication_none_placeholder_text"
-                    app:customAssetFont="gotham_rounded_medium"/>
+                    app:customAssetFont="proxima_nova_regular"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -340,7 +341,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginEnd="@dimen/dimen_10dp"
-                        android:background="@drawable/background_blue_rounded_border"
+                        android:background="@drawable/button_blue_border"
                         android:padding="@dimen/dimen_1dp"
                         android:elevation="@dimen/dimen_5dp">
 

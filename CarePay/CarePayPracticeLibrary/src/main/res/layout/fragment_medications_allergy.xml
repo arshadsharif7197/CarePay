@@ -357,7 +357,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:layout_marginEnd="@dimen/dimen_10dp"
-                                android:background="@drawable/background_blue_rounded_border"
+                                android:background="@drawable/button_blue_border"
                                 android:padding="@dimen/dimen_1dp"
                                 android:elevation="@dimen/dimen_5dp">
 

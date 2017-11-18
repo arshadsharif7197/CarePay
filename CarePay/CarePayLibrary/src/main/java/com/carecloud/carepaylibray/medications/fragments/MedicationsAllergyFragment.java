@@ -261,7 +261,7 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
     }
 
     private void setAdapterVisibility(){
-        if(currentMedications.isEmpty()){
+        if(currentMedications.isEmpty() && !hasPhoto()){
             medicationRecycler.setVisibility(View.GONE);
             assertNoMedications.setVisibility(View.VISIBLE);
             assertNoMedications.setEnabled(true);
@@ -279,10 +279,22 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
     }
 
     private void validateForm(){
-        boolean valid = (allergyRecycler.getVisibility() == View.VISIBLE || !assertNoAllergies.isEnabled() || assertNoAllergies.isChecked()) &&
-                (!currentMedications.isEmpty() || !assertNoMedications.isEnabled() || assertNoMedications.isChecked());
+        boolean validAllergies = (allergyRecycler.getVisibility() == View.VISIBLE ||
+                !assertNoAllergies.isEnabled() || assertNoAllergies.isChecked());
+        boolean validMeds = (!currentMedications.isEmpty() || !assertNoMedications.isEnabled()
+                || assertNoMedications.isChecked());
+
+        boolean valid = (validAllergies && validMeds) || hasPhoto();
 
         continueButton.setEnabled(valid);
+    }
+
+    private boolean hasPhoto(){
+        return (!StringUtil.isNullOrEmpty(medicationsAllergiesDTO.getPayload()
+                .getMedicationsImage().getPayload().getUrl()) &&
+                (medicationsPostModel.getMedicationsImage()==null ||
+                !medicationsPostModel.getMedicationsImage().isDelete())) ||
+                !StringUtil.isNullOrEmpty(photoPath);
     }
 
     @Override
@@ -518,6 +530,7 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
             emptyPhotoLayout.setVisibility(View.VISIBLE);
             photoLayout.setVisibility(View.GONE);
         }
+        validateForm();
     }
 
 
