@@ -19,6 +19,10 @@ public interface DemographicsPresenter extends HealthInsuranceFragment.Insurance
         InsuranceEditDialog.InsuranceEditDialogListener,
         EmergencyContactInterface {
 
+    String SAVED_STEP_KEY = "save_step";
+    String CURRENT_ICICLE_FRAGMENT = "current_icicle_fragment";
+
+
     void onSaveInstanceState(Bundle icicle);
 
     void onStop();
@@ -47,4 +51,7 @@ public interface DemographicsPresenter extends HealthInsuranceFragment.Insurance
     void navigateToIntakeForms(WorkflowDTO workflowDTO);
 
     void navigateToMedicationsAllergy(WorkflowDTO workflowDTO);
+
+    Fragment getCurrentFragment();
+
 }
