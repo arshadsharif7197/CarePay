@@ -238,5 +238,6 @@
     <dimen name="emailFieldTopMargin">0dp</dimen>
 
     <dimen name="demogr_details_section_top_margin">30dp</dimen>
+    <dimen name="demographics_add_padding">57dp</dimen>
 
 </resources>
