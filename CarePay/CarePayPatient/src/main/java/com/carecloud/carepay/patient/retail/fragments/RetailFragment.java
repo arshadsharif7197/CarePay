@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.purchases.fragments;
+package com.carecloud.carepay.patient.retail.fragments;
 
 import android.os.Bundle;
 import android.util.Base64;
@@ -9,10 +9,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.purchases.models.sso.Person;
-import com.carecloud.carepay.patient.purchases.models.sso.Profile;
-import com.carecloud.carepay.patient.purchases.models.sso.SsoModel;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepay.patient.retail.models.RetailModel;
+import com.carecloud.carepay.patient.retail.models.RetailPracticeDTO;
+import com.carecloud.carepay.patient.retail.models.sso.Person;
+import com.carecloud.carepay.patient.retail.models.sso.Profile;
+import com.carecloud.carepay.patient.retail.models.sso.SsoModel;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -29,23 +30,25 @@ import javax.crypto.spec.SecretKeySpec;
  * Created by lmenendez on 2/8/17
  */
 
-public class PurchaseFragment extends BaseFragment {
+public class RetailFragment extends BaseFragment {
     private static final String APP_CLIENT_SECRET = "9xasKgFMZbDErsGgQeCN3EHawKeydaNW";
     private static final String APP_ID = "breeze-shopping";
 
-    private AppointmentsResultModel appointmentsResultModel;
+    private RetailModel retailModel;
+    private RetailPracticeDTO retailPractice;
+
     private String ssoProfile = "";
     private String storeId = "12522068";//hardcoded MyBreezeClinic StoreId
 
-    private View noPurchaseLayout;// this should be available here to access it for show/hide from other methods
     private WebView shoppingWebView;
 
 
-    public static PurchaseFragment newInstance(AppointmentsResultModel appointmentsResultModel){
+    public static RetailFragment newInstance(RetailModel retailModel, RetailPracticeDTO retailPractice){
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, appointmentsResultModel);
+        DtoHelper.bundleDto(args, retailModel);
+        DtoHelper.bundleDto(args, retailPractice);
 
-        PurchaseFragment fragment = new PurchaseFragment();
+        RetailFragment fragment = new RetailFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,7 +58,8 @@ public class PurchaseFragment extends BaseFragment {
         super.onCreate(icicle);
 
         Bundle args = getArguments();
-        appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, args);
+        retailModel = DtoHelper.getConvertedDTO(RetailModel.class, args);
+        retailPractice = DtoHelper.getConvertedDTO(RetailPracticeDTO.class, args);
 
         initSsoPayload();
     }
@@ -67,14 +71,13 @@ public class PurchaseFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, Bundle icicle){
-        noPurchaseLayout = view.findViewById(R.id.no_purchase_layout);
-        noPurchaseLayout.setVisibility(View.GONE);
-
         shoppingWebView = (WebView) view.findViewById(R.id.shoppingWebView);
         WebSettings settings = shoppingWebView.getSettings();
         settings.setJavaScriptEnabled(true);
 
-        shoppingWebView.loadData(getHtmlData(), "text/html", "utf-8");
+        if(retailPractice != null) {
+            shoppingWebView.loadData(retailPractice.getStore().getStoreHtml(), "text/html", "utf-8");
+        }
     }
 
     public boolean handleBackButton(){
@@ -86,7 +89,7 @@ public class PurchaseFragment extends BaseFragment {
     }
 
     private void initSsoPayload(){
-        DemographicPayloadDTO demographics = appointmentsResultModel.getPayload().getDemographicDTO().getPayload();
+        DemographicPayloadDTO demographics = retailModel.getPayload().getDemographicDTO().getPayload();
         Person person = new Person();
         person.setName(demographics.getPersonalDetails().getFullName());
         person.setStreet(demographics.getAddress().getAddress1());

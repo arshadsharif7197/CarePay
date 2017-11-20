@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.purchases.models.sso;
+package com.carecloud.carepay.patient.retail.models.sso;
 
 import com.google.gson.annotations.SerializedName;
 
