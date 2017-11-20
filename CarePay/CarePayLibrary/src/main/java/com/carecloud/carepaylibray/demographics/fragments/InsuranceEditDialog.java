@@ -233,6 +233,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
         ViewGroup contentLayout = (ViewGroup) view.findViewById(R.id.checkinDemographicsContentLayout);
         inflater.inflate(R.layout.add_edit_insurance_view, contentLayout, true);
+        float padding = getResources().getDimension(R.dimen.demographics_add_padding);
+        contentLayout.setPadding((int) padding, 0,0,0);
 
         View heading = view.findViewById(R.id.demographicsHeading);
         if (heading != null) {

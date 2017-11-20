@@ -165,6 +165,7 @@
     <dimen name="view_allergy_margin_bottom">5dp</dimen>
     <dimen name="demogr_details_padding_start_edit">28dp</dimen>
     <dimen name="demogr_details_unlisted_text_size">16sp</dimen>
+    <dimen name="demographics_add_padding">0dp</dimen>
 
     <!-- Appointments-->
     <dimen name="fab_margin">16dp</dimen>
