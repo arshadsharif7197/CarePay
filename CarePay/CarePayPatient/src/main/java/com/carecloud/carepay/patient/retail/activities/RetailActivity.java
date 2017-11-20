@@ -11,12 +11,15 @@ import com.carecloud.carepay.patient.retail.fragments.RetailListFragment;
 import com.carecloud.carepay.patient.retail.interfaces.RetailInterface;
 import com.carecloud.carepay.patient.retail.models.RetailModel;
 import com.carecloud.carepay.patient.retail.models.RetailPracticeDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 
 /**
  * Created by lmenendez on 2/8/17
  */
 
 public class RetailActivity extends MenuPatientActivity implements RetailInterface {
+
+    private RetailModel retailModel;
 
     private RetailFragment retailFragment;
     private String title;
@@ -25,11 +28,12 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
     @Override
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
-        RetailModel retailModel = getConvertedDTO(RetailModel.class);
+        retailModel = getConvertedDTO(RetailModel.class);
 
         Fragment fragment;
         if(retailModel.getPayload().getRetailPracticeList().size() == 1) {
-            retailFragment = RetailFragment.newInstance(retailModel, retailModel.getPayload().getRetailPracticeList().get(0));
+            RetailPracticeDTO retailPracticeDTO = retailModel.getPayload().getRetailPracticeList().get(0);
+            retailFragment = RetailFragment.newInstance(retailModel, retailPracticeDTO, lookupUserPractice(retailPracticeDTO));
             fragment = retailFragment;
         }else{
             fragment = RetailListFragment.newInstance(retailModel);
@@ -58,8 +62,8 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
     }
 
     @Override
-    public void displayRetailStore(RetailModel retailModel, RetailPracticeDTO retailPractice) {
-        retailFragment = RetailFragment.newInstance(retailModel, retailPractice);
+    public void displayRetailStore(RetailModel retailModel, RetailPracticeDTO retailPractice, UserPracticeDTO userPracticeDTO) {
+        retailFragment = RetailFragment.newInstance(retailModel, retailPractice, userPracticeDTO);
         replaceFragment(retailFragment, true);
         displayToolbar(false);
     }
@@ -72,6 +76,15 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
 
     private void replaceFragment(Fragment fragment, boolean addToBackStack){
         replaceFragment(R.id.container_main, fragment, addToBackStack);
+    }
+
+    private UserPracticeDTO lookupUserPractice(RetailPracticeDTO retailPracticeDTO){
+        for(UserPracticeDTO userPracticeDTO : retailModel.getPayload().getUserPractices()){
+            if(retailPracticeDTO.getPracticeId()!=null && retailPracticeDTO.getPracticeId().equals(userPracticeDTO.getPracticeId())){
+                return userPracticeDTO;
+            }
+        }
+        return new UserPracticeDTO();
     }
 
 }

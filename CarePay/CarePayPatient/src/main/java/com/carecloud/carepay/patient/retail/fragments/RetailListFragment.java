@@ -13,6 +13,7 @@ import com.carecloud.carepay.patient.retail.adapters.RetailStoreListAdapter;
 import com.carecloud.carepay.patient.retail.interfaces.RetailInterface;
 import com.carecloud.carepay.patient.retail.models.RetailModel;
 import com.carecloud.carepay.patient.retail.models.RetailPracticeDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
@@ -27,7 +28,7 @@ public class RetailListFragment extends BaseFragment implements RetailStoreListA
 
     private RetailInterface callback;
     private RetailModel retailModel;
-    private List<RetailPracticeDTO> retailPracticesList = new ArrayList<>();
+    private List<UserPracticeDTO> retailPracticesList = new ArrayList<>();
 
     private RecyclerView practiceStoreRecycler;
     private View noRetailLayout;
@@ -62,7 +63,7 @@ public class RetailListFragment extends BaseFragment implements RetailStoreListA
         Bundle args = getArguments();
         retailModel = DtoHelper.getConvertedDTO(RetailModel.class, args);
         if(retailModel != null) {
-            retailPracticesList = retailModel.getPayload().getRetailPracticeList();
+            retailPracticesList = retailModel.getPayload().getUserPractices();
         }
     }
 
@@ -95,7 +96,15 @@ public class RetailListFragment extends BaseFragment implements RetailStoreListA
     }
 
     @Override
-    public void onStoreSelected(RetailPracticeDTO retailPracticeDTO) {
-        callback.displayRetailStore(retailModel, retailPracticeDTO);
+    public void onStoreSelected(UserPracticeDTO userPracticeDTO) {
+        RetailPracticeDTO selectedPractice = null;
+        for(RetailPracticeDTO retailPracticeDTO : retailModel.getPayload().getRetailPracticeList()){
+            if(retailPracticeDTO.getPracticeId()!=null && retailPracticeDTO.getPracticeId().equals(userPracticeDTO.getPracticeId())){
+                selectedPractice = retailPracticeDTO;
+                break;
+            }
+        }
+
+        callback.displayRetailStore(retailModel, selectedPractice, userPracticeDTO);
     }
 }

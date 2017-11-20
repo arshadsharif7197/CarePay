@@ -1,12 +1,13 @@
 package com.carecloud.carepay.patient.retail.models;
 
+import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by lmenendez on 11/20/17
  */
 
-public class RetailPracticeDTO {
+public class RetailPracticeDTO extends PracticePatientIdsDTO {
 
     @SerializedName("store")
     private Store store;

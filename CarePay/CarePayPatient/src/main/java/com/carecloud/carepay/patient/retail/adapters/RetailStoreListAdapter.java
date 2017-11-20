@@ -9,7 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.retail.models.RetailPracticeDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
+import com.carecloud.carepaylibray.utils.StringUtil;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +24,14 @@ import java.util.List;
 
 public class RetailStoreListAdapter extends RecyclerView.Adapter<RetailStoreListAdapter.ViewHolder> {
     public interface RetailSelectionCallback{
-        void onStoreSelected(RetailPracticeDTO retailPracticeDTO);
+        void onStoreSelected(UserPracticeDTO userPracticeDTO);
     }
 
     private Context context;
-    private List<RetailPracticeDTO> retailPractices = new ArrayList<>();
+    private List<UserPracticeDTO> retailPractices = new ArrayList<>();
     private RetailSelectionCallback callback;
 
-    public RetailStoreListAdapter(Context context, List<RetailPracticeDTO> retailPractices, RetailSelectionCallback callback){
+    public RetailStoreListAdapter(Context context, List<UserPracticeDTO> retailPractices, RetailSelectionCallback callback){
         this.context = context;
         this.retailPractices = retailPractices;
         this.callback = callback;
@@ -40,14 +44,36 @@ public class RetailStoreListAdapter extends RecyclerView.Adapter<RetailStoreList
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        final RetailPracticeDTO retailPracticeDTO = retailPractices.get(position);
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+        final UserPracticeDTO userPracticeDTO = retailPractices.get(position);
 
-        holder.practiceName.setText(retailPracticeDTO.getStore().getStoreId());//TODO need to get more info to fill these views
+        holder.practiceName.setText(userPracticeDTO.getPracticeName());
+        holder.practiceInitials.setText(StringUtil.getShortName(userPracticeDTO.getPracticeName()));
+        holder.practiceAddress.setText(userPracticeDTO.getAddressDTO().getFullAddress());
+
+        Picasso.with(context)
+                .load(userPracticeDTO.getPracticePhoto())
+                .resize(60,60)
+                .centerCrop()
+                .transform(new CircleImageTransform())
+                .into(holder.practiceIcon, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        holder.practiceInitials.setVisibility(View.GONE);
+                        holder.practiceIcon.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        holder.practiceInitials.setVisibility(View.VISIBLE);
+                        holder.practiceIcon.setVisibility(View.GONE);
+                    }
+                });
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.onStoreSelected(retailPracticeDTO);
+                callback.onStoreSelected(userPracticeDTO);
             }
         });
     }
