@@ -1,19 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:descendantFocusability="beforeDescendants"
     android:focusable="true"
-    android:id="@+id/scanIdRootLayout">
+    android:id="@+id/scanIdRootLayout"
+    android:paddingLeft="@dimen/dimen_57dp">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/demo_view_height"
+        android:layout_marginBottom="@dimen/divider_margin_bottom"
+        android:layout_marginTop="@dimen/divider_margin_top"
+        android:background="@color/light_gray"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        >
 
         <View
             android:layout_width="0dp"
@@ -96,4 +107,4 @@
             android:layout_weight=".35"/>
 
     </LinearLayout>
-</FrameLayout>
+</LinearLayout>
