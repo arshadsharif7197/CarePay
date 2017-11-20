@@ -42,7 +42,6 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 public class DemographicsPresenterImpl implements DemographicsPresenter {
-
     private AppointmentDTO appointmentPayload;
     private DemographicsView demographicsView;
 
@@ -52,11 +51,11 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
     //demographics nav
     private int currentDemographicStep = 1;
-    private static final String SAVED_STEP_KEY = "save_step";
 
     private boolean startCheckin = false;
     public String appointmentId;
 
+    private Fragment currentFragment;
 
     /**
      * @param demographicsView   Demographics View
@@ -85,6 +84,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     @Override
     public void onSaveInstanceState(Bundle icicle) {
         icicle.putInt(SAVED_STEP_KEY, currentDemographicStep);
+        icicle.putString(CURRENT_ICICLE_FRAGMENT, currentFragment.getClass().getName());
     }
 
     @Override
@@ -104,6 +104,11 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         }
 
         return null;
+    }
+
+    @Override
+    public Fragment getCurrentFragment(){
+        return currentFragment;
     }
 
     private void displayStartFragment(WorkflowDTO workflowDTO) {
@@ -147,6 +152,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             transaction.addToBackStack(tag);
         }
         transaction.commitAllowingStateLoss();
+        currentFragment = fragment;
     }
 
     @Override
@@ -394,7 +400,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     protected CheckInDemographicsBaseFragment getDemographicFragment(int step) {
-        if (hasStep(step) != 1) {
+        if (hasStep(step) != 1 && step <= MAX_STEPS) {
             return getDemographicFragment(++step);
         }
         switch (step) {

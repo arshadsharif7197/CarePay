@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -34,6 +35,7 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
+import com.carecloud.carepaylibray.interfaces.IcicleInterface;
 import com.carecloud.carepaylibray.media.MediaResultListener;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
@@ -61,13 +63,40 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        Bundle icicle = savedInstanceState;
+        if(savedInstanceState != null){
+            String tag = savedInstanceState.getString(DemographicsPresenter.CURRENT_ICICLE_FRAGMENT);
+            if(tag != null){
+                Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+                if(fragment instanceof IcicleInterface){
+                    icicle = ((IcicleInterface) fragment).popData();
+                    icicle.putAll(savedInstanceState);
+                }
+            }
+        }
+        super.onCreate(icicle);
         setContentView(R.layout.activity_demographic_review);
 
         initializeHomeButton();
         initializeLeftNavigation();
-        presenter = new PatientModeDemographicsPresenter(this, savedInstanceState, this);
+        presenter = new PatientModeDemographicsPresenter(this, icicle, this);
 
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        Bundle icicle = savedInstanceState;
+        if(savedInstanceState != null){
+            String tag = savedInstanceState.getString(DemographicsPresenter.CURRENT_ICICLE_FRAGMENT);
+            if(tag != null){
+                Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+                if(fragment instanceof IcicleInterface){
+                    icicle = ((IcicleInterface) fragment).popData();
+                    icicle.putAll(savedInstanceState);
+                }
+            }
+        }
+        super.onRestoreInstanceState(icicle);
     }
 
     @Override
@@ -78,8 +107,13 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void onSaveInstanceState(Bundle icicle) {
-        presenter.onSaveInstanceState(icicle);
         super.onSaveInstanceState(icicle);
+        Fragment fragment = presenter.getCurrentFragment();
+        if(fragment != null &&  fragment instanceof IcicleInterface){
+            ((IcicleInterface) fragment).pushData((Bundle) icicle.clone());
+        }
+        icicle.clear();
+        presenter.onSaveInstanceState(icicle);
     }
 
     @Override

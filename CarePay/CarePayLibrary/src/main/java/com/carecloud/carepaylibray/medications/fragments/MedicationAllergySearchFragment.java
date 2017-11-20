@@ -168,9 +168,9 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
         queryMap.put(searchDTO.getQueryStrings().getPracticeMgmt().getName(), medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPracticeMgmt());
         queryMap.put(searchDTO.getQueryStrings().getSearch().getName(), searchQuery);
 
-        Map<String, String> headers = ((ISession) getContext()).getWorkflowServiceHelper().getPreferredLanguageHeader();
+        Map<String, String> headers = getWorkflowServiceHelper().getPreferredLanguageHeader();
 
-        ((ISession) getContext()).getWorkflowServiceHelper().execute(transitionDTO, medicationSearchCallback, queryMap, headers);
+        getWorkflowServiceHelper().execute(transitionDTO, medicationSearchCallback, queryMap, headers);
 
     }
 
@@ -212,8 +212,8 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
 
         @Override
         public boolean onQueryTextChange(String newText) {
-            if (newText.length() > 3) {
-                ((ISession) getContext()).getWorkflowServiceHelper().interrupt();
+            if (newText.length() > 0) {
+                getWorkflowServiceHelper().interrupt();
 
                 submitMedicatonSearch(newText);
             }
