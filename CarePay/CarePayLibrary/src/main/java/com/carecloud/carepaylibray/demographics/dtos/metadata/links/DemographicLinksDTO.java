@@ -18,9 +18,9 @@ public class DemographicLinksDTO {
     @Expose
     private BaseLinkModel demographics = new BaseLinkModel();
 
-    @SerializedName("search_employers")
+    @SerializedName("search_physicians")
     @Expose
-    private TransitionDTO searchEmployers = new TransitionDTO();
+    private TransitionDTO searchPhysicians = new TransitionDTO();
 
     /**
      * @return The self
@@ -50,11 +50,11 @@ public class DemographicLinksDTO {
         this.demographics = demographics;
     }
 
-    public TransitionDTO getSearchEmployers() {
-        return searchEmployers;
+    public TransitionDTO getSearchPhysicians() {
+        return searchPhysicians;
     }
 
-    public void setSearchEmployers(TransitionDTO searchEmployers) {
-        this.searchEmployers = searchEmployers;
+    public void setSearchPhysicians(TransitionDTO searchPhysicians) {
+        this.searchPhysicians = searchPhysicians;
     }
 }
