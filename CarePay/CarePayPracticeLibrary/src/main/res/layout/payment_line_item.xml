@@ -55,9 +55,8 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/lineItemAmountLabel"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:textAlignment="textEnd"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/text_size_17"

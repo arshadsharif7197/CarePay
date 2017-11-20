@@ -243,7 +243,7 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
         if(StringUtil.isNullOrEmpty(url)){
             emptyPhotoLayout.setVisibility(View.VISIBLE);
         }else{
-            documentScannerAdapter.setImageView(url, medicationPhoto, false, 0, 0, R.id.placeHolderIconImageViewId, this);
+            documentScannerAdapter.setImageView(url, medicationPhoto, false, 0, 0, R.drawable.icn_placeholder_document, this);
         }
 
     }
@@ -517,6 +517,9 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
                 MedicationsImagePostModel medicationsImagePostModel = new MedicationsImagePostModel();
                 medicationsImagePostModel.setPhoto(photoPath);
                 medicationsPostModel.setMedicationsImage(medicationsImagePostModel);
+
+                //update current payload to handle back nav
+                medicationsAllergiesDTO.getPayload().getMedicationsImage().getPayload().setUrl(photoPath);
             }
         }
     }
@@ -530,6 +533,7 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
             emptyPhotoLayout.setVisibility(View.VISIBLE);
             photoLayout.setVisibility(View.GONE);
         }
+        setAdapterVisibility();
         validateForm();
     }
 
