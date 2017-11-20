@@ -10,7 +10,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/carecloudmini" />
             <option value="$PROJECT_DIR$/fontviews" />
-            <option value="$PROJECT_DIR$/../../shamrock_android_sdk/ShamrockAndroidSDK/shamrocksdk" />
+            <option value="$PROJECT_DIR$/../../shamrock_android_sdk/shamrocksdk" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

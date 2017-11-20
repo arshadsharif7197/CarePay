@@ -96,7 +96,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_review_demographic_base, container, false);
         stepProgressBar = (StepProgressBar) view.findViewById(R.id.stepProgressBarCheckin);
-        stepProgressBar.setNumDots(checkinFlowCallback.getTotalSteps());
         inflateContent(inflater, view);
         inflateToolbarViews(view);
 
@@ -112,6 +111,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         if (checkinFlowCallback == null) {
             attachCallback(getContext());
         }
+        stepProgressBar.setNumDots(checkinFlowCallback.getTotalSteps());
     }
 
     private void inflateToolbarViews(View view) {
@@ -193,7 +193,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         nextButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View buttonView, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_DOWN && !buttonView.isSelected()){
+                if (event.getAction() == MotionEvent.ACTION_DOWN && !buttonView.isSelected()) {
                     setUserAction(true);
                     checkIfEnableButton(view);
                     return true;
@@ -301,6 +301,29 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                     inputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
                 } else {
                     inputLayout.setError(null);
+                }
+                checkIfEnableButton(getView());
+            }
+        };
+    }
+
+    protected TextWatcher getOptionalViewTextWatcher(final View optionalView) {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (StringUtil.isNullOrEmpty(editable.toString())) {
+                    optionalView.setVisibility(View.VISIBLE);
+                } else {
+                    optionalView.setVisibility(View.GONE);
                 }
                 checkIfEnableButton(getView());
             }
@@ -431,17 +454,17 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         this.userAction = userAction;
     }
 
-    protected void setDefaultError(View baseView, int id){
+    protected void setDefaultError(View baseView, int id) {
         setFieldError(baseView, id, Label.getLabel("demographics_required_validation_msg"));
     }
 
-    protected void setFieldError(View baseView, int id, String error){
+    protected void setFieldError(View baseView, int id, String error) {
         TextInputLayout inputLayout = (TextInputLayout) baseView.findViewById(id);
         setFieldError(inputLayout, error);
     }
 
-    protected void setFieldError(TextInputLayout inputLayout, String error){
-        if(inputLayout != null){
+    protected void setFieldError(TextInputLayout inputLayout, String error) {
+        if (inputLayout != null) {
             inputLayout.setErrorEnabled(true);
             inputLayout.setError(error);
         }
@@ -452,40 +475,43 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         void onOptionSelected(DemographicsOption option);
     }
 
-    protected void showErrorViews(boolean isError, ViewGroup container){
+    protected void showErrorViews(boolean isError, ViewGroup container) {
         final String TAG_ERROR_HIDE_INV = getString(R.string.tag_demographics_error_hide_inv);
         final String TAG_ERROR_HIDE_GONE = getString(R.string.tag_demographics_error_hide_gone);
         final String TAG_ERROR_SHOW_INV = getString(R.string.tag_demographics_error_show_inv);
         final String TAG_ERROR_SHOW_GONE = getString(R.string.tag_demographics_error_show_gone);
 
-        for(int i=0; i < container.getChildCount(); i++){
+        for (int i = 0; i < container.getChildCount(); i++) {
             View view = container.getChildAt(i);
-            if(view instanceof ViewGroup){
+            if (view instanceof ViewGroup) {
                 showErrorViews(isError, (ViewGroup) view);
             }
-            String tag = (String) view.getTag();
-            if(tag != null){
-                if(isError){
-                    if(tag.equals(TAG_ERROR_HIDE_GONE)){
-                        view.setVisibility(View.GONE);
-                    }else if(tag.equals(TAG_ERROR_HIDE_INV)){
-                        view.setVisibility(View.INVISIBLE);
-                    }else if(tag.equals(TAG_ERROR_SHOW_GONE) || tag.equals(TAG_ERROR_SHOW_INV)){
-                        view.setVisibility(View.VISIBLE);
-                    }
-                    view.setFocusable(true);
-                    view.setFocusableInTouchMode(true);
-                    view.requestFocus();
-                }else{
-                    if(tag.equals(TAG_ERROR_SHOW_GONE)){
-                        view.setVisibility(View.GONE);
-                    }else if(tag.equals(TAG_ERROR_SHOW_INV)){
-                        view.setVisibility(View.INVISIBLE);
-                    }else if(tag.equals(TAG_ERROR_HIDE_GONE) || tag.equals(TAG_ERROR_HIDE_INV)){
-                        view.setVisibility(View.VISIBLE);
+            if (view.getTag() instanceof String) {
+                String tag = (String) view.getTag();
+                if (tag != null) {
+                    if (isError) {
+                        if (tag.equals(TAG_ERROR_HIDE_GONE)) {
+                            view.setVisibility(View.GONE);
+                        } else if (tag.equals(TAG_ERROR_HIDE_INV)) {
+                            view.setVisibility(View.INVISIBLE);
+                        } else if (tag.equals(TAG_ERROR_SHOW_GONE) || tag.equals(TAG_ERROR_SHOW_INV)) {
+                            view.setVisibility(View.VISIBLE);
+                        }
+                        view.setFocusable(true);
+                        view.setFocusableInTouchMode(true);
+                        view.requestFocus();
+                    } else {
+                        if (tag.equals(TAG_ERROR_SHOW_GONE)) {
+                            view.setVisibility(View.GONE);
+                        } else if (tag.equals(TAG_ERROR_SHOW_INV)) {
+                            view.setVisibility(View.INVISIBLE);
+                        } else if (tag.equals(TAG_ERROR_HIDE_GONE) || tag.equals(TAG_ERROR_HIDE_INV)) {
+                            view.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
             }
+
         }
 
     }

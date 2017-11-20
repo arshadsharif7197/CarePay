@@ -82,6 +82,11 @@ public class PaymentsPayloadDTO implements Serializable {
     @SerializedName("patient_refunds")
     @Expose
     private PaymentHistoryItemPayload patientRefund = new PaymentHistoryItemPayload();
+    @SerializedName("payment_profile_id")
+    @Expose
+    private String paymentProfileId;
+    @SerializedName("organization_id")
+    private String organizationId;
 
     public List<PatientModel> getPatients() {
         return patients;
@@ -299,5 +304,21 @@ public class PaymentsPayloadDTO implements Serializable {
 
     public void setPatientRefund(PaymentHistoryItemPayload patientRefund) {
         this.patientRefund = patientRefund;
+    }
+
+    public String getPaymentProfileId() {
+        return paymentProfileId;
+    }
+
+    public void setPaymentProfileId(String paymentProfileId) {
+        this.paymentProfileId = paymentProfileId;
+    }
+
+    public String getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(String organizationId) {
+        this.organizationId = organizationId;
     }
 }

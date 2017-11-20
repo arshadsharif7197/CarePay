@@ -60,6 +60,14 @@ public class UnlockFragment extends LoginFragment {
             }
         });
 
+        View signOutButton = view.findViewById(R.id.button_signout);
+        signOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().finishAffinity();
+            }
+        });
+
     }
 
     @Override

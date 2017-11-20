@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.carecloud.carepaylibray.customcomponents.CarePayTextView xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/DemographicsOptionalLabelStyle"
+    android:layout_gravity="bottom|end"
+    android:layout_marginBottom="@dimen/dimen_20dp"
+    android:layout_marginEnd="@dimen/dimen_40dp"
+    app:customAssetFont="proxima_nova_semi_bold"
+    breeze:textKey="demographics_details_optional_hint"
+    tools:text="Optional"
+    tools:showIn="@layout/fragment_base_demographics" />

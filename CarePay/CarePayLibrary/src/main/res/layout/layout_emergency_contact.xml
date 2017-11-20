@@ -129,9 +129,10 @@
                 <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                     android:id="@+id/primaryPhoneEditText"
                     style="@style/SigninSignupEditStyle"
-                    android:digits="0123456789"
-                    android:imeOptions="actionDone"
-                    android:maxLength="10"
+                    android:digits="0123456789-"
+                    android:imeOptions="actionNext"
+                    android:inputType="phone"
+                    android:maxLength="12"
                     app:customAssetFont="proxima_nova_regular"
                     app:hintTextAppearance="@style/FloatingLabelStyle"
                     breeze:hintKey="demographics_primary_phone_number_label" />
@@ -161,9 +162,10 @@
                 <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                     android:id="@+id/secondaryPhoneEditText"
                     style="@style/SigninSignupEditStyle"
-                    android:digits="0123456789"
-                    android:imeOptions="actionDone"
-                    android:maxLength="10"
+                    android:digits="0123456789-"
+                    android:imeOptions="actionNext"
+                    android:inputType="phone"
+                    android:maxLength="12"
                     app:customAssetFont="proxima_nova_regular"
                     app:hintTextAppearance="@style/FloatingLabelStyle"
                     breeze:hintKey="demographics_secondary_phone_number_label" />
@@ -337,7 +339,7 @@
                     android:inputType="textCapCharacters"
                     android:maxLength="255"
                     android:maxLines="1"
-                    android:nextFocusRight="@+id/phoneTextView"
+                    android:nextFocusRight="@+id/stateTextView"
                     app:customAssetFont="proxima_nova_regular"
                     app:hintTextAppearance="@style/FloatingLabelStyle"
                     breeze:hintKey="payment_city" />
@@ -413,25 +415,6 @@
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
-            android:id="@+id/socialSecurityInputLayout"
-            style="@style/SigninSignupTextInputStyle"
-            app:customAssetFont="proxima_nova_semi_bold"
-            app:hintTextAppearance="@style/FloatingLabelStyle">
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
-                android:id="@+id/socialSecurityEditText"
-                style="@style/SigninSignupEditStyle"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:maxLength="10"
-                app:customAssetFont="proxima_nova_regular"
-                app:hintTextAppearance="@style/FloatingLabelStyle"
-                breeze:hintKey="demographics_social_security"
-                tools:hint="Social Security Number" />
-
-        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
-
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -449,7 +432,7 @@
                     android:imeOptions="actionNext"
                     android:inputType="date"
                     android:maxLength="10"
-                    android:nextFocusForward="@+id/reviewgrdemoPhoneNumberEdit"
+                    android:nextFocusForward="@+id/genderEditText"
                     app:customAssetFont="proxima_nova_regular"
                     breeze:hintKey="demographics_review_date_of_birth" />
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>

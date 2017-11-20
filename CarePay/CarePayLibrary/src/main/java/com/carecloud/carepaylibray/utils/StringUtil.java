@@ -7,12 +7,12 @@ import android.util.Log;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.isNotEmptyString;
-
 import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.isNotEmptyString;
 
 public class StringUtil {
 
@@ -40,7 +40,7 @@ public class StringUtil {
      * @return The string with capitalized first letters
      */
     public static String captialize(String source) {
-        if(source == null){
+        if (source == null) {
             return "";
         }
         source = source.replaceAll("( ){2,}", " ").toLowerCase();
@@ -65,6 +65,9 @@ public class StringUtil {
      * @return The unformatted zip code as String
      */
     public static String revertZipToRawFormat(String formattedZipCode) {
+        if (formattedZipCode == null) {
+            return null;
+        }
         return formattedZipCode.replace("-", "");
     }
 
@@ -75,6 +78,9 @@ public class StringUtil {
      * @return The unformatted phone as String
      */
     public static String revertToRawPhoneFormat(String formattedPhoneNum) {
+        if (formattedPhoneNum == null) {
+            return null;
+        }
         return formattedPhoneNum.replace("-", "");
     }
 
@@ -85,7 +91,7 @@ public class StringUtil {
      * @return formated string
      */
     public static String formatPhoneNumber(String phoneNumber) {
-        if(phoneNumber == null){
+        if (phoneNumber == null) {
             return null;
         }
         StringBuilder phoneNumberString = new StringBuilder();
@@ -112,6 +118,9 @@ public class StringUtil {
      * @return formated string
      */
     public static String formatZipCode(String zipcode) {
+        if (zipcode == null) {
+            return null;
+        }
         StringBuilder zipCodeString = new StringBuilder();
         zipCodeString.append(zipcode);
         if (zipCodeString.length() > 0 && zipCodeString.length() > 5 && Character.isDigit(zipCodeString.charAt(5))) {
@@ -171,7 +180,7 @@ public class StringUtil {
                 zipcode.replace(currentLength - 1, currentLength, "");
             }
 
-            if (currentLength == 9 && !zipcode.toString().contains("-")){
+            if (currentLength == 9 && !zipcode.toString().contains("-")) {
                 zipcode.insert(5, "-");
             }
         }
@@ -327,25 +336,27 @@ public class StringUtil {
 
     /**
      * Convenience method for exporting collection contents to comma delimited string
+     *
      * @param collection collection to export
      * @return comma delimited string
      */
-    public static String getListAsCommaDelimitedString(Collection<?> collection){
+    public static String getListAsCommaDelimitedString(Collection<?> collection) {
         return getListAsDelimitedString(collection, ',');
     }
 
     /**
      * Method for exporting contents of a collection to a delimited string
+     *
      * @param collection collection to export
-     * @param delimiter character to use as a delimiter
+     * @param delimiter  character to use as a delimiter
      * @return delimited string
      */
-    public static String getListAsDelimitedString(Collection<?> collection, char delimiter){
+    public static String getListAsDelimitedString(Collection<?> collection, char delimiter) {
         StringBuilder builder = new StringBuilder();
-        for(Object obj : collection){
+        for (Object obj : collection) {
             builder.append(obj.toString());
             builder.append(delimiter);
         }
-        return builder.length() > 0 ? builder.substring(0, builder.length()-1) : "";
+        return builder.length() > 0 ? builder.substring(0, builder.length() - 1) : "";
     }
 }

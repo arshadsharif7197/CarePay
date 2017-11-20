@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.appointments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -520,14 +521,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         }
     };
 
-    private void showAdHocFragment(WorkflowDTO workflowDTO, String patientId) {
-        Gson gson = new Gson();
-        AppointmentsResultModel appointmentsResultModel = gson
-                .fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
-        AdHocFormsListFragment fragment = AdHocFormsListFragment
-                .newInstance(appointmentsResultModel, patientId);
-        fragment.show(getSupportFragmentManager(), "forms");
-    }
 
     private void showResponsibilityFragment(PaymentsModel paymentsModel) {
         String tag = ResponsibilityFragmentDialog.class.getSimpleName();
@@ -584,7 +577,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void onLeftActionTapped(PaymentsModel paymentsModel, double owedAmount) {
-        getAllPracticeForms(getPatientId());
+        getAllPracticeForms(getPatientId(), null, paymentsModel);
     }
 
     @Override
@@ -620,17 +613,17 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void onMiddleActionTapped(AppointmentDTO appointmentDTO) {
-        getAllPracticeForms(appointmentDTO.getMetadata().getPatientId());
+        getAllPracticeForms(appointmentDTO.getMetadata().getPatientId(), appointmentDTO, null);
     }
 
-    private void getAllPracticeForms(String patientId) {
+    private void getAllPracticeForms(String patientId, AppointmentDTO appointmentDTO, PaymentsModel paymentsModel) {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("patient_id", patientId);
         TransitionDTO adHocForms = checkInDTO.getMetadata().getLinks().getAllPracticeForms();
-        getWorkflowServiceHelper().execute(adHocForms, getAdHocServiceCallback(patientId), queryMap);
+        getWorkflowServiceHelper().execute(adHocForms, getAdHocServiceCallback(patientId, appointmentDTO, paymentsModel), queryMap);
     }
 
-    WorkflowServiceCallback getAdHocServiceCallback(final String patientId) {
+    WorkflowServiceCallback getAdHocServiceCallback(final String patientId, final AppointmentDTO appointmentDTO, final PaymentsModel paymentsModel) {
         return new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
@@ -640,7 +633,25 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
-                showAdHocFragment(workflowDTO, patientId);
+                Gson gson = new Gson();
+                AppointmentsResultModel appointmentsResultModel = gson
+                        .fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
+                AdHocFormsListFragment fragment = AdHocFormsListFragment
+                        .newInstance(appointmentsResultModel, patientId);
+                fragment.show(getSupportFragmentManager(), "forms");
+                fragment.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        if(!isVisible()){
+                            return;
+                        }
+                        if(appointmentDTO != null){
+                            showPracticeAppointmentDialog(appointmentDTO);
+                        }else if (paymentsModel != null){
+                            showResponsibilityFragment(paymentsModel);
+                        }
+                    }
+                });
             }
 
             @Override
