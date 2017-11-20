@@ -2,10 +2,12 @@ package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -13,7 +15,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -154,6 +160,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         settings.setAllowUniversalAccessFromFileURLs(true);
         settings.setJavaScriptEnabled(true);
         settings.setSaveFormData(false);
+        settings.setDomStorageEnabled(true);
 
         WebViewDatabase.getInstance(getContext()).clearFormData();
 
@@ -167,7 +174,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
 
 
         //show progress bar
-        webView.setWebViewClient(new WebViewClient());
+        webView.setWebViewClient(new BaseWebClient());
         webView.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
                 if (progress < 100) {
@@ -402,4 +409,41 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
     };
 
 
+    class BaseWebClient extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
+
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            super.onReceivedError(view, request, error);
+            hideProgressDialog();
+            nextButton.setEnabled(true);
+        }
+
+        @Override
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            super.onReceivedError(view, errorCode, description, failingUrl);
+            hideProgressDialog();
+            nextButton.setEnabled(true);
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+        @Override
+        public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+            super.onReceivedHttpError(view, request, errorResponse);
+            hideProgressDialog();
+            nextButton.setEnabled(true);
+        }
+
+        @Override
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            super.onReceivedSslError(view, handler, error);
+            hideProgressDialog();
+            nextButton.setEnabled(true);
+        }
+
+    }
 }

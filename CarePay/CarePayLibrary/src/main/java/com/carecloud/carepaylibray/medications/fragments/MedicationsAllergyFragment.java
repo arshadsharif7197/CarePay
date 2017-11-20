@@ -1,8 +1,12 @@
 package com.carecloud.carepaylibray.medications.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +20,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -25,15 +30,21 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
+import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter;
+import com.carecloud.carepaylibray.media.MediaScannerPresenter;
+import com.carecloud.carepaylibray.media.MediaViewInterface;
 import com.carecloud.carepaylibray.medications.adapters.MedicationAllergiesAdapter;
 import com.carecloud.carepaylibray.medications.models.MedicationAllergiesAction;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesQueryStrings;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
+import com.carecloud.carepaylibray.medications.models.MedicationsImagePostModel;
 import com.carecloud.carepaylibray.medications.models.MedicationsObject;
+import com.carecloud.carepaylibray.medications.models.MedicationsPostModel;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -48,7 +59,9 @@ import java.util.Map;
  * Created by lmenendez on 2/15/17
  */
 
-public class MedicationsAllergyFragment extends BaseCheckinFragment implements MedicationAllergiesAdapter.MedicationAllergiesAdapterCallback{
+public class MedicationsAllergyFragment extends BaseCheckinFragment implements
+        MedicationAllergiesAdapter.MedicationAllergiesAdapterCallback, MediaViewInterface,
+        DocumentScannerAdapter.ImageLoadCallback{
 
     public interface MedicationAllergyCallback {
         void showMedicationSearch();
@@ -66,9 +79,17 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements M
     private CheckBox assertNoAllergies;
     private Button continueButton;
 
+    private View emptyPhotoLayout;
+    private View photoLayout;
+    private ImageView medicationPhoto;
+    private MediaScannerPresenter mediaScannerPresenter;
+    private DocumentScannerAdapter documentScannerAdapter;
+    private String photoPath;
+
     protected DemographicsPresenter callback;
 
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
+    private MedicationsPostModel medicationsPostModel = new MedicationsPostModel();
 
     private List<MedicationsObject> currentMedications = new ArrayList<>();
     private List<MedicationsObject> addMedications = new ArrayList<>();
@@ -195,6 +216,36 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements M
         assertNoAllergies.setEnabled(false);
         assertNoAllergies.setChecked(false);
         assertNoAllergies.setOnCheckedChangeListener(assertCheckListener);
+
+        emptyPhotoLayout = view.findViewById(R.id.medication_photo_empty_layout);
+        photoLayout = view.findViewById(R.id.medication_photo_layout);
+        medicationPhoto = (ImageView) view.findViewById(R.id.medications_image);
+
+        View newPhotoButton = view.findViewById(R.id.medication_list_photo_button);
+        newPhotoButton.setOnClickListener(takePhotoListener);
+
+        View changePhotoButton = view.findViewById(R.id.medication_list_photo_change);
+        changePhotoButton.setOnClickListener(takePhotoListener);
+
+        View removePhotoButton = view.findViewById(R.id.medication_list_photo_remove);
+        removePhotoButton.setOnClickListener(removePhotoListener);
+
+        initImageViews(view);
+    }
+
+    private void initImageViews(View view) {
+        mediaScannerPresenter = new MediaScannerPresenter(getContext(), this,
+                CarePayCameraPreview.CameraType.SCAN_DOC);
+        mediaScannerPresenter.setCaptureView(medicationPhoto);
+        documentScannerAdapter = new DocumentScannerAdapter(getContext(), view, mediaScannerPresenter, getApplicationMode().getApplicationType(), false);
+
+        String url =  medicationsAllergiesDTO.getPayload().getMedicationsImage().getPayload().getUrl();
+        if(StringUtil.isNullOrEmpty(url)){
+            emptyPhotoLayout.setVisibility(View.VISIBLE);
+        }else{
+            documentScannerAdapter.setImageView(url, medicationPhoto, false, 0, 0, R.drawable.icn_placeholder_document, this);
+        }
+
     }
 
     private void setAdapters(){
@@ -210,7 +261,7 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements M
     }
 
     private void setAdapterVisibility(){
-        if(currentMedications.isEmpty()){
+        if(currentMedications.isEmpty() && !hasPhoto()){
             medicationRecycler.setVisibility(View.GONE);
             assertNoMedications.setVisibility(View.VISIBLE);
             assertNoMedications.setEnabled(true);
@@ -228,10 +279,22 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements M
     }
 
     private void validateForm(){
-        boolean valid = (allergyRecycler.getVisibility() == View.VISIBLE || !assertNoAllergies.isEnabled() || assertNoAllergies.isChecked()) &&
-                (!currentMedications.isEmpty() || !assertNoMedications.isEnabled() || assertNoMedications.isChecked());
+        boolean validAllergies = (allergyRecycler.getVisibility() == View.VISIBLE ||
+                !assertNoAllergies.isEnabled() || assertNoAllergies.isChecked());
+        boolean validMeds = (!currentMedications.isEmpty() || !assertNoMedications.isEnabled()
+                || assertNoMedications.isChecked());
+
+        boolean valid = (validAllergies && validMeds) || hasPhoto();
 
         continueButton.setEnabled(valid);
+    }
+
+    private boolean hasPhoto(){
+        return (!StringUtil.isNullOrEmpty(medicationsAllergiesDTO.getPayload()
+                .getMedicationsImage().getPayload().getUrl()) &&
+                (medicationsPostModel.getMedicationsImage()==null ||
+                !medicationsPostModel.getMedicationsImage().isDelete())) ||
+                !StringUtil.isNullOrEmpty(photoPath);
     }
 
     @Override
@@ -298,6 +361,27 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements M
         }
     };
 
+    private View.OnClickListener takePhotoListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            mediaScannerPresenter.selectImage(true);
+        }
+    };
+
+    private View.OnClickListener removePhotoListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if(!StringUtil.isNullOrEmpty(medicationsAllergiesDTO.getPayload().getMedicationsImage().getPayload().getUrl())) {
+                MedicationsImagePostModel medicationsImagePostModel = new MedicationsImagePostModel();
+                medicationsImagePostModel.setDelete(true);
+                medicationsPostModel.setMedicationsImage(medicationsImagePostModel);
+            }
+            photoPath = null;
+            medicationPhoto.setImageDrawable(null);
+            onImageLoadCompleted(false);
+        }
+    };
+
     private View.OnClickListener continueClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -314,7 +398,9 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements M
             Map<String, String> headers = ((ISession) getContext()).getWorkflowServiceHelper().getPreferredLanguageHeader();
             headers.put("transition", "true");
 
-            String jsonBody = gson.toJson(getAllModifiedItems());
+            medicationsPostModel.setMedicationsList(getAllModifiedItems());
+            setupImageBase64();
+            String jsonBody = gson.toJson(medicationsPostModel);
             ((ISession) getContext()).getWorkflowServiceHelper().execute(transitionDTO, submitMedicationAllergiesCallback, jsonBody, queryMap, headers);
 
 
@@ -381,6 +467,76 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements M
             callback.medicationSubmitFail(exceptionMessage);
         }
     };
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (!handleActivityResult(requestCode, resultCode, data)) {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
+        return mediaScannerPresenter != null && mediaScannerPresenter.handleActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        handleRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public void handleRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (mediaScannerPresenter != null) {
+            mediaScannerPresenter.handleRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    @Override
+    public void setCapturedBitmap(String path, View view) {
+        documentScannerAdapter.setImageView(path, view, false, 0, 0, R.id.placeHolderIconImageViewId, this);
+        photoPath = path;
+    }
+
+    @Override
+    public void handleStartActivityForResult(Intent intent, int requestCode) {
+        startActivityForResult(intent, requestCode);
+    }
+
+    @Nullable
+    @Override
+    public Fragment getCallingFragment() {
+        return this;
+    }
+
+    @Override
+    public void setupImageBase64() {
+        if(!StringUtil.isNullOrEmpty(photoPath)) {
+            photoPath = DocumentScannerAdapter.getBase64(getContext(), photoPath);
+            if(!StringUtil.isNullOrEmpty(photoPath)) {
+                MedicationsImagePostModel medicationsImagePostModel = new MedicationsImagePostModel();
+                medicationsImagePostModel.setPhoto(photoPath);
+                medicationsPostModel.setMedicationsImage(medicationsImagePostModel);
+
+                //update current payload to handle back nav
+                medicationsAllergiesDTO.getPayload().getMedicationsImage().getPayload().setUrl(photoPath);
+            }
+        }
+    }
+
+    @Override
+    public void onImageLoadCompleted(boolean success) {
+        if(success){
+            emptyPhotoLayout.setVisibility(View.GONE);
+            photoLayout.setVisibility(View.VISIBLE);
+        }else{
+            emptyPhotoLayout.setVisibility(View.VISIBLE);
+            photoLayout.setVisibility(View.GONE);
+        }
+        setAdapterVisibility();
+        validateForm();
+    }
+
 
 }
 
