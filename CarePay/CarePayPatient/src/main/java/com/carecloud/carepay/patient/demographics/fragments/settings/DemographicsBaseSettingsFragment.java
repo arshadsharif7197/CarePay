@@ -18,8 +18,10 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicPhysicianSection;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsField;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
+import com.carecloud.carepaylibray.demographics.dtos.payload.PhysicianDto;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
