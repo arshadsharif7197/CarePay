@@ -33,7 +33,7 @@
             android:id="@+id/medication_allergy_delete_button"
             android:padding="@dimen/padding_large"
             android:textColor="@color/harvard_crimson"
-            android:textSize="@dimen/text_size_17"
+            android:textSize="@dimen/text_size_13"
             android:text="Remove"
             app:customAssetFont="proxima_nova_semi_bold"/>
 

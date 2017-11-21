@@ -25,6 +25,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,6 +46,10 @@ public class DocumentScannerAdapter {
     public static final int FRONT_PIC = 1;
     public static final int BACK_PIC = 2;
 
+    public interface ImageLoadCallback{
+        void onImageLoadCompleted(boolean success);
+    }
+
     private Context context;
     private MediaScannerPresenter mediaScannerPresenter;
     private ApplicationMode.ApplicationType applicationType;
@@ -63,11 +68,25 @@ public class DocumentScannerAdapter {
      * @param applicationType application mode
      */
     public DocumentScannerAdapter(Context context, View view, MediaScannerPresenter mediaScannerPresenter, ApplicationMode.ApplicationType applicationType){
+        this(context, view, mediaScannerPresenter, applicationType, true);
+    }
+
+    /**
+     * Adapter for managing Document Scanner Views
+     * @param context context
+     * @param view base view
+     * @param mediaScannerPresenter media scanner presenter
+     * @param applicationType application mode
+     */
+    public DocumentScannerAdapter(Context context, View view, MediaScannerPresenter mediaScannerPresenter, ApplicationMode.ApplicationType applicationType, boolean initScanViews){
         this.context = context;
         this.mediaScannerPresenter = mediaScannerPresenter;
         this.applicationType = applicationType;
-        initViews(view);
+        if(initScanViews) {
+            initViews(view);
+        }
     }
+
 
     private void initViews(View view){
         imageFront = (ImageView) view.findViewById(R.id.demogrDocsFrontScanImage);
@@ -166,6 +185,22 @@ public class DocumentScannerAdapter {
         final int width = Math.max(imageView.getMeasuredWidth(), lp.width);
         final int height = Math.max(imageView.getMeasuredHeight(), lp.height);
 
+        setImageView(filePath, view, updateButton, width, height, 0, null);
+    }
+
+    /**
+     * Show image from path
+     * @param filePath can be a file path, other URI, or Base64 string
+     * @param view view to add image
+     * @param updateButton should update the corresponding button text
+     * @param width target width
+     * @param height target height
+     * @param placeholderImageId placeholder drawable id
+     * @param callback completion callback
+     */
+    public void setImageView(String filePath, final View view, final boolean updateButton, final int width, final int height, final int placeholderImageId, final ImageLoadCallback callback) {
+        final ImageView imageView = (ImageView) view;
+
         File file = new File(filePath);
         Uri fileUri;
         if(file.exists()){
@@ -181,21 +216,27 @@ public class DocumentScannerAdapter {
             }
         }
 
-        Picasso.with(context).load(fileUri)
+        RequestCreator picassoRequest = Picasso.with(context).load(fileUri)
                 .placeholder(R.drawable.icn_placeholder_document)
-                .resize(width, height)
-                .centerInside()
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
-                .transform(new RoundedCornersTransformation(10, 0))
-                .into(imageView, new Callback() {
+                .transform(new RoundedCornersTransformation(10, 0));
+
+        if(width > 0 || height > 0){
+            picassoRequest = picassoRequest
+                    .resize(width, height)
+                    .centerInside();
+        }
+
+        picassoRequest.into(imageView, new Callback() {
                     @Override
                     public void onSuccess() {
-                        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                        ViewGroup.LayoutParams lp = imageView.getLayoutParams();
-                        lp.width = width;
-                        lp.height = height;
-                        imageView.setLayoutParams(lp);
-
+                        if(width > 0 || height > 0) {
+                            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                            ViewGroup.LayoutParams lp = imageView.getLayoutParams();
+                            lp.width = width;
+                            lp.height = height;
+                            imageView.setLayoutParams(lp);
+                        }
                         if(updateButton) {
                             if (view.getId() == getFrontImageId()) {
                                 setFrontRescan();
@@ -205,14 +246,25 @@ public class DocumentScannerAdapter {
                                 setBackRescan();
                             }
                         }
+                        if(callback!=null){
+                            callback.onImageLoadCompleted(true);
+                        }
                     }
 
                     @Override
                     public void onError() {
+                        int imageId = placeholderImageId;
+                        if(imageId <= 0 ){
+                            imageId = R.drawable.icn_placeholder_document;
+                        }
                         imageView.setImageDrawable(ContextCompat.getDrawable(context,
-                                R.drawable.icn_placeholder_document));
+                                imageId));
+                        if(callback!=null){
+                            callback.onImageLoadCompleted(false);
+                        }
                     }
                 });
+
     }
 
     public int getFrontImageId(){
