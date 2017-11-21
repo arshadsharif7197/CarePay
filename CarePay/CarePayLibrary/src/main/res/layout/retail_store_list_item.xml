@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/list_apt_padding_right"
+    android:paddingRight="@dimen/list_apt_padding_right">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/apt_dl_image_elevation"
+            android:layout_marginTop="@dimen/apt_dl_image_elevation"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="@dimen/payment_details_dialog_icon_size"
+                android:layout_height="@dimen/payment_details_dialog_icon_size">
+
+                <ImageView
+                    android:id="@+id/practice_icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/icn_placeholder_user_profile"
+                    android:visibility="gone"/>
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/practiceInitials"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:background="@drawable/round_list_tv"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:src="@drawable/icn_placeholder_user_profile_png"
+                    android:textColor="@color/lightSlateGray"
+                    android:textSize="@dimen/apt_dl_text_big"
+                    app:customAssetFont="gotham_rounded_medium" />
+
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/textview_margin"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/practice_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="start"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/textview_default_textsize"
+                    android:textStyle="bold"
+                    app:customAssetFont="proxima_nova_semi_bold" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/practice_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="start"
+                    android:textColor="@color/lightSlateGray"
+                    android:textSize="@dimen/textview_textsize"
+                    app:customAssetFont="proxima_nova_regular" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginBottom="3dp"
+            android:background="@color/divider_color" />
+    </LinearLayout>
+</LinearLayout>

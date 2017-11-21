@@ -28,6 +28,9 @@ public class LandingLinks extends BaseLinks {
     @SerializedName("unread_notifications")
     @Expose
     private TransitionDTO unreadNotifications = new TransitionDTO();
+    @SerializedName("retail")
+    @Expose
+    private TransitionDTO retail = new TransitionDTO();
 
     public TransitionDTO getPatientBalances() {
         return patientBalances;
@@ -75,5 +78,13 @@ public class LandingLinks extends BaseLinks {
 
     public void setUnreadNotifications(TransitionDTO unreadNotifications) {
         this.unreadNotifications = unreadNotifications;
+    }
+
+    public TransitionDTO getRetail() {
+        return retail;
+    }
+
+    public void setRetail(TransitionDTO retail) {
+        this.retail = retail;
     }
 }
