@@ -273,7 +273,6 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         zipCodeEditText.setText(StringUtil.formatZipCode(emergencyContact.getAddress().getZipcode()));
         zipCodeEditText.getOnFocusChangeListener().onFocusChange(zipCodeEditText,
                 !StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString().trim()));
-//        zipCodeEditText.addTextChangedListener(getEmptyValidatorWatcher(zipCodeTextInputLayout, false));
 
 
         cityTextInputLayout = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
@@ -446,7 +445,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                 return false;
             }
             if (StringUtil.isNullOrEmpty(cityEditText.getText().toString())) {
-//                cityTextInputLayout.setErrorEnabled(true);
+                cityTextInputLayout.setErrorEnabled(true);
                 cityTextInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
                 return false;
             }
