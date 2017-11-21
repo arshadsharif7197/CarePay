@@ -498,7 +498,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         EditText phoneEditText = (EditText) view.findViewById(R.id.phoneTextView);
         phoneEditText.addTextChangedListener(phoneInputFormatter);
         phoneEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(phoneTextInputLayout, null));
-        phoneEditText.setText(StringUtil.formatPhoneNumber(selectedEmployer.getAddress().getPhone()));
+        phoneEditText.setText(StringUtil.formatPhoneNumber(selectedEmployer.getAddress().getPhoneNumber()));
         phoneEditText.getOnFocusChangeListener()
                 .onFocusChange(phoneEditText, !StringUtil.isNullOrEmpty(phoneEditText.getText().toString()));
 
@@ -622,7 +622,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             selectedEmployer.getAddress().setState(state);
 
             String phone = ((TextView) findViewById(R.id.phoneTextView)).getText().toString().trim();
-            selectedEmployer.getAddress().setPhone(phone);
+            selectedEmployer.getAddress().setPhoneNumber(phone);
 
             demographicEmploymentInfoModel.setEmployerDto(selectedEmployer);
         } else {
