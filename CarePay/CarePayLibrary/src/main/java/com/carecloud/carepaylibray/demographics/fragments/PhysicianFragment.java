@@ -179,7 +179,7 @@ public class PhysicianFragment extends BaseDialogFragment implements PhysicianAd
         });
 
         if (physician != null) {
-            searchView.setQuery(physician.getFullName(), true);
+            searchView.setQuery(physician.getFullName().replace("'", ""), true);
         } else {
             SystemUtil.showSoftKeyboard(getContext());
             searchView.requestFocus();
@@ -191,6 +191,11 @@ public class PhysicianFragment extends BaseDialogFragment implements PhysicianAd
         queries.put("search", query);
         if (!Label.getLabel("demographics_physician_all_states_label").equals(stateTextView.getText().toString())) {
             queries.put("state_code", stateTextView.getText().toString());
+        }
+
+        if (!dto.getPayload().getAppointmentpayloaddto().isEmpty()) {
+            queries.put("practice_id", dto.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
+            queries.put("appointment_id", dto.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
         }
 
         TransitionDTO searchPhysiciansLink = dto.getMetadata().getLinks().getSearchPhysicians();
