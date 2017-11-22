@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.shamrocksdk.connections.models.Device;
+import com.carecloud.shamrocksdk.connections.models.defs.DeviceDef;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,14 +59,14 @@ public class IntegratedPaymentsChooseDeviceAdapter extends RecyclerView.Adapter<
         holder.deviceStatus.setText(StringUtil.captialize(device.getState()).replace("_", ""));
 
         switch (device.getState()){
-            case Device.STATE_OFFLINE:
+            case DeviceDef.STATE_OFFLINE:
                 holder.deviceStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.button_rounded_red_background));
                 break;
-            case Device.STATE_IN_USE:
+            case DeviceDef.STATE_IN_USE:
                 holder.deviceStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.button_rounded_yellow_background));
                 break;
             default:
-            case Device.STATE_READY:
+            case DeviceDef.STATE_READY:
                 holder.deviceStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.green_rounded_button_selector));
                 break;
         }
