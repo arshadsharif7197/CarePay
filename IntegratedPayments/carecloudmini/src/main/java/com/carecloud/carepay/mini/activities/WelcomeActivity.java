@@ -28,7 +28,7 @@ import com.carecloud.shamrocksdk.connections.DeviceConnection;
 import com.carecloud.shamrocksdk.connections.interfaces.ConnectionActionCallback;
 import com.carecloud.shamrocksdk.connections.interfaces.ConnectionCallback;
 import com.carecloud.shamrocksdk.connections.models.Device;
-import com.carecloud.shamrocksdk.connections.models.defs.StateDef;
+import com.carecloud.shamrocksdk.connections.models.defs.DeviceDef;
 import com.carecloud.shamrocksdk.payment.DevicePayment;
 import com.carecloud.shamrocksdk.payment.DeviceRefund;
 import com.carecloud.shamrocksdk.payment.interfaces.PaymentActionCallback;
@@ -279,7 +279,7 @@ public class WelcomeActivity extends FullScreenActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                connectedDevice.setState(StateDef.STATE_READY);
+                connectedDevice.setState(DeviceDef.STATE_READY);
                 connectedDevice.setProcessing(false);
                 connectedDevice.setPaymentRequestId(null);
                 connectedDevice.setRefunding(false);
@@ -295,7 +295,7 @@ public class WelcomeActivity extends FullScreenActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                connectedDevice.setState(StateDef.STATE_READY);
+                connectedDevice.setState(DeviceDef.STATE_READY);
                 connectedDevice.setProcessing(false);
                 connectedDevice.setPaymentRequestId(null);
                 updateConnectedDevice();
@@ -366,7 +366,7 @@ public class WelcomeActivity extends FullScreenActivity {
             if(connectedDevice != null){
 
                 switch (connectedDevice.getState()){
-                    case StateDef.STATE_READY: //Device is ready to process payments
+                    case DeviceDef.STATE_READY: //Device is ready to process payments
                         if(paymentRequestId == null ) {
                             updateMessage(getString(R.string.welcome_waiting));
                             return;
@@ -375,7 +375,7 @@ public class WelcomeActivity extends FullScreenActivity {
                             //this is a net new payment request
                             Log.d(TAG, "Device is ready & payment request received, update to in-use");
                             connectedDevice = device;
-                            connectedDevice.setState(StateDef.STATE_IN_USE);
+                            connectedDevice.setState(DeviceDef.STATE_IN_USE);
 
                             updateConnectedDevice();
 
@@ -386,11 +386,11 @@ public class WelcomeActivity extends FullScreenActivity {
                         }
 
                         break;
-                    case StateDef.STATE_IN_USE:
+                    case DeviceDef.STATE_IN_USE:
                         if(connectedDevice.getPaymentRequestId() == null){
                             Log.d(TAG, "Error state, device is in use but no request id, reset device state");
                             //this device should not be in use without a payment request
-                            connectedDevice.setState(StateDef.STATE_READY);
+                            connectedDevice.setState(DeviceDef.STATE_READY);
                             updateConnectedDevice();
                             return;
                         }
@@ -413,7 +413,7 @@ public class WelcomeActivity extends FullScreenActivity {
                             connectedDevice.setProcessing(true);
                         }
                         break;
-                    case StateDef.STATE_OFFLINE:
+                    case DeviceDef.STATE_OFFLINE:
                     default:
                         connectDevice();
                         break;
@@ -650,7 +650,7 @@ public class WelcomeActivity extends FullScreenActivity {
     private Runnable deviceStateRefresh = new Runnable() {
         @Override
         public void run() {
-            if(connectedDevice == null || !connectedDevice.getState().equals(StateDef.STATE_IN_USE)){
+            if(connectedDevice == null || !connectedDevice.getState().equals(DeviceDef.STATE_IN_USE)){
                 connectDevice();
             }
             scheduleDeviceRefresh();
