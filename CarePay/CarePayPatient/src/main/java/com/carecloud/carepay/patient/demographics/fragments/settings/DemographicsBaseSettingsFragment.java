@@ -149,6 +149,7 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
                     inputLayout.setError(null);
                     inputLayout.setErrorEnabled(false);
                 }
+                checkIfEnableButton();
             }
         };
     }
