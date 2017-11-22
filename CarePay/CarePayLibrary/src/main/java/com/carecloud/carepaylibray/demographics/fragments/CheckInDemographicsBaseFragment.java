@@ -348,6 +348,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                     inputLayout.setError(null);
                     inputLayout.setErrorEnabled(false);
                 }
+                checkIfEnableButton(getView());
             }
         };
     }

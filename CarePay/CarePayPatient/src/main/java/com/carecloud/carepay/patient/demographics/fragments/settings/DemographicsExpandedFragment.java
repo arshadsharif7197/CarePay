@@ -76,8 +76,14 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
     private PhysicianDto referringPhysician = new PhysicianDto();
     private boolean showEmployerFields;
     private View employerDependentFieldsLayout;
+    private EditText addressEditText;
+    private EditText addressEditText2;
+    private EditText zipCodeEditText;
     private EditText cityEditText;
     private EditText stateEditText;
+    private TextInputLayout zipCodeTextInputLayout;
+    private TextInputLayout cityTextInputLayout;
+    private TextInputLayout stateTextInputLayout;
 
 
     /**
@@ -374,7 +380,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         });
 
         TextInputLayout address1TextInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
-        EditText addressEditText = (EditText) view.findViewById(R.id.addressEditText);
+        addressEditText = (EditText) view.findViewById(R.id.addressEditText);
         addressEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address1TextInputLayout, null));
         addressEditText.setText(selectedEmployer.getAddress().getAddress1());
         addressEditText.getOnFocusChangeListener()
@@ -382,30 +388,31 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
 
 
         TextInputLayout address2TextInputLayout = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
-        EditText addressEditText2 = (EditText) view.findViewById(R.id.addressEditText2);
+        addressEditText2 = (EditText) view.findViewById(R.id.addressEditText2);
         addressEditText2.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address2TextInputLayout, null));
         addressEditText2.setText(selectedEmployer.getAddress().getAddress2());
         addressEditText2.getOnFocusChangeListener()
                 .onFocusChange(addressEditText2, !StringUtil.isNullOrEmpty(addressEditText2.getText().toString()));
 
 
-        TextInputLayout zipCodeTextInputLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
-        EditText zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeTextView);
+        zipCodeTextInputLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
+        zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeTextView);
         zipCodeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeTextInputLayout,
                 getZipCodeFocusListener(zipCodeEditText)));
         zipCodeEditText.setText(StringUtil.formatZipCode(selectedEmployer.getAddress().getZipcode()));
         zipCodeEditText.getOnFocusChangeListener()
                 .onFocusChange(zipCodeEditText, !StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString()));
 
-        TextInputLayout cityTextInputLayout = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
+        cityTextInputLayout = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
         cityEditText = (EditText) view.findViewById(R.id.cityTextView);
         cityEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(cityTextInputLayout, null));
         cityEditText.setText(selectedEmployer.getAddress().getCity());
         cityEditText.getOnFocusChangeListener()
                 .onFocusChange(cityEditText, !StringUtil.isNullOrEmpty(cityEditText.getText().toString()));
+        cityEditText.addTextChangedListener(clearValidationErrorsOnTextChange(cityTextInputLayout));
 
-        TextInputLayout stateTextInputLayout = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
+        stateTextInputLayout = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
         stateEditText = (EditText) view.findViewById(R.id.stateTextView);
         stateEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(stateTextInputLayout, null));
@@ -424,6 +431,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         stateEditText.setText(selectedEmployer.getAddress().getState());
         stateEditText.getOnFocusChangeListener()
                 .onFocusChange(stateEditText, !StringUtil.isNullOrEmpty(stateEditText.getText().toString()));
+        stateEditText.addTextChangedListener(clearValidationErrorsOnTextChange(stateTextInputLayout));
 
         TextInputLayout phoneTextInputLayout = (TextInputLayout) view.findViewById(R.id.phoneTextInputLayout);
         EditText phoneEditText = (EditText) view.findViewById(R.id.phoneTextView);
@@ -510,6 +518,25 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 && StringUtil.isNullOrEmpty(selectedEmployer.getName())
                 && showEmployerFields) {
             return false;
+        }
+
+        if (showEmployerFields && (!StringUtil.isNullOrEmpty(addressEditText.getText().toString())
+                || (!StringUtil.isNullOrEmpty(addressEditText2.getText().toString())))) {
+            if (StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())) {
+                zipCodeTextInputLayout.setErrorEnabled(true);
+                zipCodeTextInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
+                return false;
+            }
+            if (StringUtil.isNullOrEmpty(cityEditText.getText().toString())) {
+                cityTextInputLayout.setErrorEnabled(true);
+                cityTextInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
+                return false;
+            }
+            if (StringUtil.isNullOrEmpty(stateEditText.getText().toString())) {
+                stateTextInputLayout.setErrorEnabled(true);
+                stateTextInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
+                return false;
+            }
         }
         if (dataModel.getDemographic().getEmergencyContact().isRequired()
                 && StringUtil.isNullOrEmpty(selectedEmergencyContact.getFirstName())) {
@@ -727,6 +754,9 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                     stateEditText.setText(stateAbbr);
                     stateEditText.getOnFocusChangeListener()
                             .onFocusChange(stateEditText, !StringUtil.isNullOrEmpty(stateEditText.getText().toString()));
+                    zipCodeTextInputLayout.setError(null);
+                    zipCodeTextInputLayout.setErrorEnabled(false);
+                    checkIfEnableButton();
                 }
             }
 
