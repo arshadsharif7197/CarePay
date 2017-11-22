@@ -1,2 +1,3 @@
-include ':CarePayLibrary', ':CarePayServiceLibrary', ':CarePayPatient', ':CarePayPracticeLibrary', ':CarePayPracticeClover', ':CarePayPracticeTablet', ':payeezysdk'//, ':shamrocksdk'
+include ':CarePayLibrary', ':CarePayServiceLibrary', ':CarePayPatient', ':CarePayPracticeLibrary', ':CarePayPracticeClover', ':CarePayPracticeTablet', ':payeezysdk'
+//include ':shamrocksdk'
 //project(':shamrocksdk').projectDir = new File(settingsDir, '../../shamrock_android_sdk/shamrocksdk')

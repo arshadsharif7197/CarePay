@@ -50,9 +50,11 @@ import com.carecloud.shamrocksdk.connections.DeviceInfo;
 import com.carecloud.shamrocksdk.connections.interfaces.ConnectionActionCallback;
 import com.carecloud.shamrocksdk.connections.interfaces.ListDeviceCallback;
 import com.carecloud.shamrocksdk.connections.models.Device;
+import com.carecloud.shamrocksdk.connections.models.defs.DeviceDef;
 import com.carecloud.shamrocksdk.payment.ClientPayment;
 import com.carecloud.shamrocksdk.payment.interfaces.ClientPaymentRequestCallback;
 import com.carecloud.shamrocksdk.payment.models.PaymentRequest;
+import com.carecloud.shamrocksdk.payment.models.defs.StateDef;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
@@ -246,7 +248,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                processPaymentButton.setEnabled(selectedDevice != null && selectedDevice.getState().equals(Device.STATE_READY));
+                processPaymentButton.setEnabled(selectedDevice != null && selectedDevice.getState().equals(DeviceDef.STATE_READY));
             }
         });
     }
@@ -552,7 +554,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
                 return;
             }
             Device device = deviceMap.get(deviceName.substring(index));
-            device.setState(Device.STATE_OFFLINE);
+            device.setState(DeviceDef.STATE_OFFLINE);
             setAdapter();
             if(selectedDevice != null && selectedDevice.getDeviceId().equals(deviceName)){
                 selectedDevice = device;
@@ -569,7 +571,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
             setAdapter();
             if(selectedDevice != null && selectedDevice.getDeviceId().equals(device.getDeviceId())){
                 selectedDevice = findDevice;
-                if(selectedDevice.getState().equals(Device.STATE_IN_USE)){
+                if(selectedDevice.getState().equals(DeviceDef.STATE_IN_USE)){
                     toggleSelectDevice(true);
                 }else{
                     toggleSelectDevice(false);
@@ -590,17 +592,17 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         public void onPaymentRequestUpdate(String paymentRequestId, PaymentRequest paymentRequest, JsonElement recordObject) {
             switch (paymentRequest.getState()){
                 default:
-                case PaymentRequest.STATE_ACKNOWLEDGED:
-                case PaymentRequest.STATE_CAPTURED:
+                case StateDef.STATE_ACKNOWLEDGED:
+                case StateDef.STATE_CAPTURED:
                     showProgressDialog();
                     break;
-                case PaymentRequest.STATE_CANCELED:
+                case StateDef.STATE_CANCELED:
                     releasePaymentRequest(paymentRequestId);
                     hideProgressDialog();
                     break;
-                case PaymentRequest.STATE_COMPLETED:
-                case PaymentRequest.STATE_PROCESSING:
-                case PaymentRequest.STATE_RECORDING:
+                case StateDef.STATE_COMPLETED:
+                case StateDef.STATE_PROCESSING:
+                case StateDef.STATE_RECORDING:
                     hideProgressDialog();
                     onPaymentCompleted(paymentRequestId, recordObject);
                     break;
