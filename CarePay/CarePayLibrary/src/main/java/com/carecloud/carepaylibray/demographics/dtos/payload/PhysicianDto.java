@@ -19,8 +19,11 @@ public class PhysicianDto {
     @SerializedName("npi")
     private String npi;
     @Expose
-    @SerializedName("speciality")
+    @SerializedName("specialty")
     private String speciality;
+    @Expose
+    @SerializedName("title")
+    private String title;
     @Expose
     @SerializedName("address")
     private DemographicAddressPayloadDTO address;
@@ -69,8 +72,49 @@ public class PhysicianDto {
 
     public String getFullName() {
         if (fullName == null) {
-            fullName = firstName + " " + lastName;
+            StringBuffer sb = new StringBuffer();
+            if (title != null) {
+                sb.append(title).append(" ");
+            }
+            if (firstName != null) {
+                sb.append(firstName);
+            }
+            if (lastName != null) {
+                sb.append(" ").append(lastName);
+            }
+            fullName = sb.toString();
         }
         return fullName;
     }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    /**
+     * @return the firstname and the first letter of the lastname
+     */
+    public String getFormattedName() {
+        StringBuffer sb = new StringBuffer();
+        if (title != null) {
+            sb.append(title).append(" ");
+        }
+        if (firstName != null) {
+            sb.append(firstName);
+        }
+        if (lastName != null) {
+            sb.append(" ").append(lastName.substring(0, 1)).append(".");
+        }
+        return sb.toString();
+    }
+
+
 }
