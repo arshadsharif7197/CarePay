@@ -410,7 +410,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         cityEditText.setText(selectedEmployer.getAddress().getCity());
         cityEditText.getOnFocusChangeListener()
                 .onFocusChange(cityEditText, !StringUtil.isNullOrEmpty(cityEditText.getText().toString()));
-        cityEditText.addTextChangedListener(getEmptyValidatorWatcher(cityTextInputLayout, true));
+        cityEditText.addTextChangedListener(clearValidationErrorsOnTextChange(cityTextInputLayout));
 
         stateTextInputLayout = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
         stateEditText = (EditText) view.findViewById(R.id.stateTextView);
@@ -431,7 +431,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         stateEditText.setText(selectedEmployer.getAddress().getState());
         stateEditText.getOnFocusChangeListener()
                 .onFocusChange(stateEditText, !StringUtil.isNullOrEmpty(stateEditText.getText().toString()));
-        stateEditText.addTextChangedListener(getEmptyValidatorWatcher(stateTextInputLayout, true));
+        stateEditText.addTextChangedListener(clearValidationErrorsOnTextChange(stateTextInputLayout));
 
         TextInputLayout phoneTextInputLayout = (TextInputLayout) view.findViewById(R.id.phoneTextInputLayout);
         EditText phoneEditText = (EditText) view.findViewById(R.id.phoneTextView);
@@ -779,30 +779,5 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                     demographicsSettingsDTO.getMetadata().getNewDataModel().getDemographic().getReferringPhysician());
         }
         checkIfEnableButton();
-    }
-
-    private TextWatcher getEmptyValidatorWatcher(final TextInputLayout inputLayout, final boolean checkEnable) {
-        return new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence sequence, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (editable.length() > 0) {
-                    inputLayout.setError(null);
-                    inputLayout.setErrorEnabled(false);
-                }
-                if (checkEnable) {
-                    checkIfEnableButton();
-                }
-            }
-        };
     }
 }
