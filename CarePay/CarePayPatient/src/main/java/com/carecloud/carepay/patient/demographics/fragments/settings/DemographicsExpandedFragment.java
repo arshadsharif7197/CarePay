@@ -247,7 +247,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         final EditText editText = (EditText) view.findViewById(editTextId);
         editText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(inputLayout, null));
         if (physician != null) {
-            editText.setText(physician.getFullName());
+            editText.setText(physician.getFormattedName());
         }
         editText.getOnFocusChangeListener().onFocusChange(editText,
                 !StringUtil.isNullOrEmpty(editText.getText().toString().trim()));
@@ -430,7 +430,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         phoneEditText.addTextChangedListener(phoneInputFormatter);
         phoneEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(phoneTextInputLayout, null));
         if (selectedEmployer.getAddress() != null) {
-            phoneEditText.setText(StringUtil.formatPhoneNumber(selectedEmployer.getAddress().getPhone()));
+            phoneEditText.setText(StringUtil.formatPhoneNumber(selectedEmployer.getAddress().getPhoneNumber()));
         }
         phoneEditText.getOnFocusChangeListener()
                 .onFocusChange(phoneEditText, !StringUtil.isNullOrEmpty(phoneEditText.getText().toString()));
@@ -630,7 +630,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
 
             String phone = StringUtil.revertToRawPhoneFormat(((TextView) findViewById(R.id.phoneTextView))
                     .getText().toString().trim());
-            selectedEmployer.getAddress().setPhone(phone);
+            selectedEmployer.getAddress().setPhoneNumber(phone);
 
             employmentInfoModel.setEmployerDto(selectedEmployer);
         } else {

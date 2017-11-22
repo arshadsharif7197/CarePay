@@ -30,7 +30,7 @@ public class DemographicPayloadResponseDTO extends DemographicsSettingsPayloadDT
 
     @Expose
     @SerializedName("physicians")
-    private PhysicianWrapper physicians = new PhysicianWrapper();
+    private List<PhysicianDto> physicians = new ArrayList<>();
 
     public DemographicPayloadInfoDTO getDemographics() {
         return demographics;
@@ -70,11 +70,11 @@ public class DemographicPayloadResponseDTO extends DemographicsSettingsPayloadDT
         this.checkinSettings = checkinSettings;
     }
 
-    public PhysicianWrapper getPhysicians() {
+    public List<PhysicianDto> getPhysicians() {
         return physicians;
     }
 
-    public void setPhysicians(PhysicianWrapper physicians) {
+    public void setPhysicians(List<PhysicianDto> physicians) {
         this.physicians = physicians;
     }
 }
