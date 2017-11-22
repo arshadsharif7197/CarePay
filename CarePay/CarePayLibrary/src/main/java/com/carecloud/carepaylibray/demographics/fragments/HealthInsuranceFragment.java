@@ -34,6 +34,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
     private TextView insurancePhotoAlert;
     private boolean showAlert = false;
+    private boolean noPrimaryInsuranceFound;
 
     public interface InsuranceDocumentScannerListener {
         void editInsurance(DemographicDTO demographicDTO, Integer editedIndex, boolean showAsDialog);
@@ -104,42 +105,56 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     private List<DemographicInsurancePayloadDTO> getInsurances(DemographicDTO demographicDTO) {
         List<DemographicInsurancePayloadDTO> insuranceList = new ArrayList<>();
         if (demographicDTO != null) {
+            boolean isThereAnyPrimaryInsurance = false;
             for (DemographicInsurancePayloadDTO insurance : demographicDTO.getPayload().getDemographics()
                     .getPayload().getInsurances()) {
                 if (!insurance.isDeleted()) {
                     insuranceList.add(insurance);
+                    if (insurance.getInsuranceType().toLowerCase().equals("primary")) {
+                        isThereAnyPrimaryInsurance = true;
+                    }
                     if (insurance.getInsurancePhotos().size() == 0) {
                         showAlert = true;
                     }
                 }
             }
+            if (!demographicDTO.getPayload().getDemographics().getPayload().getInsurances().isEmpty()
+                    && !isThereAnyPrimaryInsurance) {
+                noPrimaryInsuranceFound = true;
+                showAlert = true;
+            }
         }
         return insuranceList;
     }
 
-    private void showAlert() {
-        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT) {
-            new CustomMessageToast(getActivity(), Label.getLabel("demographics_insurance_no_photo_alert"),
-                    CustomMessageToast.NOTIFICATION_TYPE_WARNING).show();
-        } else {
-            insurancePhotoAlert.setText(Label.getLabel("demographics_insurance_no_photo_alert"));
-            insurancePhotoAlert.setVisibility(View.VISIBLE);
-        }
-    }
-
     private void initializeViews() {
-        if(demographicDTO != null) {
+        if (demographicDTO != null) {
             if (hasInsurance()) {
                 insurancePhotoAlert.setVisibility(View.GONE);
                 adapter.setInsurancesList(getInsurances(demographicDTO));
                 if (showAlert) {
                     showAlert();
                     showAlert = false;
+                    noPrimaryInsuranceFound = false;
                 }
             } else {
                 getFragmentManager().popBackStack(); //remove the health insurance fragment from the stack
                 editInsurance(null, false);
             }
+        }
+    }
+
+    private void showAlert() {
+        String alertMessage = Label.getLabel("demographics_insurance_no_photo_alert");
+        if (noPrimaryInsuranceFound) {
+            alertMessage = Label.getLabel("demographics_insurance_no_primary_alert");
+        }
+        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT) {
+            new CustomMessageToast(getActivity(), alertMessage,
+                    CustomMessageToast.NOTIFICATION_TYPE_WARNING).show();
+        } else {
+            insurancePhotoAlert.setText(alertMessage);
+            insurancePhotoAlert.setVisibility(View.VISIBLE);
         }
     }
 
@@ -150,8 +165,8 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
             attachCallback(getContext());
         }
         int total = checkinFlowCallback.getTotalSteps();
-        int step = CheckinFlowCallback.INSURANCE>total?total:CheckinFlowCallback.INSURANCE;
-        stepProgressBar.setCurrentProgressDot(step-1);
+        int step = CheckinFlowCallback.INSURANCE > total ? total : CheckinFlowCallback.INSURANCE;
+        stepProgressBar.setCurrentProgressDot(step - 1);
         checkinFlowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, total, step);
         checkinFlowCallback.setCurrentStep(step);
     }
@@ -186,7 +201,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
                 editInsurance(null, true);
             }
         });
-        if(demographicDTO == null){
+        if (demographicDTO == null) {
             addAnotherButton.setVisibility(View.GONE);
         }
 
