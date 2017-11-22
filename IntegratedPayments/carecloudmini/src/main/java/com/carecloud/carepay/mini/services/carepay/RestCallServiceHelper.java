@@ -170,6 +170,32 @@ public class RestCallServiceHelper {
     }
 
     /**
+     * Make Http call to post a refund object id to carepay for processing
+     * @param callback callback
+     * @param token kms token from sdk
+     * @param payload payment object id payload
+     */
+    public void executePostRefund(@NonNull final RestCallServiceCallback callback, String token, @NonNull String payload){
+        callback.onPreExecute();
+        Call<JsonElement> postRefundCall = getPostRefundCall(token, payload);
+        postRefundCall.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                if(response.isSuccessful()){
+                    callback.onPostExecute(response.body());
+                }else{
+                    callback.onFailure(parseError(response, "error", "message"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable throwable) {
+                callback.onFailure(throwable.getMessage());
+            }
+        });
+    }
+
+    /**
      * Create the call for posting payment object to carepay
      * @param token kms token from sdk
      * @param payload payment object id payload
@@ -185,6 +211,21 @@ public class RestCallServiceHelper {
         return restCallService.postPaymentRequest(payload);
     }
 
+    /**
+     * Create the call for posting refund object to carepay
+     * @param token kms token from sdk
+     * @param payload payment object id payload
+     * @return new Rest Call
+     */
+    public Call<JsonElement> getPostRefundCall(String token, @NonNull String payload){
+        Map<String, String> customHeaders = new HashMap<>();
+        customHeaders.put(HEADER_KEY_AUTH_TYPE, HEADER_VALUE_AUTH_TYPE_KMS);
+        customHeaders.put(HEADER_KEY_AUTHORIZATION, token);
+
+        RestCallService restCallService = RestServiceGenerator.getInstance().createService(RestCallService.class, getFullHeaders(customHeaders));
+
+        return restCallService.postRefundRequest(payload);
+    }
 
     /**
      * Parse Response to retrieve error string
