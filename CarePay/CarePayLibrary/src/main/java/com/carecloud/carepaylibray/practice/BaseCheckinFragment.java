@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.practice;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -8,25 +9,18 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
+import com.carecloud.carepaylibray.interfaces.IcicleInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.util.List;
 
 /**
- * Created by lsoco_user on 11/29/2016.
+ * Created by lsoco_user on 11/29/2016
  */
 
-public abstract class BaseCheckinFragment extends BaseFragment {
+public abstract class BaseCheckinFragment extends BaseFragment implements IcicleInterface {
 
     protected FlowStateInfo flowStateInfo;
-
-    public FlowStateInfo getFlowStateInfo() {
-        return flowStateInfo;
-    }
-
-    public void setFlowStateInfo(FlowStateInfo flowStateInfo) {
-        this.flowStateInfo = flowStateInfo;
-    }
 
     public boolean navigateBack() {
         return false;
@@ -77,6 +71,25 @@ public abstract class BaseCheckinFragment extends BaseFragment {
             }
         }
         return null;
+    }
+
+    private Bundle frozenIcicle = null;
+
+    @Override
+    public IcicleInterface pushData( Bundle icicle ){
+        if(frozenIcicle == null){
+            frozenIcicle = icicle;
+        }else{
+            frozenIcicle.putAll(icicle);
+        }
+        return this;
+    }
+
+    @Override
+    public Bundle popData(){
+        Bundle icicle = (Bundle) frozenIcicle.clone();
+        frozenIcicle = null;
+        return icicle;
     }
 
 }

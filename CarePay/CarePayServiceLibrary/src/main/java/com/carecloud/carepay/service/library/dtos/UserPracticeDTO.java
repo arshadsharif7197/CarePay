@@ -25,6 +25,9 @@ public class UserPracticeDTO {
     @SerializedName("practice_phone")
     @Expose
     private String practicePhone;
+    @SerializedName("practice_address")
+    @Expose
+    private UserPracticeAddressDTO addressDTO = new UserPracticeAddressDTO();
 
     @SerializedName("prefix")
     @Expose
@@ -133,5 +136,13 @@ public class UserPracticeDTO {
 
     public void setPracticePhone(String practicePhone) {
         this.practicePhone = practicePhone;
+    }
+
+    public UserPracticeAddressDTO getAddressDTO() {
+        return addressDTO;
+    }
+
+    public void setAddressDTO(UserPracticeAddressDTO addressDTO) {
+        this.addressDTO = addressDTO;
     }
 }
