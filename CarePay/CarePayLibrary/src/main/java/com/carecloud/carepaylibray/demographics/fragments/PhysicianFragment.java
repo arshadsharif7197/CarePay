@@ -194,12 +194,13 @@ public class PhysicianFragment extends BaseDialogFragment implements PhysicianAd
         }
 
         if (!dto.getPayload().getAppointmentpayloaddto().isEmpty()) {
+            queries.put("practice_mgmt", dto.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
             queries.put("practice_id", dto.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
             queries.put("appointment_id", dto.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
         }
 
         TransitionDTO searchPhysiciansLink = dto.getMetadata().getLinks().getSearchPhysicians();
-        getWorkflowServiceHelper().execute(searchPhysiciansLink, updateDemographicsCallback, queries);
+        getWorkflowServiceHelper().execute(searchPhysiciansLink, searchPhysicianCallback, queries);
     }
 
 
@@ -261,7 +262,7 @@ public class PhysicianFragment extends BaseDialogFragment implements PhysicianAd
         listView.setOnItemClickListener(clickListener);
     }
 
-    private WorkflowServiceCallback updateDemographicsCallback = new WorkflowServiceCallback() {
+    private WorkflowServiceCallback searchPhysicianCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();

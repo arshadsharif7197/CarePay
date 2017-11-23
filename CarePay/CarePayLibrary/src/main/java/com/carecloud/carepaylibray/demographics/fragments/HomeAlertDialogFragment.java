@@ -24,6 +24,12 @@ public class HomeAlertDialogFragment extends BaseDialogFragment {
         // Required empty public constructor
     }
 
+    /**
+     *
+     * @param title the dialog title
+     * @param message the dialog message
+     * @return a new instance
+     */
     public static HomeAlertDialogFragment newInstance(String title, String message) {
         Bundle args = new Bundle();
         args.putString("title", title);
