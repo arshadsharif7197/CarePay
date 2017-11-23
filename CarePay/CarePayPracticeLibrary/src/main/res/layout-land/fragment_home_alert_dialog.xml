@@ -33,7 +33,7 @@
         android:layout_marginEnd="@dimen/dimen_26dp"
         android:layout_marginStart="@dimen/dimen_26dp"
         android:orientation="vertical"
-        tools:context="com.carecloud.carepay.practice.library.checkin.dialog.HomeAlertDialogFragment">
+        tools:context="com.carecloud.carepay.practice.library.com.carecloud.carepaylibray.demographics.fragments.HomeAlertDialogFragment">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/dialogTitleTextView"

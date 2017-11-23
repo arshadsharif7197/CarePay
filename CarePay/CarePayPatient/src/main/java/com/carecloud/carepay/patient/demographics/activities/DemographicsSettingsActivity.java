@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.demographics.activities;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -27,6 +28,7 @@ import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.PhysicianDto;
 import com.carecloud.carepaylibray.demographics.fragments.EmergencyContactFragment;
+import com.carecloud.carepaylibray.demographics.fragments.HomeAlertDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.PhysicianFragment;
 import com.carecloud.carepaylibray.demographics.interfaces.DemographicExtendedInterface;
@@ -206,6 +208,15 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     @Override
     public void goOneStepBack() {
         onBackPressed();
+    }
+
+    @Override
+    public void showRemovePrimaryInsuranceDialog(HomeAlertDialogFragment.HomeAlertInterface callback) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment.newInstance(null, null);
+        homeAlertDialogFragment.setCallback(callback);
+        String tag = homeAlertDialogFragment.getClass().getName();
+        homeAlertDialogFragment.show(ft, tag);
     }
 
     public void addFragment(Fragment fragment, boolean addToBackStack) {

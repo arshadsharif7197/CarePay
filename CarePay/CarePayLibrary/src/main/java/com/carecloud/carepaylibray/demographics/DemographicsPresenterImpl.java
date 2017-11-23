@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
@@ -24,6 +25,7 @@ import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.EmergencyContactFragment;
 import com.carecloud.carepaylibray.demographics.fragments.FormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
+import com.carecloud.carepaylibray.demographics.fragments.HomeAlertDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.IntakeFormsFragment;
@@ -107,7 +109,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     @Override
-    public Fragment getCurrentFragment(){
+    public Fragment getCurrentFragment() {
         return currentFragment;
     }
 
@@ -397,6 +399,17 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         if (demographicsView != null) {
             demographicsView.onBackPressed();
         }
+    }
+
+    @Override
+    public void showRemovePrimaryInsuranceDialog(HomeAlertDialogFragment.HomeAlertInterface callback) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment
+                .newInstance(Label.getLabel("demographics_insurance_primary_alert_title"),
+                        Label.getLabel("demographics_insurance_primary_alert_message"));
+        homeAlertDialogFragment.setCallback(callback);
+        String tag = homeAlertDialogFragment.getClass().getName();
+        homeAlertDialogFragment.show(ft, tag);
     }
 
     protected CheckInDemographicsBaseFragment getDemographicFragment(int step) {
