@@ -21,9 +21,10 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/socialSecurityNumber"
                 style="@style/SigninSignupEditStyle"
+                android:digits="0123456789-"
                 android:imeOptions="actionNext"
                 android:inputType="number"
-                android:maxLength="10"
+                android:maxLength="11"
                 app:customAssetFont="proxima_nova_regular"
                 app:hintTextAppearance="@style/FloatingLabelStyle"
                 breeze:hintKey="demographics_social_security"

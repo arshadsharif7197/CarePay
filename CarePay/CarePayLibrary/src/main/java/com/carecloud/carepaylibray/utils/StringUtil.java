@@ -112,6 +112,33 @@ public class StringUtil {
     }
 
     /**
+     * format phone number
+     *
+     * @param ssn phonenumber as a string
+     * @return formated string
+     */
+    public static String formatSocialSecurityNumber(String ssn) {
+        if (ssn == null) {
+            return null;
+        }
+        StringBuilder socialSecurityNumberString = new StringBuilder();
+        socialSecurityNumberString.append(ssn);
+        if (socialSecurityNumberString.length() > 0) {
+            if (socialSecurityNumberString.length() == 3 || socialSecurityNumberString.length() == 7)
+                socialSecurityNumberString.append("-");
+            if (socialSecurityNumberString.length() > 3) {
+                if (Character.isDigit(socialSecurityNumberString.charAt(3)))
+                    socialSecurityNumberString.insert(3, "-");
+            }
+            if (socialSecurityNumberString.length() > 6) {
+                if (Character.isDigit(socialSecurityNumberString.charAt(6)))
+                    socialSecurityNumberString.insert(6, "-");
+            }
+        }
+        return socialSecurityNumberString.toString();
+    }
+
+    /**
      * format zipcode
      *
      * @param zipcode zipcode as a string
@@ -128,6 +155,37 @@ public class StringUtil {
         }
 
         return zipCodeString.toString();
+    }
+
+    /**
+     * Util to auto-format a edit text holding a phone
+     *
+     * @param ssn The editable passed in the text watcher of that edit
+     */
+    public static void autoFormatSocialSecurityNumber(Editable ssn, int lengthBefore) {
+        int currentLength = ssn.length();
+        if (lengthBefore < currentLength) {
+            char lastChar = ssn.charAt(currentLength - 1);
+            if (currentLength == 3 && lastChar != '-') {
+                ssn.append("-");
+            }
+
+            if (currentLength == 4 && lastChar != '-') { // re-insert / after its deletion
+                ssn.replace(currentLength - 1, currentLength, "-" + lastChar);
+            }
+
+            if (currentLength == 6 && lastChar != '-') {
+                ssn.append("-");
+            }
+
+            if (currentLength == 7 && lastChar != '-') { // re-insert / after its deletion
+                ssn.replace(currentLength - 1, currentLength, "-" + lastChar);
+            }
+
+            if (lengthBefore != 3 && lengthBefore != 6 && lastChar == '-') {
+                ssn.replace(currentLength - 1, currentLength, "");
+            }
+        }
     }
 
     /**
