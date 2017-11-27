@@ -2,7 +2,6 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="signin_button_textsize">18sp</dimen>
 
     <!-- Default dimens which will be use for any default styling  -->
     <dimen name="dimen_1dp">1dp</dimen>
@@ -28,12 +27,10 @@
     <dimen name="dimen_28dp">28dp</dimen>
     <dimen name="dimen_30dp">30dp</dimen>
     <dimen name="dimen_34dp">34dp</dimen>
-    <dimen name="dimen_35dp">35dp</dimen>
     <dimen name="dimen_40dp">40dp</dimen>
     <dimen name="dimen_44dp">44dp</dimen>
     <dimen name="dimen_60dp">60dp</dimen>
     <dimen name="dimen_65dp">65dp</dimen>
-    <dimen name="dimen_106dp">106dp</dimen>
     <dimen name="dimen_144dp">144dp</dimen>
     <dimen name="dimen_175dp">175dp</dimen>
     <dimen name="dimen_300dp">300dp</dimen>
@@ -48,23 +45,17 @@
     <dimen name="dimen_57dp">57dp</dimen>
     <dimen name="dimen_81dp">81dp</dimen>
     <dimen name="dimen_138dp">138dp</dimen>
-    <dimen name="dimen_178dp">178dp</dimen>
-    <dimen name="dimen_222dp">222dp</dimen>
     <dimen name="dimen_230dp">230dp</dimen>
     <dimen name="dimen_240dp">240dp</dimen>
-    <dimen name="dimen_255dp">255dp</dimen>
-    <dimen name="dimen_369dp">369dp</dimen>
-    <dimen name="dimen_374dp">374dp</dimen>
     <dimen name="dimen_500dp">500dp</dimen>
-    <dimen name="dimen_510dp">510dp</dimen>
     <dimen name="dimen_612dp">612dp</dimen>
     <dimen name="dimen_684dp">684dp</dimen>
 
     <dimen name="text_size_12sp">12sp</dimen>
-    <dimen name="text_size_13sp">13sp</dimen>
     <dimen name="text_size_14sp">14sp</dimen>
     <dimen name="text_size_16sp">16sp</dimen>
     <dimen name="text_size_17sp">17sp</dimen>
+    <dimen name="text_size_20sp">20sp</dimen>
     <dimen name="text_size_21sp">21sp</dimen>
     <dimen name="text_size_23sp">23sp</dimen>
     <dimen name="text_size_28sp">28sp</dimen>
@@ -73,10 +64,6 @@
     <dimen name="text_size_50sp">50sp</dimen>
     <dimen name="text_size_90sp">90sp</dimen>
 
-    <dimen name="appointment_cart_padding">10dp</dimen>
-    <dimen name="appointment_cart_elevation">30dp</dimen>
-    <dimen name="appointment_cart_corner_radius">10dp</dimen>
-    <dimen name="appointment_cart_patient_textsize">22sp</dimen>
     <dimen name="appointment_cart_provider_textsize">17sp</dimen>
     <dimen name="appointment_cart_amount_textsize">17sp</dimen>
     <dimen name="appointment_cart_time_textsize">16sp</dimen>
@@ -89,7 +76,6 @@
     <dimen name="view_margin">10dp</dimen>
     <dimen name="search_edittext_padding_right">50dp</dimen>
     <dimen name="clear_search_button_margin">-40dp</dimen>
-    <dimen name="recyclerview_padding_bottom">40dp</dimen>
     <dimen name="custom_filter_text_size">18sp</dimen>
     <dimen name="custom_filter_view_margin">5dp</dimen>
     <dimen name="custom_filter_patient_image_size">32dp</dimen>
@@ -108,7 +94,6 @@
     <dimen name="button_delete_key_height">27dp</dimen>
 
     <!--Change mode dialog-->
-    <dimen name="logout_padding_top">57dp</dimen>
     <dimen name="home_select_mode_button_width">176dp</dimen>
     <dimen name="home_select_mode_button_height">219dp</dimen>
 
@@ -118,15 +103,7 @@
     <dimen name="custom_appointment_dialog_view_margin">9dp</dimen>
     <dimen name="custom_appointment_dialog_view_padding">10dp</dimen>
     <dimen name="custom_appointment_dialog_view_textsize_small">14sp</dimen>
-    <dimen name="custom_appointment_dialog_view_textsize_medium">24sp</dimen>
-    <dimen name="custom_appointment_dialog_view_textsize_large">32sp</dimen>
-    <dimen name="custom_appointment_dialog_label_margin">16dp</dimen>
-    <dimen name="appointment_detail_dialog_divider_width">400dp</dimen>
-    <dimen name="appointment_detail_dialog_divider_margin">12dp</dimen>
-    <dimen name="custom_appointment_dialog_layout_margin">14dp</dimen>
-    <dimen name="custom_appointment_dialog_layout_padding">20dp</dimen>
     <dimen name="custom_appointment_dialog_checkbox_margin">10dp</dimen>
-    <dimen name="appointment_detail_dialog_checkbox_divider_width">100dp</dimen>
     <dimen name="appointment_detail_dialog_checkbox_divider_height">4dp</dimen>
     <dimen name="appointment_detail_dialog_checkbox_divider_margin">-50dp</dimen>
     <dimen name="appointment_detail_dialog_checkbox_divider_margin_top">20dp</dimen>
@@ -134,11 +111,7 @@
     <dimen name="custom_appointment_dialog_button_textsize">22sp</dimen>
 
     <dimen name="custom_appointment_dialog_background_shape_radius">7dp</dimen>
-    <dimen name="custom_appointment_dialog_button_shape_radius">25dp</dimen>
-    <dimen name="custom_appointment_dialog_button_shape_padding_top">16dp</dimen>
-    <dimen name="custom_appointment_dialog_button_shape_padding_left">38dp</dimen>
     <dimen name="custom_appointment_dialog_checkbox_normal_size">16dp</dimen>
-    <dimen name="custom_appointment_dialog_checkbox_normal_end_size">24dp</dimen>
 
     <!-- Home Screen -->
 
@@ -176,34 +149,17 @@
     <dimen name="patient_splash_button_height">51dp</dimen>
 
     <!--Signature view dialog-->
-    <dimen name="sign_dialog_width">510dp</dimen>
-    <dimen name="sign_dialog_title_padding">19dp</dimen>
-    <dimen name="sign_dialog_msg_padding">55dp</dimen>
-    <dimen name="sign_dialog_switch_padding">24.5dp</dimen>
-    <dimen name="sign_dialog_clear_width">78dp</dimen>
-    <dimen name="sign_dialog_clear_height">32dp</dimen>
-    <dimen name="sign_dialog_clear_margin">24.3dp</dimen>
-    <dimen name="sign_dialog_close_font">12sp</dimen>
-    <dimen name="sign_dialog_title_font">23sp</dimen>
-    <dimen name="sign_dialog_msg_font">16sp</dimen>
-    <dimen name="sign_dialog_helper_font">14sp</dimen>
-    <dimen name="sign_dialog_switch_font">17sp</dimen>
 
     <!-- Check-in -->
-    <dimen name="checkin_back_width">171dp</dimen>
-    <dimen name="checkin_back_height">45dp</dimen>
-    <dimen name="checkin_logo_width">150dp</dimen>
     <dimen name="checkin_info_label_width">150dp</dimen>
     <dimen name="checked_in_card_status_top_margin">36dp</dimen>
 
     <!--Provider lists-->
     <dimen name="provider_list_title_margin">34dp</dimen>
-    <dimen name="provider_list_margin">54dp</dimen>
     <dimen name="provider_no_list_margin">72dp</dimen>
     <dimen name="provider_card_width">380dp</dimen>
     <dimen name="provider_card_header_height">150dp</dimen>
     <dimen name="provider_card_avatar_size">100dp</dimen>
-    <dimen name="provider_card_footer_height">268dp</dimen>
     <dimen name="provider_card_address_margin">110dp</dimen>
     <dimen name="provider_card_place_margin">19dp</dimen>
 
@@ -216,12 +172,9 @@
     <dimen name="appointment_summary_provider_image_margin">-50dp</dimen>
 
     <!--Practice Payment-->
-    <dimen name="patient_list_margin">185dp</dimen>
     <dimen name="profile_pic_size">60dp</dimen>
 
     <!--Practice Responsibility dialog-->
-    <dimen name="dialog_row_padding">24.5dp</dimen>
-    <dimen name="responsibility_list_margin">80dp</dimen>
 
     <dimen name="dimen_72dp">72dp</dimen>
     <dimen name="payment_distibution_dialog_height">600dp</dimen>
