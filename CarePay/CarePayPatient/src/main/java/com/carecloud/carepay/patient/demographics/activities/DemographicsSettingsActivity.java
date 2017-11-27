@@ -24,6 +24,7 @@ import com.carecloud.carepay.patient.payment.fragments.CreditCardDetailsFragment
 import com.carecloud.carepay.patient.payment.fragments.CreditCardListFragment;
 import com.carecloud.carepay.patient.payment.fragments.SettingAddCreditCardFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.PhysicianDto;
@@ -249,5 +250,10 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         if (fragment instanceof PhysicianFragmentInterface) {
             ((PhysicianFragmentInterface) fragment).setPhysician(physician, physicianType);
         }
+    }
+
+    @Override
+    public AppointmentDTO getAppointment() {
+        return null;
     }
 }

@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.demographics.interfaces;
 
 import android.support.v7.widget.Toolbar;
 
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.PhysicianDto;
 import com.carecloud.carepaylibray.interfaces.DTOInterface;
 
@@ -16,4 +17,6 @@ public interface PhysicianInterface extends DTOInterface {
     void showSearchPhysicianFragmentDialog(PhysicianDto physicianDto, int physicianType);
 
     void onPhysicianSelected(PhysicianDto physician, int physicianType);
+
+    AppointmentDTO getAppointment();
 }
