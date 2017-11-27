@@ -229,7 +229,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ((ISession) getContext()).hideProgressDialog();
+            hideProgressDialog();
 
             Gson gson = new Gson();
             MedicationsAllergiesResultsModel searchResults = gson.fromJson(workflowDTO.toString(), MedicationsAllergiesResultsModel.class);
@@ -242,7 +242,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ((ISession) getContext()).hideProgressDialog();
+            hideProgressDialog();
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
