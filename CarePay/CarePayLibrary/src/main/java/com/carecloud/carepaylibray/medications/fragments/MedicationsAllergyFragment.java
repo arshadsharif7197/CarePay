@@ -61,7 +61,7 @@ import java.util.Map;
 
 public class MedicationsAllergyFragment extends BaseCheckinFragment implements
         MedicationAllergiesAdapter.MedicationAllergiesAdapterCallback, MediaViewInterface,
-        DocumentScannerAdapter.ImageLoadCallback{
+        DocumentScannerAdapter.ImageLoadCallback {
 
     public interface MedicationAllergyCallback {
         void showMedicationSearch();
@@ -98,36 +98,36 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
     private Handler handler = new Handler();
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
         attachCallback(context);
     }
 
     @Override
-    public void attachCallback(Context context){
-        try{
+    public void attachCallback(Context context) {
+        try {
             if (context instanceof DemographicsView) {
                 callback = ((DemographicsView) context).getPresenter();
             } else {
                 callback = (DemographicsPresenter) context;
             }
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached Context must implement DemographicsPresenter");
         }
 
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(callback == null){
+        if (callback == null) {
             attachCallback(getContext());
         }
         callback.setCheckinFlow(CheckinFlowState.MEDICATIONS_AND_ALLERGIES, 1, 1);
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
         Gson gson = new Gson();
@@ -139,12 +139,12 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_medications_allergy, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         inflateToolbarViews(view);
         initViews(view);
 
@@ -154,18 +154,18 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                scrollView.scrollTo(0,0);
+                scrollView.scrollTo(0, 0);
 
             }
-        },30);
+        }, 30);
 
         View container = view.findViewById(R.id.container_main);
         hideKeyboardOnViewTouch(container);
     }
 
-    private void inflateToolbarViews(View view){
+    private void inflateToolbarViews(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
-        if(toolbar == null) {
+        if (toolbar == null) {
             return;
         }
         toolbar.setTitle("");
@@ -175,12 +175,12 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
 
 
         TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        if(title!=null) {
+        if (title != null) {
             title.setText(Label.getLabel("medication_allergies_titlebar_text"));
         }
     }
 
-    private void initViews(View view){
+    private void initViews(View view) {
         TextView allergyChooseButton = (TextView) view.findViewById(R.id.allergy_choose_button);
         allergyChooseButton.setOnClickListener(chooseAllergyClickListener);
 
@@ -239,33 +239,33 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
         mediaScannerPresenter.setCaptureView(medicationPhoto);
         documentScannerAdapter = new DocumentScannerAdapter(getContext(), view, mediaScannerPresenter, getApplicationMode().getApplicationType(), false);
 
-        String url =  medicationsAllergiesDTO.getPayload().getMedicationsImage().getPayload().getUrl();
-        if(StringUtil.isNullOrEmpty(url)){
+        String url = medicationsAllergiesDTO.getPayload().getMedicationsImage().getPayload().getUrl();
+        if (StringUtil.isNullOrEmpty(url)) {
             emptyPhotoLayout.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             documentScannerAdapter.setImageView(url, medicationPhoto, false, 0, 0, R.drawable.icn_placeholder_document, this);
         }
 
     }
 
-    private void setAdapters(){
-        if(medicationRecycler.getAdapter()==null) {
+    private void setAdapters() {
+        if (medicationRecycler.getAdapter() == null) {
             MedicationAllergiesAdapter medicationAdapter = new MedicationAllergiesAdapter(getContext(), currentMedications, this);
             medicationRecycler.setAdapter(medicationAdapter);
-        }else{
-            MedicationAllergiesAdapter adapter =((MedicationAllergiesAdapter)medicationRecycler.getAdapter());
+        } else {
+            MedicationAllergiesAdapter adapter = ((MedicationAllergiesAdapter) medicationRecycler.getAdapter());
             adapter.setItems(currentMedications);
             adapter.notifyDataSetChanged();
         }
         setAdapterVisibility();
     }
 
-    private void setAdapterVisibility(){
-        if(currentMedications.isEmpty() && !hasPhoto()){
+    private void setAdapterVisibility() {
+        if (currentMedications.isEmpty() && !hasPhoto()) {
             medicationRecycler.setVisibility(View.GONE);
             assertNoMedications.setVisibility(View.VISIBLE);
             assertNoMedications.setEnabled(true);
-        }else{
+        } else {
             medicationRecycler.setVisibility(View.VISIBLE);
             medicationRecycler.getLayoutManager().setMeasuredDimension(View.MeasureSpec.AT_MOST, View.MeasureSpec.AT_MOST);
             assertNoMedications.setChecked(false);
@@ -278,7 +278,7 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
         validateForm();
     }
 
-    private void validateForm(){
+    private void validateForm() {
         boolean validAllergies = (allergyRecycler.getVisibility() == View.VISIBLE ||
                 !assertNoAllergies.isEnabled() || assertNoAllergies.isChecked());
         boolean validMeds = (!currentMedications.isEmpty() || !assertNoMedications.isEnabled()
@@ -289,24 +289,27 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
         continueButton.setEnabled(valid);
     }
 
-    private boolean hasPhoto(){
+    private boolean hasPhoto() {
         return (!StringUtil.isNullOrEmpty(medicationsAllergiesDTO.getPayload()
                 .getMedicationsImage().getPayload().getUrl()) &&
-                (medicationsPostModel.getMedicationsImage()==null ||
-                !medicationsPostModel.getMedicationsImage().isDelete())) ||
+                (medicationsPostModel.getMedicationsImage() == null ||
+                        !medicationsPostModel.getMedicationsImage().isDelete())) ||
                 !StringUtil.isNullOrEmpty(photoPath);
     }
 
     @Override
     public void deleteItem(MedicationsAllergiesObject item) {
-        if(item instanceof MedicationsObject){
+        if (item instanceof MedicationsObject) {
             //remove Medication from list
             currentMedications.remove(item);
-            if(addMedications.contains(item)){
+            if (addMedications.contains(item)) {
                 addMedications.remove(item);
-            }else {
+            } else {
                 item.setAction(MedicationAllergiesAction.delete);
-                removeMedications.add((MedicationsObject) item);
+                MedicationsObject medicationToDelete = new MedicationsObject();
+                medicationToDelete.setAction(item.getAction());
+                medicationToDelete.setUuid(item.getUuid());
+                removeMedications.add(medicationToDelete);
             }
         }
         setAdapters();
@@ -315,15 +318,16 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
 
     /**
      * Exposed method to add an Medication or Allergy item to the list
+     *
      * @param item item to add
      */
-    public void addItem(MedicationsAllergiesObject item){
-        if(item instanceof  MedicationsObject){
+    public void addItem(MedicationsAllergiesObject item) {
+        if (item instanceof MedicationsObject) {
             //check if exists
-            if(currentMedications.contains(item)){
+            if (currentMedications.contains(item)) {
                 return;
             }
-            if(removeMedications.contains(item)){
+            if (removeMedications.contains(item)) {
                 removeMedications.remove(item);
             }
             item.setAction(MedicationAllergiesAction.add);
@@ -333,7 +337,7 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
         setAdapters();
     }
 
-    private List<MedicationsObject> getAllModifiedItems(){
+    private List<MedicationsObject> getAllModifiedItems() {
         List<MedicationsObject> combinedList = new ArrayList<>();
         combinedList.addAll(addMedications);
         combinedList.addAll(removeMedications);
@@ -371,7 +375,7 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
     private View.OnClickListener removePhotoListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if(!StringUtil.isNullOrEmpty(medicationsAllergiesDTO.getPayload().getMedicationsImage().getPayload().getUrl())) {
+            if (!StringUtil.isNullOrEmpty(medicationsAllergiesDTO.getPayload().getMedicationsImage().getPayload().getUrl())) {
                 MedicationsImagePostModel medicationsImagePostModel = new MedicationsImagePostModel();
                 medicationsImagePostModel.setDelete(true);
                 medicationsPostModel.setMedicationsImage(medicationsImagePostModel);
@@ -410,7 +414,7 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
     private TextView.OnEditorActionListener addUnlistedMedicationListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
-            if(!StringUtil.isNullOrEmpty(textView.getText().toString())) {
+            if (!StringUtil.isNullOrEmpty(textView.getText().toString())) {
                 MedicationsObject medicationsObject = new MedicationsObject();
                 medicationsObject.setDispensableDrugId("");
                 medicationsObject.setDisplayName(textView.getText().toString());
@@ -432,15 +436,15 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
     };
 
 
-    private View.OnFocusChangeListener getOnFocusChangeListener(final String hintString){
+    private View.OnFocusChangeListener getOnFocusChangeListener(final String hintString) {
         return new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 TextView textView = (TextView) view;
-                if(hasFocus){
+                if (hasFocus) {
                     textView.setText(null);
                     textView.setHint(null);
-                }else{
+                } else {
                     textView.setText(null);
                     textView.setHint(hintString);
                 }
@@ -511,9 +515,9 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
 
     @Override
     public void setupImageBase64() {
-        if(!StringUtil.isNullOrEmpty(photoPath)) {
+        if (!StringUtil.isNullOrEmpty(photoPath)) {
             photoPath = DocumentScannerAdapter.getBase64(getContext(), photoPath);
-            if(!StringUtil.isNullOrEmpty(photoPath)) {
+            if (!StringUtil.isNullOrEmpty(photoPath)) {
                 MedicationsImagePostModel medicationsImagePostModel = new MedicationsImagePostModel();
                 medicationsImagePostModel.setPhoto(photoPath);
                 medicationsPostModel.setMedicationsImage(medicationsImagePostModel);
@@ -526,10 +530,10 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
 
     @Override
     public void onImageLoadCompleted(boolean success) {
-        if(success){
+        if (success) {
             emptyPhotoLayout.setVisibility(View.GONE);
             photoLayout.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             emptyPhotoLayout.setVisibility(View.VISIBLE);
             photoLayout.setVisibility(View.GONE);
         }
