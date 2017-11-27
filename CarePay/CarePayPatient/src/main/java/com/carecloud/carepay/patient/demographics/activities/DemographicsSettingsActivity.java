@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.demographics.activities;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -23,10 +24,12 @@ import com.carecloud.carepay.patient.payment.fragments.CreditCardDetailsFragment
 import com.carecloud.carepay.patient.payment.fragments.CreditCardListFragment;
 import com.carecloud.carepay.patient.payment.fragments.SettingAddCreditCardFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.PhysicianDto;
 import com.carecloud.carepaylibray.demographics.fragments.EmergencyContactFragment;
+import com.carecloud.carepaylibray.demographics.fragments.HomeAlertDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.PhysicianFragment;
 import com.carecloud.carepaylibray.demographics.interfaces.DemographicExtendedInterface;
@@ -208,6 +211,15 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         onBackPressed();
     }
 
+    @Override
+    public void showRemovePrimaryInsuranceDialog(HomeAlertDialogFragment.HomeAlertInterface callback) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment.newInstance(null, null);
+        homeAlertDialogFragment.setCallback(callback);
+        String tag = homeAlertDialogFragment.getClass().getName();
+        homeAlertDialogFragment.show(ft, tag);
+    }
+
     public void addFragment(Fragment fragment, boolean addToBackStack) {
         addFragment(R.id.activity_demographics_settings, fragment, addToBackStack);
     }
@@ -238,5 +250,10 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         if (fragment instanceof PhysicianFragmentInterface) {
             ((PhysicianFragmentInterface) fragment).setPhysician(physician, physicianType);
         }
+    }
+
+    @Override
+    public AppointmentDTO getAppointment() {
+        return null;
     }
 }

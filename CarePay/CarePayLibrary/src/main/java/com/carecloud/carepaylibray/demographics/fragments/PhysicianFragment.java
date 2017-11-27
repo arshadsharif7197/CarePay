@@ -25,6 +25,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.adapters.PhysicianAdapter;
@@ -193,13 +194,15 @@ public class PhysicianFragment extends BaseDialogFragment implements PhysicianAd
             queries.put("state_code", stateTextView.getText().toString());
         }
 
-        if (!dto.getPayload().getAppointmentpayloaddto().isEmpty()) {
-            queries.put("practice_id", dto.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
-            queries.put("appointment_id", dto.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
+        if (callback.getAppointment() != null) {
+            AppointmentDTO appointment = callback.getAppointment();
+            queries.put("practice_mgmt", appointment.getMetadata().getPracticeMgmt());
+            queries.put("practice_id", appointment.getMetadata().getPracticeId());
+            queries.put("appointment_id", appointment.getMetadata().getAppointmentId());
         }
 
         TransitionDTO searchPhysiciansLink = dto.getMetadata().getLinks().getSearchPhysicians();
-        getWorkflowServiceHelper().execute(searchPhysiciansLink, updateDemographicsCallback, queries);
+        getWorkflowServiceHelper().execute(searchPhysiciansLink, searchPhysicianCallback, queries);
     }
 
 
@@ -261,7 +264,7 @@ public class PhysicianFragment extends BaseDialogFragment implements PhysicianAd
         listView.setOnItemClickListener(clickListener);
     }
 
-    private WorkflowServiceCallback updateDemographicsCallback = new WorkflowServiceCallback() {
+    private WorkflowServiceCallback searchPhysicianCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();
