@@ -1,0 +1,62 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/dimen_500dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/dimen_26dp"
+    android:layout_marginStart="@dimen/dimen_26dp"
+    android:orientation="vertical"
+    tools:context="com.carecloud.carepaylibray.demographics.fragments.HomeAlertDialogFragment">
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/dialogTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_top_rounded_white"
+        android:gravity="center"
+        android:padding="@dimen/dimen_10dp"
+        android:textColor="@color/charcoal"
+        android:textSize="@dimen/text_size_24sp"
+        app:customAssetFont="gotham_rounded_medium"
+        breeze:textKey="home_alert_dialog_title"
+        tools:text="Go back home?" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/dialogMessageTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/white"
+        android:gravity="center"
+        android:padding="@dimen/dimen_10dp"
+        android:textColor="@color/cadet_gray"
+        android:textSize="@dimen/text_size_20sp"
+        app:customAssetFont="proxima_nova_regular"
+        breeze:textKey="home_alert_dialog_message"
+        tools:text="Are you sure you want to exit this \n workflow? Some or all of your \n information may be lost." />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_bottom_rounded_white_border"
+        android:padding="@dimen/dimen_10dp">
+
+        <View
+            android:id="@+id/button_left_action"
+            android:layout_width="1dp"
+            android:layout_height="1dp" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/button_right_action"
+            style="@style/SigninNewAccountButtonStyle"
+            android:text="@string/signup_button"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="demographics_insurance_primary_alert_button"
+            tools:text="Yes" />
+
+    </FrameLayout>
+
+</LinearLayout>
+
+

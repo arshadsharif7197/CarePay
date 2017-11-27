@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
-import com.carecloud.carepay.practice.library.checkin.dialog.HomeAlertDialogFragment;
+import com.carecloud.carepaylibray.demographics.fragments.HomeAlertDialogFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.PatientModeDemographicsPresenter;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
@@ -173,7 +173,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             public void onClick(View view) {
                 if (!presenter.handleHomeButtonClick()) {
                     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment.newInstance();
+                    HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment.newInstance(null, null);
                     homeAlertDialogFragment.setCallback(new HomeAlertDialogFragment.HomeAlertInterface() {
                         @Override
                         public void onAcceptExit() {
