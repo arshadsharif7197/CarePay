@@ -476,6 +476,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     protected void setDefaultError(View baseView, int id) {
         setFieldError(baseView, id, Label.getLabel("demographics_required_validation_msg"));
+        baseView.requestFocus();
     }
 
     protected void setFieldError(View baseView, int id, String error) {
@@ -535,5 +536,24 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         }
 
     }
+
+    protected TextWatcher zipInputFormatter = new TextWatcher() {
+        int lastLength;
+
+        @Override
+        public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+            lastLength = sequence.length();
+        }
+
+        @Override
+        public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            StringUtil.autoFormatZipcode(editable, lastLength);
+        }
+    };
 
 }

@@ -438,6 +438,7 @@
                 style="@style/SigninSignupEditStyle"
                 android:clickable="false"
                 android:cursorVisible="false"
+                android:drawableEnd="@drawable/icon_drop_down"
                 android:imeOptions="actionNext"
                 app:customAssetFont="proxima_nova_regular"
                 app:hintTextAppearance="@style/FloatingLabelStyle"

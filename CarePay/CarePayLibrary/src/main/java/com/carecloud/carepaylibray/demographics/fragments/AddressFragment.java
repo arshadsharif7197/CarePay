@@ -206,27 +206,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         stateEditText.getOnFocusChangeListener().onFocusChange(stateEditText, true);
     }
 
-
-    private TextWatcher zipInputFormatter = new TextWatcher() {
-        int lastLength;
-
-        @Override
-        public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
-            lastLength = sequence.length();
-        }
-
-        @Override
-        public void onTextChanged(CharSequence sequence, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-            StringUtil.autoFormatZipcode(editable, lastLength);
-        }
-    };
-
-
     private View.OnFocusChangeListener getZipCodeFocusListener(final EditText zipCode) {
         return new View.OnFocusChangeListener() {
             @Override
