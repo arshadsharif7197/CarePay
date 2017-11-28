@@ -13,12 +13,17 @@ import com.carecloud.carepay.patient.retail.adapters.RetailStoreListAdapter;
 import com.carecloud.carepay.patient.retail.interfaces.RetailInterface;
 import com.carecloud.carepay.patient.retail.models.RetailModel;
 import com.carecloud.carepay.patient.retail.models.RetailPracticeDTO;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lmenendez on 11/20/17
@@ -97,14 +102,47 @@ public class RetailListFragment extends BaseFragment implements RetailStoreListA
 
     @Override
     public void onStoreSelected(UserPracticeDTO userPracticeDTO) {
-        RetailPracticeDTO selectedPractice = null;
-        for(RetailPracticeDTO retailPracticeDTO : retailModel.getPayload().getRetailPracticeList()){
-            if(retailPracticeDTO.getPracticeId()!=null && retailPracticeDTO.getPracticeId().equals(userPracticeDTO.getPracticeId())){
-                selectedPractice = retailPracticeDTO;
-                break;
-            }
-        }
+//        RetailPracticeDTO selectedPractice = null;
+//        for(RetailPracticeDTO retailPracticeDTO : retailModel.getPayload().getRetailPracticeList()){
+//            if(retailPracticeDTO.getPracticeId()!=null && retailPracticeDTO.getPracticeId().equals(userPracticeDTO.getPracticeId())){
+//                selectedPractice = retailPracticeDTO;
+//                break;
+//            }
+//        }
+//
+//        callback.displayRetailStore(retailModel, selectedPractice, userPracticeDTO);
 
-        callback.displayRetailStore(retailModel, selectedPractice, userPracticeDTO);
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_id", userPracticeDTO.getPracticeId());
+        queryMap.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
+        queryMap.put("store_only", "true");
+
+        TransitionDTO transitionDTO = retailModel.getMetadata().getLinks().getRetail();
+        getWorkflowServiceHelper().execute(transitionDTO, getRetailStoreCallback(userPracticeDTO), queryMap);
+
+
+    }
+
+    private WorkflowServiceCallback getRetailStoreCallback(final UserPracticeDTO userPracticeDTO) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                RetailModel retailModel = DtoHelper.getConvertedDTO(RetailModel.class, workflowDTO);
+                RetailPracticeDTO selectedPractice = retailModel.getPayload().getRetailPracticeList().get(0);
+                callback.displayRetailStore(RetailListFragment.this.retailModel, selectedPractice, userPracticeDTO);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+            }
+        };
     }
 }
