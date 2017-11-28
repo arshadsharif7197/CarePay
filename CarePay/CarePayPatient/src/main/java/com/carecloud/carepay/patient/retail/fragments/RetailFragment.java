@@ -88,7 +88,7 @@ public class RetailFragment extends BaseFragment {
             settings.setJavaScriptEnabled(true);
             shoppingWebView.setWebViewClient(new RetailViewClient());
 
-            shoppingWebView.loadDataWithBaseURL(null, retailPractice.getStore().getStoreHtml(), "text/html", "utf-8", null);
+            shoppingWebView.loadDataWithBaseURL("data:text/html", retailPractice.getStore().getStoreHtml(), "text/html", "utf-8", "data:text/html");
 //            shoppingWebView.loadDataWithBaseURL(null, getHtmlData(), "text/html", "utf-8", null);
         }
     }
