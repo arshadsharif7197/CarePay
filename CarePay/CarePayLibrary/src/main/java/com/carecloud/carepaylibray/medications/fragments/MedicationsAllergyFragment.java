@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -25,12 +26,14 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
+import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
@@ -62,6 +65,8 @@ import java.util.Map;
 public class MedicationsAllergyFragment extends BaseCheckinFragment implements
         MedicationAllergiesAdapter.MedicationAllergiesAdapterCallback, MediaViewInterface,
         DocumentScannerAdapter.ImageLoadCallback {
+
+    private TextView checkBoxAlert;
 
     public interface MedicationAllergyCallback {
         void showMedicationSearch();
@@ -189,7 +194,18 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
 
         continueButton = (Button) view.findViewById(R.id.medication_allergies_continue_button);
         continueButton.setOnClickListener(continueClickListener);
-        continueButton.setEnabled(false);
+        continueButton.setSelected(false);
+        continueButton.setClickable(false);
+        continueButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View buttonView, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN && !buttonView.isSelected()) {
+                    showAlert();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         EditText unlistedAllergies = (EditText) view.findViewById(R.id.allergy_none_placeholder_text);
         unlistedAllergies.setOnFocusChangeListener(getOnFocusChangeListener(Label.getLabel("allergy_none_placeholder_text")));
@@ -231,6 +247,18 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
         removePhotoButton.setOnClickListener(removePhotoListener);
 
         initImageViews(view);
+        checkBoxAlert = (TextView) view.findViewById(R.id.checkBoxAlert);
+    }
+
+    private void showAlert() {
+        String alertMessage = Label.getLabel("demographics_check_alert_message");
+        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT) {
+            new CustomMessageToast(getActivity(), alertMessage,
+                    CustomMessageToast.NOTIFICATION_TYPE_WARNING).show();
+        } else {
+            checkBoxAlert.setText(alertMessage);
+            checkBoxAlert.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initImageViews(View view) {
@@ -286,7 +314,8 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
 
         boolean valid = (validAllergies && validMeds) || hasPhoto();
 
-        continueButton.setEnabled(valid);
+        continueButton.setSelected(valid);
+        continueButton.setClickable(valid);
     }
 
     private boolean hasPhoto() {
@@ -361,6 +390,7 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
     private CompoundButton.OnCheckedChangeListener assertCheckListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            checkBoxAlert.setVisibility(View.GONE);
             validateForm();
         }
     };

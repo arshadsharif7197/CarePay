@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
 
     <include layout="@layout/toolbar_title_only" />
 
@@ -28,25 +27,32 @@
             android:padding="@dimen/dimen_30dp">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/allergy_medication_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/allergy_medication_header"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/text_size_20"
-                tools:text="Allergies &amp; Medications"
+                app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="allergy_medication_header"
-                app:customAssetFont="gotham_rounded_medium"/>
+                tools:text="Allergies &amp; Medications" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/checkBoxAlert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/lightning_yellow"
+                android:visibility="gone" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/allergy_medication_header_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/allergy_medication_header_message"
                 android:layout_marginTop="@dimen/dimen_8dp"
                 android:textColor="@color/optionl_gray"
                 android:textSize="@dimen/text_size_14"
-                tools:text="We need to know about the allergies you may have and any medications you take"
+                app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="allergy_medication_header_message"
-                app:customAssetFont="proxima_nova_regular"/>
+                tools:text="We need to know about the allergies you may have and any medications you take" />
 
             <LinearLayout
                 android:id="@+id/allergies_layout"
@@ -56,137 +62,138 @@
                 android:visibility="gone">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/allergy_section_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/allergy_section_header"
                     android:layout_marginTop="@dimen/dimen_30dp"
+                    android:gravity="start"
                     android:padding="@dimen/padding_large"
                     android:textColor="@color/textview_default_textcolor"
                     android:textSize="@dimen/text_size_15"
-                    android:gravity="start"
-                    tools:text="ALLERGIES YOU MAY HAVE"
+                    app:customAssetFont="proxima_nova_semi_bold"
                     breeze:textKey="allergy_section_header"
-                    app:customAssetFont="proxima_nova_semi_bold"/>
+                    tools:text="ALLERGIES YOU MAY HAVE" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingTop="@dimen/dimen_5dp"
-                    android:paddingBottom="@dimen/dimen_5dp">
+                    android:paddingBottom="@dimen/dimen_5dp"
+                    android:paddingTop="@dimen/dimen_5dp">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/allergy_title"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:id="@+id/allergy_title"
+                        android:gravity="start"
                         android:padding="@dimen/padding_large"
                         android:textColor="@color/textview_default_textcolor"
                         android:textSize="@dimen/text_size_17"
-                        android:gravity="start"
-                        tools:text="Allergy"
+                        app:customAssetFont="proxima_nova_regular"
                         breeze:textKey="allergy_title"
-                        app:customAssetFont="proxima_nova_regular"/>
+                        tools:text="Allergy" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/allergy_choose_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/allergy_choose_button"
                         android:padding="@dimen/padding_large"
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/text_size_14"
-                        tools:text="Choose"
+                        app:customAssetFont="proxima_nova_semi_bold"
                         breeze:textKey="allergy_choose_button"
-                        app:customAssetFont="proxima_nova_semi_bold"/>
+                        tools:text="Choose" />
 
                 </LinearLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_1dp"
-                    android:background="@color/light_gray"/>
+                    android:background="@color/light_gray" />
 
                 <android.support.v7.widget.RecyclerView
+                    android:id="@+id/alergy_recycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/alergy_recycler"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <LinearLayout
+                    android:id="@+id/allergy_none_placeholder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="visible"
-                    android:id="@+id/allergy_none_placeholder"
+                    android:paddingBottom="@dimen/dimen_5dp"
                     android:paddingTop="@dimen/dimen_5dp"
-                    android:paddingBottom="@dimen/dimen_5dp">
+                    android:visibility="visible">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                        android:id="@+id/allergy_none_placeholder_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/transparent_apt"
-                        android:id="@+id/allergy_none_placeholder_text"
-                        android:padding="@dimen/padding_large"
-                        android:textColor="@color/optionl_gray"
-                        android:textSize="@dimen/text_size_17"
                         android:imeOptions="actionDone"
                         android:maxLines="1"
+                        android:padding="@dimen/padding_large"
                         android:singleLine="true"
-                        tools:hint="Add unlisted allergies"
+                        android:textColor="@color/optionl_gray"
+                        android:textSize="@dimen/text_size_17"
+                        app:customAssetFont="proxima_nova_regular"
                         breeze:hintKey="allergy_none_placeholder_text"
-                        app:customAssetFont="proxima_nova_regular"/>
+                        tools:hint="Add unlisted allergies" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dimen_1dp"
-                        android:background="@color/light_gray"/>
+                        android:background="@color/light_gray" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
                         android:id="@+id/assert_no_allergies"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:button="@null"
+                        android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
                         android:padding="@dimen/dimen_10dp"
                         android:textColor="@color/textview_default_textcolor"
                         android:textSize="@dimen/text_size_17"
-                        android:button="@null"
-                        android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
                         android:theme="@style/MyCheckBox"
-                        tools:text="I do not have any allergies"
-                        breeze:textKey="no_allergies_message"
+                        android:visibility="gone"
                         app:customAssetFont="proxima_nova_regular"
-                        android:visibility="gone"/>
+                        breeze:textKey="no_allergies_message"
+                        tools:text="I do not have any allergies" />
 
                 </LinearLayout>
 
             </LinearLayout>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/medications_section_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/medications_section_header"
                 android:layout_marginTop="@dimen/dimen_30dp"
+                android:gravity="start"
                 android:padding="@dimen/padding_large"
+                android:textAllCaps="true"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/text_size_15"
-                android:gravity="start"
-                android:textAllCaps="true"
-                tools:text="MEDICATIONS YOU'RE TAKING"
+                app:customAssetFont="proxima_nova_semi_bold"
                 breeze:textKey="medications_section_header"
-                app:customAssetFont="proxima_nova_semi_bold"/>
+                tools:text="MEDICATIONS YOU'RE TAKING" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
                 android:id="@+id/assert_no_meds"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:button="@null"
+                android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
                 android:padding="@dimen/dimen_10dp"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/text_size_17"
-                android:button="@null"
-                android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
                 android:theme="@style/MyCheckBox"
-                tools:text="I am not on any medications"
-                breeze:textKey="no_medication_message"
+                android:visibility="gone"
                 app:customAssetFont="proxima_nova_regular"
-                android:visibility="gone"/>
+                breeze:textKey="no_medication_message"
+                tools:text="I am not on any medications" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -194,69 +201,70 @@
                 android:orientation="horizontal">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/medications_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:id="@+id/medications_title"
+                    android:gravity="start"
                     android:padding="@dimen/padding_large"
                     android:textColor="@color/textview_default_textcolor"
                     android:textSize="@dimen/text_size_17"
-                    android:gravity="start"
-                    tools:text="Medication"
+                    app:customAssetFont="proxima_nova_regular"
                     breeze:textKey="medications_title"
-                    app:customAssetFont="proxima_nova_regular"/>
+                    tools:text="Medication" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/medication_choose_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/medication_choose_button"
                     android:padding="@dimen/padding_large"
                     android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/text_size_14"
-                    tools:text="Choose"
+                    app:customAssetFont="proxima_nova_semi_bold"
                     breeze:textKey="medication_choose_button"
-                    app:customAssetFont="proxima_nova_semi_bold"/>
+                    tools:text="Choose" />
 
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_1dp"
-                android:background="@color/light_gray"/>
+                android:background="@color/light_gray" />
 
             <android.support.v7.widget.RecyclerView
+                android:id="@+id/medication_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/medication_recycler"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <LinearLayout
+                android:id="@+id/medication_none_placeholder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="visible"
-                android:id="@+id/medication_none_placeholder"
+                android:paddingBottom="@dimen/dimen_5dp"
                 android:paddingTop="@dimen/dimen_5dp"
-                android:paddingBottom="@dimen/dimen_5dp">
+                android:visibility="visible">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                    android:id="@+id/medication_none_placeholder_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/transparent_apt"
-                    android:id="@+id/medication_none_placeholder_text"
-                    android:padding="@dimen/padding_large"
-                    android:textColor="@color/lightSlateGray"
-                    android:textSize="@dimen/text_size_16"
                     android:imeOptions="actionDone"
                     android:maxLines="1"
+                    android:padding="@dimen/padding_large"
                     android:singleLine="true"
-                    tools:hint="Add unlisted medication"
+                    android:textColor="@color/lightSlateGray"
+                    android:textSize="@dimen/text_size_16"
+                    app:customAssetFont="proxima_nova_regular"
                     breeze:hintKey="medication_none_placeholder_text"
-                    app:customAssetFont="proxima_nova_regular"/>
+                    tools:hint="Add unlisted medication" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_1dp"
-                    android:background="@color/light_gray"/>
+                    android:background="@color/light_gray" />
 
             </LinearLayout>
 
@@ -266,8 +274,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_30dp"
                 android:orientation="vertical"
-                android:paddingTop="@dimen/dimen_5dp"
                 android:paddingBottom="@dimen/dimen_5dp"
+                android:paddingTop="@dimen/dimen_5dp"
                 android:visibility="gone">
 
                 <LinearLayout
@@ -279,13 +287,13 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textSize="@dimen/text_size_17"
-                        android:textColor="@color/textview_default_textcolor"
-                        android:padding="@dimen/padding_large"
                         android:gravity="start"
-                        tools:text="Take Medication List Photo"
+                        android:padding="@dimen/padding_large"
+                        android:textColor="@color/textview_default_textcolor"
+                        android:textSize="@dimen/text_size_17"
                         app:customAssetFont="proxima_nova_regular"
-                        breeze:textKey="medication_photo_add"/>
+                        breeze:textKey="medication_photo_add"
+                        tools:text="Take Medication List Photo" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/medication_list_photo_button"
@@ -295,17 +303,17 @@
                         android:padding="@dimen/padding_large"
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/text_size_14"
+                        android:visibility="visible"
                         app:customAssetFont="gotham_rounded_medium"
-                        tools:text="Take Photo"
                         breeze:textKey="medication_photo_add_button"
-                        android:visibility="visible"/>
+                        tools:text="Take Photo" />
 
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_1dp"
-                    android:background="@color/light_gray"/>
+                    android:background="@color/light_gray" />
 
             </LinearLayout>
 
@@ -313,85 +321,85 @@
                 android:id="@+id/medication_photo_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_30dp"
                 android:layout_marginBottom="@dimen/dimen_50dp"
+                android:layout_marginTop="@dimen/dimen_30dp"
                 android:orientation="vertical"
                 android:visibility="gone">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="start"
                     android:padding="@dimen/padding_large"
+                    android:textAllCaps="true"
                     android:textColor="@color/textview_default_textcolor"
                     android:textSize="@dimen/text_size_15"
-                    android:gravity="start"
-                    android:textAllCaps="true"
-                    tools:text="Medications List"
+                    app:customAssetFont="proxima_nova_semi_bold"
                     breeze:textKey="medication_photo_list_header"
-                    app:customAssetFont="proxima_nova_semi_bold"/>
+                    tools:text="Medications List" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/dimen_20dp">
+                    android:layout_marginTop="@dimen/dimen_20dp"
+                    android:orientation="horizontal">
 
                     <FrameLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_marginEnd="@dimen/dimen_10dp"
+                        android:layout_weight="1"
                         android:background="@drawable/button_blue_border"
-                        android:padding="@dimen/dimen_1dp"
-                        android:elevation="@dimen/dimen_5dp">
+                        android:elevation="@dimen/dimen_5dp"
+                        android:padding="@dimen/dimen_1dp">
 
                         <ImageView
                             android:id="@+id/medications_image"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:adjustViewBounds="true"
-                            android:src="@drawable/icn_placeholder_document"/>
+                            android:src="@drawable/icn_placeholder_document" />
 
                     </FrameLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginStart="@dimen/dimen_10dp">
+                        android:layout_marginStart="@dimen/dimen_10dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayButton
                             android:id="@+id/medication_list_photo_change"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:minHeight="0dp"
-                            android:paddingTop="@dimen/dimen_10dp"
-                            android:paddingBottom="@dimen/dimen_10dp"
                             android:background="@drawable/button_blue_border"
+                            android:minHeight="0dp"
+                            android:paddingBottom="@dimen/dimen_10dp"
+                            android:paddingTop="@dimen/dimen_10dp"
                             android:textColor="@color/colorPrimary"
                             android:textSize="@dimen/text_size_13"
+                            android:visibility="visible"
                             app:customAssetFont="gotham_rounded_medium"
-                            tools:text="Re-Take Photo"
                             breeze:textKey="medication_photo_change"
-                            android:visibility="visible"/>
+                            tools:text="Re-Take Photo" />
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayButton
                             android:id="@+id/medication_list_photo_remove"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:minHeight="0dp"
                             android:layout_marginTop="@dimen/dimen_20dp"
-                            android:paddingTop="@dimen/dimen_10dp"
-                            android:paddingBottom="@dimen/dimen_10dp"
                             android:background="@drawable/button_red_border"
+                            android:minHeight="0dp"
+                            android:paddingBottom="@dimen/dimen_10dp"
+                            android:paddingTop="@dimen/dimen_10dp"
                             android:textColor="@color/remove_red"
                             android:textSize="@dimen/text_size_13"
+                            android:visibility="visible"
                             app:customAssetFont="gotham_rounded_medium"
-                            tools:text="Remove"
                             breeze:textKey="medication_photo_remove"
-                            android:visibility="visible"/>
+                            tools:text="Remove" />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -399,16 +407,16 @@
             </LinearLayout>
 
 
-
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
     <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/medication_allergies_continue_button"
-        android:enabled="false"
         style="@style/InTakeNextButtonStyle"
-        breeze:textKey="demographics_review_next_button"
-        app:customAssetFont="gotham_rounded_medium"/>
+        android:background="@drawable/button_selector_always_click"
+        android:enabled="true"
+        app:customAssetFont="gotham_rounded_medium"
+        breeze:textKey="demographics_review_next_button" />
 
 
 </LinearLayout>
