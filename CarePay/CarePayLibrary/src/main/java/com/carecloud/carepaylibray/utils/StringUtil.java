@@ -158,7 +158,7 @@ public class StringUtil {
     }
 
     /**
-     * Util to auto-format a edit text holding a phone
+     * Util to auto-format a edit text holding a social security number
      *
      * @param ssn The editable passed in the text watcher of that edit
      */

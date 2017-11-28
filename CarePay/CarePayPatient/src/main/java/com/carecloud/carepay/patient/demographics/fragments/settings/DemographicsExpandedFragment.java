@@ -477,6 +477,21 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 && checkTextEmptyValue(R.id.preferredName, view)) {
             return false;
         }
+
+
+        TextInputLayout socialSecurityInputLayout = (TextInputLayout) view.findViewById(R.id.socialSecurityInputLayout);
+        EditText socialSecurityNumber = (EditText) view.findViewById(R.id.socialSecurityNumber);
+        if (socialSecurityInputLayout.getVisibility() == View.VISIBLE &&
+                !StringUtil.isNullOrEmpty(socialSecurityNumber.getText().toString().trim()) &&
+                !ValidationHelper.isValidString(socialSecurityNumber.getText().toString().trim(),
+                        ValidationHelper.SOCIAL_SECURITY_NUMBER_PATTERN)) {
+            socialSecurityInputLayout.setErrorEnabled(true);
+            socialSecurityInputLayout.setError(Label.getLabel("demographics_social_security_number_validation_msg"));
+            return false;
+        } else {
+            socialSecurityInputLayout.setErrorEnabled(false);
+            socialSecurityInputLayout.setError(null);
+        }
         if (dataModel.getDemographic().getPersonalDetails().getProperties().getSocialSecurityNumber().isRequired()
                 && checkTextEmptyValue(R.id.socialSecurityNumber, view)) {
             return false;

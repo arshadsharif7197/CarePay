@@ -353,6 +353,25 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         };
     }
 
+    protected TextWatcher ssnInputFormatter = new TextWatcher() {
+        int lastLength;
+
+        @Override
+        public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+            lastLength = sequence.length();
+        }
+
+        @Override
+        public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            StringUtil.autoFormatSocialSecurityNumber(editable, lastLength);
+        }
+    };
+
     protected TextWatcher phoneInputFormatter = new TextWatcher() {
         int lastLength;
 
