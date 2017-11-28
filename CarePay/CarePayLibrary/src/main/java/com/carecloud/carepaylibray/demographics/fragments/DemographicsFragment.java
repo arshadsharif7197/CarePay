@@ -147,10 +147,17 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
         DemographicsPersonalSection personalInfoSection = demographic.getPersonalDetails();
 
-        setUpDemographicField(view, demographicPayload.getPersonalDetails().getSocialSecurityNumber(),
+        setUpDemographicField(view, StringUtil.formatSocialSecurityNumber(demographicPayload
+                        .getPersonalDetails().getSocialSecurityNumber()),
                 personalInfoSection.getProperties().getSocialSecurityNumber(),
                 R.id.socialSecurityContainer, R.id.socialSecurityInputLayout,
                 R.id.socialSecurityNumber, R.id.socialSecurityOptional, null, null);
+        EditText socialSecurityNumber = (EditText) view.findViewById(R.id.socialSecurityNumber);
+        socialSecurityNumber.addTextChangedListener(ssnInputFormatter);
+        if (!dataModel.getDemographic().getPersonalDetails().getProperties().getSocialSecurityNumber().isRequired()) {
+            socialSecurityNumber.addTextChangedListener(
+                    clearValidationErrorsOnTextChange((TextInputLayout) view.findViewById(R.id.socialSecurityInputLayout)));
+        }
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getPreferredName(),
                 personalInfoSection.getProperties().getPreferredName(), R.id.preferredNameContainer,
@@ -581,6 +588,20 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 return false;
             }
 
+            TextInputLayout socialSecurityInputLayout = (TextInputLayout) view.findViewById(R.id.socialSecurityInputLayout);
+            EditText socialSecurityNumber = (EditText) view.findViewById(R.id.socialSecurityNumber);
+            if (socialSecurityInputLayout.getVisibility() == View.VISIBLE &&
+                    !StringUtil.isNullOrEmpty(socialSecurityNumber.getText().toString().trim()) &&
+                    !ValidationHelper.isValidString(socialSecurityNumber.getText().toString().trim(),
+                            ValidationHelper.SOCIAL_SECURITY_NUMBER_PATTERN)) {
+                socialSecurityInputLayout.setErrorEnabled(true);
+                socialSecurityInputLayout.setError(Label.getLabel("demographics_social_security_number_validation_msg"));
+                return false;
+            } else {
+                socialSecurityInputLayout.setErrorEnabled(false);
+                socialSecurityInputLayout.setError(null);
+            }
+
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getSocialSecurityNumber().isRequired()
                     && checkTextEmptyValue(R.id.socialSecurityNumber, view)) {
                 if (isUserAction()) {
@@ -821,7 +842,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
         String socialSecurity = ((TextView) findViewById(R.id.socialSecurityNumber)).getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(socialSecurity)) {
-            demographicPersDetailsPayloadDTO.setSocialSecurityNumber(socialSecurity);
+            demographicPersDetailsPayloadDTO.setSocialSecurityNumber(StringUtil.revertToRawFormat(socialSecurity));
         }
 
         String emailAddress = ((TextView) findViewById(R.id.email)).getText().toString().trim();
@@ -846,7 +867,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
         String secondaryPhone = ((TextView) findViewById(R.id.secondaryPhone)).getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(secondaryPhone)) {
-            demographicPersDetailsPayloadDTO.setSecondaryPhoneNumber(StringUtil.revertToRawPhoneFormat(secondaryPhone));
+            demographicPersDetailsPayloadDTO.setSecondaryPhoneNumber(StringUtil.revertToRawFormat(secondaryPhone));
         }
 
         String secondaryPhoneType = selectedSecondaryPhoneType.getName();

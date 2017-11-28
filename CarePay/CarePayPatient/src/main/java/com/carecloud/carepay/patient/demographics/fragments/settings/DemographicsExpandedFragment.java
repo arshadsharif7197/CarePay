@@ -163,10 +163,17 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 personalInfoSection.getProperties().getPreferredName(), R.id.preferredNameContainer,
                 R.id.preferredNameInputLayout, R.id.preferredName, R.id.preferredNameOptional, null, null);
 
-        setUpDemographicField(view, demographicPayload.getPersonalDetails().getSocialSecurityNumber(),
+        setUpDemographicField(view, StringUtil.formatSocialSecurityNumber(demographicPayload
+                        .getPersonalDetails().getSocialSecurityNumber()),
                 personalInfoSection.getProperties().getSocialSecurityNumber(),
                 R.id.socialSecurityContainer, R.id.socialSecurityInputLayout,
                 R.id.socialSecurityNumber, R.id.socialSecurityOptional, null, null);
+        EditText socialSecurityNumber = (EditText) view.findViewById(R.id.socialSecurityNumber);
+        socialSecurityNumber.addTextChangedListener(ssnInputFormatter);
+        if (!dataModel.getDemographic().getPersonalDetails().getProperties().getSocialSecurityNumber().isRequired()) {
+            socialSecurityNumber.addTextChangedListener(
+                    clearValidationErrorsOnTextChange((TextInputLayout) view.findViewById(R.id.socialSecurityInputLayout)));
+        }
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getEmailAddress(),
                 personalInfoSection.getProperties().getEmailAddress(), R.id.emailContainer, R.id.emailInputLayout,
@@ -194,11 +201,11 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 personalInfoSection.getProperties().getSecondaryPhoneNumber(),
                 R.id.secondaryPhoneContainer, R.id.secondaryPhoneInputLayout,
                 R.id.secondaryPhone, R.id.secondaryPhoneOptional, null, null);
-        EditText secondaryPhoneEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.secondaryPhone);
+        EditText secondaryPhoneEditText = (EditText) view.findViewById(R.id.secondaryPhone);
         secondaryPhoneEditText.addTextChangedListener(phoneInputFormatter);
         if (!dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryPhoneNumber().isRequired()) {
             secondaryPhoneEditText.addTextChangedListener(
-                    clearValidationErrorsOnTextChange((TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.secondaryPhoneInputLayout)));
+                    clearValidationErrorsOnTextChange((TextInputLayout) view.findViewById(R.id.secondaryPhoneInputLayout)));
         }
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getSecondaryPhoneNumberType(),
@@ -220,9 +227,9 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 Label.getLabel("demographics_marital_status"));
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getReferralSource(),
-                personalInfoSection.getProperties().getReferralSource(), com.carecloud.carepaylibrary.R.id.referralSourceDemographicsLayout,
-                com.carecloud.carepaylibrary.R.id.referralSourceInputLayout, com.carecloud.carepaylibrary.R.id.referralSourceEditText,
-                com.carecloud.carepaylibrary.R.id.referralSourceOptional, selectedReferralSource, Label.getLabel("demographics_referral_source"));
+                personalInfoSection.getProperties().getReferralSource(), R.id.referralSourceDemographicsLayout,
+                R.id.referralSourceInputLayout, R.id.referralSourceEditText,
+                R.id.referralSourceOptional, selectedReferralSource, Label.getLabel("demographics_referral_source"));
 
         setUpPrimaryCarePhysician(view, demographicPayload.getPrimaryPhysician(), demogarphic.getPrimaryPhysician());
         setUpReferringPhysician(view, demographicPayload.getReferringPhysician(), demogarphic.getReferringPhysician());
@@ -470,6 +477,21 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 && checkTextEmptyValue(R.id.preferredName, view)) {
             return false;
         }
+
+
+        TextInputLayout socialSecurityInputLayout = (TextInputLayout) view.findViewById(R.id.socialSecurityInputLayout);
+        EditText socialSecurityNumber = (EditText) view.findViewById(R.id.socialSecurityNumber);
+        if (socialSecurityInputLayout.getVisibility() == View.VISIBLE &&
+                !StringUtil.isNullOrEmpty(socialSecurityNumber.getText().toString().trim()) &&
+                !ValidationHelper.isValidString(socialSecurityNumber.getText().toString().trim(),
+                        ValidationHelper.SOCIAL_SECURITY_NUMBER_PATTERN)) {
+            socialSecurityInputLayout.setErrorEnabled(true);
+            socialSecurityInputLayout.setError(Label.getLabel("demographics_social_security_number_validation_msg"));
+            return false;
+        } else {
+            socialSecurityInputLayout.setErrorEnabled(false);
+            socialSecurityInputLayout.setError(null);
+        }
         if (dataModel.getDemographic().getPersonalDetails().getProperties().getSocialSecurityNumber().isRequired()
                 && checkTextEmptyValue(R.id.socialSecurityNumber, view)) {
             return false;
@@ -584,7 +606,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
 
         String socialSecurity = ((TextView) findViewById(R.id.socialSecurityNumber)).getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(socialSecurity)) {
-            patientModel.setSocialSecurityNumber(socialSecurity);
+            patientModel.setSocialSecurityNumber(StringUtil.revertToRawFormat(socialSecurity));
         }
 
         String emailAddress = ((TextView) findViewById(R.id.email)).getText().toString().trim();
@@ -609,7 +631,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
 
         String secondaryPhone = ((TextView) findViewById(R.id.secondaryPhone)).getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(secondaryPhone)) {
-            patientModel.setSecondaryPhoneNumber(StringUtil.revertToRawPhoneFormat(secondaryPhone));
+            patientModel.setSecondaryPhoneNumber(StringUtil.revertToRawFormat(secondaryPhone));
         }
 
         String secondaryPhoneType = selectedSecondaryPhoneType.getName();
@@ -655,7 +677,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
             String state = ((TextView) findViewById(R.id.stateTextView)).getText().toString().trim();
             selectedEmployer.getAddress().setState(state);
 
-            String phone = StringUtil.revertToRawPhoneFormat(((TextView) findViewById(R.id.phoneTextView))
+            String phone = StringUtil.revertToRawFormat(((TextView) findViewById(R.id.phoneTextView))
                     .getText().toString().trim());
             selectedEmployer.getAddress().setPhoneNumber(phone);
 
