@@ -606,7 +606,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
 
         String socialSecurity = ((TextView) findViewById(R.id.socialSecurityNumber)).getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(socialSecurity)) {
-            patientModel.setSocialSecurityNumber(StringUtil.revertToRawPhoneFormat(socialSecurity));
+            patientModel.setSocialSecurityNumber(StringUtil.revertToRawFormat(socialSecurity));
         }
 
         String emailAddress = ((TextView) findViewById(R.id.email)).getText().toString().trim();
@@ -631,7 +631,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
 
         String secondaryPhone = ((TextView) findViewById(R.id.secondaryPhone)).getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(secondaryPhone)) {
-            patientModel.setSecondaryPhoneNumber(StringUtil.revertToRawPhoneFormat(secondaryPhone));
+            patientModel.setSecondaryPhoneNumber(StringUtil.revertToRawFormat(secondaryPhone));
         }
 
         String secondaryPhoneType = selectedSecondaryPhoneType.getName();
@@ -677,7 +677,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
             String state = ((TextView) findViewById(R.id.stateTextView)).getText().toString().trim();
             selectedEmployer.getAddress().setState(state);
 
-            String phone = StringUtil.revertToRawPhoneFormat(((TextView) findViewById(R.id.phoneTextView))
+            String phone = StringUtil.revertToRawFormat(((TextView) findViewById(R.id.phoneTextView))
                     .getText().toString().trim());
             selectedEmployer.getAddress().setPhoneNumber(phone);
 

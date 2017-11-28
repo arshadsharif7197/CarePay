@@ -77,7 +77,7 @@ public class StringUtil {
      * @param formattedPhoneNum The phone
      * @return The unformatted phone as String
      */
-    public static String revertToRawPhoneFormat(String formattedPhoneNum) {
+    public static String revertToRawFormat(String formattedPhoneNum) {
         if (formattedPhoneNum == null) {
             return null;
         }

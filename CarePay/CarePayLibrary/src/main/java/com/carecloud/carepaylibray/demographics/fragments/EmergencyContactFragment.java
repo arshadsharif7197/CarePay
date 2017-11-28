@@ -485,11 +485,11 @@ public class EmergencyContactFragment extends BaseDialogFragment {
             emergencyContact.setLastName(lastName);
         }
 
-        String primaryPhone = StringUtil.revertToRawPhoneFormat(primaryPhoneEditText.getText().toString().trim());
+        String primaryPhone = StringUtil.revertToRawFormat(primaryPhoneEditText.getText().toString().trim());
         if (!StringUtil.isNullOrEmpty(primaryPhone)) {
             emergencyContact.setPhoneNumber(primaryPhone);
         }
-        String secondaryPhone = StringUtil.revertToRawPhoneFormat(secondaryPhoneEditText.getText().toString().trim());
+        String secondaryPhone = StringUtil.revertToRawFormat(secondaryPhoneEditText.getText().toString().trim());
         if (!StringUtil.isNullOrEmpty(secondaryPhone)) {
             emergencyContact.setSecondaryPhoneNumber(secondaryPhone);
         }
