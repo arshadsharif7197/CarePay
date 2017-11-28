@@ -270,6 +270,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeTextView);
         zipCodeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeTextInputLayout,
                 getZipCodeFocusListener(zipCodeEditText)));
+        zipCodeEditText.addTextChangedListener(zipInputFormatter);
         zipCodeEditText.setText(StringUtil.formatZipCode(emergencyContact.getAddress().getZipcode()));
         zipCodeEditText.getOnFocusChangeListener().onFocusChange(zipCodeEditText,
                 !StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString().trim()));
@@ -504,7 +505,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         }
         String zipCode = zipCodeEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(zipCode)) {
-            emergencyContact.getAddress().setZipcode(zipCode);
+            emergencyContact.getAddress().setZipcode(StringUtil.revertZipToRawFormat(zipCode));
         }
         String city = cityEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(city)) {
@@ -787,6 +788,25 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         @Override
         public void afterTextChanged(Editable editable) {
             StringUtil.autoFormatPhone(editable, lastLength);
+        }
+    };
+
+    protected TextWatcher zipInputFormatter = new TextWatcher() {
+        int lastLength;
+
+        @Override
+        public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+            lastLength = sequence.length();
+        }
+
+        @Override
+        public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            StringUtil.autoFormatZipcode(editable, lastLength);
         }
     };
 }

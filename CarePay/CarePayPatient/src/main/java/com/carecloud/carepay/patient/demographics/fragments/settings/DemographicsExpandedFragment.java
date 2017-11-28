@@ -345,14 +345,15 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         }
         if (!employmentInfoSection.isRequired()) {
             view.findViewById(R.id.employmentInfoOptionalTextView).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.employmentInfoContainer).setVisibility(View.GONE);
+//            view.findViewById(R.id.employmentInfoContainer).setVisibility(View.GONE);
         }
 
-        setEmployerInfoFields(view, demographicPayload);
+        setEmployerInfoFields(view, demographicPayload, employmentInfoSection);
 
     }
 
-    private void setEmployerInfoFields(View view, DemographicPayloadDTO demographicPayload) {
+    private void setEmployerInfoFields(View view, DemographicPayloadDTO demographicPayload,
+                                       DemographicEmploymentInfoSection employmentInfoSection) {
         employerDependentFieldsLayout = view.findViewById(R.id.employerDependentLayout);
 
         selectedEmployer = demographicPayload.getEmploymentInfoModel().getEmployerDto();
@@ -367,7 +368,6 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         employerNameEditText.setText(selectedEmployer.getName());
         employerNameEditText.getOnFocusChangeListener().onFocusChange(employerNameEditText,
                 !StringUtil.isNullOrEmpty(employerNameEditText.getText().toString().trim()));
-        employerNameEditText.addTextChangedListener(getValidateEmptyTextWatcher(employerNameTextInputLayout));
         employerNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
@@ -382,9 +382,11 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
             @Override
             public void afterTextChanged(Editable editable) {
                 selectedEmployer.setName(editable.toString());
-                checkIfEnableButton();
             }
         });
+        if (employmentInfoSection.isRequired()) {
+            employerNameEditText.addTextChangedListener(getValidateEmptyTextWatcher(employerNameTextInputLayout));
+        }
 
         TextInputLayout address1TextInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
         addressEditText = (EditText) view.findViewById(R.id.addressEditText);
@@ -406,6 +408,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeTextView);
         zipCodeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeTextInputLayout,
                 getZipCodeFocusListener(zipCodeEditText)));
+        zipCodeEditText.addTextChangedListener(zipInputFormatter);
         zipCodeEditText.setText(StringUtil.formatZipCode(selectedEmployer.getAddress().getZipcode()));
         zipCodeEditText.getOnFocusChangeListener()
                 .onFocusChange(zipCodeEditText, !StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString()));
