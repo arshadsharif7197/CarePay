@@ -254,7 +254,7 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
         String alertMessage = Label.getLabel("demographics_check_alert_message");
         if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT) {
             new CustomMessageToast(getActivity(), alertMessage,
-                    CustomMessageToast.NOTIFICATION_TYPE_WARNING).show();
+                    CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
         } else {
             checkBoxAlert.setText(alertMessage);
             checkBoxAlert.setVisibility(View.VISIBLE);
