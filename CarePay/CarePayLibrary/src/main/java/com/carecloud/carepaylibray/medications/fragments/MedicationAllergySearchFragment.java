@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -57,7 +58,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
                                                               int searchMode) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, medicationsAllergiesDTO);
-        args.putInt("searchMode", searchMode);
+        args.putInt(CarePayConstants.SEARCH_MODE, searchMode);
         MedicationAllergySearchFragment fragment = new MedicationAllergySearchFragment();
         fragment.setArguments(args);
         return fragment;
@@ -87,7 +88,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class, getArguments());
-        searchMode = getArguments().getInt("searchMode");
+        searchMode = getArguments().getInt(CarePayConstants.SEARCH_MODE);
     }
 
     @Override
@@ -182,6 +183,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
         }
 
         Map<String, String> headers = getWorkflowServiceHelper().getPreferredLanguageHeader();
+        getWorkflowServiceHelper().interrupt();
         getWorkflowServiceHelper().execute(searchDTO, searchCallback, queryMap, headers);
 
     }
@@ -202,16 +204,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
         public boolean onQueryTextSubmit(String query) {
             searchView.clearFocus();
             SystemUtil.hideSoftKeyboard(getActivity());
-            switch (searchMode) {
-                case MedicationsAllergyFragment.MEDICATION_ITEM:
-                    submitSearch(query, searchMode);
-                    break;
-                case MedicationsAllergyFragment.ALLERGY_ITEM:
-                    submitSearch(query, searchMode);
-                    break;
-                default:
-                    break;
-            }
+            submitSearch(query, searchMode);
             return true;
         }
 
@@ -252,7 +245,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
 
         @Override
         public void onFailure(String exceptionMessage) {
-            if (isVisible()){
+            if (isVisible()) {
                 hideProgressDialog();
                 Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
             }
