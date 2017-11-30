@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.medications.models.AllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class MedicationAllergySearchAdapter extends RecyclerView.Adapter<MedicationAllergySearchAdapter.SearchViewHolder> {
 
-    public interface SearchItemSelectedCallback{
+    public interface SearchItemSelectedCallback {
         void searchItemSelected(MedicationsAllergiesObject item);
     }
 
@@ -27,12 +28,13 @@ public class MedicationAllergySearchAdapter extends RecyclerView.Adapter<Medicat
     private SearchItemSelectedCallback callback;
 
     /**
-     *
-     * @param context Context for adapter
-     * @param items list of medication or allergies
-     * @param callback callback for selecting items
+     * @param context    Context for adapter
+     * @param items      list of medication or allergies
+     * @param callback   callback for selecting items
+     * @param searchMode
      */
-    public MedicationAllergySearchAdapter(Context context, List<? extends MedicationsAllergiesObject> items, SearchItemSelectedCallback callback){
+    public MedicationAllergySearchAdapter(Context context, List<? extends MedicationsAllergiesObject> items,
+                                          SearchItemSelectedCallback callback, int searchMode) {
         this.context = context;
         this.items = items;
         this.callback = callback;
@@ -48,11 +50,16 @@ public class MedicationAllergySearchAdapter extends RecyclerView.Adapter<Medicat
     @Override
     public void onBindViewHolder(SearchViewHolder holder, int position) {
         final MedicationsAllergiesObject item = items.get(position);
-        holder.getItemText().setText(item.getDisplayName());
+        if (item instanceof AllergiesObject) {
+            holder.getItemText().setText(((AllergiesObject) item).getInteroperableDesc());
+        } else {
+            holder.getItemText().setText(item.getDisplayName());
+        }
+
         holder.getRootView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(callback!=null){
+                if (callback != null) {
                     callback.searchItemSelected(item);
                 }
             }
@@ -61,14 +68,14 @@ public class MedicationAllergySearchAdapter extends RecyclerView.Adapter<Medicat
 
     @Override
     public int getItemCount() {
-        return items!=null?items.size():0;
+        return items != null ? items.size() : 0;
     }
 
-    public void setItems(List<? extends MedicationsAllergiesObject> items){
+    public void setItems(List<? extends MedicationsAllergiesObject> items) {
         this.items = items;
     }
 
-    static class SearchViewHolder extends RecyclerView.ViewHolder{
+    static class SearchViewHolder extends RecyclerView.ViewHolder {
         private TextView itemText;
         private View rootView;
 

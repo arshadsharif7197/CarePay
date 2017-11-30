@@ -167,6 +167,7 @@ public class PhysicianFragment extends BaseDialogFragment implements PhysicianAd
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                SystemUtil.hideSoftKeyboard(getActivity());
                 if (!StringUtil.isNullOrEmpty(query)) {
                     searchPhysicians(query);
                 }
@@ -275,7 +276,6 @@ public class PhysicianFragment extends BaseDialogFragment implements PhysicianAd
             hideProgressDialog();
             DemographicDTO dto = DtoHelper.getConvertedDTO(DemographicDTO.class, workflowDTO);
             adapter.setData(dto.getPayload().getPhysicians());
-            SystemUtil.hideSoftKeyboard(getActivity(), searchView);
         }
 
         @Override

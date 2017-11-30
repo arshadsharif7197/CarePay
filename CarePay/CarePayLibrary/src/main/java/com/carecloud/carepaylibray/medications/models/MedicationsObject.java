@@ -92,4 +92,12 @@ public class MedicationsObject extends MedicationsAllergiesObject {
     public void setTradeName(String tradeName) {
         this.tradeName = tradeName;
     }
+
+    @Override
+    public boolean equals(Object object){
+        if(object instanceof MedicationsAllergiesObject){
+            return displayName.equals(((MedicationsAllergiesObject)object).getDisplayName());
+        }
+        return super.equals(object);
+    }
 }

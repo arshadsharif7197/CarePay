@@ -492,8 +492,8 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
             socialSecurityInputLayout.setError(Label.getLabel("demographics_social_security_number_validation_msg"));
             return false;
         } else {
-            socialSecurityInputLayout.setErrorEnabled(false);
             socialSecurityInputLayout.setError(null);
+            socialSecurityInputLayout.setErrorEnabled(false);
         }
         if (dataModel.getDemographic().getPersonalDetails().getProperties().getSocialSecurityNumber().isRequired()
                 && checkTextEmptyValue(R.id.socialSecurityNumber, view)) {

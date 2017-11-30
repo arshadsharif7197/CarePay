@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -41,7 +40,6 @@ import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.gson.Gson;
 
 public class DemographicsPresenterImpl implements DemographicsPresenter {
     private AppointmentDTO appointmentPayload;
@@ -182,12 +180,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     public void navigateToMedicationsAllergy(WorkflowDTO workflowDTO) {
         medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class,
                 workflowDTO);
-
-        Bundle bundle = new Bundle();
-        bundle.putString(CarePayConstants.MEDICATION_ALLERGIES_DTO_EXTRA, workflowDTO.toString());
-
-        MedicationsAllergyFragment fragment = new MedicationsAllergyFragment();
-        fragment.setArguments(bundle);
+        MedicationsAllergyFragment fragment = MedicationsAllergyFragment.newInstance(medicationsAllergiesDTO);
         navigateToFragment(fragment, true);
     }
 
@@ -248,42 +241,10 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     @Override
-    public void showMedicationSearch() {
-        MedicationAllergySearchFragment fragment = new MedicationAllergySearchFragment();
-        if (medicationsAllergiesDTO != null) {
-            Gson gson = new Gson();
-            String jsonExtra = gson.toJson(medicationsAllergiesDTO);
-            Bundle bundle = new Bundle();
-            bundle.putString(CarePayConstants.MEDICATION_ALLERGIES_DTO_EXTRA, jsonExtra);
-
-            bundle.putString(CarePayConstants.MEDICATION_ALLERGIES_SEARCH_MODE_EXTRA,
-                    MedicationAllergySearchFragment.SearchMode.MEDICATION.name());
-            fragment.setArguments(bundle);
-
-        }
-
-        fragment.show(getSupportFragmentManager(),
-                fragment.getClass().getName());
-    }
-
-    @Override
-    public void showAllergiesSearch() {
-
-    }
-
-    @Override
-    public void medicationSubmitSuccess(WorkflowDTO workflowDTO) {
-        if (demographicsView != null) {
-            demographicsView.navigateToWorkflow(workflowDTO);
-        }
-    }
-
-    @Override
-    public void medicationSubmitFail(String message) {
-        if (demographicsView != null) {
-            demographicsView.showErrorNotification(message);
-            Log.e(demographicsView.getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), message);
-        }
+    public void showMedicationAllergySearchFragment(int searchType) {
+        MedicationAllergySearchFragment fragment = MedicationAllergySearchFragment
+                .newInstance(medicationsAllergiesDTO, searchType);
+        showFragmentAsDialogIfNeeded(fragment);
     }
 
     @Override
@@ -452,10 +413,8 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
     @Override
     public void showSearchPhysicianFragmentDialog(PhysicianDto physicianDto, int physicianType) {
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
         PhysicianFragment fragment = PhysicianFragment.newInstance(physicianDto, physicianType);
-        showFragmentAsDialogIfNeeded(transaction, fragment);
+        showFragmentAsDialogIfNeeded(fragment);
     }
 
     @Override
@@ -468,13 +427,13 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
     @Override
     public void showAddEditEmergencyContactDialog() {
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
         EmergencyContactFragment fragment = EmergencyContactFragment.newInstance();
-        showFragmentAsDialogIfNeeded(transaction, fragment);
+        showFragmentAsDialogIfNeeded(fragment);
     }
 
-    private void showFragmentAsDialogIfNeeded(FragmentTransaction transaction, BaseDialogFragment fragment) {
+    private void showFragmentAsDialogIfNeeded(BaseDialogFragment fragment) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
         if (isPatientMode) {
             fragment.show(transaction, fragment.getClass().getCanonicalName());
         } else {

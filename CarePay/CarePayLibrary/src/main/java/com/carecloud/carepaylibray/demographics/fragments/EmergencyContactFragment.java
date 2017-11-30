@@ -718,6 +718,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                     inputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
                 } else {
                     inputLayout.setError(null);
+                    inputLayout.setErrorEnabled(false);
                 }
                 checkIfEnableButton();
             }
