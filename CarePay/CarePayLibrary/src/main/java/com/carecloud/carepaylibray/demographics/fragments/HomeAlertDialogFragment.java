@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 /**
  * @author pjohnson
@@ -25,8 +26,7 @@ public class HomeAlertDialogFragment extends BaseDialogFragment {
     }
 
     /**
-     *
-     * @param title the dialog title
+     * @param title   the dialog title
      * @param message the dialog message
      * @return a new instance
      */
@@ -49,12 +49,12 @@ public class HomeAlertDialogFragment extends BaseDialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         String title = getArguments().getString("title");
-        if (title != null) {
+        if (!StringUtil.isNullOrEmpty(title)) {
             ((TextView) view.findViewById(R.id.dialogTitleTextView)).setText(title);
         }
         String message = getArguments().getString("message");
-        if (message != null) {
-            ((TextView) view.findViewById(R.id.dialogMessageTextView)).setText(title);
+        if (!StringUtil.isNullOrEmpty(message)) {
+            ((TextView) view.findViewById(R.id.dialogMessageTextView)).setText(message);
         }
         Button yesButton = (Button) view.findViewById(R.id.button_right_action);
         yesButton.setOnClickListener(new View.OnClickListener() {
