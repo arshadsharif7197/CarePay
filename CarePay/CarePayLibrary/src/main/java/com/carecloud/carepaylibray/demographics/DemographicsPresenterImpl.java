@@ -216,7 +216,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         this.demographicDTO = demographicDTO;
         InsuranceEditDialog insuranceEditDialog = InsuranceEditDialog.newInstance(demographicDTO,
                 editedIndex, isPatientMode, true);
-
         if (showAsDialog && isPatientMode) {
             String tag = "InsuranceEditFloatingDialog";
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -229,7 +228,12 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             insuranceEditDialog.show(ft, tag);
             demographicsView.setMediaResultListener(insuranceEditDialog);
         } else {
-            navigateToFragment(insuranceEditDialog, true);
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction transaction = fm.beginTransaction();
+            transaction.add(R.id.root_layout, insuranceEditDialog, insuranceEditDialog.getClass().getCanonicalName());
+            transaction.addToBackStack(null);
+            transaction.commitAllowingStateLoss();
+//            navigateToFragment(insuranceEditDialog, true);
         }
     }
 
