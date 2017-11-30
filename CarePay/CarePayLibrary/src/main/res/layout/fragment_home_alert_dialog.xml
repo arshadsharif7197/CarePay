@@ -9,6 +9,16 @@
     android:orientation="vertical"
     tools:context="com.carecloud.carepaylibray.demographics.fragments.HomeAlertDialogFragment">
 
+    <ImageView
+        android:id="@+id/closeViewLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/apt_imgview_ht"
+        android:layout_gravity="start"
+        android:layout_marginBottom="@dimen/apt_dl_margin_bottom"
+        android:gravity="start"
+        android:src="@drawable/icn_patient_mode_nav_close"
+        android:textColor="@color/white" />
+
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/dialogTitleTextView"
         android:layout_width="match_parent"

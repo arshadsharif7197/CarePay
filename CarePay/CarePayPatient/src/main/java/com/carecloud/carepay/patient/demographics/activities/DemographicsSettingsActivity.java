@@ -24,6 +24,7 @@ import com.carecloud.carepay.patient.payment.fragments.CreditCardDetailsFragment
 import com.carecloud.carepay.patient.payment.fragments.CreditCardListFragment;
 import com.carecloud.carepay.patient.payment.fragments.SettingAddCreditCardFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
@@ -214,7 +215,9 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     @Override
     public void showRemovePrimaryInsuranceDialog(HomeAlertDialogFragment.HomeAlertInterface callback) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment.newInstance(null, null);
+        HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment
+                .newInstance(Label.getLabel("demographics_insurance_primary_alert_title"),
+                        Label.getLabel("demographics_insurance_primary_alert_message"));
         homeAlertDialogFragment.setCallback(callback);
         String tag = homeAlertDialogFragment.getClass().getName();
         homeAlertDialogFragment.show(ft, tag);
