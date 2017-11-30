@@ -319,12 +319,14 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
             medicationChooseButton.setText(Label.getLabel("demographics_choose"));
         } else {
             medicationRecycler.setVisibility(View.VISIBLE);
-            medicationRecycler.getLayoutManager().setMeasuredDimension(View.MeasureSpec.AT_MOST, View.MeasureSpec.AT_MOST);
+//            medicationRecycler.getLayoutManager().setMeasuredDimension(View.MeasureSpec.AT_MOST, View.MeasureSpec.AT_MOST);
             assertNoMedications.setChecked(false);
             assertNoMedications.setEnabled(false);
             assertNoMedications.setVisibility(View.GONE);
             if (!currentMedications.isEmpty()){
                 medicationChooseButton.setText(Label.getLabel("practice_checkin_demogr_ins_add_another"));
+            }else{
+                medicationChooseButton.setText(Label.getLabel("demographics_choose"));
             }
         }
 
@@ -335,7 +337,7 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
             allergyChooseButton.setText(Label.getLabel("demographics_choose"));
         } else {
             allergyRecycler.setVisibility(View.VISIBLE);
-            allergyRecycler.getLayoutManager().setMeasuredDimension(View.MeasureSpec.AT_MOST, View.MeasureSpec.AT_MOST);
+//            allergyRecycler.getLayoutManager().setMeasuredDimension(View.MeasureSpec.AT_MOST, View.MeasureSpec.AT_MOST);
             assertNoAllergies.setChecked(false);
             assertNoAllergies.setEnabled(false);
             assertNoAllergies.setVisibility(View.GONE);
@@ -356,7 +358,7 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
                 (!currentMedications.isEmpty() || !assertNoMedications.isEnabled()
                         || assertNoMedications.isChecked()));
 
-        boolean valid = (validAllergies && validMeds) || hasPhoto();
+        boolean valid = (validAllergies && (validMeds || hasPhoto()));
         if (valid && checkBoxAlert != null) {
             checkBoxAlert.setVisibility(View.GONE);
         }
@@ -645,7 +647,7 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
             photoLayout.setVisibility(View.GONE);
         }
         setAdapterVisibility();
-        validateForm();
+//        validateForm();
     }
 
 
