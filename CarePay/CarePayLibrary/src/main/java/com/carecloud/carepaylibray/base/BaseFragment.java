@@ -39,6 +39,7 @@ public abstract class BaseFragment extends Fragment implements ISession {
                 @Override
                 public void onClick(View view) {
                     SystemUtil.hideSoftKeyboard(getContext(), view);
+                    view.requestFocus();
                 }
             });
         }
