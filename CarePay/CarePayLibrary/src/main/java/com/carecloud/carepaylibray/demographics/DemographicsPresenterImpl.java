@@ -228,12 +228,12 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             insuranceEditDialog.show(ft, tag);
             demographicsView.setMediaResultListener(insuranceEditDialog);
         } else {
-            FragmentManager fm = getSupportFragmentManager();
-            FragmentTransaction transaction = fm.beginTransaction();
-            transaction.add(R.id.root_layout, insuranceEditDialog, insuranceEditDialog.getClass().getCanonicalName());
-            transaction.addToBackStack(null);
-            transaction.commitAllowingStateLoss();
-//            navigateToFragment(insuranceEditDialog, true);
+            navigateToFragment(insuranceEditDialog, true);
+//            FragmentManager fm = getSupportFragmentManager();
+//            FragmentTransaction transaction = fm.beginTransaction();
+//            transaction.add(R.id.root_layout, insuranceEditDialog, insuranceEditDialog.getClass().getCanonicalName());
+//            transaction.addToBackStack(null);
+//            transaction.commitAllowingStateLoss();
         }
     }
 
