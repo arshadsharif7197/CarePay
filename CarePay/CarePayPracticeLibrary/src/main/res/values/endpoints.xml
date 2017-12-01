@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="carepay_locations">carepay/business_entities/%s/locations</string>
+    <string name="carepay_device_groups">carepay/organizations/%s/device_groups</string>
+    <string name="carepay_init_payment_request">carepay/payment_request_initialization</string>
+</resources>

@@ -7,13 +7,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/demo_view_height"
-        android:layout_marginBottom="@dimen/divider_margin_bottom"
-        android:layout_marginTop="@dimen/divider_margin_top"
-        android:background="@color/light_gray"/>
-
     <include layout="@layout/fragment_demographics_scan_license" />
 
 </LinearLayout>

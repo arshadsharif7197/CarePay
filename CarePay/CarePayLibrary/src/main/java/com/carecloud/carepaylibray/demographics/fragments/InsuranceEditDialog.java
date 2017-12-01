@@ -46,15 +46,15 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.marcok.stepprogressbar.StepProgressBar;
 
+import java.util.Iterator;
+import java.util.List;
+
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_BACK_DTO;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_FRONT_DTO;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_BACK;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_FRONT;
-
-import java.util.Iterator;
-import java.util.List;
 
 public class InsuranceEditDialog extends BaseDialogFragment implements MediaViewInterface {
 
@@ -117,6 +117,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         void onInsuranceEdited(DemographicDTO demographicDTO, boolean proceed);
 
         void goOneStepBack();
+
+        void showRemovePrimaryInsuranceDialog(HomeAlertDialogFragment.HomeAlertInterface callback);
     }
 
     /**
@@ -233,6 +235,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
         ViewGroup contentLayout = (ViewGroup) view.findViewById(R.id.checkinDemographicsContentLayout);
         inflater.inflate(R.layout.add_edit_insurance_view, contentLayout, true);
+        float padding = getResources().getDimension(R.dimen.demographics_add_padding);
+        contentLayout.setPadding((int) padding, 0, 0, 0);
 
         View heading = view.findViewById(R.id.demographicsHeading);
         if (heading != null) {
@@ -266,9 +270,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             }
         });
 
-        if(!isCheckin){
+        if (!isCheckin) {
             View container = view.findViewById(R.id.insurance_toolbar);
-            container.setPadding(0,0,0,0);
+            container.setPadding(0, 0, 0, 0);
             toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
         }
 
@@ -461,13 +465,28 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private View.OnClickListener removeButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View saveChanges) {
-            if (editedIndex != NEW_INSURANCE) {
-                demographicDTO.getPayload().getDemographics().getPayload().getInsurances()
-                        .get(editedIndex).setDeleted(true);
+            DemographicInsurancePayloadDTO insurance = demographicDTO.getPayload().getDemographics()
+                    .getPayload().getInsurances().get(editedIndex);
+            if (insurance.getInsuranceType().toLowerCase().equals("primary")) {
+                callback.showRemovePrimaryInsuranceDialog(new HomeAlertDialogFragment.HomeAlertInterface() {
+                    @Override
+                    public void onAcceptExit() {
+                        removeInsurance();
+                    }
+                });
+            } else {
+                removeInsurance();
             }
-            closeDialog();
         }
     };
+
+    private void removeInsurance() {
+        if (editedIndex != NEW_INSURANCE) {
+            demographicDTO.getPayload().getDemographics().getPayload().getInsurances()
+                    .get(editedIndex).setDeleted(true);
+        }
+        closeDialog();
+    }
 
     private View.OnClickListener getNoInsuranceListener() {
         return new View.OnClickListener() {

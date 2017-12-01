@@ -44,8 +44,9 @@ public abstract class MenuPatientActivity extends BasePatientActivity
     private static TransitionDTO transitionProfile;
     private static TransitionDTO transitionAppointments;
     private static TransitionDTO transitionLogout;
-    protected static TransitionDTO transitionNotifications;
+    private static TransitionDTO transitionNotifications;
     private static TransitionDTO transitionMyHealth;
+    private static TransitionDTO transitionRetail;
 
     protected ActionBarDrawerToggle toggle;
     protected TextView appointmentsDrawerUserIdTextView;
@@ -146,7 +147,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
                 transition = transitionProfile;
                 break;
             case R.id.nav_purchase:
-                transition = transitionAppointments;
+                transition = transitionRetail;
                 callback = purchaseWorkflowCallback;
                 break;
             case R.id.nav_notification:
@@ -301,7 +302,6 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         }
     };
 
-    //TODO this is currently pointed at appointments endpoint
     private WorkflowServiceCallback purchaseWorkflowCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -312,8 +312,6 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             PatientNavigationHelper.setAccessPaymentsBalances(false);
-            //need to manually redirect this response to the notifications screen temporarily
-            workflowDTO.setState(NavigationStateConstants.PURCHASE);
             navigateToWorkflow(workflowDTO);
         }
 
@@ -369,6 +367,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity
 
     public static void setTransitionNotifications(TransitionDTO transitionNotifications) {
         MenuPatientActivity.transitionNotifications = transitionNotifications;
+    }
+
+    public static void setTransitionRetail(TransitionDTO transitionRetail){
+        MenuPatientActivity.transitionRetail = transitionRetail;
     }
 
     public static TransitionDTO getTransitionAppointments() {

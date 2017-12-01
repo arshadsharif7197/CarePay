@@ -61,17 +61,16 @@ public class AdHocFormFragment extends BaseWebFormFragment {
         callback = null;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        appointmentsResultModel = (AppointmentsResultModel) callback.getDto();
-        formsList = callback.getFormsList();
-        setTotalForms(formsList.size());
-    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        appointmentsResultModel = (AppointmentsResultModel) callback.getDto();
+        formsList = callback.getFormsList();
+        if(formsList != null) {
+            setTotalForms(formsList.size());
+        }
+
         setHeader(Label.getLabel("adhoc_form_title"));
         lastFormButtonLabel = Label.getLabel("adhoc_sign_form_button_label");
         nextButton.setText(Label.getLabel("adhoc_sign_form_button_label"));

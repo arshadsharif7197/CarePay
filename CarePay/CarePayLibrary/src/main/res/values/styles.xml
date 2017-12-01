@@ -404,7 +404,7 @@
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textSize">@dimen/demographics_docs_clickable_text_size</item>
         <item name="android:layout_marginEnd">@dimen/signup_optional_label_margin_left_right</item>
-        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
     </style>
 
     <style name="DemographicsFragmentsHeadingStyle" parent="android:Widget.TextView">

@@ -365,7 +365,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         String phoneNumber = phoneNumberEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(phoneNumber)) {
             // 'de-format' before saving to model
-            demographicAddressPayloadDTO.setPhone(StringUtil.revertToRawPhoneFormat(phoneNumber));
+            demographicAddressPayloadDTO.setPhone(StringUtil.revertToRawFormat(phoneNumber));
         }
         updatableDemographicDTO.getPayload().getDemographics().getPayload().setAddress(demographicAddressPayloadDTO);
         updatableDemographicDTO.getPayload().setAppointmentpayloaddto(demographicDTO.getPayload().getAppointmentpayloaddto());

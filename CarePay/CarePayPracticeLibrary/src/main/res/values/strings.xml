@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Breeze</string>
-    <string name="signin">Sign-in</string>
-    <string name="forgot_password">Forgot Password</string>
-    <string name="go_back">&#160;&#160;&#160;Go Back</string>
     <string name="not_defined">Not Defined</string>
-    <string name="no_account">There is no Clover account.</string>
-
-    <string name="forgotpassword">Forgot password</string>
 
     <string name="home_icon_check_in">Check-in</string>
     <string name="unauthorized">Unauthorized</string>
     <string name="unauthorized_practice_user">Unauthorized practice user.</string>
     <string name="qr_code_scanner">QR Code Scanner</string>
-    <string name="signin_failed">Sign-in failed</string>
-    <string name="find_my_appointments_unsuccessful">Could not find the appointments, please check the information.</string>
+    <string name="no_account">There is no Clover account.</string>
 
 
     <string name="em_dash">&#8212;</string>

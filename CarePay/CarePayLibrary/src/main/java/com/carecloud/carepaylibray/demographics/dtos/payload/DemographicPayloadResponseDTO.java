@@ -28,6 +28,10 @@ public class DemographicPayloadResponseDTO extends DemographicsSettingsPayloadDT
     @Expose
     private CheckinSettingsDTO checkinSettings = new CheckinSettingsDTO();
 
+    @Expose
+    @SerializedName("physicians")
+    private List<PhysicianDto> physicians = new ArrayList<>();
+
     public DemographicPayloadInfoDTO getDemographics() {
         return demographics;
     }
@@ -64,5 +68,13 @@ public class DemographicPayloadResponseDTO extends DemographicsSettingsPayloadDT
 
     public void setCheckinSettings(CheckinSettingsDTO checkinSettings) {
         this.checkinSettings = checkinSettings;
+    }
+
+    public List<PhysicianDto> getPhysicians() {
+        return physicians;
+    }
+
+    public void setPhysicians(List<PhysicianDto> physicians) {
+        this.physicians = physicians;
     }
 }

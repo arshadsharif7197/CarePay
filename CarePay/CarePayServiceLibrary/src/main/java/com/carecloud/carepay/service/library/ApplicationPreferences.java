@@ -263,19 +263,19 @@ public class ApplicationPreferences {
         return readStringFromSharedPref(PREFERENCE_PREFIX);
     }
 
-    private void writeBooleanToSharedPref(String key, Boolean value) {
+    public void writeBooleanToSharedPref(String key, Boolean value) {
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putBoolean(key, value);
         editor.apply();
     }
 
-    private void writeStringToSharedPref(String key, String value) {
+    public void writeStringToSharedPref(String key, String value) {
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putString(key, value);
         editor.apply();
     }
 
-    private void writeIntegerToSharedPref(String key, int value) {
+    public void writeIntegerToSharedPref(String key, int value) {
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putInt(key, value);
         editor.apply();

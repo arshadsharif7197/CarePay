@@ -129,9 +129,10 @@
                 <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                     android:id="@+id/primaryPhoneEditText"
                     style="@style/SigninSignupEditStyle"
-                    android:digits="0123456789"
-                    android:imeOptions="actionDone"
-                    android:maxLength="10"
+                    android:digits="0123456789-"
+                    android:imeOptions="actionNext"
+                    android:inputType="phone"
+                    android:maxLength="12"
                     app:customAssetFont="proxima_nova_regular"
                     app:hintTextAppearance="@style/FloatingLabelStyle"
                     breeze:hintKey="demographics_primary_phone_number_label" />
@@ -161,9 +162,10 @@
                 <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                     android:id="@+id/secondaryPhoneEditText"
                     style="@style/SigninSignupEditStyle"
-                    android:digits="0123456789"
-                    android:imeOptions="actionDone"
-                    android:maxLength="10"
+                    android:digits="0123456789-"
+                    android:imeOptions="actionNext"
+                    android:inputType="phone"
+                    android:maxLength="12"
                     app:customAssetFont="proxima_nova_regular"
                     app:hintTextAppearance="@style/FloatingLabelStyle"
                     breeze:hintKey="demographics_secondary_phone_number_label" />
@@ -253,7 +255,7 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/addressEditText"
                 style="@style/SigninSignupEditStyle"
-                android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ0123456789 "
+                android:digits="@string/restrict_address_characters"
                 android:imeOptions="actionNext"
                 android:inputType="textPostalAddress"
                 android:maxLength="256"
@@ -277,7 +279,7 @@
                 <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                     android:id="@+id/addressEditText2"
                     style="@style/SigninSignupEditStyle"
-                    android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ0123456789 "
+                    android:digits="@string/restrict_address_characters"
                     android:imeOptions="actionNext"
                     android:inputType="textPostalAddress"
                     android:maxLength="256"
@@ -337,7 +339,7 @@
                     android:inputType="textCapCharacters"
                     android:maxLength="255"
                     android:maxLines="1"
-                    android:nextFocusRight="@+id/phoneTextView"
+                    android:nextFocusRight="@+id/stateTextView"
                     app:customAssetFont="proxima_nova_regular"
                     app:hintTextAppearance="@style/FloatingLabelStyle"
                     breeze:hintKey="payment_city" />
@@ -430,7 +432,7 @@
                     android:imeOptions="actionNext"
                     android:inputType="date"
                     android:maxLength="10"
-                    android:nextFocusForward="@+id/reviewgrdemoPhoneNumberEdit"
+                    android:nextFocusForward="@+id/genderEditText"
                     app:customAssetFont="proxima_nova_regular"
                     breeze:hintKey="demographics_review_date_of_birth" />
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>

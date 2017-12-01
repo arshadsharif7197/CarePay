@@ -23,6 +23,10 @@ allprojects {
         maven {
             url "https://maven.google.com"
         }
+        maven {
+            url 'https://jitpack.io'
+            credentials { username authToken }
+        }
     }
 }
 
@@ -32,6 +36,10 @@ subprojects {
         repositories {
             jcenter()
             mavenCentral()
+            maven {
+                url 'https://jitpack.io'
+                credentials { username authToken }
+            }
         }
 
         dependencies {

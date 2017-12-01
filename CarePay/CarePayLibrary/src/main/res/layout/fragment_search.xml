@@ -2,25 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
     android:orientation="vertical">
-
-    <ImageView
-        android:id="@+id/closeViewLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/apt_imgview_ht"
-        android:layout_gravity="start"
-        android:layout_marginBottom="@dimen/apt_dl_margin_bottom"
-        android:gravity="start"
-        android:src="@drawable/icn_patient_mode_nav_close"
-        android:textColor="@color/white" />
 
     <include layout="@layout/toolbar_search" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/search_recycler"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/list_dialog_min_height"
-        android:padding="@dimen/padding_xlarge"
-        android:background="@color/white"/>
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:padding="@dimen/padding_xlarge" />
 
 </LinearLayout>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,6 +8,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/dimen_30dp"
     android:layout_marginTop="@dimen/dimen_30dp"
+    android:layout_gravity="center"
     android:orientation="horizontal"
     android:paddingBottom="@dimen/dimen_30dp"
     android:paddingTop="@dimen/dimen_30dp">
@@ -40,7 +42,7 @@
     <RelativeLayout
         android:id="@+id/search_content"
         android:layout_width="@dimen/dialog_width"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dialog_height"
         android:layout_marginEnd="@dimen/dimen_26dp"
         android:layout_marginStart="@dimen/dimen_26dp"
         android:layout_toRightOf="@+id/closeViewLayout"

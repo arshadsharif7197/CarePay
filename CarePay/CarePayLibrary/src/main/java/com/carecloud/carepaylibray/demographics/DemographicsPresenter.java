@@ -8,6 +8,8 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
+import com.carecloud.carepaylibray.demographics.interfaces.DemographicExtendedInterface;
+import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactInterface;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearchFragment;
 import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
@@ -17,7 +19,11 @@ public interface DemographicsPresenter extends HealthInsuranceFragment.Insurance
         MedicationAllergySearchFragment.MedicationAllergySearchCallback,
         CheckinFlowCallback,
         InsuranceEditDialog.InsuranceEditDialogListener,
-        EmergencyContactInterface {
+        DemographicExtendedInterface {
+
+    String SAVED_STEP_KEY = "save_step";
+    String CURRENT_ICICLE_FRAGMENT = "current_icicle_fragment";
+
 
     void onSaveInstanceState(Bundle icicle);
 
@@ -47,4 +53,7 @@ public interface DemographicsPresenter extends HealthInsuranceFragment.Insurance
     void navigateToIntakeForms(WorkflowDTO workflowDTO);
 
     void navigateToMedicationsAllergy(WorkflowDTO workflowDTO);
+
+    Fragment getCurrentFragment();
+
 }

@@ -7,19 +7,14 @@ import android.util.Log;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.isNotEmptyString;
-
 import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class StringUtil {
+import static com.carecloud.carepaylibray.utils.SystemUtil.isNotEmptyString;
 
-    private static final String EMAIL_PATTERN =
-            "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-    private static final String PASSWORD_REGEX_VALIDATION
-            = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@!%*?&_-])[A-Za-z\\d$@!%*?&_-]{8,}";
+public class StringUtil {
 
     /**
      * Determines if the specified String object is null or equal to
@@ -31,26 +26,6 @@ public class StringUtil {
      */
     public static boolean isNullOrEmpty(String string) {
         return (string == null || string.trim().equals(""));
-    }
-
-    public static boolean isValidmail(String email) {
-        return !isNullOrEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-
-    /**
-     * Test if a password respect the standard pattern, id, at least 8 chars,
-     * at least 1 number, 1 upper case, 1 lower case, 1 special character.
-     *
-     * @param password The passwrod as a string
-     * @return Whether the password matches the pattern.
-     */
-    public static boolean isValidPassword(String password) {
-        if (password != null) {
-            Pattern pattern = Pattern.compile(PASSWORD_REGEX_VALIDATION);
-            Matcher matcher = pattern.matcher(password);
-            return matcher.matches();
-        }
-        return false;
     }
 
 
@@ -65,7 +40,7 @@ public class StringUtil {
      * @return The string with capitalized first letters
      */
     public static String captialize(String source) {
-        if(source == null){
+        if (source == null) {
             return "";
         }
         source = source.replaceAll("( ){2,}", " ").toLowerCase();
@@ -90,6 +65,9 @@ public class StringUtil {
      * @return The unformatted zip code as String
      */
     public static String revertZipToRawFormat(String formattedZipCode) {
+        if (formattedZipCode == null) {
+            return null;
+        }
         return formattedZipCode.replace("-", "");
     }
 
@@ -99,7 +77,10 @@ public class StringUtil {
      * @param formattedPhoneNum The phone
      * @return The unformatted phone as String
      */
-    public static String revertToRawPhoneFormat(String formattedPhoneNum) {
+    public static String revertToRawFormat(String formattedPhoneNum) {
+        if (formattedPhoneNum == null) {
+            return null;
+        }
         return formattedPhoneNum.replace("-", "");
     }
 
@@ -110,7 +91,7 @@ public class StringUtil {
      * @return formated string
      */
     public static String formatPhoneNumber(String phoneNumber) {
-        if(phoneNumber == null){
+        if (phoneNumber == null) {
             return null;
         }
         StringBuilder phoneNumberString = new StringBuilder();
@@ -131,12 +112,42 @@ public class StringUtil {
     }
 
     /**
+     * format phone number
+     *
+     * @param ssn phonenumber as a string
+     * @return formated string
+     */
+    public static String formatSocialSecurityNumber(String ssn) {
+        if (ssn == null) {
+            return null;
+        }
+        StringBuilder socialSecurityNumberString = new StringBuilder();
+        socialSecurityNumberString.append(ssn);
+        if (socialSecurityNumberString.length() > 0) {
+            if (socialSecurityNumberString.length() == 3 || socialSecurityNumberString.length() == 7)
+                socialSecurityNumberString.append("-");
+            if (socialSecurityNumberString.length() > 3) {
+                if (Character.isDigit(socialSecurityNumberString.charAt(3)))
+                    socialSecurityNumberString.insert(3, "-");
+            }
+            if (socialSecurityNumberString.length() > 6) {
+                if (Character.isDigit(socialSecurityNumberString.charAt(6)))
+                    socialSecurityNumberString.insert(6, "-");
+            }
+        }
+        return socialSecurityNumberString.toString();
+    }
+
+    /**
      * format zipcode
      *
      * @param zipcode zipcode as a string
      * @return formated string
      */
     public static String formatZipCode(String zipcode) {
+        if (zipcode == null) {
+            return null;
+        }
         StringBuilder zipCodeString = new StringBuilder();
         zipCodeString.append(zipcode);
         if (zipCodeString.length() > 0 && zipCodeString.length() > 5 && Character.isDigit(zipCodeString.charAt(5))) {
@@ -144,6 +155,37 @@ public class StringUtil {
         }
 
         return zipCodeString.toString();
+    }
+
+    /**
+     * Util to auto-format a edit text holding a social security number
+     *
+     * @param ssn The editable passed in the text watcher of that edit
+     */
+    public static void autoFormatSocialSecurityNumber(Editable ssn, int lengthBefore) {
+        int currentLength = ssn.length();
+        if (lengthBefore < currentLength) {
+            char lastChar = ssn.charAt(currentLength - 1);
+            if (currentLength == 3 && lastChar != '-') {
+                ssn.append("-");
+            }
+
+            if (currentLength == 4 && lastChar != '-') { // re-insert / after its deletion
+                ssn.replace(currentLength - 1, currentLength, "-" + lastChar);
+            }
+
+            if (currentLength == 6 && lastChar != '-') {
+                ssn.append("-");
+            }
+
+            if (currentLength == 7 && lastChar != '-') { // re-insert / after its deletion
+                ssn.replace(currentLength - 1, currentLength, "-" + lastChar);
+            }
+
+            if (lengthBefore != 3 && lengthBefore != 6 && lastChar == '-') {
+                ssn.replace(currentLength - 1, currentLength, "");
+            }
+        }
     }
 
     /**
@@ -196,7 +238,7 @@ public class StringUtil {
                 zipcode.replace(currentLength - 1, currentLength, "");
             }
 
-            if (currentLength == 9 && !zipcode.toString().contains("-")){
+            if (currentLength == 9 && !zipcode.toString().contains("-")) {
                 zipcode.insert(5, "-");
             }
         }
@@ -352,25 +394,27 @@ public class StringUtil {
 
     /**
      * Convenience method for exporting collection contents to comma delimited string
+     *
      * @param collection collection to export
      * @return comma delimited string
      */
-    public static String getListAsCommaDelimitedString(Collection<?> collection){
+    public static String getListAsCommaDelimitedString(Collection<?> collection) {
         return getListAsDelimitedString(collection, ',');
     }
 
     /**
      * Method for exporting contents of a collection to a delimited string
+     *
      * @param collection collection to export
-     * @param delimiter character to use as a delimiter
+     * @param delimiter  character to use as a delimiter
      * @return delimited string
      */
-    public static String getListAsDelimitedString(Collection<?> collection, char delimiter){
+    public static String getListAsDelimitedString(Collection<?> collection, char delimiter) {
         StringBuilder builder = new StringBuilder();
-        for(Object obj : collection){
+        for (Object obj : collection) {
             builder.append(obj.toString());
             builder.append(delimiter);
         }
-        return builder.length() > 0 ? builder.substring(0, builder.length()-1) : "";
+        return builder.length() > 0 ? builder.substring(0, builder.length() - 1) : "";
     }
 }
