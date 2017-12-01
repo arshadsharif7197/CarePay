@@ -778,8 +778,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 showErrorViews(false, (ViewGroup) view.findViewById(R.id.employmentStatusDemographicsLayout));
             }
 
-            if (showEmployerFields && (!StringUtil.isNullOrEmpty(employerAddressEditText.getText().toString())
-                    || (!StringUtil.isNullOrEmpty(employerAddressEditText2.getText().toString())))) {
+            if (showEmployerFields && !StringUtil.isNullOrEmpty(employerAddressEditText.getText().toString())) {
                 if (StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())) {
                     if (isUserAction()) {
 //                        showErrorViews(true, (ViewGroup) view.findViewById(R.id.raceDemographicsLayout));
