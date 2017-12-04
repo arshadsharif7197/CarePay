@@ -35,16 +35,15 @@ import java.util.List;
 public class AppointmentsListFragment extends BaseAppointmentFragment implements AppointmentListAdapter.SelectAppointmentCallback {
 
     private AppointmentsResultModel appointmentsResultModel;
-    private ProgressBar appointmentProgressBar;
     private SwipeRefreshLayout refreshLayout;
     private View appointmentView;
     private View noAppointmentView;
-    private View appointmentsListView;
 
     private List<AppointmentDTO> appointmentsItems;
     private RecyclerView appointmentRecyclerView;
 
     private PatientAppointmentNavigationCallback callback;
+    private FloatingActionButton floatingActionButton;
 
     @Override
     public void onAttach(Context context) {
@@ -91,52 +90,48 @@ public class AppointmentsListFragment extends BaseAppointmentFragment implements
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        appointmentsListView = inflater.inflate(R.layout.fragment_appointments_list, container, false);
-        return appointmentsListView;
+
+        return inflater.inflate(R.layout.fragment_appointments_list, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        appointmentRecyclerView = (RecyclerView) appointmentsListView.findViewById(R.id.appointments_recycler_view);
+        appointmentRecyclerView = (RecyclerView) view.findViewById(R.id.appointments_recycler_view);
         appointmentRecyclerView.setLayoutManager(layoutManager);
-
         // Set Title
         showDefaultActionBar();
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(Label.getLabel("appointments_heading"));
         }
-
-        //Fetch appointment data
+        setUpViews(view);
         loadAppointmentList();
     }
 
-    private void init() {
-        String noAptMessageTitle = "";
-        String noAptMessageText = "";
-
-        if (appointmentsResultModel != null) {
-            noAptMessageTitle = Label.getLabel("no_appointments_message_title");
-            noAptMessageText = Label.getLabel("no_appointments_message_text");
-        }
+    private void setUpViews(View view) {
+        String noAptMessageTitle = Label.getLabel("no_appointments_message_title");
+        String noAptMessageText = Label.getLabel("no_appointments_message_text");
 
         //Pull down to refresh
-        refreshLayout = (SwipeRefreshLayout) appointmentsListView.findViewById(R.id.swipeRefreshLayout);
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         setRefreshAction();
 
-        appointmentProgressBar = (ProgressBar) appointmentsListView.findViewById(R.id.appointmentProgressBar);
-        appointmentProgressBar.setVisibility(View.GONE);
+        appointmentView = view.findViewById(R.id.appointment_section_linear_layout);
+        noAppointmentView = view.findViewById(R.id.no_appointment_layout);
+        ((TextView) view.findViewById(R.id.no_apt_message_title)).setText(noAptMessageTitle);
+        ((TextView) view.findViewById(R.id.no_apt_message_desc)).setText(noAptMessageText);
 
-        appointmentView = appointmentsListView.findViewById(R.id.appointment_section_linear_layout);
-        noAppointmentView = appointmentsListView.findViewById(R.id.no_appointment_layout);
-        ((TextView) appointmentsListView.findViewById(R.id.no_apt_message_title)).setText(noAptMessageTitle);
-        ((TextView) appointmentsListView.findViewById(R.id.no_apt_message_desc)).setText(noAptMessageText);
-
-        FloatingActionButton floatingActionButton = (FloatingActionButton) appointmentsListView.findViewById(R.id.fab);
+        floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                callback.newAppointment();
+            }
+        });
+        view.findViewById(R.id.newAppointmentClassicButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 callback.newAppointment();
             }
         });
@@ -146,22 +141,13 @@ public class AppointmentsListFragment extends BaseAppointmentFragment implements
         if (appointmentsItems != null) {
             appointmentsItems.clear();
         }
-
-        // Initialize views
-        init();
-
-        appointmentProgressBar.setVisibility(View.GONE);
-
         if (appointmentsResultModel != null && appointmentsResultModel.getPayload().getAppointments().size() > 0) {
-
             appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
             noAppointmentView.setVisibility(View.GONE);
+            floatingActionButton.setVisibility(View.VISIBLE);
             appointmentView.setVisibility(View.VISIBLE);
-
             setAdapter();
-
         } else {
-            // Show no appointment screen
             showNoAppointmentScreen();
         }
     }
@@ -176,14 +162,14 @@ public class AppointmentsListFragment extends BaseAppointmentFragment implements
         }
     }
 
-    private void showAppointmentPopup(AppointmentDTO appointmentDTO) {
-        callback.displayAppointmentDetails(appointmentDTO);
-    }
-
-
     private void showNoAppointmentScreen() {
         noAppointmentView.setVisibility(View.VISIBLE);
         appointmentView.setVisibility(View.GONE);
+        floatingActionButton.setVisibility(View.GONE);
+    }
+
+    private void showAppointmentPopup(AppointmentDTO appointmentDTO) {
+        callback.displayAppointmentDetails(appointmentDTO);
     }
 
     private void setRefreshAction() {
@@ -212,14 +198,13 @@ public class AppointmentsListFragment extends BaseAppointmentFragment implements
     WorkflowServiceCallback pageRefreshCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            appointmentProgressBar.setVisibility(View.VISIBLE);
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             refreshLayout.setRefreshing(false);
-            appointmentProgressBar.setVisibility(View.GONE);
             if (appointmentsResultModel != null) {
                 Gson gson = new Gson();
                 appointmentsResultModel = gson.fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
@@ -231,7 +216,6 @@ public class AppointmentsListFragment extends BaseAppointmentFragment implements
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             refreshLayout.setRefreshing(false);
-            appointmentProgressBar.setVisibility(View.GONE);
             showErrorNotification(null);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
