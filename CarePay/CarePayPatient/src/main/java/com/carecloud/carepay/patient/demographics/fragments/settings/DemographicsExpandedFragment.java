@@ -84,6 +84,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
     private TextInputLayout zipCodeTextInputLayout;
     private TextInputLayout cityTextInputLayout;
     private TextInputLayout stateTextInputLayout;
+    private TextInputLayout address1TextInputLayout;
 
 
     /**
@@ -199,7 +200,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         setUpDemographicField(view, StringUtil
                         .formatPhoneNumber(demographicPayload.getPersonalDetails().getSecondaryPhoneNumber()),
                 personalInfoSection.getProperties().getSecondaryPhoneNumber(),
-                R.id.secondaryPhoneContainer, R.id.secondaryPhoneInputLayout,
+                R.id.secondaryPhoneDemographicsLayout, R.id.secondaryPhoneInputLayout,
                 R.id.secondaryPhone, R.id.secondaryPhoneOptional, null, null);
         EditText secondaryPhoneEditText = (EditText) view.findViewById(R.id.secondaryPhone);
         secondaryPhoneEditText.addTextChangedListener(phoneInputFormatter);
@@ -434,7 +435,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 .onFocusChange(stateEditText, !StringUtil.isNullOrEmpty(stateEditText.getText().toString()));
         stateEditText.addTextChangedListener(clearValidationErrorsOnTextChange(stateTextInputLayout));
 
-        TextInputLayout address1TextInputLayout = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.address1TextInputLayout);
+        address1TextInputLayout = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.address1TextInputLayout);
         employerAddressEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.addressEditText);
         employerAddressEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(address1TextInputLayout, null));
@@ -579,7 +580,18 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         }
 
         if (showEmployerFields && (!StringUtil.isNullOrEmpty(employerAddressEditText.getText().toString())
-                || (!StringUtil.isNullOrEmpty(employerAddressEditText2.getText().toString())))) {
+                || !StringUtil.isNullOrEmpty(stateEditText.getText().toString())
+                || !StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())
+                || !StringUtil.isNullOrEmpty(cityEditText.getText().toString()))) {
+
+            if (StringUtil.isNullOrEmpty(employerAddressEditText.getText().toString())) {
+                if (userInteraction) {
+                    address1TextInputLayout.setErrorEnabled(true);
+                    address1TextInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
+                    employerAddressEditText.requestFocus();
+                }
+                return false;
+            }
             if (StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())) {
                 if (userInteraction) {
                     zipCodeTextInputLayout.setErrorEnabled(true);

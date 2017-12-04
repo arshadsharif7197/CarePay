@@ -466,7 +466,23 @@ public class EmergencyContactFragment extends BaseDialogFragment {
             return false;
         }
         if (!StringUtil.isNullOrEmpty(addressEditText.getText().toString())
-                || (!StringUtil.isNullOrEmpty(addressEditText2.getText().toString()))) {
+                || !StringUtil.isNullOrEmpty(stateEditText.getText().toString())
+                || !StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())
+                || !StringUtil.isNullOrEmpty(cityEditText.getText().toString())) {
+
+
+            if (StringUtil.isNullOrEmpty(addressEditText.getText().toString())) {
+//                if (userInteraction) {
+//                    add.setErrorEnabled(true);
+//                    zipCodeTextInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
+//                    employerAddressEditText.requestFocus();
+//                } else {
+//                    unsetFieldError(view, R.id.address1TextInputLayout);
+//                    showErrorViews(false, (ViewGroup) view.findViewById(R.id.address1DemographicsLayout));
+//                }
+                return false;
+            }
+
             if (StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())) {
                 if (userInteraction) {
                     zipCodeTextInputLayout.setErrorEnabled(true);

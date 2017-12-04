@@ -489,6 +489,18 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             inputLayout.setErrorEnabled(true);
             inputLayout.setError(error);
         }
+    }
+
+    protected void unsetFieldError(View baseView, int id) {
+        TextInputLayout inputLayout = (TextInputLayout) baseView.findViewById(id);
+        unsetFieldError(inputLayout);
+    }
+
+    protected void unsetFieldError(TextInputLayout inputLayout) {
+        if (inputLayout != null) {
+            inputLayout.setError(null);
+            inputLayout.setErrorEnabled(false);
+        }
 
     }
 
