@@ -35,7 +35,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadR
 import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
 import com.carecloud.carepaylibray.demographics.dtos.payload.EmploymentInfoModel;
 import com.carecloud.carepaylibray.demographics.dtos.payload.PhysicianDto;
-import com.carecloud.carepaylibray.demographics.fragments.PhysicianFragment;
+import com.carecloud.carepaylibray.demographics.fragments.SearchPhysicianFragment;
 import com.carecloud.carepaylibray.demographics.interfaces.DemographicExtendedInterface;
 import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactFragmentInterface;
 import com.carecloud.carepaylibray.demographics.interfaces.PhysicianFragmentInterface;
@@ -241,7 +241,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         this.primaryPhysician = primaryPhysician;
         setUpPhysicianField(view, primaryPhysician, physicianMetadata,
                 R.id.primaryPhysicianDemographicsLayout, R.id.primaryPhysicianInputLayout,
-                R.id.primaryPhysicianEditText, R.id.primaryPhysicianOptional, PhysicianFragment.PRIMARY_PHYSICIAN);
+                R.id.primaryPhysicianEditText, R.id.primaryPhysicianOptional, SearchPhysicianFragment.PRIMARY_PHYSICIAN);
     }
 
     private void setUpReferringPhysician(View view, PhysicianDto referringPhysician,
@@ -249,7 +249,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         this.referringPhysician = referringPhysician;
         setUpPhysicianField(view, referringPhysician, physicianMetadata,
                 R.id.referringPhysicianDemographicsLayout, R.id.referringPhysicianInputLayout,
-                R.id.referringPhysicianEditText, R.id.referringPhysicianOptional, PhysicianFragment.REFERRING_PHYSICIAN);
+                R.id.referringPhysicianEditText, R.id.referringPhysicianOptional, SearchPhysicianFragment.REFERRING_PHYSICIAN);
     }
 
     protected void setUpPhysicianField(View view, final PhysicianDto physician,
@@ -847,7 +847,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
 
     @Override
     public void setPhysician(PhysicianDto physician, int physicianType) {
-        if (physicianType == PhysicianFragment.PRIMARY_PHYSICIAN) {
+        if (physicianType == SearchPhysicianFragment.PRIMARY_PHYSICIAN) {
             setUpPrimaryCarePhysician(getView(), physician,
                     demographicsSettingsDTO.getMetadata().getNewDataModel().getDemographic().getPrimaryPhysician());
         } else {
