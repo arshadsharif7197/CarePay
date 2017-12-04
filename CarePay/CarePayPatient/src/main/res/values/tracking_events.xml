@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_launch">App Launched</string>
+
+    <!--Standard Events -->
+
+
+
+    <!--Parameter Events-->
+    <string name="event_appointment_scheduled">Appointment Scheduled</string>
+
+    <!--Screen Load Events-->
+
+    <!--Parameters-->
+    <string name="param_appointment_type">Appointment Type</string>
+    <string name="param_appointment_practice_id">Practice Id</string>
+
+    <!--Incremental Properties-->
+    <string name="count_appointment_scheduled">Total Appointments Scheduled</string>
+
+</resources>

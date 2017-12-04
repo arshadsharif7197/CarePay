@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.utils;
 
 import com.carecloud.carepay.service.library.constants.HttpConstants;
-import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepaylibrary.BuildConfig;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
@@ -9,12 +8,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by lmenendez on 4/13/17.
+ * Created by lmenendez on 4/13/17
  */
 
 public class MixPanelUtil {
 
-    public static boolean isDebug = BuildConfig.DEBUG;
+    private static boolean isDebug = BuildConfig.DEBUG;
 
     private static MixpanelAPI mixpanel = HttpConstants.getMixpanelAPI();
 
@@ -23,7 +22,7 @@ public class MixPanelUtil {
      * @param event event name
      */
     public static void logEvent(String event){
-        if(!isDebug) {
+        if(!isDebug && mixpanel!=null) {
             mixpanel.track(event);
         }
     }
@@ -38,7 +37,7 @@ public class MixPanelUtil {
         try {
             JSONObject object = new JSONObject();
             object.put(parameter, value);
-            if(!isDebug) {
+            if(!isDebug && mixpanel!=null) {
                 mixpanel.track(eventName, object);
             }
         }catch (JSONException jse){
@@ -58,7 +57,7 @@ public class MixPanelUtil {
             for(int i=0; i<parameters.length; i++) {
                 object.put(parameters[i], values[i]);
             }
-            if(!isDebug) {
+            if(!isDebug && mixpanel!=null) {
                 mixpanel.track(eventName, object);
             }
         } catch (JSONException jse) {
@@ -72,28 +71,24 @@ public class MixPanelUtil {
      * @param value property value
      */
     public static void incrementPeopleProperty(String property, double value){
-        if(!isDebug) {
+        if(!isDebug && mixpanel!=null) {
             mixpanel.getPeople().increment(property, value);
         }
     }
 
     /**
      * Utility to track user in mixpanel people
-     * @param signInResponse siginin dto
-     * @param deviceID device token
+     * @param userId user id
      */
-    public static void setUser(UnifiedSignInResponse signInResponse, String deviceID){
-        if(!isDebug) {
-            mixpanel.identify(signInResponse.getPayload().getSignIn().getMetadata().getUserId()+"");
+    public static void setUser(String userId){
+        if(!isDebug && mixpanel!=null) {
+            mixpanel.identify(userId+"");
 //            MixpanelAPI.People people = mixpanelAPI.getPeople();
-            mixpanel.getPeople().identify(signInResponse.getPayload().getSignIn().getMetadata().getUserId()+"");
+            mixpanel.getPeople().identify(userId+"");
 //            mixpanelAPI.getPeople().setPushRegistrationId(deviceID);
-            mixpanel.getPeople().set("$name", signInResponse.getPayload().getSignIn().getMetadata().getUsername()+"");
+//            mixpanel.getPeople().set("$name", signInResponse.getPayload().getSignIn().getMetadata().getUsername()+"");
 //            mixpanel.getPeople().set("$email", user.getEmail());
 //            mixpanel.getPeople().set("$phone", user.getPhoneNumber());
-            mixpanel.getPeople().set("Patient ID", signInResponse.getPayload().getSignIn().getMetadata().getPatientId()+"");
-            mixpanel.getPeople().set("Practice ID", signInResponse.getPayload().getSignIn().getMetadata().getPracticeId()+"");
-            mixpanel.getPeople().set("Practice Mgmt", signInResponse.getPayload().getSignIn().getMetadata().getPracticeMgmt()+"");
         }
     }
 

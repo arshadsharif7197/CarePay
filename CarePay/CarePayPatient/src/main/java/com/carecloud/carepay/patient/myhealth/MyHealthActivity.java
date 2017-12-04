@@ -34,6 +34,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 
 import java.util.List;
 
@@ -75,10 +76,11 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
         if (userImageUrl != null) {
             getApplicationPreferences().setUserPhotoUrl(userImageUrl);
         }
-
         if (icicle == null) {
             replaceFragment(MyHealthMainFragment.newInstance(), false);
         }
+        String userId = myHealthDto.getPayload().getPracticePatientIds().get(0).getUserId();
+        MixPanelUtil.setUser(userId);
     }
 
 

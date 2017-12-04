@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
+import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentFeeDialog;
 import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
@@ -57,6 +58,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.wallet.MaskedWallet;
@@ -528,6 +530,10 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             viewHandler.hideProgressDialog();
+            String[] params = {getString(R.string.param_appointment_type), getString(R.string.param_appointment_practice_id)};
+            String[] values = {selectedVisitTypeDTO.getName(), practiceId};
+            MixPanelUtil.logEvents(getString(R.string.event_appointment_scheduled), params, values);
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_scheduled), 1);
             onAppointmentRequestSuccess();
         }
 
@@ -724,5 +730,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         if (targetFragment != null) {
             targetFragment.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    private String getString(int id){
+        return getContext().getString(id);
     }
 }

@@ -91,6 +91,9 @@ public class HttpConstants {
     }
 
     public static MixpanelAPI getMixpanelAPI() {
+        if(getEnvironment().equals("Production")) {
+            return mixpanelAPI;
+        }
         return mixpanelAPI;
     }
 
