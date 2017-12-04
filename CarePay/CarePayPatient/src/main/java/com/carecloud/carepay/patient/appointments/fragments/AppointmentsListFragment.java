@@ -13,7 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
@@ -129,7 +129,9 @@ public class AppointmentsListFragment extends BaseAppointmentFragment implements
                 callback.newAppointment();
             }
         });
-        view.findViewById(R.id.newAppointmentClassicButton).setOnClickListener(new View.OnClickListener() {
+        Button newAppointmentClassicButton = (Button) view.findViewById(R.id.newAppointmentClassicButton);
+        newAppointmentClassicButton.setVisibility(View.VISIBLE);
+        newAppointmentClassicButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callback.newAppointment();

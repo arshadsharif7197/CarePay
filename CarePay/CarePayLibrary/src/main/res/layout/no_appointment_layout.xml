@@ -53,6 +53,7 @@
         android:enabled="true"
         android:textAllCaps="true"
         android:textSize="@dimen/text_size_13"
+        android:visibility="gone"
         app:customAssetFont="gotham_rounded_medium"
         breeze:textKey="add_appointment_label"
         tools:text="Add Appointment" />
