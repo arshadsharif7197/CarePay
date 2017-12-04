@@ -97,17 +97,27 @@ public class PhysicianAdapter extends RecyclerView.Adapter<PhysicianAdapter.View
         }
     }
 
+    /**
+     * reset Data when a new search is made
+     */
     public void resetData() {
         physicians.clear();
         maximumReached = false;
         notifyDataSetChanged();
     }
 
+    /**
+     * set the new Data
+     * @param physicians list of physicians
+     */
     public void setData(List<PhysicianDto> physicians) {
         this.physicians.addAll(physicians);
         notifyDataSetChanged();
     }
 
+    /**
+     * set maximumReached as true to avoid showing th progress view
+     */
     public void maximumNumberOfItemsReached() {
         maximumReached = true;
     }

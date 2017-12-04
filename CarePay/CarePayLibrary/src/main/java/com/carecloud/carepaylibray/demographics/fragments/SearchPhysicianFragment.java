@@ -66,6 +66,12 @@ public class SearchPhysicianFragment extends BaseDialogFragment implements Physi
 
     }
 
+    /**
+     *
+     * @param physicianDto the physician Dto
+     * @param physicianType the physician type (primary or referral)
+     * @return a new instance of SearchPhysicianFragment
+     */
     public static SearchPhysicianFragment newInstance(PhysicianDto physicianDto, int physicianType) {
         Bundle args = new Bundle();
         if (physicianDto != null) {
@@ -293,7 +299,6 @@ public class SearchPhysicianFragment extends BaseDialogFragment implements Physi
     private WorkflowServiceCallback searchPhysicianCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-//            showProgressDialog();
         }
 
         @Override

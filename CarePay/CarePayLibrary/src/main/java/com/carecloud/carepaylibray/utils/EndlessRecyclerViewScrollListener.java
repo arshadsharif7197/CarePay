@@ -94,7 +94,7 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
         }
     }
 
-    public int getLastVisibleItem(int[] lastVisibleItemPositions) {
+    private int getLastVisibleItem(int[] lastVisibleItemPositions) {
         int maxSize = 0;
         for (int i = 0; i < lastVisibleItemPositions.length; i++) {
             if (i == 0) {
@@ -106,7 +106,9 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
         return maxSize;
     }
 
-    // Call this method whenever performing new searches
+    /**
+     * Call this method whenever performing new searches
+     */
     public void resetState() {
         this.currentPage = this.startingPageIndex;
         this.previousTotalItemCount = 1;
