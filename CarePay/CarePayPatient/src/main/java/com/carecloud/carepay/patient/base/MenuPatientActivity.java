@@ -298,7 +298,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             showErrorNotification(exceptionMessage);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -379,6 +379,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity
 
     public static TransitionDTO getTransitionNotifications() {
         return transitionNotifications;
+    }
+
+    public static TransitionDTO getTransitionLogout() {
+        return transitionLogout;
     }
 
     private void displayMessagesScreen() {
