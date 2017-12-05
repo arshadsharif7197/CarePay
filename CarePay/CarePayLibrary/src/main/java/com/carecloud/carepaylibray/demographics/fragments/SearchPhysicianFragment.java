@@ -34,6 +34,7 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.Demograp
 import com.carecloud.carepaylibray.demographics.dtos.payload.PhysicianDto;
 import com.carecloud.carepaylibray.demographics.interfaces.PhysicianInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.EndlessRecyclerViewScrollListener;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -46,10 +47,11 @@ import java.util.Map;
  * @author pjohnson on 30/10/17.
  */
 
-public class PhysicianFragment extends BaseDialogFragment implements PhysicianAdapter.PhysicianSelectedInterface {
+public class SearchPhysicianFragment extends BaseDialogFragment implements PhysicianAdapter.PhysicianSelectedInterface {
 
     public static final int REFERRING_PHYSICIAN = 100;
     public static final int PRIMARY_PHYSICIAN = 101;
+
 
     private PhysicianInterface callback;
     private DemographicDTO dto;
@@ -58,18 +60,25 @@ public class PhysicianFragment extends BaseDialogFragment implements PhysicianAd
     private PhysicianAdapter adapter;
     private int physicianType;
     private PhysicianDto physician;
+    private EndlessRecyclerViewScrollListener scrollListener;
 
-    public PhysicianFragment() {
+    public SearchPhysicianFragment() {
 
     }
 
-    public static PhysicianFragment newInstance(PhysicianDto physicianDto, int physicianType) {
+    /**
+     *
+     * @param physicianDto the physician Dto
+     * @param physicianType the physician type (primary or referral)
+     * @return a new instance of SearchPhysicianFragment
+     */
+    public static SearchPhysicianFragment newInstance(PhysicianDto physicianDto, int physicianType) {
         Bundle args = new Bundle();
         if (physicianDto != null) {
             DtoHelper.bundleDto(args, physicianDto);
         }
         args.putInt("physicianType", physicianType);
-        PhysicianFragment fragment = new PhysicianFragment();
+        SearchPhysicianFragment fragment = new SearchPhysicianFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -156,20 +165,37 @@ public class PhysicianFragment extends BaseDialogFragment implements PhysicianAd
                     public void onOptionSelected(DemographicsOption option) {
                         stateTextView.setText(option.getLabel());
                         if (!StringUtil.isNullOrEmpty(searchView.getQuery().toString())) {
-                            searchPhysicians(searchView.getQuery().toString());
+                            showProgressDialog();
+                            searchPhysicians(searchView.getQuery().toString(),
+                                    EndlessRecyclerViewScrollListener.DEFAULT_FIRST_PAGE);
                         }
                     }
                 }, Label.getLabel("demographics_documents_title_select_state")));
         RecyclerView physicianRecyclerView = (RecyclerView) view.findViewById(R.id.physicianRecyclerView);
-        physicianRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        physicianRecyclerView.setLayoutManager(layoutManager);
+        scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                searchPhysicians(searchView.getQuery().toString(), page);
+            }
+
+            @Override
+            public void maximumNumberOfItemsReached() {
+                adapter.maximumNumberOfItemsReached();
+            }
+        };
+        physicianRecyclerView.addOnScrollListener(scrollListener);
         adapter = new PhysicianAdapter(new ArrayList<PhysicianDto>(), this);
         physicianRecyclerView.setAdapter(adapter);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 SystemUtil.hideSoftKeyboard(getActivity());
+                searchView.clearFocus();
                 if (!StringUtil.isNullOrEmpty(query)) {
-                    searchPhysicians(query);
+                    showProgressDialog();
+                    searchPhysicians(query, EndlessRecyclerViewScrollListener.DEFAULT_FIRST_PAGE);
                 }
                 return true;
             }
@@ -188,12 +214,17 @@ public class PhysicianFragment extends BaseDialogFragment implements PhysicianAd
         }
     }
 
-    private void searchPhysicians(String query) {
+    private void searchPhysicians(String query, int page) {
+        if (page == EndlessRecyclerViewScrollListener.DEFAULT_FIRST_PAGE) {
+            adapter.resetData();
+            scrollListener.resetState();
+        }
         Map<String, String> queries = new HashMap<>();
         queries.put("search", query);
         if (!Label.getLabel("demographics_physician_all_states_label").equals(stateTextView.getText().toString())) {
             queries.put("state_code", stateTextView.getText().toString());
         }
+        queries.put("page", String.valueOf(page));
 
         if (callback.getAppointment() != null) {
             AppointmentDTO appointment = callback.getAppointment();
@@ -268,7 +299,6 @@ public class PhysicianFragment extends BaseDialogFragment implements PhysicianAd
     private WorkflowServiceCallback searchPhysicianCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            showProgressDialog();
         }
 
         @Override

@@ -32,7 +32,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.PhysicianDto;
 import com.carecloud.carepaylibray.demographics.fragments.EmergencyContactFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HomeAlertDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
-import com.carecloud.carepaylibray.demographics.fragments.PhysicianFragment;
+import com.carecloud.carepaylibray.demographics.fragments.SearchPhysicianFragment;
 import com.carecloud.carepaylibray.demographics.interfaces.DemographicExtendedInterface;
 import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactFragmentInterface;
 import com.carecloud.carepaylibray.demographics.interfaces.PhysicianFragmentInterface;
@@ -243,7 +243,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
 
     @Override
     public void showSearchPhysicianFragmentDialog(PhysicianDto physicianDto, int physicianType) {
-        addFragment(PhysicianFragment.newInstance(physicianDto, physicianType), true);
+        addFragment(SearchPhysicianFragment.newInstance(physicianDto, physicianType), true);
     }
 
     @Override
