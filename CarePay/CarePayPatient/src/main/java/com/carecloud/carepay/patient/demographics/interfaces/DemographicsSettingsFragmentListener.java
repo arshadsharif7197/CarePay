@@ -36,4 +36,6 @@ public interface DemographicsSettingsFragmentListener extends FragmentActivityIn
     void showSupportFragment();
 
     void onCreditCardOperation(DemographicDTO demographicsSettingsDTO);
+
+    void logOut();
 }

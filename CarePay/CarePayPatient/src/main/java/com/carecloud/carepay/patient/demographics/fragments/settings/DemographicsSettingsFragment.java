@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +16,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -147,9 +144,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
         signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                signOutButton.setEnabled(false);
-                getWorkflowServiceHelper().executeApplicationStartRequest(logOutCall);
-
+                callback.logOut();
             }
         });
 
@@ -212,40 +207,14 @@ public class DemographicsSettingsFragment extends BaseFragment {
                 .getPayload().getPersonalDetails();
         String firstName = demographicsPersonalDetails.getFirstName();
         String lastName = demographicsPersonalDetails.getLastName();
-        if(firstName == null){
+        if (firstName == null) {
             firstName = "";
         }
-        if(lastName == null){
+        if (lastName == null) {
             lastName = "";
         }
         return (StringUtil.capitalize(firstName + " " + lastName));
     }
-
-    WorkflowServiceCallback logOutCall = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            signOutButton.setEnabled(true);
-            // log out previous user from Cognito
-            if (!HttpConstants.isUseUnifiedAuth()) {
-                getAppAuthorizationHelper().getPool().getUser().signOut();
-                getAppAuthorizationHelper().setUser(null);
-            }
-            PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            signOutButton.setEnabled(true);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
 
     WorkflowServiceCallback updateNotificationPreferencesCallback = new WorkflowServiceCallback() {
         @Override
