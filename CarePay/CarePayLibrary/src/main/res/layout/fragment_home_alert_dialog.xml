@@ -39,7 +39,7 @@
         android:layout_gravity="center"
         android:background="@color/white"
         android:gravity="center"
-        android:padding="@dimen/dimen_10dp"
+        android:padding="@dimen/dimen_20dp"
         android:textColor="@color/cadet_gray"
         android:textSize="@dimen/text_size_20sp"
         app:customAssetFont="proxima_nova_regular"

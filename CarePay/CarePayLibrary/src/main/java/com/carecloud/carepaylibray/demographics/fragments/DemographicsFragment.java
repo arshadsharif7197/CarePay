@@ -76,8 +76,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     private boolean showEmployerFields;
     private View employerDependentFieldsLayout;
 
-    private EditText addressEditText;
-    private EditText addressEditText2;
+    private EditText employerAddressEditText;
+    private EditText employerAddressEditText2;
     private EditText zipCodeEditText;
     private EditText cityEditText;
     private EditText stateEditText;
@@ -190,7 +190,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         setUpDemographicField(view, StringUtil
                         .formatPhoneNumber(demographicPayload.getPersonalDetails().getSecondaryPhoneNumber()),
                 personalInfoSection.getProperties().getSecondaryPhoneNumber(),
-                R.id.secondaryPhoneContainer, R.id.secondaryPhoneInputLayout,
+                R.id.secondaryPhoneDemographicsLayout, R.id.secondaryPhoneInputLayout,
                 R.id.secondaryPhone, R.id.secondaryPhoneOptional, null, null);
 
         if (!dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryPhoneNumber().isRequired()) {
@@ -230,7 +230,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         this.primaryPhysician = primaryPhysician;
         setUpPhysicianField(view, primaryPhysician, physicianMetadata,
                 R.id.primaryPhysicianDemographicsLayout, R.id.primaryPhysicianInputLayout,
-                R.id.primaryPhysicianEditText, R.id.primaryPhysicianOptional, PhysicianFragment.PRIMARY_PHYSICIAN);
+                R.id.primaryPhysicianEditText, R.id.primaryPhysicianOptional, SearchPhysicianFragment.PRIMARY_PHYSICIAN);
     }
 
     private void setUpReferringPhysician(View view, PhysicianDto referringPhysician,
@@ -238,7 +238,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         this.referringPhysician = referringPhysician;
         setUpPhysicianField(view, referringPhysician, physicianMetadata,
                 R.id.referringPhysicianDemographicsLayout, R.id.referringPhysicianInputLayout,
-                R.id.referringPhysicianEditText, R.id.referringPhysicianOptional, PhysicianFragment.REFERRING_PHYSICIAN);
+                R.id.referringPhysicianEditText, R.id.referringPhysicianOptional, SearchPhysicianFragment.REFERRING_PHYSICIAN);
     }
 
     protected void setUpPhysicianField(View view, final PhysicianDto physician,
@@ -421,7 +421,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
     }
 
-    private void setEmployerInfoFields(View view, DemographicPayloadDTO demographicPayload,
+    private void setEmployerInfoFields(final View view, DemographicPayloadDTO demographicPayload,
                                        DemographicEmploymentInfoSection employmentInfoSection,
                                        boolean isEmploymentStuffVisible) {
         employerDependentFieldsLayout = view.findViewById(R.id.employerDependentLayout);
@@ -431,7 +431,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             selectedEmployer = new EmployerDto();
         }
 
-        TextInputLayout employerNameTextInputLayout = (TextInputLayout) view.findViewById(R.id.employerNameTextInputLayout);
+        final TextInputLayout employerNameTextInputLayout = (TextInputLayout) view.findViewById(R.id.employerNameTextInputLayout);
         EditText employerNameEditText = (EditText) view.findViewById(R.id.employerNameEditText);
         employerNameEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(employerNameTextInputLayout, null));
@@ -451,28 +451,27 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
             @Override
             public void afterTextChanged(Editable editable) {
+                if (editable.length() > 0) {
+                    employerNameTextInputLayout.setError(null);
+                    employerNameTextInputLayout.setErrorEnabled(false);
+                    showErrorViews(false, (ViewGroup) view.findViewById(R.id.employerNameDemographicsLayout));
+                }
                 selectedEmployer.setName(editable.toString());
-//                checkIfEnableButton(getView());
+                checkIfEnableButton(getView());
             }
         });
         if (employmentInfoSection.isRequired()) {
             employerNameEditText.addTextChangedListener(getValidateEmptyTextWatcher(employerNameTextInputLayout));
         }
 
-        TextInputLayout address1TextInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
-        addressEditText = (EditText) view.findViewById(R.id.addressEditText);
-        addressEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address1TextInputLayout, null));
-        addressEditText.setText(selectedEmployer.getAddress().getAddress1());
-        addressEditText.getOnFocusChangeListener()
-                .onFocusChange(addressEditText, !StringUtil.isNullOrEmpty(addressEditText.getText().toString()));
-
-
         TextInputLayout address2TextInputLayout = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
-        addressEditText2 = (EditText) view.findViewById(R.id.addressEditText2);
-        addressEditText2.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address2TextInputLayout, null));
-        addressEditText2.setText(selectedEmployer.getAddress().getAddress2());
-        addressEditText2.getOnFocusChangeListener()
-                .onFocusChange(addressEditText2, !StringUtil.isNullOrEmpty(addressEditText2.getText().toString()));
+        employerAddressEditText2 = (EditText) view.findViewById(R.id.addressEditText2);
+        employerAddressEditText2.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(address2TextInputLayout, null));
+        employerAddressEditText2.setText(selectedEmployer.getAddress().getAddress2());
+        employerAddressEditText2.getOnFocusChangeListener()
+                .onFocusChange(employerAddressEditText2, !StringUtil.isNullOrEmpty(employerAddressEditText2
+                        .getText().toString()));
 
         zipCodeTextInputLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
         zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeTextView);
@@ -513,6 +512,48 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         stateEditText.getOnFocusChangeListener()
                 .onFocusChange(stateEditText, !StringUtil.isNullOrEmpty(stateEditText.getText().toString()));
         stateEditText.addTextChangedListener(clearValidationErrorsOnTextChange(stateTextInputLayout));
+
+        final TextInputLayout address1TextInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
+        employerAddressEditText = (EditText) view.findViewById(R.id.addressEditText);
+        employerAddressEditText.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(address1TextInputLayout, null));
+        employerAddressEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (editable.length() == 0) {
+                    employerAddressEditText2.setEnabled(false);
+                    employerAddressEditText2.setText("");
+                    employerAddressEditText2.getOnFocusChangeListener().onFocusChange(employerAddressEditText2,
+                            !StringUtil.isNullOrEmpty(employerAddressEditText2.getText().toString()));
+                    zipCodeTextInputLayout.setErrorEnabled(false);
+                    zipCodeTextInputLayout.setError(null);
+                    cityTextInputLayout.setErrorEnabled(false);
+                    cityTextInputLayout.setError(null);
+                    stateTextInputLayout.setErrorEnabled(false);
+                    stateTextInputLayout.setError(null);
+                } else {
+                    employerAddressEditText2.setEnabled(true);
+                    address1TextInputLayout.setErrorEnabled(false);
+                    address1TextInputLayout.setError(null);
+                    showErrorViews(false, (ViewGroup) view.findViewById(R.id.address1DemographicsLayout));
+                }
+                checkIfEnableButton(view);
+            }
+        });
+        employerAddressEditText.setText(selectedEmployer.getAddress().getAddress1());
+        employerAddressEditText.getOnFocusChangeListener()
+                .onFocusChange(employerAddressEditText, !StringUtil.isNullOrEmpty(employerAddressEditText
+                        .getText().toString()));
 
         TextInputLayout phoneTextInputLayout = (TextInputLayout) view.findViewById(R.id.phoneTextInputLayout);
         EditText phoneEditText = (EditText) view.findViewById(R.id.phoneTextView);
@@ -654,8 +695,11 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                     && checkTextEmptyValue(R.id.secondaryPhone, view)) {
                 if (isUserAction()) {
                     setDefaultError(view, R.id.secondaryPhoneInputLayout);
+                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.secondaryPhoneDemographicsLayout));
                 }
                 return false;
+            } else {
+                showErrorViews(false, (ViewGroup) view.findViewById(R.id.secondaryPhoneDemographicsLayout));
             }
 
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryPhoneNumberType().isRequired()
@@ -744,28 +788,61 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 showErrorViews(false, (ViewGroup) view.findViewById(R.id.employmentStatusDemographicsLayout));
             }
 
-            if (showEmployerFields && (!StringUtil.isNullOrEmpty(addressEditText.getText().toString())
-                    || (!StringUtil.isNullOrEmpty(addressEditText2.getText().toString())))) {
+            if (showEmployerFields && (!StringUtil.isNullOrEmpty(employerAddressEditText.getText().toString())
+                    || !StringUtil.isNullOrEmpty(stateEditText.getText().toString())
+                    || !StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())
+                    || !StringUtil.isNullOrEmpty(cityEditText.getText().toString()))) {
+
+                if (StringUtil.isNullOrEmpty(selectedEmployer.getName())) {
+                    if (isUserAction()) {
+                        setDefaultError(view, R.id.employerNameTextInputLayout);
+                        showErrorViews(true, (ViewGroup) view.findViewById(R.id.employerNameDemographicsLayout));
+                    } else {
+                        showErrorViews(false, (ViewGroup) view.findViewById(R.id.employerNameDemographicsLayout));
+                    }
+                    return false;
+                }
+
+                if (StringUtil.isNullOrEmpty(employerAddressEditText.getText().toString())) {
+                    if (isUserAction()) {
+                        setDefaultError(view, R.id.address1TextInputLayout);
+                        showErrorViews(true, (ViewGroup) view.findViewById(R.id.address1DemographicsLayout));
+                        employerAddressEditText.requestFocus();
+                    } else {
+                        unsetFieldError(view, R.id.address1TextInputLayout);
+                        showErrorViews(false, (ViewGroup) view.findViewById(R.id.address1DemographicsLayout));
+                    }
+                    return false;
+                }
+
                 if (StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())) {
                     if (isUserAction()) {
-//                        showErrorViews(true, (ViewGroup) view.findViewById(R.id.raceDemographicsLayout));
                         setDefaultError(view, R.id.zipCodeTextInputLayout);
+                        zipCodeEditText.requestFocus();
                     }
                     return false;
+                } else {
+                    unsetFieldError(view, R.id.zipCodeTextInputLayout);
                 }
+
                 if (StringUtil.isNullOrEmpty(cityEditText.getText().toString())) {
                     if (isUserAction()) {
-//                        showErrorViews(true, (ViewGroup) view.findViewById(R.id.raceDemographicsLayout));
                         setDefaultError(view, R.id.cityTextInputLayout);
+                        cityEditText.requestFocus();
                     }
                     return false;
+                } else {
+                    unsetFieldError(view, R.id.zipCodeTextInputLayout);
                 }
+
                 if (StringUtil.isNullOrEmpty(stateEditText.getText().toString())) {
                     if (isUserAction()) {
-//                        showErrorViews(true, (ViewGroup) view.findViewById(R.id.raceDemographicsLayout));
                         setDefaultError(view, R.id.stateTextInputLayout);
+                        stateEditText.requestFocus();
                     }
                     return false;
+                } else {
+                    unsetFieldError(view, R.id.zipCodeTextInputLayout);
                 }
             } else {
                 zipCodeTextInputLayout.setError(null);
@@ -796,6 +873,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                             ValidationHelper.PHONE_NUMBER_PATTERN)) {
                 setFieldError(phoneLayout, Label.getLabel("demographics_phone_number_validation_msg"));
                 return false;
+            } else {
+                unsetFieldError(phoneLayout);
             }
 
             TextInputLayout emailLayout = (TextInputLayout) view.findViewById(R.id.emailInputLayout);
@@ -1000,7 +1079,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     @Override
     public void setPhysician(PhysicianDto physician, int physicianType) {
         TextInputLayout inputLayout;
-        if (physicianType == PhysicianFragment.PRIMARY_PHYSICIAN) {
+        if (physicianType == SearchPhysicianFragment.PRIMARY_PHYSICIAN) {
             setUpPrimaryCarePhysician(getView(), physician,
                     demographicDTO.getMetadata().getNewDataModel().getDemographic().getPrimaryPhysician());
             inputLayout = (TextInputLayout) getView().findViewById(R.id.primaryPhysicianInputLayout);

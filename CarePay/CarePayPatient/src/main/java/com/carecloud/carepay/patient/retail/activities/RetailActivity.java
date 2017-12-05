@@ -33,7 +33,7 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
         Fragment fragment;
         if(retailModel.getPayload().getRetailPracticeList().size() == 1) {
             RetailPracticeDTO retailPracticeDTO = retailModel.getPayload().getRetailPracticeList().get(0);
-            retailFragment = RetailFragment.newInstance(retailModel, retailPracticeDTO, lookupUserPractice(retailPracticeDTO));
+            retailFragment = RetailFragment.newInstance(retailModel, retailPracticeDTO, lookupUserPractice(retailPracticeDTO), false);
             fragment = retailFragment;
         }else{
             fragment = RetailListFragment.newInstance(retailModel);
@@ -63,7 +63,7 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
 
     @Override
     public void displayRetailStore(RetailModel retailModel, RetailPracticeDTO retailPractice, UserPracticeDTO userPracticeDTO) {
-        retailFragment = RetailFragment.newInstance(retailModel, retailPractice, userPracticeDTO);
+        retailFragment = RetailFragment.newInstance(retailModel, retailPractice, userPracticeDTO, true);
         replaceFragment(retailFragment, true);
         displayToolbar(false);
     }

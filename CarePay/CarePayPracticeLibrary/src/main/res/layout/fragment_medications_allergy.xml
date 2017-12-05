@@ -316,7 +316,7 @@
                         android:layout_marginTop="@dimen/dimen_20dp"
                         android:visibility="gone">
 
-                        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                             android:id="@+id/medication_list_photo_button"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -388,7 +388,7 @@
                                 android:layout_weight="1"
                                 android:orientation="vertical">
 
-                                <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                                     android:id="@+id/medication_list_photo_change"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -403,7 +403,7 @@
                                     breeze:textKey="medication_photo_change"
                                     tools:text="Re-Take Photo" />
 
-                                <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                                     android:id="@+id/medication_list_photo_remove"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
