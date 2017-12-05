@@ -56,7 +56,7 @@ import java.util.Map;
 /**
  * Main activity for Settings workflow
  */
-public class DemographicsSettingsActivity extends MenuPatientActivity implements
+public class DemographicsSettingsActivity extends BasePatientActivity implements
         DemographicsSettingsFragmentListener, InsuranceEditDialog.InsuranceEditDialogListener,
         DemographicExtendedInterface {
 
