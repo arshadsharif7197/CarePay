@@ -342,7 +342,7 @@
                         android:layout_marginBottom="@dimen/dimen_50dp"
                         android:layout_marginTop="@dimen/dimen_50dp"
                         android:orientation="vertical"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                             android:layout_width="match_parent"
