@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
@@ -39,18 +38,18 @@
             android:layout_marginTop="5dp"
             android:textColor="@color/gray_white"
             android:textSize="12sp"
-            app:customAssetFont="gotham_rounded_bold"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            app:customAssetFont="gotham_rounded_bold" />
     </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="@dimen/visit_type_dialog_width"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/dialog_background"
+        android:layout_marginEnd="@dimen/dimen_26dp"
         android:layout_marginStart="@dimen/dimen_26dp"
-        android:layout_marginEnd="@dimen/dimen_26dp">
+        android:background="@drawable/dialog_background"
+        android:orientation="vertical">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/respons_toolbar"
@@ -60,7 +59,7 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/respons_toolbar_title"
                 style="@style/ResponsibilityToolbarTextStyle"
-                app:customAssetFont="gotham_rounded_medium"/>
+                app:customAssetFont="gotham_rounded_medium" />
 
         </android.support.v7.widget.Toolbar>
 
@@ -70,13 +69,13 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/visit_type_list_height"
             android:layout_marginBottom="@dimen/dimen_20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:contentDescription="@string/content_description_visit_type"
             android:divider="@color/divider_color"
             android:dividerHeight="1dp"
             android:elevation="17dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:scrollbars="none"
-            android:contentDescription="@string/content_description_visit_type"/>
+            android:scrollbars="none" />
     </LinearLayout>
 
     <FrameLayout

@@ -123,9 +123,7 @@ public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment
                     dismiss();
                 }
             });
-
         }
-
         setCancelable(closeView == null);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.respons_toolbar);
@@ -141,8 +139,7 @@ public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment
 
         // Load and display list
         RecyclerView visitTypeListView = (RecyclerView) view.findViewById(R.id.visitTypeList);
-        visitTypeListView.setLayoutManager(new LinearLayoutManager(getContext(),
-                LinearLayoutManager.VERTICAL, false));
+        visitTypeListView.setLayoutManager(new LinearLayoutManager(getContext()));
         visitTypeListView.setAdapter(new VisitTypeListAdapter(view.getContext(), visitTypeList,
                 appointmentSettings.getPrePayments(), this));
     }

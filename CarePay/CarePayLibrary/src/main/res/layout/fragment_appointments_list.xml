@@ -22,14 +22,6 @@
                 android:orientation="vertical"
                 android:visibility="visible">
 
-                <ProgressBar
-                    android:id="@+id/appointmentProgressBar"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="-8dp"
-                    android:indeterminate="true" />
-
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/appointments_sticky_header_title"
                     android:layout_width="match_parent"
@@ -40,9 +32,9 @@
                     android:paddingEnd="0dp"
                     android:paddingStart="@dimen/list_apt_padding_right"
                     android:textColor="@color/lightSlateGray"
-                    app:customAssetFont="proxima_nova_semi_bold"
                     android:textSize="@dimen/textview_textsize"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    app:customAssetFont="proxima_nova_semi_bold" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/appointments_recycler_view"
@@ -51,8 +43,9 @@
 
             </LinearLayout>
 
-            <include layout="@layout/no_appointment_layout"
-                     android:id="@+id/no_appointment_layout" />
+            <include
+                android:id="@+id/no_appointment_layout"
+                layout="@layout/no_appointment_layout" />
 
         </FrameLayout>
     </android.support.v4.widget.SwipeRefreshLayout>

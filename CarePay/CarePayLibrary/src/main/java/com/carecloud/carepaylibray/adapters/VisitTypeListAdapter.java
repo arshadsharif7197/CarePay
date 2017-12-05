@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
@@ -21,7 +22,7 @@ import java.util.List;
 
 public class VisitTypeListAdapter extends RecyclerView.Adapter<VisitTypeListAdapter.ViewHolder> {
 
-    public interface VisitTypeSelectionCallback{
+    public interface VisitTypeSelectionCallback {
         void onVisitTypeSelected(VisitTypeDTO visitTypeDTO);
     }
 
@@ -32,10 +33,11 @@ public class VisitTypeListAdapter extends RecyclerView.Adapter<VisitTypeListAdap
 
     /**
      * Constructor
-     * @param context context
-     * @param visitTypes visit types
+     *
+     * @param context           context
+     * @param visitTypes        visit types
      * @param prepaidVisitTypes prepaid visit types from practice settings
-     * @param callback callback
+     * @param callback          callback
      */
     public VisitTypeListAdapter(Context context, List<VisitTypeDTO> visitTypes,
                                 List<AppointmentsPrePaymentDTO> prepaidVisitTypes,
@@ -58,12 +60,14 @@ public class VisitTypeListAdapter extends RecyclerView.Adapter<VisitTypeListAdap
         holder.type.setText(visitTypeDTO.getName());
 
         double amount = getVisitAmount(visitTypeDTO.getId());
-        if(amount > 0){
+        if (amount > 0) {
             visitTypeDTO.setAmount(amount);
             holder.amount.setText(NumberFormat.getCurrencyInstance().format(amount));
-            holder.prepayLayout.setVisibility(View.VISIBLE);
-        }else{
-            holder.prepayLayout.setVisibility(View.INVISIBLE);
+            holder.notificationPaymentImage.setVisibility(View.VISIBLE);
+            holder.amount.setVisibility(View.VISIBLE);
+        } else {
+            holder.notificationPaymentImage.setVisibility(View.GONE);
+            holder.amount.setVisibility(View.GONE);
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -84,9 +88,9 @@ public class VisitTypeListAdapter extends RecyclerView.Adapter<VisitTypeListAdap
         return visitTypes.size();
     }
 
-    private double getVisitAmount(int id){
-        for(AppointmentsPrePaymentDTO prePaymentDTO : prepaidVisitTypes){
-            if(prePaymentDTO.getVisitType() == id){
+    private double getVisitAmount(int id) {
+        for (AppointmentsPrePaymentDTO prePaymentDTO : prepaidVisitTypes) {
+            if (prePaymentDTO.getVisitType() == id) {
                 return prePaymentDTO.getAmount();
             }
         }
@@ -96,13 +100,13 @@ public class VisitTypeListAdapter extends RecyclerView.Adapter<VisitTypeListAdap
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView type;
         TextView amount;
-        View prepayLayout;
+        ImageView notificationPaymentImage;
 
         ViewHolder(View itemView) {
             super(itemView);
             type = (TextView) itemView.findViewById(R.id.visitTypeListItem);
             amount = (TextView) itemView.findViewById(R.id.prepaymentAmount);
-            prepayLayout = itemView.findViewById(R.id.prepaymentLayout);
+            notificationPaymentImage = (ImageView) itemView.findViewById(R.id.notificationPaymentImage);
         }
     }
 }

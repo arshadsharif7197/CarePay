@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
-    android:layout_width="@dimen/dialog_width"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="@dimen/dimen_16dp"
@@ -16,16 +15,16 @@
         android:id="@+id/visit_type_header_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/visit_type_vertical_margin"
         android:layout_marginBottom="@dimen/visit_type_vertical_margin"
-        android:paddingStart="@dimen/visit_type_horizontal_margin"
-        android:paddingEnd="@dimen/visit_type_horizontal_margin"
+        android:layout_marginTop="@dimen/visit_type_vertical_margin"
         android:gravity="start"
+        android:paddingEnd="@dimen/visit_type_horizontal_margin"
+        android:paddingStart="@dimen/visit_type_horizontal_margin"
         android:textColor="@color/dark_blue"
         android:textSize="@dimen/visit_type_label_font"
-        tools:text="Visit Type"
         app:customAssetFont="gotham_rounded_medium"
-        breeze:textKey="visit_type_heading"/>
+        breeze:textKey="visit_type_heading"
+        tools:text="Visit Type" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/visitTypeList"
@@ -35,15 +34,17 @@
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/closeViewLayout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dimen_16dp"
+        android:layout_gravity="end"
+        android:background="?android:selectableItemBackground"
         android:gravity="end"
+        android:padding="@dimen/dimen_16dp"
+        android:textAllCaps="true"
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/text_size_14"
-        android:textAllCaps="true"
-        tools:text="Cancel"
         app:customAssetFont="gotham_rounded_medium"
-        breeze:textKey="demographics_cancel_label"/>
+        breeze:textKey="demographics_cancel_label"
+        tools:text="Cancel" />
 
 </LinearLayout>
