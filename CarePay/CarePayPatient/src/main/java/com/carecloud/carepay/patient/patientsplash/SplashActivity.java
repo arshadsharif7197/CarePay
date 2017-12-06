@@ -17,6 +17,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.newrelic.agent.android.NewRelic;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -59,17 +60,25 @@ public class SplashActivity extends BasePatientActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-
-            if (!SystemUtil.isNotEmptyString(getApplicationPreferences().getUserLanguage())) {
-                navigateToWorkflow(workflowDTO);
-            } else if (SystemUtil.isNotEmptyString(getApplicationPreferences().getUserLanguage())) {
+            if (workflowDTO.getPayload().has("language_metadata")) {
+                getWorkflowServiceHelper().saveLabels(workflowDTO.getPayload()
+                        .getAsJsonObject("language_metadata").getAsJsonObject("metadata")
+                        .getAsJsonObject("labels"));
+            }
+            if (SystemUtil.isNotEmptyString(getApplicationPreferences().getUserLanguage())) {
                 String languageId = getApplicationPreferences().getUserLanguage();
                 Gson gson = new Gson();
                 SelectLanguageDTO selectLanguageDTO = gson.fromJson(workflowDTO.toString(), SelectLanguageDTO.class);
                 Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
                 header.put("Accept-Language", languageId);
+                Map<String, String> query = new HashMap<>();
+                if (getApplicationPreferences().getUserLanguage() != null) {
+                    query.put("language", getApplicationPreferences().getUserLanguage());
+                }
                 getWorkflowServiceHelper().execute(selectLanguageDTO.getMetadata().getTransitions().getSignin(),
-                        signInCallback, null, null, header);
+                        signInCallback, null, query, header);
+            } else {
+                navigateToWorkflow(workflowDTO);
             }
 
         }
@@ -88,7 +97,6 @@ public class SplashActivity extends BasePatientActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            getWorkflowServiceHelper().saveLabels(workflowDTO.getMetadata().getAsJsonObject("labels"));
             navigateToWorkflow(workflowDTO, getIntent().getExtras());
             // end-splash activity and transition
             SplashActivity.this.finish();

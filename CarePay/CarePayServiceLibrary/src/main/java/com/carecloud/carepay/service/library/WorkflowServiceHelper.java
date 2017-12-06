@@ -2,7 +2,6 @@ package com.carecloud.carepay.service.library;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
@@ -16,8 +15,6 @@ import com.carecloud.carepay.service.library.dtos.RefreshDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepay.service.library.platform.AndroidPlatform;
-import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.google.gson.Gson;
@@ -166,7 +163,11 @@ public class WorkflowServiceHelper {
         TransitionDTO transitionDTO = new TransitionDTO();
         transitionDTO.setMethod("GET");
         transitionDTO.setUrl(HttpConstants.getApiStartUrl());
-        execute(transitionDTO, callback, null, null, getApplicationStartHeaders());
+        Map<String, String> query = new HashMap<>();
+        if (applicationPreferences.getUserLanguage() != null) {
+            query.put("language", applicationPreferences.getUserLanguage());
+        }
+        execute(transitionDTO, callback, null, query, getApplicationStartHeaders());
     }
 
     public void execute(@NonNull TransitionDTO transitionDTO,
@@ -539,6 +540,7 @@ public class WorkflowServiceHelper {
 
     /**
      * Persist all Labels contained in Workflow DTO
+     *
      * @param labels the JsonObject containing all the labels
      */
     public void saveLabels(JsonObject labels) {

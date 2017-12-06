@@ -90,6 +90,7 @@ public class SelectLanguageFragment extends BaseFragment implements LanguageList
     private void changeLanguage() {
         if (!getApplicationPreferences().getUserLanguage().equals(selectedLanguage.getCode())) {
             Map<String, String> query = new HashMap<>();
+            query.put("language", selectedLanguage.getCode());
             getWorkflowServiceHelper().execute(dto.getMetadata().getLinks().getLanguage(),
                     changeLanguageCallBack, query, getWorkflowServiceHelper().getApplicationStartHeaders());
         } else {
@@ -106,6 +107,13 @@ public class SelectLanguageFragment extends BaseFragment implements LanguageList
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
+            if (workflowDTO.getPayload().has("language_metadata")) {
+                getApplicationPreferences().setUserLanguage(selectedLanguage.getCode());
+                getWorkflowServiceHelper().saveLabels(workflowDTO.getPayload()
+                        .getAsJsonObject("language_metadata").getAsJsonObject("metadata")
+                        .getAsJsonObject("labels"));
+            }
+            getActivity().onBackPressed();
 
         }
 

@@ -59,9 +59,10 @@
                 <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                     android:id="@+id/signinEmailEditText"
                     style="@style/EditTextStyle"
-                    android:hint="@string/signin_signup_email_hint"
                     android:inputType="textEmailAddress"
-                    app:customAssetFont="proxima_nova_semi_bold" />
+                    app:customAssetFont="proxima_nova_semi_bold"
+                    breeze:hintKey="signup_email"
+                    tools:text="Email" />
 
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -79,11 +80,12 @@
                     <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                         android:id="@+id/passwordEditText"
                         style="@style/EditTextStyle"
-                        android:hint="@string/password_text"
                         android:imeOptions="actionDone"
                         android:inputType="textPassword"
-                        android:paddingRight="@dimen/dimen_30dp"
-                        app:customAssetFont="proxima_nova_semi_bold" />
+                        android:paddingEnd="@dimen/dimen_30dp"
+                        app:customAssetFont="proxima_nova_semi_bold"
+                        breeze:hintKey="password_label"
+                        tools:text="Password" />
 
                 </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
