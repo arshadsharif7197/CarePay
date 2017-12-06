@@ -14,6 +14,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -328,7 +329,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         setChangeFocusListeners();
         setActionListeners();
 
-
         if (getDialog() != null || (hadInsurance && !isPatientMode) || !isCheckin) {
             saveInsuranceButton = (Button) findViewById(R.id.save_insurance_changes);
         } else {
@@ -376,7 +376,20 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         initializeScanArea(view);
 
         saveInsuranceButton.setOnClickListener(saveButtonListener);
-        validateForm();
+
+        saveInsuranceButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View buttonView, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN && !buttonView.isSelected()) {
+                    if (validateForm(true)) {
+                        saveInsurance();
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+        checkIfEnableButton();
     }
 
 
@@ -503,50 +516,56 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     View.OnClickListener saveButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View saveChanges) {
-            DemographicInsurancePayloadDTO demographicInsurancePayloadDTO;
-            if (editedIndex == NEW_INSURANCE) {
-                demographicInsurancePayloadDTO = new DemographicInsurancePayloadDTO();
-                demographicDTO.getPayload().getDemographics().getPayload().getInsurances()
-                        .add(demographicInsurancePayloadDTO);
-            } else {
-                demographicInsurancePayloadDTO = demographicDTO.getPayload().getDemographics()
-                        .getPayload().getInsurances().get(editedIndex);
+            if (validateForm(true)) {
+                saveInsurance();
             }
-
-            demographicInsurancePayloadDTO.setInsuranceProvider(selectedProviderOption.getName());
-            demographicInsurancePayloadDTO.setInsurancePlan(selectedPlanOption.getName());
-            demographicInsurancePayloadDTO.setInsuranceType(selectedTypeOption.getName() != null
-                    ? selectedTypeOption.getName() : defaultType);
-
-            demographicInsurancePayloadDTO.setInsuranceMemberId(cardNumber.getText().toString().trim());
-            demographicInsurancePayloadDTO.setInsuranceGroupId(groupNumber.getText().toString().trim());
-
-            demographicInsurancePayloadDTO.setRelationship(selectedRelationshipOption.getName());
-            demographicInsurancePayloadDTO.setPolicyFirstNameHolder(policyFirstNameHolder.getText()
-                    .toString().trim());
-            demographicInsurancePayloadDTO.setPolicyLastNameHolder(policyLastNameHolder.getText()
-                    .toString().trim());
-            demographicInsurancePayloadDTO.setPolicyDateOfBirthHolder(policyBirthDateHolder.getText()
-                    .toString().trim());
-            demographicInsurancePayloadDTO.setGender(selectedGenderTextView.getText()
-                    .toString().trim());
-
-            setupImageBase64();
-
-            List<DemographicInsurancePhotoDTO> photos = demographicInsurancePayloadDTO.getInsurancePhotos();
-            if (frontInsurancePhotoDTO != null) {
-                removeOldPhoto(photos, FRONT_PIC);
-                photos.add(frontInsurancePhotoDTO);
-            }
-
-            if (backInsurancePhotoDTO != null) {
-                removeOldPhoto(photos, BACK_PIC);
-                photos.add(backInsurancePhotoDTO);
-            }
-
-            closeDialog();
         }
     };
+
+    private void saveInsurance() {
+        DemographicInsurancePayloadDTO demographicInsurancePayloadDTO;
+        if (editedIndex == NEW_INSURANCE) {
+            demographicInsurancePayloadDTO = new DemographicInsurancePayloadDTO();
+            demographicDTO.getPayload().getDemographics().getPayload().getInsurances()
+                    .add(demographicInsurancePayloadDTO);
+        } else {
+            demographicInsurancePayloadDTO = demographicDTO.getPayload().getDemographics()
+                    .getPayload().getInsurances().get(editedIndex);
+        }
+
+        demographicInsurancePayloadDTO.setInsuranceProvider(selectedProviderOption.getName());
+        demographicInsurancePayloadDTO.setInsurancePlan(selectedPlanOption.getName());
+        demographicInsurancePayloadDTO.setInsuranceType(selectedTypeOption.getName() != null
+                ? selectedTypeOption.getName() : defaultType);
+
+        demographicInsurancePayloadDTO.setInsuranceMemberId(cardNumber.getText().toString().trim());
+        demographicInsurancePayloadDTO.setInsuranceGroupId(groupNumber.getText().toString().trim());
+
+        demographicInsurancePayloadDTO.setRelationship(selectedRelationshipOption.getName());
+        demographicInsurancePayloadDTO.setPolicyFirstNameHolder(policyFirstNameHolder.getText()
+                .toString().trim());
+        demographicInsurancePayloadDTO.setPolicyLastNameHolder(policyLastNameHolder.getText()
+                .toString().trim());
+        demographicInsurancePayloadDTO.setPolicyDateOfBirthHolder(policyBirthDateHolder.getText()
+                .toString().trim());
+        demographicInsurancePayloadDTO.setGender(selectedGenderTextView.getText()
+                .toString().trim());
+
+        setupImageBase64();
+
+        List<DemographicInsurancePhotoDTO> photos = demographicInsurancePayloadDTO.getInsurancePhotos();
+        if (frontInsurancePhotoDTO != null) {
+            removeOldPhoto(photos, FRONT_PIC);
+            photos.add(frontInsurancePhotoDTO);
+        }
+
+        if (backInsurancePhotoDTO != null) {
+            removeOldPhoto(photos, BACK_PIC);
+            photos.add(backInsurancePhotoDTO);
+        }
+
+        closeDialog();
+    }
 
     private void closeDialog() {
         dismiss();
@@ -634,7 +653,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             }
             photoDTO.setPage(page);
         }
-        validateForm();
+        checkIfEnableButton();
     }
 
     @Override
@@ -652,7 +671,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     public void setupImageBase64() {
 
     }
-
 
     private void getInsuranceDropdownLists() {
         InsuranceModelProperties insuranceModelProperties = demographicDTO.getMetadata()
@@ -689,7 +707,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                     otherProviderEditText.setVisibility(View.GONE);
                 }
                 findViewById(R.id.providerRequired).setVisibility(View.GONE);
-                validateForm();
+                checkIfEnableButton();
 
             }
         };
@@ -729,7 +747,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                                             isDataHolderSelf = false;
                                             manageBoDAndGenderVisibility(isDataHolderSelf);
                                         }
-                                        validateForm();
+                                        checkIfEnableButton();
                                     }
                                 }),
                         Label.getLabel("demographics_insurance_relationship_label")));
@@ -786,7 +804,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                     policyBirthDateHolderInput.setError(null);
                     policyBirthDateHolderInput.setErrorEnabled(false);
                 }
-                validateForm();
+                checkIfEnableButton();
             }
         });
 
@@ -807,7 +825,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                     selectedProviderOption.setName(editable.toString());
                     selectedPlanOption.setLabel(selectedProviderOption.getLabel());
                 }
-                validateForm();
+                checkIfEnableButton();
             }
         });
 
@@ -856,7 +874,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                     inputLayout.setError(null);
                     inputLayout.setErrorEnabled(false);
                 }
-                validateForm();
+                checkIfEnableButton();
             }
         };
     }
@@ -890,46 +908,60 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         return hasInsurance;
     }
 
-    private void validateForm() {
-        boolean isValid = true;
+    private void checkIfEnableButton() {
+        boolean isValid = validateForm(false);
+        saveInsuranceButton.setSelected(isValid);
+        saveInsuranceButton.setClickable(isValid);
+    }
 
+    private boolean validateForm(boolean userInteraction) {
         if (StringUtil.isNullOrEmpty(selectedProviderOption.getName())) {
-            isValid = false;
+            return false;
         }
 
         if (!isDataHolderSelf) {
             if (StringUtil.isNullOrEmpty(policyFirstNameHolder.getText().toString().trim())) {
-                policyFirstNameHolderInput.setErrorEnabled(true);
-                policyFirstNameHolderInput.setError(Label.getLabel("demographics_required_field_msg"));
-                isValid = false;
+                if (userInteraction) {
+                    policyFirstNameHolderInput.setErrorEnabled(true);
+                    policyFirstNameHolderInput.setError(Label.getLabel("demographics_required_field_msg"));
+                }
+                return false;
             }
             if (StringUtil.isNullOrEmpty(policyLastNameHolder.getText().toString().trim())) {
-                policyLastNameHolderInput.setErrorEnabled(true);
-                policyLastNameHolderInput.setError(Label.getLabel("demographics_required_field_msg"));
-                isValid = false;
+                if (userInteraction) {
+                    policyLastNameHolderInput.setErrorEnabled(true);
+                    policyLastNameHolderInput.setError(Label.getLabel("demographics_required_field_msg"));
+                }
+                return false;
             }
             if (StringUtil.isNullOrEmpty(policyBirthDateHolder.getText().toString().trim())) {
-                policyBirthDateHolderInput.setErrorEnabled(true);
-                policyBirthDateHolderInput.setError(Label.getLabel("demographics_required_field_msg"));
-                isValid = false;
+                if (userInteraction) {
+                    policyBirthDateHolderInput.setErrorEnabled(true);
+                    policyBirthDateHolderInput.setError(Label.getLabel("demographics_required_field_msg"));
+                }
+                return false;
             }
 
             if (!StringUtil.isNullOrEmpty(policyBirthDateHolder.getText().toString().trim())) {
                 String dateValidationResult = DateUtil
                         .getDateOfBirthValidationResultMessage(policyBirthDateHolder.getText().toString().trim());
                 if (dateValidationResult != null) {
-                    policyBirthDateHolderInput.setErrorEnabled(true);
-                    policyBirthDateHolderInput.setError(dateValidationResult);
-                    isValid = false;
+                    if (userInteraction) {
+                        policyBirthDateHolderInput.setErrorEnabled(true);
+                        policyBirthDateHolderInput.setError(dateValidationResult);
+                    }
+                    return false;
                 }
             }
             if (StringUtil.isNullOrEmpty(selectedGenderOption.getName())
                     || "Choose".equals(selectedGenderOption.getName())) {
-                genderRequiredTextView.setVisibility(View.VISIBLE);
-                isValid = false;
+                if (userInteraction) {
+                    genderRequiredTextView.setVisibility(View.VISIBLE);
+                }
+                return false;
             }
         }
-        saveInsuranceButton.setEnabled(isValid);
+        return true;
     }
 
 
@@ -963,7 +995,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                 storeOption.setName(option.getName());
 
                 if (getView() != null) {
-                    validateForm();
+                    checkIfEnableButton();
                 }
             }
         };

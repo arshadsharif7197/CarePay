@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:breeze="http://schemas.carecloud.com/breeze"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <FrameLayout
         android:id="@+id/insurance_toolbar"
@@ -50,8 +50,8 @@
                     android:id="@+id/remove_insurance_entry"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_10dp"
                     android:layout_marginBottom="@dimen/dimen_10dp"
+                    android:layout_marginTop="@dimen/dimen_10dp"
                     android:background="@drawable/button_red_border"
                     android:paddingBottom="@dimen/dimen_14dp"
                     android:paddingTop="@dimen/dimen_14dp"
@@ -64,10 +64,10 @@
                     android:id="@+id/save_insurance_changes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_10dp"
                     android:layout_marginBottom="@dimen/dimen_10dp"
-                    android:background="@drawable/button_selector"
-                    android:enabled="false"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:background="@drawable/button_selector_always_click"
+                    android:enabled="true"
                     android:paddingBottom="@dimen/dimen_14dp"
                     android:paddingTop="@dimen/dimen_14dp"
                     android:textColor="@color/white"
