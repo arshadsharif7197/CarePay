@@ -8,14 +8,17 @@
 
     <!--Parameter Events-->
     <string name="event_appointment_scheduled">Appointment Scheduled</string>
+    <string name="event_appointment_cancelled">Appointment Cancelled</string>
 
     <!--Screen Load Events-->
 
     <!--Parameters-->
     <string name="param_appointment_type">Appointment Type</string>
-    <string name="param_appointment_practice_id">Practice Id</string>
+    <string name="param_appointment_cancel_reason">Cancellation Reason</string>
+    <string name="param_practice_id">Practice Id</string>
 
     <!--Incremental Properties-->
     <string name="count_appointment_scheduled">Total Appointments Scheduled</string>
+    <string name="count_appointment_cancelled">Total Appointments Cancelled</string>
 
 </resources>

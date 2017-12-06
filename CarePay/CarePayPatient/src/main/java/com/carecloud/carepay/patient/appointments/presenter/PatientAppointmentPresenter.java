@@ -87,6 +87,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     private Fragment androidPayTargetFragment;
 
     private boolean startCancelationFeePayment = false;
+    private String cancellationReasonString;
 
 
     public PatientAppointmentPresenter(AppointmentViewHandler viewHandler,
@@ -422,6 +423,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                     public void onCancelReasonAppointmentDialogCancelClicked(AppointmentDTO appointmentDTO,
                                                                              int cancellationReason,
                                                                              String cancellationReasonComment) {
+                        cancellationReasonString = cancellationReasonComment;
                         if (cancellationFee == null) {
                             onCancelAppointment(appointmentDTO, cancellationReason, cancellationReasonComment);
                         } else {
@@ -485,6 +487,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             viewHandler.hideProgressDialog();
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_cancellation_success_message_HTML"));
             viewHandler.refreshAppointments();
+            //log appt cancelation to mixpanel
+            String[] params = {getString(R.string.param_appointment_cancel_reason), getString(R.string.param_practice_id)};
+            Object[] values = {cancellationReasonString, practiceId};
+            MixPanelUtil.logEvents(getString(R.string.event_appointment_cancelled), params, values);
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_cancelled), 1);
         }
 
         @Override
@@ -530,7 +537,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             viewHandler.hideProgressDialog();
-            String[] params = {getString(R.string.param_appointment_type), getString(R.string.param_appointment_practice_id)};
+            //log appt scheduled to mixpanel
+            String[] params = {getString(R.string.param_appointment_type), getString(R.string.param_practice_id)};
             String[] values = {selectedVisitTypeDTO.getName(), practiceId};
             MixPanelUtil.logEvents(getString(R.string.event_appointment_scheduled), params, values);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_scheduled), 1);
@@ -713,6 +721,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         if(startCancelationFeePayment){
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_cancellation_success_message_HTML"));
             viewHandler.confirmAppointment(false);
+            //log appt cancelation to mixpanel
+            String[] params = {getString(R.string.param_appointment_cancel_reason), getString(R.string.param_practice_id)};
+            Object[] values = {cancellationReasonString, practiceId};
+            MixPanelUtil.logEvents(getString(R.string.event_appointment_cancelled), params, values);
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_cancelled), 1);
         }else {
             onAppointmentRequestSuccess();
         }
