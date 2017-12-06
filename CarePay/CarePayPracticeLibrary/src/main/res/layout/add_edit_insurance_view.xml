@@ -21,7 +21,7 @@
             android:layout_centerVertical="true"
             android:gravity="start"
             android:textColor="@color/textview_default_textcolor"
-            android:textSize="@dimen/text_size_24sp"
+            android:textSize="@dimen/text_size_20sp"
             app:customAssetFont="gotham_rounded_book"
             breeze:textKey="demographics_documents_title_select_provider"
             tools:text="Provider" />
@@ -62,7 +62,7 @@
             android:layout_marginTop="@dimen/dimen_30dp"
             android:textAlignment="textEnd"
             android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/text_size_17sp"
+            android:textSize="@dimen/text_size_20sp"
             android:visibility="gone"
             app:customAssetFont="gotham_rounded_medium" />
     </RelativeLayout>
@@ -86,7 +86,7 @@
             android:layout_gravity="center_vertical"
             android:gravity="start"
             android:textColor="@color/textview_default_textcolor"
-            android:textSize="@dimen/text_size_24sp"
+            android:textSize="@dimen/text_size_20sp"
             app:customAssetFont="gotham_rounded_book"
             breeze:textKey="demographics_documents_title_select_plan"
             tools:text="Plan" />
@@ -146,7 +146,7 @@
                 android:paddingEnd="0dp"
                 android:paddingStart="0dp"
                 android:textAllCaps="true"
-                android:textSize="@dimen/text_size_24sp"
+                android:textSize="@dimen/text_size_20sp"
                 app:customAssetFont="gotham_rounded_book"
                 breeze:hintKey="demographics_insurance_card_number"
                 tools:hint="Insurance Card Number" />
@@ -169,7 +169,7 @@
                 android:paddingEnd="0dp"
                 android:paddingStart="0dp"
                 android:textAllCaps="true"
-                android:textSize="@dimen/text_size_24sp"
+                android:textSize="@dimen/text_size_20sp"
                 app:customAssetFont="gotham_rounded_book"
                 breeze:hintKey="demographics_insurance_group_number"
                 tools:hint="Group Number" />
@@ -190,7 +190,7 @@
             android:layout_weight="0.7"
             android:gravity="start"
             android:textColor="@color/textview_default_textcolor"
-            android:textSize="@dimen/text_size_24sp"
+            android:textSize="@dimen/text_size_20sp"
             app:customAssetFont="gotham_rounded_book"
             breeze:textKey="demographics_insurance_type_label"
             tools:text="Type" />
@@ -266,7 +266,7 @@
             android:layout_weight="0.7"
             android:gravity="start"
             android:textColor="@color/textview_default_textcolor"
-            android:textSize="@dimen/text_size_24sp"
+            android:textSize="@dimen/text_size_20sp"
             app:customAssetFont="gotham_rounded_book"
             breeze:textKey="demographics_insurance_relationship_label"
             tools:text="Relationship" />
@@ -293,7 +293,8 @@
         android:id="@+id/dateOfBirthContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_5dp">
+        android:layout_marginTop="@dimen/dimen_5dp"
+        android:visibility="gone">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/health_insurance_policy_birth_date_holder_layout"
@@ -306,6 +307,7 @@
                 android:digits="0123456789/"
                 android:imeOptions="actionNext"
                 android:inputType="date"
+                android:textSize="@dimen/text_size_20sp"
                 android:maxLength="10"
                 android:nextFocusForward="@+id/revewidemoPhoneNumberEdit"
                 app:customAssetFont="proxima_nova_regular"
@@ -326,7 +328,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/dimen_15dp"
-        android:paddingTop="@dimen/dimen_15dp">
+        android:paddingTop="@dimen/dimen_15dp"
+        android:visibility="gone">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:layout_width="wrap_content"
@@ -335,7 +338,7 @@
             android:layout_centerVertical="true"
             android:gravity="start"
             android:textColor="@color/textview_default_textcolor"
-            android:textSize="@dimen/text_size_24sp"
+            android:textSize="@dimen/text_size_20sp"
             app:customAssetFont="gotham_rounded_book"
             breeze:textKey="demographics_review_gender"
             tools:text="Gender" />
