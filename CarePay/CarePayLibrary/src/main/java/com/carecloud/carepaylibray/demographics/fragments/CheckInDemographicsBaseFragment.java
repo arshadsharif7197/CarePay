@@ -484,6 +484,11 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         setFieldError(inputLayout, error);
     }
 
+    protected void setDefaultError(TextInputLayout inputLayout) {
+        setFieldError(inputLayout, Label.getLabel("demographics_required_validation_msg"));
+        inputLayout.requestFocus();
+    }
+
     protected void setFieldError(TextInputLayout inputLayout, String error) {
         if (inputLayout != null) {
             inputLayout.setErrorEnabled(true);
@@ -565,6 +570,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         @Override
         public void afterTextChanged(Editable editable) {
             StringUtil.autoFormatZipcode(editable, lastLength);
+            checkIfEnableButton(getView());
         }
     };
 
