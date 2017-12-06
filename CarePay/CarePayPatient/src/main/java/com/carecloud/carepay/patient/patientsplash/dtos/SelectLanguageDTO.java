@@ -4,10 +4,11 @@ package com.carecloud.carepay.patient.patientsplash.dtos;
  * Created by Rahul on 11/7/16.
  */
 
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class SelectLanguageDTO {
+public class SelectLanguageDTO implements DTO {
     @SerializedName("metadata")
     @Expose
     private MetaDataDTO metadata = new MetaDataDTO();

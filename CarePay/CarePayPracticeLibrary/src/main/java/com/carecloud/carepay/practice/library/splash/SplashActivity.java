@@ -43,7 +43,7 @@ public class SplashActivity extends BasePracticeActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            getWorkflowServiceHelper().saveLabels(workflowDTO);
+            getWorkflowServiceHelper().saveLabels(workflowDTO.getMetadata().getAsJsonObject("labels"));
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, getIntent().getExtras());
             SplashActivity.this.finish();
         }

@@ -539,22 +539,18 @@ public class WorkflowServiceHelper {
 
     /**
      * Persist all Labels contained in Workflow DTO
-     *
-     * @param workflowDTO workflow dto
+     * @param labels the JsonObject containing all the labels
      */
-    public void saveLabels(WorkflowDTO workflowDTO) {
-        JsonObject labels = workflowDTO.getMetadata().getAsJsonObject("labels");
-        String state = workflowDTO.getState();
-        boolean contains = ((AndroidPlatform) Platform.get())
-                .openSharedPreferences(AndroidPlatform.LABELS_FILE_NAME).contains("labelFor" + state);
-        if (labels != null && !contains) {
+    public void saveLabels(JsonObject labels) {
+//        String state = workflowDTO.getState();
+        if (labels != null) {
             Set<Map.Entry<String, JsonElement>> set = labels.entrySet();
             for (Map.Entry<String, JsonElement> entry : set) {
                 Label.putLabelAsync(entry.getKey(), entry.getValue().getAsString());
             }
             Label.applyAsyncLabels();
-            SharedPreferences.Editor editor = ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences().edit();
-            editor.putBoolean("labelFor" + state, true).apply();
+//            SharedPreferences.Editor editor = ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences().edit();
+//            editor.putBoolean("labelFor" + state, true).apply();
         }
     }
 

@@ -63,16 +63,12 @@ public class SplashActivity extends BasePatientActivity {
             if (!SystemUtil.isNotEmptyString(getApplicationPreferences().getUserLanguage())) {
                 navigateToWorkflow(workflowDTO);
             } else if (SystemUtil.isNotEmptyString(getApplicationPreferences().getUserLanguage())) {
-                String languageid = getApplicationPreferences().getUserLanguage();
-
-                // Convert to SignInSignUpDTO
+                String languageId = getApplicationPreferences().getUserLanguage();
                 Gson gson = new Gson();
-                SelectLanguageDTO signInSignUpDTO = gson.fromJson(workflowDTO.toString(), SelectLanguageDTO.class);
-
+                SelectLanguageDTO selectLanguageDTO = gson.fromJson(workflowDTO.toString(), SelectLanguageDTO.class);
                 Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
-                header.put("Accept-Language", languageid);
-
-                getWorkflowServiceHelper().execute(signInSignUpDTO.getMetadata().getTransitions().getSignin(),
+                header.put("Accept-Language", languageId);
+                getWorkflowServiceHelper().execute(selectLanguageDTO.getMetadata().getTransitions().getSignin(),
                         signInCallback, null, null, header);
             }
 
@@ -92,7 +88,7 @@ public class SplashActivity extends BasePatientActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            getWorkflowServiceHelper().saveLabels(workflowDTO);
+            getWorkflowServiceHelper().saveLabels(workflowDTO.getMetadata().getAsJsonObject("labels"));
             navigateToWorkflow(workflowDTO, getIntent().getExtras());
             // end-splash activity and transition
             SplashActivity.this.finish();

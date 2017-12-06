@@ -18,6 +18,9 @@ public class SignInLinksDTO {
     @SerializedName("personal_info")
     @Expose
     private TransitionDTO personalInfo = new TransitionDTO();
+    @SerializedName("language_metadata")
+    @Expose
+    private TransitionDTO language = new TransitionDTO();
 
     public TransitionDTO getSelf() {
         return self;
@@ -41,5 +44,13 @@ public class SignInLinksDTO {
 
     public void setPersonalInfo(TransitionDTO personalInfo) {
         this.personalInfo = personalInfo;
+    }
+
+    public TransitionDTO getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(TransitionDTO language) {
+        this.language = language;
     }
 }

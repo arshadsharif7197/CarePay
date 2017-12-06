@@ -1,19 +1,15 @@
 package com.carecloud.carepay.patient.selectlanguage.adapters;
 
-import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 
-
-import com.carecloud.carepay.patient.selectlanguage.models.LanguageOptionModel;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.ISession;
-import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 
 import java.util.List;
 
@@ -23,22 +19,18 @@ import java.util.List;
 
 public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapter.ViewHolder> {
 
-    List<LanguageOptionModel> languageListLanguageOptionModels;
-    Context context;
-    RadioButton selectedLanguage;
-    private  String languageID="";
+    private List<OptionDTO> languageListLanguageOptionModels;
+    private RadioButton selectedLanguage;
     private OnItemClickListener itemClickListener;
 
     /**
-     *
-     * @param languageListLanguageOptionModels  option model
-     * @param itemClickListener onclicklistner
-     * @param context context
+     * @param languageListLanguageOptionModels option model
+     * @param itemClickListener                onclicklistner
      */
-    public LanguageListAdapter(List<LanguageOptionModel> languageListLanguageOptionModels, OnItemClickListener itemClickListener, Context context) {
+    public LanguageListAdapter(List<OptionDTO> languageListLanguageOptionModels,
+                               OnItemClickListener itemClickListener) {
         this.languageListLanguageOptionModels = languageListLanguageOptionModels;
         this.itemClickListener = itemClickListener;
-        this.context = context;
     }
 
     @Override
@@ -48,16 +40,38 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        LanguageOptionModel languageSelected = languageListLanguageOptionModels.get(position);
-        String languageName = languageSelected.getValue();
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+        final OptionDTO languageSelected = languageListLanguageOptionModels.get(position);
+        String languageName = languageSelected.getLabel();
         holder.languageNameRadioButton.setText(languageName);
+        holder.languageNameRadioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!holder.languageNameRadioButton.equals(selectedLanguage)) {
+                    selectedLanguage.setTextColor(ContextCompat.getColor(selectedLanguage.getContext(), R.color.slateGray));
+                    selectedLanguage.setChecked(false);
+                    holder.languageNameRadioButton.setTextColor(ContextCompat
+                            .getColor(holder.languageNameRadioButton.getContext(), R.color.colorPrimary));
+                    holder.languageNameRadioButton.setChecked(true);
+                    selectedLanguage = holder.languageNameRadioButton;
+                    itemClickListener.onLanguageSelected(languageSelected);
 
-        if (((ISession) context).getApplicationPreferences().getUserLanguage().equals(languageSelected.getLanguageId())) {
+                }
+            }
+        });
+        if (holder.languageNameRadioButton.isChecked()) {
+            holder.languageNameRadioButton.setTextColor(ContextCompat
+                    .getColor(holder.languageNameRadioButton.getContext(), R.color.colorPrimary));
+        } else {
+            holder.languageNameRadioButton.setTextColor(ContextCompat
+                    .getColor(holder.languageNameRadioButton.getContext(), R.color.slateGray));
+        }
+
+        if (((ISession) holder.languageNameRadioButton.getContext()).getApplicationPreferences()
+                .getUserLanguage().equals(languageSelected.getCode())) {
             selectedLanguage = holder.languageNameRadioButton;
             selectedLanguage.setChecked(true);
-            selectedLanguage.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
-            itemClickListener.onLanguageChange(languageSelected.getValue(), languageSelected.getLanguageId());
+            selectedLanguage.setTextColor(ContextCompat.getColor(selectedLanguage.getContext(), R.color.colorPrimary));
         }
     }
 
@@ -70,47 +84,15 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
     }
 
     public interface OnItemClickListener {
-        void onLanguageChange(String selectedLanguage,String languagecode);
+        void onLanguageSelected(OptionDTO language);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        //TextView textViewLanguageName;
-        CardView cardView;
-        //ImageView radioImageLanguageSelect;
         RadioButton languageNameRadioButton;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            cardView = (CardView) itemView.findViewById(R.id.cardView);
             languageNameRadioButton = (RadioButton) itemView.findViewById(R.id.languageNameRadioButton);
-
-            languageNameRadioButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    RadioButton radioButton = (RadioButton) view;
-                    if (selectedLanguage != null) {
-                        selectedLanguage.setChecked(false);
-                        selectedLanguage.setTextColor(ContextCompat.getColor(context, R.color.slateGray));
-                        SystemUtil.setProximaNovaRegularTypeface(context, selectedLanguage);
-                    }
-                    selectedLanguage = radioButton;
-                    selectedLanguage.setChecked(true);
-                    selectedLanguage.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
-                    SystemUtil.setProximaNovaSemiboldTypeface(context, selectedLanguage);
-                    if (itemClickListener != null) {
-                        String selLangValue = selectedLanguage.getText().toString();
-                        // search sel lang id
-                        languageID = languageListLanguageOptionModels.get(0).getLanguageId();
-                        for (LanguageOptionModel langOpt : languageListLanguageOptionModels) {
-                            if (langOpt.getValue().equals(selLangValue)) {
-                                languageID = langOpt.getLanguageId();
-                            }
-                        }
-                        itemClickListener.onLanguageChange(selLangValue, languageID);
-
-                    }
-                }
-            });
         }
     }
 }
