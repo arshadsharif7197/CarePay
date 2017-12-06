@@ -84,6 +84,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     private TextInputLayout zipCodeTextInputLayout;
     private TextInputLayout cityTextInputLayout;
     private TextInputLayout stateTextInputLayout;
+    private TextInputLayout address1TextInputLayout;
 
     @Override
     public void attachCallback(Context context) {
@@ -477,8 +478,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeTextView);
         zipCodeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeTextInputLayout,
                 getZipCodeFocusListener(zipCodeEditText)));
-        zipCodeEditText.addTextChangedListener(zipInputFormatter);
         zipCodeEditText.setText(StringUtil.formatZipCode(selectedEmployer.getAddress().getZipcode()));
+        zipCodeEditText.addTextChangedListener(zipInputFormatter);
         zipCodeEditText.getOnFocusChangeListener()
                 .onFocusChange(zipCodeEditText, !StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString()));
 
@@ -513,7 +514,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 .onFocusChange(stateEditText, !StringUtil.isNullOrEmpty(stateEditText.getText().toString()));
         stateEditText.addTextChangedListener(clearValidationErrorsOnTextChange(stateTextInputLayout));
 
-        final TextInputLayout address1TextInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
+        address1TextInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
         employerAddressEditText = (EditText) view.findViewById(R.id.addressEditText);
         employerAddressEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(address1TextInputLayout, null));
@@ -805,24 +806,34 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
                 if (StringUtil.isNullOrEmpty(employerAddressEditText.getText().toString())) {
                     if (isUserAction()) {
-                        setDefaultError(view, R.id.address1TextInputLayout);
                         showErrorViews(true, (ViewGroup) view.findViewById(R.id.address1DemographicsLayout));
-                        employerAddressEditText.requestFocus();
+                        setDefaultError(address1TextInputLayout);
+
                     } else {
-                        unsetFieldError(view, R.id.address1TextInputLayout);
                         showErrorViews(false, (ViewGroup) view.findViewById(R.id.address1DemographicsLayout));
+                        unsetFieldError(view, R.id.address1TextInputLayout);
                     }
                     return false;
                 }
 
+                if (!StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString().trim()) &&
+                        !ValidationHelper.isValidString(zipCodeEditText.getText().toString().trim(),
+                                ValidationHelper.ZIP_CODE_PATTERN)) {
+                    setFieldError(zipCodeTextInputLayout, Label.getLabel("demographics_zip_code_validation_msg"));
+                    return false;
+                } else {
+                    unsetFieldError(zipCodeTextInputLayout);
+                }
+
                 if (StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())) {
                     if (isUserAction()) {
-                        setDefaultError(view, R.id.zipCodeTextInputLayout);
-                        zipCodeEditText.requestFocus();
+                        setDefaultError(zipCodeTextInputLayout);
+                    } else {
+                        unsetFieldError(zipCodeTextInputLayout);
                     }
                     return false;
                 } else {
-                    unsetFieldError(view, R.id.zipCodeTextInputLayout);
+                    unsetFieldError(zipCodeTextInputLayout);
                 }
 
                 if (StringUtil.isNullOrEmpty(cityEditText.getText().toString())) {
