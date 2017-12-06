@@ -81,6 +81,7 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
         @Override
         public void afterTextChanged(Editable editable) {
             StringUtil.autoFormatZipcode(editable, lastLength);
+            checkIfEnableButton();
         }
     };
 
