@@ -79,6 +79,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     private String patientId;
     private String practiceId;
     private String practiceMgmt;
+    private String practiceName;
     private AppointmentResourcesDTO selectedAppointmentResourcesDTO;
     private VisitTypeDTO selectedVisitTypeDTO;
     private AppointmentDTO appointmentDTO;
@@ -88,7 +89,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     private boolean startCancelationFeePayment = false;
     private String cancellationReasonString;
-
 
     public PatientAppointmentPresenter(AppointmentViewHandler viewHandler,
                                        AppointmentsResultModel appointmentsResultModel,
@@ -117,6 +117,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         setPatientID(selectedResourcesPracticeDTO.getPracticeId());
         practiceId = selectedResourcesPracticeDTO.getPracticeId();
         practiceMgmt = selectedResourcesPracticeDTO.getPracticeMgmt();
+        practiceName = selectedResourcesPracticeDTO.getPracticeName();
 
         VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog.newInstance(appointmentResourcesDTO,
                 appointmentsResultModel, getPracticeSettings());
@@ -488,8 +489,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_cancellation_success_message_HTML"));
             viewHandler.refreshAppointments();
             //log appt cancelation to mixpanel
-            String[] params = {getString(R.string.param_appointment_cancel_reason), getString(R.string.param_practice_id)};
-            Object[] values = {cancellationReasonString, practiceId};
+            String[] params = {getString(R.string.param_appointment_cancel_reason), getString(R.string.param_practice_id), getString(R.string.param_practice_name)};
+            Object[] values = {cancellationReasonString, practiceId, practiceName};
             MixPanelUtil.logEvents(getString(R.string.event_appointment_cancelled), params, values);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_cancelled), 1);
         }
@@ -538,8 +539,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         public void onPostExecute(WorkflowDTO workflowDTO) {
             viewHandler.hideProgressDialog();
             //log appt scheduled to mixpanel
-            String[] params = {getString(R.string.param_appointment_type), getString(R.string.param_practice_id)};
-            String[] values = {selectedVisitTypeDTO.getName(), practiceId};
+            String[] params = {getString(R.string.param_appointment_type), getString(R.string.param_practice_id), getString(R.string.param_practice_name)};
+            String[] values = {selectedVisitTypeDTO.getName(), practiceId, practiceName};
             MixPanelUtil.logEvents(getString(R.string.event_appointment_scheduled), params, values);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_scheduled), 1);
             onAppointmentRequestSuccess();
@@ -722,8 +723,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_cancellation_success_message_HTML"));
             viewHandler.confirmAppointment(false);
             //log appt cancelation to mixpanel
-            String[] params = {getString(R.string.param_appointment_cancel_reason), getString(R.string.param_practice_id)};
-            Object[] values = {cancellationReasonString, practiceId};
+            String[] params = {getString(R.string.param_appointment_cancel_reason), getString(R.string.param_practice_id), getString(R.string.param_practice_name)};
+            Object[] values = {cancellationReasonString, practiceId, practiceName};
             MixPanelUtil.logEvents(getString(R.string.event_appointment_cancelled), params, values);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_cancelled), 1);
         }else {

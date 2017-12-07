@@ -9,16 +9,25 @@
     <!--Parameter Events-->
     <string name="event_appointment_scheduled">Appointment Scheduled</string>
     <string name="event_appointment_cancelled">Appointment Cancelled</string>
+    <string name="event_payment_make_full_payment">Full Payment Completed</string>
+    <string name="event_payment_make_partial_payment">Partial Payment Completed</string>
 
-    <!--Screen Load Events-->
+    <!--Screen Load Events-->.....
 
     <!--Parameters-->
     <string name="param_appointment_type">Appointment Type</string>
     <string name="param_appointment_cancel_reason">Cancellation Reason</string>
+    <string name="param_payment_amount">Payment Amount</string>
+    <string name="param_payment_type">Payment Type</string>
     <string name="param_practice_id">Practice Id</string>
+    <string name="param_practice_name">Practice Name</string>
 
     <!--Incremental Properties-->
     <string name="count_appointment_scheduled">Total Appointments Scheduled</string>
     <string name="count_appointment_cancelled">Total Appointments Cancelled</string>
+
+    <!--People Properties-->
+    <string name="people_gender">Gender</string>
+    <string name="people_dob">Date of Birth</string>
 
 </resources>

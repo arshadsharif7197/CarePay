@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_launch">App Launched</string>
+
+    <!--People Properties-->
+    <string name="people_gender">Gender</string>
+    <string name="people_dob">Date of Birth</string>
+    <string name="people_ethnicity">Ethnicity</string>
+    <string name="people_race">Race</string>
+    <string name="people_language">Language</string>
+
+</resources>

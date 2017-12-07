@@ -1,7 +1,11 @@
 package com.carecloud.carepaylibray.utils;
 
+import android.content.Context;
+
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibrary.BuildConfig;
+import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import org.json.JSONException;
@@ -80,7 +84,7 @@ public class MixPanelUtil {
      * Utility to track user in mixpanel people
      * @param userId user id
      */
-    public static void setUser(String userId){
+    public static void setUser(Context context, String userId, DemographicPayloadDTO demographics){
         if(!isDebug && mixpanel!=null) {
             mixpanel.identify(userId+"");
 //            MixpanelAPI.People people = mixpanelAPI.getPeople();
@@ -89,6 +93,11 @@ public class MixPanelUtil {
 //            mixpanel.getPeople().set("$name", signInResponse.getPayload().getSignIn().getMetadata().getUsername()+"");
 //            mixpanel.getPeople().set("$email", user.getEmail());
 //            mixpanel.getPeople().set("$phone", user.getPhoneNumber());
+            mixpanel.getPeople().set(context.getString(R.string.people_gender), demographics.getPersonalDetails().getGender());
+            mixpanel.getPeople().set(context.getString(R.string.people_dob), demographics.getPersonalDetails().getDateOfBirth());
+            mixpanel.getPeople().set(context.getString(R.string.people_ethnicity), demographics.getPersonalDetails().getEthnicity());
+            mixpanel.getPeople().set(context.getString(R.string.people_race), demographics.getPersonalDetails().getPrimaryRace());
+            mixpanel.getPeople().set(context.getString(R.string.people_language), demographics.getPersonalDetails().getPreferredLanguage());
         }
     }
 

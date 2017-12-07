@@ -80,7 +80,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
             replaceFragment(MyHealthMainFragment.newInstance(), false);
         }
         String userId = myHealthDto.getPayload().getPracticePatientIds().get(0).getUserId();
-        MixPanelUtil.setUser(userId);
+        MixPanelUtil.setUser(getContext(), userId, myHealthDto.getPayload().getDemographicDTO());
     }
 
 
