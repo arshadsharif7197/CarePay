@@ -13,7 +13,6 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.fcm.RegistrationIntentService;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.newrelic.agent.android.NewRelic;
 
@@ -64,22 +63,21 @@ public class SplashActivity extends BasePatientActivity {
                 getWorkflowServiceHelper().saveLabels(workflowDTO.getPayload()
                         .getAsJsonObject("language_metadata").getAsJsonObject("metadata")
                         .getAsJsonObject("labels"));
+                getApplicationPreferences().setUserLanguage(workflowDTO.getPayload()
+                        .getAsJsonObject("language_metadata").get("code").toString());
             }
-            if (SystemUtil.isNotEmptyString(getApplicationPreferences().getUserLanguage())) {
-                String languageId = getApplicationPreferences().getUserLanguage();
-                Gson gson = new Gson();
-                SelectLanguageDTO selectLanguageDTO = gson.fromJson(workflowDTO.toString(), SelectLanguageDTO.class);
-                Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
-                header.put("Accept-Language", languageId);
-                Map<String, String> query = new HashMap<>();
-                if (getApplicationPreferences().getUserLanguage() != null) {
-                    query.put("language", getApplicationPreferences().getUserLanguage());
-                }
-                getWorkflowServiceHelper().execute(selectLanguageDTO.getMetadata().getTransitions().getSignin(),
-                        signInCallback, null, query, header);
-            } else {
-                navigateToWorkflow(workflowDTO);
+
+            Gson gson = new Gson();
+            SelectLanguageDTO selectLanguageDTO = gson.fromJson(workflowDTO.toString(), SelectLanguageDTO.class);
+            Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
+            header.put("Accept-Language", getApplicationPreferences().getUserLanguage());
+            Map<String, String> query = new HashMap<>();
+            if (getApplicationPreferences().getUserLanguage() != null) {
+                query.put("language", getApplicationPreferences().getUserLanguage());
             }
+            getWorkflowServiceHelper().execute(selectLanguageDTO.getMetadata().getTransitions().getSignin(),
+                    signInCallback, null, query, header);
+
 
         }
 
