@@ -749,7 +749,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                     && primaryPhysician == null) {
                 if (isUserAction()) {
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.primaryPhysicianDemographicsLayout));
-                    setDefaultError(view, R.id.primaryPhysicianInputLayout);
+//                    setDefaultError(view, R.id.primaryPhysicianInputLayout);
                 }
                 return false;
             } else {
@@ -760,7 +760,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                     && referringPhysician == null) {
                 if (isUserAction()) {
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.referringPhysicianDemographicsLayout));
-                    setDefaultError(view, R.id.referringPhysicianInputLayout);
+//                    setDefaultError(view, R.id.referringPhysicianInputLayout);
                 }
                 return false;
             } else {

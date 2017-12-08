@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
@@ -294,7 +295,7 @@
                 android:id="@+id/demogrAddressOptionalLabel"
                 style="@style/SignupRequireHintStyle"
                 app:customAssetFont="proxima_nova_regular"
-                breeze:textHint="payment_address_line2_text" />
+                breeze:textKey="demographics_details_optional_hint"/>
 
         </FrameLayout>
 
@@ -437,12 +438,6 @@
                     breeze:hintKey="demographics_review_date_of_birth" />
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/dateOfBirthOptionalLabel"
-                style="@style/SignupRequireHintStyle"
-                android:textColor="@color/cadet_gray"
-                app:customAssetFont="proxima_nova_regular"
-                breeze:textKey="demographics_details_dob_hint" />
         </FrameLayout>
 
 
