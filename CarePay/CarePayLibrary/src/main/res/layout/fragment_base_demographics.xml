@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
@@ -16,7 +17,9 @@
             android:id="@+id/genderInputLayout"
             style="@style/SigninSignupTextInputStyle"
             app:customAssetFont="proxima_nova_semi_bold"
-            app:hintTextAppearance="@style/FloatingLabelStyle">
+            app:hintTextAppearance="@style/FloatingLabelStyle"
+            android:textColorHint="@color/demographics_color_error"
+            android:tag="@string/tag_demographics_error_color">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/genderEditText"
@@ -49,7 +52,9 @@
             android:id="@+id/raceInputLayout"
             style="@style/SigninSignupTextInputStyle"
             app:customAssetFont="proxima_nova_semi_bold"
-            app:hintTextAppearance="@style/FloatingLabelStyle">
+            app:hintTextAppearance="@style/FloatingLabelStyle"
+            android:textColorHint="@color/demographics_color_error"
+            android:tag="@string/tag_demographics_error_color">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/raceEditText"
@@ -82,7 +87,9 @@
             android:id="@+id/secondaryRaceInputLayout"
             style="@style/SigninSignupTextInputStyle"
             app:customAssetFont="proxima_nova_semi_bold"
-            app:hintTextAppearance="@style/FloatingLabelStyle">
+            app:hintTextAppearance="@style/FloatingLabelStyle"
+            android:textColorHint="@color/demographics_color_error"
+            android:tag="@string/tag_demographics_error_color">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/secondaryRaceEditText"
@@ -115,7 +122,9 @@
             android:id="@+id/ethnicityInputLayout"
             style="@style/SigninSignupTextInputStyle"
             app:customAssetFont="proxima_nova_semi_bold"
-            app:hintTextAppearance="@style/FloatingLabelStyle">
+            app:hintTextAppearance="@style/FloatingLabelStyle"
+            android:textColorHint="@color/demographics_color_error"
+            android:tag="@string/tag_demographics_error_color">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/ethnicityEditText"

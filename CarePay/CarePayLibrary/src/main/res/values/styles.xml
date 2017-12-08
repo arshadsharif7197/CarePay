@@ -195,9 +195,11 @@
     <style name="SignupRequireHintStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginRight">@dimen/signup_optional_label_margin_left_right
-        </item>
-        <item name="android:layout_gravity">end</item>
+        <item name="android:layout_marginRight">@dimen/signup_optional_label_margin_left_right</item>
+        <item name="android:background">@drawable/button_gray_border</item>
+        <item name="android:padding">@dimen/dimen_3dp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:layout_gravity">end|center_vertical</item>
         <item name="android:textSize">@dimen/signup_optional_label_text_size</item>
     </style>
 

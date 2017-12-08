@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/reviewdemographicsPersonalContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -24,6 +26,7 @@
             android:maxLength="100"
             android:nextFocusForward="@+id/reviewdemogrMiddleNameEdit"
             app:customAssetFont="proxima_nova_regular"
+            tools:hint="First Name"
             breeze:hintKey="demographics_first_name" />
     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -47,6 +50,7 @@
                 android:maxLength="100"
                 android:nextFocusForward="@+id/reviewdemogrsLastNameEdit"
                 app:customAssetFont="proxima_nova_regular"
+                tools:hint="Middle Name"
                 breeze:hintKey="demographics_middle_name" />
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
@@ -57,6 +61,7 @@
             android:textAllCaps="true"
             android:textColor="@color/cadet_gray"
             app:customAssetFont="proxima_nova_regular"
+            tools:hint="Optional"
             breeze:textKey="demographics_details_optional_hint" />
     </FrameLayout>
 
@@ -75,6 +80,7 @@
             android:maxLength="100"
             android:nextFocusForward="@+id/reviewdemogrEmailEdit"
             app:customAssetFont="proxima_nova_regular"
+            tools:hint="Last Name"
             breeze:hintKey="demographics_lirst_name" />
 
     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
