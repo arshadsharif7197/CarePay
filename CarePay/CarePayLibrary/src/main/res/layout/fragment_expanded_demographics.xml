@@ -194,7 +194,7 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/secondaryPhoneContainer"
+        android:id="@+id/secondaryPhoneDemographicsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -549,26 +549,33 @@
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
         </FrameLayout>
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
-            android:id="@+id/address1TextInputLayout"
-            style="@style/SigninSignupTextInputStyle"
-            app:customAssetFont="proxima_nova_semi_bold"
-            app:hintTextAppearance="@style/FloatingLabelStyle">
+        <FrameLayout
+            android:id="@+id/address1DemographicsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
-                android:id="@+id/addressEditText"
-                style="@style/SigninSignupEditStyle"
-                android:digits="@string/restrict_address_characters"
-                android:imeOptions="actionNext"
-                android:inputType="textPostalAddress"
-                android:maxLength="256"
-                android:nextFocusForward="@+id/addressEditText2"
-                app:customAssetFont="proxima_nova_regular"
-                app:hintTextAppearance="@style/FloatingLabelStyle"
-                breeze:hintKey="address1_label"
-                tools:text="Address 1" />
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                android:id="@+id/address1TextInputLayout"
+                style="@style/SigninSignupTextInputStyle"
+                app:customAssetFont="proxima_nova_semi_bold"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
 
-        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                    android:id="@+id/addressEditText"
+                    style="@style/SigninSignupEditStyle"
+                    android:digits="@string/restrict_address_characters"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPostalAddress"
+                    android:maxLength="256"
+                    android:nextFocusForward="@+id/addressEditText2"
+                    app:customAssetFont="proxima_nova_regular"
+                    app:hintTextAppearance="@style/FloatingLabelStyle"
+                    breeze:hintKey="address1_label"
+                    tools:text="Address 1" />
+
+            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+        </FrameLayout>
 
         <FrameLayout
             android:layout_width="match_parent"

@@ -29,7 +29,7 @@ import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.IntakeFormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
-import com.carecloud.carepaylibray.demographics.fragments.PhysicianFragment;
+import com.carecloud.carepaylibray.demographics.fragments.SearchPhysicianFragment;
 import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactFragmentInterface;
 import com.carecloud.carepaylibray.demographics.interfaces.PhysicianFragmentInterface;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
@@ -216,7 +216,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         this.demographicDTO = demographicDTO;
         InsuranceEditDialog insuranceEditDialog = InsuranceEditDialog.newInstance(demographicDTO,
                 editedIndex, isPatientMode, true);
-
         if (showAsDialog && isPatientMode) {
             String tag = "InsuranceEditFloatingDialog";
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -230,6 +229,11 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             demographicsView.setMediaResultListener(insuranceEditDialog);
         } else {
             navigateToFragment(insuranceEditDialog, true);
+//            FragmentManager fm = getSupportFragmentManager();
+//            FragmentTransaction transaction = fm.beginTransaction();
+//            transaction.add(R.id.root_layout, insuranceEditDialog, insuranceEditDialog.getClass().getCanonicalName());
+//            transaction.addToBackStack(null);
+//            transaction.commitAllowingStateLoss();
         }
     }
 
@@ -413,7 +417,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
     @Override
     public void showSearchPhysicianFragmentDialog(PhysicianDto physicianDto, int physicianType) {
-        PhysicianFragment fragment = PhysicianFragment.newInstance(physicianDto, physicianType);
+        SearchPhysicianFragment fragment = SearchPhysicianFragment.newInstance(physicianDto, physicianType);
         showFragmentAsDialogIfNeeded(fragment);
     }
 

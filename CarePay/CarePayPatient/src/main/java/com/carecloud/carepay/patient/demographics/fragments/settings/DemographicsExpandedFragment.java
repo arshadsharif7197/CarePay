@@ -35,7 +35,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadR
 import com.carecloud.carepaylibray.demographics.dtos.payload.EmployerDto;
 import com.carecloud.carepaylibray.demographics.dtos.payload.EmploymentInfoModel;
 import com.carecloud.carepaylibray.demographics.dtos.payload.PhysicianDto;
-import com.carecloud.carepaylibray.demographics.fragments.PhysicianFragment;
+import com.carecloud.carepaylibray.demographics.fragments.SearchPhysicianFragment;
 import com.carecloud.carepaylibray.demographics.interfaces.DemographicExtendedInterface;
 import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactFragmentInterface;
 import com.carecloud.carepaylibray.demographics.interfaces.PhysicianFragmentInterface;
@@ -76,14 +76,15 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
     private PhysicianDto referringPhysician = new PhysicianDto();
     private boolean showEmployerFields;
     private View employerDependentFieldsLayout;
-    private EditText addressEditText;
-    private EditText addressEditText2;
+    private EditText employerAddressEditText;
+    private EditText employerAddressEditText2;
     private EditText zipCodeEditText;
     private EditText cityEditText;
     private EditText stateEditText;
     private TextInputLayout zipCodeTextInputLayout;
     private TextInputLayout cityTextInputLayout;
     private TextInputLayout stateTextInputLayout;
+    private TextInputLayout address1TextInputLayout;
 
 
     /**
@@ -199,7 +200,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         setUpDemographicField(view, StringUtil
                         .formatPhoneNumber(demographicPayload.getPersonalDetails().getSecondaryPhoneNumber()),
                 personalInfoSection.getProperties().getSecondaryPhoneNumber(),
-                R.id.secondaryPhoneContainer, R.id.secondaryPhoneInputLayout,
+                R.id.secondaryPhoneDemographicsLayout, R.id.secondaryPhoneInputLayout,
                 R.id.secondaryPhone, R.id.secondaryPhoneOptional, null, null);
         EditText secondaryPhoneEditText = (EditText) view.findViewById(R.id.secondaryPhone);
         secondaryPhoneEditText.addTextChangedListener(phoneInputFormatter);
@@ -240,7 +241,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         this.primaryPhysician = primaryPhysician;
         setUpPhysicianField(view, primaryPhysician, physicianMetadata,
                 R.id.primaryPhysicianDemographicsLayout, R.id.primaryPhysicianInputLayout,
-                R.id.primaryPhysicianEditText, R.id.primaryPhysicianOptional, PhysicianFragment.PRIMARY_PHYSICIAN);
+                R.id.primaryPhysicianEditText, R.id.primaryPhysicianOptional, SearchPhysicianFragment.PRIMARY_PHYSICIAN);
     }
 
     private void setUpReferringPhysician(View view, PhysicianDto referringPhysician,
@@ -248,7 +249,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         this.referringPhysician = referringPhysician;
         setUpPhysicianField(view, referringPhysician, physicianMetadata,
                 R.id.referringPhysicianDemographicsLayout, R.id.referringPhysicianInputLayout,
-                R.id.referringPhysicianEditText, R.id.referringPhysicianOptional, PhysicianFragment.REFERRING_PHYSICIAN);
+                R.id.referringPhysicianEditText, R.id.referringPhysicianOptional, SearchPhysicianFragment.REFERRING_PHYSICIAN);
     }
 
     protected void setUpPhysicianField(View view, final PhysicianDto physician,
@@ -388,28 +389,19 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
             employerNameEditText.addTextChangedListener(getValidateEmptyTextWatcher(employerNameTextInputLayout));
         }
 
-        TextInputLayout address1TextInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
-        addressEditText = (EditText) view.findViewById(R.id.addressEditText);
-        addressEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address1TextInputLayout, null));
-        addressEditText.setText(selectedEmployer.getAddress().getAddress1());
-        addressEditText.getOnFocusChangeListener()
-                .onFocusChange(addressEditText, !StringUtil.isNullOrEmpty(addressEditText.getText().toString()));
-
-
         TextInputLayout address2TextInputLayout = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
-        addressEditText2 = (EditText) view.findViewById(R.id.addressEditText2);
-        addressEditText2.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address2TextInputLayout, null));
-        addressEditText2.setText(selectedEmployer.getAddress().getAddress2());
-        addressEditText2.getOnFocusChangeListener()
-                .onFocusChange(addressEditText2, !StringUtil.isNullOrEmpty(addressEditText2.getText().toString()));
-
+        employerAddressEditText2 = (EditText) view.findViewById(R.id.addressEditText2);
+        employerAddressEditText2.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address2TextInputLayout, null));
+        employerAddressEditText2.setText(selectedEmployer.getAddress().getAddress2());
+        employerAddressEditText2.getOnFocusChangeListener()
+                .onFocusChange(employerAddressEditText2, !StringUtil.isNullOrEmpty(employerAddressEditText2.getText().toString()));
 
         zipCodeTextInputLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
         zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeTextView);
         zipCodeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeTextInputLayout,
                 getZipCodeFocusListener(zipCodeEditText)));
-        zipCodeEditText.addTextChangedListener(zipInputFormatter);
         zipCodeEditText.setText(StringUtil.formatZipCode(selectedEmployer.getAddress().getZipcode()));
+        zipCodeEditText.addTextChangedListener(zipInputFormatter);
         zipCodeEditText.getOnFocusChangeListener()
                 .onFocusChange(zipCodeEditText, !StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString()));
 
@@ -443,6 +435,44 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 .onFocusChange(stateEditText, !StringUtil.isNullOrEmpty(stateEditText.getText().toString()));
         stateEditText.addTextChangedListener(clearValidationErrorsOnTextChange(stateTextInputLayout));
 
+        address1TextInputLayout = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.address1TextInputLayout);
+        employerAddressEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.addressEditText);
+        employerAddressEditText.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(address1TextInputLayout, null));
+        employerAddressEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (editable.length() == 0) {
+                    employerAddressEditText2.setEnabled(false);
+                    employerAddressEditText2.setText("");
+                    zipCodeTextInputLayout.setErrorEnabled(false);
+                    zipCodeTextInputLayout.setError(null);
+                    cityTextInputLayout.setErrorEnabled(false);
+                    cityTextInputLayout.setError(null);
+                    stateTextInputLayout.setErrorEnabled(false);
+                    stateTextInputLayout.setError(null);
+                } else {
+                    employerAddressEditText2.setEnabled(true);
+
+                }
+                checkIfEnableButton();
+            }
+        });
+        employerAddressEditText.setText(selectedEmployer.getAddress().getAddress1());
+        employerAddressEditText.getOnFocusChangeListener()
+                .onFocusChange(employerAddressEditText, !StringUtil.isNullOrEmpty(employerAddressEditText
+                        .getText().toString()));
+
         TextInputLayout phoneTextInputLayout = (TextInputLayout) view.findViewById(R.id.phoneTextInputLayout);
         EditText phoneEditText = (EditText) view.findViewById(R.id.phoneTextView);
         phoneEditText.addTextChangedListener(phoneInputFormatter);
@@ -471,6 +501,10 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
 
     @Override
     protected boolean passConstraints() {
+        return passConstraints(false);
+    }
+
+    protected boolean passConstraints(boolean userInteraction) {
         View view = getView();
         if (view == null) {
             return false;
@@ -545,21 +579,57 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
             return false;
         }
 
-        if (showEmployerFields && (!StringUtil.isNullOrEmpty(addressEditText.getText().toString())
-                || (!StringUtil.isNullOrEmpty(addressEditText2.getText().toString())))) {
-            if (StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())) {
-                zipCodeTextInputLayout.setErrorEnabled(true);
-                zipCodeTextInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
+        if (showEmployerFields && (!StringUtil.isNullOrEmpty(employerAddressEditText.getText().toString())
+                || !StringUtil.isNullOrEmpty(stateEditText.getText().toString())
+                || !StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())
+                || !StringUtil.isNullOrEmpty(cityEditText.getText().toString()))) {
+
+            if (StringUtil.isNullOrEmpty(employerAddressEditText.getText().toString())) {
+                if (userInteraction) {
+                    address1TextInputLayout.setErrorEnabled(true);
+                    address1TextInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
+                    employerAddressEditText.requestFocus();
+                }
                 return false;
             }
+
+            if (!StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString().trim()) &&
+                    !ValidationHelper.isValidString(zipCodeEditText.getText().toString().trim(),
+                            ValidationHelper.ZIP_CODE_PATTERN)) {
+                zipCodeTextInputLayout.setErrorEnabled(true);
+                zipCodeTextInputLayout.setError(Label.getLabel("demographics_zip_code_validation_msg"));
+                return false;
+            } else {
+                zipCodeTextInputLayout.setErrorEnabled(false);
+                zipCodeTextInputLayout.setError(null);
+            }
+
+            if (StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())) {
+                if (userInteraction) {
+                    zipCodeTextInputLayout.setErrorEnabled(true);
+                    zipCodeTextInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
+                } else {
+                    zipCodeTextInputLayout.setErrorEnabled(false);
+                    zipCodeTextInputLayout.setError(null);
+                }
+                return false;
+            } else {
+                zipCodeTextInputLayout.setErrorEnabled(false);
+                zipCodeTextInputLayout.setError(null);
+            }
+
             if (StringUtil.isNullOrEmpty(cityEditText.getText().toString())) {
-                cityTextInputLayout.setErrorEnabled(true);
-                cityTextInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
+                if (userInteraction) {
+                    cityTextInputLayout.setErrorEnabled(true);
+                    cityTextInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
+                }
                 return false;
             }
             if (StringUtil.isNullOrEmpty(stateEditText.getText().toString())) {
-                stateTextInputLayout.setErrorEnabled(true);
-                stateTextInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
+                if (userInteraction) {
+                    stateTextInputLayout.setErrorEnabled(true);
+                    stateTextInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
+                }
                 return false;
             }
         }
@@ -699,7 +769,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
 
 
     private void updateDemographics() {
-        if (passConstraints()) {
+        if (passConstraints(true)) {
             Map<String, String> header = new HashMap<>();
             DemographicDTO updateModel = getUpdateModel();
             Gson gson = new Gson();
@@ -796,7 +866,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
 
     @Override
     public void setPhysician(PhysicianDto physician, int physicianType) {
-        if (physicianType == PhysicianFragment.PRIMARY_PHYSICIAN) {
+        if (physicianType == SearchPhysicianFragment.PRIMARY_PHYSICIAN) {
             setUpPrimaryCarePhysician(getView(), physician,
                     demographicsSettingsDTO.getMetadata().getNewDataModel().getDemographic().getPrimaryPhysician());
         } else {

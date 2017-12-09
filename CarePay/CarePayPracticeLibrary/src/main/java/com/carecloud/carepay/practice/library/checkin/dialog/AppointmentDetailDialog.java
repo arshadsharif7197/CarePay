@@ -462,7 +462,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
                     //current user
                     CheckBox checkBox = checkBoxes.get(3);
-                    checkBox.setChecked(true);
+                    checkBox.setSelected(true);
                     checkBox.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
 
                     SpannableString spannableString = new SpannableString(place);
@@ -490,7 +490,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
                     //current user
                     CheckBox checkBox = checkBoxes.get(3);
-                    checkBox.setChecked(true);
+                    checkBox.setSelected(true);
                     checkBox.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
 
                     SpannableString spannableString = new SpannableString(place);
@@ -532,7 +532,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                     checkboxLayout.setVisibility(View.VISIBLE);
                     int counter = 3;
                     CheckBox checkBox = checkBoxes.get(counter);
-                    checkBox.setChecked(true);
+                    checkBox.setSelected(true);
                     checkBox.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
 
                     SpannableString spannableString = new SpannableString(place);

@@ -284,6 +284,7 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
         if (StringUtil.isNullOrEmpty(url)) {
             emptyPhotoLayout.setVisibility(View.VISIBLE);
         } else {
+            emptyPhotoLayout.setVisibility(View.GONE);
             documentScannerAdapter.setImageView(url, medicationPhoto, false, 0, 0, R.drawable.icn_placeholder_document, this);
         }
 

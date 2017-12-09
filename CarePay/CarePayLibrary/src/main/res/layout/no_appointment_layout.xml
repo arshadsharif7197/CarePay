@@ -1,37 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/no_appointment_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:orientation="vertical"
     android:visibility="gone">
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_100dp"
-        android:id="@+id/no_apt_placeholder_icon"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/icn_empty_state_appointments"/>
-
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/no_apt_message_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_marginTop="@dimen/no_apt_message_title_margin_top"
         android:gravity="center"
+        android:paddingEnd="@dimen/dimen_20dp"
+        android:paddingStart="@dimen/dimen_20dp"
         android:textColor="@color/textview_default_textcolor"
         android:textSize="21sp"
         app:customAssetFont="gotham_rounded_medium" />
+
+    <ImageView
+        android:id="@+id/no_apt_placeholder_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/no_apt_message_title"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/icn_empty_state_appointments" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/no_apt_message_desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/no_apt_message_title"
         android:layout_marginEnd="@dimen/no_apt_message_desc_margin"
         android:layout_marginStart="@dimen/no_apt_message_desc_margin"
         android:layout_marginTop="@dimen/no_apt_message_desc_margin_top"
@@ -40,7 +43,19 @@
         android:textSize="13sp"
         app:customAssetFont="proxima_nova_regular" />
 
-    <View
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        android:id="@+id/newAppointmentClassicButton"
+        style="@style/ResponsButtonStyle"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_60dp"/>
-</LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/no_apt_message_desc"
+        android:layout_marginTop="@dimen/dimen_80dp"
+        android:enabled="true"
+        android:textAllCaps="true"
+        android:textSize="@dimen/text_size_13"
+        android:visibility="gone"
+        app:customAssetFont="gotham_rounded_medium"
+        breeze:textKey="add_appointment_label"
+        tools:text="Add Appointment" />
+
+</RelativeLayout>
