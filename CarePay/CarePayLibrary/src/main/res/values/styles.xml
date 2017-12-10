@@ -497,7 +497,9 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="SigninSignupTextInputStyle" parent="TextInputLayoutStyle" />
+    <style name="SigninSignupTextInputStyle" parent="TextInputLayoutStyle">
+        <item name="android:textColorHint">@color/lightSlateGray</item>
+    </style>
 
     <style name="SigninSignupEditStyle" parent="EditTextStyle">
         <item name="android:imeOptions">actionNext</item>

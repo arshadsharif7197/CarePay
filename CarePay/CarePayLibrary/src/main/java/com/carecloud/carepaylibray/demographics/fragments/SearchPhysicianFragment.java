@@ -102,7 +102,7 @@ public class SearchPhysicianFragment extends BaseDialogFragment implements Physi
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         dto = (DemographicDTO) callback.getDto();
-        physician = DtoHelper.getConvertedDTO(PhysicianDto.class, getArguments());
+//        physician = DtoHelper.getConvertedDTO(PhysicianDto.class, getArguments());
         physicianType = getArguments().getInt("physicianType");
     }
 

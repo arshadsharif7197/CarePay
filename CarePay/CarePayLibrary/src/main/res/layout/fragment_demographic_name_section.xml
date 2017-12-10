@@ -55,14 +55,11 @@
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        <include
             android:id="@+id/reviewdemogrMiddleNameOptionalLabel"
-            style="@style/SignupRequireHintStyle"
-            android:textAllCaps="true"
-            android:textColor="@color/cadet_gray"
-            app:customAssetFont="proxima_nova_regular"
-            tools:hint="Optional"
-            breeze:textKey="demographics_details_optional_hint" />
+            layout="@layout/layout_optional_text_view"
+            android:visibility="visible"/>
+
     </FrameLayout>
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
