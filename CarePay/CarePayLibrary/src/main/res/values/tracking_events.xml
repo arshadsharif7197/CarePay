@@ -2,11 +2,47 @@
 <resources>
     <string name="app_launch">App Launched</string>
 
+    <!--Parameter Events-->
+    <string name="event_appointment_scheduled">Appointment Scheduled</string>
+    <string name="event_appointment_cancelled">Appointment Cancelled</string>
+    <string name="event_payment_make_full_payment">Full Payment Completed</string>
+    <string name="event_payment_make_partial_payment">Partial Payment Completed</string>
+    <string name="event_checkin_completed">Check-in Completed</string>
+    <string name="event_checkin_started">Check-in Started</string>
+    <string name="event_checkin_resumed">Check-in Resumed</string>
+    <string name="event_add_identity_doc">Add Identity Document</string>
+    <string name="event_add_insurance_doc">Add Insurance Photo</string>
+
+
+    <!--Parameters-->
+    <string name="param_appointment_type">Appointment Type</string>
+    <string name="param_appointment_cancel_reason">Cancellation Reason</string>
+    <string name="param_payment_amount">Payment Amount</string>
+    <string name="param_payment_type">Payment Type</string>
+    <string name="param_practice_id">Practice Id</string>
+    <string name="param_practice_name">Practice Name</string>
+    <string name="param_appointment_id">Appointment Id</string>
+    <string name="param_is_guest">Is Guest User</string>
+    <string name="param_is_checkin">Updated During Check-in</string>
+
+
+    <!--Incremental Properties-->
+    <string name="count_appointment_scheduled">Total Appointments Scheduled</string>
+    <string name="count_appointment_cancelled">Total Appointments Cancelled</string>
+    <string name="count_checkin_completed">Total Check-ins Completed</string>
+
+
+    <!--Incremental Properties-->
+    <string name="timer_checkin">Check-in Time</string>
+
+
     <!--People Properties-->
     <string name="people_gender">Gender</string>
     <string name="people_dob">Date of Birth</string>
     <string name="people_ethnicity">Ethnicity</string>
     <string name="people_race">Race</string>
     <string name="people_language">Language</string>
+    <string name="people_has_identity_doc">Has Identity Document</string>
+    <string name="people_has_insurance_doc">Has Insurance Document</string>
 
 </resources>

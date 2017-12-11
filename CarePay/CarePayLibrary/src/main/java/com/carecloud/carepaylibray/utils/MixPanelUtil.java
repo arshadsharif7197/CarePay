@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.utils;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibrary.BuildConfig;
@@ -57,8 +58,9 @@ public class MixPanelUtil {
      */
     public static void logEvents(String eventName, String[] parameters, Object[] values) {
         try {
+            int min = Math.min(parameters.length, values.length);
             JSONObject object = new JSONObject();
-            for(int i=0; i<parameters.length; i++) {
+            for(int i=0; i<min; i++) {
                 object.put(parameters[i], values[i]);
             }
             if(!isDebug && mixpanel!=null) {
@@ -101,5 +103,50 @@ public class MixPanelUtil {
         }
     }
 
+    /**
+     * Utility to start event timing
+     * @param trackingEvent event name
+     */
+    public static void startTimer(String trackingEvent){
+        if(!isDebug && mixpanel!=null) {
+            mixpanel.timeEvent(trackingEvent);
+        }
+    }
 
+    /**
+     * Utility to end event timing - Event Start and end names must match exactly
+     * @param trackingEvent event name
+     */
+    public static void endTimer(String trackingEvent){
+        if(!isDebug && mixpanel!=null) {
+            mixpanel.track(trackingEvent);
+        }
+    }
+
+
+    /**
+     * Utility to track a custom Property for a user
+     * @param property property name
+     * @param value value
+     */
+    public static void addCustomPeopleProperty(String property, Object value) {
+        if (!isDebug && mixpanel != null) {
+            mixpanel.getPeople().set(property, value);
+        }
+    }
+
+
+    /**
+     * Utility to track multiple custom properties for a user
+     * @param properties array of properties
+     * @param values array of values
+     */
+    public static void addCustomPeopleProperties(@NonNull String[] properties, @NonNull Object[] values){
+        if (!isDebug && mixpanel != null) {
+            int min = Math.min(properties.length, values.length);
+            for(int i = 0; i<min; i++){
+                mixpanel.getPeople().set(properties[i], values[i]);
+            }
+        }
+    }
 }

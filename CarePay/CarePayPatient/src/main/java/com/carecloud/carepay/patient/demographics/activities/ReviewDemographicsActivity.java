@@ -29,6 +29,7 @@ import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class ReviewDemographicsActivity extends BasePatientActivity implements DemographicsView,
@@ -205,6 +206,15 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     public void completeCheckIn(WorkflowDTO workflowDTO) {
         SystemUtil.showSuccessToast(getContext(), Label.getLabel("confirm_appointment_checkin"));
         finish();
+
+        //Log Check-in Completed
+        if(getAppointment() != null) {
+            String[] params = {getString(R.string.param_practice_id), getString(R.string.param_appointment_id), getString(R.string.param_appointment_type), getString(R.string.param_is_guest)};
+            Object[] values = {getAppointment().getMetadata().getPracticeId(), getAppointmentId(), getAppointment().getPayload().getVisitType().getName(), false};
+            MixPanelUtil.logEvents(getString(R.string.event_checkin_completed), params, values);
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_checkin_completed), 1);
+            MixPanelUtil.endTimer(getString(R.string.timer_checkin));
+        }
         navigateToWorkflow(workflowDTO);
     }
 
@@ -224,6 +234,15 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
             setResult(cancelled ? RESULT_CANCELED : RESULT_OK);
         }
         finish();
+
+        //Log Check-in Completed
+        if(getAppointment() != null) {
+            String[] params = {getString(R.string.param_practice_id), getString(R.string.param_appointment_id), getString(R.string.param_appointment_type), getString(R.string.param_is_guest)};
+            Object[] values = {getAppointment().getMetadata().getPracticeId(), getAppointmentId(), getAppointment().getPayload().getVisitType().getName(), false};
+            MixPanelUtil.logEvents(getString(R.string.event_checkin_completed), params, values);
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_checkin_completed), 1);
+            MixPanelUtil.endTimer(getString(R.string.timer_checkin));
+        }
     }
 
     @Nullable
