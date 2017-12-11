@@ -164,9 +164,7 @@ public class WorkflowServiceHelper {
         transitionDTO.setMethod("GET");
         transitionDTO.setUrl(HttpConstants.getApiStartUrl());
         Map<String, String> query = new HashMap<>();
-        if (applicationPreferences.getUserLanguage() != null) {
-            query.put("language", applicationPreferences.getUserLanguage());
-        }
+        query.put("language", applicationPreferences.getUserLanguage());
         execute(transitionDTO, callback, null, query, getApplicationStartHeaders());
     }
 

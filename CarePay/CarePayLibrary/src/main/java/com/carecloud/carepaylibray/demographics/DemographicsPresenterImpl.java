@@ -369,9 +369,10 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     @Override
     public void showRemovePrimaryInsuranceDialog(HomeAlertDialogFragment.HomeAlertInterface callback) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        String message = isPatientMode ? Label.getLabel("demographics_insurance_primary_alert_message_patient")
+                : Label.getLabel("demographics_insurance_primary_alert_message");
         HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment
-                .newInstance(Label.getLabel("demographics_insurance_primary_alert_title"),
-                        Label.getLabel("demographics_insurance_primary_alert_message"));
+                .newInstance(Label.getLabel("demographics_insurance_primary_alert_title"), message);
         homeAlertDialogFragment.setCallback(callback);
         String tag = homeAlertDialogFragment.getClass().getName();
         homeAlertDialogFragment.show(ft, tag);

@@ -90,7 +90,8 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         if (isVisible()) {
             ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
             SystemUtil.showSuccessToast(getContext(),
-                    Label.getLabel(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ? "appointment_request_success_message_HTML" : "appointment_schedule_success_message_HTML"));
+                    Label.getLabel(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
+                            "appointment_request_success_message_HTML" : "appointment_schedule_success_message_HTML"));
         }
 
         onAppointmentRequestSuccess();
