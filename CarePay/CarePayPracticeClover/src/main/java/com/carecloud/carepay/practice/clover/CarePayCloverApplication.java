@@ -10,6 +10,7 @@ import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
 import com.carecloud.carepaylibray.CarePayApplication;
+import com.carecloud.shamrocksdk.ShamrockSdk;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 /**
@@ -30,6 +31,7 @@ public class CarePayCloverApplication extends CarePayApplication
         mixpanelAPI = MixpanelAPI.getInstance(this, getString(R.string.mixpanel_application_token));
         setHttpConstants();
         registerActivityLifecycleCallbacks(this);
+        ShamrockSdk.init(HttpConstants.getPaymentsApiKey(), HttpConstants.getDeepStreamUrl(), HttpConstants.getPaymentsUrl());
     }
 
     private void setHttpConstants() {
@@ -48,6 +50,9 @@ public class CarePayCloverApplication extends CarePayApplication
         HttpConstants.setUseUnifiedAuth(BuildConfig.useUnifiedAuth);
         HttpConstants.setMixpanelAPI(mixpanelAPI);
         HttpConstants.setEnvironment(BuildConfig.ENVIRONMENT);
+        HttpConstants.setDeepStreamUrl(BuildConfig.DEEPSTREAM_URL);
+        HttpConstants.setPaymentsUrl(BuildConfig.PAYMENTS_BASE_URL);
+        HttpConstants.setPaymentsApiKey(BuildConfig.PAYMENTS_API_KEY);
     }
 
     @Override

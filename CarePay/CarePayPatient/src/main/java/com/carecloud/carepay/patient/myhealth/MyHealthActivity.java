@@ -65,6 +65,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
         setTransitionAppointments(myHealthDto.getMetadata().getLinks().getAppointments());
         setTransitionNotifications(myHealthDto.getMetadata().getLinks().getNotifications());
         setTransitionMyHealth(myHealthDto.getMetadata().getLinks().getMyHealth());
+        setTransitionRetail(myHealthDto.getMetadata().getLinks().getRetail());
 
         getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants
                 .DEMOGRAPHICS_ADDRESS_BUNDLE, myHealthDto.getPayload().getDemographicDTO().getAddress());

@@ -4,10 +4,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/reviewdemographicsaddressContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/dimen_57dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,6 +33,7 @@
                 android:nextFocusForward="@+id/addressEditText2Id"
                 app:hintTextAppearance="@style/FloatingLabelStyle"
                 breeze:hintKey="demographics_address_line1"
+                tools:hint="Address Line 1"
                 app:customAssetFont="gotham_rounded_book"/>
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
@@ -53,18 +56,15 @@
                     android:maxLength="50"
                     android:nextFocusForward="@+id/zipCodeId"
                     breeze:hintKey="demographics_address_line2"
+                    tools:hint="Address Line 2"
                     app:customAssetFont="gotham_rounded_book"/>
 
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            <include
                 android:id="@+id/demogrAddressOptionalLabel"
-                style="@style/SignupRequireHintStyle"
-                android:textColor="@color/cadet_gray"
-                breeze:textKey="demographics_details_optional_hint"
-                app:customAssetFont="proxima_nova_regular"/>
-
-
+                layout="@layout/layout_optional_text_view"
+                android:visibility="visible"/>
 
         </FrameLayout>
 
@@ -83,6 +83,7 @@
                 android:maxLength="10"
                 android:nextFocusForward="@+id/cityId"
                 breeze:hintKey="demographics_zipcode"
+                tools:hint="Zip Code"
                 app:customAssetFont="gotham_rounded_book"/>
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
@@ -105,6 +106,7 @@
                     style="@style/DemographicsReviewEditTextStyle"
                     android:imeOptions="actionDone"
                     breeze:hintKey="demographics_city"
+                    tools:hint="City"
                     app:customAssetFont="gotham_rounded_book"/>
 
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
@@ -125,6 +127,7 @@
                     android:focusable="false"
                     android:clickable="true"
                     breeze:hintKey="demographics_state"
+                    tools:hint="State"
                     app:customAssetFont="gotham_rounded_book"/>
 
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>

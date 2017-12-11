@@ -44,8 +44,9 @@ public abstract class MenuPatientActivity extends BasePatientActivity
     private static TransitionDTO transitionProfile;
     private static TransitionDTO transitionAppointments;
     private static TransitionDTO transitionLogout;
-    protected static TransitionDTO transitionNotifications;
+    private static TransitionDTO transitionNotifications;
     private static TransitionDTO transitionMyHealth;
+    private static TransitionDTO transitionRetail;
 
     protected ActionBarDrawerToggle toggle;
     protected TextView appointmentsDrawerUserIdTextView;
@@ -146,7 +147,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
                 transition = transitionProfile;
                 break;
             case R.id.nav_purchase:
-                transition = transitionAppointments;
+                transition = transitionRetail;
                 callback = purchaseWorkflowCallback;
                 break;
             case R.id.nav_notification:
@@ -297,11 +298,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             showErrorNotification(exceptionMessage);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
-    //TODO this is currently pointed at appointments endpoint
     private WorkflowServiceCallback purchaseWorkflowCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -312,8 +312,6 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             PatientNavigationHelper.setAccessPaymentsBalances(false);
-            //need to manually redirect this response to the notifications screen temporarily
-            workflowDTO.setState(NavigationStateConstants.PURCHASE);
             navigateToWorkflow(workflowDTO);
         }
 
@@ -371,12 +369,20 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         MenuPatientActivity.transitionNotifications = transitionNotifications;
     }
 
+    public static void setTransitionRetail(TransitionDTO transitionRetail){
+        MenuPatientActivity.transitionRetail = transitionRetail;
+    }
+
     public static TransitionDTO getTransitionAppointments() {
         return transitionAppointments;
     }
 
     public static TransitionDTO getTransitionNotifications() {
         return transitionNotifications;
+    }
+
+    public static TransitionDTO getTransitionLogout() {
+        return transitionLogout;
     }
 
     private void displayMessagesScreen() {

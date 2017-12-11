@@ -2,8 +2,11 @@ package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -56,6 +60,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     StepProgressBar stepProgressBar;
     boolean preventNavBack = false;
     private boolean userAction = false;
+    private ScrollView scrollView;
 
     protected CheckinFlowCallback checkinFlowCallback;
 
@@ -102,6 +107,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         View mainContainer = view.findViewById(R.id.container_main);
         hideKeyboardOnViewTouch(mainContainer);
         hideKeyboardOnViewTouch(view);
+        scrollView = (ScrollView) view.findViewById(R.id.demographicsScrollView);
         return view;
     }
 
@@ -193,7 +199,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         nextButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View buttonView, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_DOWN && !buttonView.isSelected()){
+                if (event.getAction() == MotionEvent.ACTION_DOWN && !buttonView.isSelected()) {
                     setUserAction(true);
                     checkIfEnableButton(view);
                     return true;
@@ -307,6 +313,29 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         };
     }
 
+    protected TextWatcher getOptionalViewTextWatcher(final View optionalView) {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (StringUtil.isNullOrEmpty(editable.toString())) {
+                    optionalView.setVisibility(View.VISIBLE);
+                } else {
+                    optionalView.setVisibility(View.GONE);
+                }
+                checkIfEnableButton(getView());
+            }
+        };
+    }
+
     protected TextWatcher clearValidationErrorsOnTextChange(final TextInputLayout inputLayout) {
         return new TextWatcher() {
             @Override
@@ -325,9 +354,29 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                     inputLayout.setError(null);
                     inputLayout.setErrorEnabled(false);
                 }
+                checkIfEnableButton(getView());
             }
         };
     }
+
+    protected TextWatcher ssnInputFormatter = new TextWatcher() {
+        int lastLength;
+
+        @Override
+        public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+            lastLength = sequence.length();
+        }
+
+        @Override
+        public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            StringUtil.autoFormatSocialSecurityNumber(editable, lastLength);
+        }
+    };
 
     protected TextWatcher phoneInputFormatter = new TextWatcher() {
         int lastLength;
@@ -431,19 +480,37 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         this.userAction = userAction;
     }
 
-    protected void setDefaultError(View baseView, int id){
+    protected void setDefaultError(View baseView, int id) {
         setFieldError(baseView, id, Label.getLabel("demographics_required_validation_msg"));
+        baseView.requestFocus();
     }
 
-    protected void setFieldError(View baseView, int id, String error){
+    protected void setFieldError(View baseView, int id, String error) {
         TextInputLayout inputLayout = (TextInputLayout) baseView.findViewById(id);
         setFieldError(inputLayout, error);
     }
 
-    protected void setFieldError(TextInputLayout inputLayout, String error){
-        if(inputLayout != null){
+    protected void setDefaultError(TextInputLayout inputLayout) {
+        setFieldError(inputLayout, Label.getLabel("demographics_required_validation_msg"));
+        inputLayout.requestFocus();
+    }
+
+    protected void setFieldError(TextInputLayout inputLayout, String error) {
+        if (inputLayout != null) {
             inputLayout.setErrorEnabled(true);
             inputLayout.setError(error);
+        }
+    }
+
+    protected void unsetFieldError(View baseView, int id) {
+        TextInputLayout inputLayout = (TextInputLayout) baseView.findViewById(id);
+        unsetFieldError(inputLayout);
+    }
+
+    protected void unsetFieldError(TextInputLayout inputLayout) {
+        if (inputLayout != null) {
+            inputLayout.setError(null);
+            inputLayout.setErrorEnabled(false);
         }
 
     }
@@ -452,42 +519,80 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         void onOptionSelected(DemographicsOption option);
     }
 
-    protected void showErrorViews(boolean isError, ViewGroup container){
+    protected void showErrorViews(boolean isError, ViewGroup container) {
         final String TAG_ERROR_HIDE_INV = getString(R.string.tag_demographics_error_hide_inv);
         final String TAG_ERROR_HIDE_GONE = getString(R.string.tag_demographics_error_hide_gone);
         final String TAG_ERROR_SHOW_INV = getString(R.string.tag_demographics_error_show_inv);
         final String TAG_ERROR_SHOW_GONE = getString(R.string.tag_demographics_error_show_gone);
+        final String TAG_ERROR_COLOR = getString(R.string.tag_demographics_error_color);
 
-        for(int i=0; i < container.getChildCount(); i++){
-            View view = container.getChildAt(i);
-            if(view instanceof ViewGroup){
+        for (int i = 0; i < container.getChildCount(); i++) {
+            final View view = container.getChildAt(i);
+            if (view instanceof ViewGroup) {
                 showErrorViews(isError, (ViewGroup) view);
             }
-            String tag = (String) view.getTag();
-            if(tag != null){
-                if(isError){
-                    if(tag.equals(TAG_ERROR_HIDE_GONE)){
-                        view.setVisibility(View.GONE);
-                    }else if(tag.equals(TAG_ERROR_HIDE_INV)){
-                        view.setVisibility(View.INVISIBLE);
-                    }else if(tag.equals(TAG_ERROR_SHOW_GONE) || tag.equals(TAG_ERROR_SHOW_INV)){
-                        view.setVisibility(View.VISIBLE);
-                    }
-                    view.setFocusable(true);
-                    view.setFocusableInTouchMode(true);
-                    view.requestFocus();
-                }else{
-                    if(tag.equals(TAG_ERROR_SHOW_GONE)){
-                        view.setVisibility(View.GONE);
-                    }else if(tag.equals(TAG_ERROR_SHOW_INV)){
-                        view.setVisibility(View.INVISIBLE);
-                    }else if(tag.equals(TAG_ERROR_HIDE_GONE) || tag.equals(TAG_ERROR_HIDE_INV)){
-                        view.setVisibility(View.VISIBLE);
+            if (view.getTag() instanceof String) {
+                String tag = (String) view.getTag();
+                if (tag != null) {
+                    if (isError) {
+                        if (tag.equals(TAG_ERROR_HIDE_GONE)) {
+                            view.setVisibility(View.GONE);
+                        } else if (tag.equals(TAG_ERROR_HIDE_INV)) {
+                            view.setVisibility(View.INVISIBLE);
+                        } else if (tag.equals(TAG_ERROR_SHOW_GONE) || tag.equals(TAG_ERROR_SHOW_INV)) {
+                            view.setVisibility(View.VISIBLE);
+                        }else if (tag.equals(TAG_ERROR_COLOR)){
+                            view.setSelected(true);
+                            if(view instanceof TextInputLayout){
+                                EditText editText = ((TextInputLayout) view).getEditText();
+                                editText.getBackground().setColorFilter(ContextCompat.getColor(getContext(), R.color.remove_red), PorterDuff.Mode.SRC_IN);
+                            }
+                        }
+                        Rect rect = new Rect();
+                        view.getGlobalVisibleRect(rect);
+                        if(rect.top > 0){
+                            scrollView.scrollBy(0, rect.top-scrollView.getTop());
+                        }else {
+                            scrollView.scrollBy(0, rect.top);
+                        }
+                    } else {
+                        if (tag.equals(TAG_ERROR_SHOW_GONE)) {
+                            view.setVisibility(View.GONE);
+                        } else if (tag.equals(TAG_ERROR_SHOW_INV)) {
+                            view.setVisibility(View.INVISIBLE);
+                        } else if (tag.equals(TAG_ERROR_HIDE_GONE) || tag.equals(TAG_ERROR_HIDE_INV)) {
+                            view.setVisibility(View.VISIBLE);
+                        } else if (tag.equals(TAG_ERROR_COLOR)){
+                            view.setSelected(false);
+                        }
                     }
                 }
             }
+
         }
 
     }
+
+
+
+    protected TextWatcher zipInputFormatter = new TextWatcher() {
+        int lastLength;
+
+        @Override
+        public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+            lastLength = sequence.length();
+        }
+
+        @Override
+        public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            StringUtil.autoFormatZipcode(editable, lastLength);
+            checkIfEnableButton(getView());
+        }
+    };
 
 }

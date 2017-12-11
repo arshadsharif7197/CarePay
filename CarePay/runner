@@ -50,6 +50,24 @@ elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "QA" ]]; th
 
     echo "${green}*** DEPLOYING QA PATIENT APK TO AWS ***${reset}"
     AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk s3://automation-zeus/ --recursive
+
+elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "Staging" ]]; then
+
+    echo "${green}*** DELETING STAGING APKS FROM AWS ***${reset}"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 rm s3://automation-zeus --recursive --exclude "*" --include "*staging*"
+
+    echo "${green}*** BUILDING STAGING PRACTICE APK ***${reset}"
+    ./gradlew :CarePayPracticeTablet:assembleStaging --profile --configure-on-demand
+
+    echo "${green}*** DEPLOYING STAGING PRACTICE APKS TO AWS ***${reset}"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk s3://automation-zeus/ --recursive
+
+    echo "${green}*** BUILDING STAGING PATIENT APK ***${reset}"
+    ./gradlew :CarePayPatient:assembleStaging --profile --configure-on-demand
+
+    echo "${green}*** DEPLOYING STAGING PATIENT APKS TO AWS ***${reset}"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk s3://automation-zeus/ --recursive
+
 elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "master" ]]; then
 
     echo "${green}*** DELETING PRODUCTION APKS FROM AWS ***${reset}"

@@ -44,6 +44,14 @@ public class DemographicDataModel {
         @Expose
         private DemographicEmploymentInfoSection employmentInfo = new DemographicEmploymentInfoSection();
 
+        @SerializedName("primary_care_physician")
+        @Expose
+        private DemographicPhysicianSection primaryPhysician = new DemographicPhysicianSection();
+
+        @SerializedName("referring_physician")
+        @Expose
+        private DemographicPhysicianSection referringPhysician = new DemographicPhysicianSection();
+
         public DemographicsAddressSection getAddress() {
             return address;
         }
@@ -82,6 +90,22 @@ public class DemographicDataModel {
 
         public void setEmploymentInfo(DemographicEmploymentInfoSection employmentInfo) {
             this.employmentInfo = employmentInfo;
+        }
+
+        public DemographicPhysicianSection getPrimaryPhysician() {
+            return primaryPhysician;
+        }
+
+        public void setPrimaryPhysician(DemographicPhysicianSection primaryPhysician) {
+            this.primaryPhysician = primaryPhysician;
+        }
+
+        public DemographicPhysicianSection getReferringPhysician() {
+            return referringPhysician;
+        }
+
+        public void setReferringPhysician(DemographicPhysicianSection referringPhysician) {
+            this.referringPhysician = referringPhysician;
         }
     }
 }

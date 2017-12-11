@@ -180,9 +180,10 @@
                     android:layout_marginTop="@dimen/dimen_20dp"
                     android:textColor="@color/textview_default_textcolor"
                     android:textSize="@dimen/text_size_18sp"
+                    android:textAllCaps="true"
                     app:customAssetFont="proxima_nova_extra_bold"
                     breeze:textKey="payment_details_label"
-                    tools:text="PAYMENT DETAILS" />
+                    tools:text="Payment Details" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/signedFormsRecyclerView"

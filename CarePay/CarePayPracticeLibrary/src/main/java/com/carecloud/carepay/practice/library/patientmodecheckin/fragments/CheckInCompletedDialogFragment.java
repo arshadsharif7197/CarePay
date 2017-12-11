@@ -93,6 +93,11 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
         super.onCreate(icicle);
         hasPayment = getArguments().getBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, false);
         isAdHocForms = getArguments().getBoolean(CarePayConstants.ADHOC_FORMS, false);
+        appointmentNavigationType = getApplicationPreferences().getAppointmentNavigationOption();
+        initPayloads(icicle);
+    }
+
+    private boolean initPayloads(Bundle icicle){
         DTO dto = callback.getDto();
         if (dto != null) {
             selectedAppointment = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
@@ -117,8 +122,10 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
                             .getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
                 }
             }
+
+            return true;
         }
-        appointmentNavigationType = getApplicationPreferences().getAppointmentNavigationOption();
+        return false;
     }
 
     @Override
@@ -137,6 +144,10 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         if (selectedAppointment == null && !isAdHocForms) {
+            return;
+        }
+
+        if(!initPayloads(savedInstanceState)){
             return;
         }
 
@@ -165,7 +176,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
         if (isAdHocForms) {
             userNameTextView.setText(((AppointmentsResultModel) callback.getDto()).getPayload().getDemographicDTO().getPayload()
                     .getPersonalDetails().getFullName());
-            appointmentHourTextView.setText(DateUtil.getInstance().getHoursFormatted(new Date()));
+            appointmentHourTextView.setText(DateUtil.getHoursFormatted(new Date()));
             view.findViewById(R.id.statusContainer).setVisibility(View.GONE);
             view.findViewById(R.id.separator1).setVisibility(View.GONE);
             view.findViewById(R.id.visitTypeContainer).setVisibility(View.GONE);
@@ -224,20 +235,22 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
             setUpForAdHocForms(view);
         } else {
             paymentTypeTextView.setText(Label.getLabel("payment_confirm_type_no_paid"));
+
+            if (appointmentNavigationType == Defs.NAVIGATE_CHECKOUT ) {
+                TextView successMessage = (TextView) view.findViewById(R.id.successMessage);
+                successMessage.setText(Label.getLabel("confirm_appointment_checkout"));
+            }
         }
 
-        if (appointmentNavigationType == Defs.NAVIGATE_CHECKOUT) {
-            TextView successMessage = (TextView) view.findViewById(R.id.successMessage);
-            successMessage.setText(Label.getLabel("confirm_appointment_checkout"));
-        }
 
     }
 
     private void setUpForAdHocForms(View view) {
+        boolean isPlural = filledForms.size() > 1;
         ((TextView) view.findViewById(R.id.paymentDetailsLabel))
-                .setText(Label.getLabel("adhoc_final_step_signed_forms_label"));
+                .setText(Label.getLabel(isPlural ? "adhoc_final_step_signed_forms_label" : "adhoc_final_step_signed_forms_label_singular"));
         ((TextView) view.findViewById(R.id.successMessage))
-                .setText(Label.getLabel("adhoc_final_step_message"));
+                .setText(Label.getLabel(isPlural ? "adhoc_final_step_message" : "adhoc_final_step_message_singular"));
         view.findViewById(R.id.paymentTypeLayout).setVisibility(View.GONE);
         view.findViewById(R.id.continueTextView).setVisibility(View.GONE);
         view.findViewById(R.id.separator3).setVisibility(View.GONE);

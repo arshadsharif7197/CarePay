@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/reviewdemographicsPersonalContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -28,15 +30,10 @@
                 android:maxLength="10"
                 android:nextFocusForward="@+id/reviewgrdemoPhoneNumberEdit"
                 app:customAssetFont="proxima_nova_regular"
+                tools:hint="Date of Birth"
                 breeze:hintKey="demographics_review_date_of_birth" />
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/dobformatlabel"
-            style="@style/SignupRequireHintStyle"
-            android:textColor="@color/cadet_gray"
-            app:customAssetFont="proxima_nova_regular"
-            breeze:textKey="demographics_details_dob_hint" />
     </FrameLayout>
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
@@ -53,6 +50,7 @@
             android:inputType="phone"
             android:maxLength="12"
             app:customAssetFont="proxima_nova_regular"
+            tools:hint="Phone Number"
             breeze:hintKey="demographics_phone_number" />
     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 

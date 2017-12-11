@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/physicianContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/physicianNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:paddingBottom="@dimen/dimen_10dp"
+        android:paddingEnd="@dimen/dimen_20dp"
+        android:paddingStart="@dimen/dimen_20dp"
+        android:paddingTop="@dimen/dimen_10dp"
+        android:textColor="@color/charcoal"
+        android:textSize="@dimen/text_size_18sp"
+        app:customAssetFont="proxima_nova_regular"
+        tools:text="Dr. Joshua Wellington" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:layout_below="@id/physicianNameTextView"
+        android:layout_marginEnd="@dimen/dimen_20dp"
+        android:layout_marginStart="@dimen/dimen_20dp"
+        android:background="@color/munsell" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/physicianSpecialityTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/divider"
+        android:ellipsize="end"
+        android:paddingBottom="@dimen/dimen_10dp"
+        android:paddingEnd="@dimen/dimen_20dp"
+        android:paddingStart="@dimen/dimen_20dp"
+        android:paddingTop="@dimen/dimen_10dp"
+        android:singleLine="true"
+        android:textColor="@color/myHealthTextColor"
+        android:textSize="@dimen/text_size_18sp"
+        android:textStyle="italic"
+        app:customAssetFont="proxima_nova_regular"
+        tools:text="Neurology" />
+
+    <RelativeLayout
+        android:id="@+id/physicianAddressContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/physicianSpecialityTextView"
+        android:layout_marginBottom="@dimen/dimen_10dp">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/physicianPhoneTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:paddingEnd="@dimen/dimen_20dp"
+            android:paddingStart="@dimen/dimen_20dp"
+            android:textColor="@color/cadet_gray"
+            android:textSize="@dimen/text_size_15"
+            app:customAssetFont="proxima_nova_regular"
+            tools:text="+1 305 606-1234" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/physicianAddressTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/physicianPhoneTextView"
+            android:gravity="start"
+            android:paddingEnd="@dimen/dimen_20dp"
+            android:paddingStart="@dimen/dimen_20dp"
+            android:textColor="@color/cadet_gray"
+            android:textSize="@dimen/text_size_15"
+            app:customAssetFont="proxima_nova_regular"
+            tools:text="22700 SW 92 PL" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/physicianFaxTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/physicianPhoneTextView"
+            android:paddingEnd="@dimen/dimen_20dp"
+            android:paddingStart="@dimen/dimen_20dp"
+            android:textColor="@color/cadet_gray"
+            android:textSize="@dimen/text_size_15"
+            app:customAssetFont="proxima_nova_regular"
+            tools:text="+1 305 606-1234 (Fax)" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/physicianZipCodeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/physicianAddressTextView"
+            android:layout_toStartOf="@id/physicianFaxTextView"
+            android:gravity="start"
+            android:paddingEnd="@dimen/dimen_20dp"
+            android:paddingStart="@dimen/dimen_20dp"
+            android:textColor="@color/cadet_gray"
+            android:textSize="@dimen/text_size_15"
+            app:customAssetFont="proxima_nova_regular"
+            tools:text="332190" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/physicianCityTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/physicianZipCodeTextView"
+            android:gravity="start"
+            android:paddingEnd="@dimen/dimen_20dp"
+            android:paddingStart="@dimen/dimen_20dp"
+            android:textColor="@color/cadet_gray"
+            android:textSize="@dimen/text_size_15"
+            app:customAssetFont="proxima_nova_regular"
+            tools:text="Miami, FL, USA" />
+
+    </RelativeLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:background="@color/munsell" />
+
+</RelativeLayout>

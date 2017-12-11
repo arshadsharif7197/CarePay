@@ -3,7 +3,7 @@ package com.carecloud.carepay.practice.library.patientmodecheckin;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
-import com.carecloud.carepay.practice.library.checkin.dialog.HomeAlertDialogFragment;
+import com.carecloud.carepaylibray.demographics.fragments.HomeAlertDialogFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.models.PatientModeCheckinDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -89,7 +89,7 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
 
     private void showHomeAlertDialog() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment.newInstance();
+        HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment.newInstance(null, null);
         homeAlertDialogFragment.setCallback(new HomeAlertDialogFragment.HomeAlertInterface() {
             @Override
             public void onAcceptExit() {

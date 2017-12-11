@@ -2,31 +2,36 @@ package com.carecloud.carepaylibray.demographics;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.PhysicianDto;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.EmergencyContactFragment;
 import com.carecloud.carepaylibray.demographics.fragments.FormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
+import com.carecloud.carepaylibray.demographics.fragments.HomeAlertDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.IntakeFormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
+import com.carecloud.carepaylibray.demographics.fragments.SearchPhysicianFragment;
+import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactFragmentInterface;
+import com.carecloud.carepaylibray.demographics.interfaces.PhysicianFragmentInterface;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearchFragment;
@@ -35,10 +40,8 @@ import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.gson.Gson;
 
 public class DemographicsPresenterImpl implements DemographicsPresenter {
-
     private AppointmentDTO appointmentPayload;
     private DemographicsView demographicsView;
 
@@ -48,11 +51,11 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
     //demographics nav
     private int currentDemographicStep = 1;
-    private static final String SAVED_STEP_KEY = "save_step";
 
     private boolean startCheckin = false;
     public String appointmentId;
 
+    private Fragment currentFragment;
 
     /**
      * @param demographicsView   Demographics View
@@ -81,6 +84,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     @Override
     public void onSaveInstanceState(Bundle icicle) {
         icicle.putInt(SAVED_STEP_KEY, currentDemographicStep);
+        icicle.putString(CURRENT_ICICLE_FRAGMENT, currentFragment.getClass().getName());
     }
 
     @Override
@@ -100,6 +104,11 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         }
 
         return null;
+    }
+
+    @Override
+    public Fragment getCurrentFragment() {
+        return currentFragment;
     }
 
     private void displayStartFragment(WorkflowDTO workflowDTO) {
@@ -143,6 +152,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             transaction.addToBackStack(tag);
         }
         transaction.commitAllowingStateLoss();
+        currentFragment = fragment;
     }
 
     @Override
@@ -170,12 +180,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     public void navigateToMedicationsAllergy(WorkflowDTO workflowDTO) {
         medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class,
                 workflowDTO);
-
-        Bundle bundle = new Bundle();
-        bundle.putString(CarePayConstants.MEDICATION_ALLERGIES_DTO_EXTRA, workflowDTO.toString());
-
-        MedicationsAllergyFragment fragment = new MedicationsAllergyFragment();
-        fragment.setArguments(bundle);
+        MedicationsAllergyFragment fragment = MedicationsAllergyFragment.newInstance(medicationsAllergiesDTO);
         navigateToFragment(fragment, true);
     }
 
@@ -211,7 +216,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         this.demographicDTO = demographicDTO;
         InsuranceEditDialog insuranceEditDialog = InsuranceEditDialog.newInstance(demographicDTO,
                 editedIndex, isPatientMode, true);
-
         if (showAsDialog && isPatientMode) {
             String tag = "InsuranceEditFloatingDialog";
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -225,6 +229,11 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             demographicsView.setMediaResultListener(insuranceEditDialog);
         } else {
             navigateToFragment(insuranceEditDialog, true);
+//            FragmentManager fm = getSupportFragmentManager();
+//            FragmentTransaction transaction = fm.beginTransaction();
+//            transaction.add(R.id.root_layout, insuranceEditDialog, insuranceEditDialog.getClass().getCanonicalName());
+//            transaction.addToBackStack(null);
+//            transaction.commitAllowingStateLoss();
         }
     }
 
@@ -236,42 +245,10 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     @Override
-    public void showMedicationSearch() {
-        MedicationAllergySearchFragment fragment = new MedicationAllergySearchFragment();
-        if (medicationsAllergiesDTO != null) {
-            Gson gson = new Gson();
-            String jsonExtra = gson.toJson(medicationsAllergiesDTO);
-            Bundle bundle = new Bundle();
-            bundle.putString(CarePayConstants.MEDICATION_ALLERGIES_DTO_EXTRA, jsonExtra);
-
-            bundle.putString(CarePayConstants.MEDICATION_ALLERGIES_SEARCH_MODE_EXTRA,
-                    MedicationAllergySearchFragment.SearchMode.MEDICATION.name());
-            fragment.setArguments(bundle);
-
-        }
-
-        fragment.show(getSupportFragmentManager(),
-                fragment.getClass().getName());
-    }
-
-    @Override
-    public void showAllergiesSearch() {
-
-    }
-
-    @Override
-    public void medicationSubmitSuccess(WorkflowDTO workflowDTO) {
-        if (demographicsView != null) {
-            demographicsView.navigateToWorkflow(workflowDTO);
-        }
-    }
-
-    @Override
-    public void medicationSubmitFail(String message) {
-        if (demographicsView != null) {
-            demographicsView.showErrorNotification(message);
-            Log.e(demographicsView.getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), message);
-        }
+    public void showMedicationAllergySearchFragment(int searchType) {
+        MedicationAllergySearchFragment fragment = MedicationAllergySearchFragment
+                .newInstance(medicationsAllergiesDTO, searchType);
+        showFragmentAsDialogIfNeeded(fragment);
     }
 
     @Override
@@ -389,8 +366,19 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         }
     }
 
+    @Override
+    public void showRemovePrimaryInsuranceDialog(HomeAlertDialogFragment.HomeAlertInterface callback) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment
+                .newInstance(Label.getLabel("demographics_insurance_primary_alert_title"),
+                        Label.getLabel("demographics_insurance_primary_alert_message"));
+        homeAlertDialogFragment.setCallback(callback);
+        String tag = homeAlertDialogFragment.getClass().getName();
+        homeAlertDialogFragment.show(ft, tag);
+    }
+
     protected CheckInDemographicsBaseFragment getDemographicFragment(int step) {
-        if (hasStep(step) != 1) {
+        if (hasStep(step) != 1 && step <= MAX_STEPS) {
             return getDemographicFragment(++step);
         }
         switch (step) {
@@ -428,10 +416,28 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     @Override
+    public void showSearchPhysicianFragmentDialog(PhysicianDto physicianDto, int physicianType) {
+        SearchPhysicianFragment fragment = SearchPhysicianFragment.newInstance(physicianDto, physicianType);
+        showFragmentAsDialogIfNeeded(fragment);
+    }
+
+    @Override
+    public void onPhysicianSelected(PhysicianDto physician, int physicianType) {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
+        if (fragment instanceof PhysicianFragmentInterface) {
+            ((PhysicianFragmentInterface) fragment).setPhysician(physician, physicianType);
+        }
+    }
+
+    @Override
     public void showAddEditEmergencyContactDialog() {
+        EmergencyContactFragment fragment = EmergencyContactFragment.newInstance();
+        showFragmentAsDialogIfNeeded(fragment);
+    }
+
+    private void showFragmentAsDialogIfNeeded(BaseDialogFragment fragment) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-        EmergencyContactFragment fragment = EmergencyContactFragment.newInstance();
         if (isPatientMode) {
             fragment.show(transaction, fragment.getClass().getCanonicalName());
         } else {
@@ -444,8 +450,8 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     @Override
     public void updateEmergencyContact(PatientModel emergencyContact) {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
-        if (fragment instanceof EmergencyContactInterfaceFragment) {
-            ((EmergencyContactInterfaceFragment) fragment).updateEmergencyContact(emergencyContact);
+        if (fragment instanceof EmergencyContactFragmentInterface) {
+            ((EmergencyContactFragmentInterface) fragment).updateEmergencyContact(emergencyContact);
         }
     }
 }

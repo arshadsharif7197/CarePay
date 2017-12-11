@@ -36,8 +36,14 @@ public class QueueUploadService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         List<QueuePaymentRecord> queuedRecords = QueuePaymentRecord.listAll(QueuePaymentRecord.class);
         for(QueuePaymentRecord record : queuedRecords){
-            if(postPaymentRequest(record.getPaymentRequestId())){
-                record.delete();
+            if(record.isRefund()){
+                if (postRefundRequest(record.getPaymentRequestId())){
+                    record.delete();
+                }
+            }else {
+                if (postPaymentRequest(record.getPaymentRequestId())) {
+                    record.delete();
+                }
             }
         }
 
@@ -73,6 +79,34 @@ public class QueueUploadService extends IntentService {
         }
 
     }
+
+    private boolean postRefundRequest(String paymentRequestId){
+        if(StringUtil.isNullOrEmpty(paymentRequestId)){
+            return true;// this will clear the empty record
+        }
+
+        StreamRecord streamRecord = new StreamRecord();
+        streamRecord.setDeepstreamRecordId(paymentRequestId);
+
+        Gson gson = new Gson();
+        String token = AuthorizationUtil.getAuthorizationToken(this).replace("\n", "");
+
+        Call<JsonElement> call = getApplicationHelper().getRestHelper().getPostRefundCall(token, gson.toJson(streamRecord));
+        try{
+            Response<JsonElement> response = call.execute();
+            if(response.isSuccessful()){
+                return true;
+            }else{
+                String errorMessage = RestCallServiceHelper.parseError(response, "error", "message");
+                return errorMessage.contains("payment request has already been completed"); //this processing error indicates that the payment should not be retried
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
 
     protected ApplicationHelper getApplicationHelper(){
         return (ApplicationHelper) getApplication();

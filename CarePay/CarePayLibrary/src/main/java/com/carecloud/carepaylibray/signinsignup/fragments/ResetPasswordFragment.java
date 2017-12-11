@@ -26,6 +26,7 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
@@ -199,7 +200,7 @@ public class ResetPasswordFragment extends BaseFragment {
     };
 
     private boolean validateEmail(String email) {
-        boolean isValid = StringUtil.isValidmail(email);
+        boolean isValid = ValidationHelper.isValidEmail(email);
         if (!isValid) {
             setEmailError(getString(com.carecloud.carepaylibrary.R.string.signin_signup_error_invalid_email));
         }

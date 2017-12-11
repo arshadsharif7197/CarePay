@@ -405,6 +405,7 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="alert_ok">OK</string>
     <string name="alert_title">Alert</string>
     <string name="alert_title_server_error">Server Error</string>
+    <string name="restrict_address_characters">0123456789 abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ#.,;:\'°</string>
     <string name="restrict_digits_letters_space">0123456789 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <string name="restrict_letters_space">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <string name="restrict_letters">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
@@ -424,5 +425,7 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="tag_demographics_error_show_gone">demographics_error_show_gone</string>
     <string name="tag_demographics_error_hide_inv">demographics_error_hide_inv</string>
     <string name="tag_demographics_error_hide_gone">demographics_error_hide_gone</string>
+    <string name="tag_demographics_error_color">demographics_error_color</string>
+    <string name="tag_demographics_error_scroll">demographics_error_scroll</string>
 
 </resources>
