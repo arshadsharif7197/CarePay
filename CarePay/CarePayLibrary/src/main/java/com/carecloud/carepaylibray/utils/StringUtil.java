@@ -40,7 +40,7 @@ public class StringUtil {
      * @return The string with capitalized first letters
      */
     public static String captialize(String source) {
-        if (source == null) {
+        if (isNullOrEmpty(source)) {
             return "";
         }
         source = source.replaceAll("( ){2,}", " ").toLowerCase();

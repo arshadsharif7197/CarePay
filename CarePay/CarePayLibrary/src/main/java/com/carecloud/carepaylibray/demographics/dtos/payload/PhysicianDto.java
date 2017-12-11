@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.dtos.payload;
 
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -113,7 +114,7 @@ public class PhysicianDto {
         if (lastName != null) {
             sb.append(" ").append(lastName.substring(0, 1)).append(".");
         }
-        return sb.toString();
+        return StringUtil.captialize(sb.toString());
     }
 
 

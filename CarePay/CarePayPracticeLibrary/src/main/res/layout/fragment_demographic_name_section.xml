@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/reviewdemographicsPersonalContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -25,6 +26,7 @@
             android:maxLength="100"
             android:nextFocusForward="@+id/reviewdemogrMiddleNameEdit"
             breeze:hintKey="demographics_first_name"
+            tools:hint="First Name"
             app:customAssetFont="gotham_rounded_book"/>
     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -48,17 +50,16 @@
                 android:maxLength="100"
                 android:nextFocusForward="@+id/reviewdemogrsLastNameEdit"
                 app:customAssetFont="gotham_rounded_book"
+                tools:hint="Middle Name"
                 breeze:hintKey="demographics_middle_name"/>
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        <include
             android:id="@+id/reviewdemogrMiddleNameOptionalLabel"
-            style="@style/SignupRequireHintStyle"
-            android:textAllCaps="true"
-            android:textColor="@color/cadet_gray"
-            breeze:textKey="demographics_details_optional_hint"
-            app:customAssetFont="proxima_nova_regular"/>
+            layout="@layout/layout_optional_text_view"
+            android:visibility="visible"/>
+
     </FrameLayout>
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
@@ -76,6 +77,7 @@
             android:maxLength="100"
             android:nextFocusForward="@+id/reviewdemogrEmailEdit"
             breeze:hintKey="demographics_lirst_name"
+            tools:hint="Last Name"
             app:customAssetFont="gotham_rounded_book"/>
 
     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
