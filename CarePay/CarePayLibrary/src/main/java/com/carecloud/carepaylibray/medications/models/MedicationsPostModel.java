@@ -14,6 +14,9 @@ public class MedicationsPostModel {
     @SerializedName("medications_array")
     private List<MedicationsObject> medicationsList = new ArrayList<>();
 
+    @SerializedName("allergies_array")
+    private List<AllergiesObject> allergiesList = new ArrayList<>();
+
     @SerializedName("medications_image")
     private MedicationsImagePostModel medicationsImage;
 
@@ -23,6 +26,14 @@ public class MedicationsPostModel {
 
     public void setMedicationsList(List<MedicationsObject> medicationsList) {
         this.medicationsList = medicationsList;
+    }
+
+    public List<AllergiesObject> getAllergiesList() {
+        return allergiesList;
+    }
+
+    public void setAllergiesList(List<AllergiesObject> allergiesList) {
+        this.allergiesList = allergiesList;
     }
 
     public MedicationsImagePostModel getMedicationsImage() {

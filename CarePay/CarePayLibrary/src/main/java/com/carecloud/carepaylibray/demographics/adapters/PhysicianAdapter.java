@@ -19,8 +19,12 @@ import java.util.List;
 
 public class PhysicianAdapter extends RecyclerView.Adapter<PhysicianAdapter.ViewHolder> {
 
+    private static final int VIEW_TYPE_LOADING = 0;
+    private static final int VIEW_TYPE_DATA = 1;
+
     private final PhysicianSelectedInterface callback;
     private List<PhysicianDto> physicians;
+    private boolean maximumReached;
 
     public PhysicianAdapter(ArrayList<PhysicianDto> physicianDtos, PhysicianSelectedInterface callback) {
         this.physicians = physicianDtos;
@@ -29,11 +33,20 @@ public class PhysicianAdapter extends RecyclerView.Adapter<PhysicianAdapter.View
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_physician, parent, false));
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        if (viewType == VIEW_TYPE_LOADING) {
+            return new ViewHolder(inflater.inflate(R.layout.item_progress_bar, parent, false));
+        }
+        return new ViewHolder(inflater.inflate(R.layout.item_physician, parent, false));
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        if (getItemViewType(position) == VIEW_TYPE_LOADING) {
+            // display the loading view
+            getFooterView(position, holder);
+            return;
+        }
         final PhysicianDto physician = physicians.get(position);
         holder.physicianNameTextView.setText(physician.getFullName());
         if (physician.getSpeciality() != null) {
@@ -68,12 +81,45 @@ public class PhysicianAdapter extends RecyclerView.Adapter<PhysicianAdapter.View
 
     @Override
     public int getItemCount() {
-        return physicians.size();
+        return physicians.size() + 1;
     }
 
-    public void setData(List<PhysicianDto> physicians) {
-        this.physicians = physicians;
+    @Override
+    public int getItemViewType(int position) {
+        return (position >= physicians.size()) ? VIEW_TYPE_LOADING : VIEW_TYPE_DATA;
+    }
+
+    private void getFooterView(int position, ViewHolder holder) {
+        if (position >= physicians.size() && physicians.size() > 0 && !maximumReached) {
+            holder.progressBar.setVisibility(View.VISIBLE);
+        } else {
+            holder.progressBar.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * reset Data when a new search is made
+     */
+    public void resetData() {
+        physicians.clear();
+        maximumReached = false;
         notifyDataSetChanged();
+    }
+
+    /**
+     * set the new Data
+     * @param physicians list of physicians
+     */
+    public void setData(List<PhysicianDto> physicians) {
+        this.physicians.addAll(physicians);
+        notifyDataSetChanged();
+    }
+
+    /**
+     * set maximumReached as true to avoid showing th progress view
+     */
+    public void maximumNumberOfItemsReached() {
+        maximumReached = true;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -87,6 +133,7 @@ public class PhysicianAdapter extends RecyclerView.Adapter<PhysicianAdapter.View
         TextView physicianCityTextView;
         View physicianAddressContainer;
         View physicianContainer;
+        View progressBar;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -99,6 +146,7 @@ public class PhysicianAdapter extends RecyclerView.Adapter<PhysicianAdapter.View
             physicianCityTextView = (TextView) itemView.findViewById(R.id.physicianCityTextView);
             physicianAddressContainer = itemView.findViewById(R.id.physicianAddressContainer);
             physicianContainer = itemView.findViewById(R.id.physicianContainer);
+            progressBar = itemView.findViewById(R.id.progressBar);
         }
     }
 

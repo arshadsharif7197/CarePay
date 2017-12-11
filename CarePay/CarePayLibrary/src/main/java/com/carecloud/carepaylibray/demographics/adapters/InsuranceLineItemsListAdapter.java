@@ -11,6 +11,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +81,7 @@ public class InsuranceLineItemsListAdapter extends
                 holder.alertLayout.setVisibility(View.INVISIBLE);
                 holder.edit.setText(Label.getLabel("practice_checin_edit_clickable_label"));
             }
-            holder.type.setText(lineItem.getInsuranceType());
+            holder.type.setText(StringUtil.capitalize(lineItem.getInsuranceType()));
         }
 
         holder.edit.setOnClickListener(new View.OnClickListener() {

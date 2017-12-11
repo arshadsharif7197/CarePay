@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.carecloud.carepay.mini.HttpConstants;
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
 import com.carecloud.carepay.mini.views.CustomErrorToast;
@@ -75,7 +76,10 @@ public class UnlockFragment extends LoginFragment {
         String currentPracticeId = getApplicationHelper().getApplicationPreferences().getPracticeId();
         if(hasAccess(currentPracticeId, callback.getPreRegisterDataModel().getUserPracticeDTOList())){
             callback.replaceFragment(new SettingsFragment(), false);
-        }else{
+        }else if(HttpConstants.getEnvironment().equals("Support")){
+            super.displayNextStep();
+        }
+        else{
             CustomErrorToast.showWithMessage(getContext(), getString(R.string.error_user_access_practice));
         }
     }

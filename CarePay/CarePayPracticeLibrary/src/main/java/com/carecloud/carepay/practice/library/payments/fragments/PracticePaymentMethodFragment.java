@@ -72,7 +72,7 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
         try{
             shamrockCallback = (ShamrockPaymentsCallback) context;
         }catch (ClassCastException cce){
-            throw new ClassCastException("Attached context must implement ShamrockPaymentsCallback");
+            cce.printStackTrace();
         }
     }
 

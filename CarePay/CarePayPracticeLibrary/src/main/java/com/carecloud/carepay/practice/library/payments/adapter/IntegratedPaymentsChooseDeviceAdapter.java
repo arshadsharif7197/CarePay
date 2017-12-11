@@ -56,7 +56,7 @@ public class IntegratedPaymentsChooseDeviceAdapter extends RecyclerView.Adapter<
         final Device device = deviceList.get(position);
 
         holder.deviceName.setText(StringUtil.captialize(device.getName()));
-        holder.deviceStatus.setText(StringUtil.captialize(device.getState()).replace("_", ""));
+        holder.deviceStatus.setText(StringUtil.captialize(device.getState()).replace("_", " "));
 
         switch (device.getState()){
             case DeviceDef.STATE_OFFLINE:

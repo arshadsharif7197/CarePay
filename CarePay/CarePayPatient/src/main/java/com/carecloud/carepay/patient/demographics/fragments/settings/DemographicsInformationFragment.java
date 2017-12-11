@@ -472,7 +472,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         String phoneNumberString = phoneNumber.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(phoneNumberString)) {
             // 'de-format' before saving to model
-            addressModel.setPhone(StringUtil.revertToRawPhoneFormat(phoneNumberString));
+            addressModel.setPhone(StringUtil.revertToRawFormat(phoneNumberString));
         }
 
         String addressString = address.getText().toString().trim();

@@ -36,12 +36,14 @@ import javax.crypto.spec.SecretKeySpec;
  */
 
 public class RetailFragment extends BaseFragment {
+    private static final String KEY_SHOW_TOOLBAR = "show_toolbar";
     private static final String APP_CLIENT_SECRET = "9xasKgFMZbDErsGgQeCN3EHawKeydaNW";
     private static final String APP_ID = "breeze-shopping";
 
     private RetailModel retailModel;
     private RetailPracticeDTO retailPractice;
     private UserPracticeDTO userPracticeDTO;
+    private boolean showToolbar = true;
 
     private String ssoProfile = "";
     private String storeId = "12522068";//hardcoded MyBreezeClinic StoreId
@@ -49,11 +51,12 @@ public class RetailFragment extends BaseFragment {
     private WebView shoppingWebView;
 
 
-    public static RetailFragment newInstance(RetailModel retailModel, RetailPracticeDTO retailPractice, UserPracticeDTO userPracticeDTO){
+    public static RetailFragment newInstance(RetailModel retailModel, RetailPracticeDTO retailPractice, UserPracticeDTO userPracticeDTO, boolean showToolbar){
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, retailModel);
         DtoHelper.bundleDto(args, retailPractice);
         DtoHelper.bundleDto(args, userPracticeDTO);
+        args.putBoolean(KEY_SHOW_TOOLBAR, showToolbar);
 
         RetailFragment fragment = new RetailFragment();
         fragment.setArguments(args);
@@ -68,6 +71,7 @@ public class RetailFragment extends BaseFragment {
         retailModel = DtoHelper.getConvertedDTO(RetailModel.class, args);
         retailPractice = DtoHelper.getConvertedDTO(RetailPracticeDTO.class, args);
         userPracticeDTO = DtoHelper.getConvertedDTO(UserPracticeDTO.class, args);
+        showToolbar = args.getBoolean(KEY_SHOW_TOOLBAR, true);
 
         initSsoPayload();
     }
@@ -88,22 +92,27 @@ public class RetailFragment extends BaseFragment {
             settings.setJavaScriptEnabled(true);
             shoppingWebView.setWebViewClient(new RetailViewClient());
 
-            shoppingWebView.loadDataWithBaseURL(null, retailPractice.getStore().getStoreHtml(), "text/html", "utf-8", null);
+            shoppingWebView.loadDataWithBaseURL("data:text/html", retailPractice.getStore().getStoreHtml(), "text/html", "utf-8", "data:text/html");
 //            shoppingWebView.loadDataWithBaseURL(null, getHtmlData(), "text/html", "utf-8", null);
         }
     }
 
     private void initToolbar(View view){
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
-        TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        title.setText(userPracticeDTO.getPracticeName());
+        if(showToolbar) {
+            toolbar.setVisibility(View.VISIBLE);
+            toolbar.setNavigationIcon(R.drawable.icn_nav_back);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivity().onBackPressed();
+                }
+            });
+            TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+            title.setText(userPracticeDTO.getPracticeName());
+        }else {
+            toolbar.setVisibility(View.GONE);
+        }
     }
 
     public boolean handleBackButton(){

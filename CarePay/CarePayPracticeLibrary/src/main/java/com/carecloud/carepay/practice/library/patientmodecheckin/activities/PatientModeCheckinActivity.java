@@ -14,7 +14,8 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
-import com.carecloud.carepay.practice.library.checkin.dialog.HomeAlertDialogFragment;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.demographics.fragments.HomeAlertDialogFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.PatientModeDemographicsPresenter;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
@@ -173,7 +174,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             public void onClick(View view) {
                 if (!presenter.handleHomeButtonClick()) {
                     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment.newInstance();
+                    HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment.newInstance(null, null);
                     homeAlertDialogFragment.setCallback(new HomeAlertDialogFragment.HomeAlertInterface() {
                         @Override
                         public void onAcceptExit() {
@@ -288,6 +289,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 //            extra.putString(CarePayConstants.EXTRA_WORKFLOW, workflowDTO.toString());
             extra.putBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, true);
             DtoHelper.bundleDto(extra, presenter.getAppointmentPayload());
+            //get the appointment transitions from the Demo payload
+            AppointmentsResultModel appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
+            extra.putString(CarePayConstants.EXTRA_APPOINTMENT_TRANSITIONS,
+                    DtoHelper.getStringDTO(appointmentsResultModel));
             Intent completeIntent = new Intent(this, CompleteCheckActivity.class);
             completeIntent.putExtra(CarePayConstants.EXTRA_BUNDLE, extra);
             completeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

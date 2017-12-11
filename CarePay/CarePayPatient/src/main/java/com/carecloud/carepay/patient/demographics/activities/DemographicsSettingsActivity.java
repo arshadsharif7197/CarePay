@@ -3,11 +3,14 @@ package com.carecloud.carepay.patient.demographics.activities;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.demographics.fragments.settings.ChangePasswordFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsExpandedFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsInformationFragment;
@@ -23,18 +26,32 @@ import com.carecloud.carepay.patient.payment.fragments.CreditCardDetailsFragment
 import com.carecloud.carepay.patient.payment.fragments.CreditCardListFragment;
 import com.carecloud.carepay.patient.payment.fragments.SettingAddCreditCardFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepay.service.library.platform.AndroidPlatform;
+import com.carecloud.carepay.service.library.platform.Platform;
+import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
+import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.PhysicianDto;
 import com.carecloud.carepaylibray.demographics.fragments.EmergencyContactFragment;
+import com.carecloud.carepaylibray.demographics.fragments.HomeAlertDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
-import com.carecloud.carepaylibray.demographics.fragments.PhysicianFragment;
+import com.carecloud.carepaylibray.demographics.fragments.SearchPhysicianFragment;
 import com.carecloud.carepaylibray.demographics.interfaces.DemographicExtendedInterface;
 import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactFragmentInterface;
 import com.carecloud.carepaylibray.demographics.interfaces.PhysicianFragmentInterface;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Main activity for Settings workflow
@@ -94,6 +111,24 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
                     .loadCreditCardsList(demographicsSettingsDTO);
         }
         this.demographicsSettingsDTO = demographicsSettingsDTO;
+    }
+
+    @Override
+    public void logOut() {
+        UnifiedSignInUser user = new UnifiedSignInUser();
+        user.setEmail(getApplicationPreferences().getUserId());
+        user.setDeviceToken(((AndroidPlatform) Platform.get()).openDefaultSharedPreferences()
+                .getString(CarePayConstants.FCM_TOKEN, null));
+        UnifiedSignInDTO signInDTO = new UnifiedSignInDTO();
+        signInDTO.setUser(user);
+        Map<String, String> headersMap = new HashMap<>();
+        headersMap.put("x-api-key", HttpConstants.getApiStartKey());
+        headersMap.put("transition", "true");
+        Map<String, String> queryMap = new HashMap<>();
+        String payload = new Gson().toJson(signInDTO);
+        getWorkflowServiceHelper().execute(MenuPatientActivity.getTransitionLogout(), logoutWorkflowCallback,
+                payload, queryMap, headersMap);
+
     }
 
     @Override
@@ -208,6 +243,17 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         onBackPressed();
     }
 
+    @Override
+    public void showRemovePrimaryInsuranceDialog(HomeAlertDialogFragment.HomeAlertInterface callback) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment
+                .newInstance(Label.getLabel("demographics_insurance_primary_alert_title"),
+                        Label.getLabel("demographics_insurance_primary_alert_message"));
+        homeAlertDialogFragment.setCallback(callback);
+        String tag = homeAlertDialogFragment.getClass().getName();
+        homeAlertDialogFragment.show(ft, tag);
+    }
+
     public void addFragment(Fragment fragment, boolean addToBackStack) {
         addFragment(R.id.activity_demographics_settings, fragment, addToBackStack);
     }
@@ -228,7 +274,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
 
     @Override
     public void showSearchPhysicianFragmentDialog(PhysicianDto physicianDto, int physicianType) {
-        addFragment(PhysicianFragment.newInstance(physicianDto, physicianType), true);
+        addFragment(SearchPhysicianFragment.newInstance(physicianDto, physicianType), true);
     }
 
     @Override
@@ -239,4 +285,30 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
             ((PhysicianFragmentInterface) fragment).setPhysician(physician, physicianType);
         }
     }
+
+    @Override
+    public AppointmentDTO getAppointment() {
+        return null;
+    }
+
+    private WorkflowServiceCallback logoutWorkflowCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            getAppAuthorizationHelper().setAccessToken(null);
+            navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 }

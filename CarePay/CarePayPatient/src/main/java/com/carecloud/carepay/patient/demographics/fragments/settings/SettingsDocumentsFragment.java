@@ -96,7 +96,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     public void onViewCreated(View view, Bundle icicle) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
-        title.setText(Label.getLabel("demographics_label"));
+        title.setText(Label.getLabel("demographics_documents_section"));
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
         callback.setToolbar(toolbar);
 
