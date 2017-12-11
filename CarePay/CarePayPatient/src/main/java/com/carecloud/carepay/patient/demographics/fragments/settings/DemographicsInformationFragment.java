@@ -204,7 +204,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         address = (EditText) view.findViewById(R.id.addressEditTextId);
         address.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(addressInputLayout, null));
         setVisibility(addressInputLayout, addressSection.getProperties().getAddress1().isDisplayed());
-        address.setText(demographicPayload.getAddress().getAddress1());
+        address.setText(StringUtil.captialize(demographicPayload.getAddress().getAddress1()));
         address.getOnFocusChangeListener().onFocusChange(address,
                 !StringUtil.isNullOrEmpty(address.getText().toString().trim()));
         if (addressSection.getProperties().getAddress1().isRequired()) {
@@ -237,7 +237,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         address2 = (EditText) view.findViewById(R.id.addressEditText2Id);
         address2.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address2InputLayout, null));
         setVisibility(address2InputLayout, addressSection.getProperties().getAddress2().isDisplayed());
-        address2.setText(demographicPayload.getAddress().getAddress2());
+        address2.setText(StringUtil.captialize(demographicPayload.getAddress().getAddress2()));
         address2.getOnFocusChangeListener().onFocusChange(address2,
                 !StringUtil.isNullOrEmpty(address2.getText().toString().trim()));
         if (addressSection.getProperties().getAddress2().isRequired()) {
@@ -267,7 +267,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         cityEditText = (EditText) view.findViewById(R.id.cityId);
         cityEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(cityInputLayout, null));
         setVisibility(cityInputLayout, addressSection.getProperties().getCity().isDisplayed());
-        cityEditText.setText(demographicPayload.getAddress().getCity());
+        cityEditText.setText(StringUtil.captialize(demographicPayload.getAddress().getCity()));
         cityEditText.getOnFocusChangeListener().onFocusChange(cityEditText,
                 !StringUtil.isNullOrEmpty(cityEditText.getText().toString().trim()));
         if (addressSection.getProperties().getCity().isRequired()) {

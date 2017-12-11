@@ -2,8 +2,11 @@ package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -56,6 +60,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     StepProgressBar stepProgressBar;
     boolean preventNavBack = false;
     private boolean userAction = false;
+    private ScrollView scrollView;
 
     protected CheckinFlowCallback checkinFlowCallback;
 
@@ -102,6 +107,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         View mainContainer = view.findViewById(R.id.container_main);
         hideKeyboardOnViewTouch(mainContainer);
         hideKeyboardOnViewTouch(view);
+        scrollView = (ScrollView) view.findViewById(R.id.demographicsScrollView);
         return view;
     }
 
@@ -484,6 +490,11 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         setFieldError(inputLayout, error);
     }
 
+    protected void setDefaultError(TextInputLayout inputLayout) {
+        setFieldError(inputLayout, Label.getLabel("demographics_required_validation_msg"));
+        inputLayout.requestFocus();
+    }
+
     protected void setFieldError(TextInputLayout inputLayout, String error) {
         if (inputLayout != null) {
             inputLayout.setErrorEnabled(true);
@@ -513,9 +524,10 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         final String TAG_ERROR_HIDE_GONE = getString(R.string.tag_demographics_error_hide_gone);
         final String TAG_ERROR_SHOW_INV = getString(R.string.tag_demographics_error_show_inv);
         final String TAG_ERROR_SHOW_GONE = getString(R.string.tag_demographics_error_show_gone);
+        final String TAG_ERROR_COLOR = getString(R.string.tag_demographics_error_color);
 
         for (int i = 0; i < container.getChildCount(); i++) {
-            View view = container.getChildAt(i);
+            final View view = container.getChildAt(i);
             if (view instanceof ViewGroup) {
                 showErrorViews(isError, (ViewGroup) view);
             }
@@ -529,10 +541,20 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                             view.setVisibility(View.INVISIBLE);
                         } else if (tag.equals(TAG_ERROR_SHOW_GONE) || tag.equals(TAG_ERROR_SHOW_INV)) {
                             view.setVisibility(View.VISIBLE);
+                        }else if (tag.equals(TAG_ERROR_COLOR)){
+                            view.setSelected(true);
+                            if(view instanceof TextInputLayout){
+                                EditText editText = ((TextInputLayout) view).getEditText();
+                                editText.getBackground().setColorFilter(ContextCompat.getColor(getContext(), R.color.remove_red), PorterDuff.Mode.SRC_IN);
+                            }
                         }
-                        view.setFocusable(true);
-                        view.setFocusableInTouchMode(true);
-                        view.requestFocus();
+                        Rect rect = new Rect();
+                        view.getGlobalVisibleRect(rect);
+                        if(rect.top > 0){
+                            scrollView.scrollBy(0, rect.top-scrollView.getTop());
+                        }else {
+                            scrollView.scrollBy(0, rect.top);
+                        }
                     } else {
                         if (tag.equals(TAG_ERROR_SHOW_GONE)) {
                             view.setVisibility(View.GONE);
@@ -540,6 +562,8 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                             view.setVisibility(View.INVISIBLE);
                         } else if (tag.equals(TAG_ERROR_HIDE_GONE) || tag.equals(TAG_ERROR_HIDE_INV)) {
                             view.setVisibility(View.VISIBLE);
+                        } else if (tag.equals(TAG_ERROR_COLOR)){
+                            view.setSelected(false);
                         }
                     }
                 }
@@ -548,6 +572,8 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         }
 
     }
+
+
 
     protected TextWatcher zipInputFormatter = new TextWatcher() {
         int lastLength;
@@ -565,6 +591,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         @Override
         public void afterTextChanged(Editable editable) {
             StringUtil.autoFormatZipcode(editable, lastLength);
+            checkIfEnableButton(getView());
         }
     };
 

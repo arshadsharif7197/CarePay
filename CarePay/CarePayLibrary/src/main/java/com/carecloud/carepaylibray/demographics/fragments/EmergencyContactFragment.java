@@ -259,8 +259,8 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeTextView);
         zipCodeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeTextInputLayout,
                 getZipCodeFocusListener(zipCodeEditText)));
-        zipCodeEditText.addTextChangedListener(zipInputFormatter);
         zipCodeEditText.setText(StringUtil.formatZipCode(emergencyContact.getAddress().getZipcode()));
+        zipCodeEditText.addTextChangedListener(zipInputFormatter);
         zipCodeEditText.getOnFocusChangeListener().onFocusChange(zipCodeEditText,
                 !StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString().trim()));
 
@@ -483,13 +483,31 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                 return false;
             }
 
+            if (!StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString().trim()) &&
+                    !ValidationHelper.isValidString(zipCodeEditText.getText().toString().trim(),
+                            ValidationHelper.ZIP_CODE_PATTERN)) {
+                zipCodeTextInputLayout.setErrorEnabled(true);
+                zipCodeTextInputLayout.setError(Label.getLabel("demographics_zip_code_validation_msg"));
+                return false;
+            } else {
+                zipCodeTextInputLayout.setErrorEnabled(false);
+                zipCodeTextInputLayout.setError(null);
+            }
+
             if (StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())) {
                 if (userInteraction) {
                     zipCodeTextInputLayout.setErrorEnabled(true);
                     zipCodeTextInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
+                } else {
+                    zipCodeTextInputLayout.setErrorEnabled(false);
+                    zipCodeTextInputLayout.setError(null);
                 }
                 return false;
+            } else {
+                zipCodeTextInputLayout.setErrorEnabled(false);
+                zipCodeTextInputLayout.setError(null);
             }
+
             if (StringUtil.isNullOrEmpty(cityEditText.getText().toString())) {
                 if (userInteraction) {
                     cityTextInputLayout.setErrorEnabled(true);
@@ -857,6 +875,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         @Override
         public void afterTextChanged(Editable editable) {
             StringUtil.autoFormatZipcode(editable, lastLength);
+            checkIfEnableButton();
         }
     };
 }
