@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -68,6 +69,7 @@ public class WelcomeActivity extends FullScreenActivity {
     private boolean isDisconnecting = false;
     private boolean isResumed = false;
 
+    private PowerManager.WakeLock wakeLock;
 
     @Override
     protected void onCreate(Bundle icicle){
@@ -93,7 +95,12 @@ public class WelcomeActivity extends FullScreenActivity {
         if(connectedDevice == null || !connectedDevice.isProcessing()) {
             connectDevice();
             scheduleDeviceRefresh();
+            //Acquire wakelock
+            PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+            wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, TAG);
+            wakeLock.acquire();
         }
+
     }
 
     @Override
@@ -101,6 +108,10 @@ public class WelcomeActivity extends FullScreenActivity {
         if(connectedDevice == null || !connectedDevice.isProcessing()) {
             disconnectDevice();
             handler.removeCallbacks(deviceStateRefresh);
+
+            if(wakeLock != null){
+                wakeLock.release();
+            }
         }
         super.onStop();
     }
