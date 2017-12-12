@@ -248,7 +248,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment
                 .newInstance(Label.getLabel("demographics_insurance_primary_alert_title"),
-                        Label.getLabel("demographics_insurance_primary_alert_message"));
+                        Label.getLabel("demographics_insurance_primary_alert_message_patient"));
         homeAlertDialogFragment.setCallback(callback);
         String tag = homeAlertDialogFragment.getClass().getName();
         homeAlertDialogFragment.show(ft, tag);

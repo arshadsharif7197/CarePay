@@ -81,7 +81,7 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
                     OptionDTO languageOption = patientModePayloadDTO.getLanguages().get(i);
                     if (languageOption != null && languageOption.getCode() != null) {
                         languages.add(i, languageOption.getCode().toUpperCase());
-                        if (languageOption.getDefault() != null && languageOption.getDefault()) {
+                        if (languageOption.isDefault() != null && languageOption.isDefault()) {
                             defaultLangOption = languageOption;
                             indexDefault = i;
                         }

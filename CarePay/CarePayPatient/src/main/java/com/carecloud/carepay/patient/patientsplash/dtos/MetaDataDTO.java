@@ -7,7 +7,6 @@ package com.carecloud.carepay.patient.patientsplash.dtos;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-
 public class MetaDataDTO {
 
     @SerializedName("links")

@@ -258,7 +258,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         for (int i = 0; i < languageListSize; i++) {
             OptionDTO languageOption = signinDTO.getPayload().getLanguages().get(i);
             languages.add(i, languageOption.getCode().toUpperCase());
-            if (languageOption.getDefault()) {
+            if (languageOption.isDefault()) {
                 defaultLangOption = languageOption;
                 indexDefault = i;
             }
