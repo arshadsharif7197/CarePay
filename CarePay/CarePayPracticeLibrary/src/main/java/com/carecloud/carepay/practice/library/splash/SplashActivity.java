@@ -43,7 +43,13 @@ public class SplashActivity extends BasePracticeActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            getWorkflowServiceHelper().saveLabels(workflowDTO.getMetadata().getAsJsonObject("labels"));
+            if (workflowDTO.getPayload().has("language_metadata")) {
+                getWorkflowServiceHelper().saveLabels(workflowDTO.getPayload()
+                        .getAsJsonObject("language_metadata").getAsJsonObject("metadata")
+                        .getAsJsonObject("labels"));
+                getApplicationPreferences().setUserLanguage(workflowDTO.getPayload()
+                        .getAsJsonObject("language_metadata").get("code").getAsString());
+            }
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, getIntent().getExtras());
             SplashActivity.this.finish();
         }

@@ -18,7 +18,7 @@ public class SignInLinksDTO {
     @SerializedName("personal_info")
     @Expose
     private TransitionDTO personalInfo = new TransitionDTO();
-    @SerializedName("language_metadata")
+    @SerializedName(value = "language_metadata", alternate = "language")
     @Expose
     private TransitionDTO language = new TransitionDTO();
 

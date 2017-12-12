@@ -116,12 +116,11 @@ public class ApplicationPreferences {
      * @return user preferred language. Returns default value if not set.
      */
     public String getUserLanguage() {
-        if (null != userLanguage) {
-            return userLanguage;
+        if (userLanguage == null) {
+            userLanguage = readStringFromSharedPref(PREFERENCE_USER_SELECTED_LANGUAGE,
+                    Resources.getSystem().getConfiguration().locale.getLanguage());
         }
-
-        return readStringFromSharedPref(PREFERENCE_USER_SELECTED_LANGUAGE,
-                Resources.getSystem().getConfiguration().locale.getLanguage());
+        return userLanguage;
     }
 
     /**
