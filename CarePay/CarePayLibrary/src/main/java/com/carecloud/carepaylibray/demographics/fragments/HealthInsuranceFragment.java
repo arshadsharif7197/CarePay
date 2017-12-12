@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
@@ -104,6 +105,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
     private List<DemographicInsurancePayloadDTO> getInsurances(DemographicDTO demographicDTO) {
         List<DemographicInsurancePayloadDTO> insuranceList = new ArrayList<>();
+        boolean hasOnePhoto = false;
         if (demographicDTO != null) {
             boolean isThereAnyPrimaryInsurance = false;
             for (DemographicInsurancePayloadDTO insurance : demographicDTO.getPayload().getDemographics()
@@ -115,6 +117,8 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
                     }
                     if (insurance.getInsurancePhotos().size() == 0) {
                         showAlert = true;
+                    }else if(!hasOnePhoto){
+                        hasOnePhoto = true;
                     }
                 }
             }
@@ -124,6 +128,9 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
                 showAlert = true;
             }
         }
+
+        MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_has_identity_doc), hasOnePhoto);
+
         return insuranceList;
     }
 

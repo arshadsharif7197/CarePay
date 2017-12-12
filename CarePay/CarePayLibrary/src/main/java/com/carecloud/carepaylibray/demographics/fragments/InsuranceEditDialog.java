@@ -47,13 +47,10 @@ import com.carecloud.carepaylibray.media.MediaScannerPresenter;
 import com.carecloud.carepaylibray.media.MediaViewInterface;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.marcok.stepprogressbar.StepProgressBar;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
@@ -61,6 +58,10 @@ import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAd
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_FRONT_DTO;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_BACK;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_FRONT;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class InsuranceEditDialog extends BaseDialogFragment implements MediaViewInterface {
 
@@ -612,6 +613,11 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         setupImageBase64();
 
         List<DemographicInsurancePhotoDTO> photos = demographicInsurancePayloadDTO.getInsurancePhotos();
+        if(frontInsurancePhotoDTO != null || backInsurancePhotoDTO != null){
+            //Log new Insurance Doc
+            MixPanelUtil.logEvents(getString(R.string.event_add_insurance_doc), getString(R.string.param_is_checkin), isCheckin);
+        }
+
         if (frontInsurancePhotoDTO != null) {
             removeOldPhoto(photos, FRONT_PIC);
             photos.add(frontInsurancePhotoDTO);

@@ -122,7 +122,7 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
         if((hasFrontImage && base64FrontImage != null) ||
                 (hasBackImage && base64BackImage != null)){
             //Log new Identity Doc
-            MixPanelUtil.logEvents(getString(R.string.event_add_identity_doc), getString(R.string.param_is_checkin), false);
+            MixPanelUtil.logEvents(getString(R.string.event_add_identity_doc), getString(R.string.param_is_checkin), true);
         }
 
         if (hasFrontImage && base64FrontImage != null) {
