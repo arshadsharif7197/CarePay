@@ -137,13 +137,13 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
                     isResume = false;
                     //Log Check-in Started
                     if(getAppointment() != null) {
-                        MixPanelUtil.logEvents(getString(R.string.event_checkin_completed), params, values);
+                        MixPanelUtil.logEvent(getString(R.string.event_checkin_started), params, values);
                     }
                 }
                 break;
         }
         if(isResume){
-            MixPanelUtil.logEvents(getString(R.string.event_checkin_resumed), params, values);
+            MixPanelUtil.logEvent(getString(R.string.event_checkin_resumed), params, values);
         }
         MixPanelUtil.startTimer(getString(R.string.timer_checkin));
         startCheckin = false;
@@ -422,7 +422,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     protected boolean shouldPreventBackNav() {
-        return false;
+        return getCurrentStep() == 1;
     }
 
     @Override

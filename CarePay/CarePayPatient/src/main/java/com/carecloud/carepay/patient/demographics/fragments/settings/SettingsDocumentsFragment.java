@@ -156,12 +156,19 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     }
 
     private List<DemographicInsurancePayloadDTO> getInsurances(DemographicDTO demographicDTO) {
+        boolean hasOnePhoto = false;
         List<DemographicInsurancePayloadDTO> insuranceList = new ArrayList<>();
         for (DemographicInsurancePayloadDTO insurance : demographicDTO.getPayload().getDemographics().getPayload().getInsurances()) {
             if (!insurance.isDeleted()) {
                 insuranceList.add(insurance);
             }
+            if (insurance.getInsurancePhotos().size() > 0 && !hasOnePhoto) {
+                hasOnePhoto = true;
+            }
         }
+
+        MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_has_identity_doc), hasOnePhoto);
+
         return insuranceList;
     }
 
@@ -189,7 +196,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         if((hasFrontImage && base64FrontImage != null) ||
                 (hasBackImage && base64BackImage != null)){
             //Log new Identity Doc
-            MixPanelUtil.logEvents(getString(R.string.event_add_identity_doc), getString(R.string.param_is_checkin), false);
+            MixPanelUtil.logEvent(getString(R.string.event_add_identity_doc), getString(R.string.param_is_checkin), false);
         }
 
         if (hasFrontImage && base64FrontImage != null) {

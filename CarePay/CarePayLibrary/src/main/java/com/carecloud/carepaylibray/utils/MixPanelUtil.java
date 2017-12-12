@@ -38,7 +38,7 @@ public class MixPanelUtil {
      * @param parameter parameter name
      * @param value parameter value
      */
-    public static void logEvents(String eventName, String parameter, Object value){
+    public static void logEvent(String eventName, String parameter, Object value){
         try {
             JSONObject object = new JSONObject();
             object.put(parameter, value);
@@ -56,7 +56,7 @@ public class MixPanelUtil {
      * @param parameters list of parameter names
      * @param values list of parameter values
      */
-    public static void logEvents(String eventName, String[] parameters, Object[] values) {
+    public static void logEvent(String eventName, String[] parameters, Object[] values) {
         try {
             int min = Math.min(parameters.length, values.length);
             JSONObject object = new JSONObject();

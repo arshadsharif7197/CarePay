@@ -58,6 +58,7 @@ import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.gson.Gson;
 
@@ -90,6 +91,14 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
         if (savedInstanceState == null) {
             initDto(getConvertedDTO(WorkflowDTO.class));
+
+            if(getAppointment() != null) {
+                //Log Check-out Started
+                String[] params = {getString(R.string.param_practice_id), getString(R.string.param_appointment_id), getString(R.string.param_appointment_type), getString(R.string.param_is_guest)};
+                Object[] values = {getAppointment().getMetadata().getPracticeId(), getAppointmentId(), getAppointment().getPayload().getVisitType().getName(), false};
+                MixPanelUtil.logEvent(getString(R.string.event_checkout_started), params, values);
+                MixPanelUtil.startTimer(getString(R.string.timer_checkout));
+            }
         }
 
         shouldAddBackStack = true;
@@ -430,6 +439,18 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         addFragment(fragment, true);
     }
 
+    @Override
+    public void completeCheckout() {
+        //Log Check-out Completed
+        if(getAppointment() != null) {
+            String[] params = {getString(R.string.param_practice_id), getString(R.string.param_appointment_id), getString(R.string.param_appointment_type), getString(R.string.param_is_guest)};
+            Object[] values = {getAppointment().getMetadata().getPracticeId(), getAppointmentId(), getAppointment().getPayload().getVisitType().getName(), false};
+            MixPanelUtil.logEvent(getString(R.string.event_checkout_completed), params, values);
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_checkout_completed), 1);
+            MixPanelUtil.endTimer(getString(R.string.timer_checkout));
+        }
+    }
+
     WorkflowServiceCallback continueCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -443,6 +464,8 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
             PatientNavigationHelper
                     .navigateToWorkflow(getContext(), workflowDTO,
                             getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO));
+
+            completeCheckout();
         }
 
         @Override
@@ -514,5 +537,13 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         if(targetFragment != null) {
             targetFragment.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public void onBackPressed(){
+        if(getSupportFragmentManager().getBackStackEntryCount() < 1){
+            MixPanelUtil.logEvent(getString(R.string.event_checkout_cancelled), getString(R.string.param_last_completed_step), getString(R.string.step_appointment));
+        }
+        super.onBackPressed();
     }
 }

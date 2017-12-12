@@ -47,6 +47,7 @@ import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactFragm
 import com.carecloud.carepaylibray.demographics.interfaces.PhysicianFragmentInterface;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -206,6 +207,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     @Override
     public void displayHelpFragment() {
         replaceFragment(new HelpFragment(), true);
+        MixPanelUtil.logEvent(getString(R.string.event_help_clicked));
     }
 
     @Override

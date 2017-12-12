@@ -615,7 +615,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         List<DemographicInsurancePhotoDTO> photos = demographicInsurancePayloadDTO.getInsurancePhotos();
         if(frontInsurancePhotoDTO != null || backInsurancePhotoDTO != null){
             //Log new Insurance Doc
-            MixPanelUtil.logEvents(getString(R.string.event_add_insurance_doc), getString(R.string.param_is_checkin), isCheckin);
+            MixPanelUtil.logEvent(getString(R.string.event_add_insurance_doc), getString(R.string.param_is_checkin), isCheckin);
         }
 
         if (frontInsurancePhotoDTO != null) {

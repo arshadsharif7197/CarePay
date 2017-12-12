@@ -37,6 +37,7 @@ import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.KeyboardWatcher;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.WebViewKeyboardAdjuster;
 import com.google.gson.JsonObject;
@@ -386,27 +387,33 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         return false;
     }
 
-    protected WorkflowServiceCallback updateformCallBack = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
+    protected WorkflowServiceCallback getUpdateFormCallBack(final String formTypes) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
 
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            onUpdate(callback, workflowDTO);
-            nextButton.setEnabled(true);
-        }
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                onUpdate(callback, workflowDTO);
+                nextButton.setEnabled(true);
 
-        @Override
-        public void onFailure(String exceptionMessage) {
-            nextButton.setEnabled(true);
-            hideProgressDialog();
-            showErrorNotification(exceptionMessage);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
+                String[] params = {getString(R.string.param_forms_count), getString(R.string.param_forms_type)};
+                Object[] values = {totalForms, formTypes};
+                MixPanelUtil.logEvent(getString(R.string.event_checkin_forms), params, values);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                nextButton.setEnabled(true);
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+                Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            }
+        };
+    }
 
 
     class BaseWebClient extends WebViewClient {
