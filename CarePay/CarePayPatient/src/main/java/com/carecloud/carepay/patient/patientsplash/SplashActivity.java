@@ -64,7 +64,7 @@ public class SplashActivity extends BasePatientActivity {
                         .getAsJsonObject("language_metadata").getAsJsonObject("metadata")
                         .getAsJsonObject("labels"));
                 getApplicationPreferences().setUserLanguage(workflowDTO.getPayload()
-                        .getAsJsonObject("language_metadata").get("code").toString());
+                        .getAsJsonObject("language_metadata").get("code").getAsString());
             }
 
             Gson gson = new Gson();
