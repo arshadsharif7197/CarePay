@@ -45,7 +45,7 @@ public class OptionDTO {
         this.code = code;
     }
 
-    public Boolean getDefault() {
+    public Boolean isDefault() {
         return isDefault;
     }
 

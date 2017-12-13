@@ -2,6 +2,7 @@ package com.carecloud.carepay.service.library;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 
 import com.carecloud.carepay.service.library.constants.Defs;
 import com.google.gson.Gson;
@@ -115,11 +116,11 @@ public class ApplicationPreferences {
      * @return user preferred language. Returns default value if not set.
      */
     public String getUserLanguage() {
-        if (null != userLanguage) {
-            return userLanguage;
+        if (userLanguage == null) {
+            userLanguage = readStringFromSharedPref(PREFERENCE_USER_SELECTED_LANGUAGE,
+                    Resources.getSystem().getConfiguration().locale.getLanguage());
         }
-
-        return readStringFromSharedPref(PREFERENCE_USER_SELECTED_LANGUAGE, "en");
+        return userLanguage;
     }
 
     /**

@@ -46,9 +46,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="@dimen/signin_layout_padding"
+            android:paddingEnd="@dimen/signin_layout_padding"
             android:paddingStart="@dimen/signin_layout_padding"
-            android:paddingEnd="@dimen/signin_layout_padding">
+            android:paddingTop="@dimen/signin_layout_padding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                 android:id="@+id/signInEmailTextInputLayout"
@@ -59,9 +59,10 @@
                 <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                     android:id="@+id/signinEmailEditText"
                     style="@style/EditTextStyle"
-                    android:hint="@string/signin_signup_email_hint"
                     android:inputType="textEmailAddress"
-                    app:customAssetFont="proxima_nova_semi_bold" />
+                    app:customAssetFont="proxima_nova_semi_bold"
+                    breeze:hintKey="signup_email"
+                    tools:text="Email" />
 
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -79,11 +80,12 @@
                     <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                         android:id="@+id/passwordEditText"
                         style="@style/EditTextStyle"
-                        android:hint="@string/password_text"
                         android:imeOptions="actionDone"
                         android:inputType="textPassword"
-                        android:paddingRight="@dimen/dimen_30dp"
-                        app:customAssetFont="proxima_nova_semi_bold" />
+                        android:paddingEnd="@dimen/dimen_30dp"
+                        app:customAssetFont="proxima_nova_semi_bold"
+                        breeze:hintKey="password_label"
+                        tools:text="Password" />
 
                 </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -127,10 +129,10 @@
                     style="@style/SigninSignupClickableTextView"
                     android:layout_width="wrap_content"
                     android:layout_alignParentStart="true"
+                    android:background="?android:selectableItemBackground"
                     android:gravity="start"
                     android:padding="@dimen/dimen_10dp"
                     android:text="@string/language_textview"
-                    android:visibility="invisible"
                     app:customAssetFont="proxima_nova_semi_bold"
                     breeze:textKey="change_language_link" />
 

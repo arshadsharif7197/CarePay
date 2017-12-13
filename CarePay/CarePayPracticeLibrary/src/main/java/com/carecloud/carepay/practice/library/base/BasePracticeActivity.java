@@ -20,6 +20,9 @@ import com.newrelic.agent.android.NewRelic;
 
 import org.apache.commons.lang3.NotImplementedException;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public abstract class BasePracticeActivity extends BaseActivity
         implements IConfirmPracticeAppPin {
 
@@ -35,12 +38,10 @@ public abstract class BasePracticeActivity extends BaseActivity
         Log.d("New Relic", getClass().getName());
     }
 
-
     @Override
     public void onPinConfirmationCheck(boolean isCorrectPin, String pin) {
 
     }
-
 
     protected boolean setTextViewById(int id, String text) {
         View view = findViewById(id);
@@ -49,25 +50,6 @@ public abstract class BasePracticeActivity extends BaseActivity
         }
 
         ((TextView) view).setText(text);
-
-        return true;
-    }
-
-    public boolean enableViewById(int id) {
-        return setEnabledViewById(id, true);
-    }
-
-    public boolean disableViewById(int id) {
-        return setEnabledViewById(id, true);
-    }
-
-    private boolean setEnabledViewById(int id, boolean enabled) {
-        View view = findViewById(id);
-        if (null == view) {
-            return false;
-        }
-
-        view.setEnabled(enabled);
 
         return true;
     }
@@ -89,9 +71,7 @@ public abstract class BasePracticeActivity extends BaseActivity
         if (null == view) {
             return false;
         }
-
         view.setVisibility(visibility);
-
         return true;
     }
 
@@ -158,4 +138,38 @@ public abstract class BasePracticeActivity extends BaseActivity
     public void navigateToWorkflow(WorkflowDTO workflowDTO) {
         PracticeNavigationHelper.navigateToWorkflow(this, workflowDTO);
     }
+
+    protected void changeLanguage(TransitionDTO transition, String languageCode) {
+        Map<String, String> query = new HashMap<>();
+        query.put("language", languageCode);
+        getWorkflowServiceHelper().execute(transition, languageCallback, null, query,
+                getWorkflowServiceHelper().getApplicationStartHeaders());
+    }
+
+    protected WorkflowServiceCallback languageCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            if (workflowDTO.getPayload().has("language_metadata")) {
+                getWorkflowServiceHelper().saveLabels(workflowDTO.getPayload()
+                        .getAsJsonObject("language_metadata").getAsJsonObject("metadata")
+                        .getAsJsonObject("labels"));
+                getApplicationPreferences().setUserLanguage(workflowDTO.getPayload()
+                        .getAsJsonObject("language_metadata").get("code").getAsString());
+            }
+            recreate();
+            hideProgressDialog();
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 }

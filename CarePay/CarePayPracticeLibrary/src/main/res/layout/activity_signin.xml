@@ -42,8 +42,7 @@
             android:layout_marginTop="@dimen/dimen_20dp"
             android:background="@drawable/bg_blue_overlay"
             android:paddingEnd="@dimen/home_spinner_padding_righ_left"
-            android:paddingStart="@dimen/home_spinner_padding_righ_left"
-            android:visibility="gone" />
+            android:paddingStart="@dimen/home_spinner_padding_righ_left" />
 
         <ImageView
             android:id="@+id/imageView"
