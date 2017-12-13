@@ -303,6 +303,9 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
             } else {
                 callback.navigateToWorkflow(workflowDTO);
             }
+            if(!workflowDTO.getState().contains("checkout")){
+                callback.completeCheckout();
+            }
         }
 
         @Override
@@ -336,6 +339,9 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
                 callback.showAllDone(workflowDTO);
             } else {
                 callback.navigateToWorkflow(workflowDTO);
+            }
+            if(!workflowDTO.getState().contains("checkout")){
+                callback.completeCheckout();
             }
         }
 

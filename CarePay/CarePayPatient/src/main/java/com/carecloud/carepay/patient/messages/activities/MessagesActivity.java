@@ -19,6 +19,7 @@ import com.carecloud.carepay.service.library.RestCallServiceCallback;
 import com.carecloud.carepay.service.library.RestCallServiceHelper;
 import com.carecloud.carepay.service.library.RestDef;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
@@ -141,7 +142,7 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
 
         restCallServiceHelper.executeRequest(RestDef.POST,
                 HttpConstants.getMessagingBaseUrl(),
-                postNewMessageCallback,
+                getPostNewMessageCallback(provider),
                 true,
                 getString(R.string.msg_auth_token_key),
                 queryMap,
@@ -242,6 +243,8 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
         public void onPostExecute(JsonElement jsonElement) {
             hideProgressDialog();
             loadConversationsList(jsonElement);
+
+            MixPanelUtil.logEvent(getString(R.string.event_message_reply));
         }
 
         @Override
@@ -251,27 +254,33 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
         }
     };
 
-    private RestCallServiceCallback postNewMessageCallback = new RestCallServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
+    private RestCallServiceCallback getPostNewMessageCallback(final ProviderContact provider) {
+        return new RestCallServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
 
-        @Override
-        public void onPostExecute(JsonElement jsonElement) {
-            hideProgressDialog();
-            Gson gson = new Gson();
-            Messages.Reply thread = gson.fromJson(jsonElement, Messages.Reply.class);
-            getSupportFragmentManager().popBackStackImmediate(MessagesProvidersFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            replaceFragment(MessagesConversationFragment.newInstance(thread), true);
-        }
+            @Override
+            public void onPostExecute(JsonElement jsonElement) {
+                hideProgressDialog();
+                Gson gson = new Gson();
+                Messages.Reply thread = gson.fromJson(jsonElement, Messages.Reply.class);
+                getSupportFragmentManager().popBackStackImmediate(MessagesProvidersFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                replaceFragment(MessagesConversationFragment.newInstance(thread), true);
 
-        @Override
-        public void onFailure(String errorMessage) {
-            hideProgressDialog();
-            showErrorNotification(errorMessage);
-        }
-    };
+                String[] params = {getString(R.string.param_provider_id), getString(R.string.param_provider_name)};
+                Object[] values = {provider.getId(), provider.getName()};
+                MixPanelUtil.logEvent(getString(R.string.event_message_new), params, values);
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                hideProgressDialog();
+                showErrorNotification(errorMessage);
+            }
+        };
+    }
 
     private RestCallServiceCallback deleteThreadCallback = new RestCallServiceCallback() {
         @Override

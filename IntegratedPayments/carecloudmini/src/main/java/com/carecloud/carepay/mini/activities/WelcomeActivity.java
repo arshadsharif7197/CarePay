@@ -649,6 +649,9 @@ public class WelcomeActivity extends FullScreenActivity {
                 NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
                 if(isResumed && networkInfo != null && networkInfo.isConnected()){
                     connectDevice();
+                }else{
+                    Log.w(TAG, "Activity is Resumed: "+isResumed);
+                    Log.w(TAG, "Network Info: "+ (networkInfo != null? networkInfo.getState() : " NULL"));
                 }
             }
         }

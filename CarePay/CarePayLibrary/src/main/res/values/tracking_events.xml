@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_launch">App Launched</string>
+    <!--Standard Events -->
+    <string name="event_updated_notifications">Updated Notification Settings</string>
+    <string name="event_help_clicked">Help Button Clicked</string>
+    <string name="event_message_reply">Message Sent</string>
+    <string name="event_payment_make_full_payment">Full Payment Selected</string>
+    <string name="event_payment_make_partial_payment">Partial Payment Selected</string>
+    <string name="event_payment_skipped">Pay Later Selected</string>
+
+
+    <!--Parameter Events-->
+    <string name="event_appointment_scheduled">Appointment Scheduled</string>
+    <string name="event_appointment_cancelled">Appointment Cancelled</string>
+    <string name="event_checkin_completed">Check-in Completed</string>
+    <string name="event_checkin_started">Check-in Started</string>
+    <string name="event_checkin_resumed">Check-in Resumed</string>
+    <string name="event_checkin_cancelled">Check-In Cancelled</string>
+    <string name="event_add_identity_doc">Add Identity Document</string>
+    <string name="event_add_insurance_doc">Add Insurance Photo</string>
+    <string name="event_checkin_forms">Completed Forms</string>
+    <string name="event_updated_meds">Updated Medications</string>
+    <string name="event_updated_allergies">Updated Allergies</string>
+    <string name="event_checkout_started">Check-out Started</string>
+    <string name="event_checkout_completed">Check-out Completed</string>
+    <string name="event_checkout_cancelled">Check-out Cancelled</string>
+    <string name="event_updated_demographics">Updated Demographics</string>
+    <string name="event_updated_credit_cards">Updated Credit Cards</string>
+    <string name="event_message_new">New Message Thread</string>
+    <string name="event_payment_started">Payment Started</string>
+    <string name="event_payment_complete">Complete Payment</string>
+    <string name="event_payment_failed">Failed Payment</string>
+
+
+    <!--Parameters-->
+    <string name="param_appointment_type">Appointment Type</string>
+    <string name="param_appointment_cancel_reason">Cancellation Reason</string>
+    <string name="param_payment_amount">Payment Amount</string>
+    <string name="param_payment_type">Payment Method Type</string>
+    <string name="param_practice_id">Practice Id</string>
+    <string name="param_practice_name">Practice Name</string>
+    <string name="param_appointment_id">Appointment Id</string>
+    <string name="param_is_guest">Is Guest User</string>
+    <string name="param_is_checkin">Updated During Check-in</string>
+    <string name="param_forms_count">Completed Forms Count</string>
+    <string name="param_forms_type">Forms Type</string>
+    <string name="param_meds_count">Medications Update Count</string>
+    <string name="param_allergies_count">Allergies Update Count</string>
+    <string name="param_last_completed_step">Last Step</string>
+    <string name="param_is_payment">Updated During Payment</string>
+    <string name="param_provider_id">Provider Id</string>
+    <string name="param_provider_name">Provider Name</string>
+
+
+
+    <!--Incremental Properties-->
+    <string name="count_appointment_scheduled">Total Appointments Scheduled</string>
+    <string name="count_appointment_cancelled">Total Appointments Cancelled</string>
+    <string name="count_checkin_completed">Total Check-ins Completed</string>
+    <string name="count_checkout_completed">Total Check-outs Completed</string>
+    <string name="count_payments_completed">Total Payments Made</string>
+    <string name="total_payments_amount">Total Payments Amount</string>
+
+
+    <!--Incremental Properties-->
+    <string name="timer_checkin">Check-in Time</string>
+    <string name="timer_checkout">Check-out Time</string>
+
+
+    <!--People Properties-->
+    <string name="people_gender">Gender</string>
+    <string name="people_dob">Date of Birth</string>
+    <string name="people_ethnicity">Ethnicity</string>
+    <string name="people_race">Race</string>
+    <string name="people_language">Language</string>
+    <string name="people_has_identity_doc">Has Identity Document</string>
+    <string name="people_has_insurance_doc">Has Insurance Document</string>
+    <string name="people_enabled_push">Has Push Notifications Enabled</string>
+    <string name="people_enabled_email">Has Email Notifications Enabled</string>
+
+
+    <!--Enum Values-->
+    <string name="forms_type_consent">Consent Forms</string>
+    <string name="forms_type_intake">Intake Forms</string>
+    <string name="step_personal_info">Personal Information</string>
+    <string name="step_address">Address</string>
+    <string name="step_demographics">Demographics</string>
+    <string name="step_identity">Identity</string>
+    <string name="step_health_insurance">Health Insurance</string>
+    <string name="step_consent_forms">Consent Forms</string>
+    <string name="step_medications">Medications &amp; Allergies</string>
+    <string name="step_intake">Intake Forms</string>
+    <string name="step_payment">Payment</string>
+    <string name="step_appointment">Next Appointment</string>
+    <string name="step_checkout_forms">Check-out Forms</string>
+    <string name="payment_new_card">New Card</string>
+    <string name="payment_card_on_file">Card on File</string>
+    <string name="payment_google">Google Payments</string>
+    <string name="payment_cash">Cash</string>
+    <string name="payment_check">Check</string>
+    <string name="payment_clover">Clover</string>
+
+</resources>

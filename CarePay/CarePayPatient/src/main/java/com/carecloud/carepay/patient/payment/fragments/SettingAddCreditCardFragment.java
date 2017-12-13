@@ -19,6 +19,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.payments.fragments.BaseAddCreditCardFragment;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -84,6 +85,8 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
             callback.onCreditCardOperation(demographicsSettingsDTO);
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
             getActivity().onBackPressed();
+
+            MixPanelUtil.logEvent(getString(R.string.event_updated_credit_cards), getString(R.string.param_is_payment), false);
         }
 
         @Override
