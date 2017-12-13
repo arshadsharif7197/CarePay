@@ -237,7 +237,8 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         langSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                changeLanguage(signinDTO.getMetadata().getLinks().getLanguage(), languages.get(position).toLowerCase());
+                changeLanguage(signinDTO.getMetadata().getLinks().getLanguage(),
+                        languages.get(position).toLowerCase(), getWorkflowServiceHelper().getApplicationStartHeaders());
             }
 
             @Override

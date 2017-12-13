@@ -139,11 +139,10 @@ public abstract class BasePracticeActivity extends BaseActivity
         PracticeNavigationHelper.navigateToWorkflow(this, workflowDTO);
     }
 
-    protected void changeLanguage(TransitionDTO transition, String languageCode) {
+    protected void changeLanguage(TransitionDTO transition, String languageCode, Map<String, String> headers) {
         Map<String, String> query = new HashMap<>();
         query.put("language", languageCode);
-        getWorkflowServiceHelper().execute(transition, languageCallback, null, query,
-                getWorkflowServiceHelper().getApplicationStartHeaders());
+        getWorkflowServiceHelper().execute(transition, languageCallback, null, query, headers);
     }
 
     protected WorkflowServiceCallback languageCallback = new WorkflowServiceCallback() {

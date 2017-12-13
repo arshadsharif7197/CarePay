@@ -102,7 +102,7 @@ public class CarePayPracticeApplication extends CarePayApplication
     }
 
     @Override
-    public void onAtomicRestart(){
+    public void onAtomicRestart() {
         super.onAtomicRestart();
         applicationMode.clearUserPracticeDTO();
         applicationMode = null;
@@ -114,7 +114,6 @@ public class CarePayPracticeApplication extends CarePayApplication
             applicationMode = new ApplicationMode();
             applicationMode.setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
         }
-
         return applicationMode;
     }
 }

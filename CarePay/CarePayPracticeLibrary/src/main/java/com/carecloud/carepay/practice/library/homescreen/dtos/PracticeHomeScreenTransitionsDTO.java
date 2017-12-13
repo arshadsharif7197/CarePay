@@ -37,135 +37,109 @@ public class PracticeHomeScreenTransitionsDTO {
     @SerializedName("office_news_post")
     @Expose
     private TransitionDTO officeNewsPost = new TransitionDTO();
+    @SerializedName(value = "language_metadata", alternate = "language")
+    @Expose
+    private TransitionDTO language = new TransitionDTO();
 
     /**
-     *
-     * @return
-     * The patientMode
+     * @return The patientMode
      */
     public TransitionDTO getPatientMode() {
         return patientMode;
     }
 
     /**
-     *
-     * @param patientMode
-     * The patient_mode
+     * @param patientMode The patient_mode
      */
     public void setPatientMode(TransitionDTO patientMode) {
         this.patientMode = patientMode;
     }
 
     /**
-     *
-     * @return
-     * The logout
+     * @return The logout
      */
     public TransitionDTO getLogout() {
         return logout;
     }
 
     /**
-     *
-     * @param logout
-     * The logout
+     * @param logout The logout
      */
     public void setLogout(TransitionDTO logout) {
         this.logout = logout;
     }
 
     /**
-     *
-     * @return
-     * The practiceCheckin
+     * @return The practiceCheckin
      */
     public TransitionDTO getPracticeCheckin() {
         return practiceCheckin;
     }
 
     /**
-     *
-     * @param practiceCheckin
-     * The practice_checkin
+     * @param practiceCheckin The practice_checkin
      */
     public void setPracticeCheckin(TransitionDTO practiceCheckin) {
         this.practiceCheckin = practiceCheckin;
     }
 
     /**
-     *
-     * @return
-     * The practicePayments
+     * @return The practicePayments
      */
     public TransitionDTO getPracticePayments() {
         return practicePayments;
     }
 
     /**
-     *
-     * @param practicePayments
-     * The practice_payments
+     * @param practicePayments The practice_payments
      */
     public void setPracticePayments(TransitionDTO practicePayments) {
         this.practicePayments = practicePayments;
     }
 
     /**
-     *
-     * @return
-     * The practiceCheckout
+     * @return The practiceCheckout
      */
     public TransitionDTO getPracticeCheckout() {
         return practiceCheckout;
     }
 
     /**
-     *
-     * @param practiceCheckout
-     * The practice_checkout
+     * @param practiceCheckout The practice_checkout
      */
     public void setPracticeCheckout(TransitionDTO practiceCheckout) {
         this.practiceCheckout = practiceCheckout;
     }
 
     /**
-     *
-     * @return
-     * The shop
+     * @return The shop
      */
     public TransitionDTO getShop() {
         return shop;
     }
 
     /**
-     *
-     * @param shop
-     * The shop
+     * @param shop The shop
      */
     public void setShop(TransitionDTO shop) {
         this.shop = shop;
     }
 
     /**
-     *
-     * @return
-     * The officeNews
+     * @return The officeNews
      */
     public TransitionDTO getOfficeNews() {
         return officeNews;
     }
 
     /**
-     *
-     * @param officeNews
-     * The office_news
+     * @param officeNews The office_news
      */
     public void setOfficeNews(TransitionDTO officeNews) {
         this.officeNews = officeNews;
     }
 
     /**
-     *
      * @return practiceAppointments
      */
     public TransitionDTO getPracticeAppointments() {
@@ -173,7 +147,6 @@ public class PracticeHomeScreenTransitionsDTO {
     }
 
     /**
-     *
      * @param practiceAppointments practiceAppointments
      */
     public void setPracticeAppointments(TransitionDTO practiceAppointments) {
@@ -182,6 +155,7 @@ public class PracticeHomeScreenTransitionsDTO {
 
     /**
      * officeNewsPost
+     *
      * @return officeNewsPost
      */
     public TransitionDTO getOfficeNewsPost() {
@@ -190,9 +164,18 @@ public class PracticeHomeScreenTransitionsDTO {
 
     /**
      * officeNewsPost
+     *
      * @param officeNewsPost officeNewsPost
      */
     public void setOfficeNewsPost(TransitionDTO officeNewsPost) {
         this.officeNewsPost = officeNewsPost;
+    }
+
+    public TransitionDTO getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(TransitionDTO language) {
+        this.language = language;
     }
 }
