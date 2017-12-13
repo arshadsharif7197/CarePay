@@ -541,7 +541,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             //log appt scheduled to mixpanel
             String[] params = {getString(R.string.param_appointment_type), getString(R.string.param_practice_id), getString(R.string.param_practice_name)};
             String[] values = {selectedVisitTypeDTO.getName(), practiceId, practiceName};
-            MixPanelUtil.logEvent(getString(R.string.event_appointment_scheduled), params, values);
+            MixPanelUtil.logEvent(getString(R.string.event_appointment_requested), params, values);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_scheduled), 1);
             onAppointmentRequestSuccess();
         }
