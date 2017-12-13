@@ -72,13 +72,9 @@ public class SplashActivity extends BasePatientActivity {
             Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
             header.put("Accept-Language", getApplicationPreferences().getUserLanguage());
             Map<String, String> query = new HashMap<>();
-            if (getApplicationPreferences().getUserLanguage() != null) {
-                query.put("language", getApplicationPreferences().getUserLanguage());
-            }
+            query.put("language", getApplicationPreferences().getUserLanguage());
             getWorkflowServiceHelper().execute(selectLanguageDTO.getMetadata().getTransitions().getSignin(),
                     signInCallback, null, query, header);
-
-
         }
 
         @Override
