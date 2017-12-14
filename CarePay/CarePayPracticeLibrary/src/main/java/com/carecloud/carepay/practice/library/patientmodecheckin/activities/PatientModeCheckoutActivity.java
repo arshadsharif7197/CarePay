@@ -485,6 +485,11 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     @Override
+    public void completeCheckout() {
+
+    }
+
+    @Override
     public void onRangeSelected(Date start, Date end) {
         this.startDate = start;
         this.endDate = end;
