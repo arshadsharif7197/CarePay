@@ -11,8 +11,9 @@
 
 
     <!--Parameter Events-->
-    <string name="event_appointment_scheduled">Appointment Scheduled</string>
+    <string name="event_appointment_requested">Appointment Requested</string>
     <string name="event_appointment_cancelled">Appointment Cancelled</string>
+    <string name="event_appointment_scheduled">Appointment Scheduled</string>
     <string name="event_checkin_completed">Check-in Completed</string>
     <string name="event_checkin_started">Check-in Started</string>
     <string name="event_checkin_resumed">Check-in Resumed</string>
