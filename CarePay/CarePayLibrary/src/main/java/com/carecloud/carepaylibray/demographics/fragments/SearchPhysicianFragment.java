@@ -62,6 +62,9 @@ public class SearchPhysicianFragment extends BaseDialogFragment implements Physi
     private PhysicianDto physician;
     private EndlessRecyclerViewScrollListener scrollListener;
 
+    DemographicsOption allStatesOption;
+    DemographicsOption selectedState;
+
     public SearchPhysicianFragment() {
 
     }
@@ -151,9 +154,10 @@ public class SearchPhysicianFragment extends BaseDialogFragment implements Physi
 
     private void setUpView(View view) {
         List<DemographicsOption> states = new ArrayList<>();
-        DemographicsOption allStatesOption = new DemographicsOption();
+        allStatesOption = new DemographicsOption();
         allStatesOption.setLabel(Label.getLabel("demographics_physician_all_states_label"));
         allStatesOption.setName(Label.getLabel("demographics_physician_all_states_label"));
+        selectedState = allStatesOption;
         states.add(allStatesOption);
         states.addAll(dto.getMetadata().getNewDataModel()
                 .getDemographic().getAddress().getProperties()
@@ -163,6 +167,7 @@ public class SearchPhysicianFragment extends BaseDialogFragment implements Physi
                 new CheckInDemographicsBaseFragment.OnOptionSelectedListener() {
                     @Override
                     public void onOptionSelected(DemographicsOption option) {
+                        selectedState = option;
                         stateTextView.setText(option.getLabel());
                         if (!StringUtil.isNullOrEmpty(searchView.getQuery().toString())) {
                             showProgressDialog();
@@ -221,8 +226,8 @@ public class SearchPhysicianFragment extends BaseDialogFragment implements Physi
         }
         Map<String, String> queries = new HashMap<>();
         queries.put("search", query);
-        if (!Label.getLabel("demographics_physician_all_states_label").equals(stateTextView.getText().toString())) {
-            queries.put("state_code", stateTextView.getText().toString());
+        if (!selectedState.equals(allStatesOption)) {
+            queries.put("state_code", selectedState.getName());
         }
         queries.put("page", String.valueOf(page));
 
