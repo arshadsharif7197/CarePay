@@ -62,6 +62,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPo
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.google.gson.Gson;
 
 import java.util.Date;
@@ -104,6 +105,15 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         if (savedInstanceState == null) {
             WorkflowDTO workflowDTO = getConvertedDTO(WorkflowDTO.class);
             initDto(workflowDTO);
+
+            if(getAppointment() != null) {
+                //Log Check-out Started
+                String[] params = {getString(R.string.param_practice_id), getString(R.string.param_appointment_id), getString(R.string.param_appointment_type), getString(R.string.param_is_guest)};
+                Object[] values = {getAppointment().getMetadata().getPracticeId(), getAppointmentId(), getAppointment().getPayload().getVisitType().getName(), false};
+                MixPanelUtil.logEvent(getString(R.string.event_checkout_started), params, values);
+                MixPanelUtil.startTimer(getString(R.string.timer_checkout));
+            }
+
         }
 
         initAppMode();
@@ -346,6 +356,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         header.put("transition", "true");
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getContinueTransition();
         getWorkflowServiceHelper().execute(transitionDTO, continueCallback, queryMap, header);
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_skipped));
     }
 
     @Override
@@ -353,6 +365,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         PracticePartialPaymentDialogFragment dialog = PracticePartialPaymentDialogFragment
                 .newInstance(paymentsModel, owedAmount);
         displayDialogFragment(dialog, false);
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment));
     }
 
     @Override
@@ -394,6 +408,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         public void onClick(View view) {
             AppointmentsResultModel appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
             goToHome(appointmentsResultModel.getMetadata().getTransitions().getLogout());
+
+            logCheckoutCancelled();
         }
     };
 
@@ -486,7 +502,14 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     @Override
     public void completeCheckout() {
-
+        //Log Check-out Completed
+        if(getAppointment() != null) {
+            String[] params = {getString(R.string.param_practice_id), getString(R.string.param_appointment_id), getString(R.string.param_appointment_type), getString(R.string.param_is_guest)};
+            Object[] values = {getAppointment().getMetadata().getPracticeId(), getAppointmentId(), getAppointment().getPayload().getVisitType().getName(), false};
+            MixPanelUtil.logEvent(getString(R.string.event_checkout_completed), params, values);
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_checkout_completed), 1);
+            MixPanelUtil.endTimer(getString(R.string.timer_checkout));
+        }
     }
 
     @Override
@@ -659,5 +682,18 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                     .findFragmentById(R.id.root_layout))
                     .setSelectedProvider(appointmentResourcesDTO.getResource().getProvider());
         }
+    }
+
+    private void logCheckoutCancelled(){
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
+        String currentStep = null;
+        if(currentFragment instanceof NextAppointmentFragment){
+            currentStep = getString(R.string.step_appointment);
+        }else if (currentFragment instanceof ResponsibilityCheckOutFragment){
+            currentStep = getString(R.string.step_payment);
+        }else if (currentFragment instanceof CheckOutFormFragment){
+            currentStep = getString(R.string.step_checkout_forms);
+        }
+        MixPanelUtil.logEvent(getString(R.string.event_checkout_cancelled), getString(R.string.param_last_completed_step), currentStep);
     }
 }

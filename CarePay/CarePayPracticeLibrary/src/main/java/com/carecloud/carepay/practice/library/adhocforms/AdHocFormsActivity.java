@@ -25,6 +25,7 @@ import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -121,6 +122,15 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         Intent intent = new Intent(this, CompleteCheckActivity.class);
         intent.putExtra(CarePayConstants.EXTRA_BUNDLE, bundle);
         startActivity(intent);
+
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_patient_id),
+                getString(R.string.param_forms_count)};
+        Object[] values = {getApplicationMode().getUserPracticeDTO().getPracticeId(),
+                appointmentModel.getPayload().getDemographicDTO().getPayload().getPersonalDetails().getPatientId(),
+                forms.size()};
+        MixPanelUtil.logEvent(getString(R.string.event_adhoc_forms_completed), params, values);
+
     }
 
     @Override
@@ -149,6 +159,13 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+
+            String[] params = {getString(R.string.param_practice_id),
+                    getString(R.string.param_patient_id)};
+            Object[] values = {getApplicationMode().getUserPracticeDTO().getPracticeId(),
+                    appointmentModel.getPayload().getDemographicDTO().getPayload().getPersonalDetails().getPatientId()};
+            MixPanelUtil.logEvent(getString(R.string.event_adhoc_forms_cancelled), params, values);
+
         }
 
         @Override
