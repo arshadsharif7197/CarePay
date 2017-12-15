@@ -22,7 +22,6 @@ import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -133,10 +132,6 @@ public class AdHocFormsListFragment extends BaseDialogFragment
             Bundle bundle = new Bundle();
             bundle.putSerializable("selectedForms", selectedForms);
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, bundle);
-
-            String[] params = {getString(R.string.param_practice_id), getString(R.string.param_patient_id)};
-            Object[] values = {getApplicationMode().getUserPracticeDTO().getPracticeId(), patientId};
-            MixPanelUtil.logEvent(getString(R.string.event_adhoc_forms_started), params, values);
         }
 
         @Override

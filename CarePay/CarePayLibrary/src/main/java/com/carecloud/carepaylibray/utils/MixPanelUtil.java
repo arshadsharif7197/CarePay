@@ -89,17 +89,14 @@ public class MixPanelUtil {
     public static void setUser(Context context, String userId, DemographicPayloadDTO demographics){
         if(!isDebug && mixpanel!=null) {
             mixpanel.identify(userId+"");
-//            MixpanelAPI.People people = mixpanelAPI.getPeople();
             mixpanel.getPeople().identify(userId+"");
-//            mixpanelAPI.getPeople().setPushRegistrationId(deviceID);
-//            mixpanel.getPeople().set("$name", signInResponse.getPayload().getSignIn().getMetadata().getUsername()+"");
-//            mixpanel.getPeople().set("$email", user.getEmail());
-//            mixpanel.getPeople().set("$phone", user.getPhoneNumber());
-            mixpanel.getPeople().set(context.getString(R.string.people_gender), demographics.getPersonalDetails().getGender());
-            mixpanel.getPeople().set(context.getString(R.string.people_dob), demographics.getPersonalDetails().getDateOfBirth());
-            mixpanel.getPeople().set(context.getString(R.string.people_ethnicity), demographics.getPersonalDetails().getEthnicity());
-            mixpanel.getPeople().set(context.getString(R.string.people_race), demographics.getPersonalDetails().getPrimaryRace());
-            mixpanel.getPeople().set(context.getString(R.string.people_language), demographics.getPersonalDetails().getPreferredLanguage());
+            if(demographics != null) {
+                mixpanel.getPeople().set(context.getString(R.string.people_gender), demographics.getPersonalDetails().getGender());
+                mixpanel.getPeople().set(context.getString(R.string.people_dob), demographics.getPersonalDetails().getDateOfBirth());
+                mixpanel.getPeople().set(context.getString(R.string.people_ethnicity), demographics.getPersonalDetails().getEthnicity());
+                mixpanel.getPeople().set(context.getString(R.string.people_race), demographics.getPersonalDetails().getPrimaryRace());
+                mixpanel.getPeople().set(context.getString(R.string.people_language), demographics.getPersonalDetails().getPreferredLanguage());
+            }
         }
     }
 

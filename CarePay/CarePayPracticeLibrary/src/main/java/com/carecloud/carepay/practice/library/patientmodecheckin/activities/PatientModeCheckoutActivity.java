@@ -157,12 +157,18 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                 for (AppointmentDTO appointmentDTO : appointmentsResultModel.getPayload().getAppointments()) {
                     if (appointmentDTO.getPayload().getId().equals(appointmentId)) {
                         username = appointmentDTO.getMetadata().getUsername();
+
+                        MixPanelUtil.setUser(getContext(), appointmentDTO.getMetadata().getUserId(), null);
+
                         break;
                     }
                 }
             } else if (paymentsModel != null) {
-                username = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances()
-                        .get(0).getMetadata().getUsername();
+                PendingBalanceDTO pendingBalanceDTO = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances()
+                        .get(0);
+                username = pendingBalanceDTO.getMetadata().getUsername();
+
+                MixPanelUtil.setUser(getContext(), pendingBalanceDTO.getMetadata().getUserId(), null);
             }
 
             if (username != null) {

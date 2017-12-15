@@ -24,5 +24,6 @@
     <!--Incremental Properties-->
 
     <!--People Properties-->
+    <string name="people_is_practice_user">Is Practice User</string>
 
 </resources>

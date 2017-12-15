@@ -21,6 +21,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -219,6 +220,7 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
                     iSession.getAppAuthorizationHelper().setUser(iSession.getApplicationMode().getUserPracticeDTO().getUserName());
                     ((BasePracticeActivity) context).onPinConfirmationCheck(true, pinEditText.getText().toString());
                     dismiss();
+                    identifyPracticeUser(patientModeSwitchPinResponseDTO.getPayload().getUserPracticesList().get(0).getUserId());
                 }
             }
         }
@@ -254,6 +256,11 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
         public void setException(String exception) {
             this.exception = exception;
         }
+    }
+
+    private void identifyPracticeUser(String userId){
+        MixPanelUtil.setUser(context, userId, null);
+        MixPanelUtil.addCustomPeopleProperty(context.getString(R.string.people_is_practice_user), true);
     }
 
 }

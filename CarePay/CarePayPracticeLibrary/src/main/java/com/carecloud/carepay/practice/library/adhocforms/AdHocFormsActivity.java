@@ -16,11 +16,11 @@ import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.CompleteCheckActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
@@ -34,7 +34,7 @@ import java.util.Map;
 
 public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFormsInterface {
 
-    private AppointmentsResultModel appointmentModel;
+    private AdHocFormsModel adhocFormsModel;
     private ArrayList<PracticeForm> forms;
     private AdHocRecyclerViewAdapter adapter;
 
@@ -42,14 +42,16 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ad_hoc_forms);
-        appointmentModel = getConvertedDTO(AppointmentsResultModel.class);
+        adhocFormsModel = getConvertedDTO(AdHocFormsModel.class);
         Bundle bundle = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
         SelectedAdHocForms selectedAdHocForms = (SelectedAdHocForms) bundle.getSerializable("selectedForms");
+
+        switchToPatientMode();
 
         forms = new ArrayList<>();
         if(selectedAdHocForms != null) {
             for (String uuid : selectedAdHocForms.getForms()) {
-                for (PracticeForm practiceForm : appointmentModel.getMetadata().getDataModels()
+                for (PracticeForm practiceForm : adhocFormsModel.getMetadata().getDataModels()
                         .getPracticeForms()) {
                     if (uuid.equals(practiceForm.getPayload().get("uuid").toString().replace("\"", ""))) {
                         forms.add(practiceForm);
@@ -83,13 +85,13 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
 
     private void showPinDialog() {
         ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(getContext(),
-                appointmentModel.getMetadata().getLinks().getPinpad(), false);
+                adhocFormsModel.getMetadata().getLinks().getPinpad(), false);
         confirmationPinDialog.show();
     }
 
     @Override
     public DTO getDto() {
-        return appointmentModel;
+        return adhocFormsModel;
     }
 
     @Override
@@ -127,7 +129,7 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
                 getString(R.string.param_patient_id),
                 getString(R.string.param_forms_count)};
         Object[] values = {getApplicationMode().getUserPracticeDTO().getPracticeId(),
-                appointmentModel.getPayload().getDemographicDTO().getPayload().getPersonalDetails().getPatientId(),
+                adhocFormsModel.getPayload().getAdhocFormsPatientModeInfo().getMetadata().getPatientId(),
                 forms.size()};
         MixPanelUtil.logEvent(getString(R.string.event_adhoc_forms_completed), params, values);
 
@@ -142,7 +144,7 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
 
     @Override
     public void onPinConfirmationCheck(boolean isCorrectPin, String pin) {
-        TransitionDTO transitionDTO = appointmentModel.getMetadata().getTransitions().getPracticeMode();
+        TransitionDTO transitionDTO = adhocFormsModel.getMetadata().getTransitions().getPracticeMode();
         Map<String, String> query = new HashMap<>();
         query.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
         query.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
@@ -163,7 +165,7 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
             String[] params = {getString(R.string.param_practice_id),
                     getString(R.string.param_patient_id)};
             Object[] values = {getApplicationMode().getUserPracticeDTO().getPracticeId(),
-                    appointmentModel.getPayload().getDemographicDTO().getPayload().getPersonalDetails().getPatientId()};
+                    adhocFormsModel.getPayload().getAdhocFormsPatientModeInfo().getMetadata().getPatientId()};
             MixPanelUtil.logEvent(getString(R.string.event_adhoc_forms_cancelled), params, values);
 
         }
@@ -175,4 +177,18 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+    private void switchToPatientMode(){
+        getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
+        getAppAuthorizationHelper().setUser(adhocFormsModel.getPayload().getAdhocFormsPatientModeInfo().getMetadata().getUsername());
+
+        MixPanelUtil.setUser(getContext(), adhocFormsModel.getPayload().getAdhocFormsPatientModeInfo().getMetadata().getUserId(), null);
+
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_patient_id)};
+        Object[] values = {getApplicationMode().getUserPracticeDTO().getPracticeId(),
+                adhocFormsModel.getPayload().getAdhocFormsPatientModeInfo().getMetadata().getPatientId()};
+        MixPanelUtil.logEvent(getString(R.string.event_adhoc_forms_started), params, values);
+
+    }
 }

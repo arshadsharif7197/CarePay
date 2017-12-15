@@ -49,6 +49,7 @@ import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.signinsignup.fragments.ResetPasswordFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
@@ -368,6 +369,8 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             queryMap.put("patient_id", signInResponse.getPayload().getSignIn().getMetadata().getPatientId());
             getApplicationMode().setPatientId(signInResponse.getPayload().getSignIn().getMetadata().getPatientId());
             getWorkflowServiceHelper().execute(transitionDTO, signInCallback, queryMap);
+
+            identifyPatientUser(signInResponse.getPayload().getSignIn().getMetadata().getUserId());
         }
     }
 
@@ -419,6 +422,8 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         queryMap.put("practice_mgmt", userPractice.getPracticeMgmt());
         queryMap.put("practice_id", userPractice.getPracticeId());
         getWorkflowServiceHelper().execute(transitionDTO, signInCallback, queryMap);
+
+        identifyPracticeUser(userPractice.getUserId());
     }
 
     @Override
@@ -482,6 +487,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             if (practiceList.size() == 1) {
                 navigateToWorkFlow(workflowDTO);
                 setSignInButtonClickable(true);
+                identifyPracticeUser(practiceList.get(0).getUserId());
             } else {
                 showPracticeSearchFragment(workflowDTO);
             }
@@ -530,7 +536,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         args.putString(CarePayConstants.PRACTICE_SELECTION_BUNDLE, gson.toJson(workflowDTO));
         PracticeSearchFragment fragment = new PracticeSearchFragment();
         fragment.setArguments(args);
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
     }
 
     private boolean areAllFieldsValid(String email, String password) {
@@ -579,5 +585,14 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         if (requestCode == RESET_PASSWORD && resultCode == ResetPasswordFragment.GO_TO_HOME) {
             finish();
         }
+    }
+
+    private void identifyPracticeUser(String userId){
+        MixPanelUtil.setUser(this, userId, null);
+        MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_is_practice_user), true);
+    }
+
+    private void identifyPatientUser(String userId){
+        MixPanelUtil.setUser(this, userId, null);
     }
 }
