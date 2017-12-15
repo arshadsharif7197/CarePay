@@ -100,6 +100,16 @@ public class MixPanelUtil {
         }
     }
 
+    public static void setDemographics(Context context, DemographicPayloadDTO demographics){
+        if(!isDebug && mixpanel!=null && demographics != null) {
+            mixpanel.getPeople().set(context.getString(R.string.people_gender), demographics.getPersonalDetails().getGender());
+            mixpanel.getPeople().set(context.getString(R.string.people_dob), demographics.getPersonalDetails().getDateOfBirth());
+            mixpanel.getPeople().set(context.getString(R.string.people_ethnicity), demographics.getPersonalDetails().getEthnicity());
+            mixpanel.getPeople().set(context.getString(R.string.people_race), demographics.getPersonalDetails().getPrimaryRace());
+            mixpanel.getPeople().set(context.getString(R.string.people_language), demographics.getPersonalDetails().getPreferredLanguage());
+        }
+    }
+
     /**
      * Utility to start event timing
      * @param trackingEvent event name
