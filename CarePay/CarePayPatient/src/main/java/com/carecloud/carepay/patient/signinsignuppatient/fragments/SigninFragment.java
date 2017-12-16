@@ -25,7 +25,6 @@ import com.carecloud.carepay.patient.selectlanguage.fragments.SelectLanguageFrag
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
@@ -159,7 +158,7 @@ public class SigninFragment extends BaseFragment {
     }
 
     private void signIn() {
-        if (areAllFieldsValid(emailEditText.getText().toString(), passwordEditText.getText().toString())) {
+        if (areAllFieldsValid(emailEditText.getText().toString(), passwordEditText.getText().toString()) && signInButton.isClickable()) {
             setSignInButtonClickable(false);
             unifiedSignIn(emailEditText.getText().toString(), passwordEditText.getText().toString(),
                     signInDTO.getMetadata().getTransitions().getSignIn());
