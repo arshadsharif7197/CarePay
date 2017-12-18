@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
@@ -11,6 +12,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentMe
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItemMetadata;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -109,6 +111,10 @@ public class CloverPaymentAdapter {
         }
         intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(paymentLineItems));
         activity.startActivityForResult(intent, CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE, new Bundle());
+
+        String[] params = {activity.getString(R.string.param_payment_amount), activity.getString(R.string.param_payment_type)};
+        Object[] values = {postModel.getAmount(), activity.getString(R.string.payment_clover)};
+        MixPanelUtil.logEvent(activity.getString(R.string.event_payment_started), params, values);
 
     }
 
