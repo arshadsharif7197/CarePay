@@ -160,7 +160,7 @@ public class SigninFragment extends BaseFragment {
     }
 
     private void signIn() {
-        if (areAllFieldsValid(emailEditText.getText().toString(), passwordEditText.getText().toString())) {
+        if (areAllFieldsValid(emailEditText.getText().toString(), passwordEditText.getText().toString()) && signInButton.isClickable()) {
             setSignInButtonClickable(false);
             unifiedSignIn(emailEditText.getText().toString(), passwordEditText.getText().toString(),
                     signInDTO.getMetadata().getTransitions().getSignIn());
