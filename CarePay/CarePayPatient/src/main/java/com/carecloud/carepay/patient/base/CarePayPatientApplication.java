@@ -25,7 +25,7 @@ public class CarePayPatientApplication extends CarePayApplication {
     public void onCreate() {
         super.onCreate();
 
-        mixpanelAPI = MixpanelAPI.getInstance(this, getString(R.string.mixpanel_application_token));
+        mixpanelAPI = MixpanelAPI.getInstance(this.getApplicationContext(), getString(R.string.mixpanel_application_token));
         setHttpConstants();
         registerActivityLifecycleCallbacks(new CarePayActivityLifecycleCallbacks());
     }

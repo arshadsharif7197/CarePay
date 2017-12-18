@@ -33,7 +33,7 @@ import java.util.regex.Matcher;
 
 public class AdHocFormFragment extends BaseWebFormFragment {
 
-    private AppointmentsResultModel appointmentsResultModel;
+    private AdHocFormsModel adhocFormsModel;
     private List<JsonObject> jsonFormSaveResponseArray = new ArrayList<>();
     private List<PracticeForm> formsList;
     private AdHocFormsInterface callback;
@@ -65,7 +65,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        appointmentsResultModel = (AppointmentsResultModel) callback.getDto();
+        adhocFormsModel = (AdHocFormsModel) callback.getDto();
         formsList = callback.getFormsList();
         if(formsList != null) {
             setTotalForms(formsList.size());
@@ -104,7 +104,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
                 userResponse = jsonFormSaveResponseArray.get(displayedFormsIndex);
             } else {
                 String uuid = payload.get("uuid").toString().replace("\"", "");
-                for (ConsentFormUserResponseDTO response : appointmentsResultModel.getPayload().getPatientFormsResponse()) {
+                for (ConsentFormUserResponseDTO response : adhocFormsModel.getPayload().getPatientFormsResponse()) {
                     if (uuid.equals(response.getFormId())) {
                         JsonObject json = new JsonObject();
                         json.addProperty("uuid", response.getFormId());
@@ -141,7 +141,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
 
     @Override
     protected void submitAllForms() {
-        AppointmentMetadataModel patientInfo = appointmentsResultModel.getPayload()
+        AppointmentMetadataModel patientInfo = adhocFormsModel.getPayload()
                 .getAdhocFormsPatientModeInfo().getMetadata();
         Map<String, String> queries = new HashMap<>();
         queries.put("practice_mgmt", patientInfo.getPracticeMgmt());
@@ -154,7 +154,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
 
         Gson gson = new Gson();
         String body = gson.toJson(jsonFormSaveResponseArray);
-        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getUpdateForms();
+        TransitionDTO transitionDTO = adhocFormsModel.getMetadata().getTransitions().getUpdateForms();
         getWorkflowServiceHelper().execute(transitionDTO, updateFormCallBack, body, queries, header);
     }
 

@@ -164,6 +164,9 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
             hideProgressDialog();
             callback.navigateToWorkflow(workflowDTO);
             nextButton.setEnabled(true);
+            if(!workflowDTO.getState().contains("checkout")){
+                callback.completeCheckout();
+            }
         }
 
         @Override

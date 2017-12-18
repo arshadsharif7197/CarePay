@@ -51,6 +51,7 @@ import com.carecloud.carepaylibray.medications.models.MedicationsObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsPostModel;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -571,6 +572,16 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ((ISession) getContext()).hideProgressDialog();
             onUpdate(callback, workflowDTO);
+
+            List<MedicationsObject> modifiedMeds = getAllModifiedMedications();
+            if(!modifiedMeds.isEmpty()){
+                MixPanelUtil.logEvent(getString(R.string.event_updated_meds), getString(R.string.param_meds_count), modifiedMeds.size());
+            }
+
+            List<AllergiesObject> modifiedAllergies = getAllModifiedAllergies();
+            if(!modifiedAllergies.isEmpty()){
+                MixPanelUtil.logEvent(getString(R.string.event_updated_allergies), getString(R.string.param_allergies_count), modifiedAllergies.size());
+            }
 
         }
 

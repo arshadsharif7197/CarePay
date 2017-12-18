@@ -35,14 +35,15 @@ import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter;
 import com.carecloud.carepaylibray.media.MediaScannerPresenter;
 import com.carecloud.carepaylibray.media.MediaViewInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lmenendez on 5/24/17
@@ -155,12 +156,19 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     }
 
     private List<DemographicInsurancePayloadDTO> getInsurances(DemographicDTO demographicDTO) {
+        boolean hasOnePhoto = false;
         List<DemographicInsurancePayloadDTO> insuranceList = new ArrayList<>();
         for (DemographicInsurancePayloadDTO insurance : demographicDTO.getPayload().getDemographics().getPayload().getInsurances()) {
             if (!insurance.isDeleted()) {
                 insuranceList.add(insurance);
             }
+            if (insurance.getInsurancePhotos().size() > 0 && !hasOnePhoto) {
+                hasOnePhoto = true;
+            }
         }
+
+        MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_has_identity_doc), hasOnePhoto);
+
         return insuranceList;
     }
 
@@ -185,6 +193,12 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     private DemographicIdDocPayloadDTO getPostModel() {
         setupImageBase64();
         DemographicIdDocPayloadDTO docPayloadDTO = new DemographicIdDocPayloadDTO();
+        if((hasFrontImage && base64FrontImage != null) ||
+                (hasBackImage && base64BackImage != null)){
+            //Log new Identity Doc
+            MixPanelUtil.logEvent(getString(R.string.event_add_identity_doc), getString(R.string.param_is_checkin), false);
+        }
+
         if (hasFrontImage && base64FrontImage != null) {
             DemographicIdDocPhotoDTO docPhotoDTO = new DemographicIdDocPhotoDTO();
             docPhotoDTO.setPage(FRONT_PIC);

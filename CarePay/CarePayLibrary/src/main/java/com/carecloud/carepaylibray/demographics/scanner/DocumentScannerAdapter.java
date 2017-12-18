@@ -20,6 +20,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
 import com.carecloud.carepaylibray.media.MediaScannerPresenter;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Callback;
@@ -130,6 +131,9 @@ public class DocumentScannerAdapter {
                 }
             }
         }
+
+        MixPanelUtil.addCustomPeopleProperty(context.getString(R.string.people_has_identity_doc),
+                (!StringUtil.isNullOrEmpty(frontPic) || !StringUtil.isNullOrEmpty(backPic)));
 
 
         if (!StringUtil.isNullOrEmpty(frontPic)) {

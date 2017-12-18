@@ -14,6 +14,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
@@ -39,7 +40,9 @@ import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragm
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
 
 public class DemographicsPresenterImpl implements DemographicsPresenter {
     private AppointmentDTO appointmentPayload;
@@ -79,6 +82,8 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
         WorkflowDTO workflowDTO = demographicsView.getConvertedDTO(WorkflowDTO.class);
         displayStartFragment(workflowDTO);
+
+        MixPanelUtil.setDemographics(demographicsView.getContext(), demographicDTO.getPayload().getDemographics().getPayload());
     }
 
     @Override
@@ -113,6 +118,10 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
     private void displayStartFragment(WorkflowDTO workflowDTO) {
         startCheckin = true;
+        boolean isResume = true;
+        boolean isGuest = !ValidationHelper.isValidEmail(((ISession)demographicsView.getContext()).getAppAuthorizationHelper().getCurrUser());
+        String[] params = {getString(R.string.param_practice_id), getString(R.string.param_appointment_id), getString(R.string.param_appointment_type), getString(R.string.param_is_guest)};
+        Object[] values = {getAppointment().getMetadata().getPracticeId(), getAppointmentId(), getAppointment().getPayload().getVisitType().getName(), isGuest};
         switch (workflowDTO.getState()) {
             case NavigationStateConstants.CONSENT_FORMS:
                 navigateToConsentForms(workflowDTO);
@@ -125,7 +134,20 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
                 break;
             default:
                 navigateToDemographicFragment(currentDemographicStep);
+
+                if(currentDemographicStep == 1){
+                    isResume = false;
+                    //Log Check-in Started
+                    if(getAppointment() != null) {
+                        MixPanelUtil.logEvent(getString(R.string.event_checkin_started), params, values);
+                    }
+                }
+                break;
         }
+        if(isResume){
+            MixPanelUtil.logEvent(getString(R.string.event_checkin_resumed), params, values);
+        }
+        MixPanelUtil.startTimer(getString(R.string.timer_checkin));
         startCheckin = false;
     }
 
@@ -403,7 +425,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     protected boolean shouldPreventBackNav() {
-        return false;
+        return getCurrentStep() == 1;
     }
 
     @Override
@@ -454,5 +476,9 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         if (fragment instanceof EmergencyContactFragmentInterface) {
             ((EmergencyContactFragmentInterface) fragment).updateEmergencyContact(emergencyContact);
         }
+    }
+
+    private String getString(int id){
+        return demographicsView.getContext().getString(id);
     }
 }

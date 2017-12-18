@@ -25,7 +25,6 @@ import com.carecloud.carepay.patient.selectlanguage.fragments.SelectLanguageFrag
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
@@ -38,6 +37,8 @@ import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.signinsignup.fragments.ResetPasswordFragment;
+import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
@@ -159,7 +160,7 @@ public class SigninFragment extends BaseFragment {
     }
 
     private void signIn() {
-        if (areAllFieldsValid(emailEditText.getText().toString(), passwordEditText.getText().toString())) {
+        if (areAllFieldsValid(emailEditText.getText().toString(), passwordEditText.getText().toString()) && signInButton.isClickable()) {
             setSignInButtonClickable(false);
             unifiedSignIn(emailEditText.getText().toString(), passwordEditText.getText().toString(),
                     signInDTO.getMetadata().getTransitions().getSignIn());
@@ -255,6 +256,11 @@ public class SigninFragment extends BaseFragment {
             } else {
                 PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
             }
+
+            MyHealthDto myHealthDto = DtoHelper.getConvertedDTO(MyHealthDto.class, workflowDTO);
+            String userId = myHealthDto.getPayload().getPracticePatientIds().get(0).getUserId();
+            MixPanelUtil.setUser(getContext(), userId, myHealthDto.getPayload().getDemographicDTO());
+
         }
 
         @Override
