@@ -37,6 +37,8 @@ import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.signinsignup.fragments.ResetPasswordFragment;
+import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
@@ -254,6 +256,11 @@ public class SigninFragment extends BaseFragment {
             } else {
                 PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
             }
+
+            MyHealthDto myHealthDto = DtoHelper.getConvertedDTO(MyHealthDto.class, workflowDTO);
+            String userId = myHealthDto.getPayload().getPracticePatientIds().get(0).getUserId();
+            MixPanelUtil.setUser(getContext(), userId, myHealthDto.getPayload().getDemographicDTO());
+
         }
 
         @Override

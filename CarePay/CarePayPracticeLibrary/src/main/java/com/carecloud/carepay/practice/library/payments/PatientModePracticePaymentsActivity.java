@@ -40,6 +40,7 @@ import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -143,6 +144,8 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         PracticePartialPaymentDialogFragment dialog = PracticePartialPaymentDialogFragment
                 .newInstance(paymentResultModel, owedAmount);
         displayDialogFragment(dialog, false);
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment));
     }
 
     @Override
@@ -150,6 +153,8 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         PracticePaymentMethodDialogFragment fragment = PracticePaymentMethodDialogFragment
                 .newInstance(paymentsModel, amount);
         displayDialogFragment(fragment, false);
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment));
     }
 
     @Override

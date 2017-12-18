@@ -542,7 +542,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             String[] params = {getString(R.string.param_appointment_type), getString(R.string.param_practice_id), getString(R.string.param_practice_name)};
             String[] values = {selectedVisitTypeDTO.getName(), practiceId, practiceName};
             MixPanelUtil.logEvent(getString(R.string.event_appointment_requested), params, values);
-            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_scheduled), 1);
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
             onAppointmentRequestSuccess();
         }
 
@@ -603,6 +603,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
                 .newInstance(paymentsModel, amount);
         viewHandler.navigateToFragment(prepaymentFragment, true);
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment));
     }
 
     @Override

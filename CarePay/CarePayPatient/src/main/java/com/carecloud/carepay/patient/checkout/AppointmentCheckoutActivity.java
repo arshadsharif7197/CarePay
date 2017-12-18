@@ -235,16 +235,22 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata()
                 .getPaymentsTransitions().getContinueTransition();
         getWorkflowServiceHelper().execute(transitionDTO, continueCallback, queryMap, header);
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_skipped));
     }
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         replaceFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount), true);
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment));
     }
 
     @Override
     public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
         new PartialPaymentDialog(getContext(), paymentsModel, selectedBalance).show();
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment));
     }
 
     @Override
