@@ -274,7 +274,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, paymentModelJson, queries, header);
 
         String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
-        Object[] values = {amountToMakePayment, getString(R.string.payment_new_card)};
+        Object[] values = {amountToMakePayment, getString(R.string.payment_card_on_file)};
         MixPanelUtil.logEvent(getString(R.string.event_payment_started), params, values);
     }
 
@@ -333,7 +333,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
             System.out.print(exceptionMessage);
 
             String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
-            Object[] values = {amountToMakePayment, getString(R.string.payment_new_card)};
+            Object[] values = {amountToMakePayment, getString(R.string.payment_card_on_file)};
             MixPanelUtil.logEvent(getString(R.string.event_payment_failed), params, values);
         }
     };

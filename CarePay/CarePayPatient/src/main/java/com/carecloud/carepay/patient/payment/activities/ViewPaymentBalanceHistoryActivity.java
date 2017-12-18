@@ -36,6 +36,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.gson.Gson;
 
@@ -131,6 +132,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         replaceFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount), true);
         displayToolbar(false, toolBarTitle);
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment));
     }
 
     @Override

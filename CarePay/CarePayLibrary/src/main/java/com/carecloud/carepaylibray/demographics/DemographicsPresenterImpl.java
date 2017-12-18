@@ -82,6 +82,8 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
         WorkflowDTO workflowDTO = demographicsView.getConvertedDTO(WorkflowDTO.class);
         displayStartFragment(workflowDTO);
+
+        MixPanelUtil.setDemographics(demographicsView.getContext(), demographicDTO.getPayload().getDemographics().getPayload());
     }
 
     @Override
