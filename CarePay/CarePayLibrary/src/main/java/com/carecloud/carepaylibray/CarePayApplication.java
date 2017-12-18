@@ -7,7 +7,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
-import com.carecloud.carepaylibray.base.IApplicationSession;
+import com.carecloud.carepay.service.library.base.IApplicationSession;
 import com.orm.SugarContext;
 
 /**
