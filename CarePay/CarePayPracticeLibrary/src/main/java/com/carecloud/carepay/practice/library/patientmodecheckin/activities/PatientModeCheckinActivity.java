@@ -10,6 +10,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -55,22 +58,23 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
+import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class PatientModeCheckinActivity extends BasePracticeActivity implements
         DemographicsView, PaymentNavigationCallback, PaymentMethodDialogInterface {
 
     public final static int SUBFLOW_PAYMENTS = 3;
-
     private PatientModeDemographicsPresenter presenter;
-
     private PaymentsModel paymentDTO;
-
     private View[] checkInFlowViews;
-
     private MediaResultListener resultListener;
 
     @Override
@@ -92,7 +96,34 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         initializeHomeButton();
         initializeLeftNavigation();
         presenter = new PatientModeDemographicsPresenter(this, icicle, this);
+        initializeLanguageSpinner();
 
+    }
+
+    private void initializeLanguageSpinner() {
+        final List<String> languages = new ArrayList<>();
+        for (OptionDTO language : presenter.getLanguages()) {
+            languages.add(language.getCode().toUpperCase());
+        }
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.home_spinner_item, languages);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner languageSpinner = (Spinner) findViewById(R.id.languageSpinner);
+        languageSpinner.setAdapter(spinnerArrayAdapter);
+        languageSpinner.setSelection(spinnerArrayAdapter.getPosition(getApplicationPreferences()
+                .getUserLanguage().toUpperCase()), false);
+        final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
+        headers.put("username", getApplicationPreferences().getUserName());
+        headers.put("username_patient", getApplicationPreferences().getPatientId());
+        languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                changeLanguage(presenter.getLanguageLink(), languages.get(position).toLowerCase(), headers);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
     @Override

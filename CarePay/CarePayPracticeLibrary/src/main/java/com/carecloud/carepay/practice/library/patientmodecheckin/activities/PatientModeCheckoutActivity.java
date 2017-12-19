@@ -8,6 +8,9 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAvailableHoursDialogFragment;
@@ -60,13 +63,16 @@ import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
+import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -106,7 +112,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             WorkflowDTO workflowDTO = getConvertedDTO(WorkflowDTO.class);
             initDto(workflowDTO);
 
-            if(getAppointment() != null) {
+            if (getAppointment() != null) {
                 //Log Check-out Started
                 String[] params = {getString(R.string.param_practice_id), getString(R.string.param_appointment_id), getString(R.string.param_appointment_type), getString(R.string.param_is_guest)};
                 Object[] values = {getAppointment().getMetadata().getPracticeId(), getAppointmentId(), getAppointment().getPayload().getVisitType().getName(), false};
@@ -137,6 +143,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
             showCheckOutFormFragment();
         }
+        initializeLanguageSpinner();
 
     }
 
@@ -146,6 +153,44 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
         View home = findViewById(R.id.btnHome);
         home.setOnClickListener(homeClick);
+    }
+
+    private void initializeLanguageSpinner() {
+        final List<String> languages = new ArrayList<>();
+        if (appointmentsResultModel != null) {
+            for (OptionDTO language : appointmentsResultModel.getPayload().getLanguages()) {
+                languages.add(language.getCode().toUpperCase());
+            }
+        } else {
+            for (OptionDTO language : paymentsModel.getPaymentPayload().getLanguages()) {
+                languages.add(language.getCode().toUpperCase());
+            }
+        }
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.home_spinner_item, languages);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner languageSpinner = (Spinner) findViewById(R.id.languageSpinner);
+        languageSpinner.setAdapter(spinnerArrayAdapter);
+        languageSpinner.setSelection(spinnerArrayAdapter.getPosition(getApplicationPreferences()
+                .getUserLanguage().toUpperCase()), false);
+        final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
+        headers.put("username", getApplicationPreferences().getUserName());
+        headers.put("username_patient", getApplicationPreferences().getPatientId());
+        languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                TransitionDTO transition;
+                if (appointmentsResultModel != null) {
+                    transition = appointmentsResultModel.getMetadata().getLinks().getLanguage();
+                } else {
+                    transition = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getLanguage();
+                }
+                changeLanguage(transition, languages.get(position).toLowerCase(), headers);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
     private void initAppMode() {
@@ -509,7 +554,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     @Override
     public void completeCheckout() {
         //Log Check-out Completed
-        if(getAppointment() != null) {
+        if (getAppointment() != null) {
             String[] params = {getString(R.string.param_practice_id), getString(R.string.param_appointment_id), getString(R.string.param_appointment_type), getString(R.string.param_is_guest)};
             Object[] values = {getAppointment().getMetadata().getPracticeId(), getAppointmentId(), getAppointment().getPayload().getVisitType().getName(), false};
             MixPanelUtil.logEvent(getString(R.string.event_checkout_completed), params, values);
@@ -690,14 +735,14 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         }
     }
 
-    private void logCheckoutCancelled(){
+    private void logCheckoutCancelled() {
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
         String currentStep = null;
-        if(currentFragment instanceof NextAppointmentFragment){
+        if (currentFragment instanceof NextAppointmentFragment) {
             currentStep = getString(R.string.step_appointment);
-        }else if (currentFragment instanceof ResponsibilityCheckOutFragment){
+        } else if (currentFragment instanceof ResponsibilityCheckOutFragment) {
             currentStep = getString(R.string.step_payment);
-        }else if (currentFragment instanceof CheckOutFormFragment){
+        } else if (currentFragment instanceof CheckOutFormFragment) {
             currentStep = getString(R.string.step_checkout_forms);
         }
         MixPanelUtil.logEvent(getString(R.string.event_checkout_cancelled), getString(R.string.param_last_completed_step), currentStep);

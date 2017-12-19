@@ -196,4 +196,12 @@ public class AdHocFormFragment extends BaseWebFormFragment {
         }
         return false;
     }
+
+    public List<JsonObject> getJsonFormSaveResponseArray() {
+        return jsonFormSaveResponseArray;
+    }
+
+    public void setJsonFormSaveResponseArray(List<JsonObject> jsonFormSaveResponseArray) {
+        this.jsonFormSaveResponseArray = jsonFormSaveResponseArray;
+    }
 }

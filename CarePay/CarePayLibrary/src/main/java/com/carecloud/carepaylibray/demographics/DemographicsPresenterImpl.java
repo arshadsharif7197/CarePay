@@ -48,7 +48,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     private AppointmentDTO appointmentPayload;
     private DemographicsView demographicsView;
 
-    private DemographicDTO demographicDTO;
+    protected DemographicDTO demographicDTO;
     private final boolean isPatientMode;
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
 
@@ -89,7 +89,9 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     @Override
     public void onSaveInstanceState(Bundle icicle) {
         icicle.putInt(SAVED_STEP_KEY, currentDemographicStep);
-        icicle.putString(CURRENT_ICICLE_FRAGMENT, currentFragment.getClass().getName());
+        if (currentFragment != null) {
+            icicle.putString(CURRENT_ICICLE_FRAGMENT, currentFragment.getClass().getName());
+        }
     }
 
     @Override
@@ -119,7 +121,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     private void displayStartFragment(WorkflowDTO workflowDTO) {
         startCheckin = true;
         boolean isResume = true;
-        boolean isGuest = !ValidationHelper.isValidEmail(((ISession)demographicsView.getContext()).getAppAuthorizationHelper().getCurrUser());
+        boolean isGuest = !ValidationHelper.isValidEmail(((ISession) demographicsView.getContext()).getAppAuthorizationHelper().getCurrUser());
         String[] params = {getString(R.string.param_practice_id), getString(R.string.param_appointment_id), getString(R.string.param_appointment_type), getString(R.string.param_is_guest)};
         Object[] values = {getAppointment().getMetadata().getPracticeId(), getAppointmentId(), getAppointment().getPayload().getVisitType().getName(), isGuest};
         switch (workflowDTO.getState()) {
@@ -135,16 +137,16 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             default:
                 navigateToDemographicFragment(currentDemographicStep);
 
-                if(currentDemographicStep == 1){
+                if (currentDemographicStep == 1) {
                     isResume = false;
                     //Log Check-in Started
-                    if(getAppointment() != null) {
+                    if (getAppointment() != null) {
                         MixPanelUtil.logEvent(getString(R.string.event_checkin_started), params, values);
                     }
                 }
                 break;
         }
-        if(isResume){
+        if (isResume) {
             MixPanelUtil.logEvent(getString(R.string.event_checkin_resumed), params, values);
         }
         MixPanelUtil.startTimer(getString(R.string.timer_checkin));
@@ -478,7 +480,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         }
     }
 
-    private String getString(int id){
+    private String getString(int id) {
         return demographicsView.getContext().getString(id);
     }
 }
