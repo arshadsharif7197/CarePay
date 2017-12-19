@@ -45,17 +45,6 @@ public class SharedPreferenceLabelProvider implements LabelProvider {
     }
 
     /**
-     * Returns the language resource for an specified key. If there is no resource, returns the defaultValue.
-     *
-     * @param key          the key related to the value
-     * @param defaultValue returns this if key-value does not exits
-     */
-    @Override
-    public String getValue(String key, String defaultValue) {
-        return hasValue(key) ? getValue(key) : defaultValue;
-    }
-
-    /**
      * Returns a boolean indicating if the language resource exists or not for the specified key.
      *
      * @param key the key related to the value

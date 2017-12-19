@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.homescreen.dtos;
 
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -27,9 +28,13 @@ public class PracticeHomeScreenPayloadDTO {
     @SerializedName("office_news_post")
     @Expose
     private HomeScreenOfficeNewsDTO officeNewsPost;
+    @SerializedName("languages")
+    @Expose
+    private List<OptionDTO> languages = new ArrayList<>();
 
     /**
      * The officeNewsPost
+     *
      * @return officeNewsPost
      */
     public HomeScreenOfficeNewsDTO getOfficeNewsPost() {
@@ -38,6 +43,7 @@ public class PracticeHomeScreenPayloadDTO {
 
     /**
      * The officeNewsPost
+     *
      * @param officeNewsPost officeNewsPost
      */
     public void setOfficeNewsPost(HomeScreenOfficeNewsDTO officeNewsPost) {
@@ -46,6 +52,7 @@ public class PracticeHomeScreenPayloadDTO {
 
     /**
      * The officeNews
+     *
      * @return officeNews
      */
     public List<HomeScreenOfficeNewsDTO> getOfficeNews() {
@@ -54,6 +61,7 @@ public class PracticeHomeScreenPayloadDTO {
 
     /**
      * The officeNews
+     *
      * @param officeNews officeNews
      */
     public void setOfficeNews(List<HomeScreenOfficeNewsDTO> officeNews) {
@@ -61,56 +69,52 @@ public class PracticeHomeScreenPayloadDTO {
     }
 
     /**
-     *
-     * @return
-     * The appointmentCounts
+     * @return The appointmentCounts
      */
     public HomeScreenAppointmentCountsDTO getAppointmentCounts() {
         return appointmentCounts;
     }
 
     /**
-     *
-     * @param appointmentCounts
-     * The appointment_counts
+     * @param appointmentCounts The appointment_counts
      */
     public void setAppointmentCounts(HomeScreenAppointmentCountsDTO appointmentCounts) {
         this.appointmentCounts = appointmentCounts;
     }
 
     /**
-     *
-     * @return
-     * The alerts
+     * @return The alerts
      */
     public HomeScreenAlertsDTO getAlerts() {
         return alerts;
     }
 
     /**
-     *
-     * @param alerts
-     * The alerts
+     * @param alerts The alerts
      */
     public void setAlerts(HomeScreenAlertsDTO alerts) {
         this.alerts = alerts;
     }
 
     /**
-     *
-     * @return
-     * The userPractices
+     * @return The userPractices
      */
     public List<UserPracticeDTO> getUserPractices() {
         return userPractices;
     }
 
     /**
-     *
-     * @param userPractices
-     * The user_practices
+     * @param userPractices The user_practices
      */
     public void setUserPractices(List<UserPracticeDTO> userPractices) {
         this.userPractices = userPractices;
+    }
+
+    public List<OptionDTO> getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(List<OptionDTO> languages) {
+        this.languages = languages;
     }
 }

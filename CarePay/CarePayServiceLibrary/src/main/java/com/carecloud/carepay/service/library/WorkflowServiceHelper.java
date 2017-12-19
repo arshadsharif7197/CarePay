@@ -542,15 +542,22 @@ public class WorkflowServiceHelper {
      * @param labels the JsonObject containing all the labels
      */
     public void saveLabels(JsonObject labels) {
-//        String state = workflowDTO.getState();
+        saveLabels(labels, "");
+    }
+
+    /**
+     * Persist all Labels contained in Workflow DTO
+     *
+     * @param labels the JsonObject containing all the labels
+     * @param prefix the prefix added in the key (most used for patient labels)
+     */
+    public void saveLabels(JsonObject labels, String prefix) {
         if (labels != null) {
             Set<Map.Entry<String, JsonElement>> set = labels.entrySet();
             for (Map.Entry<String, JsonElement> entry : set) {
-                Label.putLabelAsync(entry.getKey(), entry.getValue().getAsString());
+                Label.putLabelAsync(prefix + entry.getKey(), entry.getValue().getAsString());
             }
             Label.applyAsyncLabels();
-//            SharedPreferences.Editor editor = ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences().edit();
-//            editor.putBoolean("labelFor" + state, true).apply();
         }
     }
 

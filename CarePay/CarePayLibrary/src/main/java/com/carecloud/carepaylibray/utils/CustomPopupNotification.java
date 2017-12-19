@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.base.IApplicationSession;
+import com.carecloud.carepay.service.library.base.IApplicationSession;
 import com.carecloud.carepaylibray.qrcodescanner.DisplayUtils;
 
 /**

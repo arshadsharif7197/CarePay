@@ -738,7 +738,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 }
                 return false;
             } else {
-                unsetFieldError(view, R.id.secondaryPhoneDemographicsLayout);
+                unsetFieldError(view, R.id.secondaryPhoneInputLayout);
                 showErrorViews(false, (ViewGroup) view.findViewById(R.id.secondaryPhoneDemographicsLayout));
             }
 

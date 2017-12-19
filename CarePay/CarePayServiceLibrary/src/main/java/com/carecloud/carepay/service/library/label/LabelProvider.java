@@ -13,12 +13,6 @@ public interface LabelProvider {
     String getValue(String key);
 
     /**
-     * Returns the language resource for an specified key. If there is no resource, returns the key.
-     * @param key the key related to the value
-     */
-    String getValue(String key, String defaultValue);
-
-    /**
      * Returns a boolean indicating if the language resource exists or not for the specified key.
      * @param key the key related to the value
      */
