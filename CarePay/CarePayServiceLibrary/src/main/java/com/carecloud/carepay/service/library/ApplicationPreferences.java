@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 
+import com.carecloud.carepay.service.library.base.IApplicationSession;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.Defs;
 import com.google.gson.Gson;
 
@@ -53,6 +55,7 @@ public class ApplicationPreferences {
     private String prefix;
     private String userId;
     private String userLanguage;
+    private String patientUserLanguage;
     private String practiceLanguage;
     private Boolean navigateToAppointments;
     private Boolean isTutorialShown;
@@ -108,7 +111,13 @@ public class ApplicationPreferences {
     }
 
     public void setUserLanguage(String newValue) {
+        if (((IApplicationSession) context).getApplicationMode().getApplicationType()
+                .equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)) {
+            patientUserLanguage = newValue;
+            return;
+        }
         userLanguage = newValue;
+        patientUserLanguage = newValue;
         writeStringToSharedPref(PREFERENCE_USER_SELECTED_LANGUAGE, userLanguage);
     }
 
@@ -116,6 +125,10 @@ public class ApplicationPreferences {
      * @return user preferred language. Returns default value if not set.
      */
     public String getUserLanguage() {
+        if (((IApplicationSession) context).getApplicationMode().getApplicationType()
+                .equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)) {
+            return patientUserLanguage;
+        }
         if (userLanguage == null) {
             userLanguage = readStringFromSharedPref(PREFERENCE_USER_SELECTED_LANGUAGE,
                     Resources.getSystem().getConfiguration().locale.getLanguage());

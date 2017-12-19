@@ -3,6 +3,7 @@ package com.carecloud.carepay.service.library.constants;
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.dtos.CognitoDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepay.service.library.label.Label;
 
 /**
  * Created by Jahirul Bhuiyan on 11/16/2016.
@@ -51,6 +52,7 @@ public class ApplicationMode {
 
     public void setApplicationType(ApplicationType applicationType) {
         this.applicationType = applicationType;
+        Label.setApplicationType(applicationType);
     }
 
     public CognitoDTO getCognitoDTO() {

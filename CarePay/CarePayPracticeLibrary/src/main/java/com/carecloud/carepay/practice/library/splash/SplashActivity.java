@@ -8,6 +8,7 @@ import android.view.WindowManager;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -16,6 +17,7 @@ import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.google.gson.JsonObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -79,9 +81,11 @@ public class SplashActivity extends BasePracticeActivity {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             if (workflowDTO.getPayload().has("language_metadata")) {
-                getWorkflowServiceHelper().saveLabels(workflowDTO.getPayload()
-                        .getAsJsonObject("language_metadata").getAsJsonObject("metadata")
-                        .getAsJsonObject("labels"));
+                JsonObject labels = workflowDTO.getPayload().getAsJsonObject("language_metadata")
+                        .getAsJsonObject("metadata").getAsJsonObject("labels");
+                getWorkflowServiceHelper().saveLabels(labels);
+                //set default labels for patient.
+                getWorkflowServiceHelper().saveLabels(labels, CarePayConstants.PATIENT_MODE_LABELS_PREFIX);
                 getApplicationPreferences().setUserLanguage(workflowDTO.getPayload()
                         .getAsJsonObject("language_metadata").get("code").getAsString());
             }

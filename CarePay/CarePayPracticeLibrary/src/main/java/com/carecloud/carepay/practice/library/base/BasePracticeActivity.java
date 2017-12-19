@@ -139,11 +139,28 @@ public abstract class BasePracticeActivity extends BaseActivity
         PracticeNavigationHelper.navigateToWorkflow(this, workflowDTO);
     }
 
-    protected void changeLanguage(TransitionDTO transition, String languageCode) {
+    /**
+     *
+     * @param transition the transition (url) for calling the service
+     * @param languageCode the language code (eg. "en", "es")
+     * @param headers any additional header
+     */
+    protected void changeLanguage(TransitionDTO transition, String languageCode, Map<String, String> headers) {
+        changeLanguage(transition, languageCode, headers, languageCallback);
+    }
+
+    /**
+     *
+     * @param transition the transition (url) for calling the service
+     * @param languageCode the language code (eg. "en", "es")
+     * @param headers any additional header
+     * @param callback an additional callback
+     */
+    protected void changeLanguage(TransitionDTO transition, String languageCode, Map<String, String> headers,
+                                  WorkflowServiceCallback callback) {
         Map<String, String> query = new HashMap<>();
         query.put("language", languageCode);
-        getWorkflowServiceHelper().execute(transition, languageCallback, null, query,
-                getWorkflowServiceHelper().getApplicationStartHeaders());
+        getWorkflowServiceHelper().execute(transition, callback, null, query, headers);
     }
 
     protected WorkflowServiceCallback languageCallback = new WorkflowServiceCallback() {
@@ -155,9 +172,20 @@ public abstract class BasePracticeActivity extends BaseActivity
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             if (workflowDTO.getPayload().has("language_metadata")) {
-                getWorkflowServiceHelper().saveLabels(workflowDTO.getPayload()
-                        .getAsJsonObject("language_metadata").getAsJsonObject("metadata")
-                        .getAsJsonObject("labels"));
+                String prefix = CarePayConstants.PATIENT_MODE_LABELS_PREFIX;
+                if (!getApplicationMode().getApplicationType()
+                        .equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)) {
+                    getWorkflowServiceHelper().saveLabels(workflowDTO.getPayload()
+                            .getAsJsonObject("language_metadata").getAsJsonObject("metadata")
+                            .getAsJsonObject("labels"));
+                    getWorkflowServiceHelper().saveLabels(workflowDTO.getPayload()
+                            .getAsJsonObject("language_metadata").getAsJsonObject("metadata")
+                            .getAsJsonObject("labels"), prefix);
+                }else{
+                    getWorkflowServiceHelper().saveLabels(workflowDTO.getPayload()
+                            .getAsJsonObject("language_metadata").getAsJsonObject("metadata")
+                            .getAsJsonObject("labels"), prefix);
+                }
                 getApplicationPreferences().setUserLanguage(workflowDTO.getPayload()
                         .getAsJsonObject("language_metadata").get("code").getAsString());
             }
