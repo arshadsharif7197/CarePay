@@ -106,7 +106,7 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
 
         DateUtil dateUtil = DateUtil.getInstance().setToCurrent();
         TextView date = (TextView) view.findViewById(R.id.payment_confirm_date);
-        date.setText(dateUtil.toStringWithFormatMmSlashDdSlashYyyy());
+        date.setText(dateUtil.getDateAsMonthLiteralDayOrdinalYear());
 
         TextView practice = (TextView) view.findViewById(R.id.payment_confirm_practice_name);
         practice.setText(paymentsModel.getPaymentPayload().getUserPractices().get(0).getPracticeName());
