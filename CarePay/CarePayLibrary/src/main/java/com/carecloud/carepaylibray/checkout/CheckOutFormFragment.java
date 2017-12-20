@@ -20,7 +20,9 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResp
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +58,7 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
         try {
             callback = (CheckOutInterface) context;
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached Context must implement ResponsibilityActionCallback");
+            throw new ClassCastException("Attached Context must implement CheckOutInterface");
         }
     }
 
@@ -181,5 +183,26 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
     @Override
     protected void validateForm() {
         validateForm("save_form");
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("formIndex", getDisplayedFormsIndex());
+        Gson gson = new Gson();
+        outState.putString("formResponses", gson.toJson(jsonFormSaveResponseArray));
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            int formIndex = savedInstanceState.getInt("formIndex", 0);
+            setDisplayedFormsIndex(formIndex);
+            Gson gson = new Gson();
+            Type listType = new TypeToken<List<JsonObject>>() {
+            }.getType();
+            jsonFormSaveResponseArray = gson.fromJson(savedInstanceState.getString("formResponses"), listType);
+        }
     }
 }

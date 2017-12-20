@@ -29,6 +29,7 @@ import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
+import com.carecloud.carepaylibray.translation.TranslatableFragment;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -175,30 +176,6 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         AdHocFormFragment adHocFormFragment = (AdHocFormFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.formLayout);
         adHocFormFragment.navigateBack();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        AdHocFormFragment adHocFormFragment = (AdHocFormFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.formLayout);
-        outState.putInt("formIndex", adHocFormFragment.getDisplayedFormsIndex());
-        Gson gson = new Gson();
-        outState.putString("formResponses", gson.toJson(adHocFormFragment.getJsonFormSaveResponseArray()));
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        AdHocFormFragment adHocFormFragment = (AdHocFormFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.formLayout);
-        int formIndex = savedInstanceState.getInt("formIndex", 0);
-        adHocFormFragment.setDisplayedFormsIndex(formIndex);
-        Gson gson = new Gson();
-        Type listType = new TypeToken<List<JsonObject>>() {
-        }.getType();
-        List<JsonObject> formResponses = gson.fromJson(savedInstanceState.getString("formResponses"), listType);
-        adHocFormFragment.setJsonFormSaveResponseArray(formResponses);
     }
 
     @Override

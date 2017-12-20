@@ -140,64 +140,73 @@ public abstract class BasePracticeActivity extends BaseActivity
     }
 
     /**
-     *
-     * @param transition the transition (url) for calling the service
+     * @param transition   the transition (url) for calling the service
      * @param languageCode the language code (eg. "en", "es")
-     * @param headers any additional header
+     * @param headers      any additional header
      */
     protected void changeLanguage(TransitionDTO transition, String languageCode, Map<String, String> headers) {
-        changeLanguage(transition, languageCode, headers, languageCallback);
+        changeLanguage(transition, languageCode, headers, null);
     }
 
     /**
-     *
-     * @param transition the transition (url) for calling the service
+     * @param transition   the transition (url) for calling the service
      * @param languageCode the language code (eg. "en", "es")
-     * @param headers any additional header
-     * @param callback an additional callback
+     * @param headers      any additional header
+     * @param callback     an additional callback
      */
     protected void changeLanguage(TransitionDTO transition, String languageCode, Map<String, String> headers,
-                                  WorkflowServiceCallback callback) {
+                                  SimpleCallback callback) {
         Map<String, String> query = new HashMap<>();
         query.put("language", languageCode);
-        getWorkflowServiceHelper().execute(transition, callback, null, query, headers);
+        getWorkflowServiceHelper().execute(transition, getLanguageCallback(callback), null, query, headers);
     }
 
-    protected WorkflowServiceCallback languageCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
+    private WorkflowServiceCallback getLanguageCallback(final SimpleCallback callback) {
 
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            if (workflowDTO.getPayload().has("language_metadata")) {
-                String prefix = CarePayConstants.PATIENT_MODE_LABELS_PREFIX;
-                if (!getApplicationMode().getApplicationType()
-                        .equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)) {
-                    getWorkflowServiceHelper().saveLabels(workflowDTO.getPayload()
-                            .getAsJsonObject("language_metadata").getAsJsonObject("metadata")
-                            .getAsJsonObject("labels"));
-                    getWorkflowServiceHelper().saveLabels(workflowDTO.getPayload()
-                            .getAsJsonObject("language_metadata").getAsJsonObject("metadata")
-                            .getAsJsonObject("labels"), prefix);
-                }else{
-                    getWorkflowServiceHelper().saveLabels(workflowDTO.getPayload()
-                            .getAsJsonObject("language_metadata").getAsJsonObject("metadata")
-                            .getAsJsonObject("labels"), prefix);
-                }
-                getApplicationPreferences().setUserLanguage(workflowDTO.getPayload()
-                        .getAsJsonObject("language_metadata").get("code").getAsString());
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
             }
-            recreate();
-            hideProgressDialog();
-        }
 
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            showErrorNotification(exceptionMessage);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                if (workflowDTO.getPayload().has("language_metadata")) {
+                    String prefix = CarePayConstants.PATIENT_MODE_LABELS_PREFIX;
+                    if (!getApplicationMode().getApplicationType()
+                            .equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)) {
+                        getWorkflowServiceHelper().saveLabels(workflowDTO.getPayload()
+                                .getAsJsonObject("language_metadata").getAsJsonObject("metadata")
+                                .getAsJsonObject("labels"));
+                        getWorkflowServiceHelper().saveLabels(workflowDTO.getPayload()
+                                .getAsJsonObject("language_metadata").getAsJsonObject("metadata")
+                                .getAsJsonObject("labels"), prefix);
+                    } else {
+                        getWorkflowServiceHelper().saveLabels(workflowDTO.getPayload()
+                                .getAsJsonObject("language_metadata").getAsJsonObject("metadata")
+                                .getAsJsonObject("labels"), prefix);
+                    }
+                    getApplicationPreferences().setUserLanguage(workflowDTO.getPayload()
+                            .getAsJsonObject("language_metadata").get("code").getAsString());
+                }
+                if (callback != null) {
+                    callback.callback();
+                } else {
+                    recreate();
+                    hideProgressDialog();
+                }
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+                Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            }
+        };
+    }
+
+    public interface SimpleCallback {
+        void callback();
+    }
 }

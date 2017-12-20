@@ -64,6 +64,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLi
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
+import com.carecloud.carepaylibray.translation.TranslatableFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
@@ -105,10 +106,9 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_checkout);
         initViews();
-
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
         appointmentId = extra.getString(CarePayConstants.APPOINTMENT_ID);
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null || savedInstanceState.getBoolean("shouldReload", false)) {
             WorkflowDTO workflowDTO = getConvertedDTO(WorkflowDTO.class);
             initDto(workflowDTO);
 
@@ -119,11 +119,9 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                 MixPanelUtil.logEvent(getString(R.string.event_checkout_started), params, values);
                 MixPanelUtil.startTimer(getString(R.string.timer_checkout));
             }
-
         }
-
+        initializeLanguageSpinner();
         initAppMode();
-
         shouldAddBackStack = true;
     }
 
@@ -143,14 +141,12 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
             showCheckOutFormFragment();
         }
-        initializeLanguageSpinner();
 
     }
 
     private void initViews() {
         View logout = findViewById(R.id.logoutTextview);
         logout.setOnClickListener(homeClick);
-
         View home = findViewById(R.id.btnHome);
         home.setOnClickListener(homeClick);
     }
@@ -301,7 +297,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 //        this.appointmentsResultModel = appointmentsResultModel;
         NextAppointmentFragment fragment = (NextAppointmentFragment) getSupportFragmentManager()
                 .findFragmentByTag(NextAppointmentFragment.class.getCanonicalName());
-        if ((fragment != null) && fragment.setVisitType(visitTypeDTO)) {
+        if ((fragment != null) && fragment.setVisitType(visitTypeDTO, true)) {
             showAvailableHoursFragment(null, null, appointmentsResultModel,
                     appointmentResourcesDTO.getResource(), visitTypeDTO);
         }
@@ -425,7 +421,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         NextAppointmentFragment fragment = (NextAppointmentFragment) getSupportFragmentManager()
                 .findFragmentByTag(NextAppointmentFragment.class.getCanonicalName());
         if (fragment != null) {
-            fragment.setLocationAndTime(appointmentsSlot);
+            fragment.setLocationAndTime(appointmentsSlot, true);
         }
     }
 
@@ -731,7 +727,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                 instanceof NextAppointmentFragmentInterface) {
             ((NextAppointmentFragmentInterface) getSupportFragmentManager()
                     .findFragmentById(R.id.root_layout))
-                    .setSelectedProvider(appointmentResourcesDTO.getResource().getProvider());
+                    .setSelectedProvider(appointmentResourcesDTO.getResource().getProvider(), true);
         }
     }
 
@@ -746,5 +742,23 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             currentStep = getString(R.string.step_checkout_forms);
         }
         MixPanelUtil.logEvent(getString(R.string.event_checkout_cancelled), getString(R.string.param_last_completed_step), currentStep);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
+        if (currentFragment instanceof TranslatableFragment) {
+            ((TranslatableFragment) currentFragment).saveInstanceForTranslation(outState);
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
+        if (currentFragment instanceof TranslatableFragment) {
+            ((TranslatableFragment) currentFragment).restoreInstanceForTranslation(savedInstanceState);
+        }
     }
 }

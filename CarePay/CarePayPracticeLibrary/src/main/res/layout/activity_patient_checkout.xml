@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_patient_mode_checkin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -31,12 +30,13 @@
                 android:layout_marginTop="@dimen/dimen_30dp"
                 android:background="@drawable/bg_blue_overlay"
                 android:gravity="center"
-                breeze:textKey="practice_app_logout_text"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22sp"
-                app:customAssetFont="gotham_rounded_medium" />
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="practice_app_logout_text" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/checkoutMessage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -44,9 +44,9 @@
                 android:gravity="start"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_30sp"
-                tools:text="Let's get you checked in!"
+                app:customAssetFont="gotham_rounded_bold"
                 breeze:textKey="practice_checkout_header_label"
-                app:customAssetFont="gotham_rounded_bold" />
+                tools:text="Let's get you checked in!" />
 
             <ImageView
                 android:id="@+id/btnHome"
@@ -62,10 +62,10 @@
                 android:id="@+id/languageSpinner"
                 android:layout_width="@dimen/home_spinner_width"
                 android:layout_height="@dimen/home_spinner_height"
-                android:layout_marginStart="@dimen/dimen_20dp"
-                android:layout_marginBottom="@dimen/dimen_15dp"
-                android:layout_toEndOf="@id/btnHome"
                 android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/dimen_15dp"
+                android:layout_marginStart="@dimen/dimen_20dp"
+                android:layout_toEndOf="@id/btnHome"
                 android:background="@drawable/bg_blue_overlay"
                 android:paddingEnd="@dimen/home_spinner_padding_righ_left"
                 android:paddingStart="@dimen/home_spinner_padding_righ_left" />
