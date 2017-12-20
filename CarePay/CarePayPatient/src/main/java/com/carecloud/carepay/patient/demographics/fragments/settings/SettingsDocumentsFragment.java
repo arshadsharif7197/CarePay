@@ -25,6 +25,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
+import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.demographics.adapters.InsuranceLineItemsListAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
@@ -64,6 +65,9 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     private InsuranceLineItemsListAdapter adapter;
 
     private DemographicsSettingsFragmentListener callback;
+
+    private boolean showAlert = false;
+    private boolean noPrimaryInsuranceFound = false;
 
 
     public static SettingsDocumentsFragment newInstance() {
@@ -130,6 +134,12 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         } else {
             adapter.setInsurancesList(insuranceList);
         }
+        if (showAlert) {
+            showAlert();
+            showAlert = false;
+            noPrimaryInsuranceFound = false;
+        }
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
@@ -157,13 +167,24 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
 
     private List<DemographicInsurancePayloadDTO> getInsurances(DemographicDTO demographicDTO) {
         boolean hasOnePhoto = false;
+        boolean isThereAnyPrimaryInsurance = false;
         List<DemographicInsurancePayloadDTO> insuranceList = new ArrayList<>();
         for (DemographicInsurancePayloadDTO insurance : demographicDTO.getPayload().getDemographics().getPayload().getInsurances()) {
             if (!insurance.isDeleted()) {
                 insuranceList.add(insurance);
+                if (insurance.getInsuranceType().toLowerCase().equals("primary")) {
+                    isThereAnyPrimaryInsurance = true;
+                }
+                if (insurance.getInsurancePhotos().size() == 0) {
+                    showAlert = true;
+                }else if(!hasOnePhoto){
+                    hasOnePhoto = true;
+                }
             }
-            if (insurance.getInsurancePhotos().size() > 0 && !hasOnePhoto) {
-                hasOnePhoto = true;
+            if (!demographicDTO.getPayload().getDemographics().getPayload().getInsurances().isEmpty()
+                    && !isThereAnyPrimaryInsurance) {
+                noPrimaryInsuranceFound = true;
+                showAlert = true;
             }
         }
 
@@ -171,6 +192,17 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
 
         return insuranceList;
     }
+
+    private void showAlert() {
+        String alertMessage = Label.getLabel("demographics_insurance_no_photo_alert");
+        if (noPrimaryInsuranceFound) {
+            alertMessage = Label.getLabel("demographics_insurance_no_primary_alert");
+        }
+        new CustomMessageToast(getActivity(), alertMessage,
+                CustomMessageToast.NOTIFICATION_TYPE_WARNING).show();
+
+    }
+
 
     protected DemographicDTO getUpdateModel() {
         DemographicDTO updatableDemographicDTO = new DemographicDTO();

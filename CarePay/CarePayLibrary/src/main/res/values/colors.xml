@@ -10,6 +10,7 @@
     <color name="transparent_apt">#00000000</color>
 
     <color name="lightSlateGray">#78909C</color>
+    <color name="lightSlateGrayTrans">#3F78909C</color>
     <color name="charcoal">#ff37474f</color>
     <color name="cadet_gray">#ff90a4ae</color>
     <color name="light_gray">#CFD8DC</color>
