@@ -12,7 +12,10 @@ import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenterImpl;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.fragments.HomeAlertDialogFragment;
+import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+
+import java.util.List;
 
 /**
  * Created by lmenendez on 4/25/17.
@@ -132,4 +135,11 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
         }
     }
 
+    public List<OptionDTO> getLanguages() {
+        return demographicDTO.getPayload().getLanguages();
+    }
+
+    public TransitionDTO getLanguageLink() {
+        return demographicDTO.getMetadata().getLinks().getLanguage();
+    }
 }

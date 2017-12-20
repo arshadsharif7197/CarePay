@@ -13,14 +13,15 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.checkout.BaseWebFormFragment;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.intake.models.AppointmentMetadataModel;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +68,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
         super.onViewCreated(view, savedInstanceState);
         adhocFormsModel = (AdHocFormsModel) callback.getDto();
         formsList = callback.getFormsList();
-        if(formsList != null) {
+        if (formsList != null) {
             setTotalForms(formsList.size());
         }
 
@@ -195,5 +196,26 @@ public class AdHocFormFragment extends BaseWebFormFragment {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("formIndex", getDisplayedFormsIndex());
+        Gson gson = new Gson();
+        outState.putString("formResponses", gson.toJson(jsonFormSaveResponseArray));
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            int formIndex = savedInstanceState.getInt("formIndex", 0);
+            setDisplayedFormsIndex(formIndex);
+            Gson gson = new Gson();
+            Type listType = new TypeToken<List<JsonObject>>() {
+            }.getType();
+            jsonFormSaveResponseArray = gson.fromJson(savedInstanceState.getString("formResponses"), listType);
+        }
     }
 }

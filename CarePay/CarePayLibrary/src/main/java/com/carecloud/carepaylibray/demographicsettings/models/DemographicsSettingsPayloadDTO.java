@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.demographicsettings.models;
 
 import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.models.PapiAccountsDTO;
+import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -13,7 +14,7 @@ public class DemographicsSettingsPayloadDTO {
 
     @SerializedName("languages")
     @Expose
-    private List<DemographicsSettingsLanguageDTO> demographicsSettingsLanguageDTOs = new ArrayList<>();
+    private List<OptionDTO> demographicsSettingsLanguageDTOs = new ArrayList<>();
     @SerializedName("notifications")
     @Expose
     private DemographicSettingsNotificationDTO demographicSettingsNotificationDTO = new DemographicSettingsNotificationDTO();
@@ -35,7 +36,7 @@ public class DemographicsSettingsPayloadDTO {
      *
      * @return the languages
      */
-    public List<DemographicsSettingsLanguageDTO> getLanguages() {
+    public List<OptionDTO> getLanguages() {
         return demographicsSettingsLanguageDTOs;
     }
 
@@ -44,15 +45,15 @@ public class DemographicsSettingsPayloadDTO {
      *
      * @param demographicsSettingsLanguageDTOs the demographics settings language dt os
      */
-    public void setLanguages(List<DemographicsSettingsLanguageDTO> demographicsSettingsLanguageDTOs) {
+    public void setLanguages(List<OptionDTO> demographicsSettingsLanguageDTOs) {
         this.demographicsSettingsLanguageDTOs = demographicsSettingsLanguageDTOs;
     }
 
-    public List<DemographicsSettingsLanguageDTO> getDemographicsSettingsLanguageDTOs() {
+    public List<OptionDTO> getDemographicsSettingsLanguageDTOs() {
         return demographicsSettingsLanguageDTOs;
     }
 
-    public void setDemographicsSettingsLanguageDTOs(List<DemographicsSettingsLanguageDTO> demographicsSettingsLanguageDTOs) {
+    public void setDemographicsSettingsLanguageDTOs(List<OptionDTO> demographicsSettingsLanguageDTOs) {
         this.demographicsSettingsLanguageDTOs = demographicsSettingsLanguageDTOs;
     }
 

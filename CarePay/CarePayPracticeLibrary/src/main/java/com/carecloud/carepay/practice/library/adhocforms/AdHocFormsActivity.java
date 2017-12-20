@@ -7,6 +7,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -25,8 +28,14 @@ import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
+import com.carecloud.carepaylibray.translation.TranslatableFragment;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +58,7 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         switchToPatientMode();
 
         forms = new ArrayList<>();
-        if(selectedAdHocForms != null) {
+        if (selectedAdHocForms != null) {
             for (String uuid : selectedAdHocForms.getForms()) {
                 for (PracticeForm practiceForm : adhocFormsModel.getMetadata().getDataModels()
                         .getPracticeForms()) {
@@ -67,7 +76,7 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
 
         TextView header = (TextView) findViewById(R.id.adhoc_forms_header);
         header.setText(Label.getLabel(forms.size() > 1 ?
-                        "adhoc_form_left_message" : "adhoc_form_left_message_singular"));
+                "adhoc_form_left_message" : "adhoc_form_left_message_singular"));
 
         View.OnClickListener goBackClicListener = new View.OnClickListener() {
             @Override
@@ -77,10 +86,37 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         };
         findViewById(R.id.goBackImageView).setOnClickListener(goBackClicListener);
         findViewById(R.id.goBackTextView).setOnClickListener(goBackClicListener);
-
+        initializeLanguageSpinner();
         if (savedInstanceState == null) {
             addFragment(AdHocFormFragment.newInstance(), false);
         }
+    }
+
+    private void initializeLanguageSpinner() {
+        final List<String> languages = new ArrayList<>();
+        for (OptionDTO language : adhocFormsModel.getPayload().getLanguages()) {
+            languages.add(language.getCode().toUpperCase());
+        }
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.home_spinner_item, languages);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner languageSpinner = (Spinner) findViewById(R.id.languageSpinner);
+        languageSpinner.setAdapter(spinnerArrayAdapter);
+        languageSpinner.setSelection(spinnerArrayAdapter.getPosition(getApplicationPreferences()
+                .getUserLanguage().toUpperCase()), false);
+        final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
+        headers.put("username", getApplicationPreferences().getUserName());
+        headers.put("username_patient", getApplicationPreferences().getPatientId());
+        languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                changeLanguage(adhocFormsModel.getMetadata().getLinks().getLanguage(),
+                        languages.get(position).toLowerCase(), headers);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
     private void showPinDialog() {
@@ -178,7 +214,7 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         }
     };
 
-    private void switchToPatientMode(){
+    private void switchToPatientMode() {
         getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
         getAppAuthorizationHelper().setUser(adhocFormsModel.getPayload().getAdhocFormsPatientModeInfo().getMetadata().getUsername());
 
