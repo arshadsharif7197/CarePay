@@ -8,8 +8,15 @@ import android.support.annotation.Nullable;
 
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
 import com.carecloud.carepay.mini.models.queue.QueuePaymentRecord;
+import com.carecloud.carepay.mini.models.queue.QueueUnprocessedPaymentRecord;
 import com.carecloud.carepay.mini.services.carepay.RestCallServiceHelper;
 import com.carecloud.carepay.mini.utils.StringUtil;
+import com.carecloud.shamrocksdk.payment.DevicePayment;
+import com.carecloud.shamrocksdk.payment.DeviceRefund;
+import com.carecloud.shamrocksdk.payment.interfaces.PaymentRequestCallback;
+import com.carecloud.shamrocksdk.payment.interfaces.RefundRequestCallback;
+import com.carecloud.shamrocksdk.payment.models.PaymentRequest;
+import com.carecloud.shamrocksdk.payment.models.RefundRequest;
 import com.carecloud.shamrocksdk.payment.models.StreamRecord;
 import com.carecloud.shamrocksdk.utils.AuthorizationUtil;
 import com.google.gson.Gson;
@@ -44,6 +51,16 @@ public class QueueUploadService extends IntentService {
                 if (postPaymentRequest(record.getPaymentRequestId())) {
                     record.delete();
                 }
+            }
+        }
+
+
+        List<QueueUnprocessedPaymentRecord> unprocessedPaymentRecords = QueueUnprocessedPaymentRecord.listAll(QueueUnprocessedPaymentRecord.class);
+        for(QueueUnprocessedPaymentRecord record : unprocessedPaymentRecords){
+            if(record.isRefund()){
+                processQueuedRefundRecord(record);
+            }else {
+                processQueuedPaymentRecord(record);
             }
         }
 
@@ -111,5 +128,94 @@ public class QueueUploadService extends IntentService {
     protected ApplicationHelper getApplicationHelper(){
         return (ApplicationHelper) getApplication();
     }
+
+    private void processQueuedPaymentRecord(final QueueUnprocessedPaymentRecord record){
+        Gson gson = new Gson();
+        final PaymentRequest queuedPaymentRequest = gson.fromJson(record.getPayload(), PaymentRequest.class);
+        DevicePayment.updatePaymentRequest(this, record.getPaymentRequestId(), queuedPaymentRequest, new PaymentRequestCallback() {
+            @Override
+            public void onPaymentRequestUpdate(String paymentRequestId, PaymentRequest paymentRequest) {
+                //confirm that we are working with an updated record
+                if(paymentRequest != null &&
+                        paymentRequest.getTransactionResponse() != null &&
+                        paymentRequest.getPaymentMethod() != null &&
+                        paymentRequest.getPaymentMethod().getCardData() != null){
+
+                    //Record is now updated so we no longer need to be keeping this in the queue
+                    record.delete();
+
+                    //Lets add this updated record to the send queue
+                    QueuePaymentRecord queuePaymentRecord = new QueuePaymentRecord();
+                    queuePaymentRecord.setPaymentRequestId(paymentRequestId);
+                    queuePaymentRecord.setRefund(false);
+                    queuePaymentRecord.save();
+
+                    if(postPaymentRequest(paymentRequestId)){
+                        queuePaymentRecord.delete();
+                    }
+
+                }
+            }
+
+            @Override
+            public void onPaymentRequestUpdateFail(String paymentRequestId, JsonElement recordObject) {
+
+            }
+
+            @Override
+            public void onPaymentConnectionFailure(String message) {
+
+            }
+
+            @Override
+            public void onPaymentRequestDestroyed(String paymentRequestId) {
+
+            }
+        });
+    }
+
+    private void processQueuedRefundRecord(final QueueUnprocessedPaymentRecord record){
+        Gson gson = new Gson();
+        final RefundRequest queuedRefundRequest = gson.fromJson(record.getPayload(), RefundRequest.class);
+        DeviceRefund.updateRefundRequest(this, record.getPaymentRequestId(), queuedRefundRequest, new RefundRequestCallback() {
+            @Override
+            public void onRefundRequestUpdate(String refundRequestId, RefundRequest refundRequest) {
+                //confirm that we are working with an updated record
+                if(refundRequest != null &&
+                        refundRequest.getTransactionResponse() != null){
+
+                    //Record is now updated so we no longer need to be keeping this in the queue
+                    record.delete();
+
+                    //Lets add this updated record to the send queue
+                    QueuePaymentRecord queuePaymentRecord = new QueuePaymentRecord();
+                    queuePaymentRecord.setPaymentRequestId(refundRequestId);
+                    queuePaymentRecord.setRefund(true);
+                    queuePaymentRecord.save();
+
+                    if(postRefundRequest(refundRequestId)){
+                        queuePaymentRecord.delete();
+                    }
+
+                }
+            }
+
+            @Override
+            public void onRefundRequestUpdateFail(String refundRequestId, JsonElement recordObject) {
+
+            }
+
+            @Override
+            public void onRefundConnectionFailure(String message) {
+
+            }
+
+            @Override
+            public void onRefundRequestDestroyed(String refundRequestId) {
+
+            }
+        });
+    }
+
 
 }
