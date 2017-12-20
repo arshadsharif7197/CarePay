@@ -237,7 +237,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
      */
     public void updateInsuranceList(DemographicDTO demographicDTO) {
         this.demographicDTO = demographicDTO;
-        if (insurancePhotoAlert != null) {
+        if (insurancePhotoAlert != null && isAdded()) {
             initializeViews();
         }
     }

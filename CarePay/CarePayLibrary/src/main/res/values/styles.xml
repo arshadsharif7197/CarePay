@@ -303,7 +303,7 @@
         <item name="android:layout_height">30dp</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_marginStart">14dp</item>
-        <item name="android:background">@drawable/button_scan_card</item>
+        <item name="android:background">@drawable/button_blue_border</item>
         <item name="android:textAllCaps">true</item>
     </style>
 
