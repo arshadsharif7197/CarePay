@@ -119,7 +119,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
         headers.put("username", getApplicationPreferences().getUserName());
         headers.put("username_patient", getApplicationPreferences().getPatientId());
-        Log.e("Pablo", "" + getApplicationPreferences().getPatientId());
         languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

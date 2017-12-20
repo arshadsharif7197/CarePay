@@ -18,6 +18,7 @@ import com.carecloud.carepay.mini.HttpConstants;
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
 import com.carecloud.carepay.mini.models.queue.QueuePaymentRecord;
+import com.carecloud.carepay.mini.models.queue.QueueUnprocessedPaymentRecord;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
 import com.carecloud.carepay.mini.services.QueueUploadService;
 import com.carecloud.carepay.mini.services.carepay.RestCallServiceCallback;
@@ -457,6 +458,31 @@ public class WelcomeActivity extends FullScreenActivity {
             }else {
                 postPaymentRequest(paymentRequestId);
             }
+        }
+
+        @Override
+        public void onPaymentCompleteWithError(String paymentRequestId, JsonElement paymentPayload, String errorMessage) {
+            Gson gson = new Gson();
+            QueueUnprocessedPaymentRecord unprocessedPaymentRecord = new QueueUnprocessedPaymentRecord();
+            unprocessedPaymentRecord.setPaymentRequestId(paymentRequestId);
+            unprocessedPaymentRecord.setRefund(connectedDevice.isRefunding());
+            unprocessedPaymentRecord.setPayload(gson.toJson(paymentPayload));
+            unprocessedPaymentRecord.save();
+
+            launchQueueService();
+            if(connectedDevice.isRefunding()){
+                updateMessage(getString(R.string.welcome_complete_refund));
+            }else {
+                updateMessage(getString(R.string.welcome_complete));
+            }
+            resetDevice(paymentRequestId);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    updateMessage(getString(R.string.welcome_waiting));
+                }
+            }, PAYMENT_COMPLETE_RESET);
+
         }
 
         @Override

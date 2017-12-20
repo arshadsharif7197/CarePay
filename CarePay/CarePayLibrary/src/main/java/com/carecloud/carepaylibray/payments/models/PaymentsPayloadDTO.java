@@ -8,6 +8,7 @@ import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItemPayload;
 import com.carecloud.carepaylibray.payments.models.history.PaymentsTransactionHistory;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
+import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -85,6 +86,9 @@ public class PaymentsPayloadDTO implements Serializable {
     @SerializedName("payment_profile_id")
     @Expose
     private String paymentProfileId;
+    @SerializedName("languages")
+    @Expose
+    private List<OptionDTO> languages = new ArrayList<>();
     @SerializedName("organization_id")
     private String organizationId;
 
@@ -225,7 +229,7 @@ public class PaymentsPayloadDTO implements Serializable {
     public PapiAccountsDTO getPapiAccountByType(String accountType) {
         for (PapiAccountsDTO papiAccountDTO : getPapiAccounts()) {
             if (papiAccountDTO.getType().contains(accountType)) {
-               return papiAccountDTO ;
+                return papiAccountDTO;
             }
         }
         return null;
@@ -320,5 +324,13 @@ public class PaymentsPayloadDTO implements Serializable {
 
     public void setOrganizationId(String organizationId) {
         this.organizationId = organizationId;
+    }
+
+    public List<OptionDTO> getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(List<OptionDTO> languages) {
+        this.languages = languages;
     }
 }

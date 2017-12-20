@@ -173,7 +173,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
         NextAppointmentFragmentInterface fragment = (NextAppointmentFragmentInterface) getSupportFragmentManager()
                 .findFragmentByTag(NextAppointmentFragment.class.getCanonicalName());
-        if ((fragment != null) && fragment.setVisitType(visitTypeDTO)) {
+        if ((fragment != null) && fragment.setVisitType(visitTypeDTO, true)) {
             showAvailableHoursFragment(null, null, appointmentsResultModel,
                     appointmentResourcesDTO.getResource(), visitTypeDTO);
         }
@@ -201,7 +201,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         NextAppointmentFragmentInterface fragment = (NextAppointmentFragmentInterface) getSupportFragmentManager()
                 .findFragmentByTag(NextAppointmentFragment.class.getCanonicalName());
         if (fragment != null) {
-            fragment.setLocationAndTime(appointmentsSlot);
+            fragment.setLocationAndTime(appointmentsSlot, true);
         }
     }
 
@@ -527,7 +527,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
                 instanceof NextAppointmentFragmentInterface) {
             ((NextAppointmentFragmentInterface) getSupportFragmentManager()
                     .findFragmentById(R.id.fragmentContainer))
-                    .setSelectedProvider(appointmentResourcesDTO.getResource().getProvider());
+                    .setSelectedProvider(appointmentResourcesDTO.getResource().getProvider(), true);
         }
 
     }

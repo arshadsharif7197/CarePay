@@ -40,146 +40,117 @@ public class PaymentsLinksDTO {
     @SerializedName("list_papi_accounts_by_practice")
     @Expose
     private TransitionDTO papiAccounts = new TransitionDTO();
+    @SerializedName(value = "language_metadata", alternate = "language")
+    @Expose
+    private TransitionDTO language = new TransitionDTO();
 
     /**
-     * 
-     * @return
-     *     The paymentsSelfRefresh
+     * @return The paymentsSelfRefresh
      */
     public PaymentsSelfRefreshDTO getPaymentsSelfRefresh() {
         return paymentsSelfRefresh;
     }
 
     /**
-     * 
-     * @param paymentsSelfRefresh
-     *     The paymentsSelfRefresh
+     * @param paymentsSelfRefresh The paymentsSelfRefresh
      */
     public void setPaymentsSelfRefresh(PaymentsSelfRefreshDTO paymentsSelfRefresh) {
         this.paymentsSelfRefresh = paymentsSelfRefresh;
     }
 
     /**
-     * 
-     * @return
-     *     The paymentsDemographics
+     * @return The paymentsDemographics
      */
     public TransitionDTO getPaymentsDemographics() {
         return paymentsDemographics;
     }
 
     /**
-     * 
-     * @param paymentsDemographics
-     *     The paymentsDemographics
+     * @param paymentsDemographics The paymentsDemographics
      */
     public void setPaymentsDemographics(TransitionDTO paymentsDemographics) {
         this.paymentsDemographics = paymentsDemographics;
     }
 
     /**
-     * 
-     * @return
-     *     The appointments
+     * @return The appointments
      */
     public TransitionDTO getAppointments() {
         return appointments;
     }
 
     /**
-     * 
-     * @param appointments
-     *     The appointments
+     * @param appointments The appointments
      */
     public void setAppointments(TransitionDTO appointments) {
         this.appointments = appointments;
     }
 
     /**
-     * 
-     * @return
-     *     The paymentsPatientBalancesDTO
+     * @return The paymentsPatientBalancesDTO
      */
     public TransitionDTO getPaymentsPatientBalances() {
         return paymentsPatientBalances;
     }
 
     /**
-     * 
-     * @param paymentsPatientBalances
-     *     The patient_balances
+     * @param paymentsPatientBalances The patient_balances
      */
     public void setPaymentsPatientBalances(TransitionDTO paymentsPatientBalances) {
         this.paymentsPatientBalances = paymentsPatientBalances;
     }
 
     /**
-     * 
-     * @return
-     *     The paymentsMethodsDTO
+     * @return The paymentsMethodsDTO
      */
     public PaymentsMethodsDTO getPaymentsMethods() {
         return paymentsMethods;
     }
 
     /**
-     * 
-     * @param paymentsMethods
-     *     The payment_methods
+     * @param paymentsMethods The payment_methods
      */
     public void setPaymentsMethods(PaymentsMethodsDTO paymentsMethods) {
         this.paymentsMethods = paymentsMethods;
     }
 
     /**
-     * 
-     * @return
-     *     The paymentsCreditCardsDTO
+     * @return The paymentsCreditCardsDTO
      */
     public TransitionDTO getPaymentsCreditCards() {
         return paymentsCreditCards;
     }
 
     /**
-     * 
-     * @param paymentsCreditCards
-     *     The credit_cards
+     * @param paymentsCreditCards The credit_cards
      */
     public void setPaymentsCreditCards(TransitionDTO paymentsCreditCards) {
         this.paymentsCreditCards = paymentsCreditCards;
     }
 
     /**
-     * 
-     * @return
-     *     The paymentsPlans
+     * @return The paymentsPlans
      */
     public PaymentsPlansDTO getPaymentsPlans() {
         return paymentsPlans;
     }
 
     /**
-     * 
-     * @param paymentsPlans
-     *     The payment_plans
+     * @param paymentsPlans The payment_plans
      */
     public void setPaymentsPlans(PaymentsPlansDTO paymentsPlans) {
         this.paymentsPlans = paymentsPlans;
     }
 
     /**
-     * 
-     * @return
-     *     The paymentsHistory
+     * @return The paymentsHistory
      */
     public TransitionDTO getPaymentsHistory() {
         return paymentsHistory;
     }
 
     /**
-     * 
-     * @param paymentsHistory
-     *     The payment_history
+     * @param paymentsHistory The payment_history
      */
     public void setPaymentsHistory(TransitionDTO paymentsHistory) {
         this.paymentsHistory = paymentsHistory;
@@ -207,5 +178,13 @@ public class PaymentsLinksDTO {
 
     public void setPapiAccounts(TransitionDTO papiAccounts) {
         this.papiAccounts = papiAccounts;
+    }
+
+    public TransitionDTO getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(TransitionDTO language) {
+        this.language = language;
     }
 }
