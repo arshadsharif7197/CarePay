@@ -81,7 +81,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         }
 
         WorkflowDTO workflowDTO = demographicsView.getConvertedDTO(WorkflowDTO.class);
-        displayStartFragment(workflowDTO);
+        displayFragment(workflowDTO);
 
         MixPanelUtil.setDemographics(demographicsView.getContext(), demographicDTO.getPayload().getDemographics().getPayload());
     }
@@ -118,7 +118,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         return currentFragment;
     }
 
-    private void displayStartFragment(WorkflowDTO workflowDTO) {
+    public void displayFragment(WorkflowDTO workflowDTO) {
         startCheckin = true;
         boolean isResume = true;
         boolean isGuest = !ValidationHelper.isValidEmail(((ISession) demographicsView.getContext()).getAppAuthorizationHelper().getCurrUser());

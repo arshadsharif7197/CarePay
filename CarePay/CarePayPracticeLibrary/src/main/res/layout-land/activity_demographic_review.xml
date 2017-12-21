@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:id="@+id/activity_patient_mode_checkin"
@@ -42,12 +44,14 @@
                     android:layout_weight="24" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/checkInLeftNavigationTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Let's get you checked in!"
+                    tools:text="Let's get you checked in!"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/dimen_30dp"
-                    app:customAssetFont="gotham_rounded_bold" />
+                    android:textSize="@dimen/text_size_30sp"
+                    app:customAssetFont="gotham_rounded_bold"
+                    breeze:textKey="practice_checkin_header_label" />
 
                 <FrameLayout
                     android:layout_width="match_parent"

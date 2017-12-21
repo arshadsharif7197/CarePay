@@ -191,6 +191,7 @@ public abstract class BasePracticeActivity extends BaseActivity
                 }
                 if (callback != null) {
                     callback.callback();
+                    hideProgressDialog();
                 } else {
                     recreate();
                     hideProgressDialog();
