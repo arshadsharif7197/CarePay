@@ -228,7 +228,6 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     @Override
     public void onInsuranceEdited(DemographicDTO demographicDTO, boolean proceed) {
         SystemUtil.hideSoftKeyboard(this);
-        onBackPressed();
 
         FragmentManager fm = getSupportFragmentManager();
 
@@ -238,6 +237,8 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
                 (SettingsDocumentsFragment) fm.findFragmentByTag(tag);
 
         settingsDocumentsFragment.updateInsuranceList(demographicDTO);
+
+        fm.popBackStack(tag, 0);
     }
 
     @Override
