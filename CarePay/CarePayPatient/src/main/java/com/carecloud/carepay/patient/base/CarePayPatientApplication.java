@@ -51,6 +51,7 @@ public class CarePayPatientApplication extends CarePayApplication {
         HttpConstants.setUseUnifiedAuth(BuildConfig.useUnifiedAuth);
         HttpConstants.setMixpanelAPI(mixpanelAPI);
         HttpConstants.setEnvironment(BuildConfig.ENVIRONMENT);
+        HttpConstants.setRetailPaymentsRedirectUrl(BuildConfig.RETAIL_REDIRECT_URL);
     }
 
     @Override

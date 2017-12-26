@@ -1,26 +1,34 @@
 package com.carecloud.carepay.patient.retail.fragments;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.retail.interfaces.RetailInterface;
 import com.carecloud.carepay.patient.retail.models.RetailModel;
 import com.carecloud.carepay.patient.retail.models.RetailPracticeDTO;
 import com.carecloud.carepay.patient.retail.models.sso.Person;
 import com.carecloud.carepay.patient.retail.models.sso.Profile;
 import com.carecloud.carepay.patient.retail.models.sso.SsoModel;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
@@ -40,16 +48,22 @@ public class RetailFragment extends BaseFragment {
     private static final String APP_CLIENT_SECRET = "9xasKgFMZbDErsGgQeCN3EHawKeydaNW";
     private static final String APP_ID = "breeze-shopping";
 
+    private static final String QUERY_ORDER = "transaction_id";
+    private static final String QUERY_STORE = "store_id";
+    private static final String QUERY_AMOUNT = "amount";
+
     private RetailModel retailModel;
     private RetailPracticeDTO retailPractice;
     private UserPracticeDTO userPracticeDTO;
     private boolean showToolbar = true;
+    private RetailInterface callback;
 
     private String ssoProfile = "";
     private String storeId = "12522068";//hardcoded MyBreezeClinic StoreId
 
     private WebView shoppingWebView;
-
+    private String returnUrl = null;
+    private String loadedUrl;
 
     public static RetailFragment newInstance(RetailModel retailModel, RetailPracticeDTO retailPractice, UserPracticeDTO userPracticeDTO, boolean showToolbar){
         Bundle args = new Bundle();
@@ -64,9 +78,20 @@ public class RetailFragment extends BaseFragment {
     }
 
     @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+        try{
+            callback = (RetailInterface) context;
+        }catch (ClassCastException cce){
+            throw new ClassCastException("Attached context must implement RetailInterface");
+        }
+    }
+
+    @Override
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
 
+        setRetainInstance(true);
         Bundle args = getArguments();
         retailModel = DtoHelper.getConvertedDTO(RetailModel.class, args);
         retailPractice = DtoHelper.getConvertedDTO(RetailPracticeDTO.class, args);
@@ -82,19 +107,36 @@ public class RetailFragment extends BaseFragment {
     }
 
     @Override
+    @SuppressLint("SetJavaScriptEnabled")
     public void onViewCreated(View view, Bundle icicle){
-        if(retailPractice != null) {
-            initToolbar(view);
+        initToolbar(view);
+        if(retailPractice != null && returnUrl == null) {
 
             shoppingWebView = (WebView) view.findViewById(R.id.shoppingWebView);
             WebView.setWebContentsDebuggingEnabled(true);
             WebSettings settings = shoppingWebView.getSettings();
             settings.setJavaScriptEnabled(true);
             shoppingWebView.setWebViewClient(new RetailViewClient());
+            shoppingWebView.addJavascriptInterface(new RetailJavascriptInterface(), "RetailInterface");
 
-            shoppingWebView.loadDataWithBaseURL("data:text/html", retailPractice.getStore().getStoreHtml(), "text/html", "utf-8", "data:text/html");
-//            shoppingWebView.loadDataWithBaseURL(null, getHtmlData(), "text/html", "utf-8", null);
+
+            shoppingWebView.loadDataWithBaseURL("data:text/html", addCallback(retailPractice.getStore().getStoreHtml()), "text/html", "utf-8", "data:text/html");
+//            shoppingWebView.loadData(getIframeHtml(retailPractice.getStore().getStoreHtml()), "text/html", "utf-8");
+//            shoppingWebView.loadDataWithBaseURL("about:blank", retailPractice.getStore().getStoreHtml(), "text/html", "utf-8", "about:blank");
+
         }
+        if(returnUrl != null){
+            shoppingWebView.loadUrl(returnUrl);
+        }
+    }
+
+    /**
+     * Load payment redirect into existing webview
+     * @param returnUrl returnUrl
+     */
+    public void loadPaymentRedirectUrl(String returnUrl){
+        this.returnUrl = returnUrl;
+//        shoppingWebView.loadUrl(returnUrl);
     }
 
     private void initToolbar(View view){
@@ -171,6 +213,16 @@ public class RetailFragment extends BaseFragment {
                 "</html>";
     }
 
+
+    private String addCallback(String storeHtml){
+        return storeHtml +
+                "<script type=\"text/javascript\">Ecwid.OnPageLoad.add(" +
+                "function(page){" +
+                "RetailInterface.retailRedirect(window.location.href);" +
+                "});" +
+                "</script>";
+    }
+
     private static String hmacSha1(String value, String key)
             throws UnsupportedEncodingException, NoSuchAlgorithmException,
             InvalidKeyException {
@@ -195,9 +247,42 @@ public class RetailFragment extends BaseFragment {
         return new String(hexChars);
     }
 
+
+    private void startPaymentRequest(String storeId, String orderId, String amountString){
+        try {
+            double amount = Double.parseDouble(amountString);
+            IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
+            postModel.setAmount(amount);
+            postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
+            postModel.setOrderId(orderId);
+            postModel.setStoreId(storeId);
+
+            callback.getPaymentModel().getPaymentPayload().setPaymentPostModel(postModel);
+            callback.onPayButtonClicked(amount, callback.getPaymentModel());
+
+        }catch (NumberFormatException nfe){
+            nfe.printStackTrace();
+            showErrorNotification("Payment Amount Error");
+        }
+
+    }
+
+
+
     private class RetailViewClient extends WebViewClient {
+
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            Uri uri = Uri.parse(url);
+            String query = uri.getQuery();
+            String baseUrl = url.replace(query, "").replace("?", "");
+            if(HttpConstants.getRetailPaymentsRedirectUrl().equals(baseUrl)){
+                String orderId = uri.getQueryParameter(QUERY_ORDER);
+                String amountString = uri.getQueryParameter(QUERY_AMOUNT);
+                String storeId = uri.getQueryParameter(QUERY_STORE);
+                startPaymentRequest(storeId, orderId, amountString);
+                return true;
+            }
             view.loadUrl(url);
             return true;
         }
@@ -208,8 +293,31 @@ public class RetailFragment extends BaseFragment {
         }
 
         @Override
+        public WebResourceResponse shouldInterceptRequest(WebView webView, String url){
+            return super.shouldInterceptRequest(webView, url);
+        }
+
+        @Override
         public void onPageFinished(WebView webView, String url){
             super.onPageFinished(webView, url);
+            loadedUrl = url;
+        }
+    }
+
+
+    private class RetailJavascriptInterface {
+
+        @JavascriptInterface
+        public void retailRedirect(final String url){
+            if(loadedUrl!=null && loadedUrl.equals(url)){
+                return;
+            }
+            shoppingWebView.post(new Runnable() {
+                @Override
+                public void run() {
+                    shoppingWebView.loadDataWithBaseURL("data:text/html", addCallback(url), "text/html", "utf-8", "data:text/html");
+                }
+            });
         }
     }
 

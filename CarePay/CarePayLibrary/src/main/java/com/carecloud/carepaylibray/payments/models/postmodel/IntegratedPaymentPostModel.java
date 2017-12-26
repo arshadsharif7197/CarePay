@@ -19,6 +19,22 @@ public class IntegratedPaymentPostModel {
     public static final String EXECUTION_ANDROID = "android_pay";
     public static final String EXECUTION_PAYEEZY = "payeezy";
 
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(String storeId) {
+        this.storeId = storeId;
+    }
+
     @StringDef({EXECUTION_CLOVER, EXECUTION_ANDROID, EXECUTION_PAYEEZY})
     @Retention(RetentionPolicy.SOURCE)
     public @interface ExecutionType{};
@@ -40,6 +56,12 @@ public class IntegratedPaymentPostModel {
 
     @SerializedName("payment_method")
     private PapiPaymentMethod papiPaymentMethod = new PapiPaymentMethod();
+
+    @SerializedName("order_id")
+    private String orderId;
+
+    @SerializedName("store_id")
+    private String storeId;
 
     public double getAmount() {
         return amount;
