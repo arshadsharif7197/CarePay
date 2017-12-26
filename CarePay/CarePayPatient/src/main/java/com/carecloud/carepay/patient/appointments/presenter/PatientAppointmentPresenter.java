@@ -446,6 +446,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                             PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
                                     .newInstance(paymentsModel, Double.parseDouble(cancellationFee.getAmount()));
                             viewHandler.navigateToFragment(prepaymentFragment, true);
+
+                            MixPanelUtil.logEvent(getString(R.string.event_payment_cancellation_started));
                         }
                     }
                 }).show();
@@ -604,7 +606,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                 .newInstance(paymentsModel, amount);
         viewHandler.navigateToFragment(prepaymentFragment, true);
 
-        MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment));
+        MixPanelUtil.logEvent(getString(R.string.event_payment_start_prepayment));
     }
 
     @Override

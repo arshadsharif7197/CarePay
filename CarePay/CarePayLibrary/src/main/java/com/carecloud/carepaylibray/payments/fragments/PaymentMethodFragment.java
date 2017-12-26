@@ -26,6 +26,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -151,10 +152,12 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
                     public void onActionButton() {
                     }
                 }).show();
+                logPaymentMethodSelection(getString(R.string.payment_cash));
                 break;
 
             case CarePayConstants.TYPE_CREDIT_CARD:
                 callback.onPaymentMethodAction(paymentMethod, amount, paymentsModel);
+                logPaymentMethodSelection(getString(R.string.payment_credit_card));
                 break;
 
             default:
@@ -197,5 +200,8 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
         return paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments().getPaymentMethods();
     }
 
+    protected void logPaymentMethodSelection(String type){
+        MixPanelUtil.logEvent(getString(R.string.event_payment_method_selected), getString(R.string.param_payment_type), type);
+    }
 
 }
