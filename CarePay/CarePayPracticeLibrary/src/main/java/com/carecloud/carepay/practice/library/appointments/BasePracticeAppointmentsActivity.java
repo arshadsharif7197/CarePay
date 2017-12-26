@@ -366,7 +366,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
                 .newInstance(paymentsModel, amount);
         displayDialogFragment(prepaymentFragment, true);
 
-        MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment));
+        MixPanelUtil.logEvent(getString(R.string.event_payment_start_prepayment));
     }
 
     @Override

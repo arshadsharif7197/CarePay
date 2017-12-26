@@ -712,6 +712,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         PracticePaymentMethodPrepaymentFragment prepaymentFragment = PracticePaymentMethodPrepaymentFragment
                 .newInstance(paymentsModel, amount);
         displayDialogFragment(prepaymentFragment, true);
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_start_prepayment));
     }
 
     @Override

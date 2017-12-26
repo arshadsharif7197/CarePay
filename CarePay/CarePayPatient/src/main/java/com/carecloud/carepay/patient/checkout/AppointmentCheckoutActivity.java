@@ -509,6 +509,8 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
                 .newInstance(paymentsModel, amount);
         addFragment(prepaymentFragment, true);
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_start_prepayment));
     }
 
     @Override
