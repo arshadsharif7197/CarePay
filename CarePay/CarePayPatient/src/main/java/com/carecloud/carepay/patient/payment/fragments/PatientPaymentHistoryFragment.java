@@ -175,8 +175,9 @@ public class PatientPaymentHistoryFragment extends BaseFragment
                 paging = nextPage;
                 List<PaymentHistoryItem> newItems = paymentsModel.getPaymentPayload()
                         .getTransactionHistory().getPaymentHistoryList();
-                setAdapter(newItems);
-                paymentHistoryItems.addAll(filterPaymentHistory(newItems));
+                List<PaymentHistoryItem>filteredItems = filterPaymentHistory(newItems);
+                setAdapter(filteredItems);
+                paymentHistoryItems.addAll(filteredItems);
             }
             isPaging = false;
         }
