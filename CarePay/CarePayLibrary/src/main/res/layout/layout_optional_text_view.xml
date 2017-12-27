@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/DemographicsOptionalLabelStyle"
     android:layout_gravity="center_vertical|end"
-    android:layout_marginEnd="@dimen/dimen_35dp"
+    android:layout_marginEnd="@dimen/dimen_38dp"
     app:customAssetFont="proxima_nova_semi_bold"
     breeze:textKey="demographics_details_optional_hint"
     tools:showIn="@layout/fragment_base_demographics"
