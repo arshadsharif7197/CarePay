@@ -120,8 +120,9 @@ public class RetailFragment extends BaseFragment {
             shoppingWebView.addJavascriptInterface(new RetailJavascriptInterface(), "RetailInterface");
 
 
-            shoppingWebView.loadDataWithBaseURL("data:text/html", addCallback(retailPractice.getStore().getStoreHtml()), "text/html", "utf-8", "data:text/html");
-//            shoppingWebView.loadData(getIframeHtml(retailPractice.getStore().getStoreHtml()), "text/html", "utf-8");
+//            shoppingWebView.loadDataWithBaseURL("data:text/html", addCallback(retailPractice.getStore().getStoreHtml()), "text/html", "utf-8", "data:text/html");
+            shoppingWebView.loadData(getIframeHtml(retailPractice.getStore().getStoreHtml()), "text/html", "utf-8");
+//            shoppingWebView.loadData(retailPractice.getStore().getStoreHtml(), "text/html", "utf-8");
 //            shoppingWebView.loadDataWithBaseURL("about:blank", retailPractice.getStore().getStoreHtml(), "text/html", "utf-8", "about:blank");
 
         }
@@ -163,6 +164,11 @@ public class RetailFragment extends BaseFragment {
             return true;
         }
         return false;
+    }
+
+    private String getIframeHtml(String html){
+//        html = html.replace("\"", "'");
+        return "<style>body{margin:0;} iframe{width:100vw; height:100vh; margin:0; padding:0; border:none;}</style><iframe srcdoc='"+html+"' ></iframe>";
     }
 
     private void initSsoPayload(){
@@ -273,15 +279,17 @@ public class RetailFragment extends BaseFragment {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            Uri uri = Uri.parse(url);
-            String query = uri.getQuery();
-            String baseUrl = url.replace(query, "").replace("?", "");
-            if(HttpConstants.getRetailPaymentsRedirectUrl().equals(baseUrl)){
-                String orderId = uri.getQueryParameter(QUERY_ORDER);
-                String amountString = uri.getQueryParameter(QUERY_AMOUNT);
-                String storeId = uri.getQueryParameter(QUERY_STORE);
-                startPaymentRequest(storeId, orderId, amountString);
-                return true;
+            if(url != null) {
+                Uri uri = Uri.parse(url);
+                String query = uri.getQuery();
+                String baseUrl = url.replace(query, "").replace("?", "");
+                if (HttpConstants.getRetailPaymentsRedirectUrl().equals(baseUrl)) {
+                    String orderId = uri.getQueryParameter(QUERY_ORDER);
+                    String amountString = uri.getQueryParameter(QUERY_AMOUNT);
+                    String storeId = uri.getQueryParameter(QUERY_STORE);
+                    startPaymentRequest(storeId, orderId, amountString);
+                    return true;
+                }
             }
             view.loadUrl(url);
             return true;
