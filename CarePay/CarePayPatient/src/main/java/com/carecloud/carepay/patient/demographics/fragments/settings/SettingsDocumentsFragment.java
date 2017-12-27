@@ -294,7 +294,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
      */
     public void updateInsuranceList(DemographicDTO demographicDTO) {
         this.demographicDTO = demographicDTO;
-        if (getView() != null) {
+        if (getView() != null && isAdded()) {
             initHealthInsuranceList(getView());
         }
     }
