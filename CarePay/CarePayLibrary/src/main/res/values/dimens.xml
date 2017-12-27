@@ -457,5 +457,6 @@
     <dimen name="confirmationNumberTextSize">11sp</dimen>
     <dimen name="icon_check_size">130dp</dimen>
     <dimen name="confirmationPracticeNameMargin">20dp</dimen>
+    <dimen name="dimen_35dp">35dp</dimen>
 
 </resources>
