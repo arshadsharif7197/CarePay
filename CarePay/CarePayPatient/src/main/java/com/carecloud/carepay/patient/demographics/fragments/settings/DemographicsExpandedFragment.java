@@ -768,7 +768,6 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         return updatableDemographicDTO;
     }
 
-
     private void updateDemographics() {
         if (passConstraints(true)) {
             Map<String, String> header = new HashMap<>();
