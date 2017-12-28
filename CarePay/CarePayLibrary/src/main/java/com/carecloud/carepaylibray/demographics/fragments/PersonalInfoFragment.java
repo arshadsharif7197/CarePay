@@ -211,7 +211,6 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
 
     }
 
-
     private TextWatcher dateInputFormatter = new TextWatcher() {
         int lastLength;
 
@@ -230,7 +229,6 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
             StringUtil.autoFormatDateOfBirth(editable, lastLength);
         }
     };
-
 
     private View.OnClickListener selectEndOnClick = new View.OnClickListener() {
         @Override
@@ -303,7 +301,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
             }
 
             return true;
-        }finally {
+        } finally {
             setUserAction(false);
         }
     }
