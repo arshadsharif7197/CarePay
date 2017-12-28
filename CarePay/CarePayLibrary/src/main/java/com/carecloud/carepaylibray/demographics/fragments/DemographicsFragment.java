@@ -71,8 +71,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
     private DemographicsOption selectedReferralSource = new DemographicsOption();
     private EmployerDto selectedEmployer = new EmployerDto();
     private PatientModel emergencyContac;
-    private PhysicianDto primaryPhysician = new PhysicianDto();
-    private PhysicianDto referringPhysician = new PhysicianDto();
+//    private PhysicianDto primaryPhysician = new PhysicianDto();
+//    private PhysicianDto referringPhysician = new PhysicianDto();
     private boolean showEmployerFields;
     private View employerDependentFieldsLayout;
 
@@ -222,48 +222,48 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 R.id.referralSourceInputLayout, R.id.referralSourceEditText,
                 R.id.referralSourceOptional, selectedReferralSource, Label.getLabel("demographics_referral_source"));
 
-        setUpPrimaryCarePhysician(view, demographicPayload.getPrimaryPhysician(), demographic.getPrimaryPhysician());
-        setUpReferringPhysician(view, demographicPayload.getReferringPhysician(), demographic.getReferringPhysician());
+//        setUpPrimaryCarePhysician(view, demographicPayload.getPrimaryPhysician(), demographic.getPrimaryPhysician());
+//        setUpReferringPhysician(view, demographicPayload.getReferringPhysician(), demographic.getReferringPhysician());
     }
 
-    private void setUpPrimaryCarePhysician(View view, PhysicianDto primaryPhysician,
-                                           DemographicPhysicianSection physicianMetadata) {
-        this.primaryPhysician = primaryPhysician;
-        setUpPhysicianField(view, primaryPhysician, physicianMetadata,
-                R.id.primaryPhysicianDemographicsLayout, R.id.primaryPhysicianInputLayout,
-                R.id.primaryPhysicianEditText, R.id.primaryPhysicianOptional, SearchPhysicianFragment.PRIMARY_PHYSICIAN);
-    }
+//    private void setUpPrimaryCarePhysician(View view, PhysicianDto primaryPhysician,
+//                                           DemographicPhysicianSection physicianMetadata) {
+//        this.primaryPhysician = primaryPhysician;
+//        setUpPhysicianField(view, primaryPhysician, physicianMetadata,
+//                R.id.primaryPhysicianDemographicsLayout, R.id.primaryPhysicianInputLayout,
+//                R.id.primaryPhysicianEditText, R.id.primaryPhysicianOptional, SearchPhysicianFragment.PRIMARY_PHYSICIAN);
+//    }
+//
+//    private void setUpReferringPhysician(View view, PhysicianDto referringPhysician,
+//                                         DemographicPhysicianSection physicianMetadata) {
+//        this.referringPhysician = referringPhysician;
+//        setUpPhysicianField(view, referringPhysician, physicianMetadata,
+//                R.id.referringPhysicianDemographicsLayout, R.id.referringPhysicianInputLayout,
+//                R.id.referringPhysicianEditText, R.id.referringPhysicianOptional, SearchPhysicianFragment.REFERRING_PHYSICIAN);
+//    }
 
-    private void setUpReferringPhysician(View view, PhysicianDto referringPhysician,
-                                         DemographicPhysicianSection physicianMetadata) {
-        this.referringPhysician = referringPhysician;
-        setUpPhysicianField(view, referringPhysician, physicianMetadata,
-                R.id.referringPhysicianDemographicsLayout, R.id.referringPhysicianInputLayout,
-                R.id.referringPhysicianEditText, R.id.referringPhysicianOptional, SearchPhysicianFragment.REFERRING_PHYSICIAN);
-    }
-
-    protected void setUpPhysicianField(View view, final PhysicianDto physician,
-                                       DemographicPhysicianSection demographicsField,
-                                       int containerLayout, int inputLayoutId, int editTextId,
-                                       int optionalViewId, final int physicianType) {
-        view.findViewById(containerLayout).setVisibility(demographicsField.isDisplay() ? View.VISIBLE : View.GONE);
-        final TextInputLayout inputLayout = (TextInputLayout) view.findViewById(inputLayoutId);
-        final EditText editText = (EditText) view.findViewById(editTextId);
-        editText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(inputLayout, null));
-        if (physician != null) {
-            editText.setText(physician.getFormattedName());
-        }
-        editText.getOnFocusChangeListener().onFocusChange(editText,
-                !StringUtil.isNullOrEmpty(editText.getText().toString().trim()));
-        final View optionalView = view.findViewById(optionalViewId);
-        optionalView.setVisibility(!demographicsField.isRequired() && physician == null ? View.VISIBLE : View.GONE);
-        editText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.showSearchPhysicianFragmentDialog(physician, physicianType);
-            }
-        });
-    }
+//    protected void setUpPhysicianField(View view, final PhysicianDto physician,
+//                                       DemographicPhysicianSection demographicsField,
+//                                       int containerLayout, int inputLayoutId, int editTextId,
+//                                       int optionalViewId, final int physicianType) {
+//        view.findViewById(containerLayout).setVisibility(demographicsField.isDisplay() ? View.VISIBLE : View.GONE);
+//        final TextInputLayout inputLayout = (TextInputLayout) view.findViewById(inputLayoutId);
+//        final EditText editText = (EditText) view.findViewById(editTextId);
+//        editText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(inputLayout, null));
+//        if (physician != null) {
+//            editText.setText(physician.getFormattedName());
+//        }
+//        editText.getOnFocusChangeListener().onFocusChange(editText,
+//                !StringUtil.isNullOrEmpty(editText.getText().toString().trim()));
+//        final View optionalView = view.findViewById(optionalViewId);
+//        optionalView.setVisibility(!demographicsField.isRequired() && physician == null ? View.VISIBLE : View.GONE);
+//        editText.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                callback.showSearchPhysicianFragmentDialog(physician, physicianType);
+//            }
+//        });
+//    }
 
     private void setUpBaseDemographicFields(View view, DemographicPayloadDTO demographicPayload,
                                             DemographicsPersonalSection personalInfoSection) {
@@ -803,25 +803,25 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 showErrorViews(false, (ViewGroup) view.findViewById(R.id.emergencyContactDemographicsLayout));
             }
 
-            if (dataModel.getDemographic().getPrimaryPhysician().isRequired()
-                    && primaryPhysician == null) {
-                if (isUserAction()) {
-                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.primaryPhysicianDemographicsLayout));
-                }
-                return false;
-            } else {
-                showErrorViews(false, (ViewGroup) view.findViewById(R.id.primaryPhysicianDemographicsLayout));
-            }
-
-            if (dataModel.getDemographic().getReferringPhysician().isRequired()
-                    && referringPhysician == null) {
-                if (isUserAction()) {
-                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.referringPhysicianDemographicsLayout));
-                }
-                return false;
-            } else {
-                showErrorViews(false, (ViewGroup) view.findViewById(R.id.referringPhysicianDemographicsLayout));
-            }
+//            if (dataModel.getDemographic().getPrimaryPhysician().isRequired()
+//                    && primaryPhysician == null) {
+//                if (isUserAction()) {
+//                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.primaryPhysicianDemographicsLayout));
+//                }
+//                return false;
+//            } else {
+//                showErrorViews(false, (ViewGroup) view.findViewById(R.id.primaryPhysicianDemographicsLayout));
+//            }
+//
+//            if (dataModel.getDemographic().getReferringPhysician().isRequired()
+//                    && referringPhysician == null) {
+//                if (isUserAction()) {
+//                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.referringPhysicianDemographicsLayout));
+//                }
+//                return false;
+//            } else {
+//                showErrorViews(false, (ViewGroup) view.findViewById(R.id.referringPhysicianDemographicsLayout));
+//            }
 
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getReferralSource().isRequired()
                     && StringUtil.isNullOrEmpty(selectedReferralSource.getName())) {
@@ -1093,8 +1093,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
         updatableDemographicDTO.getPayload().getDemographics().getPayload().setPersonalDetails(demographicPersDetailsPayloadDTO);
         updatableDemographicDTO.getPayload().getDemographics().getPayload().setEmploymentInfoModel(demographicEmploymentInfoModel);
-        updatableDemographicDTO.getPayload().getDemographics().getPayload().setPrimaryPhysician(primaryPhysician);
-        updatableDemographicDTO.getPayload().getDemographics().getPayload().setReferringPhysician(referringPhysician);
+//        updatableDemographicDTO.getPayload().getDemographics().getPayload().setPrimaryPhysician(primaryPhysician);
+//        updatableDemographicDTO.getPayload().getDemographics().getPayload().setReferringPhysician(referringPhysician);
         updatableDemographicDTO.setMetadata(demographicDTO.getMetadata());
         updatableDemographicDTO.getPayload().setAppointmentpayloaddto(demographicDTO.getPayload().getAppointmentpayloaddto());
         return updatableDemographicDTO;
@@ -1157,18 +1157,18 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
     @Override
     public void setPhysician(PhysicianDto physician, int physicianType) {
-        TextInputLayout inputLayout;
-        if (physicianType == SearchPhysicianFragment.PRIMARY_PHYSICIAN) {
-            setUpPrimaryCarePhysician(getView(), physician,
-                    demographicDTO.getMetadata().getNewDataModel().getDemographic().getPrimaryPhysician());
-            inputLayout = (TextInputLayout) getView().findViewById(R.id.primaryPhysicianInputLayout);
-        } else {
-            setUpReferringPhysician(getView(), physician,
-                    demographicDTO.getMetadata().getNewDataModel().getDemographic().getReferringPhysician());
-            inputLayout = (TextInputLayout) getView().findViewById(R.id.referringPhysicianInputLayout);
-        }
-        inputLayout.setError(null);
-        inputLayout.setErrorEnabled(false);
-        checkIfEnableButton(getView());
+//        TextInputLayout inputLayout;
+//        if (physicianType == SearchPhysicianFragment.PRIMARY_PHYSICIAN) {
+//            setUpPrimaryCarePhysician(getView(), physician,
+//                    demographicDTO.getMetadata().getNewDataModel().getDemographic().getPrimaryPhysician());
+//            inputLayout = (TextInputLayout) getView().findViewById(R.id.primaryPhysicianInputLayout);
+//        } else {
+//            setUpReferringPhysician(getView(), physician,
+//                    demographicDTO.getMetadata().getNewDataModel().getDemographic().getReferringPhysician());
+//            inputLayout = (TextInputLayout) getView().findViewById(R.id.referringPhysicianInputLayout);
+//        }
+//        inputLayout.setError(null);
+//        inputLayout.setErrorEnabled(false);
+//        checkIfEnableButton(getView());
     }
 }
