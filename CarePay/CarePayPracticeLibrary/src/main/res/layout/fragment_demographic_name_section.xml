@@ -10,7 +10,6 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-
     <LinearLayout
         android:id="@+id/firstNameContainer"
         android:layout_width="match_parent"

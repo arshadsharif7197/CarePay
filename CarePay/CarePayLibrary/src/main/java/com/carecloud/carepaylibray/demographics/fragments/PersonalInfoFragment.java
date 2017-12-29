@@ -185,8 +185,8 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
 
     @Override
     protected boolean passConstraints(View view) {
-        try {
 
+        try {
             String firstNameValue = ((EditText) view.findViewById(R.id.reviewdemogrFirstNameEdit)).getText().toString();
             if (validateField(view, dataModel.getDemographic().getPersonalDetails().getProperties()
                             .getFirstName().isRequired(), firstNameValue, R.id.firstNameContainer,
@@ -216,8 +216,8 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
                         .getDateOfBirthValidationResultMessage(dateOfBirth.getText().toString().trim());
                 if (dateValidationResult != null) {
                     setFieldError(dateBirthLayout, dateValidationResult, isUserAction());
-                    if (isUserAction()){
-                        showErrorViews(true, (ViewGroup)view.findViewById(R.id.dobContainer));
+                    if (isUserAction()) {
+                        showErrorViews(true, (ViewGroup) view.findViewById(R.id.dobContainer));
                     }
                     return false;
                 }
@@ -234,8 +234,8 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
                     !StringUtil.isNullOrEmpty(phoneNumber.getText().toString().trim()) &&
                     !ValidationHelper.isValidString(phoneNumber.getText().toString().trim(), ValidationHelper.PHONE_NUMBER_PATTERN)) {
                 setFieldError(phoneLayout, Label.getLabel("demographics_phone_number_validation_msg"), isUserAction());
-                if (isUserAction()){
-                    showErrorViews(true, (ViewGroup)view.findViewById(R.id.phoneNumberContainer));
+                if (isUserAction()) {
+                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.phoneNumberContainer));
                 }
                 return false;
             }
@@ -244,20 +244,6 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         } finally {
             setUserAction(false);
         }
-    }
-
-    private boolean validateField(View view, boolean isRequired, String value, int containerId,
-                                  int inputLayoutId, boolean shouldRequestFocus) {
-        if (isRequired && StringUtil.isNullOrEmpty(value)) {
-            if (shouldRequestFocus) {
-                showErrorViews(true, (ViewGroup) view.findViewById(containerId));
-                setDefaultError(view, inputLayoutId, shouldRequestFocus);
-            }
-            return true;
-        } else {
-            showErrorViews(false, (ViewGroup) view.findViewById(containerId));
-        }
-        return false;
     }
 
     @Override

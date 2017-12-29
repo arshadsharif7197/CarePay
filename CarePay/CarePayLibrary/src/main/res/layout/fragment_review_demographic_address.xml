@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/reviewdemographicsaddressContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="@dimen/dimen_18dp">
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/address1Container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/address1TextInputLayout"
             style="@style/SigninSignupTextInputStyle"
             android:layout_weight="1"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
-            app:customAssetFont="proxima_nova_semi_bold">
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/addressEditTextId"
@@ -30,49 +28,56 @@
                 android:inputType="textPostalAddress"
                 android:maxLength="50"
                 android:nextFocusForward="@+id/addressEditText2Id"
+                app:customAssetFont="proxima_nova_regular"
                 app:hintTextAppearance="@style/FloatingLabelStyle"
                 breeze:hintKey="demographics_address_line1"
-                tools:hint="Address Line 1"
-                app:customAssetFont="proxima_nova_regular"/>
+                tools:hint="Address Line 1" />
+
+        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/address2Container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+            android:id="@+id/address2TextInputLayout"
+            style="@style/SigninSignupTextInputStyle"
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                android:id="@+id/addressEditText2Id"
+                style="@style/SigninSignupEditStyle"
+                android:imeOptions="actionNext"
+                android:inputType="textPostalAddress"
+                android:maxLength="50"
+                android:nextFocusForward="@+id/zipCodeId"
+                app:customAssetFont="proxima_nova_regular"
+                breeze:hintKey="demographics_address_line2"
+                tools:hint="Address Line 2" />
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <include
+            android:id="@+id/demogrAddressOptionalLabel"
+            layout="@layout/layout_optional_text_view"
+            android:visibility="visible" />
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
-                android:id="@+id/address2TextInputLayout"
-                style="@style/SigninSignupTextInputStyle"
-                app:hintTextAppearance="@style/FloatingLabelStyle"
-                app:customAssetFont="proxima_nova_semi_bold">
+    </FrameLayout>
 
-                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
-                    android:id="@+id/addressEditText2Id"
-                    style="@style/SigninSignupEditStyle"
-                    android:imeOptions="actionNext"
-                    android:inputType="textPostalAddress"
-                    android:maxLength="50"
-                    android:nextFocusForward="@+id/zipCodeId"
-                    breeze:hintKey="demographics_address_line2"
-                    tools:hint="Address Line 2"
-                    app:customAssetFont="proxima_nova_regular"/>
-
-            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
-
-            <include
-                android:id="@+id/demogrAddressOptionalLabel"
-                layout="@layout/layout_optional_text_view"
-                android:visibility="visible"/>
-
-        </FrameLayout>
+    <FrameLayout
+        android:id="@+id/zipCodeContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/zipCodeTextInputLayout"
             style="@style/SigninSignupTextInputStyle"
             android:layout_weight="1"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
-            app:customAssetFont="proxima_nova_semi_bold">
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/zipCodeId"
@@ -81,59 +86,59 @@
                 android:imeOptions="actionNext"
                 android:maxLength="10"
                 android:nextFocusForward="@+id/cityId"
+                app:customAssetFont="proxima_nova_regular"
                 breeze:hintKey="demographics_zipcode"
-                tools:hint="Zip Code"
-                app:customAssetFont="proxima_nova_regular"/>
+                tools:hint="Zip Code" />
+
+        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/cityAndStateContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+            android:id="@+id/cityTextInputLayout"
+            style="@style/SigninSignupTextInputStyle"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                android:id="@+id/cityId"
+                style="@style/SigninSignupEditStyle"
+                android:imeOptions="actionDone"
+                app:customAssetFont="proxima_nova_regular"
+                breeze:hintKey="demographics_city"
+                tools:hint="City" />
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
-                android:id="@+id/cityTextInputLayout"
-                style="@style/SigninSignupTextInputStyle"
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                app:hintTextAppearance="@style/FloatingLabelStyle"
-                app:customAssetFont="proxima_nova_semi_bold">
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+            android:id="@+id/stateTextInputLayout"
+            style="@style/SigninSignupTextInputStyle"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
-                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
-                    android:id="@+id/cityId"
-                    style="@style/SigninSignupEditStyle"
-                    android:imeOptions="actionDone"
-                    breeze:hintKey="demographics_city"
-                    tools:hint="City"
-                    app:customAssetFont="proxima_nova_regular"/>
+            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                android:id="@+id/reviewDemographicsStateAutoCompleteTextView"
+                style="@style/SigninSignupEditStyle"
+                android:clickable="true"
+                android:focusable="false"
+                android:imeOptions="actionDone"
+                app:customAssetFont="proxima_nova_regular"
+                breeze:hintKey="demographics_state"
+                tools:hint="State" />
 
-            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
-
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
-                android:id="@+id/stateTextInputLayout"
-                style="@style/SigninSignupTextInputStyle"
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                app:hintTextAppearance="@style/FloatingLabelStyle"
-                app:customAssetFont="proxima_nova_semi_bold">
-
-                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
-                    android:id="@+id/reviewDemographicsStateAutoCompleteTextView"
-                    style="@style/SigninSignupEditStyle"
-                    android:imeOptions="actionDone"
-                    android:focusable="false"
-                    android:clickable="true"
-                    breeze:hintKey="demographics_state"
-                    tools:hint="State"
-                    app:customAssetFont="proxima_nova_regular"/>
-
-            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
-
-
-        </LinearLayout>
+        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
     </LinearLayout>
 
 </LinearLayout>
+

@@ -644,4 +644,18 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         }
     }
 
+    protected boolean validateField(View view, boolean isRequired, String value, int containerId,
+                                    int inputLayoutId, boolean shouldRequestFocus) {
+        if (isRequired && StringUtil.isNullOrEmpty(value)) {
+            if (shouldRequestFocus) {
+                showErrorViews(true, (ViewGroup) view.findViewById(containerId));
+                setDefaultError(view, inputLayoutId, shouldRequestFocus);
+            }
+            return true;
+        } else {
+            showErrorViews(false, (ViewGroup) view.findViewById(containerId));
+        }
+        return false;
+    }
+
 }
