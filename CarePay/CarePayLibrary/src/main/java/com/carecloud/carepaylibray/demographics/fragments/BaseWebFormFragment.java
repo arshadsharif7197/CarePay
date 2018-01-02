@@ -40,9 +40,15 @@ import com.carecloud.carepaylibray.utils.KeyboardWatcher;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.WebViewKeyboardAdjuster;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import com.marcok.stepprogressbar.StepProgressBar;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
@@ -62,6 +68,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
     private int totalForms;
     private int displayedFormsIndex;
 
+    protected List<JsonObject> jsonFormSaveResponseArray = new ArrayList<>();
     private CheckinFlowCallback callback;
 
     @Override
@@ -452,5 +459,26 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
             nextButton.setEnabled(true);
         }
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("formIndex", getDisplayedFormsIndex());
+        Gson gson = new Gson();
+        outState.putString("formResponses", gson.toJson(jsonFormSaveResponseArray));
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            int formIndex = savedInstanceState.getInt("formIndex", 0);
+            setDisplayedFormsIndex(formIndex);
+            Gson gson = new Gson();
+            Type listType = new TypeToken<List<JsonObject>>() {
+            }.getType();
+            jsonFormSaveResponseArray = gson.fromJson(savedInstanceState.getString("formResponses"), listType);
+        }
     }
 }

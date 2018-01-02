@@ -32,6 +32,9 @@
     <string name="event_payment_complete">Complete Payment</string>
     <string name="event_payment_failed">Failed Payment</string>
     <string name="event_payment_cancelled">Cancelled Payment</string>
+    <string name="event_payment_method_selected">Selected Payment Method</string>
+    <string name="event_payment_start_prepayment">Prepayment Started</string>
+    <string name="event_payment_cancellation_started">Cancellation Payment Started</string>
 
 
     <!--Parameters-->
@@ -102,5 +105,6 @@
     <string name="payment_cash">Cash</string>
     <string name="payment_check">Check</string>
     <string name="payment_clover">Clover</string>
+    <string name="payment_credit_card">Credit Card</string>
 
 </resources>

@@ -92,7 +92,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
     @Override
     public void onViewCreated(View view, Bundle icicle) {
         title.setText(Label.getLabel("payment_new_credit_card"));
-        nextButton.setText(Label.getLabel("payment_details_pay_now"));
+        nextButton.setText(Label.getLabel("add_credit_card_save_button_label"));
     }
 
 

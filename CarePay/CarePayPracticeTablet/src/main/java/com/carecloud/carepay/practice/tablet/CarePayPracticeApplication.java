@@ -35,7 +35,7 @@ public class CarePayPracticeApplication extends CarePayApplication
      * init app
      */
     public void start() {
-        mixpanelAPI = MixpanelAPI.getInstance(this.getApplicationContext(), getString(R.string.mixpanel_application_token));
+        mixpanelAPI = MixpanelAPI.getInstance(this.getApplicationContext(), BuildConfig.MIX_PANEL_TOKEN);
         setHttpConstants();
         registerActivityLifecycleCallbacks(this);
         ShamrockSdk.init(HttpConstants.getPaymentsApiKey(), HttpConstants.getDeepStreamUrl(), HttpConstants.getPaymentsUrl());

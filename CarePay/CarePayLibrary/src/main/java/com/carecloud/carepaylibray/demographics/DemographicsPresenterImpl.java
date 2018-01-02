@@ -81,7 +81,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         }
 
         WorkflowDTO workflowDTO = demographicsView.getConvertedDTO(WorkflowDTO.class);
-        displayStartFragment(workflowDTO);
+        displayFragment(workflowDTO);
 
         MixPanelUtil.setDemographics(demographicsView.getContext(), demographicDTO.getPayload().getDemographics().getPayload());
     }
@@ -118,7 +118,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         return currentFragment;
     }
 
-    private void displayStartFragment(WorkflowDTO workflowDTO) {
+    public void displayFragment(WorkflowDTO workflowDTO) {
         startCheckin = true;
         boolean isResume = true;
         boolean isGuest = !ValidationHelper.isValidEmail(((ISession) demographicsView.getContext()).getAppAuthorizationHelper().getCurrUser());
@@ -363,15 +363,16 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
                 = (HealthInsuranceFragment) fm.findFragmentByTag(tag);
         if (healthInsuranceFragment == null) {//may need to recreate it if no insurances
             healthInsuranceFragment = new HealthInsuranceFragment();
+            healthInsuranceFragment.updateInsuranceList(demographicDTO);
+            fm.popBackStack(InsuranceEditDialog.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            navigateToFragment(healthInsuranceFragment, true);
+            return;
         }
 
         if (!healthInsuranceFragment.isAdded()) {
-            fm.popBackStack();
             healthInsuranceFragment.updateInsuranceList(demographicDTO);
-            navigateToFragment(healthInsuranceFragment, true);
-        }
-
-        if (demographicDTO == null || proceed) {
+            fm.popBackStack(tag,0);
+        }else if (demographicDTO == null || proceed) {
             fm.executePendingTransactions();
             healthInsuranceFragment.openNextFragment(this.demographicDTO);
         } else {

@@ -28,7 +28,6 @@ import java.util.regex.Matcher;
 public class IntakeFormsFragment extends BaseWebFormFragment {
 
     private IntakeResponseModel intakeResponseModel;
-    private List<JsonObject> jsonFormSaveResponseArray = new ArrayList<>();
     private List<IntakeForm> intakeFormList;
     private IntakeFindings intakeFindings;
 
@@ -109,7 +108,6 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
         String body = gson.toJson(jsonFormSaveResponseArray);
         TransitionDTO transitionDTO = intakeResponseModel.getMetadata().getTransitions().getUpdateIntake();
         getWorkflowServiceHelper().execute(transitionDTO, getUpdateFormCallBack(getString(R.string.forms_type_intake)), body, queries, header);
-
     }
 
     @Override

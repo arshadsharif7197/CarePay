@@ -536,10 +536,10 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
             demographicsSettingsDTO.getPayload().getDemographics().getPayload().setAddress(updatedModel.getPayload().getDemographics().getPayload().getAddress());
             demographicsSettingsDTO.getPayload().getDemographics().getPayload().setPersonalDetails(updatedModel.getPayload().getDemographics().getPayload().getPersonalDetails());
 
-            getActivity().onBackPressed();
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
-
             MixPanelUtil.logEvent(getString(R.string.event_updated_demographics), getString(R.string.param_is_checkin), false);
+            getActivity().onBackPressed();
+
         }
 
         @Override
