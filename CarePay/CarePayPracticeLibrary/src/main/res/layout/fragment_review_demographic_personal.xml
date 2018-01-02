@@ -6,10 +6,10 @@
     android:fillViewport="true"
     android:orientation="vertical"
     android:focusable="true"
-    android:focusableInTouchMode="true"
-    android:paddingLeft="@dimen/dimen_57dp">
+    android:focusableInTouchMode="true">
 
-    <include layout="@layout/fragment_demographics_picture" />
+    <include layout="@layout/fragment_demographics_picture"
+        android:paddingLeft="@dimen/dimen_57dp" />
 
     <include layout="@layout/fragment_demographic_name_section" />
 

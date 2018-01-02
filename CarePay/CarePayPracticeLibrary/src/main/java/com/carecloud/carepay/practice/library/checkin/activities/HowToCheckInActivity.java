@@ -26,6 +26,7 @@ import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.qrcodescanner.ScannerQRActivity;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -203,6 +204,8 @@ public class HowToCheckInActivity extends BasePracticeActivity {
                 .equals(getApplicationMode().getUserPracticeDTO().getPracticeId())) {
 
             getAppAuthorizationHelper().setUser(scanQRCodeResultDTO.getUserName());
+
+            MixPanelUtil.setUser(this, scanQRCodeResultDTO.getUserId(), null);
 
             // getApplicationMode().getUserPracticeDTO().setUserName(scanQRCodeResultDTO.getUserName());
             Map<String, String> queryMap = new HashMap<String, String>();

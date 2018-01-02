@@ -7,6 +7,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
@@ -14,7 +15,6 @@ import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,13 +23,10 @@ import java.util.regex.Matcher;
 /**
  * Created by lmenendez on 3/23/17
  */
-
 public class FormsFragment extends BaseWebFormFragment {
 
     private ConsentFormDTO consentFormDTO;
-    private List<JsonObject> jsonFormSaveResponseArray = new ArrayList<>();
     private List<PracticeForm> consentFormList;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,13 +73,12 @@ public class FormsFragment extends BaseWebFormFragment {
             String formString = form.toString().replaceAll("\\\\", Matcher.quoteReplacement("\\\\")).replaceAll("\'", Matcher.quoteReplacement("\\\'"));
 
             loadFormUrl(formString, "load_form");
-
         }
     }
 
     @Override
     protected String getBaseUrl() {
-        return HttpConstants.getFormsUrl()+"/practice-forms/";
+        return HttpConstants.getFormsUrl() + "/practice-forms/";
     }
 
     @Override
@@ -93,7 +89,6 @@ public class FormsFragment extends BaseWebFormFragment {
         } else {
             jsonFormSaveResponseArray.add(jsonResponse);
         }
-
     }
 
     @Override
@@ -104,7 +99,6 @@ public class FormsFragment extends BaseWebFormFragment {
         queries.put("appointment_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getAppointmentId());
         queries.put("patient_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getPatientId());
 
-
         Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
         header.put("transition", "true");
         header.put("username_patient", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getUsername());
@@ -112,8 +106,7 @@ public class FormsFragment extends BaseWebFormFragment {
         Gson gson = new Gson();
         String body = gson.toJson(jsonFormSaveResponseArray);
         TransitionDTO transitionDTO = consentFormDTO.getMetadata().getTransitions().getUpdateConsent();
-        getWorkflowServiceHelper().execute(transitionDTO, updateformCallBack, body, queries, header);
-
+        getWorkflowServiceHelper().execute(transitionDTO, getUpdateFormCallBack(getString(R.string.forms_type_consent)), body, queries, header);
     }
 
     @Override
@@ -125,6 +118,5 @@ public class FormsFragment extends BaseWebFormFragment {
     protected CheckinFlowState getCheckinFlowState() {
         return CheckinFlowState.CONSENT;
     }
-
 
 }

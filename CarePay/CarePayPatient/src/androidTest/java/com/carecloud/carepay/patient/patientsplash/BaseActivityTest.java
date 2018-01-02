@@ -114,7 +114,7 @@ public class BaseActivityTest {
             SelectLanguageDTO signInSignUpDTO = gson.fromJson(workflowDTO.toString(), SelectLanguageDTO.class);
             Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
             header.put("Accept-Language", "en");
-            getWorkflowServiceHelper().execute(signInSignUpDTO.getMetadata().getTransitions().getSignin(), signInCallback, null, null, header);
+//            getWorkflowServiceHelper().execute(signInSignUpDTO.getMetadata().getTransitions().getSignin(), signInCallback, null, null, header);
             Log.d(TAG, "onPostExecute applicationStartCallback");
         }
 

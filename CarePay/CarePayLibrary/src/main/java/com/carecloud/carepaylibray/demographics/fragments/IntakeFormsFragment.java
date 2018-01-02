@@ -7,6 +7,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.intake.models.IntakeFindings;
 import com.carecloud.carepaylibray.intake.models.IntakeForm;
@@ -27,7 +28,6 @@ import java.util.regex.Matcher;
 public class IntakeFormsFragment extends BaseWebFormFragment {
 
     private IntakeResponseModel intakeResponseModel;
-    private List<JsonObject> jsonFormSaveResponseArray = new ArrayList<>();
     private List<IntakeForm> intakeFormList;
     private IntakeFindings intakeFindings;
 
@@ -107,8 +107,7 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
         Gson gson = new Gson();
         String body = gson.toJson(jsonFormSaveResponseArray);
         TransitionDTO transitionDTO = intakeResponseModel.getMetadata().getTransitions().getUpdateIntake();
-        getWorkflowServiceHelper().execute(transitionDTO, updateformCallBack, body, queries, header);
-
+        getWorkflowServiceHelper().execute(transitionDTO, getUpdateFormCallBack(getString(R.string.forms_type_intake)), body, queries, header);
     }
 
     @Override

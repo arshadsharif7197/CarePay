@@ -8,6 +8,7 @@ import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItemPayload;
 import com.carecloud.carepaylibray.payments.models.history.PaymentsTransactionHistory;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
+import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -43,9 +44,6 @@ public class PaymentsPayloadDTO implements Serializable {
     @SerializedName("patient_credit_cards")
     @Expose
     private List<PaymentsPatientsCreditCardsPayloadListDTO> patientCreditCards = new ArrayList<>();
-    @SerializedName("intake_forms")
-    @Expose
-    private PaymentsPayloadIntakeFormsDTO intakeForms = new PaymentsPayloadIntakeFormsDTO();
     @SerializedName("patient_payment_plans")
     @Expose
     private PaymentsPatientsPlansDTO patientPaymentPlans = new PaymentsPatientsPlansDTO();
@@ -85,6 +83,9 @@ public class PaymentsPayloadDTO implements Serializable {
     @SerializedName("payment_profile_id")
     @Expose
     private String paymentProfileId;
+    @SerializedName("languages")
+    @Expose
+    private List<OptionDTO> languages = new ArrayList<>();
     @SerializedName("organization_id")
     private String organizationId;
 
@@ -102,20 +103,6 @@ public class PaymentsPayloadDTO implements Serializable {
 
     public void setPatientPayments(PatientPaymentsDTO patientPayments) {
         this.patientPayments = patientPayments;
-    }
-
-    /**
-     * @return The intakeForms
-     */
-    public PaymentsPayloadIntakeFormsDTO getIntakeForms() {
-        return intakeForms;
-    }
-
-    /**
-     * @param intakeForms The intake_forms
-     */
-    public void setIntakeForms(PaymentsPayloadIntakeFormsDTO intakeForms) {
-        this.intakeForms = intakeForms;
     }
 
     /**
@@ -225,7 +212,7 @@ public class PaymentsPayloadDTO implements Serializable {
     public PapiAccountsDTO getPapiAccountByType(String accountType) {
         for (PapiAccountsDTO papiAccountDTO : getPapiAccounts()) {
             if (papiAccountDTO.getType().contains(accountType)) {
-               return papiAccountDTO ;
+                return papiAccountDTO;
             }
         }
         return null;
@@ -320,5 +307,13 @@ public class PaymentsPayloadDTO implements Serializable {
 
     public void setOrganizationId(String organizationId) {
         this.organizationId = organizationId;
+    }
+
+    public List<OptionDTO> getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(List<OptionDTO> languages) {
+        this.languages = languages;
     }
 }

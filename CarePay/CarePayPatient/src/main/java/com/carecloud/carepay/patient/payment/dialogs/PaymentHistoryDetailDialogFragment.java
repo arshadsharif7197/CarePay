@@ -98,6 +98,15 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
             }
         }, 100);
 
+        double refundedAmount = historyItem.getPayload().getTotalRefunded();
+        if(refundedAmount > 0D){
+            View refundLayout = view.findViewById(R.id.refund_layout);
+            refundLayout.setVisibility(View.VISIBLE);
+
+            TextView refundAmount = (TextView) view.findViewById(R.id.transaction_refunded);
+            refundAmount.setText(NumberFormat.getCurrencyInstance().format(historyItem.getPayload().getTotalRefunded()));
+        }
+
     }
 
     @Override

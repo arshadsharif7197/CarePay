@@ -60,6 +60,9 @@ public class LinksDTO extends BaseLinks {
     @SerializedName("appointment_status")
     @Expose
     private TransitionDTO appointmentStatus = new TransitionDTO();
+    @SerializedName(value = "language_metadata", alternate = "language")
+    @Expose
+    private TransitionDTO language = new TransitionDTO();
 
     /**
      * @return The demographics
@@ -202,5 +205,13 @@ public class LinksDTO extends BaseLinks {
 
     public void setAppointmentStatus(TransitionDTO appointmentStatus) {
         this.appointmentStatus = appointmentStatus;
+    }
+
+    public TransitionDTO getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(TransitionDTO language) {
+        this.language = language;
     }
 }

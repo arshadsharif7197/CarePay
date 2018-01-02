@@ -14,6 +14,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
@@ -39,13 +40,15 @@ import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragm
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
 
 public class DemographicsPresenterImpl implements DemographicsPresenter {
     private AppointmentDTO appointmentPayload;
     private DemographicsView demographicsView;
 
-    private DemographicDTO demographicDTO;
+    protected DemographicDTO demographicDTO;
     private final boolean isPatientMode;
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
 
@@ -78,13 +81,17 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         }
 
         WorkflowDTO workflowDTO = demographicsView.getConvertedDTO(WorkflowDTO.class);
-        displayStartFragment(workflowDTO);
+        displayFragment(workflowDTO);
+
+        MixPanelUtil.setDemographics(demographicsView.getContext(), demographicDTO.getPayload().getDemographics().getPayload());
     }
 
     @Override
     public void onSaveInstanceState(Bundle icicle) {
         icicle.putInt(SAVED_STEP_KEY, currentDemographicStep);
-        icicle.putString(CURRENT_ICICLE_FRAGMENT, currentFragment.getClass().getName());
+        if (currentFragment != null) {
+            icicle.putString(CURRENT_ICICLE_FRAGMENT, currentFragment.getClass().getName());
+        }
     }
 
     @Override
@@ -111,8 +118,12 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         return currentFragment;
     }
 
-    private void displayStartFragment(WorkflowDTO workflowDTO) {
+    public void displayFragment(WorkflowDTO workflowDTO) {
         startCheckin = true;
+        boolean isResume = true;
+        boolean isGuest = !ValidationHelper.isValidEmail(((ISession) demographicsView.getContext()).getAppAuthorizationHelper().getCurrUser());
+        String[] params = {getString(R.string.param_practice_id), getString(R.string.param_appointment_id), getString(R.string.param_appointment_type), getString(R.string.param_is_guest)};
+        Object[] values = {getAppointment().getMetadata().getPracticeId(), getAppointmentId(), getAppointment().getPayload().getVisitType().getName(), isGuest};
         switch (workflowDTO.getState()) {
             case NavigationStateConstants.CONSENT_FORMS:
                 navigateToConsentForms(workflowDTO);
@@ -125,7 +136,20 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
                 break;
             default:
                 navigateToDemographicFragment(currentDemographicStep);
+
+                if (currentDemographicStep == 1) {
+                    isResume = false;
+                    //Log Check-in Started
+                    if (getAppointment() != null) {
+                        MixPanelUtil.logEvent(getString(R.string.event_checkin_started), params, values);
+                    }
+                }
+                break;
         }
+        if (isResume) {
+            MixPanelUtil.logEvent(getString(R.string.event_checkin_resumed), params, values);
+        }
+        MixPanelUtil.startTimer(getString(R.string.timer_checkin));
         startCheckin = false;
     }
 
@@ -339,15 +363,16 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
                 = (HealthInsuranceFragment) fm.findFragmentByTag(tag);
         if (healthInsuranceFragment == null) {//may need to recreate it if no insurances
             healthInsuranceFragment = new HealthInsuranceFragment();
+            healthInsuranceFragment.updateInsuranceList(demographicDTO);
+            fm.popBackStack(InsuranceEditDialog.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            navigateToFragment(healthInsuranceFragment, true);
+            return;
         }
 
         if (!healthInsuranceFragment.isAdded()) {
-            fm.popBackStack();
             healthInsuranceFragment.updateInsuranceList(demographicDTO);
-            navigateToFragment(healthInsuranceFragment, true);
-        }
-
-        if (demographicDTO == null || proceed) {
+            fm.popBackStack(tag,0);
+        }else if (demographicDTO == null || proceed) {
             fm.executePendingTransactions();
             healthInsuranceFragment.openNextFragment(this.demographicDTO);
         } else {
@@ -369,9 +394,10 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     @Override
     public void showRemovePrimaryInsuranceDialog(HomeAlertDialogFragment.HomeAlertInterface callback) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        String message = isPatientMode ? Label.getLabel("demographics_insurance_primary_alert_message_patient")
+                : Label.getLabel("demographics_insurance_primary_alert_message");
         HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment
-                .newInstance(Label.getLabel("demographics_insurance_primary_alert_title"),
-                        Label.getLabel("demographics_insurance_primary_alert_message"));
+                .newInstance(Label.getLabel("demographics_insurance_primary_alert_title"), message);
         homeAlertDialogFragment.setCallback(callback);
         String tag = homeAlertDialogFragment.getClass().getName();
         homeAlertDialogFragment.show(ft, tag);
@@ -402,7 +428,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     protected boolean shouldPreventBackNav() {
-        return false;
+        return getCurrentStep() == 1;
     }
 
     @Override
@@ -453,5 +479,9 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         if (fragment instanceof EmergencyContactFragmentInterface) {
             ((EmergencyContactFragmentInterface) fragment).updateEmergencyContact(emergencyContact);
         }
+    }
+
+    private String getString(int id) {
+        return demographicsView.getContext().getString(id);
     }
 }

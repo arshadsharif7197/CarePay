@@ -22,6 +22,10 @@ public class DemographicLinksDTO {
     @Expose
     private TransitionDTO searchPhysicians = new TransitionDTO();
 
+    @SerializedName(value = "language_metadata", alternate = "language")
+    @Expose
+    private TransitionDTO language = new TransitionDTO();
+
     /**
      * @return The self
      */
@@ -56,5 +60,13 @@ public class DemographicLinksDTO {
 
     public void setSearchPhysicians(TransitionDTO searchPhysicians) {
         this.searchPhysicians = searchPhysicians;
+    }
+
+    public TransitionDTO getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(TransitionDTO language) {
+        this.language = language;
     }
 }

@@ -32,6 +32,7 @@ import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
+import com.carecloud.carepaylibray.translation.TranslatableFragment;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -50,7 +51,8 @@ import java.util.Map;
  * Use the {@link NextAppointmentFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NextAppointmentFragment extends BaseFragment implements NextAppointmentFragmentInterface {
+public class NextAppointmentFragment extends BaseFragment implements NextAppointmentFragmentInterface,
+        TranslatableFragment {
 
     private CheckOutInterface callback;
     private AppointmentsResultModel appointmentsResultModel;
@@ -105,9 +107,6 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        appointmentsResultModel = (AppointmentsResultModel) callback.getDto();
-        selectedAppointment = getAppointmentSelected();
-        selectedProvider = selectedAppointment.getPayload().getProvider();
     }
 
     @Override
@@ -119,6 +118,9 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        appointmentsResultModel = (AppointmentsResultModel) callback.getDto();
+        selectedAppointment = getAppointmentSelected();
+        selectedProvider = selectedAppointment.getPayload().getProvider();
         setUpToolbar(view);
         setUpUi(getView());
     }
@@ -253,15 +255,17 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
         ScheduleAppointmentRequestDTO scheduleAppointmentRequestDTO = new ScheduleAppointmentRequestDTO();
         ScheduleAppointmentRequestDTO.Appointment appointment = scheduleAppointmentRequestDTO
                 .getAppointment();
+        appointment.setProviderId(selectedProvider.getId());
+        appointment.setProviderGuid(selectedProvider.getGuid());
+        appointment.setVisitReasonId(visitType.getId());
+        appointment.setComplaint(visitType.getName());
         appointment.setStartTime(visitTime.getStartTime());
         appointment.setEndTime(visitTime.getEndTime());
         appointment.setLocationId(visitTime.getLocation().getId());
         appointment.setLocationGuid(visitTime.getLocation().getGuid());
-        appointment.setProviderId(appointmentResourcesDTO.getResource().getProvider().getId());
-        appointment.setProviderGuid(appointmentResourcesDTO.getResource().getProvider().getGuid());
-        appointment.setVisitReasonId(visitType.getId());
-        appointment.setResourceId(appointmentResourcesDTO.getResource().getId());
-        appointment.setComplaint(visitType.getName());
+        if (appointmentResourcesDTO != null) {
+            appointment.setResourceId(appointmentResourcesDTO.getResource().getId());
+        }
         appointment.setComments("");
         appointment.getPatient().setId(selectedAppointment.getMetadata().getPatientId());
 
@@ -303,6 +307,9 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
             } else {
                 callback.navigateToWorkflow(workflowDTO);
             }
+            if (!workflowDTO.getState().contains("checkout")) {
+                callback.completeCheckout();
+            }
         }
 
         @Override
@@ -336,6 +343,9 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
                 callback.showAllDone(workflowDTO);
             } else {
                 callback.navigateToWorkflow(workflowDTO);
+            }
+            if (!workflowDTO.getState().contains("checkout")) {
+                callback.completeCheckout();
             }
         }
 
@@ -406,13 +416,15 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
     }
 
     @Override
-    public void setSelectedProvider(ProviderDTO provider) {
+    public void setSelectedProvider(ProviderDTO provider, boolean showNextDialogs) {
         selectedProvider = provider;
         if (selectedProvider != null) {
             selectedAppointment.getPayload().setProvider(provider);
             chooseProviderTextView.setText(selectedProvider.getFullName());
             setUpProviderMessage(getView(), selectedProvider);
-            showVisitTypeFragment();
+            if (showNextDialogs) {
+                showVisitTypeFragment();
+            }
 
             visitTypeTextView.setText(null);
             setHint(visitTypeTextView, visitTypeTextInputLayout, null);
@@ -428,10 +440,11 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
     }
 
     /**
-     * @param visitTypeDTO the visit type
+     * @param visitTypeDTO    the visit type
+     * @param showNextDialogs
      */
     @Override
-    public boolean setVisitType(VisitTypeDTO visitTypeDTO) {
+    public boolean setVisitType(VisitTypeDTO visitTypeDTO, boolean showNextDialogs) {
         visitType = visitTypeDTO;
         visitTypeTextView.setText(visitTypeDTO.getName());
         setHint(visitTypeTextView, visitTypeTextInputLayout, visitTypeDTO.getName());
@@ -444,14 +457,15 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
         findViewById(R.id.providerMessageHeader).setSelected(false);
         setDefaultMessage();
         scheduleAppointmentButton.setEnabled(false);
-        return true;
+        return showNextDialogs;
     }
 
     /**
      * @param appointmentsSlot the location and time of the appointment
+     * @param showNextDialogs
      */
     @Override
-    public void setLocationAndTime(AppointmentsSlotsDTO appointmentsSlot) {
+    public void setLocationAndTime(AppointmentsSlotsDTO appointmentsSlot, boolean showNextDialogs) {
         this.visitTime = appointmentsSlot;
         String nextAppointmentDate = getNextAppointmentDate(appointmentsSlot.getStartTime());
         visitTimeTextView.setText(nextAppointmentDate);
@@ -502,4 +516,33 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
         }
     }
 
+    @Override
+    public Bundle saveInstanceForTranslation(Bundle bundle) {
+        Gson gson = new Gson();
+        bundle.putString("provider", gson.toJson(selectedProvider));
+        bundle.putString("visitType", gson.toJson(visitType));
+        bundle.putString("visitTime", gson.toJson(visitTime));
+        bundle.putString("appointmentResource", gson.toJson(appointmentResourcesDTO));
+        bundle.putBoolean("shouldReload", true);
+        return bundle;
+    }
+
+    @Override
+    public void restoreInstanceForTranslation(Bundle bundle) {
+        Gson gson = new Gson();
+        ProviderDTO provider = gson.fromJson(bundle.getString("provider"), ProviderDTO.class);
+        if (provider != null) {
+            setSelectedProvider(provider, false);
+        }
+        VisitTypeDTO visitType = gson.fromJson(bundle.getString("visitType"), VisitTypeDTO.class);
+        if (visitType != null) {
+            setVisitType(visitType, false);
+        }
+        AppointmentsSlotsDTO visitTime = gson.fromJson(bundle.getString("visitTime"),
+                AppointmentsSlotsDTO.class);
+        if (visitTime != null) {
+            setLocationAndTime(visitTime, false);
+        }
+        appointmentResourcesDTO = gson.fromJson(bundle.getString("appointmentResource"), AppointmentResourcesDTO.class);
+    }
 }

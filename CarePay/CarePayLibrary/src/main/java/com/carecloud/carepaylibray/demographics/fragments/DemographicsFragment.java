@@ -160,7 +160,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                     clearValidationErrorsOnTextChange((TextInputLayout) view.findViewById(R.id.socialSecurityInputLayout)));
         }
 
-        setUpDemographicField(view, demographicPayload.getPersonalDetails().getPreferredName(),
+        setUpDemographicField(view, StringUtil.captialize(demographicPayload.getPersonalDetails().getPreferredName()),
                 personalInfoSection.getProperties().getPreferredName(), R.id.preferredNameContainer,
                 R.id.preferredNameInputLayout, R.id.preferredName, R.id.preferredNameOptional, null, null);
 
@@ -350,11 +350,13 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         emergencyContactEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(emergencyContactInputLayout, null));
         if (emergencyContact != null) {
-            emergencyContactEditText.setText(emergencyContact.getFullName());
+            emergencyContactEditText.setText(StringUtil.captialize(emergencyContact.getFullName()));
         }
         emergencyContactEditText.getOnFocusChangeListener().onFocusChange(emergencyContactEditText,
                 !StringUtil.isNullOrEmpty(emergencyContactEditText.getText().toString().trim()));
         DemographicEmergencyContactSection emergencyContactSection = dataModel.getDemographic().getEmergencyContact();
+        view.findViewById(R.id.emergencyContactDemographicsLayout)
+                .setVisibility(emergencyContactSection.isDisplay() ? View.VISIBLE : View.GONE);
         view.findViewById(R.id.emergencyContactOptionalLabel)
                 .setVisibility(!emergencyContactSection.isRequired() && emergencyContact == null ? View.VISIBLE : View.GONE);
         emergencyContactEditText.setOnClickListener(new View.OnClickListener() {
@@ -436,7 +438,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         EditText employerNameEditText = (EditText) view.findViewById(R.id.employerNameEditText);
         employerNameEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(employerNameTextInputLayout, null));
-        employerNameEditText.setText(selectedEmployer.getName());
+        employerNameEditText.setText(StringUtil.captialize(selectedEmployer.getName()));
         employerNameEditText.getOnFocusChangeListener().onFocusChange(employerNameEditText,
                 !StringUtil.isNullOrEmpty(employerNameEditText.getText().toString().trim()));
         employerNameEditText.addTextChangedListener(new TextWatcher() {
@@ -469,7 +471,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         employerAddressEditText2 = (EditText) view.findViewById(R.id.addressEditText2);
         employerAddressEditText2.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(address2TextInputLayout, null));
-        employerAddressEditText2.setText(selectedEmployer.getAddress().getAddress2());
+        employerAddressEditText2.setText(StringUtil.captialize(selectedEmployer.getAddress().getAddress2()));
         employerAddressEditText2.getOnFocusChangeListener()
                 .onFocusChange(employerAddressEditText2, !StringUtil.isNullOrEmpty(employerAddressEditText2
                         .getText().toString()));
@@ -488,7 +490,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         cityEditText = (EditText) view.findViewById(R.id.cityTextView);
         cityEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(cityTextInputLayout, null));
-        cityEditText.setText(selectedEmployer.getAddress().getCity());
+        cityEditText.setText(StringUtil.captialize(selectedEmployer.getAddress().getCity()));
         cityEditText.getOnFocusChangeListener()
                 .onFocusChange(cityEditText, !StringUtil.isNullOrEmpty(cityEditText.getText().toString()));
         cityEditText.addTextChangedListener(clearValidationErrorsOnTextChange(cityTextInputLayout));
@@ -551,7 +553,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 checkIfEnableButton(view);
             }
         });
-        employerAddressEditText.setText(selectedEmployer.getAddress().getAddress1());
+        employerAddressEditText.setText(StringUtil.captialize(selectedEmployer.getAddress().getAddress1()));
         employerAddressEditText.getOnFocusChangeListener()
                 .onFocusChange(employerAddressEditText, !StringUtil.isNullOrEmpty(employerAddressEditText
                         .getText().toString()));
@@ -588,7 +590,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                     && StringUtil.isNullOrEmpty(selectedGender.getName())) {
                 if (isUserAction()) {
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.genderDemographicsLayout));
-                    setDefaultError(view, R.id.genderInputLayout);
+                    setDefaultError(view, R.id.genderInputLayout, isUserAction());
                 }
                 return false;
             } else {
@@ -599,7 +601,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                     && StringUtil.isNullOrEmpty(selectedRace.getName())) {
                 if (isUserAction()) {
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.raceDemographicsLayout));
-                    setDefaultError(view, R.id.raceInputLayout);
+                    setDefaultError(view, R.id.raceInputLayout, isUserAction());
                 }
                 return false;
             } else {
@@ -629,9 +631,25 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getPreferredName().isRequired()
                     && checkTextEmptyValue(R.id.preferredName, view)) {
                 if (isUserAction()) {
-                    setDefaultError(view, R.id.preferredNameInputLayout);
+                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.preferredNameContainer));
+                    setDefaultError(view, R.id.preferredNameInputLayout, isUserAction());
                 }
                 return false;
+            } else {
+                unsetFieldError(view, R.id.preferredNameInputLayout);
+                showErrorViews(false, (ViewGroup) view.findViewById(R.id.preferredNameContainer));
+            }
+
+            if (dataModel.getDemographic().getPersonalDetails().getProperties().getSocialSecurityNumber().isRequired()
+                    && checkTextEmptyValue(R.id.socialSecurityNumber, view)) {
+                if (isUserAction()) {
+                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.socialSecurityContainer));
+                    setDefaultError(view, R.id.socialSecurityInputLayout, isUserAction());
+                }
+                return false;
+            } else {
+                unsetFieldError(view, R.id.socialSecurityInputLayout);
+                showErrorViews(false, (ViewGroup) view.findViewById(R.id.socialSecurityContainer));
             }
 
             TextInputLayout socialSecurityInputLayout = (TextInputLayout) view.findViewById(R.id.socialSecurityInputLayout);
@@ -640,29 +658,45 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                     !StringUtil.isNullOrEmpty(socialSecurityNumber.getText().toString().trim()) &&
                     !ValidationHelper.isValidString(socialSecurityNumber.getText().toString().trim(),
                             ValidationHelper.SOCIAL_SECURITY_NUMBER_PATTERN)) {
-                socialSecurityInputLayout.setErrorEnabled(true);
-                socialSecurityInputLayout.setError(Label.getLabel("demographics_social_security_number_validation_msg"));
+                if (isUserAction()) {
+                    socialSecurityInputLayout.setErrorEnabled(true);
+                    socialSecurityInputLayout.setError(Label.getLabel("demographics_social_security_number_validation_msg"));
+                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.socialSecurityContainer));
+                }
                 return false;
             } else {
                 socialSecurityInputLayout.setError(null);
                 socialSecurityInputLayout.setErrorEnabled(false);
-            }
-
-            if (dataModel.getDemographic().getPersonalDetails().getProperties().getSocialSecurityNumber().isRequired()
-                    && checkTextEmptyValue(R.id.socialSecurityNumber, view)) {
-                if (isUserAction()) {
-                    setDefaultError(view, R.id.socialSecurityInputLayout);
-                }
-                return false;
+                showErrorViews(false, (ViewGroup) view.findViewById(R.id.socialSecurityContainer));
             }
 
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getEmailAddress().isRequired()
                     && checkTextEmptyValue(R.id.email, view)) {
                 if (isUserAction()) {
-                    setDefaultError(view, R.id.emailInputLayout);
+                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.emailContainer));
+                    setDefaultError(view, R.id.emailInputLayout, isUserAction());
                 }
                 return false;
+            } else {
+                unsetFieldError(view, R.id.emailInputLayout);
+                showErrorViews(false, (ViewGroup) view.findViewById(R.id.emailContainer));
             }
+
+            TextInputLayout emailLayout = (TextInputLayout) view.findViewById(R.id.emailInputLayout);
+            EditText emailAddress = (EditText) view.findViewById(R.id.email);
+            if (emailLayout.getVisibility() == View.VISIBLE &&
+                    !StringUtil.isNullOrEmpty(emailAddress.getText().toString().trim()) &&
+                    !ValidationHelper.isValidEmail(emailAddress.getText().toString().trim())) {
+                if (isUserAction()) {
+                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.emailContainer));
+                    setFieldError(emailLayout, Label.getLabel("demographics_email_validation_msg"), isUserAction());
+                }
+                return false;
+            } else {
+                unsetFieldError(emailLayout);
+                showErrorViews(false, (ViewGroup) view.findViewById(R.id.emailContainer));
+            }
+
 
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getPreferredLanguage().isRequired()
                     && StringUtil.isNullOrEmpty(selectedPreferredLanguage.getName())) {
@@ -677,9 +711,13 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getDriversLicenseNumber().isRequired()
                     && checkTextEmptyValue(R.id.driverLicense, view)) {
                 if (isUserAction()) {
-                    setDefaultError(view, R.id.driverLicenseInputLayout);
+                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.driverLicenseContainer));
+                    setDefaultError(view, R.id.driverLicenseInputLayout, isUserAction());
                 }
                 return false;
+            } else {
+                unsetFieldError(view, R.id.driverLicenseInputLayout);
+                showErrorViews(false, (ViewGroup) view.findViewById(R.id.driverLicenseContainer));
             }
 
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getDriversLicenseState().isRequired()
@@ -695,13 +733,31 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryPhoneNumber().isRequired()
                     && checkTextEmptyValue(R.id.secondaryPhone, view)) {
                 if (isUserAction()) {
-                    setDefaultError(view, R.id.secondaryPhoneInputLayout);
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.secondaryPhoneDemographicsLayout));
+                    setDefaultError(view, R.id.secondaryPhoneInputLayout, isUserAction());
                 }
                 return false;
             } else {
+                unsetFieldError(view, R.id.secondaryPhoneInputLayout);
                 showErrorViews(false, (ViewGroup) view.findViewById(R.id.secondaryPhoneDemographicsLayout));
             }
+
+            TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.secondaryPhoneInputLayout);
+            EditText secondaryPhoneNumber = (EditText) view.findViewById(R.id.secondaryPhone);
+            if (phoneLayout.getVisibility() == View.VISIBLE &&
+                    !StringUtil.isNullOrEmpty(secondaryPhoneNumber.getText().toString().trim()) &&
+                    !ValidationHelper.isValidString(secondaryPhoneNumber.getText().toString().trim(),
+                            ValidationHelper.PHONE_NUMBER_PATTERN)) {
+                if (isUserAction()) {
+                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.secondaryPhoneDemographicsLayout));
+                    setFieldError(phoneLayout, Label.getLabel("demographics_phone_number_validation_msg"), isUserAction());
+                }
+                return false;
+            } else {
+                unsetFieldError(phoneLayout);
+                showErrorViews(false, (ViewGroup) view.findViewById(R.id.secondaryPhoneDemographicsLayout));
+            }
+
 
             if (dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryPhoneNumberType().isRequired()
                     && StringUtil.isNullOrEmpty(selectedSecondaryPhoneType.getName())) {
@@ -751,7 +807,6 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                     && primaryPhysician == null) {
                 if (isUserAction()) {
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.primaryPhysicianDemographicsLayout));
-                    setDefaultError(view, R.id.primaryPhysicianInputLayout);
                 }
                 return false;
             } else {
@@ -762,7 +817,6 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                     && referringPhysician == null) {
                 if (isUserAction()) {
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.referringPhysicianDemographicsLayout));
-                    setDefaultError(view, R.id.referringPhysicianInputLayout);
                 }
                 return false;
             } else {
@@ -796,7 +850,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
                 if (StringUtil.isNullOrEmpty(selectedEmployer.getName())) {
                     if (isUserAction()) {
-                        setDefaultError(view, R.id.employerNameTextInputLayout);
+                        setDefaultError(view, R.id.employerNameTextInputLayout, isUserAction());
                         showErrorViews(true, (ViewGroup) view.findViewById(R.id.employerNameDemographicsLayout));
                     } else {
                         showErrorViews(false, (ViewGroup) view.findViewById(R.id.employerNameDemographicsLayout));
@@ -807,7 +861,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 if (StringUtil.isNullOrEmpty(employerAddressEditText.getText().toString())) {
                     if (isUserAction()) {
                         showErrorViews(true, (ViewGroup) view.findViewById(R.id.address1DemographicsLayout));
-                        setDefaultError(address1TextInputLayout);
+                        setDefaultError(address1TextInputLayout, isUserAction());
 
                     } else {
                         showErrorViews(false, (ViewGroup) view.findViewById(R.id.address1DemographicsLayout));
@@ -816,18 +870,9 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                     return false;
                 }
 
-                if (!StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString().trim()) &&
-                        !ValidationHelper.isValidString(zipCodeEditText.getText().toString().trim(),
-                                ValidationHelper.ZIP_CODE_PATTERN)) {
-                    setFieldError(zipCodeTextInputLayout, Label.getLabel("demographics_zip_code_validation_msg"));
-                    return false;
-                } else {
-                    unsetFieldError(zipCodeTextInputLayout);
-                }
-
                 if (StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())) {
                     if (isUserAction()) {
-                        setDefaultError(zipCodeTextInputLayout);
+                        setDefaultError(zipCodeTextInputLayout, isUserAction());
                     } else {
                         unsetFieldError(zipCodeTextInputLayout);
                     }
@@ -836,9 +881,18 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                     unsetFieldError(zipCodeTextInputLayout);
                 }
 
+                if (!StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString().trim()) &&
+                        !ValidationHelper.isValidString(zipCodeEditText.getText().toString().trim(),
+                                ValidationHelper.ZIP_CODE_PATTERN)) {
+                    setFieldError(zipCodeTextInputLayout, Label.getLabel("demographics_zip_code_validation_msg"), isUserAction());
+                    return false;
+                } else {
+                    unsetFieldError(zipCodeTextInputLayout);
+                }
+
                 if (StringUtil.isNullOrEmpty(cityEditText.getText().toString())) {
                     if (isUserAction()) {
-                        setDefaultError(view, R.id.cityTextInputLayout);
+                        setDefaultError(view, R.id.cityTextInputLayout, isUserAction());
                         cityEditText.requestFocus();
                     }
                     return false;
@@ -848,13 +902,33 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
                 if (StringUtil.isNullOrEmpty(stateEditText.getText().toString())) {
                     if (isUserAction()) {
-                        setDefaultError(view, R.id.stateTextInputLayout);
+                        setDefaultError(view, R.id.stateTextInputLayout, isUserAction());
                         stateEditText.requestFocus();
                     }
                     return false;
                 } else {
                     unsetFieldError(view, R.id.zipCodeTextInputLayout);
                 }
+
+
+                TextInputLayout employerPhoneLayout = (TextInputLayout) view.findViewById(R.id.phoneTextInputLayout);
+                EditText employerPhoneNumber = (EditText) view.findViewById(R.id.phoneTextView);
+                if (employerPhoneLayout.getVisibility() == View.VISIBLE &&
+                        !StringUtil.isNullOrEmpty(employerPhoneNumber.getText().toString().trim()) &&
+                        !ValidationHelper.isValidString(employerPhoneNumber.getText().toString().trim(),
+                                ValidationHelper.PHONE_NUMBER_PATTERN)) {
+                    if (isUserAction()) {
+                        showErrorViews(true, (ViewGroup) view.findViewById(R.id.employerPhoneContainer));
+                        setFieldError(employerPhoneLayout,
+                                Label.getLabel("demographics_phone_number_validation_msg"), isUserAction());
+                    }
+                    return false;
+                } else {
+                    unsetFieldError(employerPhoneLayout);
+                    showErrorViews(false, (ViewGroup) view.findViewById(R.id.employerPhoneContainer));
+                }
+
+
             } else {
                 zipCodeTextInputLayout.setError(null);
                 zipCodeTextInputLayout.setErrorEnabled(false);
@@ -868,7 +942,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                     && StringUtil.isNullOrEmpty(selectedEmployer.getName())
                     && showEmployerFields) {
                 if (isUserAction()) {
-                    setDefaultError(view, R.id.employerNameTextInputLayout);
+                    setDefaultError(view, R.id.employerNameTextInputLayout, isUserAction());
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.employerNameDemographicsLayout));
                 } else {
                     showErrorViews(false, (ViewGroup) view.findViewById(R.id.employerNameDemographicsLayout));
@@ -876,26 +950,6 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 return false;
             }
 
-            TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.secondaryPhoneInputLayout);
-            EditText secondaryPhoneNumber = (EditText) view.findViewById(R.id.secondaryPhone);
-            if (phoneLayout.getVisibility() == View.VISIBLE &&
-                    !StringUtil.isNullOrEmpty(secondaryPhoneNumber.getText().toString().trim()) &&
-                    !ValidationHelper.isValidString(secondaryPhoneNumber.getText().toString().trim(),
-                            ValidationHelper.PHONE_NUMBER_PATTERN)) {
-                setFieldError(phoneLayout, Label.getLabel("demographics_phone_number_validation_msg"));
-                return false;
-            } else {
-                unsetFieldError(phoneLayout);
-            }
-
-            TextInputLayout emailLayout = (TextInputLayout) view.findViewById(R.id.emailInputLayout);
-            EditText emailAddress = (EditText) view.findViewById(R.id.email);
-            if (emailLayout.getVisibility() == View.VISIBLE &&
-                    !StringUtil.isNullOrEmpty(emailAddress.getText().toString().trim()) &&
-                    !ValidationHelper.isValidEmail(emailAddress.getText().toString().trim())) {
-                setFieldError(emailLayout, Label.getLabel("demographics_email_validation_msg"));
-                return false;
-            }
 
             return true;
         } finally {

@@ -4,7 +4,6 @@ import android.os.Build;
 import android.provider.Settings;
 
 import com.carecloud.carepay.patient.BuildConfig;
-import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
@@ -25,7 +24,7 @@ public class CarePayPatientApplication extends CarePayApplication {
     public void onCreate() {
         super.onCreate();
 
-        mixpanelAPI = MixpanelAPI.getInstance(this, getString(R.string.mixpanel_application_token));
+        mixpanelAPI = MixpanelAPI.getInstance(this.getApplicationContext(), BuildConfig.MIX_PANEL_TOKEN);
         setHttpConstants();
         registerActivityLifecycleCallbacks(new CarePayActivityLifecycleCallbacks());
     }

@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_gravity="center"
     android:orientation="horizontal">
 
     <FrameLayout
@@ -88,6 +90,7 @@
         </LinearLayout>
 
         <ScrollView
+            android:id="@+id/demographicsScrollView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@id/dialog_add_edit_insurance_bottom_toolbar"
@@ -119,22 +122,5 @@
             android:src="@drawable/dialog_button_bg" />
 
     </LinearLayout>
-
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="invisible">
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/round_semi_transparent_bg"
-            android:src="@drawable/icn_close"
-            tools:ignore="ContentDescription" />
-
-    </FrameLayout>
 
 </LinearLayout>

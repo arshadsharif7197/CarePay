@@ -2,6 +2,4 @@
 <resources>
     <string name="clover_payment_activity">clover_payment_activity</string>
     <string name="clover_refund_activity">clover_refund_activity</string>
-    <!--<string name="new_relic_application_token">AA35b4f8a06cf80fa183849e8159ae58f2a9c8a0b0</string>-->
-    <string name="mixpanel_application_token">09be4f20d726e7d212b454d6625f8f04</string>
 </resources>

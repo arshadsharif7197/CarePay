@@ -10,9 +10,9 @@ import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 
 public interface NextAppointmentFragmentInterface {
 
-    void setLocationAndTime(AppointmentsSlotsDTO appointmentsSlot);
+    void setLocationAndTime(AppointmentsSlotsDTO appointmentsSlot, boolean showNextDialogs);
 
-    boolean setVisitType(VisitTypeDTO visitTypeDTO);
+    boolean setVisitType(VisitTypeDTO visitTypeDTO, boolean showNextDialogs);
 
-    void setSelectedProvider(ProviderDTO provider);
+    void setSelectedProvider(ProviderDTO provider, boolean showNextDialogs);
 }

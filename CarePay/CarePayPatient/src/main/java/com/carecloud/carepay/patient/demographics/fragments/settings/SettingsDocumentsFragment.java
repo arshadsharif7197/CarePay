@@ -25,6 +25,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
+import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.demographics.adapters.InsuranceLineItemsListAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
@@ -35,14 +36,15 @@ import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter;
 import com.carecloud.carepaylibray.media.MediaScannerPresenter;
 import com.carecloud.carepaylibray.media.MediaViewInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lmenendez on 5/24/17
@@ -63,6 +65,9 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     private InsuranceLineItemsListAdapter adapter;
 
     private DemographicsSettingsFragmentListener callback;
+
+    private boolean showAlert = false;
+    private boolean noPrimaryInsuranceFound = false;
 
 
     public static SettingsDocumentsFragment newInstance() {
@@ -129,6 +134,12 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         } else {
             adapter.setInsurancesList(insuranceList);
         }
+        if (showAlert) {
+            showAlert();
+            showAlert = false;
+            noPrimaryInsuranceFound = false;
+        }
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
@@ -155,14 +166,43 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     }
 
     private List<DemographicInsurancePayloadDTO> getInsurances(DemographicDTO demographicDTO) {
+        boolean hasOnePhoto = false;
+        boolean isThereAnyPrimaryInsurance = false;
         List<DemographicInsurancePayloadDTO> insuranceList = new ArrayList<>();
         for (DemographicInsurancePayloadDTO insurance : demographicDTO.getPayload().getDemographics().getPayload().getInsurances()) {
             if (!insurance.isDeleted()) {
                 insuranceList.add(insurance);
+                if (insurance.getInsuranceType().toLowerCase().equals("primary")) {
+                    isThereAnyPrimaryInsurance = true;
+                }
+                if (insurance.getInsurancePhotos().size() == 0) {
+                    showAlert = true;
+                }else if(!hasOnePhoto){
+                    hasOnePhoto = true;
+                }
+            }
+            if (!demographicDTO.getPayload().getDemographics().getPayload().getInsurances().isEmpty()
+                    && !isThereAnyPrimaryInsurance) {
+                noPrimaryInsuranceFound = true;
+                showAlert = true;
             }
         }
+
+        MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_has_identity_doc), hasOnePhoto);
+
         return insuranceList;
     }
+
+    private void showAlert() {
+        String alertMessage = Label.getLabel("demographics_insurance_no_photo_alert");
+        if (noPrimaryInsuranceFound) {
+            alertMessage = Label.getLabel("demographics_insurance_no_primary_alert");
+        }
+        new CustomMessageToast(getActivity(), alertMessage,
+                CustomMessageToast.NOTIFICATION_TYPE_WARNING).show();
+
+    }
+
 
     protected DemographicDTO getUpdateModel() {
         DemographicDTO updatableDemographicDTO = new DemographicDTO();
@@ -185,6 +225,12 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     private DemographicIdDocPayloadDTO getPostModel() {
         setupImageBase64();
         DemographicIdDocPayloadDTO docPayloadDTO = new DemographicIdDocPayloadDTO();
+        if((hasFrontImage && base64FrontImage != null) ||
+                (hasBackImage && base64BackImage != null)){
+            //Log new Identity Doc
+            MixPanelUtil.logEvent(getString(R.string.event_add_identity_doc), getString(R.string.param_is_checkin), false);
+        }
+
         if (hasFrontImage && base64FrontImage != null) {
             DemographicIdDocPhotoDTO docPhotoDTO = new DemographicIdDocPhotoDTO();
             docPhotoDTO.setPage(FRONT_PIC);
@@ -248,7 +294,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
      */
     public void updateInsuranceList(DemographicDTO demographicDTO) {
         this.demographicDTO = demographicDTO;
-        if (getView() != null) {
+        if (getView() != null && isAdded()) {
             initHealthInsuranceList(getView());
         }
     }

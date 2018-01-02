@@ -298,7 +298,7 @@
                             android:textColor="@color/textview_default_textcolor"
                             android:textSize="@dimen/text_size_17"
                             app:customAssetFont="proxima_nova_regular"
-                            breeze:textKey="medication_photo_add"
+                            breeze:textKey="medication_photo_add_patient"
                             tools:text="Take Medication List Photo" />
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayTextView

@@ -49,6 +49,7 @@ import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.signinsignup.fragments.ResetPasswordFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
@@ -99,11 +100,11 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         setSystemUiVisibility();
         initViews(signinScreenMode);
         setEditTexts();
-        setClickables();
+        setClickListeners();
         changeScreenMode(signinScreenMode);
 
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
-        if(extra != null) {
+        if (extra != null) {
             boolean crash = extra.getBoolean(CarePayConstants.CRASH, false);
             if (crash) {
                 Toast.makeText(this, Label.getLabel("crash_handled_error_message"), Toast.LENGTH_LONG).show();
@@ -147,6 +148,18 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
 
     }
 
+    private void setUpLanguageSpinner() {
+        for (OptionDTO language : signinDTO.getPayload().getLanguages()) {
+            languages.add(language.getCode().toUpperCase());
+        }
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.home_spinner_item, languages);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        langSpinner = (Spinner) findViewById(R.id.signinLangSpinner);
+        langSpinner.setAdapter(spinnerArrayAdapter);
+        langSpinner.setSelection(spinnerArrayAdapter.getPosition(getApplicationPreferences()
+                .getUserLanguage().toUpperCase()), false);
+    }
+
     private void displayVersionNumber() {
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -154,6 +167,116 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             versionNumber.setText(packageInfo.versionName);
         } catch (PackageManager.NameNotFoundException nne) {
             nne.printStackTrace();
+        }
+    }
+
+    private void setEditTexts() {
+        setTextListeners();
+        emailEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(signInEmailTextInputLayout, null));
+        passwordEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(passwordTextInputLayout, null));
+    }
+
+    private void setTextListeners() {
+        emailEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                boolean isEmptyEmail = StringUtil.isNullOrEmpty(emailEditText.getText().toString());
+                if (!isEmptyEmail) { // clear the error
+                    signInEmailTextInputLayout.setError(null);
+                    signInEmailTextInputLayout.setErrorEnabled(false);
+                }
+                enableSignInButton(editable.toString(), passwordEditText.getText().toString());
+            }
+        });
+        passwordEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                boolean isEmptyPassword = StringUtil.isNullOrEmpty(passwordEditText.getText().toString());
+                if (isEmptyPassword) {
+                    passwordTextInputLayout.setError(null);
+                    passwordTextInputLayout.setErrorEnabled(false);
+                }
+                enableSignInButton(emailEditText.getText().toString(), editable.toString());
+            }
+        });
+    }
+
+    private void setClickListeners() {
+        goBackButton.setOnClickListener(goBackButtonListener);
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signIn();
+            }
+        });
+        langSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                changeLanguage(signinDTO.getMetadata().getLinks().getLanguage(),
+                        languages.get(position).toLowerCase(), getWorkflowServiceHelper().getApplicationStartHeaders());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        forgotPasswordTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SigninActivity.this, ResetPasswordActivity.class);
+                Bundle bundle = new Bundle();
+                DtoHelper.bundleDto(bundle, signinDTO);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, RESET_PASSWORD);
+            }
+        });
+
+        showPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (passwordEditText.getInputType() != InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+                    setInputType(passwordEditText, InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                } else {
+                    setInputType(passwordEditText, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                }
+            }
+        });
+    }
+
+    private void changeScreenMode(SignInScreenMode signInScreenMode) {
+        if (signInScreenMode == SignInScreenMode.PATIENT_MODE_SIGNIN) {
+            homeButton.setVisibility(View.VISIBLE);
+            goBackButton.setVisibility(View.VISIBLE);
+            langSpinner.setVisibility(View.GONE);
+            forgotPasswordTextView.setVisibility(View.VISIBLE);
+            setNavigationBarVisibility();
         }
     }
 
@@ -247,89 +370,9 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             queryMap.put("patient_id", signInResponse.getPayload().getSignIn().getMetadata().getPatientId());
             getApplicationMode().setPatientId(signInResponse.getPayload().getSignIn().getMetadata().getPatientId());
             getWorkflowServiceHelper().execute(transitionDTO, signInCallback, queryMap);
+
+            identifyPatientUser(signInResponse.getPayload().getSignIn().getMetadata().getUserId());
         }
-    }
-
-    private void setUpLanguageSpinner() {
-        int languageListSize = signinDTO.getPayload().getLanguages().size();
-        OptionDTO defaultLangOption = null;
-
-        int indexDefault = 0;
-        for (int i = 0; i < languageListSize; i++) {
-            OptionDTO languageOption = signinDTO.getPayload().getLanguages().get(i);
-            languages.add(i, languageOption.getCode().toUpperCase());
-            if (languageOption.getDefault()) {
-                defaultLangOption = languageOption;
-                indexDefault = i;
-            }
-        }
-
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.home_spinner_item, languages);
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        langSpinner = (Spinner) findViewById(R.id.signinLangSpinner);
-        langSpinner.setAdapter(spinnerArrayAdapter);
-
-        // this should be always true, as there's always a default option
-        if (defaultLangOption != null && !getApplicationPreferences().getUserLanguage().isEmpty()) {
-            langSpinner.setSelection(spinnerArrayAdapter.getPosition(getApplicationPreferences().getUserLanguage().toUpperCase()));
-        } else {
-            langSpinner.setSelection(indexDefault);
-            getApplicationPreferences().setPracticeLanguage(defaultLangOption.getCode());
-        }
-    }
-
-    private void setClickables() {
-
-        goBackButton.setOnClickListener(goBackButtonListener);
-
-        homeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
-
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signIn();
-            }
-        });
-
-        langSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // save selected in preferences
-                getApplicationPreferences().setUserLanguage(languages.get(position).toLowerCase());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
-        forgotPasswordTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(SigninActivity.this, ResetPasswordActivity.class);
-                Bundle bundle = new Bundle();
-                DtoHelper.bundleDto(bundle, signinDTO);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, RESET_PASSWORD);
-            }
-        });
-
-        showPasswordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (passwordEditText.getInputType() != InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
-                    setInputType(passwordEditText, InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                } else {
-                    setInputType(passwordEditText, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                }
-            }
-        });
-
     }
 
     private void setInputType(EditText editText, int inputType) {
@@ -340,73 +383,12 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         }
     }
 
-    private void setTextListeners() {
-        emailEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                boolean isEmptyEmail = StringUtil.isNullOrEmpty(emailEditText.getText().toString());
-                if (!isEmptyEmail) { // clear the error
-                    signInEmailTextInputLayout.setError(null);
-                    signInEmailTextInputLayout.setErrorEnabled(false);
-                }
-                enableSignInButton(editable.toString(), passwordEditText.getText().toString());
-            }
-        });
-        passwordEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                boolean isEmptyPassword = StringUtil.isNullOrEmpty(passwordEditText.getText().toString());
-                if (isEmptyPassword) {
-                    passwordTextInputLayout.setError(null);
-                    passwordTextInputLayout.setErrorEnabled(false);
-                }
-                enableSignInButton(emailEditText.getText().toString(), editable.toString());
-            }
-        });
-    }
-
     private void enableSignInButton(String email, String password) {
         if (StringUtil.isNullOrEmpty(email) || StringUtil.isNullOrEmpty(password)) {
             setSignInButtonEnabled(false);
         } else {
             setSignInButtonEnabled(true);
         }
-    }
-
-    private void changeScreenMode(SignInScreenMode signInScreenMode) {
-        if (signInScreenMode == SignInScreenMode.PATIENT_MODE_SIGNIN) {
-            homeButton.setVisibility(View.VISIBLE);
-            goBackButton.setVisibility(View.VISIBLE);
-            langSpinner.setVisibility(View.GONE);
-            forgotPasswordTextView.setVisibility(View.VISIBLE);
-            setNavigationBarVisibility();
-        }
-    }
-
-    private void setEditTexts() {
-        setTextListeners();
-        emailEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(signInEmailTextInputLayout, null));
-        passwordEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(passwordTextInputLayout, null));
     }
 
     /**
@@ -441,6 +423,8 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         queryMap.put("practice_mgmt", userPractice.getPracticeMgmt());
         queryMap.put("practice_id", userPractice.getPracticeId());
         getWorkflowServiceHelper().execute(transitionDTO, signInCallback, queryMap);
+
+        identifyPracticeUser(userPractice.getUserId());
     }
 
     @Override
@@ -504,6 +488,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             if (practiceList.size() == 1) {
                 navigateToWorkFlow(workflowDTO);
                 setSignInButtonClickable(true);
+                identifyPracticeUser(practiceList.get(0).getUserId());
             } else {
                 showPracticeSearchFragment(workflowDTO);
             }
@@ -552,7 +537,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         args.putString(CarePayConstants.PRACTICE_SELECTION_BUNDLE, gson.toJson(workflowDTO));
         PracticeSearchFragment fragment = new PracticeSearchFragment();
         fragment.setArguments(args);
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
     }
 
     private boolean areAllFieldsValid(String email, String password) {
@@ -601,5 +586,14 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         if (requestCode == RESET_PASSWORD && resultCode == ResetPasswordFragment.GO_TO_HOME) {
             finish();
         }
+    }
+
+    private void identifyPracticeUser(String userId){
+        MixPanelUtil.setUser(this, userId, null);
+        MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_is_practice_user), true);
+    }
+
+    private void identifyPatientUser(String userId){
+        MixPanelUtil.setUser(this, userId, null);
     }
 }

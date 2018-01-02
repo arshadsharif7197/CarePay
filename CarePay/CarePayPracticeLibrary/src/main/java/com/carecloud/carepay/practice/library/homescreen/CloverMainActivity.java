@@ -14,8 +14,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -40,6 +43,7 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -61,6 +65,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private LinearLayout homeAlertLinearLl;
     private List<String> modeSwitchOptions = new ArrayList<>();
     private HomeScreenMode homeScreenMode;
+    private Spinner languageSpinner;
 
     public enum HomeScreenMode {
         PATIENT_HOME, PRACTICE_HOME
@@ -79,6 +84,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         initUIFields();
         createChangeModeDialog();
         populateWithLabels();
+        populateLanguageSpinner();
 
         modeSwitchImageView.setOnClickListener(this);
         findViewById(R.id.homeLockIcon).setOnClickListener(this);
@@ -92,11 +98,45 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         getNews();
     }
 
+    private void populateLanguageSpinner() {
+        JsonObject payloadAsJsonObject = homeScreenDTO.getPayload();
+        Gson gson = new Gson();
+        PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO
+                = gson.fromJson(payloadAsJsonObject, PracticeHomeScreenPayloadDTO.class);
+        final List<String> languages = new ArrayList<>();
+        for (OptionDTO language : practiceHomeScreenPayloadDTO.getLanguages()) {
+            languages.add(language.getCode().toUpperCase());
+        }
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.home_spinner_item, languages);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        languageSpinner.setAdapter(spinnerArrayAdapter);
+        languageSpinner.setSelection(spinnerArrayAdapter.getPosition(getApplicationPreferences()
+                .getUserLanguage().toUpperCase()), false);
+
+        JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getLinks();
+        final PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject,
+                PracticeHomeScreenTransitionsDTO.class);
+        final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
+        headers.put("username", getApplicationPreferences().getUserName());
+        headers.put("username_patient", getApplicationPreferences().getPatientId());
+        languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                changeLanguage(transitionsDTO.getLanguage(), languages.get(position).toLowerCase(), headers);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+
     private void initUIFields() {
         homeCheckInLl = (LinearLayout) findViewById(R.id.homeQueueLayout);
         homeAlertLinearLl = (LinearLayout) findViewById(R.id.homeAlertLayout);
         homeLockImageView = (ImageView) findViewById(R.id.homeLockIcon);
         modeSwitchImageView = (ImageView) findViewById(R.id.homeModeSwitchClickable);
+        languageSpinner = (Spinner) findViewById(R.id.languageSpinner);
     }
 
     private void populateWithLabels() {
@@ -113,6 +153,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             homeAlertLinearLl.setVisibility(View.GONE);
             modeSwitchImageView.setVisibility(View.GONE);
             homeLockImageView.setVisibility(View.VISIBLE);
+            languageSpinner.setVisibility(View.VISIBLE);
             setNavigationBarVisibility();
             findViewById(R.id.homeCheckoutClickable).setVisibility(View.VISIBLE);
             checkinLabel.setText(Label.getLabel("checkin_button_patient_mode"));
@@ -121,6 +162,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             homeAlertLinearLl.setVisibility(View.GONE);//// TODO: 10/3/17 this is temporary until alerts is ready to use
             modeSwitchImageView.setVisibility(View.VISIBLE);
             homeLockImageView.setVisibility(View.GONE);
+            languageSpinner.setVisibility(View.GONE);
             checkinLabel.setText(Label.getLabel("checkin_button"));
 
             if (homeScreenDTO != null && homeScreenDTO.getPayload() != null) {
@@ -317,7 +359,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             String userId = getApplicationMode().getUserPracticeDTO().getUserId();
             Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
 
-            if(locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()){
+            if (locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()) {
                 queryMap.put("location_ids", StringUtil.getListAsCommaDelimitedString(locationsSavedFilteredIds));
             }
 
@@ -345,7 +387,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
 
             Map<String, String> queryMap = new HashMap<>();
-            if(locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()){
+            if (locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()) {
                 queryMap.put("location_ids", StringUtil.getListAsCommaDelimitedString(locationsSavedFilteredIds));
             }
             getWorkflowServiceHelper().interrupt();
@@ -375,7 +417,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             String userId = getApplicationMode().getUserPracticeDTO().getUserId();
             Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
 
-            if(locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()){
+            if (locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()) {
                 queryMap.put("location_ids", StringUtil.getListAsCommaDelimitedString(locationsSavedFilteredIds));
             }
 
@@ -446,12 +488,12 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             ;
-            if(homeScreenMode == HomeScreenMode.PATIENT_HOME){
+            if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
                 Bundle extra = new Bundle();
                 extra.putBoolean(CarePayConstants.LOGIN_OPTION_QR, getApplicationPreferences().getAppointmentNavigationOption() != Defs.NAVIGATE_APPOINTMENT);
                 extra.putBoolean(CarePayConstants.LOGIN_OPTION_SEARCH, true);
                 PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, extra);
-            }else {
+            } else {
                 PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
             }
         }
@@ -564,12 +606,12 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            if(homeScreenMode == HomeScreenMode.PATIENT_HOME){
+            if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
                 Bundle extra = new Bundle();
                 extra.putBoolean(CarePayConstants.LOGIN_OPTION_QR, false);
                 extra.putBoolean(CarePayConstants.LOGIN_OPTION_SEARCH, true);
                 PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, extra);
-            }else {
+            } else {
                 PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
             }
         }

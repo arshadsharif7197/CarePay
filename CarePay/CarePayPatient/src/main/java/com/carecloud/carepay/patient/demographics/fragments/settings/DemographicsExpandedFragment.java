@@ -41,6 +41,7 @@ import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactFragm
 import com.carecloud.carepaylibray.demographics.interfaces.PhysicianFragmentInterface;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
@@ -160,7 +161,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                                                 DemographicDataModel.Demographic demogarphic) {
         DemographicsPersonalSection personalInfoSection = demogarphic.getPersonalDetails();
 
-        setUpDemographicField(view, demographicPayload.getPersonalDetails().getPreferredName(),
+        setUpDemographicField(view, StringUtil.captialize(demographicPayload.getPersonalDetails().getPreferredName()),
                 personalInfoSection.getProperties().getPreferredName(), R.id.preferredNameContainer,
                 R.id.preferredNameInputLayout, R.id.preferredName, R.id.preferredNameOptional, null, null);
 
@@ -285,7 +286,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         emergencyContactEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(emergencyContactInputLayout, null));
         if (emergencyContact != null) {
-            emergencyContactEditText.setText(emergencyContact.getFullName());
+            emergencyContactEditText.setText(StringUtil.captialize(emergencyContact.getFullName()));
         }
         emergencyContactEditText.getOnFocusChangeListener().onFocusChange(emergencyContactEditText,
                 !StringUtil.isNullOrEmpty(emergencyContactEditText.getText().toString().trim()));
@@ -366,7 +367,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         EditText employerNameEditText = (EditText) view.findViewById(R.id.employerNameEditText);
         employerNameEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(employerNameTextInputLayout, null));
-        employerNameEditText.setText(selectedEmployer.getName());
+        employerNameEditText.setText(StringUtil.captialize(selectedEmployer.getName()));
         employerNameEditText.getOnFocusChangeListener().onFocusChange(employerNameEditText,
                 !StringUtil.isNullOrEmpty(employerNameEditText.getText().toString().trim()));
         employerNameEditText.addTextChangedListener(new TextWatcher() {
@@ -392,7 +393,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         TextInputLayout address2TextInputLayout = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
         employerAddressEditText2 = (EditText) view.findViewById(R.id.addressEditText2);
         employerAddressEditText2.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address2TextInputLayout, null));
-        employerAddressEditText2.setText(selectedEmployer.getAddress().getAddress2());
+        employerAddressEditText2.setText(StringUtil.captialize(selectedEmployer.getAddress().getAddress2()));
         employerAddressEditText2.getOnFocusChangeListener()
                 .onFocusChange(employerAddressEditText2, !StringUtil.isNullOrEmpty(employerAddressEditText2.getText().toString()));
 
@@ -409,7 +410,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         cityEditText = (EditText) view.findViewById(R.id.cityTextView);
         cityEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(cityTextInputLayout, null));
-        cityEditText.setText(selectedEmployer.getAddress().getCity());
+        cityEditText.setText(StringUtil.captialize(selectedEmployer.getAddress().getCity()));
         cityEditText.getOnFocusChangeListener()
                 .onFocusChange(cityEditText, !StringUtil.isNullOrEmpty(cityEditText.getText().toString()));
         cityEditText.addTextChangedListener(clearValidationErrorsOnTextChange(cityTextInputLayout));
@@ -468,7 +469,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 checkIfEnableButton();
             }
         });
-        employerAddressEditText.setText(selectedEmployer.getAddress().getAddress1());
+        employerAddressEditText.setText(StringUtil.captialize(selectedEmployer.getAddress().getAddress1()));
         employerAddressEditText.getOnFocusChangeListener()
                 .onFocusChange(employerAddressEditText, !StringUtil.isNullOrEmpty(employerAddressEditText
                         .getText().toString()));
@@ -515,20 +516,6 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
             return false;
         }
 
-
-        TextInputLayout socialSecurityInputLayout = (TextInputLayout) view.findViewById(R.id.socialSecurityInputLayout);
-        EditText socialSecurityNumber = (EditText) view.findViewById(R.id.socialSecurityNumber);
-        if (socialSecurityInputLayout.getVisibility() == View.VISIBLE &&
-                !StringUtil.isNullOrEmpty(socialSecurityNumber.getText().toString().trim()) &&
-                !ValidationHelper.isValidString(socialSecurityNumber.getText().toString().trim(),
-                        ValidationHelper.SOCIAL_SECURITY_NUMBER_PATTERN)) {
-            socialSecurityInputLayout.setErrorEnabled(true);
-            socialSecurityInputLayout.setError(Label.getLabel("demographics_social_security_number_validation_msg"));
-            return false;
-        } else {
-            socialSecurityInputLayout.setError(null);
-            socialSecurityInputLayout.setErrorEnabled(false);
-        }
         if (dataModel.getDemographic().getPersonalDetails().getProperties().getSocialSecurityNumber().isRequired()
                 && checkTextEmptyValue(R.id.socialSecurityNumber, view)) {
             return false;
@@ -636,6 +623,20 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         if (dataModel.getDemographic().getEmergencyContact().isRequired()
                 && StringUtil.isNullOrEmpty(selectedEmergencyContact.getFirstName())) {
             return false;
+        }
+
+        TextInputLayout socialSecurityInputLayout = (TextInputLayout) view.findViewById(R.id.socialSecurityInputLayout);
+        EditText socialSecurityNumber = (EditText) view.findViewById(R.id.socialSecurityNumber);
+        if (socialSecurityInputLayout.getVisibility() == View.VISIBLE &&
+                !StringUtil.isNullOrEmpty(socialSecurityNumber.getText().toString().trim()) &&
+                !ValidationHelper.isValidString(socialSecurityNumber.getText().toString().trim(),
+                        ValidationHelper.SOCIAL_SECURITY_NUMBER_PATTERN)) {
+            socialSecurityInputLayout.setErrorEnabled(true);
+            socialSecurityInputLayout.setError(Label.getLabel("demographics_social_security_number_validation_msg"));
+            return false;
+        } else {
+            socialSecurityInputLayout.setError(null);
+            socialSecurityInputLayout.setErrorEnabled(false);
         }
 
         TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.secondaryPhoneInputLayout);
@@ -767,7 +768,6 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         return updatableDemographicDTO;
     }
 
-
     private void updateDemographics() {
         if (passConstraints(true)) {
             Map<String, String> header = new HashMap<>();
@@ -797,8 +797,9 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                     .setPersonalDetails(updatedModel.getPayload().getDemographics()
                             .getPayload().getPersonalDetails());
 
-            getActivity().onBackPressed();
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
+            MixPanelUtil.logEvent(getString(R.string.event_updated_demographics), getString(R.string.param_is_checkin), false);
+            getActivity().onBackPressed();
         }
 
         @Override

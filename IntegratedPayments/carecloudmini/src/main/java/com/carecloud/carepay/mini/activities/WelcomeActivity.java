@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,6 +18,7 @@ import com.carecloud.carepay.mini.HttpConstants;
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
 import com.carecloud.carepay.mini.models.queue.QueuePaymentRecord;
+import com.carecloud.carepay.mini.models.queue.QueueUnprocessedPaymentRecord;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
 import com.carecloud.carepay.mini.services.QueueUploadService;
 import com.carecloud.carepay.mini.services.carepay.RestCallServiceCallback;
@@ -68,6 +70,7 @@ public class WelcomeActivity extends FullScreenActivity {
     private boolean isDisconnecting = false;
     private boolean isResumed = false;
 
+    private PowerManager.WakeLock wakeLock;
 
     @Override
     protected void onCreate(Bundle icicle){
@@ -93,7 +96,12 @@ public class WelcomeActivity extends FullScreenActivity {
         if(connectedDevice == null || !connectedDevice.isProcessing()) {
             connectDevice();
             scheduleDeviceRefresh();
+            //Acquire wakelock
+            PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+            wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, TAG);
+            wakeLock.acquire();
         }
+
     }
 
     @Override
@@ -101,6 +109,10 @@ public class WelcomeActivity extends FullScreenActivity {
         if(connectedDevice == null || !connectedDevice.isProcessing()) {
             disconnectDevice();
             handler.removeCallbacks(deviceStateRefresh);
+
+            if(wakeLock != null){
+                wakeLock.release();
+            }
         }
         super.onStop();
     }
@@ -449,6 +461,31 @@ public class WelcomeActivity extends FullScreenActivity {
         }
 
         @Override
+        public void onPaymentCompleteWithError(String paymentRequestId, JsonElement paymentPayload, String errorMessage) {
+            Gson gson = new Gson();
+            QueueUnprocessedPaymentRecord unprocessedPaymentRecord = new QueueUnprocessedPaymentRecord();
+            unprocessedPaymentRecord.setPaymentRequestId(paymentRequestId);
+            unprocessedPaymentRecord.setRefund(connectedDevice.isRefunding());
+            unprocessedPaymentRecord.setPayload(gson.toJson(paymentPayload));
+            unprocessedPaymentRecord.save();
+
+            launchQueueService();
+            if(connectedDevice.isRefunding()){
+                updateMessage(getString(R.string.welcome_complete_refund));
+            }else {
+                updateMessage(getString(R.string.welcome_complete));
+            }
+            resetDevice(paymentRequestId);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    updateMessage(getString(R.string.welcome_waiting));
+                }
+            }, PAYMENT_COMPLETE_RESET);
+
+        }
+
+        @Override
         public void onPaymentCanceled(String paymentRequestId, String message) {
             Log.d(TAG, "Payment canceled for: "+paymentRequestId);
             releasePaymentRequest(paymentRequestId);
@@ -638,6 +675,9 @@ public class WelcomeActivity extends FullScreenActivity {
                 NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
                 if(isResumed && networkInfo != null && networkInfo.isConnected()){
                     connectDevice();
+                }else{
+                    Log.w(TAG, "Activity is Resumed: "+isResumed);
+                    Log.w(TAG, "Network Info: "+ (networkInfo != null? networkInfo.getState() : " NULL"));
                 }
             }
         }

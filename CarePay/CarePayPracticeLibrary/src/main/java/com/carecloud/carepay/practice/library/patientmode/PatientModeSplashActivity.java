@@ -81,7 +81,7 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
                     OptionDTO languageOption = patientModePayloadDTO.getLanguages().get(i);
                     if (languageOption != null && languageOption.getCode() != null) {
                         languages.add(i, languageOption.getCode().toUpperCase());
-                        if (languageOption.getDefault() != null && languageOption.getDefault()) {
+                        if (languageOption.isDefault() != null && languageOption.isDefault()) {
                             defaultLangOption = languageOption;
                             indexDefault = i;
                         }
@@ -93,7 +93,7 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
                 langSpinner.setAdapter(spinnerArrayAdapter);
                 if (defaultLangOption != null) { // this should be always true, as there's always a default option
                     langSpinner.setSelection(indexDefault);
-                    getApplicationPreferences().setUserLanguage(defaultLangOption.getCode());
+                    //getApplicationPreferences().setUserLanguage(defaultLangOption.getCode());
                 }
             }
         }

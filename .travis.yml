@@ -45,5 +45,6 @@ script:
 branches:
   only: 
     - master
+    - Staging
     - QA
     - development

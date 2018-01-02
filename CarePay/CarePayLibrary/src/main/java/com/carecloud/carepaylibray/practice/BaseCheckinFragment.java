@@ -76,17 +76,20 @@ public abstract class BaseCheckinFragment extends BaseFragment implements Icicle
     private Bundle frozenIcicle = null;
 
     @Override
-    public IcicleInterface pushData( Bundle icicle ){
-        if(frozenIcicle == null){
+    public IcicleInterface pushData(Bundle icicle) {
+        if (frozenIcicle == null) {
             frozenIcicle = icicle;
-        }else{
+        } else {
             frozenIcicle.putAll(icicle);
         }
         return this;
     }
 
     @Override
-    public Bundle popData(){
+    public Bundle popData() {
+        if (frozenIcicle == null) {
+            frozenIcicle = new Bundle();
+        }
         Bundle icicle = (Bundle) frozenIcicle.clone();
         frozenIcicle = null;
         return icicle;

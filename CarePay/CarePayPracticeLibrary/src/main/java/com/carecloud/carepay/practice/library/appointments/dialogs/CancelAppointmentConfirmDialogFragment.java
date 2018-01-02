@@ -62,7 +62,7 @@ public class CancelAppointmentConfirmDialogFragment extends BaseDialogFragment {
     @Override
     public void onViewCreated(View view, Bundle icicle) {
         if (appointmentDTO != null) {
-            String confirmMessageTemplate = Label.getLabel("appointment_confirm_cancel_message", null);
+            String confirmMessageTemplate = Label.getLabel("appointment_confirm_cancel_message");
             TextView messageView = (TextView) view.findViewById(R.id.cancel_confirm_message);
             if (confirmMessageTemplate != null && confirmMessageTemplate.contains("%s")) {
                 String formattedMessage = String.format(confirmMessageTemplate, appointmentDTO.getPayload().getPatient().getFullName());
