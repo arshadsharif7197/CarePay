@@ -63,9 +63,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 import okhttp3.RequestBody;
 
-
-import static android.R.attr.data;
-
 /**
  * Created by lmenendez on 10/17/17
  */
@@ -565,18 +562,18 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
         Map<String, Object> map3DS = new HashMap<>();
         map3DS.put("signature", jsonToken.getString("signature"));
         map3DS.put("version", jsonToken.getString("protocolVersion"));
-//        map3DS.put("data", jsonToken.getString("signedMessage"));
+        map3DS.put("data", jsonToken.getString("signedMessage"));
         map3DS.put("type", "G");
 
-        String signedMessage = jsonToken.getString("signedMessage");
-        JSONObject dataObject = new JSONObject(signedMessage);
+//        String signedMessage = jsonToken.getString("signedMessage");
+//        JSONObject dataObject = new JSONObject(signedMessage);
 
-        Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put("encryptedMessage", dataObject.getString("encryptedMessage"));
-        dataMap.put("ephemeralPublicKey", dataObject.getString("ephemeralPublicKey"));
-        dataMap.put("tag", dataObject.getString("tag"));
-
-        map3DS.put("data", dataMap);
+//        Map<String, Object> dataMap = new HashMap<>();
+//        dataMap.put("encryptedMessage", dataObject.getString("encryptedMessage"));
+//        dataMap.put("ephemeralPublicKey", dataObject.getString("ephemeralPublicKey"));
+//        dataMap.put("tag", dataObject.getString("tag"));
+//
+//        map3DS.put("data", dataMap);
 
         payloadMap.put("3DS", map3DS);
 
@@ -614,7 +611,7 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
                 headerMap.put("Authorization", authorizeString);
                 headerMap.put("token", token);
                 headerMap.put("apikey", apiKey);
-                headerMap.put("content-type", "Application/json");
+//                headerMap.put("content-type", "Application/json");
             } catch (Exception e) {
                 //  Nothing to do
             }
