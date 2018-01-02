@@ -147,6 +147,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                                                 DemographicDataModel.Demographic demographic) {
 
         DemographicsPersonalSection personalInfoSection = demographic.getPersonalDetails();
+        personalInfoSection = new DemographicsPersonalSection();
 
         setUpDemographicField(view, StringUtil.formatSocialSecurityNumber(demographicPayload
                         .getPersonalDetails().getSocialSecurityNumber()),

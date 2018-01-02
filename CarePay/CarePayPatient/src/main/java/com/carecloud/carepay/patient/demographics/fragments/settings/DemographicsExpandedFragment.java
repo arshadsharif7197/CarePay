@@ -493,7 +493,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
 
     @Override
     protected void checkIfEnableButton() {
-        boolean isEnabled = passConstraints();
+        boolean isEnabled = passConstraints(false);
         if (nextButton != null) {
             nextButton.setEnabled(isEnabled);
             nextButton.setClickable(isEnabled);
@@ -501,11 +501,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
     }
 
     @Override
-    protected boolean passConstraints() {
-        return passConstraints(false);
-    }
-
-    protected boolean passConstraints(boolean userInteraction) {
+    protected boolean passConstraints(boolean isUserInteraction) {
         View view = getView();
         if (view == null) {
             return false;
@@ -572,7 +568,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 || !StringUtil.isNullOrEmpty(cityEditText.getText().toString()))) {
 
             if (StringUtil.isNullOrEmpty(employerAddressEditText.getText().toString())) {
-                if (userInteraction) {
+                if (isUserInteraction) {
                     address1TextInputLayout.setErrorEnabled(true);
                     address1TextInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
                     employerAddressEditText.requestFocus();
@@ -592,7 +588,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
             }
 
             if (StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())) {
-                if (userInteraction) {
+                if (isUserInteraction) {
                     zipCodeTextInputLayout.setErrorEnabled(true);
                     zipCodeTextInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
                 } else {
@@ -606,14 +602,14 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
             }
 
             if (StringUtil.isNullOrEmpty(cityEditText.getText().toString())) {
-                if (userInteraction) {
+                if (isUserInteraction) {
                     cityTextInputLayout.setErrorEnabled(true);
                     cityTextInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
                 }
                 return false;
             }
             if (StringUtil.isNullOrEmpty(stateEditText.getText().toString())) {
-                if (userInteraction) {
+                if (isUserInteraction) {
                     stateTextInputLayout.setErrorEnabled(true);
                     stateTextInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
                 }

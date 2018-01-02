@@ -144,12 +144,11 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         boolean phoneNumberRequired = dataModel.getDemographic().getAddress().getProperties().getPhone().isRequired();
         setUpField(phoneNumberInputLayout, phoneNumberEditText,
                 dataModel.getDemographic().getAddress().getProperties().getPhone().isDisplayed(),
-                demographicPayload.getAddress().getPhone(), phoneNumberRequired, null);
+                StringUtil.formatPhoneNumber(demographicPayload.getAddress().getPhone()), phoneNumberRequired, null);
         if (!phoneNumberRequired) {
             phoneNumberEditText.addTextChangedListener(clearValidationErrorsOnTextChange(phoneNumberInputLayout));
         }
         phoneNumberEditText.addTextChangedListener(phoneInputFormatter);
-        phoneNumberEditText.setText(StringUtil.formatPhoneNumber(demographicPayload.getAddress().getPhone()));
         phoneNumberEditText.setOnClickListener(selectEndOnClick);
 
     }

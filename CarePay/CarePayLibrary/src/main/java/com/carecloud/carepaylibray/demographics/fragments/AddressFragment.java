@@ -87,6 +87,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                 demographicPayload.getAddress().getAddress2(),
                 addressSection.getProperties().getAddress2().isRequired(),
                 view.findViewById(R.id.demogrAddressOptionalLabel));
+        address2EditText.setEnabled(!StringUtil.isNullOrEmpty(demographicPayload.getAddress().getAddress2()));
 
         final TextInputLayout addressInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
         final EditText addressEditText = (EditText) view.findViewById(R.id.addressEditTextId);
@@ -110,6 +111,8 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                 if (StringUtil.isNullOrEmpty(editable.toString())) {
                     address2EditText.setEnabled(false);
                     address2EditText.setText("");
+                    address2EditText.getOnFocusChangeListener().onFocusChange(address2EditText,
+                            !StringUtil.isNullOrEmpty(address2EditText.getText().toString().trim()));
                 } else {
                     address2EditText.setEnabled(true);
                 }
@@ -120,20 +123,10 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         EditText zipCode = (EditText) view.findViewById(R.id.zipCodeId);
         setUpField(zipCodeInputLayout, zipCode,
                 addressSection.getProperties().getZipcode().isDisplayed(),
-                demographicPayload.getAddress().getZipcode(),
+                StringUtil.formatZipCode(demographicPayload.getAddress().getZipcode()),
                 addressSection.getProperties().getZipcode().isRequired(), null);
         zipCode.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeInputLayout, getZipCodeFocusListener(zipCode)));
         zipCode.addTextChangedListener(zipInputFormatter);
-//        setVisibility(zipCodeInputLayout, addressSection.getProperties().getZipcode().isDisplayed());
-//
-//        zipCode.setText(demographicPayload.getAddress().getZipcode());
-//        zipCode.getOnFocusChangeListener().onFocusChange(zipCode,
-//                !StringUtil.isNullOrEmpty(zipCode.getText().toString().trim()));
-//        if (addressSection.getProperties().getZipcode().isRequired()) {
-//            zipCode.addTextChangedListener(getValidateEmptyTextWatcher(zipCodeInputLayout));
-//        } else {
-//            zipCode.addTextChangedListener(clearValidationErrorsOnTextChange(zipCodeInputLayout));
-//        }
 
 
         TextInputLayout cityInputLayout = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
