@@ -395,6 +395,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         @Override
         public void afterTextChanged(Editable editable) {
             StringUtil.autoFormatPhone(editable, lastLength);
+            checkIfEnableButton(getView());
         }
     };
 
@@ -506,7 +507,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                 inputLayout.requestFocus();
             }
         }
-
     }
 
     protected void unsetFieldError(View baseView, int id) {
