@@ -32,6 +32,9 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPo
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -45,8 +48,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class RetailFragment extends BaseFragment {
     private static final String KEY_SHOW_TOOLBAR = "show_toolbar";
-    private static final String APP_CLIENT_SECRET = "9xasKgFMZbDErsGgQeCN3EHawKeydaNW";
-    private static final String APP_ID = "breeze-shopping";
+    private static final String BASE_HTML = "<!DOCTYPE html><html><body>%s</body></html>";
 
     private static final String QUERY_ORDER = "transaction_id";
     private static final String QUERY_STORE = "store_id";
@@ -57,9 +59,6 @@ public class RetailFragment extends BaseFragment {
     private UserPracticeDTO userPracticeDTO;
     private boolean showToolbar = true;
     private RetailInterface callback;
-
-    private String ssoProfile = "";
-    private String storeId = "12522068";//hardcoded MyBreezeClinic StoreId
 
     private WebView shoppingWebView;
     private String returnUrl = null;
@@ -106,28 +105,49 @@ public class RetailFragment extends BaseFragment {
         return inflater.inflate(R.layout.fragment_purchase, container, false);
     }
 
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        callback.getWebViewBundle().clear();
+        shoppingWebView.saveState(callback.getWebViewBundle());
+    }
+
     @Override
     @SuppressLint("SetJavaScriptEnabled")
     public void onViewCreated(View view, Bundle icicle){
         initToolbar(view);
-        if(retailPractice != null && returnUrl == null) {
+        if(retailPractice != null) {
 
             shoppingWebView = (WebView) view.findViewById(R.id.shoppingWebView);
             WebView.setWebContentsDebuggingEnabled(true);
             WebSettings settings = shoppingWebView.getSettings();
             settings.setJavaScriptEnabled(true);
+            settings.setDomStorageEnabled(true);
+            settings.setAllowFileAccess(true);
+            settings.setAllowUniversalAccessFromFileURLs(true);
             shoppingWebView.setWebViewClient(new RetailViewClient());
             shoppingWebView.addJavascriptInterface(new RetailJavascriptInterface(), "RetailInterface");
 
 
 //            shoppingWebView.loadDataWithBaseURL("data:text/html", addCallback(retailPractice.getStore().getStoreHtml()), "text/html", "utf-8", "data:text/html");
-            shoppingWebView.loadData(getIframeHtml(retailPractice.getStore().getStoreHtml()), "text/html", "utf-8");
+//            shoppingWebView.loadData(getIframeHtml(retailPractice.getStore().getStoreHtml()), "text/html", "utf-8");
+
+
 //            shoppingWebView.loadData(retailPractice.getStore().getStoreHtml(), "text/html", "utf-8");
-//            shoppingWebView.loadDataWithBaseURL("about:blank", retailPractice.getStore().getStoreHtml(), "text/html", "utf-8", "about:blank");
+//            shoppingWebView.loadDataWithBaseURL(HttpConstants.getFormsUrl(), retailPractice.getStore().getStoreHtml(), "text/html", "utf-8", HttpConstants.getFormsUrl());
+
+            shoppingWebView.loadUrl("file://"+getHtmlFile(retailPractice.getStore().getStoreHtml()));
 
         }
         if(returnUrl != null){
+            shoppingWebView.restoreState(callback.getWebViewBundle());
             shoppingWebView.loadUrl(returnUrl);
+            return;
+        }
+        if(loadedUrl != null){
+            shoppingWebView.restoreState(callback.getWebViewBundle());
+            shoppingWebView.loadUrl(loadedUrl);
         }
     }
 
@@ -137,7 +157,7 @@ public class RetailFragment extends BaseFragment {
      */
     public void loadPaymentRedirectUrl(String returnUrl){
         this.returnUrl = returnUrl;
-//        shoppingWebView.loadUrl(returnUrl);
+        shoppingWebView.loadUrl(returnUrl);
     }
 
     private void initToolbar(View view){
@@ -170,6 +190,137 @@ public class RetailFragment extends BaseFragment {
 //        html = html.replace("\"", "'");
         return "<style>body{margin:0;} iframe{width:100vw; height:100vh; margin:0; padding:0; border:none;}</style><iframe srcdoc='"+html+"' ></iframe>";
     }
+
+    private String getHtmlFile(String html){
+        String fullHtml = String.format(BASE_HTML, html);
+        File htmlFile = new File(getContext().getExternalCacheDir(), "retail.html");
+        FileWriter writer = null;
+        try {
+            if(htmlFile.exists()){
+                htmlFile.delete();
+            }
+
+            htmlFile.createNewFile();
+            writer = new FileWriter(htmlFile);
+            writer.write(fullHtml);
+
+        }catch (IOException ioe){
+            ioe.printStackTrace();
+        }finally {
+            if(writer != null){
+                try {
+                    writer.close();
+                }catch (IOException ioe){
+                    ioe.printStackTrace();
+                }
+            }
+        }
+        return htmlFile.getAbsolutePath();
+    }
+
+
+    private void startPaymentRequest(String storeId, String orderId, String amountString){
+        try {
+            double amount = Double.parseDouble(amountString);
+            IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
+            postModel.setAmount(amount);
+            postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
+            postModel.setOrderId(orderId);
+            postModel.setStoreId(storeId);
+
+            callback.getPaymentModel().getPaymentPayload().setPaymentPostModel(postModel);
+            callback.onPayButtonClicked(amount, callback.getPaymentModel());
+
+        }catch (NumberFormatException nfe){
+            nfe.printStackTrace();
+            showErrorNotification("Payment Amount Error");
+        }
+
+    }
+
+
+
+    private class RetailViewClient extends WebViewClient {
+        private boolean launchPayments = false;
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView webView, String url) {
+            if(url != null) {
+                Uri uri = Uri.parse(url);
+                String query = uri.getQuery();
+                if(query == null){
+                    query = "";
+                }
+                String baseUrl = url.replace(query, "").replace("?", "");
+                if (HttpConstants.getRetailPaymentsRedirectUrl().equals(baseUrl)) {
+                    String orderId = uri.getQueryParameter(QUERY_ORDER);
+                    String amountString = uri.getQueryParameter(QUERY_AMOUNT);
+                    String storeId = uri.getQueryParameter(QUERY_STORE);
+                    startPaymentRequest(storeId, orderId, amountString);
+                    launchPayments = true;
+                    return true;
+                }
+            }
+            webView.loadUrl(url);
+            return true;
+        }
+
+        @Override
+        public void onPageStarted(WebView webView, String url, Bitmap favIcon){
+            super.onPageStarted(webView, url, favIcon);
+        }
+
+        @Override
+        public WebResourceResponse shouldInterceptRequest(WebView webView, String url){
+            return super.shouldInterceptRequest(webView, url);
+        }
+
+        @Override
+        public void onPageFinished(WebView webView, String url){
+            super.onPageFinished(webView, url);
+            if(!launchPayments) {
+                loadedUrl = url;
+            }else {
+                launchPayments = false;
+                webView.goBack();
+            }
+        }
+    }
+
+
+    //region test javascript interface
+    private String addCallback(String storeHtml){
+        return storeHtml +
+                "<script type=\"text/javascript\">Ecwid.OnPageLoad.add(" +
+                "function(page){" +
+                "RetailInterface.retailRedirect(window.location.href);" +
+                "});" +
+                "</script>";
+    }
+
+    private class RetailJavascriptInterface {
+
+        @JavascriptInterface
+        public void retailRedirect(final String url){
+            if(loadedUrl!=null && loadedUrl.equals(url)){
+                return;
+            }
+            shoppingWebView.post(new Runnable() {
+                @Override
+                public void run() {
+                    shoppingWebView.loadDataWithBaseURL("data:text/html", addCallback(url), "text/html", "utf-8", "data:text/html");
+                }
+            });
+        }
+    }
+    //endregion
+
+    //region test sso generation
+    private static final String APP_CLIENT_SECRET = "9xasKgFMZbDErsGgQeCN3EHawKeydaNW";
+    private static final String APP_ID = "breeze-shopping";
+    private String ssoProfile = "";
+    private String storeId = "12522068";//hardcoded MyBreezeClinic StoreId
+
 
     private void initSsoPayload(){
         DemographicPayloadDTO demographics = retailModel.getPayload().getDemographicDTO().getPayload();
@@ -211,23 +362,14 @@ public class RetailFragment extends BaseFragment {
     private String getHtmlData(){
         return
                 "<html>" +
-                "<div> " +
-                "<script type=\"text/javascript\" src=\"https://app.ecwid.com/script.js?"+storeId+"\" charset=\"utf-8\"></script>" +
-                "<script type=\"text/javascript\"> xProductBrowser(\"categoriesPerRow=1\",\"views=grid(60,1) list(60)\",\"categoryView=grid\",\"searchView=list\");</script>" +
-                "<script> var ecwid_sso_profile = '" + ssoProfile + "' </script>" +
-                "</div>" +
-                "</html>";
+                        "<div> " +
+                        "<script type=\"text/javascript\" src=\"https://app.ecwid.com/script.js?"+storeId+"\" charset=\"utf-8\"></script>" +
+                        "<script type=\"text/javascript\"> xProductBrowser(\"categoriesPerRow=1\",\"views=grid(60,1) list(60)\",\"categoryView=grid\",\"searchView=list\");</script>" +
+                        "<script> var ecwid_sso_profile = '" + ssoProfile + "' </script>" +
+                        "</div>" +
+                        "</html>";
     }
 
-
-    private String addCallback(String storeHtml){
-        return storeHtml +
-                "<script type=\"text/javascript\">Ecwid.OnPageLoad.add(" +
-                "function(page){" +
-                "RetailInterface.retailRedirect(window.location.href);" +
-                "});" +
-                "</script>";
-    }
 
     private static String hmacSha1(String value, String key)
             throws UnsupportedEncodingException, NoSuchAlgorithmException,
@@ -252,81 +394,6 @@ public class RetailFragment extends BaseFragment {
         }
         return new String(hexChars);
     }
-
-
-    private void startPaymentRequest(String storeId, String orderId, String amountString){
-        try {
-            double amount = Double.parseDouble(amountString);
-            IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
-            postModel.setAmount(amount);
-            postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
-            postModel.setOrderId(orderId);
-            postModel.setStoreId(storeId);
-
-            callback.getPaymentModel().getPaymentPayload().setPaymentPostModel(postModel);
-            callback.onPayButtonClicked(amount, callback.getPaymentModel());
-
-        }catch (NumberFormatException nfe){
-            nfe.printStackTrace();
-            showErrorNotification("Payment Amount Error");
-        }
-
-    }
-
-
-
-    private class RetailViewClient extends WebViewClient {
-
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if(url != null) {
-                Uri uri = Uri.parse(url);
-                String query = uri.getQuery();
-                String baseUrl = url.replace(query, "").replace("?", "");
-                if (HttpConstants.getRetailPaymentsRedirectUrl().equals(baseUrl)) {
-                    String orderId = uri.getQueryParameter(QUERY_ORDER);
-                    String amountString = uri.getQueryParameter(QUERY_AMOUNT);
-                    String storeId = uri.getQueryParameter(QUERY_STORE);
-                    startPaymentRequest(storeId, orderId, amountString);
-                    return true;
-                }
-            }
-            view.loadUrl(url);
-            return true;
-        }
-
-        @Override
-        public void onPageStarted(WebView webView, String url, Bitmap favIcon){
-            super.onPageStarted(webView, url, favIcon);
-        }
-
-        @Override
-        public WebResourceResponse shouldInterceptRequest(WebView webView, String url){
-            return super.shouldInterceptRequest(webView, url);
-        }
-
-        @Override
-        public void onPageFinished(WebView webView, String url){
-            super.onPageFinished(webView, url);
-            loadedUrl = url;
-        }
-    }
-
-
-    private class RetailJavascriptInterface {
-
-        @JavascriptInterface
-        public void retailRedirect(final String url){
-            if(loadedUrl!=null && loadedUrl.equals(url)){
-                return;
-            }
-            shoppingWebView.post(new Runnable() {
-                @Override
-                public void run() {
-                    shoppingWebView.loadDataWithBaseURL("data:text/html", addCallback(url), "text/html", "utf-8", "data:text/html");
-                }
-            });
-        }
-    }
+    //endregion
 
 }

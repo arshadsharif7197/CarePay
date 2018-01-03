@@ -1,5 +1,7 @@
 package com.carecloud.carepay.patient.retail.interfaces;
 
+import android.os.Bundle;
+
 import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
 import com.carecloud.carepay.patient.retail.models.RetailModel;
 import com.carecloud.carepay.patient.retail.models.RetailPracticeDTO;
@@ -19,4 +21,6 @@ public interface RetailInterface extends PaymentInterface, PatientPaymentMethodI
     void displayToolbar(boolean visibility);
 
     PaymentsModel getPaymentModel();
+
+    Bundle getWebViewBundle();
 }

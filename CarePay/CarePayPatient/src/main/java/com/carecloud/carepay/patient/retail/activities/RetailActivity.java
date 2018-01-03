@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.retail.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
@@ -46,6 +47,8 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
     private RetailPracticeDTO selectedPractice;
     private UserPracticeDTO userPracticeDTO;
     private Fragment androidPayTargetFragment;
+
+    private Bundle webViewBundle = new Bundle();
 
     @Override
     public void onCreate(Bundle icicle){
@@ -120,6 +123,11 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
         return paymentsModel;
     }
 
+    @Override
+    public Bundle getWebViewBundle() {
+        return webViewBundle;
+    }
+
     private void replaceFragment(Fragment fragment, boolean addToBackStack){
         replaceFragment(R.id.container_main, fragment, addToBackStack);
     }
@@ -138,6 +146,7 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         replaceFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount), true);
+//        displayDialogFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount), true);
     }
 
     @Override
@@ -149,9 +158,10 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
         if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
                 && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel,
+            DialogFragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel,
                     selectedPaymentMethod.getLabel(), amount);
             replaceFragment(fragment, true);
+//            displayDialogFragment(fragment, true);
         } else {
             showAddCard(amount, paymentsModel);
         }
@@ -171,17 +181,18 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
-        getSupportFragmentManager().popBackStackImmediate(RetailFragment.class.getName(), 0);
+        RetailModel retailModel = DtoHelper.getConvertedDTO(RetailModel.class, workflowDTO);
+        getSupportFragmentManager().popBackStack(RetailFragment.class.getName(), 0);
         RetailFragment retailFragment = (RetailFragment) getSupportFragmentManager().findFragmentByTag(RetailFragment.class.getName());
-        if(retailFragment == null){
+        if(retailFragment != null) {
+            retailFragment.loadPaymentRedirectUrl(retailModel.getPayload().getReturnUrl());
+        } else {
             retailFragment = RetailFragment.newInstance(retailModel,
                     selectedPractice, userPracticeDTO,
                     getSupportFragmentManager().getBackStackEntryCount() > 0);
+            retailFragment.loadPaymentRedirectUrl(retailModel.getPayload().getReturnUrl());
             replaceFragment(retailFragment, true);
         }
-        RetailModel retailModel = DtoHelper.getConvertedDTO(RetailModel.class, workflowDTO);
-        retailFragment.loadPaymentRedirectUrl(retailModel.getPayload().getReturnUrl());
-
     }
 
     @Override
