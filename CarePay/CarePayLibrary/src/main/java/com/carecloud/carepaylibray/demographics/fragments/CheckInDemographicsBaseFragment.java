@@ -307,6 +307,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                     inputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
                 } else {
                     inputLayout.setError(null);
+                    inputLayout.setErrorEnabled(false);
                 }
                 checkIfEnableButton(getView());
             }
@@ -394,6 +395,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         @Override
         public void afterTextChanged(Editable editable) {
             StringUtil.autoFormatPhone(editable, lastLength);
+            checkIfEnableButton(getView());
         }
     };
 
@@ -480,25 +482,30 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         this.userAction = userAction;
     }
 
-    protected void setDefaultError(View baseView, int id) {
-        setFieldError(baseView, id, Label.getLabel("demographics_required_validation_msg"));
-        baseView.requestFocus();
+    protected void setDefaultError(View baseView, int id, boolean shouldRequestFocus) {
+        setFieldError(baseView, id, Label.getLabel("demographics_required_validation_msg"), shouldRequestFocus);
+//        baseView.requestFocus();
     }
 
-    protected void setFieldError(View baseView, int id, String error) {
+    protected void setFieldError(View baseView, int id, String error, boolean shouldRequestFocus) {
         TextInputLayout inputLayout = (TextInputLayout) baseView.findViewById(id);
-        setFieldError(inputLayout, error);
+        setFieldError(inputLayout, error, shouldRequestFocus);
     }
 
-    protected void setDefaultError(TextInputLayout inputLayout) {
-        setFieldError(inputLayout, Label.getLabel("demographics_required_validation_msg"));
+    protected void setDefaultError(TextInputLayout inputLayout, boolean shouldRequestFocus) {
+        setFieldError(inputLayout, Label.getLabel("demographics_required_validation_msg"), shouldRequestFocus);
         inputLayout.requestFocus();
     }
 
-    protected void setFieldError(TextInputLayout inputLayout, String error) {
+    protected void setFieldError(TextInputLayout inputLayout, String error, boolean shouldRequestFocus) {
         if (inputLayout != null) {
-            inputLayout.setErrorEnabled(true);
-            inputLayout.setError(error);
+            if (!inputLayout.isErrorEnabled()) {
+                inputLayout.setErrorEnabled(true);
+                inputLayout.setError(error);
+            }
+            if (shouldRequestFocus) {
+                inputLayout.requestFocus();
+            }
         }
     }
 
@@ -541,18 +548,18 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                             view.setVisibility(View.INVISIBLE);
                         } else if (tag.equals(TAG_ERROR_SHOW_GONE) || tag.equals(TAG_ERROR_SHOW_INV)) {
                             view.setVisibility(View.VISIBLE);
-                        }else if (tag.equals(TAG_ERROR_COLOR)){
+                        } else if (tag.equals(TAG_ERROR_COLOR)) {
                             view.setSelected(true);
-                            if(view instanceof TextInputLayout){
+                            if (view instanceof TextInputLayout) {
                                 EditText editText = ((TextInputLayout) view).getEditText();
                                 editText.getBackground().setColorFilter(ContextCompat.getColor(getContext(), R.color.remove_red), PorterDuff.Mode.SRC_IN);
                             }
                         }
                         Rect rect = new Rect();
                         view.getGlobalVisibleRect(rect);
-                        if(rect.top > 0){
-                            scrollView.scrollBy(0, rect.top-scrollView.getTop());
-                        }else {
+                        if (rect.top > 0) {
+                            scrollView.scrollBy(0, rect.top - scrollView.getTop());
+                        } else {
                             scrollView.scrollBy(0, rect.top);
                         }
                     } else {
@@ -562,7 +569,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                             view.setVisibility(View.INVISIBLE);
                         } else if (tag.equals(TAG_ERROR_HIDE_GONE) || tag.equals(TAG_ERROR_HIDE_INV)) {
                             view.setVisibility(View.VISIBLE);
-                        } else if (tag.equals(TAG_ERROR_COLOR)){
+                        } else if (tag.equals(TAG_ERROR_COLOR)) {
                             view.setSelected(false);
                         }
                     }
@@ -572,8 +579,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         }
 
     }
-
-
 
     protected TextWatcher zipInputFormatter = new TextWatcher() {
         int lastLength;
@@ -594,5 +599,63 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             checkIfEnableButton(getView());
         }
     };
+
+    protected TextWatcher dateInputFormatter = new TextWatcher() {
+        int lastLength;
+
+        @Override
+        public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+            lastLength = sequence.length();
+        }
+
+        @Override
+        public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            StringUtil.autoFormatDateOfBirth(editable, lastLength);
+        }
+    };
+
+    protected View.OnClickListener selectEndOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            EditText editText = (EditText) view;
+            editText.setSelection(editText.length());
+        }
+    };
+
+    protected void setUpField(TextInputLayout textInputLayout, EditText editText, boolean isVisible,
+                              String value, boolean isRequired, View optionalView) {
+        editText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(textInputLayout, null));
+        setVisibility(textInputLayout, isVisible);
+        editText.setText(StringUtil.captialize(value));
+        editText.getOnFocusChangeListener().onFocusChange(editText,
+                !StringUtil.isNullOrEmpty(editText.getText().toString().trim()));
+        if (isRequired) {
+            editText.addTextChangedListener(getValidateEmptyTextWatcher(textInputLayout));
+        } else if (optionalView != null) {
+            editText.addTextChangedListener(getOptionalViewTextWatcher(optionalView));
+        }
+        if (optionalView != null && !StringUtil.isNullOrEmpty(value)) {
+            optionalView.setVisibility(View.GONE);
+        }
+    }
+
+    protected boolean validateField(View view, boolean isRequired, String value, int containerId,
+                                    int inputLayoutId, boolean shouldRequestFocus) {
+        if (isRequired && StringUtil.isNullOrEmpty(value)) {
+            if (shouldRequestFocus) {
+                showErrorViews(true, (ViewGroup) view.findViewById(containerId));
+                setDefaultError(view, inputLayoutId, shouldRequestFocus);
+            }
+            return true;
+        } else {
+            showErrorViews(false, (ViewGroup) view.findViewById(containerId));
+        }
+        return false;
+    }
 
 }

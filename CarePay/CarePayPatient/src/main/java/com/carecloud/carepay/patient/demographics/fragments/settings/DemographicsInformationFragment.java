@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -54,10 +55,10 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
     private DemographicDTO demographicsSettingsDTO;
     private DemographicDataModel dataModel;
 
-    private EditText dateOfBirth;
-    private EditText phoneNumber;
-    private EditText address;
-    private EditText address2;
+    private EditText dateOfBirthEditText;
+    private EditText phoneNumberEditText;
+    private EditText addressEditText;
+    private EditText address2EditText;
     private EditText zipCode;
     private EditText cityEditText;
     private TextView stateEditText;
@@ -117,6 +118,16 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
                 updateDemographics();
             }
         });
+        nextButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View buttonView, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN && !buttonView.isSelected()) {
+                    updateDemographics();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         View additionalDemographics = view.findViewById(R.id.add_additional_info);
         additionalDemographics.setOnClickListener(new View.OnClickListener() {
@@ -141,77 +152,74 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
     }
 
     private void initPersonalInfo(View view, DemographicPayloadDTO demographicPayload) {
-        TextInputLayout dateBirthLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
-        dateOfBirth = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
-        dateOfBirth.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(dateBirthLayout, null));
-        setVisibility(dateBirthLayout, dataModel.getDemographic().getPersonalDetails().getProperties()
-                .getDateOfBirth().isDisplayed());
-        dateOfBirth.addTextChangedListener(dateInputFormatter);
-
-        String dateString = demographicPayload.getPersonalDetails().getFormattedDateOfBirth();
-        dateOfBirth.setText(dateString);
-        dateOfBirth.getOnFocusChangeListener().onFocusChange(dateOfBirth, !StringUtil.isNullOrEmpty(dateString));
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getDateOfBirth().isRequired()) {
-            dateOfBirth.addTextChangedListener(getValidateEmptyTextWatcher(dateBirthLayout));
-        } else {
-            dateOfBirth.addTextChangedListener(clearValidationErrorsOnTextChange(dateBirthLayout));
+        TextInputLayout dateBirthInputLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
+        dateOfBirthEditText = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
+        boolean isDOBRequired = dataModel.getDemographic().getPersonalDetails().getProperties().getDateOfBirth().isRequired();
+        setUpField(dateBirthInputLayout, dateOfBirthEditText,
+                dataModel.getDemographic().getPersonalDetails().getProperties().getDateOfBirth().isDisplayed(),
+                demographicPayload.getPersonalDetails().getFormattedDateOfBirth(), isDOBRequired, null);
+        if (!isDOBRequired) {
+            dateOfBirthEditText.addTextChangedListener(clearValidationErrorsOnTextChange(dateBirthInputLayout));
         }
+        dateOfBirthEditText.addTextChangedListener(dateInputFormatter);
+        dateOfBirthEditText.setOnClickListener(selectEndOnClick);
 
-
-        TextInputLayout phoneNumberLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
-        phoneNumber = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
-        phoneNumber.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(phoneNumberLayout, null));
-        setVisibility(phoneNumberLayout, dataModel.getDemographic().getAddress().getProperties().getPhone().isDisplayed());
-        phoneNumber.addTextChangedListener(phoneInputFormatter);
-
-        String phoneNumberString = demographicPayload.getAddress().getPhone();
-        phoneNumber.setText(StringUtil.formatPhoneNumber(phoneNumberString));
-        phoneNumber.getOnFocusChangeListener().onFocusChange(phoneNumber, !StringUtil.isNullOrEmpty(phoneNumberString));
-        if (dataModel.getDemographic().getAddress().getProperties().getPhone().isRequired()) {
-            phoneNumber.addTextChangedListener(getValidateEmptyTextWatcher(phoneNumberLayout));
-        } else {
-            phoneNumber.addTextChangedListener(clearValidationErrorsOnTextChange(phoneNumberLayout));
+        TextInputLayout phoneNumberInputLayout = (TextInputLayout)
+                view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
+        phoneNumberEditText = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
+        boolean phoneNumberRequired = dataModel.getDemographic().getAddress().getProperties().getPhone().isRequired();
+        setUpField(phoneNumberInputLayout, phoneNumberEditText,
+                dataModel.getDemographic().getAddress().getProperties().getPhone().isDisplayed(),
+                StringUtil.formatPhoneNumber(demographicPayload.getAddress().getPhone()), phoneNumberRequired, null);
+        if (!phoneNumberRequired) {
+            phoneNumberEditText.addTextChangedListener(clearValidationErrorsOnTextChange(phoneNumberInputLayout));
         }
-
+        phoneNumberEditText.addTextChangedListener(phoneInputFormatter);
+        phoneNumberEditText.setOnClickListener(selectEndOnClick);
     }
 
     private void setUpBaseDemographicFields(View view, DemographicPayloadDTO demographicPayload,
                                             DemographicsPersonalSection personalInfoSection) {
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getGender(),
-                personalInfoSection.getProperties().getGender(), com.carecloud.carepaylibrary.R.id.genderDemographicsLayout,
-                com.carecloud.carepaylibrary.R.id.genderInputLayout, com.carecloud.carepaylibrary.R.id.genderEditText,
-                com.carecloud.carepaylibrary.R.id.genderOptionalLabel, selectedGender, Label.getLabel("demographics_review_gender"));
+                personalInfoSection.getProperties().getGender(), R.id.genderDemographicsLayout,
+                R.id.genderInputLayout, R.id.genderEditText,
+                R.id.genderOptionalLabel, selectedGender, Label.getLabel("demographics_review_gender"));
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getPrimaryRace(),
-                personalInfoSection.getProperties().getPrimaryRace(), com.carecloud.carepaylibrary.R.id.raceDemographicsLayout,
-                com.carecloud.carepaylibrary.R.id.raceInputLayout, com.carecloud.carepaylibrary.R.id.raceEditText,
-                com.carecloud.carepaylibrary.R.id.raceOptionalLabel, selectedRace, Label.getLabel("demographics_review_race"));
+                personalInfoSection.getProperties().getPrimaryRace(), R.id.raceDemographicsLayout,
+                R.id.raceInputLayout, R.id.raceEditText,
+                R.id.raceOptionalLabel, selectedRace, Label.getLabel("demographics_review_race"));
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getSecondaryRace(),
-                personalInfoSection.getProperties().getSecondaryRace(), com.carecloud.carepaylibrary.R.id.secondaryRaceDemographicsLayout,
-                com.carecloud.carepaylibrary.R.id.secondaryRaceInputLayout, com.carecloud.carepaylibrary.R.id.secondaryRaceEditText, com.carecloud.carepaylibrary.R.id.secondaryRaceOptional,
+                personalInfoSection.getProperties().getSecondaryRace(), R.id.secondaryRaceDemographicsLayout,
+                R.id.secondaryRaceInputLayout, R.id.secondaryRaceEditText, R.id.secondaryRaceOptional,
                 selectedSecondaryRace, Label.getLabel("demographics_secondary_race"));
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getEthnicity(),
-                personalInfoSection.getProperties().getEthnicity(), com.carecloud.carepaylibrary.R.id.ethnicityDemographicsLayout,
-                com.carecloud.carepaylibrary.R.id.ethnicityInputLayout, com.carecloud.carepaylibrary.R.id.ethnicityEditText,
-                com.carecloud.carepaylibrary.R.id.ethnicityOptional, selectedEthnicity, Label.getLabel("demographics_review_ethnicity"));
+                personalInfoSection.getProperties().getEthnicity(), R.id.ethnicityDemographicsLayout,
+                R.id.ethnicityInputLayout, R.id.ethnicityEditText,
+                R.id.ethnicityOptional, selectedEthnicity, Label.getLabel("demographics_review_ethnicity"));
     }
 
     private void initAddressInfo(View view, DemographicPayloadDTO demographicPayload) {
         DemographicsAddressSection addressSection = dataModel.getDemographic().getAddress();
 
-        TextInputLayout addressInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
-        address = (EditText) view.findViewById(R.id.addressEditTextId);
-        address.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(addressInputLayout, null));
-        setVisibility(addressInputLayout, addressSection.getProperties().getAddress1().isDisplayed());
-        address.setText(StringUtil.captialize(demographicPayload.getAddress().getAddress1()));
-        address.getOnFocusChangeListener().onFocusChange(address,
-                !StringUtil.isNullOrEmpty(address.getText().toString().trim()));
-        if (addressSection.getProperties().getAddress1().isRequired()) {
-            address.addTextChangedListener(getValidateEmptyTextWatcher(addressInputLayout));
-        }
-        address.addTextChangedListener(new TextWatcher() {
+        TextInputLayout address2InputLayout = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
+        address2EditText = (EditText) view.findViewById(R.id.addressEditText2Id);
+        setUpField(address2InputLayout, address2EditText,
+                addressSection.getProperties().getAddress2().isDisplayed(),
+                demographicPayload.getAddress().getAddress2(),
+                addressSection.getProperties().getAddress2().isRequired(),
+                view.findViewById(R.id.demogrAddressOptionalLabel));
+        address2EditText.setEnabled(!StringUtil.isNullOrEmpty(demographicPayload.getAddress().getAddress2()));
+
+        final TextInputLayout addressInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
+        addressEditText = (EditText) view.findViewById(R.id.addressEditTextId);
+        setUpField(addressInputLayout, addressEditText,
+                addressSection.getProperties().getAddress1().isDisplayed(),
+                demographicPayload.getAddress().getAddress1(),
+                addressSection.getProperties().getAddress1().isRequired(), null);
+        addressEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
 
@@ -225,44 +233,25 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
             @Override
             public void afterTextChanged(Editable editable) {
                 if (StringUtil.isNullOrEmpty(editable.toString())) {
-                    address2.setEnabled(false);
-                    address2.setText("");
+                    address2EditText.setEnabled(false);
+                    address2EditText.setText("");
+                    address2EditText.getOnFocusChangeListener().onFocusChange(address2EditText,
+                            !StringUtil.isNullOrEmpty(address2EditText.getText().toString().trim()));
                 } else {
-                    address2.setEnabled(true);
+                    address2EditText.setEnabled(true);
                 }
             }
         });
 
 
-        TextInputLayout address2InputLayout = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
-        address2 = (EditText) view.findViewById(R.id.addressEditText2Id);
-        address2.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address2InputLayout, null));
-        setVisibility(address2InputLayout, addressSection.getProperties().getAddress2().isDisplayed());
-        address2.setText(StringUtil.captialize(demographicPayload.getAddress().getAddress2()));
-        address2.getOnFocusChangeListener().onFocusChange(address2,
-                !StringUtil.isNullOrEmpty(address2.getText().toString().trim()));
-        if (addressSection.getProperties().getAddress2().isRequired()) {
-            address2.addTextChangedListener(getValidateEmptyTextWatcher(address2InputLayout));
-            View address2Optional = view.findViewById(R.id.demogrAddressOptionalLabel);
-            address2Optional.setVisibility(View.GONE);
-        }
-
-
         TextInputLayout zipCodeInputLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
         zipCode = (EditText) view.findViewById(R.id.zipCodeId);
-        zipCode.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeInputLayout,
-                getZipCodeFocusListener(zipCode)));
-        setVisibility(zipCodeInputLayout, addressSection.getProperties().getZipcode().isDisplayed());
+        setUpField(zipCodeInputLayout, zipCode,
+                addressSection.getProperties().getZipcode().isDisplayed(),
+                StringUtil.formatZipCode(demographicPayload.getAddress().getZipcode()),
+                addressSection.getProperties().getZipcode().isRequired(), null);
+        zipCode.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeInputLayout, getZipCodeFocusListener(zipCode)));
         zipCode.addTextChangedListener(zipInputFormatter);
-        zipCode.setText(demographicPayload.getAddress().getZipcode());
-        zipCode.getOnFocusChangeListener().onFocusChange(zipCode,
-                !StringUtil.isNullOrEmpty(zipCode.getText().toString().trim()));
-        if (addressSection.getProperties().getZipcode().isRequired()) {
-            zipCode.addTextChangedListener(getValidateEmptyTextWatcher(zipCodeInputLayout));
-        } else {
-            zipCode.addTextChangedListener(clearValidationErrorsOnTextChange(zipCodeInputLayout));
-        }
-
 
         TextInputLayout cityInputLayout = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
         cityEditText = (EditText) view.findViewById(R.id.cityId);
@@ -293,67 +282,26 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
 
     @Override
     protected void checkIfEnableButton() {
-        boolean isEnabled = passConstraints();
+        boolean isEnabled = passConstraints(false);
         if (nextButton != null) {
-            nextButton.setEnabled(isEnabled);
+            nextButton.setSelected(isEnabled);
             nextButton.setClickable(isEnabled);
         }
     }
 
     @Override
-    protected boolean passConstraints() {
+    protected boolean passConstraints(boolean isUserInteraction) {
         View view = getView();
         if (view == null) {
             return false;
         }
 
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getDateOfBirth().isRequired()
-                && checkTextEmptyValue(R.id.revewidemogrDOBEdit, view)) {
-            return false;
-        }
-        if (dataModel.getDemographic().getAddress().getProperties().getPhone().isRequired()
-                && checkTextEmptyValue(R.id.reviewgrdemoPhoneNumberEdit, view)) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getGender().isRequired()
-                && StringUtil.isNullOrEmpty(selectedGender.getName())) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getPrimaryRace().isRequired()
-                && StringUtil.isNullOrEmpty(selectedRace.getName())) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryRace().isRequired()
-                && StringUtil.isNullOrEmpty(selectedSecondaryRace.getName())) {
-            return false;
-        }
-        if (dataModel.getDemographic().getPersonalDetails().getProperties().getEthnicity().isRequired()
-                && StringUtil.isNullOrEmpty(selectedEthnicity.getName())) {
-            return false;
-        }
-        if (dataModel.getDemographic().getAddress().getProperties().getAddress1().isRequired()
-                && checkTextEmptyValue(R.id.addressEditTextId, view)) {
-            return false;
-        }
-        if (dataModel.getDemographic().getAddress().getProperties().getAddress2().isRequired()
-                && checkTextEmptyValue(R.id.addressEditText2Id, view)) {
-            return false;
-        }
-        if (dataModel.getDemographic().getAddress().getProperties().getZipcode().isRequired()
-                && checkTextEmptyValue(R.id.zipCodeId, view)) {
-            return false;
-        }
-        if (dataModel.getDemographic().getAddress().getProperties().getCity().isRequired()
-                && checkTextEmptyValue(R.id.cityId, view)) {
-            return false;
-        }
-        if (dataModel.getDemographic().getAddress().getProperties().getState().isRequired()
-                && StringUtil.isNullOrEmpty(selectedState.getName())) {
-            return false;
-        }
+        String dobValue = ((EditText) view.findViewById(R.id.revewidemogrDOBEdit)).getText().toString();
+        if (validateField(view, dataModel.getDemographic().getPersonalDetails().getProperties()
+                        .getDateOfBirth().isRequired(), dobValue,
+                R.id.reviewdemogrDOBTextInput, isUserInteraction)) return false;
 
-
-        //These are for validating correct input regardless of required fields
+        //This validation is required regardless of whether fields are required
         TextInputLayout dateBirthLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
         EditText dateOfBirth = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
         if (dateBirthLayout.getVisibility() == View.VISIBLE &&
@@ -361,32 +309,82 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
             String dateValidationResult = DateUtil
                     .getDateOfBirthValidationResultMessage(dateOfBirth.getText().toString().trim());
             if (dateValidationResult != null) {
-                dateBirthLayout.setErrorEnabled(true);
-                dateBirthLayout.setError(dateValidationResult);
+                setFieldError(dateBirthLayout, dateValidationResult, isUserInteraction);
                 return false;
             }
         }
+
+        String phoneValue = ((EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit)).getText().toString();
+        if (validateField(view, dataModel.getDemographic().getAddress().getProperties()
+                        .getPhone().isRequired(), phoneValue,
+                R.id.reviewdemogrPhoneNumberTextInput, isUserInteraction)) return false;
 
         TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
         EditText phoneNumber = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
         if (phoneLayout.getVisibility() == View.VISIBLE &&
                 !StringUtil.isNullOrEmpty(phoneNumber.getText().toString().trim()) &&
                 !ValidationHelper.isValidString(phoneNumber.getText().toString().trim(), ValidationHelper.PHONE_NUMBER_PATTERN)) {
-            phoneLayout.setErrorEnabled(true);
-            phoneLayout.setError(Label.getLabel("demographics_phone_number_validation_msg"));
+            setFieldError(phoneLayout, Label.getLabel("demographics_phone_number_validation_msg"), isUserInteraction);
             return false;
         }
+
+        if (validateField(view, dataModel.getDemographic().getPersonalDetails().getProperties()
+                        .getGender().isRequired(), selectedGender.getName(),
+                R.id.genderInputLayout, isUserInteraction))
+            return false;
+
+        if (validateField(view, dataModel.getDemographic().getPersonalDetails().getProperties()
+                        .getPrimaryRace().isRequired(), selectedRace.getName(),
+                R.id.raceInputLayout, isUserInteraction))
+            return false;
+
+        if (validateField(view, dataModel.getDemographic().getPersonalDetails().getProperties()
+                        .getSecondaryRace().isRequired(), selectedSecondaryRace.getName(),
+                R.id.secondaryRaceInputLayout, isUserInteraction))
+            return false;
+
+        if (validateField(view, dataModel.getDemographic().getPersonalDetails().getProperties()
+                        .getEthnicity().isRequired(), selectedEthnicity.getName(),
+                R.id.ethnicityInputLayout, isUserInteraction))
+            return false;
+
+        String address1Value = ((EditText) view.findViewById(R.id.addressEditTextId)).getText().toString();
+        if (validateField(view, dataModel.getDemographic().getAddress().getProperties()
+                        .getAddress1().isRequired(), address1Value,
+                R.id.address1TextInputLayout, isUserInteraction))
+            return false;
+
+
+        String address2Value = ((EditText) view.findViewById(R.id.addressEditText2Id)).getText().toString();
+        if (validateField(view, dataModel.getDemographic().getAddress().getProperties()
+                        .getAddress2().isRequired(), address2Value,
+                R.id.address2TextInputLayout, isUserInteraction))
+            return false;
+
+        String zipCodeValue = ((EditText) view.findViewById(R.id.zipCodeId)).getText().toString();
+        if (validateField(view, dataModel.getDemographic().getAddress().getProperties()
+                        .getZipcode().isRequired(), zipCodeValue,
+                R.id.zipCodeTextInputLayout, isUserInteraction))
+            return false;
 
         TextInputLayout zipLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
         EditText zipCode = (EditText) view.findViewById(R.id.zipCodeId);
         if (zipLayout.getVisibility() == View.VISIBLE &&
                 !StringUtil.isNullOrEmpty(zipCode.getText().toString().trim()) &&
-                !ValidationHelper.isValidString(zipCode.getText().toString().trim(),
-                        ValidationHelper.ZIP_CODE_PATTERN)) {
-            zipLayout.setErrorEnabled(true);
-            zipLayout.setError(Label.getLabel("demographics_zip_code_validation_msg"));
+                !ValidationHelper.isValidString(zipCode.getText().toString().trim(), ValidationHelper.ZIP_CODE_PATTERN)) {
+            setFieldError(zipLayout, Label.getLabel("demographics_zip_code_validation_msg"), isUserInteraction);
             return false;
         }
+
+        String cityValue = ((EditText) view.findViewById(R.id.cityId)).getText().toString();
+        if (validateField(view, dataModel.getDemographic().getAddress().getProperties()
+                        .getCity().isRequired(), cityValue,
+                R.id.cityTextInputLayout, isUserInteraction)) return false;
+
+        String stateValue = selectedState.getName();
+        if (validateField(view, dataModel.getDemographic().getAddress().getProperties()
+                        .getState().isRequired(), stateValue,
+                R.id.stateTextInputLayout, isUserInteraction)) return false;
 
         return true;
     }
@@ -441,7 +439,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         //add all demographic info
         PatientModel patientModel = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
 
-        String dobString = dateOfBirth.getText().toString().trim();
+        String dobString = dateOfBirthEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(dobString)) {
             // the date is DateUtil as
             patientModel.setDateOfBirth(DateUtil.getInstance().setDateRaw(dobString).toStringWithFormatYyyyDashMmDashDd());
@@ -470,18 +468,18 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
 
         DemographicAddressPayloadDTO addressModel = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getAddress();
 
-        String phoneNumberString = phoneNumber.getText().toString().trim();
+        String phoneNumberString = phoneNumberEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(phoneNumberString)) {
             // 'de-format' before saving to model
             addressModel.setPhone(StringUtil.revertToRawFormat(phoneNumberString));
         }
 
-        String addressString = address.getText().toString().trim();
+        String addressString = addressEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(addressString)) {
             addressModel.setAddress1(addressString);
         }
 
-        String address2String = address2.getText().toString().trim();
+        String address2String = address2EditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(address2String)) {
             addressModel.setAddress2(address2String);
         }
@@ -510,7 +508,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
 
 
     private void updateDemographics() {
-        if (passConstraints()) {
+        if (passConstraints(true)) {
             Map<String, String> header = new HashMap<>();
             DemographicDTO updateModel = getUpdateModel();
             Gson gson = new Gson();
@@ -546,7 +544,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             showErrorNotification(exceptionMessage);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
