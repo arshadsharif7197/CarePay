@@ -15,6 +15,8 @@ import com.carecloud.carepay.service.library.dtos.RefreshDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepay.service.library.platform.AndroidPlatform;
+import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.google.gson.Gson;
@@ -530,7 +532,8 @@ public class WorkflowServiceHelper {
         intent.setAction("com.carecloud.carepay.restart");
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        Context context = applicationPreferences.getContext();
+
+        Context context = ((AndroidPlatform) Platform.get()).getContext();
         Toast.makeText(context, "Login Authorization has Expired!\nPlease Login to Application again",
                 Toast.LENGTH_LONG).show();
         context.startActivity(intent);
