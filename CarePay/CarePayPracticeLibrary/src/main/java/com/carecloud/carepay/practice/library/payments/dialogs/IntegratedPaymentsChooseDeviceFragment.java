@@ -222,18 +222,20 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
     }
 
     private void setAdapter(){
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                IntegratedPaymentsChooseDeviceAdapter adapter = (IntegratedPaymentsChooseDeviceAdapter) deviceRecycler.getAdapter();
-                if(adapter == null){
-                    adapter = new IntegratedPaymentsChooseDeviceAdapter(getContext(), availableDevices, IntegratedPaymentsChooseDeviceFragment.this);
-                    deviceRecycler.setAdapter(adapter);
-                }else{
-                    adapter.setDeviceList(availableDevices);
+        if(isAdded() && getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    IntegratedPaymentsChooseDeviceAdapter adapter = (IntegratedPaymentsChooseDeviceAdapter) deviceRecycler.getAdapter();
+                    if (adapter == null) {
+                        adapter = new IntegratedPaymentsChooseDeviceAdapter(getContext(), availableDevices, IntegratedPaymentsChooseDeviceFragment.this);
+                        deviceRecycler.setAdapter(adapter);
+                    } else {
+                        adapter.setDeviceList(availableDevices);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     private void updateSelectedLocation(){
@@ -245,57 +247,67 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
     }
 
     private void refreshProcessButton(){
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                processPaymentButton.setEnabled(selectedDevice != null && selectedDevice.getState().equals(DeviceDef.STATE_READY));
-            }
-        });
+        if(isAdded() && getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    processPaymentButton.setEnabled(selectedDevice != null && selectedDevice.getState().equals(DeviceDef.STATE_READY));
+                }
+            });
+        }
     }
 
     @Override
     public void showProgressDialog(){
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                IntegratedPaymentsChooseDeviceFragment.super.showProgressDialog();
-            }
-        });
+        if(isAdded() && getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    IntegratedPaymentsChooseDeviceFragment.super.showProgressDialog();
+                }
+            });
+        }
     }
 
     @Override
     public void hideProgressDialog(){
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                IntegratedPaymentsChooseDeviceFragment.super.hideProgressDialog();
-            }
-        });
+        if(isAdded() && getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    IntegratedPaymentsChooseDeviceFragment.super.hideProgressDialog();
+                }
+            });
+        }
     }
 
     @Override
     public void dismiss(){
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                IntegratedPaymentsChooseDeviceFragment.super.dismiss();
-            }
-        });
+        if(isAdded() && getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    IntegratedPaymentsChooseDeviceFragment.super.dismiss();
+                }
+            });
+        }
     }
 
     private void toggleSelectDevice(final boolean processing){
         Log.d("Toggle Selectable", "Processing: "+processing);
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                IntegratedPaymentsChooseDeviceAdapter adapter = (IntegratedPaymentsChooseDeviceAdapter) deviceRecycler.getAdapter();
-                if(adapter != null){
-                    adapter.setProcessing(processing);
+        if(isAdded() && getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    IntegratedPaymentsChooseDeviceAdapter adapter = (IntegratedPaymentsChooseDeviceAdapter) deviceRecycler.getAdapter();
+                    if (adapter != null) {
+                        adapter.setProcessing(processing);
+                    }
+                    selectedLocationText.setClickable(!processing);
+                    refreshProcessButton();
                 }
-                selectedLocationText.setClickable(!processing);
-                refreshProcessButton();
-            }
-        });
+            });
+        }
     }
 
     private void processShamrockPayment(){
