@@ -43,9 +43,6 @@ public class PaymentsPayloadDTO implements Serializable {
     @SerializedName("patient_credit_cards")
     @Expose
     private List<PaymentsPatientsCreditCardsPayloadListDTO> patientCreditCards = new ArrayList<>();
-    @SerializedName("intake_forms")
-    @Expose
-    private PaymentsPayloadIntakeFormsDTO intakeForms = new PaymentsPayloadIntakeFormsDTO();
     @SerializedName("patient_payment_plans")
     @Expose
     private PaymentsPatientsPlansDTO patientPaymentPlans = new PaymentsPatientsPlansDTO();
@@ -82,6 +79,11 @@ public class PaymentsPayloadDTO implements Serializable {
     @SerializedName("patient_refunds")
     @Expose
     private PaymentHistoryItemPayload patientRefund = new PaymentHistoryItemPayload();
+    @SerializedName("payment_profile_id")
+    @Expose
+    private String paymentProfileId;
+    @SerializedName("organization_id")
+    private String organizationId;
 
     public List<PatientModel> getPatients() {
         return patients;
@@ -97,20 +99,6 @@ public class PaymentsPayloadDTO implements Serializable {
 
     public void setPatientPayments(PatientPaymentsDTO patientPayments) {
         this.patientPayments = patientPayments;
-    }
-
-    /**
-     * @return The intakeForms
-     */
-    public PaymentsPayloadIntakeFormsDTO getIntakeForms() {
-        return intakeForms;
-    }
-
-    /**
-     * @param intakeForms The intake_forms
-     */
-    public void setIntakeForms(PaymentsPayloadIntakeFormsDTO intakeForms) {
-        this.intakeForms = intakeForms;
     }
 
     /**
@@ -299,5 +287,21 @@ public class PaymentsPayloadDTO implements Serializable {
 
     public void setPatientRefund(PaymentHistoryItemPayload patientRefund) {
         this.patientRefund = patientRefund;
+    }
+
+    public String getPaymentProfileId() {
+        return paymentProfileId;
+    }
+
+    public void setPaymentProfileId(String paymentProfileId) {
+        this.paymentProfileId = paymentProfileId;
+    }
+
+    public String getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(String organizationId) {
+        this.organizationId = organizationId;
     }
 }

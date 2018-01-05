@@ -52,6 +52,7 @@
     <string name="welcome_connecting">Connecting&#8230;</string>
     <string name="welcome_processing">Processing&#8230;</string>
     <string name="welcome_complete">Thank you for your payment.</string>
+    <string name="welcome_complete_refund">Transaction Completed.</string>
     <string name="welcome_retrying">Retrying&#8230; Attempt #%d</string>
 
 

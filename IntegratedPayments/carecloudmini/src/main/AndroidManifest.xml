@@ -3,6 +3,7 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:name=".MiniApplication"
@@ -14,7 +15,7 @@
         android:fullBackupContent="false">
 
         <meta-data android:name="DATABASE" android:value="carepay.db" />
-        <meta-data android:name="VERSION" android:value="0" />
+        <meta-data android:name="VERSION" android:value="1" />
         <meta-data android:name="QUERY_LOG" android:value="true" />
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.carecloud.carepay.mini" />
 

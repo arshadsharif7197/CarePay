@@ -79,6 +79,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             @Override
             public void onClick(View view) {
                 SystemUtil.hideSoftKeyboard(BaseActivity.this);
+                view.requestFocus();
             }
         });
         setLastInteraction(System.currentTimeMillis());

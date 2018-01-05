@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/device_item_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/background_glitter_selected_color"
+        android:gravity="center_vertical"
+        android:padding="@dimen/dimen_10dp">
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/device_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="start"
+        android:textColor="@color/slateGray"
+        android:textSize="@dimen/text_size_18sp"
+        app:customAssetFont="gotham_rounded_medium"
+        tools:text="Device Name"/>
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/status_flag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:background="@drawable/button_rounded_gray_background"
+        android:textSize="@dimen/text_size_13"
+        android:textColor="@color/white"
+        android:paddingTop="@dimen/dimen_1dp"
+        android:paddingBottom="@dimen/dimen_1dp"
+        android:paddingStart="@dimen/dimen_7dp"
+        android:paddingEnd="@dimen/dimen_7dp"
+        tools:text="Ready"
+        app:customAssetFont="proxima_nova_semi_bold"/>
+
+    </LinearLayout>
+
+</FrameLayout>

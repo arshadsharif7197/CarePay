@@ -9,8 +9,6 @@
     <color name="brick_red">#d14c4c</color>
     <color name="yellowGreen">#5BD063</color>
     <color name="checkin_item_border">#80C8E9</color>
-    <color name="taupe_gray1">#848d92</color>
-    <color name="news_item_divider">#3378909C</color>
     <color name="manatee">#9ba4a9</color>
 
     <!-- Custom Filter Popup -->
@@ -18,24 +16,15 @@
     <color name="custom_filter_list_divider_background">#d0d0d0</color>
 
     <!-- Custom Appointment Detail Dialog -->
-    <color name="charcoal_78">#c637474f</color>
-    <color name="taupe_gray_78">#c6848e93</color>
     <color name="rose_madder">#E22B41</color>
-    <color name="manatee_20">#32979797</color>
-    <color name="timberwolf_20">#32d8d8d8</color>
     <color name="timberwolf">#ffd8d8d8</color>
 
     <!-- Home Screen -->
     <color name="home_button_pressed_shadow_margin">#d1d6d9</color>
-    <color name="home_news_background">#CAE5F2</color>
-    <color name="scan_camera_background_bg">#ff424242</color>
-    <color name="scan_camera_bg">#50acacac</color>
 
     <!--Payments-->
     <color name="filter_on">#34590C</color>
-    <color name="count_bg">#61D3DF</color>
     <color name="popup_background">#37474f</color>
-    <color name="keypad_divider">@color/light_gray</color>
 
     <!--PracticeMode - PatientMode-->
     <color name="practice_mode_background">#37474F</color>
@@ -43,6 +32,4 @@
     <color name="patient_mode_action_bar">@color/colorPrimaryDark</color>
     <color name="practice_mode_counter_background">@color/dark_blue</color>
     <color name="practice_mode_counter_text">@color/soft_sky</color>
-    <color name="patient_mode_counter_background">@color/count_bg</color>
-    <color name="patient_mode_counter_text">@color/white</color>
 </resources>

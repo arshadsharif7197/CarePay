@@ -22,6 +22,7 @@ import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenterImpl;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
+import com.carecloud.carepaylibray.interfaces.IcicleInterface;
 import com.carecloud.carepaylibray.media.MediaResultListener;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
@@ -42,14 +43,41 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        Bundle icicle = savedInstanceState;
+        if(savedInstanceState != null){
+            String tag = savedInstanceState.getString(DemographicsPresenter.CURRENT_ICICLE_FRAGMENT);
+            if(tag != null){
+                Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+                if(fragment instanceof IcicleInterface){
+                    icicle = ((IcicleInterface) fragment).popData();
+                    icicle.putAll(savedInstanceState);
+                }
+            }
+        }
+        super.onCreate(icicle);
         setContentView(R.layout.activity_demographic_review);
 
-        demographicsPresenter = new DemographicsPresenterImpl(this, savedInstanceState, false);
-        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_PAYMENT_DTO)) {
-            paymentWorkflow = savedInstanceState.getString(KEY_PAYMENT_DTO);
+        demographicsPresenter = new DemographicsPresenterImpl(this, icicle, false);
+        if (icicle != null && icicle.containsKey(KEY_PAYMENT_DTO)) {
+            paymentWorkflow = icicle.getString(KEY_PAYMENT_DTO);
             initPaymentPresenter(paymentWorkflow);
         }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        Bundle icicle = savedInstanceState;
+        if(savedInstanceState != null){
+            String tag = savedInstanceState.getString(DemographicsPresenter.CURRENT_ICICLE_FRAGMENT);
+            if(tag != null){
+                Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+                if(fragment instanceof IcicleInterface){
+                    icicle = ((IcicleInterface) fragment).popData();
+                    icicle.putAll(savedInstanceState);
+                }
+            }
+        }
+        super.onRestoreInstanceState(icicle);
     }
 
     @Override
@@ -93,9 +121,14 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
     @Override
     public void onSaveInstanceState(Bundle icicle) {
+        super.onSaveInstanceState(icicle);
+        Fragment fragment = demographicsPresenter.getCurrentFragment();
+        if(fragment != null &&  fragment instanceof IcicleInterface){
+            ((IcicleInterface) fragment).pushData((Bundle) icicle.clone());
+        }
+        icicle.clear();
         demographicsPresenter.onSaveInstanceState(icicle);
         icicle.putString(KEY_PAYMENT_DTO, paymentWorkflow);
-        super.onSaveInstanceState(icicle);
     }
 
     @Override

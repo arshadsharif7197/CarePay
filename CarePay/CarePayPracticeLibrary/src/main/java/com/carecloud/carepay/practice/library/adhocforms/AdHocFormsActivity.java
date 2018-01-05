@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
@@ -18,6 +19,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
@@ -44,12 +46,14 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         SelectedAdHocForms selectedAdHocForms = (SelectedAdHocForms) bundle.getSerializable("selectedForms");
 
         forms = new ArrayList<>();
-        for (String uuid : selectedAdHocForms.getForms()) {
-            for (PracticeForm practiceForm : appointmentModel.getMetadata().getDataModels()
-                    .getPracticeForms()) {
-                if (uuid.equals(practiceForm.getPayload().get("uuid").toString().replace("\"", ""))) {
-                    forms.add(practiceForm);
-                    break;
+        if(selectedAdHocForms != null) {
+            for (String uuid : selectedAdHocForms.getForms()) {
+                for (PracticeForm practiceForm : appointmentModel.getMetadata().getDataModels()
+                        .getPracticeForms()) {
+                    if (uuid.equals(practiceForm.getPayload().get("uuid").toString().replace("\"", ""))) {
+                        forms.add(practiceForm);
+                        break;
+                    }
                 }
             }
         }
@@ -57,6 +61,10 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         formsNamesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new AdHocRecyclerViewAdapter(forms);
         formsNamesRecyclerView.setAdapter(adapter);
+
+        TextView header = (TextView) findViewById(R.id.adhoc_forms_header);
+        header.setText(Label.getLabel(forms.size() > 1 ?
+                        "adhoc_form_left_message" : "adhoc_form_left_message_singular"));
 
         View.OnClickListener goBackClicListener = new View.OnClickListener() {
             @Override

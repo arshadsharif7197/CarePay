@@ -28,6 +28,14 @@ public class DemographicPayloadDTO {
     @Expose
     private PatientModel emergencyContact;
 
+    @SerializedName("primary_care_physician")
+    @Expose
+    private PhysicianDto primaryPhysician;
+
+    @SerializedName("referring_physician")
+    @Expose
+    private PhysicianDto referringPhysician;
+
     @SerializedName("insurances")
     @Expose
     private List<DemographicInsurancePayloadDTO> insurances = new ArrayList<>();
@@ -117,7 +125,7 @@ public class DemographicPayloadDTO {
     }
 
     public EmploymentInfoModel getEmploymentInfoModel() {
-        if(employmentInfoModel == null){
+        if (employmentInfoModel == null) {
             employmentInfoModel = new EmploymentInfoModel();
         }
         return employmentInfoModel;
@@ -125,5 +133,21 @@ public class DemographicPayloadDTO {
 
     public void setEmploymentInfoModel(EmploymentInfoModel employmentInfoModel) {
         this.employmentInfoModel = employmentInfoModel;
+    }
+
+    public PhysicianDto getPrimaryPhysician() {
+        return primaryPhysician;
+    }
+
+    public void setPrimaryPhysician(PhysicianDto primaryPhysician) {
+        this.primaryPhysician = primaryPhysician;
+    }
+
+    public PhysicianDto getReferringPhysician() {
+        return referringPhysician;
+    }
+
+    public void setReferringPhysician(PhysicianDto referringPhysician) {
+        this.referringPhysician = referringPhysician;
     }
 }

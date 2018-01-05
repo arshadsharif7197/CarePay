@@ -90,7 +90,7 @@
         <activity
             android:name=".notifications.activities.NotificationProxyActivity" />
         <activity
-            android:name=".purchases.activities.PurchaseActivity"
+            android:name=".retail.activities.RetailActivity"
             android:screenOrientation="sensorPortrait" />
 
         <service android:name="com.carecloud.carepaylibray.fcm.MyFirebaseInstanceIdService">

@@ -9,13 +9,13 @@
 
     <LinearLayout
         android:id="@+id/alertLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/dimen_57dp"
         android:layout_height="match_parent"
         android:layout_marginEnd="@dimen/dimen_10dp"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/dimen_3dp"
         android:paddingTop="@dimen/dimen_3dp"
-        android:visibility="gone">
+        android:visibility="invisible">
 
         <ImageView
             android:id="@+id/alertImage"

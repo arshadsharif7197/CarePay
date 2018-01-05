@@ -91,4 +91,10 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
         dismiss();
     }
 
+    @Override
+    protected void handleIntegratedPayment(){
+        super.handleIntegratedPayment();
+        dismiss();
+    }
+
 }

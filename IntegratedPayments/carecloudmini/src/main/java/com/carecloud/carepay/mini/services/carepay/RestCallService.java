@@ -21,4 +21,6 @@ public interface RestCallService {
     @POST("carepay/payments")
     Call<JsonElement> postPaymentRequest(@Body String jsonString);
 
+    @POST("carepay/refunds")
+    Call<JsonElement> postRefundRequest(@Body String jsonString);
 }

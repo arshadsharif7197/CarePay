@@ -113,7 +113,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         EditText firstName = (EditText) view.findViewById(R.id.reviewdemogrFirstNameEdit);
         firstName.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(firstNameLayout, null));
         setVisibility(firstNameLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getFirstName().isDisplayed());
-        firstName.setText(demographicPayload.getPersonalDetails().getFirstName());
+        firstName.setText(StringUtil.captialize(demographicPayload.getPersonalDetails().getFirstName()));
         firstName.getOnFocusChangeListener().onFocusChange(firstName,
                 !StringUtil.isNullOrEmpty(firstName.getText().toString().trim()));
         if (dataModel.getDemographic().getPersonalDetails().getProperties().getFirstName().isRequired()) {
@@ -125,7 +125,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         EditText lastName = (EditText) view.findViewById(R.id.reviewdemogrLastNameEdit);
         lastName.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(lastNameLayout, null));
         setVisibility(lastNameLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getLastName().isDisplayed());
-        lastName.setText(demographicPayload.getPersonalDetails().getLastName());
+        lastName.setText(StringUtil.captialize(demographicPayload.getPersonalDetails().getLastName()));
         lastName.getOnFocusChangeListener().onFocusChange(lastName,
                 !StringUtil.isNullOrEmpty(lastName.getText().toString().trim()));
         if (dataModel.getDemographic().getPersonalDetails().getProperties().getLastName().isRequired()) {
@@ -137,7 +137,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         EditText middleName = (EditText) view.findViewById(R.id.reviewdemogrMiddleNameEdit);
         middleName.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(middleNameLayout, null));
         setVisibility(middleNameLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isDisplayed());
-        middleName.setText(demographicPayload.getPersonalDetails().getMiddleName());
+        middleName.setText(StringUtil.captialize(demographicPayload.getPersonalDetails().getMiddleName()));
         middleName.getOnFocusChangeListener().onFocusChange(middleName,
                 !StringUtil.isNullOrEmpty(middleName.getText().toString().trim()));
         if (dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isRequired()) {
@@ -365,7 +365,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         String phoneNumber = phoneNumberEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(phoneNumber)) {
             // 'de-format' before saving to model
-            demographicAddressPayloadDTO.setPhone(StringUtil.revertToRawPhoneFormat(phoneNumber));
+            demographicAddressPayloadDTO.setPhone(StringUtil.revertToRawFormat(phoneNumber));
         }
         updatableDemographicDTO.getPayload().getDemographics().getPayload().setAddress(demographicAddressPayloadDTO);
         updatableDemographicDTO.getPayload().setAppointmentpayloaddto(demographicDTO.getPayload().getAppointmentpayloaddto());
