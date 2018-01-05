@@ -95,6 +95,7 @@ public class WelcomeActivity extends FullScreenActivity {
         setPracticeDetails();
         if(connectedDevice == null || !connectedDevice.isProcessing()) {
             connectDevice();
+            handler.removeCallbacksAndMessages(null);
             scheduleDeviceRefresh();
             //Acquire wakelock
             PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
