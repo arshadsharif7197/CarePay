@@ -101,6 +101,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     private WorkflowDTO paymentConfirmationWorkflow;
     private boolean paymentStarted = false;
 
+    private boolean isUserInteraction = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,6 +125,12 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         initializeLanguageSpinner();
         initAppMode();
         shouldAddBackStack = true;
+    }
+
+    @Override
+    public void onUserInteraction(){
+        super.onUserInteraction();
+        isUserInteraction = true;
     }
 
     /**
@@ -174,6 +182,9 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(!isUserInteraction){
+                    return;
+                }
                 TransitionDTO transition;
                 if (appointmentsResultModel != null) {
                     transition = appointmentsResultModel.getMetadata().getLinks().getLanguage();

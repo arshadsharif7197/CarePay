@@ -77,6 +77,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     private View[] checkInFlowViews;
     private MediaResultListener resultListener;
 
+    private boolean isUserInteraction = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Bundle icicle = savedInstanceState;
@@ -100,6 +102,12 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     }
 
+    @Override
+    public void onUserInteraction(){
+        super.onUserInteraction();
+        isUserInteraction = true;
+    }
+
     private void initializeLanguageSpinner() {
         final List<String> languages = new ArrayList<>();
         for (OptionDTO language : presenter.getLanguages()) {
@@ -117,6 +125,9 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(!isUserInteraction){
+                    return;
+                }
                 if (presenter.getCurrentStep() == 1) {
                     changeLanguage(presenter.getLanguageLink(), languages.get(position).toLowerCase(), headers);
                 } else {
