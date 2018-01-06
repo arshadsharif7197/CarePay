@@ -1,11 +1,12 @@
 package com.carecloud.carepaylibray.intake.models;
 
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class IntakeResponseModel implements Serializable {
+public class IntakeResponseModel implements Serializable, DTO {
 
     @SerializedName("metadata")
     @Expose

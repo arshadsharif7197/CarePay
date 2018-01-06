@@ -201,9 +201,11 @@ public class DateUtil {
     public String getDateAsMonthLiteralDayOrdinal() {
         String ordinal = instance.getOrdinalSuffix(day); // fetch the ordinal
         if (getUserLanguage().equals("en")) {
+            //"%s %s%s"
             return String.format(Locale.getDefault(), Label.getLabel("date_month_literal_day_ordinal_format"),//"%s %s%s"
                     monthLiteralAbbr, day, ordinal);
         } else {
+            //"%s de %s"
             return String.format(Locale.getDefault(), Label.getLabel("date_month_literal_day_ordinal_format"),//"%s de %s"
                     day, monthLiteralAbbr);
         }
