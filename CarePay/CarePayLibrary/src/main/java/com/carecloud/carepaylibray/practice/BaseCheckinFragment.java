@@ -9,6 +9,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.IcicleInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
@@ -94,5 +95,7 @@ public abstract class BaseCheckinFragment extends BaseFragment implements Icicle
         frozenIcicle = null;
         return icicle;
     }
+
+    public abstract DTO getDto();
 
 }

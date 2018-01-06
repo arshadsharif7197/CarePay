@@ -39,6 +39,7 @@ import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter;
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.media.MediaScannerPresenter;
 import com.carecloud.carepaylibray.media.MediaViewInterface;
 import com.carecloud.carepaylibray.medications.adapters.MedicationAllergiesAdapter;
@@ -134,21 +135,21 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (callback == null) {
-            attachCallback(getContext());
-        }
-        callback.setCheckinFlow(CheckinFlowState.MEDICATIONS_AND_ALLERGIES, 1, 1);
-    }
-
-    @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class, getArguments());
         currentMedications = medicationsAllergiesDTO.getPayload().getMedications().getPayload();
         currentAllergies = medicationsAllergiesDTO.getPayload().getAllergies().getPayload();
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (callback == null) {
+            attachCallback(getContext());
+        }
+        callback.setCheckinFlow(CheckinFlowState.MEDICATIONS_AND_ALLERGIES, 1, 1);
     }
 
     @Override
@@ -325,9 +326,9 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
             assertNoMedications.setChecked(false);
             assertNoMedications.setEnabled(false);
             assertNoMedications.setVisibility(View.GONE);
-            if (!currentMedications.isEmpty()){
+            if (!currentMedications.isEmpty()) {
                 medicationChooseButton.setText(Label.getLabel("practice_checkin_demogr_ins_add_another"));
-            }else{
+            } else {
                 medicationChooseButton.setText(Label.getLabel("demographics_choose"));
             }
         }
@@ -335,7 +336,8 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
         if (currentAllergies.isEmpty()) {
             allergyRecycler.setVisibility(View.GONE);
             assertNoAllergies.setVisibility(View.VISIBLE);
-            assertNoAllergies.setEnabled(true);;
+            assertNoAllergies.setEnabled(true);
+            ;
             allergyChooseButton.setText(Label.getLabel("demographics_choose"));
         } else {
             allergyRecycler.setVisibility(View.VISIBLE);
@@ -574,12 +576,12 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
             onUpdate(callback, workflowDTO);
 
             List<MedicationsObject> modifiedMeds = getAllModifiedMedications();
-            if(!modifiedMeds.isEmpty()){
+            if (!modifiedMeds.isEmpty()) {
                 MixPanelUtil.logEvent(getString(R.string.event_updated_meds), getString(R.string.param_meds_count), modifiedMeds.size());
             }
 
             List<AllergiesObject> modifiedAllergies = getAllModifiedAllergies();
-            if(!modifiedAllergies.isEmpty()){
+            if (!modifiedAllergies.isEmpty()) {
                 MixPanelUtil.logEvent(getString(R.string.event_updated_allergies), getString(R.string.param_allergies_count), modifiedAllergies.size());
             }
 
@@ -659,9 +661,11 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
             photoLayout.setVisibility(View.GONE);
         }
         setAdapterVisibility();
-//        validateForm();
     }
 
-
+    @Override
+    public DTO getDto() {
+        return medicationsAllergiesDTO;
+    }
 }
 

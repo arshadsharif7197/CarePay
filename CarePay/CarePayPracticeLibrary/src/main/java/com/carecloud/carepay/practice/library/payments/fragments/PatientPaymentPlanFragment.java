@@ -26,6 +26,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
@@ -75,18 +76,18 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
     private PaymentNavigationCallback callback;
 
     @Override
-    public void attachCallback(Context context){
-        try{
+    public void attachCallback(Context context) {
+        try {
             callback = (PaymentNavigationCallback) context;
-        }catch(ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement PaymentNavigationCallback");
         }
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(callback == null){
+        if (callback == null) {
             attachCallback(getContext());
         }
     }
@@ -568,4 +569,9 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+    @Override
+    public DTO getDto() {
+        return paymentsModel;
+    }
 }
