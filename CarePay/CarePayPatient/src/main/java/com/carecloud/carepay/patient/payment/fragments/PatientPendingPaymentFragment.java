@@ -72,7 +72,7 @@ public class PatientPendingPaymentFragment extends BaseFragment implements Payme
 
             if (hasPayments()) {
             PaymentBalancesAdapter paymentBalancesAdapter = new PaymentBalancesAdapter(
-                    getActivity(), getPendingBalancesList(paymentsDTO), PatientPendingPaymentFragment.this);
+                    getActivity(), getPendingBalancesList(paymentsDTO), PatientPendingPaymentFragment.this, paymentsDTO);
             historyRecyclerView.setAdapter(paymentBalancesAdapter);
         } else {
             showNoPaymentsLayout();
