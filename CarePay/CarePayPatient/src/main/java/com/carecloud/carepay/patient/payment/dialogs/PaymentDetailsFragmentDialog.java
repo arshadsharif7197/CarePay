@@ -14,12 +14,14 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.adapters.PaymentItemsListAdapter;
 import com.carecloud.carepaylibray.customdialogs.BasePaymentDetailsFragmentDialog;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDialog {
 
+    private PendingBalanceDTO selectedBalance;
 
     /**
      * @param paymentsModel  the payment model
@@ -27,16 +29,24 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
      * @return new instance of a PaymentDetailsFragmentDialog
      */
     public static PaymentDetailsFragmentDialog newInstance(PaymentsModel paymentsModel,
-                                                           PendingBalancePayloadDTO paymentPayload) {
+                                                           PendingBalancePayloadDTO paymentPayload,
+                                                           PendingBalanceDTO selectedBalance) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPayload);
+        DtoHelper.bundleDto(args, selectedBalance);
 
         PaymentDetailsFragmentDialog dialog = new PaymentDetailsFragmentDialog();
         dialog.setArguments(args);
 
         return dialog;
+    }
+
+    @Override
+    public void onCreate(Bundle icicle){
+        super.onCreate(icicle);
+        selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, getArguments());
     }
 
     @Override
@@ -57,8 +67,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         });
 
         if (paymentReceiptModel != null) {
-            String practiceName = paymentReceiptModel.getPaymentPayload().getPatientBalances()
-                    .get(0).getBalances().get(0).getMetadata().getPracticeName();
+            String practiceName = selectedBalance.getMetadata().getPracticeName();
             String totalAmount = StringUtil.getFormattedBalanceAmount(paymentPayload.getAmount());
             ((TextView) view.findViewById(R.id.payment_details_total_paid)).setText(totalAmount);
             ((TextView) view.findViewById(R.id.payment_receipt_title)).setText(practiceName);
@@ -79,6 +88,9 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                     }
                 });
             }
+
+            boolean canMakePayments = paymentReceiptModel.getPaymentPayload().canMakePayments(selectedBalance.getMetadata().getPracticeId());
+            payNowButton.setVisibility(canMakePayments ? View.VISIBLE : View.GONE);
 
         }
 

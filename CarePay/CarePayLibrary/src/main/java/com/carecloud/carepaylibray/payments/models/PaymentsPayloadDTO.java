@@ -304,4 +304,17 @@ public class PaymentsPayloadDTO implements Serializable {
     public void setOrganizationId(String organizationId) {
         this.organizationId = organizationId;
     }
+
+    /**
+     * Make sure the current practice can accept payments
+     * @return true if practice has merchant service account enabled
+     */
+    public boolean canMakePayments(String practiceId){
+        for (UserPracticeDTO userPracticeDTO : getUserPractices()){
+            if(userPracticeDTO.getPracticeId() != null && userPracticeDTO.getPracticeId().equals(practiceId)){
+                return userPracticeDTO.isPayeezyEnabled();
+            }
+        }
+        return false;
+    }
 }
