@@ -29,13 +29,8 @@ import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
-import com.carecloud.carepaylibray.translation.TranslatableFragment;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +41,8 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
     private AdHocFormsModel adhocFormsModel;
     private ArrayList<PracticeForm> forms;
     private AdHocRecyclerViewAdapter adapter;
+
+    private boolean isUserInteraction = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +89,12 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         }
     }
 
+    @Override
+    public void onUserInteraction(){
+        super.onUserInteraction();
+        isUserInteraction = true;
+    }
+
     private void initializeLanguageSpinner() {
         final List<String> languages = new ArrayList<>();
         for (OptionDTO language : adhocFormsModel.getPayload().getLanguages()) {
@@ -109,6 +112,9 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(!isUserInteraction){
+                    return;
+                }
                 changeLanguage(adhocFormsModel.getMetadata().getLinks().getLanguage(),
                         languages.get(position).toLowerCase(), headers);
             }

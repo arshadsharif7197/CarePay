@@ -67,6 +67,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private HomeScreenMode homeScreenMode;
     private Spinner languageSpinner;
 
+    private boolean isUserInteraction = false;
+
     public enum HomeScreenMode {
         PATIENT_HOME, PRACTICE_HOME
     }
@@ -98,6 +100,12 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         getNews();
     }
 
+    @Override
+    public void onUserInteraction(){
+        super.onUserInteraction();
+        isUserInteraction = true;
+    }
+
     private void populateLanguageSpinner() {
         JsonObject payloadAsJsonObject = homeScreenDTO.getPayload();
         Gson gson = new Gson();
@@ -122,6 +130,9 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(!isUserInteraction){
+                    return;
+                }
                 changeLanguage(transitionsDTO.getLanguage(), languages.get(position).toLowerCase(), headers);
             }
 

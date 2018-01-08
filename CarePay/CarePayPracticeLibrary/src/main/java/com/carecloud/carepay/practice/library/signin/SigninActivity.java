@@ -90,6 +90,8 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     private Spinner langSpinner;
     private View showPasswordButton;
 
+    private boolean isUserInteraction = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,6 +112,12 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
                 Toast.makeText(this, Label.getLabel("crash_handled_error_message"), Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    @Override
+    public void onUserInteraction(){
+        super.onUserInteraction();
+        isUserInteraction = true;
     }
 
     /**
@@ -238,6 +246,9 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         langSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(!isUserInteraction){
+                    return;
+                }
                 changeLanguage(signinDTO.getMetadata().getLinks().getLanguage(),
                         languages.get(position).toLowerCase(), getWorkflowServiceHelper().getApplicationStartHeaders());
             }
