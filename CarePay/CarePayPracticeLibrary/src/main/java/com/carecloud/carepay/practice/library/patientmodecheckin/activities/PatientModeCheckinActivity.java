@@ -128,15 +128,14 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 if(!isUserInteraction){
                     return;
                 }
-                if (presenter.getCurrentStep() == 1) {
+                if (presenter.getCurrentStep() < 6) {
                     changeLanguage(presenter.getLanguageLink(), languages.get(position).toLowerCase(), headers);
                 } else {
                     changeLanguage(presenter.getLanguageLink(), languages.get(position).toLowerCase(), headers, new SimpleCallback() {
                         @Override
                         public void callback() {
-                            presenter.displayFragment(getConvertedDTO(WorkflowDTO.class));
-                            ((TextView) findViewById(R.id.checkInLeftNavigationTitle))
-                                    .setText(Label.getLabel("practice_checkin_header_label"));
+                            presenter.changeLanguage();
+                            changeMenuLanguage();
                         }
                     });
                 }
@@ -146,6 +145,12 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+    }
+
+    private void changeMenuLanguage() {
+        ((TextView) findViewById(R.id.checkInLeftNavigationTitle))
+                .setText(Label.getLabel("practice_checkin_header_label"));
+        initializeLeftNavigation();
     }
 
     @Override
