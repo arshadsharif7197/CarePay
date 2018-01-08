@@ -8,7 +8,6 @@ import android.text.Html;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.StrikethroughSpan;
-import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,7 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.models.Messages;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.ReLinkify;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import org.xml.sax.XMLReader;
@@ -108,9 +108,9 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
             holder.messageText.setText(Html.fromHtml(message.getBody(), Html.FROM_HTML_SEPARATOR_LINE_BREAK_PARAGRAPH, null, new ConversationTagHandler()));
         }
 
-        Linkify.addLinks(holder.messageText, Linkify.ALL);
         holder.messageText.setMovementMethod(LinkMovementMethod.getInstance());
         holder.messageText.setLinksClickable(true);
+        ReLinkify.addLinks(holder.messageText, ReLinkify.ALL);
 
         if(lastMessage != null) {
             Date lastDate = DateUtil.getInstance().setDateRaw(lastMessage.getCreatedDate()).getDate();
