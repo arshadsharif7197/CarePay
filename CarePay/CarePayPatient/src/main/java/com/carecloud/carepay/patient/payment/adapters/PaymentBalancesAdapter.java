@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
@@ -19,16 +20,18 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
     private Context context;
     private List<PaymentsBalancesItem> balances = new ArrayList<>();
     private OnBalanceListItemClickListener listener;
+    private PaymentsModel paymentsModel;
 
     /**
      * @param context         The context
      * @param pendingBalances The list of the pending balances
      * @param listener        the listener
      */
-    public PaymentBalancesAdapter(Context context, List<PaymentsBalancesItem> pendingBalances, OnBalanceListItemClickListener listener) {
+    public PaymentBalancesAdapter(Context context, List<PaymentsBalancesItem> pendingBalances, OnBalanceListItemClickListener listener, PaymentsModel paymentsModel) {
         this.context = context;
         this.balances = pendingBalances;
         this.listener = listener;
+        this.paymentsModel = paymentsModel;
     }
 
     @Override
@@ -53,6 +56,9 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
                 listener.onBalanceListItemClickListener(holder.getAdapterPosition());
             }
         });
+
+        boolean canPay = paymentsModel.getPaymentPayload().canMakePayments(pendingBalance.getMetadata().getPracticeId());
+        holder.payLabel.setVisibility(canPay ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -65,12 +71,14 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
         private TextView shortName;
         private TextView locationName;
         private TextView amount;
+        private View payLabel;
 
         ViewHolder(View itemView) {
             super(itemView);
             locationName = (TextView) itemView.findViewById(R.id.balancesLocation);
             amount = (TextView) itemView.findViewById(R.id.balancesTotalAmount);
             shortName = (TextView) itemView.findViewById(R.id.balancesAvatarTextView);
+            payLabel = itemView.findViewById(R.id.balancesPayNowTextView);
         }
     }
 

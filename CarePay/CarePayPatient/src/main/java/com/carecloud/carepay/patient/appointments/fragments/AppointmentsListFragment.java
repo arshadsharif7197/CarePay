@@ -156,7 +156,7 @@ public class AppointmentsListFragment extends BaseAppointmentFragment implements
 
     private void setAdapter() {
         if (appointmentRecyclerView.getAdapter() == null) {
-            AppointmentListAdapter adapter = new AppointmentListAdapter(getContext(), appointmentsItems, this);
+            AppointmentListAdapter adapter = new AppointmentListAdapter(getContext(), appointmentsItems, this, appointmentsResultModel.getPayload().getUserPractices());
             appointmentRecyclerView.setAdapter(adapter);
         } else {
             AppointmentListAdapter adapter = (AppointmentListAdapter) appointmentRecyclerView.getAdapter();
@@ -232,5 +232,15 @@ public class AppointmentsListFragment extends BaseAppointmentFragment implements
     @Override
     public void onCheckoutTapped(AppointmentDTO appointmentDTO) {
         callback.onCheckOutStarted(appointmentDTO);
+    }
+
+    @Override
+    public String getPracticeId(String appointmentId) {
+        for(AppointmentDTO appointmentDTO : appointmentsItems){
+            if(appointmentDTO.getPayload().getId().equals(appointmentId)){
+                return appointmentDTO.getMetadata().getPracticeId();
+            }
+        }
+        return null;
     }
 }
