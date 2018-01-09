@@ -1,14 +1,17 @@
 package com.carecloud.carepay.patient.messages.adapters;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.Browser;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.text.style.StrikethroughSpan;
-import android.text.util.Linkify;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +21,10 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.models.Messages;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.LinkMovementCallbackMethod;
+import com.carecloud.carepaylibray.utils.ReLinkify;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import org.xml.sax.XMLReader;
@@ -31,7 +37,7 @@ import java.util.List;
  * Created by lmenendez on 7/5/17
  */
 
-public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesConversationAdapter.ViewHolder> {
+public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesConversationAdapter.ViewHolder> implements LinkMovementCallbackMethod.OnClickCallback {
 
     private static final int TYPE_SENT = 111;
     private static final int TYPE_RECEIVED = 222;
@@ -108,8 +114,9 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
             holder.messageText.setText(Html.fromHtml(message.getBody(), Html.FROM_HTML_SEPARATOR_LINE_BREAK_PARAGRAPH, null, new ConversationTagHandler()));
         }
 
-        Linkify.addLinks(holder.messageText, Linkify.ALL);
-        holder.messageText.setMovementMethod(LinkMovementMethod.getInstance());
+        ReLinkify.addLinks(holder.messageText, ReLinkify.ALL);
+
+        holder.messageText.setMovementMethod(LinkMovementCallbackMethod.getInstance(this));
         holder.messageText.setLinksClickable(true);
 
         if(lastMessage != null) {
@@ -163,6 +170,30 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
             }
         }
         return null;
+    }
+
+    @Override
+    public void onClick(String url) {
+        Uri uri = Uri.parse(url);
+        ISession iSession = (ISession) context;
+
+        if(uri.getHost() != null && uri.getHost().contains("carecloud")){
+            char queryAppend;
+            if(uri.getQuery() != null){
+                queryAppend = '&';
+            }else{
+                queryAppend = '?';
+            }
+            uri = Uri.parse(url+queryAppend+"token="+iSession.getAppAuthorizationHelper().getIdToken());
+        }
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
+        try {
+            context.startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Log.w("URLSpan", "Actvity was not found for intent, " + intent.toString());
+        }
+
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
