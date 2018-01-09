@@ -291,10 +291,12 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                         if(appointmentDTO.getPayload().isAppointmentCancellable(callback.getPracticeSettings())) {
                             cancelAppointment.setVisibility(View.VISIBLE);
                         }
-                        actionsLayout.setVisibility(View.VISIBLE);
-                        rightButton.setVisibility(View.VISIBLE);
-                        rightButton.setText(Label.getLabel("appointments_check_in_early"));
-                        rightButton.setOnClickListener(checkInClick);
+                        if(isBreezePractice) {
+                            actionsLayout.setVisibility(View.VISIBLE);
+                            rightButton.setVisibility(View.VISIBLE);
+                            rightButton.setText(Label.getLabel("appointments_check_in_early"));
+                            rightButton.setOnClickListener(checkInClick);
+                        }
                     }
                     break;
                 }
