@@ -7,6 +7,7 @@ import android.text.Spannable;
 import android.text.method.MovementMethod;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -123,7 +124,11 @@ public class LinkMovementCallbackMethod extends ScrollingMovementMethod {
                 if (link.length != 1)
                     return false;
 
-                link[0].onClick(widget);
+                if(callback != null && link[0] instanceof URLSpan){
+                    callback.onClick(((URLSpan) link[0]).getURL());
+                }else {
+                    link[0].onClick(widget);
+                }
                 break;
 
             case UP:
@@ -200,7 +205,11 @@ public class LinkMovementCallbackMethod extends ScrollingMovementMethod {
 
             if (link.length != 0) {
                 if (action == MotionEvent.ACTION_UP) {
-                    link[0].onClick(widget);
+                    if(callback != null && link[0] instanceof URLSpan){
+                        callback.onClick(((URLSpan) link[0]).getURL());
+                    }else {
+                        link[0].onClick(widget);
+                    }
                 } else if (action == MotionEvent.ACTION_DOWN) {
                     Selection.setSelection(buffer,
                             buffer.getSpanStart(link[0]),
@@ -233,10 +242,16 @@ public class LinkMovementCallbackMethod extends ScrollingMovementMethod {
         }
     }
 
+    private OnClickCallback callback;
+
+    private void setCallback(OnClickCallback callback){
+        this.callback = callback;
+    }
+
     public static MovementMethod getInstance(OnClickCallback callback) {
         if (sInstance == null)
             sInstance = new LinkMovementCallbackMethod();
-
+        sInstance.setCallback(callback);
         return sInstance;
     }
 
