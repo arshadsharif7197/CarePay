@@ -40,6 +40,7 @@ import java.util.List;
  */
 
 public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
+    private static final String KEY_BREEZE_PRACTICE = "is_breeze_practice";
 
     private AppointmentDTO appointmentDTO;
 
@@ -64,15 +65,18 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private Button leftButton;
     private Button rightButton;
 
+    private boolean isBreezePractice = true;
+
 
     /**
      * Return a new instance of AppointmentDetailDialog and setup the arguments
      * @param appointmentDTO appointment info
      * @return AppointmentDetailDialog
      */
-    public static AppointmentDetailDialog newInstance(AppointmentDTO appointmentDTO){
+    public static AppointmentDetailDialog newInstance(AppointmentDTO appointmentDTO, boolean isBreezePractice){
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, appointmentDTO);
+        args.putBoolean(KEY_BREEZE_PRACTICE, isBreezePractice);
 
         AppointmentDetailDialog detailDialog = new AppointmentDetailDialog();
         detailDialog.setArguments(args);
@@ -113,6 +117,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         Bundle args = getArguments();
         if(args!=null){
             appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, args);
+            isBreezePractice = args.getBoolean(KEY_BREEZE_PRACTICE);
         }
     }
 
@@ -212,10 +217,12 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     appointmentTime.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                     if(appointmentDTO.getPayload().isAppointmentToday() || !appointmentDTO.getPayload().isAppointmentOver()) {
                         callback.getQueueStatus(appointmentDTO, queueStatusCallback);
-                        actionsLayout.setVisibility(View.VISIBLE);
-                        leftButton.setVisibility(View.VISIBLE);
-                        leftButton.setText(Label.getLabel("appointment_request_checkout_now"));
-                        leftButton.setOnClickListener(checkOutClick);
+                        if(isBreezePractice) {
+                            actionsLayout.setVisibility(View.VISIBLE);
+                            leftButton.setVisibility(View.VISIBLE);
+                            leftButton.setText(Label.getLabel("appointment_request_checkout_now"));
+                            leftButton.setOnClickListener(checkOutClick);
+                        }
                     }
                     break;
                 }
@@ -228,16 +235,18 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                         if(appointmentDTO.getPayload().isAppointmentCancellable(callback.getPracticeSettings())) {
                             cancelAppointment.setVisibility(View.VISIBLE);
                         }
-                        leftButton.setVisibility(View.VISIBLE);
-                        leftButton.setText(Label.getLabel("appointments_check_in_at_office"));
-                        leftButton.setOnClickListener(scanClick);
-                        rightButton.setVisibility(View.VISIBLE);
-                        if(appointmentDTO.getPayload().canCheckInNow(callback.getPracticeSettings())) {
-                            rightButton.setText(Label.getLabel("appointments_check_in_now"));
-                        }else{
-                            rightButton.setText(Label.getLabel("appointments_check_in_early"));
+                        if(isBreezePractice) {
+                            leftButton.setVisibility(View.VISIBLE);
+                            leftButton.setText(Label.getLabel("appointments_check_in_at_office"));
+                            leftButton.setOnClickListener(scanClick);
+                            rightButton.setVisibility(View.VISIBLE);
+                            if (appointmentDTO.getPayload().canCheckInNow(callback.getPracticeSettings())) {
+                                rightButton.setText(Label.getLabel("appointments_check_in_now"));
+                            } else {
+                                rightButton.setText(Label.getLabel("appointments_check_in_early"));
+                            }
+                            rightButton.setOnClickListener(checkInClick);
                         }
-                        rightButton.setOnClickListener(checkInClick);
                     }
                     break;
                 }
@@ -282,10 +291,12 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                         if(appointmentDTO.getPayload().isAppointmentCancellable(callback.getPracticeSettings())) {
                             cancelAppointment.setVisibility(View.VISIBLE);
                         }
-                        actionsLayout.setVisibility(View.VISIBLE);
-                        rightButton.setVisibility(View.VISIBLE);
-                        rightButton.setText(Label.getLabel("appointments_check_in_early"));
-                        rightButton.setOnClickListener(checkInClick);
+                        if(isBreezePractice) {
+                            actionsLayout.setVisibility(View.VISIBLE);
+                            rightButton.setVisibility(View.VISIBLE);
+                            rightButton.setText(Label.getLabel("appointments_check_in_early"));
+                            rightButton.setOnClickListener(checkInClick);
+                        }
                     }
                     break;
                 }

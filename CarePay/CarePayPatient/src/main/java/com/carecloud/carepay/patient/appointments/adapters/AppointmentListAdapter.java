@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayUtil;
@@ -41,6 +42,8 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
         void onItemTapped(AppointmentDTO appointmentDTO);
 
         void onCheckoutTapped(AppointmentDTO appointmentDTO);
+
+        String getPracticeId(String appointmentId);
     }
 
     private Context context;
@@ -49,6 +52,8 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
 
     private List<AppointmentDTO> sortedAppointments = new ArrayList<>();
 
+    private List<UserPracticeDTO> userPracticeDTOs;
+
     /**
      * Constructor
      *
@@ -56,10 +61,11 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
      * @param appointmentItems initial appt list
      * @param callback         select appt callback
      */
-    public AppointmentListAdapter(Context context, List<AppointmentDTO> appointmentItems, SelectAppointmentCallback callback) {
+    public AppointmentListAdapter(Context context, List<AppointmentDTO> appointmentItems, SelectAppointmentCallback callback, List<UserPracticeDTO> userPracticeDTOs) {
         this.context = context;
         this.appointmentItems = appointmentItems;
         this.callback = callback;
+        this.userPracticeDTOs = userPracticeDTOs;
 
         sortAppointments();
     }
@@ -108,10 +114,15 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
 
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentsPayload.getStartTime());
         AppointmentDisplayStyle style = appointmentsPayload.getDisplayStyle();
+
+        boolean isBreezePractice = isBreezePractice(callback.getPracticeId(appointmentsPayload.getId()));
+
         switch (style) {
             case CHECKED_IN: {
-                holder.checkOutButton.setVisibility(View.VISIBLE);
-                holder.checkOutButton.setClickable(true);
+                if(isBreezePractice) {
+                    holder.checkOutButton.setVisibility(View.VISIBLE);
+                    holder.checkOutButton.setClickable(true);
+                }
                 holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.emerald));
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
                 holder.initials.setBackgroundResource(R.drawable.round_list_tv_green);
@@ -363,6 +374,18 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
         holder.cellAvatar.setVisibility(View.GONE);
         holder.initials.setVisibility(View.VISIBLE);
         holder.itemView.setOnClickListener(null);//need to remove this for header just in case
+    }
+
+    private boolean isBreezePractice(String practiceId){
+        if(practiceId == null){
+            return false;
+        }
+        for(UserPracticeDTO userPracticeDTO : userPracticeDTOs){
+            if(userPracticeDTO.getPracticeId() != null && userPracticeDTO.getPracticeId().equals(practiceId)){
+                return userPracticeDTO.isBreezePractice();
+            }
+        }
+        return false;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
