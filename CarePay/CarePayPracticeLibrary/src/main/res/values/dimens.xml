@@ -190,5 +190,7 @@
 
     <dimen name="demogr_details_section_top_margin">30dp</dimen>
     <dimen name="demographics_add_padding">57dp</dimen>
+    <dimen name="dimen_140dp">140dp</dimen>
+    <dimen name="dimen_180dp">180dp</dimen>
 
 </resources>
