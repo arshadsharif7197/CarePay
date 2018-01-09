@@ -6,7 +6,7 @@ android {
     flavorDimensions "default"
     defaultConfig {
         applicationId "com.carecloud.carepay.mini"
-        minSdkVersion 17
+        minSdkVersion 19
         targetSdkVersion 25
         versionCode 8
         versionName "1.2.0"
