@@ -293,11 +293,11 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
 
 
     @Override
-    public void onItemCheckChanged(List<PaymentHistoryLineItem> groupItems, boolean checked) {
+    public void onItemCheckChanged(PaymentHistoryLineItem lineItem, boolean checked) {
         if(checked){
-            refundLineItems.addAll(groupItems);
+            refundLineItems.add(lineItem);
         }else{
-            refundLineItems.removeAll(groupItems);
+            refundLineItems.remove(lineItem);
         }
         setRefundAmount();
     }

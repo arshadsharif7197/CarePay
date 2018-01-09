@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.utils;
 import android.text.format.DateFormat;
 import android.util.Log;
 
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.label.Label;
 
 import java.text.DateFormatSymbols;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 public class DateUtil {
 
     public static final String TAG = "DateUtil";
+
     private static final String FORMAT_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
     private static final String FORMAT_ISO_8601 = "yyyy-MM-dd'T'HH:mm:ss";
     private static final String FORMAT_YYYY_DASH_MM_DASH_DD = "yyyy-MM-dd";
@@ -137,8 +139,15 @@ public class DateUtil {
      * @return A string containing the formatted date
      */
     public String getDateAsDayMonthDayOrdinal() {
-        return String.format(Locale.getDefault(), "%s, %s %d%s",
-                dayLiteral, monthLiteral, day, getOrdinalSuffix(day));
+        if (getUserLanguage().equals("en")) {
+            //"%s, %s %d%s"
+            return String.format(Locale.getDefault(), Label.getLabel("date_day_month_day_ordinal_format"),
+                    dayLiteral, monthLiteral, day, getOrdinalSuffix(day));
+        } else {
+            //"%s %d de %s"
+            return String.format(Locale.getDefault(), Label.getLabel("date_day_month_day_ordinal_format"),
+                    dayLiteral, day, monthLiteral);
+        }
     }
 
     /**
@@ -147,8 +156,15 @@ public class DateUtil {
      * @return A string containing the formatted date
      */
     public String getDateAsDayMonthDayOrdinalYear(String today) {
-        return String.format(Locale.getDefault(), "%s, %s %d%s",
-                this.isToday() ? today : dayLiteral, monthLiteralAbbr, day, getOrdinalSuffix(day));
+        if (getUserLanguage().equals("en")) {
+            //"%s, %s %d%s"
+            return String.format(Locale.getDefault(), Label.getLabel("date_day_month_day_ordinal_format"),
+                    this.isToday() ? today : dayLiteral, monthLiteralAbbr, day, getOrdinalSuffix(day));
+        } else {
+            //"%s %d de %s"
+            return String.format(Locale.getDefault(), Label.getLabel("date_day_month_day_ordinal_format"),
+                    dayLiteral, day, monthLiteral);
+        }
     }
 
     /**
@@ -157,7 +173,8 @@ public class DateUtil {
      * @return A string contains the formatted time
      */
     public String getTime12Hour() {
-        return String.format(Locale.getDefault(), "%d:%02d %s", (hour12 == 0) ? 12 : hour12, minute, amPm);
+        return String.format(Locale.getDefault(), Label.getLabel("date_time_12_hour_format"), //"%d:%02d %s"
+                (hour12 == 0) ? 12 : hour12, minute, amPm);
     }
 
     /**
@@ -167,8 +184,13 @@ public class DateUtil {
      */
     public String getDateAsMonthLiteralDayOrdinalYear() {
         String ordinal = instance.getOrdinalSuffix(day); // fetch the ordinal
-        return String.format(Locale.getDefault(), "%s %s%s, %d",
-                monthLiteral, day, ordinal, year);
+        if (getUserLanguage().equals("en")) {
+            return String.format(Locale.getDefault(), Label.getLabel("date_month_literal_day_ordinal_year_format"),//"%s %s%s, %d"
+                    monthLiteral, day, ordinal, year);
+        } else {
+            return String.format(Locale.getDefault(), Label.getLabel("date_month_literal_day_ordinal_year_format"),//"%s de %s de %s."
+                    day, monthLiteral, year);
+        }
     }
 
     /**
@@ -178,15 +200,23 @@ public class DateUtil {
      */
     public String getDateAsMonthLiteralDayOrdinal() {
         String ordinal = instance.getOrdinalSuffix(day); // fetch the ordinal
-        return String.format(Locale.getDefault(), "%s %s%s",
-                monthLiteralAbbr, day, ordinal);
+        if (getUserLanguage().equals("en")) {
+            //"%s %s%s"
+            return String.format(Locale.getDefault(), Label.getLabel("date_month_literal_day_ordinal_format"),//"%s %s%s"
+                    monthLiteralAbbr, day, ordinal);
+        } else {
+            //"%s de %s"
+            return String.format(Locale.getDefault(), Label.getLabel("date_month_literal_day_ordinal_format"),//"%s de %s"
+                    day, monthLiteralAbbr);
+        }
     }
 
     /**
      * Format current date as Month DD, YYYY, hh:mm a
+     *
      * @return formated date as string
      */
-    public String getFullDateTime(){
+    public String getFullDateTime() {
         return toStringWithFormat(FORMAT_FULL_DATE_TIME12);
     }
 
@@ -343,24 +373,24 @@ public class DateUtil {
         int dayLastDigit = number % 10;
         if (dayLastDigit == 1) { //
             if (lastTwoDigits == 11) { // if it ends in 11, use 'th'
-                return "th";
+                return Label.getLabel("ordinal_th");
             } else {
-                return "st"; // if end in 1, use 'st'
+                return Label.getLabel("ordinal_st"); // if end in 1, use 'st'
             }
         } else if (dayLastDigit == 2) {
             if (lastTwoDigits == 12) { // if it ends in 12, use 'th'}
-                return "th";
+                return Label.getLabel("ordinal_th");
             } else { // if ends just in 2, use "nd"
-                return "nd";
+                return Label.getLabel("ordinal_nd");
             }
         } else if (dayLastDigit == 3) {
             if (lastTwoDigits == 13) {
-                return "th"; // if last two digits are 13, use 'th'
+                return Label.getLabel("ordinal_th"); // if last two digits are 13, use 'th'
             } else {
-                return "rd"; // else use 'rd'
+                return Label.getLabel("ordinal_rd"); // else use 'rd'
             }
         } else {
-            return "th";
+            return Label.getLabel("ordinal_th");
         }
     }
 
@@ -373,6 +403,13 @@ public class DateUtil {
     }
 
     private void updateFields(Calendar calendar) {
+        String languageTag = getUserLanguage();
+        if (languageTag.equals("es")) {
+            Locale spanish = new Locale("es", "ES");
+            Locale.setDefault(spanish);
+        } else {
+            Locale.setDefault(Locale.US);
+        }
         day = calendar.get(Calendar.DAY_OF_MONTH);
         month = calendar.get(Calendar.MONTH);
         year = calendar.get(Calendar.YEAR);
@@ -383,6 +420,10 @@ public class DateUtil {
         monthLiteral = DateFormatSymbols.getInstance(Locale.getDefault()).getMonths()[month];
         dayLiteralAbbr = DateFormatSymbols.getInstance(Locale.getDefault()).getShortWeekdays()[calendar.get(Calendar.DAY_OF_WEEK)];
         monthLiteralAbbr = DateFormatSymbols.getInstance(Locale.getDefault()).getShortMonths()[month];
+    }
+
+    private String getUserLanguage() {
+        return ApplicationPreferences.getInstance().getUserLanguage();
     }
 
     /**
@@ -858,8 +899,15 @@ public class DateUtil {
      * @return A string containing the formatted date
      */
     public String getDateAsDayShortMonthDayOrdinal() {
-        return String.format(Locale.getDefault(), "%s, %s %d%s",
-                dayLiteral, monthLiteralAbbr, day, getOrdinalSuffix(day));
+        if (getUserLanguage().equals("en")) {
+            //"%s, %s %d%s"
+            return String.format(Locale.getDefault(), Label.getLabel("date_day_month_day_ordinal_format"),
+                    dayLiteral, monthLiteralAbbr, day, getOrdinalSuffix(day));
+        } else {
+            //"%s %d de %s"
+            return String.format(Locale.getDefault(), Label.getLabel("date_day_month_day_ordinal_format"),
+                    dayLiteral, day, monthLiteral);
+        }
     }
 
     /**
@@ -1037,20 +1085,20 @@ public class DateUtil {
     public static String getContextualTimeElapsed(Date date1, Date date2) {
         long hoursElapsed = getHoursElapsed(date1, date2);
         if (hoursElapsed > 0) {
-            if(hoursElapsed == 1){
+            if (hoursElapsed == 1) {
                 return hoursElapsed + Label.getLabel("label_hours_ago_singular");
             }
             return hoursElapsed + Label.getLabel("label_hours_ago");
         }
         long minutesElapsed = getMinutesElapsed(date1, date2);
         if (minutesElapsed > 0) {
-            if(minutesElapsed == 1){
+            if (minutesElapsed == 1) {
                 return minutesElapsed + Label.getLabel("label_minutes_ago_singular");
             }
             return minutesElapsed + Label.getLabel("label_minutes_ago");
         }
         long secondsElapsed = getSecondsElapsed(date1, date2);
-        if(secondsElapsed == 1){
+        if (secondsElapsed == 1) {
             return secondsElapsed + Label.getLabel("label_seconds_ago_singular");
         }
         return secondsElapsed + Label.getLabel("label_seconds_ago");
@@ -1124,7 +1172,7 @@ public class DateUtil {
         return toStringWithFormat(FORMAT_MONTH_DAY_TIME12);
     }
 
-    private String hackDate(String dateString){
+    private String hackDate(String dateString) {
         return dateString.replaceAll("\\.\\d\\d\\dZ", "-00:00");
     }
 }

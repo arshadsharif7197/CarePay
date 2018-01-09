@@ -35,7 +35,7 @@ public class CarePayPracticeApplication extends CarePayApplication
      * init app
      */
     public void start() {
-        mixpanelAPI = MixpanelAPI.getInstance(this, getString(R.string.mixpanel_application_token));
+        mixpanelAPI = MixpanelAPI.getInstance(this.getApplicationContext(), BuildConfig.MIX_PANEL_TOKEN);
         setHttpConstants();
         registerActivityLifecycleCallbacks(this);
         ShamrockSdk.init(HttpConstants.getPaymentsApiKey(), HttpConstants.getDeepStreamUrl(), HttpConstants.getPaymentsUrl());
@@ -102,7 +102,7 @@ public class CarePayPracticeApplication extends CarePayApplication
     }
 
     @Override
-    public void onAtomicRestart(){
+    public void onAtomicRestart() {
         super.onAtomicRestart();
         applicationMode.clearUserPracticeDTO();
         applicationMode = null;
@@ -114,7 +114,6 @@ public class CarePayPracticeApplication extends CarePayApplication
             applicationMode = new ApplicationMode();
             applicationMode.setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
         }
-
         return applicationMode;
     }
 }

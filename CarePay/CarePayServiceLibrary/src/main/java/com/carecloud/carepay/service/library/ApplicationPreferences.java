@@ -1,9 +1,13 @@
 package com.carecloud.carepay.service.library;
 
-import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 
+import com.carecloud.carepay.service.library.base.IApplicationSession;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.Defs;
+import com.carecloud.carepay.service.library.platform.AndroidPlatform;
+import com.carecloud.carepay.service.library.platform.Platform;
 import com.google.gson.Gson;
 
 import java.util.Set;
@@ -16,44 +20,24 @@ public class ApplicationPreferences {
 
     private static final String DEFAULT_STRING_PREFERENCES = "-";
 
-    public static final String PREFERENCE_CAREPAY = "Preference_CarePay";
-
-    private static final String PREFERENCE_USER_SELECTED_LANGUAGE = "user_selected_language";
-
-    private static final String PREFERENCE_PRACTICE_SELECTED_LANGUAGE = "practice_user_selected_language";
-
     private static final String PREFERENCE_PATIENT_ID = "patient_id";
-
     private static final String PREFERENCE_PRACTICE_ID = "practice_id";
-
-    private static final String PREFERENCE_PRACTICE_MANAGEMENT = "practice_management";
-
     private static final String PREFERENCE_PREFIX = "prefix";
-
     private static final String PREFERENCE_USER_ID = "user_id";
-
-    private static final String PREFERENCE_IS_PATIENT_MODE_APPOINTMENTS = "is_patient_mode_appointments";
-
     private static final String PREFERENCE_PATIENT_PHOTO_URL = "patient_photo_url";
-
     private static final String PREFERENCE_IS_TUTORIAL_SHOWN = "is_tutorial_shown";
-
-    public static final String PREFERENCE_FILTERED_PROVIDERS = "filteredDoctors";
-
-    public static final String PREFERENCE_FILTERED_LOCATIONS = "filteredLocations";
-
     private static final String PREFERENCE_APPOINTMENT_NAVIGATION_OPTION = "appointment_navigation_option";
-
-    private Context context;
+    public static final String PREFERENCE_FILTERED_PROVIDERS = "filteredDoctors";
+    public static final String PREFERENCE_FILTERED_LOCATIONS = "filteredLocations";
+    public static final String PATIENT_USER_LANGUAGE = "practiceUserLanguage";
+    public static final String PRACTICE_USER_LANGUAGE = "user_selected_language";
 
     private String patientId;
     private String practiceId;
-    private String practiceManagement;
     private String prefix;
     private String userId;
     private String userLanguage;
-    private String practiceLanguage;
-    private Boolean navigateToAppointments;
+    private String patientUserLanguage;
     private Boolean isTutorialShown;
     private String photoUrl;
     private
@@ -61,24 +45,14 @@ public class ApplicationPreferences {
     Integer navigationOption;
     private String userName;
 
-    public ApplicationPreferences(Context context) {
-        this.context = context;
-    }
+    private static ApplicationPreferences instance;
 
-    public void setNavigateToAppointments(boolean newValue) {
-        navigateToAppointments = newValue;
-        writeStringToSharedPref(PREFERENCE_USER_SELECTED_LANGUAGE, userLanguage);
-    }
 
-    /**
-     * @return true if app is navigating to appointments
-     */
-    public boolean isNavigatingToAppointments() {
-        if (null != navigateToAppointments) {
-            return navigateToAppointments;
+    public static ApplicationPreferences getInstance() {
+        if (instance == null) {
+            instance = new ApplicationPreferences();
         }
-
-        return readBooleanFromSharedPref(PREFERENCE_IS_PATIENT_MODE_APPOINTMENTS);
+        return instance;
     }
 
     /**
@@ -107,46 +81,36 @@ public class ApplicationPreferences {
     }
 
     public void setUserLanguage(String newValue) {
+        if (((IApplicationSession) ((AndroidPlatform) Platform.get()).getContext())
+                .getApplicationMode().getApplicationType()
+                .equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)) {
+            patientUserLanguage = newValue;
+            writeStringToSharedPref(PATIENT_USER_LANGUAGE, userLanguage);
+            return;
+        }
         userLanguage = newValue;
-        writeStringToSharedPref(PREFERENCE_USER_SELECTED_LANGUAGE, userLanguage);
+        patientUserLanguage = newValue;
+        writeStringToSharedPref(PRACTICE_USER_LANGUAGE, userLanguage);
     }
 
     /**
      * @return user preferred language. Returns default value if not set.
      */
     public String getUserLanguage() {
-        if (null != userLanguage) {
-            return userLanguage;
+        if (((IApplicationSession) ((AndroidPlatform) Platform.get()).getContext())
+                .getApplicationMode().getApplicationType()
+                .equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)) {
+            if (patientUserLanguage == null) {
+                patientUserLanguage = readStringFromSharedPref(PATIENT_USER_LANGUAGE,
+                        Resources.getSystem().getConfiguration().locale.getLanguage());
+            }
+            return patientUserLanguage;
         }
-
-        return readStringFromSharedPref(PREFERENCE_USER_SELECTED_LANGUAGE, "en");
-    }
-
-    /**
-     * @return user preferred language. Returns null if not set.
-     */
-    public String getUserLanguageRaw() {
-        if (null != userLanguage) {
-            return userLanguage;
+        if (userLanguage == null) {
+            userLanguage = readStringFromSharedPref(PRACTICE_USER_LANGUAGE,
+                    Resources.getSystem().getConfiguration().locale.getLanguage());
         }
-
-        return readStringFromSharedPref(PREFERENCE_USER_SELECTED_LANGUAGE);
-    }
-
-    public void setPracticeLanguage(String newValue) {
-        practiceLanguage = newValue;
-        writeStringToSharedPref(PREFERENCE_PRACTICE_SELECTED_LANGUAGE, userLanguage);
-    }
-
-    /**
-     * @return practice preferred language
-     */
-    public String getPracticeLanguage() {
-        if (null != practiceLanguage) {
-            return practiceLanguage;
-        }
-
-        return readStringFromSharedPref(PREFERENCE_PRACTICE_SELECTED_LANGUAGE, "en");
+        return userLanguage;
     }
 
     /**
@@ -185,25 +149,6 @@ public class ApplicationPreferences {
         }
 
         return readStringFromSharedPref(PREFERENCE_PRACTICE_ID);
-    }
-
-    /**
-     * @param newValue practiceManagement
-     */
-    public void setPracticeManagement(String newValue) {
-        practiceManagement = newValue;
-        writeStringToSharedPref(PREFERENCE_PRACTICE_MANAGEMENT, practiceManagement);
-    }
-
-    /**
-     * @return practiceManagement
-     */
-    public String getPracticeManagement() {
-        if (null != practiceManagement) {
-            return practiceManagement;
-        }
-
-        return readStringFromSharedPref(PREFERENCE_PRACTICE_MANAGEMENT);
     }
 
     /**
@@ -337,11 +282,7 @@ public class ApplicationPreferences {
     }
 
     private SharedPreferences getSharedPreferences() {
-        return context.getSharedPreferences(PREFERENCE_CAREPAY, Context.MODE_PRIVATE);
-    }
-
-    public Context getContext() {
-        return context;
+        return ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences();
     }
 
     /**

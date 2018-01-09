@@ -12,6 +12,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -47,13 +48,10 @@ import com.carecloud.carepaylibray.media.MediaScannerPresenter;
 import com.carecloud.carepaylibray.media.MediaViewInterface;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.marcok.stepprogressbar.StepProgressBar;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
@@ -61,6 +59,10 @@ import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAd
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_FRONT_DTO;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_BACK;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_FRONT;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class InsuranceEditDialog extends BaseDialogFragment implements MediaViewInterface {
 
@@ -250,6 +252,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             return;
         }
         toolbar.setTitle("");
+        if(!hadInsurance && !isPatientMode && isCheckin) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        }
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -374,6 +379,12 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                         DemographicsInsuranceOption insuranceOption = (DemographicsInsuranceOption) selectedOption;
                         providerEditText.setText(insuranceOption.getName());
 
+                        enableDependentFields(view,
+                                new int[]{R.id.healthInsurancePlanInputLayout,
+                                        R.id.health_insurance_card_number_layout,
+                                        R.id.health_insurance_group_number_layout},
+                                true);
+
                         //reset the plan dropdown
                         selectedPlanOption = new DemographicsOption();
                         setUpDemographicField(view, null, planField.isDisplayed(), planField.isRequired(),
@@ -397,6 +408,11 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                 });
 
         setProviderOptionsPlans(insuranceModelProperties);
+        enableDependentFields(view,
+                new int[]{R.id.healthInsurancePlanInputLayout,
+                        R.id.health_insurance_card_number_layout,
+                        R.id.health_insurance_group_number_layout},
+                !StringUtil.isNullOrEmpty(selectedProvider));
 
         String selectedPlan = demographicInsurancePayload.getInsurancePlan();
         setUpDemographicField(view, selectedPlan, planField.isDisplayed(), planField.isRequired(),
@@ -428,6 +444,13 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                         isDataHolderSelf = selectedRelationshipOption.getLabel().toLowerCase().equals(KEY_POLICY_HOLDER_SELF);
                         setupExtraFields(view, demographicInsurancePayload, insuranceModelProperties);
                         checkIfEnableButton();
+                        enableDependentFields(view,
+                                new int[]{R.id.health_insurance_policy_first_name_holder_layout,
+                                        R.id.health_insurance_policy_last_name_holder_layout,
+                                        R.id.health_insurance_policy_birth_date_holder_layout,
+                                        R.id.healthInsuranceGenderInputLayout},
+                                !isDataHolderSelf);
+
                     }
                 });
 
@@ -435,6 +458,14 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             isDataHolderSelf = selectedRelationshipOption.getLabel().toLowerCase().trim().equals(KEY_POLICY_HOLDER_SELF);
         }
         setupExtraFields(view, demographicInsurancePayload, insuranceModelProperties);
+        enableDependentFields(view,
+                new int[]{R.id.health_insurance_policy_first_name_holder_layout,
+                        R.id.health_insurance_policy_last_name_holder_layout,
+                        R.id.health_insurance_policy_birth_date_holder_layout,
+                        R.id.healthInsuranceGenderInputLayout},
+                !isDataHolderSelf);
+
+
 
         String memberId = demographicInsurancePayload.getInsuranceMemberId();
         setUpDemographicField(view, memberId, insuranceModelProperties.getInsuranceMemberId(),
@@ -491,12 +522,18 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
     }
 
+    private void enableDependentFields(View view, int[] fields, boolean enabled){
+        for(int field : fields){
+            view.findViewById(field).setEnabled(enabled);
+        }
+    }
+
     private void setupExtraFields(View view, DemographicInsurancePayloadDTO demographicInsurancePayload,
                                   InsuranceModelProperties insuranceModelProperties){
         String dob = demographicInsurancePayload.getPolicyDateOfBirthHolder();
         final TextInputLayout dobTextInputLayout = (TextInputLayout) view.findViewById(R.id.health_insurance_policy_birth_date_holder_layout);
         EditText dobEditText = (EditText) view.findViewById(R.id.health_insurance_policy_birth_date_holder);
-        setUpDemographicField(view, dob, !isDataHolderSelf, !isDataHolderSelf, new ArrayList<DemographicsOption>(),
+        setUpDemographicField(view, dob, true, !isDataHolderSelf, new ArrayList<DemographicsOption>(),
                 R.id.health_insurance_policy_birth_date_holder_layout, dobTextInputLayout, dobEditText,
                 null, null, null, null);
         dobEditText.addTextChangedListener(dateInputFormatter);
@@ -504,9 +541,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         String selectedGender = demographicInsurancePayload.getGender();
         TextInputLayout genderInputLayout = (TextInputLayout) view.findViewById(R.id.healthInsuranceGenderInputLayout);
         EditText genderEditText = (EditText) view.findViewById(R.id.health_insurance_gender);
-        setUpDemographicField(view, selectedGender, !isDataHolderSelf, !isDataHolderSelf,
+        setUpDemographicField(view, selectedGender, true, !isDataHolderSelf,
                 insuranceModelProperties.getPolicyHolderGender().getOptions(), R.id.healthInsuranceGenderLayout,
-                genderInputLayout, genderEditText, R.id.healthInsuranceGenderOptional,
+                genderInputLayout, genderEditText, null,
                 selectedGenderOption, Label.getLabel("demographics_review_gender"), null);
 
     }
@@ -612,6 +649,11 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         setupImageBase64();
 
         List<DemographicInsurancePhotoDTO> photos = demographicInsurancePayloadDTO.getInsurancePhotos();
+        if(frontInsurancePhotoDTO != null || backInsurancePhotoDTO != null){
+            //Log new Insurance Doc
+            MixPanelUtil.logEvent(getString(R.string.event_add_insurance_doc), getString(R.string.param_is_checkin), isCheckin);
+        }
+
         if (frontInsurancePhotoDTO != null) {
             removeOldPhoto(photos, FRONT_PIC);
             photos.add(frontInsurancePhotoDTO);

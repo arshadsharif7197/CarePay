@@ -7,14 +7,15 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.intake.models.IntakeFindings;
 import com.carecloud.carepaylibray.intake.models.IntakeForm;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,6 @@ import java.util.regex.Matcher;
 public class IntakeFormsFragment extends BaseWebFormFragment {
 
     private IntakeResponseModel intakeResponseModel;
-    private List<JsonObject> jsonFormSaveResponseArray = new ArrayList<>();
     private List<IntakeForm> intakeFormList;
     private IntakeFindings intakeFindings;
 
@@ -107,8 +107,7 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
         Gson gson = new Gson();
         String body = gson.toJson(jsonFormSaveResponseArray);
         TransitionDTO transitionDTO = intakeResponseModel.getMetadata().getTransitions().getUpdateIntake();
-        getWorkflowServiceHelper().execute(transitionDTO, updateformCallBack, body, queries, header);
-
+        getWorkflowServiceHelper().execute(transitionDTO, getUpdateFormCallBack(getString(R.string.forms_type_intake)), body, queries, header);
     }
 
     @Override
@@ -119,5 +118,10 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
     @Override
     protected CheckinFlowState getCheckinFlowState() {
         return CheckinFlowState.INTAKE;
+    }
+
+    @Override
+    public DTO getDto() {
+        return intakeResponseModel;
     }
 }

@@ -31,6 +31,7 @@ import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPaymentSettingsDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.JsonObject;
@@ -119,6 +120,9 @@ public class DemographicsSettingsFragment extends BaseFragment {
         pushNotificationCheckBox.setChecked(demographicsSettingsDTO.getPayload().getDemographicSettingsNotificationDTO().getPayload().isPush());
         emailNotificationCheckBox = (CheckBox) view.findViewById(R.id.emailNotificationCheckBox);
         emailNotificationCheckBox.setChecked(demographicsSettingsDTO.getPayload().getDemographicSettingsNotificationDTO().getPayload().isEmail());
+
+        MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_enabled_push), pushNotificationCheckBox.isChecked());
+        MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_enabled_email), emailNotificationCheckBox.isChecked());
     }
 
     @Override
@@ -234,6 +238,11 @@ public class DemographicsSettingsFragment extends BaseFragment {
             boolean hasEmail = settingsPayloadDTO.getPayload().getDemographicSettingsNotificationDTO().getPayload().isEmail();
             demographicsSettingsDTO.getPayload().getDemographicSettingsNotificationDTO().getPayload().setEmail(hasEmail);
             emailNotificationCheckBox.setChecked(hasEmail);
+
+            MixPanelUtil.logEvent(getString(R.string.event_updated_notifications));
+
+            MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_enabled_push), pushNotificationCheckBox.isChecked());
+            MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_enabled_email), emailNotificationCheckBox.isChecked());
         }
 
         @Override

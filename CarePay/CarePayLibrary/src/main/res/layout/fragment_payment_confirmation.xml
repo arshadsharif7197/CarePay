@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
@@ -26,35 +28,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/Feldgrau"
+        android:background="@drawable/payment_confirmation_rounded_background"
         android:orientation="vertical"
         android:paddingBottom="@dimen/dimen_20dp">
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/dark_blue_transparent"
+            android:background="@drawable/payment_confirmation_rounded_header"
             android:orientation="horizontal"
             android:padding="@dimen/dimen_10dp">
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/payment_confirm_number_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="@dimen/confirmationNumberTextSize"
-                app:customAssetFont="proxima_nova_regular"
-                breeze:textKey="payment_confirm_number" />
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/payment_confirm_value"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="@dimen/dimen_5dp"
-                android:textColor="@color/white"
-                android:textSize="@dimen/confirmationNumberTextSize"
-                app:customAssetFont="proxima_nova_regular" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/payment_confirm_date"
@@ -66,10 +49,11 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@color/white"
-                android:textSize="@dimen/confirmationNumberTextSize"
-                app:customAssetFont="proxima_nova_regular" />
+                android:textSize="@dimen/text_size_12sp"
+                tools:text="October 23rd 2017"
+                app:customAssetFont="proxima_nova_semi_bold"/>
 
-        </LinearLayout>
+        </FrameLayout>
 
         <ImageView
             android:layout_width="@dimen/icon_check_size"
@@ -78,7 +62,7 @@
             android:adjustViewBounds="true"
             android:padding="@dimen/dimen_30dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/icn_payment_confirm_check" />
+            android:src="@drawable/icn_payment_confirm_check"/>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/payment_confirm_practice_name"
@@ -88,21 +72,53 @@
             android:layout_margin="@dimen/confirmationPracticeNameMargin"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_24sp"
-            app:customAssetFont="proxima_nova_regular" />
+            app:customAssetFont="proxima_nova_regular"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/payment_confirm_number_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimen_14dp"
+            android:textColor="@color/cadet_gray"
+            android:textSize="@dimen/text_size_14"
+            tools:text="Receipt Number"
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="payment_receipt_no_label" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/payment_confirm_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/dimen_14dp"
+            android:gravity="center"
+            android:textColor="@color/textview_default_textcolor"
+            android:textSize="@dimen/text_size_14"
+            tools:text="9ac2b89c-2910-4fa7-9507-a030cd8d51f7"
+            app:customAssetFont="proxima_nova_semi_bold" />
 
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:paddingEnd="@dimen/dimen_20dp"
-        android:paddingStart="@dimen/dimen_20dp">
+        android:background="@color/white">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/payment_confirm_type_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_14dp"
             android:layout_alignParentStart="true"
             android:layout_gravity="center_vertical"
             android:gravity="start"
@@ -117,6 +133,7 @@
             android:id="@+id/payment_confirm_type_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dimen_14dp"
             android:layout_alignParentEnd="true"
             android:layout_gravity="center_vertical"
             android:gravity="end"
@@ -137,6 +154,7 @@
             android:id="@+id/payment_confirm_method_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_14dp"
             android:layout_alignParentStart="true"
             android:layout_below="@id/separator1"
             android:layout_gravity="center_vertical"
@@ -153,6 +171,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/dimen_14dp"
             android:layout_below="@id/separator1"
             android:layout_gravity="center_vertical"
             android:gravity="end"
@@ -173,6 +192,7 @@
             android:id="@+id/payment_confirm_total_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_14dp"
             android:layout_alignParentStart="true"
             android:layout_below="@id/separator2"
             android:layout_gravity="center_vertical"
@@ -188,6 +208,7 @@
             android:id="@+id/payment_confirm_total_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dimen_14dp"
             android:layout_alignParentEnd="true"
             android:layout_below="@id/separator2"
             android:layout_gravity="center_vertical"
@@ -210,6 +231,7 @@
             style="@style/BreezeButtonStyleDark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/button_blue_rounded_bottom"
             app:customAssetFont="proxima_nova_semi_bold"
             breeze:textKey="payment_ok" />
 

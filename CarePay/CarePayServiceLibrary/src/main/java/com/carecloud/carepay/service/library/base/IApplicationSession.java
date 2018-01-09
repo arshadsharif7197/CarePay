@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.base;
+package com.carecloud.carepay.service.library.base;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;

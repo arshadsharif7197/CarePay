@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
@@ -29,6 +30,7 @@ import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.gson.Gson;
 
@@ -52,11 +54,15 @@ public class PatientPaymentPresenter extends PaymentPresenter implements Patient
     @Override
     public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
         new PartialPaymentDialog(viewHandler.getContext(), paymentsModel, selectedBalance).show();
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment));
     }
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         viewHandler.navigateToFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount), true);
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment));
     }
 
     @Override
@@ -94,6 +100,8 @@ public class PatientPaymentPresenter extends PaymentPresenter implements Patient
     @Override
     public void onPayLaterClicked(PendingBalanceDTO pendingBalanceDTO) {
         viewHandler.exitPaymentProcess(true);
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_skipped));
     }
 
     @Override
@@ -186,5 +194,9 @@ public class PatientPaymentPresenter extends PaymentPresenter implements Patient
         if (targetFragment != null) {
             targetFragment.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    private String getString(int id){
+        return viewHandler.getContext().getString(id);
     }
 }

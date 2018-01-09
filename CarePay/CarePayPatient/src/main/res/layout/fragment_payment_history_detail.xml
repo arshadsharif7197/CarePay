@@ -120,6 +120,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/dimen_5dp"
                     android:layout_marginBottom="@dimen/dimen_13dp"
                     android:layout_marginStart="@dimen/dimen_13dp"
                     android:layout_marginEnd="@dimen/dimen_13dp"
@@ -165,6 +166,51 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_1dp"
                     android:background="@color/light_gray" />
+
+                <LinearLayout
+                    android:id="@+id/refund_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/dimen_14dp">
+
+                        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="start"
+                            android:textColor="@color/textview_default_textcolor"
+                            android:textSize="@dimen/text_size_17"
+                            tools:text="Refunded"
+                            breeze:textKey="payment_history_detail_refunded"
+                            app:customAssetFont="proxima_nova_regular"/>
+
+                        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                            android:id="@+id/transaction_refunded"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="end"
+                            android:textColor="@color/textview_default_textcolor"
+                            android:textSize="@dimen/text_size_14"
+                            tools:text="$999.99"
+                            app:customAssetFont="proxima_nova_semi_bold"/>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_1dp"
+                        android:background="@color/light_gray" />
+
+                </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/items_recycler"

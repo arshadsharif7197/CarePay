@@ -18,7 +18,7 @@
             android:layout_width="@dimen/dimen_57dp"
             android:layout_height="match_parent"
             android:tag="@string/tag_demographics_error_show_inv"
-            android:visibility="visible">
+            android:visibility="invisible">
 
             <include
                 layout="@layout/demographics_select_error"

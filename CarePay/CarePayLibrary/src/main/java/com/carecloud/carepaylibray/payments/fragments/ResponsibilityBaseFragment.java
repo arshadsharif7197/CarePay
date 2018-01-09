@@ -13,6 +13,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payments.interfaces.ResponsibilityPaymentInterface;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
@@ -215,4 +216,8 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
         return true;
     }
 
+    @Override
+    public DTO getDto() {
+        return paymentDTO;
+    }
 }

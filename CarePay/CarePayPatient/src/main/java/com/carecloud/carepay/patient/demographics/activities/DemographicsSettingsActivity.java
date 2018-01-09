@@ -47,6 +47,7 @@ import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactFragm
 import com.carecloud.carepaylibray.demographics.interfaces.PhysicianFragmentInterface;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -206,6 +207,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     @Override
     public void displayHelpFragment() {
         replaceFragment(new HelpFragment(), true);
+        MixPanelUtil.logEvent(getString(R.string.event_help_clicked));
     }
 
     @Override
@@ -226,7 +228,6 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     @Override
     public void onInsuranceEdited(DemographicDTO demographicDTO, boolean proceed) {
         SystemUtil.hideSoftKeyboard(this);
-        onBackPressed();
 
         FragmentManager fm = getSupportFragmentManager();
 
@@ -236,6 +237,8 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
                 (SettingsDocumentsFragment) fm.findFragmentByTag(tag);
 
         settingsDocumentsFragment.updateInsuranceList(demographicDTO);
+
+        fm.popBackStack(tag, 0);
     }
 
     @Override
@@ -248,7 +251,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment
                 .newInstance(Label.getLabel("demographics_insurance_primary_alert_title"),
-                        Label.getLabel("demographics_insurance_primary_alert_message"));
+                        Label.getLabel("demographics_insurance_primary_alert_message_patient"));
         homeAlertDialogFragment.setCallback(callback);
         String tag = homeAlertDialogFragment.getClass().getName();
         homeAlertDialogFragment.show(ft, tag);

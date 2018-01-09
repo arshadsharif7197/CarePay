@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.demographics.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
@@ -104,6 +106,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
     private List<DemographicInsurancePayloadDTO> getInsurances(DemographicDTO demographicDTO) {
         List<DemographicInsurancePayloadDTO> insuranceList = new ArrayList<>();
+        boolean hasOnePhoto = false;
         if (demographicDTO != null) {
             boolean isThereAnyPrimaryInsurance = false;
             for (DemographicInsurancePayloadDTO insurance : demographicDTO.getPayload().getDemographics()
@@ -115,6 +118,8 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
                     }
                     if (insurance.getInsurancePhotos().size() == 0) {
                         showAlert = true;
+                    }else if(!hasOnePhoto){
+                        hasOnePhoto = true;
                     }
                 }
             }
@@ -124,6 +129,9 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
                 showAlert = true;
             }
         }
+
+        MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_has_identity_doc), hasOnePhoto);
+
         return insuranceList;
     }
 
@@ -138,7 +146,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
                     noPrimaryInsuranceFound = false;
                 }
             } else {
-                getFragmentManager().popBackStack(); //remove the health insurance fragment from the stack
+                getFragmentManager().popBackStack(HealthInsuranceFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE); //remove the health insurance fragment from the stack
                 editInsurance(null, false);
             }
         }
@@ -230,7 +238,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
      */
     public void updateInsuranceList(DemographicDTO demographicDTO) {
         this.demographicDTO = demographicDTO;
-        if (insurancePhotoAlert != null) {
+        if (insurancePhotoAlert != null && isAdded()) {
             initializeViews();
         }
     }

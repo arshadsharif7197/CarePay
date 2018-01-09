@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingLeft="@dimen/list_apt_padding_right"
-    android:paddingRight="@dimen/list_apt_padding_right">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:paddingLeft="@dimen/list_apt_padding_right"
+              android:paddingRight="@dimen/list_apt_padding_right">
 
     <LinearLayout
         android:id="@+id/history_item_linear_layout"
@@ -55,16 +55,30 @@
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
-                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                    android:id="@+id/historyTotalAmount"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="start"
-                    android:textColor="@color/Feldgrau"
-                    android:textSize="@dimen/textview_default_textsize"
-                    android:textStyle="bold"
-                    app:customAssetFont="proxima_nova_semi_bold" />
+                    android:orientation="horizontal">
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/historyTotalAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="start"
+                        android:textColor="@color/Feldgrau"
+                        android:textSize="@dimen/textview_default_textsize"
+                        android:textStyle="bold"
+                        app:customAssetFont="proxima_nova_semi_bold" />
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/historyTransactionFlag"
+                        style="@style/DemographicsOptionalLabelStyle"
+                        android:layout_gravity="center_vertical|end"
+                        android:layout_marginStart="@dimen/dimen_5dp"
+                        app:customAssetFont="proxima_nova_semi_bold"/>
+
+                </LinearLayout>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/historyLocation"

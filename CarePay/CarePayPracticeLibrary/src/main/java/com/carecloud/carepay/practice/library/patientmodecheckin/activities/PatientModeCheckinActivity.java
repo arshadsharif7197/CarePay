@@ -10,12 +10,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.demographics.fragments.HomeAlertDialogFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.PatientModeDemographicsPresenter;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
@@ -30,14 +31,25 @@ import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
+import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
+import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.FormsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
+import com.carecloud.carepaylibray.demographics.fragments.HomeAlertDialogFragment;
+import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment;
+import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
+import com.carecloud.carepaylibray.demographics.fragments.IntakeFormsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.interfaces.IcicleInterface;
 import com.carecloud.carepaylibray.media.MediaResultListener;
+import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
@@ -46,30 +58,35 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
+import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class PatientModeCheckinActivity extends BasePracticeActivity implements
         DemographicsView, PaymentNavigationCallback, PaymentMethodDialogInterface {
 
     public final static int SUBFLOW_PAYMENTS = 3;
-
     private PatientModeDemographicsPresenter presenter;
-
     private PaymentsModel paymentDTO;
-
     private View[] checkInFlowViews;
-
     private MediaResultListener resultListener;
+
+    private boolean isUserInteraction = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Bundle icicle = savedInstanceState;
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             String tag = savedInstanceState.getString(DemographicsPresenter.CURRENT_ICICLE_FRAGMENT);
-            if(tag != null){
+            if (tag != null) {
                 Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
-                if(fragment instanceof IcicleInterface){
+                if (fragment instanceof IcicleInterface) {
                     icicle = ((IcicleInterface) fragment).popData();
                     icicle.putAll(savedInstanceState);
                 }
@@ -81,17 +98,69 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         initializeHomeButton();
         initializeLeftNavigation();
         presenter = new PatientModeDemographicsPresenter(this, icicle, this);
+        initializeLanguageSpinner();
 
+    }
+
+    @Override
+    public void onUserInteraction(){
+        super.onUserInteraction();
+        isUserInteraction = true;
+    }
+
+    private void initializeLanguageSpinner() {
+        final List<String> languages = new ArrayList<>();
+        for (OptionDTO language : presenter.getLanguages()) {
+            languages.add(language.getCode().toUpperCase());
+        }
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.home_spinner_item, languages);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner languageSpinner = (Spinner) findViewById(R.id.languageSpinner);
+        languageSpinner.setAdapter(spinnerArrayAdapter);
+        languageSpinner.setSelection(spinnerArrayAdapter.getPosition(getApplicationPreferences()
+                .getUserLanguage().toUpperCase()), false);
+        final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
+        headers.put("username", getApplicationPreferences().getUserName());
+        headers.put("username_patient", getApplicationPreferences().getPatientId());
+        languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(!isUserInteraction){
+                    return;
+                }
+                if (presenter.getCurrentStep() < 6) {
+                    changeLanguage(presenter.getLanguageLink(), languages.get(position).toLowerCase(), headers);
+                } else {
+                    changeLanguage(presenter.getLanguageLink(), languages.get(position).toLowerCase(), headers, new SimpleCallback() {
+                        @Override
+                        public void callback() {
+                            presenter.changeLanguage();
+                            changeMenuLanguage();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+
+    private void changeMenuLanguage() {
+        ((TextView) findViewById(R.id.checkInLeftNavigationTitle))
+                .setText(Label.getLabel("practice_checkin_header_label"));
+        initializeLeftNavigation();
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         Bundle icicle = savedInstanceState;
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             String tag = savedInstanceState.getString(DemographicsPresenter.CURRENT_ICICLE_FRAGMENT);
-            if(tag != null){
+            if (tag != null) {
                 Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
-                if(fragment instanceof IcicleInterface){
+                if (fragment instanceof IcicleInterface) {
                     icicle = ((IcicleInterface) fragment).popData();
                     icicle.putAll(savedInstanceState);
                 }
@@ -110,7 +179,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     public void onSaveInstanceState(Bundle icicle) {
         super.onSaveInstanceState(icicle);
         Fragment fragment = presenter.getCurrentFragment();
-        if(fragment != null &&  fragment instanceof IcicleInterface){
+        if (fragment != null && fragment instanceof IcicleInterface) {
             ((IcicleInterface) fragment).pushData((Bundle) icicle.clone());
         }
         icicle.clear();
@@ -144,6 +213,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         intent.putExtra(CarePayConstants.EXTRA_BUNDLE, extra);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+
+        checkinCompleted();
     }
 
     @Override
@@ -180,6 +251,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                         public void onAcceptExit() {
                             setResult(CarePayConstants.HOME_PRESSED);
                             finish();
+                            logCheckinCancelled();
                         }
                     });
                     String tag = homeAlertDialogFragment.getClass().getName();
@@ -244,6 +316,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         PracticePartialPaymentDialogFragment dialog = PracticePartialPaymentDialogFragment
                 .newInstance(paymentDTO, owedAmount);
         displayDialogFragment(dialog, false);
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment));
     }
 
     @Override
@@ -251,6 +325,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         PracticePaymentMethodDialogFragment fragment = PracticePaymentMethodDialogFragment
                 .newInstance(paymentsModel, amount);
         displayDialogFragment(fragment, false);
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment));
     }
 
     @Override
@@ -301,6 +377,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             setResult(CarePayConstants.HOME_PRESSED, intent);
             finish();
         }
+
+        checkinCompleted();
     }
 
     @Override
@@ -471,4 +549,50 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
 
     }
+
+    private void checkinCompleted() {
+        //Log Check-in Completed
+        if (getAppointment() != null) {
+            boolean isGuest = !ValidationHelper.isValidEmail(getAppAuthorizationHelper().getCurrUser());
+            String[] params = {getString(R.string.param_practice_id),
+                    getString(R.string.param_appointment_id),
+                    getString(R.string.param_appointment_type),
+                    getString(R.string.param_is_guest)};
+            Object[] values = {getAppointment().getMetadata().getPracticeId(),
+                    getAppointmentId(),
+                    getAppointment().getPayload().getVisitType().getName(),
+                    isGuest};
+            MixPanelUtil.logEvent(getString(R.string.event_checkin_completed), params, values);
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_checkin_completed), 1);
+            MixPanelUtil.endTimer(getString(R.string.timer_checkin));
+        }
+    }
+
+    private void logCheckinCancelled() {
+        Fragment currentFragment = presenter.getCurrentFragment();
+        String currentStep = null;
+        if (currentFragment instanceof PersonalInfoFragment) {
+            currentStep = getString(R.string.step_personal_info);
+        } else if (currentFragment instanceof AddressFragment) {
+            currentStep = getString(R.string.step_address);
+        } else if (currentFragment instanceof DemographicsFragment) {
+            currentStep = getString(R.string.step_demographics);
+        } else if (currentFragment instanceof IdentificationFragment) {
+            currentStep = getString(R.string.step_identity);
+        } else if (currentFragment instanceof HealthInsuranceFragment ||
+                currentFragment instanceof InsuranceEditDialog) {
+            currentStep = getString(R.string.step_health_insurance);
+        } else if (currentFragment instanceof FormsFragment) {
+            currentStep = getString(R.string.step_consent_forms);
+        } else if (currentFragment instanceof MedicationsAllergyFragment) {
+            currentStep = getString(R.string.step_medications);
+        } else if (currentFragment instanceof IntakeFormsFragment) {
+            currentStep = getString(R.string.step_intake);
+        }
+        if (currentStep != null) {
+            MixPanelUtil.logEvent(getString(R.string.event_checkin_cancelled), getString(R.string.param_last_completed_step), currentStep);
+        }
+
+    }
+
 }

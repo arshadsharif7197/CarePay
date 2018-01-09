@@ -7,7 +7,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
-import com.carecloud.carepaylibray.base.IApplicationSession;
+import com.carecloud.carepay.service.library.base.IApplicationSession;
 import com.orm.SugarContext;
 
 /**
@@ -37,7 +37,7 @@ public abstract class CarePayApplication extends MultiDexApplication implements 
     @Override
     public ApplicationPreferences getApplicationPreferences() {
         if (applicationPreferences == null) {
-            applicationPreferences = new ApplicationPreferences(this);
+            applicationPreferences = ApplicationPreferences.getInstance();
         }
 
         return applicationPreferences;

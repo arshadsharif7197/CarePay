@@ -6,6 +6,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
+import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAvailableHoursDialogFragment;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeChooseProviderDialog;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeRequestAppointmentDialog;
@@ -45,6 +46,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLi
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -90,7 +92,8 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         if (isVisible()) {
             ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
             SystemUtil.showSuccessToast(getContext(),
-                    Label.getLabel(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ? "appointment_request_success_message_HTML" : "appointment_schedule_success_message_HTML"));
+                    Label.getLabel(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
+                            "appointment_request_success_message_HTML" : "appointment_schedule_success_message_HTML"));
         }
 
         onAppointmentRequestSuccess();
@@ -171,6 +174,21 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             showAppointmentConfirmation();
+
+            ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
+            String[] params = {getString(R.string.param_appointment_type),
+                    getString(R.string.param_practice_id),
+                    getString(R.string.param_practice_name),
+                    getString(R.string.param_patient_id)};
+            String[] values = {visitTypeDTO.getName(),
+                    getApplicationMode().getUserPracticeDTO().getPracticeId(),
+                    getApplicationMode().getUserPracticeDTO().getPracticeName(),
+                    patientId};
+            MixPanelUtil.logEvent(getString(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
+                    R.string.event_appointment_requested : R.string.event_appointment_scheduled), params, values);
+            if(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
+            }
         }
 
         @Override
@@ -347,6 +365,8 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         PracticePaymentMethodPrepaymentFragment prepaymentFragment = PracticePaymentMethodPrepaymentFragment
                 .newInstance(paymentsModel, amount);
         displayDialogFragment(prepaymentFragment, true);
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_start_prepayment));
     }
 
     @Override

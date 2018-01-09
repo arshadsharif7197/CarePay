@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_launch">App Launched</string>
+
+    <!--Standard Events -->
+
+
+
+    <!--Parameter Events-->
+    <string name="event_appointment_scheduled">Appointment Scheduled</string>
+    <string name="event_appointment_accepted">Appointment Accepted</string>
+    <string name="event_appointment_rejected">Appointment Rejected</string>
+    <string name="event_adhoc_forms_started">Adhoc Forms Started</string>
+    <string name="event_adhoc_forms_completed">Adhoc Forms Completed</string>
+    <string name="event_adhoc_forms_cancelled">Adhoc Forms Cancelled</string>
+
+    <!--Screen Load Events-->.....
+
+    <!--Parameters-->
+
+    <!--Incremental Properties-->
+    <string name="count_appointment_scheduled">Total Appointments Scheduled</string>
+
+    <!--Incremental Properties-->
+
+    <!--People Properties-->
+    <string name="people_is_practice_user">Is Practice User</string>
+
+</resources>

@@ -109,6 +109,7 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
         } else {
             cloverPaymentAdapter.setCloverPayment(paymentPostModel);
         }
+        logPaymentMethodSelection(getString(R.string.payment_clover));
     }
 
     private void checkIntegratedPayments(){
@@ -124,6 +125,7 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
 
     protected void handleIntegratedPayment(){
         shamrockCallback.showChooseDeviceList(paymentsModel, amountToMakePayment);
+        logPaymentMethodSelection(getString(R.string.payment_clover));
     }
 
     private RestCallServiceCallback integratedPaymentsReadyCallback = new RestCallServiceCallback() {

@@ -91,7 +91,10 @@ public class HttpConstants {
     }
 
     public static MixpanelAPI getMixpanelAPI() {
-        return mixpanelAPI;
+        if(getEnvironment().equals("Production")) {
+            return mixpanelAPI;
+        }
+        return mixpanelAPI;//set this to null to disable logging in other environments
     }
 
     public static void setMixpanelAPI(MixpanelAPI mixpanelAPI) {

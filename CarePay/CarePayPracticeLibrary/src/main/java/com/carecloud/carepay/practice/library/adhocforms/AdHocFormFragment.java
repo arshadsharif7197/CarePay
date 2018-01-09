@@ -13,14 +13,15 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.checkout.BaseWebFormFragment;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.intake.models.AppointmentMetadataModel;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +34,7 @@ import java.util.regex.Matcher;
 
 public class AdHocFormFragment extends BaseWebFormFragment {
 
-    private AppointmentsResultModel appointmentsResultModel;
+    private AdHocFormsModel adhocFormsModel;
     private List<JsonObject> jsonFormSaveResponseArray = new ArrayList<>();
     private List<PracticeForm> formsList;
     private AdHocFormsInterface callback;
@@ -65,9 +66,9 @@ public class AdHocFormFragment extends BaseWebFormFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        appointmentsResultModel = (AppointmentsResultModel) callback.getDto();
+        adhocFormsModel = (AdHocFormsModel) callback.getDto();
         formsList = callback.getFormsList();
-        if(formsList != null) {
+        if (formsList != null) {
             setTotalForms(formsList.size());
         }
 
@@ -104,7 +105,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
                 userResponse = jsonFormSaveResponseArray.get(displayedFormsIndex);
             } else {
                 String uuid = payload.get("uuid").toString().replace("\"", "");
-                for (ConsentFormUserResponseDTO response : appointmentsResultModel.getPayload().getPatientFormsResponse()) {
+                for (ConsentFormUserResponseDTO response : adhocFormsModel.getPayload().getPatientFormsResponse()) {
                     if (uuid.equals(response.getFormId())) {
                         JsonObject json = new JsonObject();
                         json.addProperty("uuid", response.getFormId());
@@ -141,7 +142,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
 
     @Override
     protected void submitAllForms() {
-        AppointmentMetadataModel patientInfo = appointmentsResultModel.getPayload()
+        AppointmentMetadataModel patientInfo = adhocFormsModel.getPayload()
                 .getAdhocFormsPatientModeInfo().getMetadata();
         Map<String, String> queries = new HashMap<>();
         queries.put("practice_mgmt", patientInfo.getPracticeMgmt());
@@ -154,7 +155,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
 
         Gson gson = new Gson();
         String body = gson.toJson(jsonFormSaveResponseArray);
-        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getUpdateForms();
+        TransitionDTO transitionDTO = adhocFormsModel.getMetadata().getTransitions().getUpdateForms();
         getWorkflowServiceHelper().execute(transitionDTO, updateFormCallBack, body, queries, header);
     }
 
@@ -195,5 +196,26 @@ public class AdHocFormFragment extends BaseWebFormFragment {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("formIndex", getDisplayedFormsIndex());
+        Gson gson = new Gson();
+        outState.putString("formResponses", gson.toJson(jsonFormSaveResponseArray));
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            int formIndex = savedInstanceState.getInt("formIndex", 0);
+            setDisplayedFormsIndex(formIndex);
+            Gson gson = new Gson();
+            Type listType = new TypeToken<List<JsonObject>>() {
+            }.getType();
+            jsonFormSaveResponseArray = gson.fromJson(savedInstanceState.getString("formResponses"), listType);
+        }
     }
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white">
@@ -36,14 +36,14 @@
                     android:maxLength="256"
                     app:customAssetFont="gotham_rounded_book"
                     app:hintTextAppearance="@style/FloatingLabelStyle"
-                    tools:hint="First Name"
-                    breeze:hintKey="demographics_first_name" />
+                    breeze:hintKey="demographics_first_name"
+                    tools:hint="First Name" />
 
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
             <include
                 android:id="@+id/firstNameOptionalTextView"
-                layout="@layout/layout_optional_text_view"/>
+                layout="@layout/layout_optional_text_view" />
 
         </FrameLayout>
 
@@ -66,14 +66,14 @@
                     android:maxLength="256"
                     app:customAssetFont="gotham_rounded_book"
                     app:hintTextAppearance="@style/FloatingLabelStyle"
-                    tools:hint="Middle Name"
-                    breeze:hintKey="demographics_middle_name" />
+                    breeze:hintKey="demographics_middle_name"
+                    tools:hint="Middle Name" />
 
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
             <include
                 android:id="@+id/middleNameOptionalTextView"
-                layout="@layout/layout_optional_text_view"/>
+                layout="@layout/layout_optional_text_view" />
 
         </FrameLayout>
 
@@ -96,14 +96,14 @@
                     android:maxLength="256"
                     app:customAssetFont="gotham_rounded_book"
                     app:hintTextAppearance="@style/FloatingLabelStyle"
-                    tools:hint="Last Name"
-                    breeze:hintKey="demographics_last_name" />
+                    breeze:hintKey="demographics_last_name"
+                    tools:hint="Last Name" />
 
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
             <include
                 android:id="@+id/lastNameOptionalTextView"
-                layout="@layout/layout_optional_text_view"/>
+                layout="@layout/layout_optional_text_view" />
 
         </FrameLayout>
 
@@ -127,14 +127,14 @@
                     android:maxLength="12"
                     app:customAssetFont="gotham_rounded_book"
                     app:hintTextAppearance="@style/FloatingLabelStyle"
-                    tools:hint="Primary Phone Number"
-                    breeze:hintKey="demographics_primary_phone_number_label" />
+                    breeze:hintKey="demographics_primary_phone_number_label"
+                    tools:hint="Primary Phone Number" />
 
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
             <include
                 android:id="@+id/primaryPhoneOptionalTextView"
-                layout="@layout/layout_optional_text_view"/>
+                layout="@layout/layout_optional_text_view" />
 
         </FrameLayout>
 
@@ -157,14 +157,14 @@
                     android:maxLength="12"
                     app:customAssetFont="gotham_rounded_book"
                     app:hintTextAppearance="@style/FloatingLabelStyle"
-                    tools:hint="Secondary Phone Number"
-                    breeze:hintKey="demographics_secondary_phone_number_label" />
+                    breeze:hintKey="demographics_secondary_phone_number_label"
+                    tools:hint="Secondary Phone Number" />
 
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
             <include
                 android:id="@+id/secondaryPhoneOptionalTextView"
-                layout="@layout/layout_optional_text_view"/>
+                layout="@layout/layout_optional_text_view" />
 
         </FrameLayout>
 
@@ -191,14 +191,14 @@
                     android:focusableInTouchMode="false"
                     android:imeOptions="actionNext"
                     app:customAssetFont="gotham_rounded_book"
-                    tools:hint="EC Relationship"
-                    breeze:hintKey="demographics_emergency_contact_relationship" />
+                    breeze:hintKey="demographics_emergency_contact_relationship"
+                    tools:hint="EC Relationship" />
 
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
             <include
                 android:id="@+id/emergencyContactRelationshipOptionalLabel"
-                layout="@layout/layout_optional_text_view"/>
+                layout="@layout/layout_optional_text_view" />
 
         </FrameLayout>
 
@@ -219,13 +219,13 @@
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/text_size_18sp"
                 app:customAssetFont="proxima_nova_regular"
-                tools:text="Address"
-                breeze:textKey="demographics_address_section" />
+                breeze:textKey="demographics_address_section"
+                tools:text="Address" />
 
             <include
                 android:id="@+id/addressInfoOptionalTextView"
                 layout="@layout/layout_optional_text_view"
-                android:visibility="visible"/>
+                android:visibility="visible" />
 
         </LinearLayout>
 
@@ -245,8 +245,8 @@
                 android:nextFocusForward="@+id/addressEditText2"
                 app:customAssetFont="gotham_rounded_book"
                 app:hintTextAppearance="@style/FloatingLabelStyle"
-                tools:hint="Address Line 1"
-                breeze:hintKey="address1_label" />
+                breeze:hintKey="address1_label"
+                tools:hint="Address Line 1" />
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -270,15 +270,15 @@
                     android:nextFocusForward="@+id/zipCodeTextView"
                     app:customAssetFont="gotham_rounded_book"
                     app:hintTextAppearance="@style/FloatingLabelStyle"
-                    tools:hint="Address Line 2"
-                    breeze:hintKey="address2_label" />
+                    breeze:hintKey="address2_label"
+                    tools:hint="Address Line 2" />
 
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
             <include
                 android:id="@+id/demogrAddressOptionalLabel"
                 layout="@layout/layout_optional_text_view"
-                android:visibility="visible"/>
+                android:visibility="visible" />
 
         </FrameLayout>
 
@@ -297,8 +297,8 @@
                 android:nextFocusForward="@+id/cityTextView"
                 app:customAssetFont="gotham_rounded_book"
                 app:hintTextAppearance="@style/FloatingLabelStyle"
-                tools:hint="Zip Code"
-                breeze:hintKey="payment_zipcode" />
+                breeze:hintKey="payment_zipcode"
+                tools:hint="Zip Code" />
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -327,8 +327,8 @@
                     android:nextFocusRight="@+id/stateTextView"
                     app:customAssetFont="gotham_rounded_book"
                     app:hintTextAppearance="@style/FloatingLabelStyle"
-                    tools:hint="City"
-                    breeze:hintKey="payment_city" />
+                    breeze:hintKey="payment_city"
+                    tools:hint="City" />
 
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -347,8 +347,8 @@
                     android:focusable="false"
                     android:imeOptions="actionDone"
                     app:customAssetFont="gotham_rounded_book"
-                    tools:hint="State"
-                    breeze:hintKey="demographics_state" />
+                    breeze:hintKey="demographics_state"
+                    tools:hint="State" />
 
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -371,13 +371,13 @@
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/text_size_18sp"
                 app:customAssetFont="proxima_nova_regular"
-                tools:text="Additional Information"
-                breeze:textKey="demographics_additional_information_section" />
+                breeze:textKey="demographics_additional_information_section"
+                tools:text="Additional Information" />
 
             <include
                 android:id="@+id/additionalInfoOptionalTextView"
                 layout="@layout/layout_optional_text_view"
-                android:visibility="visible"/>
+                android:visibility="visible" />
 
         </LinearLayout>
 
@@ -419,8 +419,8 @@
                     android:maxLength="10"
                     android:nextFocusForward="@+id/genderEditText"
                     app:customAssetFont="gotham_rounded_book"
-                    tools:hint="Date of Birth"
-                    breeze:hintKey="demographics_review_date_of_birth" />
+                    breeze:hintKey="demographics_review_date_of_birth"
+                    tools:hint="Date of Birth" />
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
         </FrameLayout>
@@ -447,14 +447,14 @@
                     android:editable="false"
                     android:focusableInTouchMode="false"
                     app:customAssetFont="gotham_rounded_book"
-                    tools:hint="Gender"
-                    breeze:hintKey="demographics_gender_label" />
+                    breeze:hintKey="demographics_gender_label"
+                    tools:hint="Gender" />
 
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
             <include
                 android:id="@+id/genderOptionalLabel"
-                layout="@layout/layout_optional_text_view"/>
+                layout="@layout/layout_optional_text_view" />
 
         </FrameLayout>
 
