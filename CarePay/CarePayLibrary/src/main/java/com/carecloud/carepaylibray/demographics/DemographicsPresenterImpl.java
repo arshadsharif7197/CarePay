@@ -368,6 +368,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         }
 
         if (!healthInsuranceFragment.isAdded()) {
+            healthInsuranceFragment.updateInsuranceList(demographicDTO);
             fm.popBackStack(tag,0);
         }else if (demographicDTO == null || proceed) {
             fm.executePendingTransactions();
