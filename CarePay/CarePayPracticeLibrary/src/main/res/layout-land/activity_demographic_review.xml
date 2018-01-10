@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/activity_patient_mode_checkin"
@@ -47,11 +47,11 @@
                     android:id="@+id/checkInLeftNavigationTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="Let's get you checked in!"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_30sp"
                     app:customAssetFont="gotham_rounded_bold"
-                    breeze:textKey="practice_checkin_header_label" />
+                    breeze:textKey="practice_checkin_header_label"
+                    tools:text="Let's get you checked in!" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -122,7 +122,8 @@
                         android:layout_toEndOf="@id/checkinHomeClickable"
                         android:background="@drawable/bg_blue_overlay"
                         android:paddingEnd="@dimen/home_spinner_padding_righ_left"
-                        android:paddingStart="@dimen/home_spinner_padding_righ_left" />
+                        android:paddingStart="@dimen/home_spinner_padding_righ_left"
+                        android:visibility="gone" />
 
                 </RelativeLayout>
 

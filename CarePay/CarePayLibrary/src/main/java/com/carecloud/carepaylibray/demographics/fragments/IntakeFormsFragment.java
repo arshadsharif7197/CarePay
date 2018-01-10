@@ -12,10 +12,10 @@ import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.intake.models.IntakeFindings;
 import com.carecloud.carepaylibray.intake.models.IntakeForm;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -118,5 +118,10 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
     @Override
     protected CheckinFlowState getCheckinFlowState() {
         return CheckinFlowState.INTAKE;
+    }
+
+    @Override
+    public DTO getDto() {
+        return intakeResponseModel;
     }
 }

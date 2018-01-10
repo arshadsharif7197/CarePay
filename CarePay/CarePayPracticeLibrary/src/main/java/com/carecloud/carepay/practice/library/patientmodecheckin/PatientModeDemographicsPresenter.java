@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
 import com.carecloud.carepay.practice.library.patientmodecheckin.models.PatientModeCheckinDTO;
@@ -12,8 +13,10 @@ import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenterImpl;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.fragments.HomeAlertDialogFragment;
+import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -141,5 +144,17 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
 
     public TransitionDTO getLanguageLink() {
         return demographicDTO.getMetadata().getLinks().getLanguage();
+    }
+
+    public void changeLanguage() {
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentById(com.carecloud.carepaylibrary.R.id.root_layout);
+        if (fragment instanceof BaseCheckinFragment) {
+            if (((BaseCheckinFragment) fragment).getDto() != null) {
+                Gson gson = new Gson();
+                String stringDto = gson.toJson(((BaseCheckinFragment) fragment).getDto());
+                displayFragment(gson.fromJson(stringDto, WorkflowDTO.class));
+            }
+        }
     }
 }

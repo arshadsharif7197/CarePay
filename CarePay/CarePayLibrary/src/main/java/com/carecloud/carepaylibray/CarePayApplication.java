@@ -37,7 +37,7 @@ public abstract class CarePayApplication extends MultiDexApplication implements 
     @Override
     public ApplicationPreferences getApplicationPreferences() {
         if (applicationPreferences == null) {
-            applicationPreferences = new ApplicationPreferences(this);
+            applicationPreferences = ApplicationPreferences.getInstance();
         }
 
         return applicationPreferences;

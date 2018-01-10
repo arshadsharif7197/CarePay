@@ -5,7 +5,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by Jahirul Bhuiyan on 10/27/2016.
+ * Created by Jahirul Bhuiyan on 10/27/2016
  */
 
 public class UserPracticeDTO {
@@ -28,7 +28,6 @@ public class UserPracticeDTO {
     @SerializedName("practice_address")
     @Expose
     private UserPracticeAddressDTO addressDTO = new UserPracticeAddressDTO();
-
     @SerializedName("prefix")
     @Expose
     private String prefix;
@@ -41,6 +40,15 @@ public class UserPracticeDTO {
     @SerializedName("username")
     @Expose
     private String userName;
+    @SerializedName("breeze_practice")
+    @Expose
+    private boolean breezePractice = false;
+    @SerializedName("payeezy")
+    @Expose
+    private boolean payeezyEnabled = false;
+    @SerializedName("clover")
+    @Expose
+    private boolean cloverEnabled = false;
 
     /**
      * @return The prefix
@@ -144,5 +152,29 @@ public class UserPracticeDTO {
 
     public void setAddressDTO(UserPracticeAddressDTO addressDTO) {
         this.addressDTO = addressDTO;
+    }
+
+    public boolean isBreezePractice() {
+        return breezePractice;
+    }
+
+    public void setBreezePractice(boolean breezePractice) {
+        this.breezePractice = breezePractice;
+    }
+
+    public boolean isPayeezyEnabled() {
+        return payeezyEnabled;
+    }
+
+    public void setPayeezyEnabled(boolean payeezyEnabled) {
+        this.payeezyEnabled = payeezyEnabled;
+    }
+
+    public boolean isCloverEnabled() {
+        return cloverEnabled;
+    }
+
+    public void setCloverEnabled(boolean cloverEnabled) {
+        this.cloverEnabled = cloverEnabled;
     }
 }

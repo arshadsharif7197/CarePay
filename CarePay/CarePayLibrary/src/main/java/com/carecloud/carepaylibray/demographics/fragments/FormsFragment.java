@@ -12,6 +12,7 @@ import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -117,6 +118,11 @@ public class FormsFragment extends BaseWebFormFragment {
     @Override
     protected CheckinFlowState getCheckinFlowState() {
         return CheckinFlowState.CONSENT;
+    }
+
+    @Override
+    public DTO getDto() {
+        return consentFormDTO;
     }
 
 }

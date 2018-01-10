@@ -168,7 +168,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         Fragment prev = fm.findFragmentByTag(tag);
         if (prev != null) {
             fm.popBackStackImmediate(tag, 0);
-            return;
         }
 
         transaction.replace(R.id.root_layout, fragment, tag);
@@ -253,11 +252,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             demographicsView.setMediaResultListener(insuranceEditDialog);
         } else {
             navigateToFragment(insuranceEditDialog, true);
-//            FragmentManager fm = getSupportFragmentManager();
-//            FragmentTransaction transaction = fm.beginTransaction();
-//            transaction.add(R.id.root_layout, insuranceEditDialog, insuranceEditDialog.getClass().getCanonicalName());
-//            transaction.addToBackStack(null);
-//            transaction.commitAllowingStateLoss();
         }
     }
 
