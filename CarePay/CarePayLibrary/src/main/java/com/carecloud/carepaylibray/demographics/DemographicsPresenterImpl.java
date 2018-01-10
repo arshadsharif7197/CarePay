@@ -360,11 +360,14 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             healthInsuranceFragment.updateInsuranceList(demographicDTO);
             fm.popBackStack(InsuranceEditDialog.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
             navigateToFragment(healthInsuranceFragment, true);
+            if(proceed) {
+                fm.executePendingTransactions();
+                healthInsuranceFragment.openNextFragment(this.demographicDTO);
+            }
             return;
         }
 
         if (!healthInsuranceFragment.isAdded()) {
-            healthInsuranceFragment.updateInsuranceList(demographicDTO);
             fm.popBackStack(tag,0);
         }else if (demographicDTO == null || proceed) {
             fm.executePendingTransactions();
