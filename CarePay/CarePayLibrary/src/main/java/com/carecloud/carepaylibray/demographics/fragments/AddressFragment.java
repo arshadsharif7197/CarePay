@@ -231,6 +231,8 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.zipCodeContainer));
                 }
                 return false;
+            } else {
+                unsetFieldError(zipLayout);
             }
 
             String cityValue = ((EditText) view.findViewById(R.id.cityId)).getText().toString();
