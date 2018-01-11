@@ -61,7 +61,7 @@ public class PhysicianAdapter extends RecyclerView.Adapter<PhysicianAdapter.View
                 address = " " + physician.getAddress().getAddress2();
             }
             holder.physicianAddressTextView.setText(address);
-            holder.physicianZipCodeTextView.setText(physician.getAddress().getZipcode());
+            holder.physicianZipCodeTextView.setText(StringUtil.formatZipCode(physician.getAddress().getZipcode()));
             holder.physicianCityTextView.setText(physician.getAddress().getCity()
                     + " " + physician.getAddress().getState());
             if (physician.getAddress().getFaxNumber() != null) {
@@ -108,6 +108,7 @@ public class PhysicianAdapter extends RecyclerView.Adapter<PhysicianAdapter.View
 
     /**
      * set the new Data
+     *
      * @param physicians list of physicians
      */
     public void setData(List<PhysicianDto> physicians) {

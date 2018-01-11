@@ -170,7 +170,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         });
 
         if (!isEmptyEC(emergencyContact)) {
-            saveButton.setText(Label.getLabel("demographics_save_changes_button"));
+            saveButton.setText(Label.getLabel("demographics.emergencyContact.button.label.saveChanges"));
         } else {
             emergencyContact = new PatientModel();
         }
