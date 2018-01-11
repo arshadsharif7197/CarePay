@@ -154,7 +154,7 @@ public class StringUtil {
             zipCodeString.insert(5, "-");
         }
 
-        return zipCodeString.toString();
+        return zipCodeString.toString().trim();
     }
 
     /**
