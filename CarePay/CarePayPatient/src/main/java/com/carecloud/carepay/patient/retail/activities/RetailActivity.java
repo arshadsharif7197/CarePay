@@ -145,8 +145,8 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
-//        replaceFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount), true);
-        displayDialogFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount), true);
+        replaceFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount), true);
+//        displayDialogFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount), true);
     }
 
     @Override
@@ -160,8 +160,8 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
                 && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             DialogFragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel,
                     selectedPaymentMethod.getLabel(), amount);
-//            replaceFragment(fragment, true);
-            displayDialogFragment(fragment, true);
+            replaceFragment(fragment, true);
+//            displayDialogFragment(fragment, true);
         } else {
             showAddCard(amount, paymentsModel);
         }

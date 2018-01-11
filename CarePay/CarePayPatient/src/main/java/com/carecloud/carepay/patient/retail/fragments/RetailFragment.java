@@ -25,8 +25,11 @@ import com.carecloud.carepay.patient.retail.models.RetailPracticeDTO;
 import com.carecloud.carepay.patient.retail.models.sso.Person;
 import com.carecloud.carepay.patient.retail.models.sso.Profile;
 import com.carecloud.carepay.patient.retail.models.sso.SsoModel;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
@@ -39,6 +42,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -50,6 +55,9 @@ import javax.crypto.spec.SecretKeySpec;
 public class RetailFragment extends BaseFragment {
     private static final String KEY_SHOW_TOOLBAR = "show_toolbar";
     private static final String BASE_HTML = "<!DOCTYPE html><html><body>%s</body></html>";
+    public static final String BASE_URL = "/shop.html";
+    public static final String BASE_QUERY_STORE = "store";
+    public static final String BASE_QUERY_SSO = "sso";
 
     private static final String QUERY_ORDER = "transaction_id";
     private static final String QUERY_STORE = "store_id";
@@ -118,7 +126,7 @@ public class RetailFragment extends BaseFragment {
     @SuppressLint("SetJavaScriptEnabled")
     public void onViewCreated(View view, Bundle icicle){
         initToolbar(view);
-        if(retailPractice != null) {
+        if(retailPractice != null && returnUrl == null) {
 
             shoppingWebView = (WebView) view.findViewById(R.id.shoppingWebView);
             WebView.setWebContentsDebuggingEnabled(true);
@@ -138,18 +146,30 @@ public class RetailFragment extends BaseFragment {
 //            shoppingWebView.loadData(retailPractice.getStore().getStoreHtml(), "text/html", "utf-8");
 //            shoppingWebView.loadDataWithBaseURL(HttpConstants.getFormsUrl(), retailPractice.getStore().getStoreHtml(), "text/html", "utf-8", HttpConstants.getFormsUrl());
 
-            shoppingWebView.loadUrl("file://"+getHtmlFile(retailPractice.getStore().getStoreHtml()));
+//            shoppingWebView.loadUrl("file://"+getHtmlFile(retailPractice.getStore().getStoreHtml()));
 
+            loadRetailHome();
         }
         if(returnUrl != null){
-            shoppingWebView.restoreState(callback.getWebViewBundle());
-            shoppingWebView.loadUrl(returnUrl);
+            reloadSSO(returnUrl);
+//            shoppingWebView.restoreState(callback.getWebViewBundle());
+//            shoppingWebView.loadUrl(returnUrl);
+//            shoppingWebView.clearHistory();
             return;
         }
         if(loadedUrl != null){
-            shoppingWebView.restoreState(callback.getWebViewBundle());
-            shoppingWebView.loadUrl(loadedUrl);
+            reloadSSO(loadedUrl);
         }
+    }
+
+    private void loadRetailHome(){
+        Uri storeUrl = Uri.parse(HttpConstants.getFormsUrl()+BASE_URL);
+        storeUrl = storeUrl.buildUpon()
+                .appendQueryParameter(BASE_QUERY_STORE, retailPractice.getStore().getStoreId())
+                .appendQueryParameter(BASE_QUERY_SSO, retailPractice.getStore().getSso().getSSO())
+                .build();
+
+        shoppingWebView.loadUrl(storeUrl.toString());
     }
 
     /**
@@ -158,7 +178,6 @@ public class RetailFragment extends BaseFragment {
      */
     public void loadPaymentRedirectUrl(String returnUrl){
         this.returnUrl = returnUrl;
-        shoppingWebView.loadUrl(returnUrl);
     }
 
     private void initToolbar(View view){
@@ -239,10 +258,45 @@ public class RetailFragment extends BaseFragment {
 
     }
 
+    private void reloadSSO(String followUpUrl){
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_id", userPracticeDTO.getPracticeId());
+        queryMap.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
+        queryMap.put("store_only", "true");
+
+        TransitionDTO transitionDTO = retailModel.getMetadata().getLinks().getRetail();
+        getWorkflowServiceHelper().execute(transitionDTO, getRefreshSsoCallback(followUpUrl), queryMap);
+
+    }
+
+    private WorkflowServiceCallback getRefreshSsoCallback(final String followUpUrl) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                RetailModel retailModel = DtoHelper.getConvertedDTO(RetailModel.class, workflowDTO);
+                retailPractice = retailModel.getPayload().getRetailPracticeList().get(0);
+                loadRetailHome();
+                shoppingWebView.clearHistory();
+                shoppingWebView.loadUrl(followUpUrl);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+            }
+        };
+    }
 
 
     private class RetailViewClient extends WebViewClient {
         private boolean launchPayments = false;
+        private boolean loadReturnUrl = false;
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView webView, String url) {
@@ -284,10 +338,14 @@ public class RetailFragment extends BaseFragment {
                 Log.d("Retail WebView", loadedUrl);
             }else {
                 launchPayments = false;
-                webView.goBack();
             }
             if(url.equals(returnUrl)){
                 Log.d("Retail WebView", returnUrl);
+                loadReturnUrl = true;
+            }
+            if(loadReturnUrl){
+                webView.clearHistory();
+                loadReturnUrl = false;
             }
         }
     }
