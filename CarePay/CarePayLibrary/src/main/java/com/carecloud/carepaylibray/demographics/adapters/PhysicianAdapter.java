@@ -58,12 +58,12 @@ public class PhysicianAdapter extends RecyclerView.Adapter<PhysicianAdapter.View
             holder.physicianPhoneTextView.setText(StringUtil.formatPhoneNumber(physician.getAddress().getPhoneNumber()));
             String address = physician.getAddress().getAddress1();
             if (physician.getAddress().getAddress2() != null) {
-                address = " " + physician.getAddress().getAddress2();
+                address += " " + physician.getAddress().getAddress2();
             }
             holder.physicianAddressTextView.setText(address);
             holder.physicianZipCodeTextView.setText(StringUtil.formatZipCode(physician.getAddress().getZipcode()));
             holder.physicianCityTextView.setText(physician.getAddress().getCity()
-                    + " " + physician.getAddress().getState());
+                    + ", " + physician.getAddress().getState());
             if (physician.getAddress().getFaxNumber() != null) {
                 String fax = StringUtil.formatPhoneNumber(physician.getAddress().getFaxNumber()) + " (Fax)";
                 holder.physicianFaxTextView.setText(fax);
