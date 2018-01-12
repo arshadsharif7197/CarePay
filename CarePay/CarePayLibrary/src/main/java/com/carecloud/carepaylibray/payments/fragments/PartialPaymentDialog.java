@@ -37,6 +37,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by lmenendez on 2/28/17
@@ -54,6 +55,8 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private PaymentsModel paymentsDTO;
     private double minimumPayment;
     private PendingBalanceDTO selectedBalance;
+    protected NumberFormat currencyFormat;
+
 
     private double insuranceCopay;
     private double patientBalance;
@@ -73,6 +76,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         this.context = context;
         this.paymentsDTO = paymentsDTO;
         this.selectedBalance = selectedBalance;
+        this.currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
 
         try {
             if (context instanceof PaymentViewHandler) {
@@ -112,7 +116,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         payPartialButton.setOnClickListener(this);
         payPartialButton.setEnabled(false);
 
-        String symbol = NumberFormat.getCurrencyInstance().getCurrency().getSymbol();
+        String symbol = currencyFormat.getCurrency().getSymbol();
         amountSymbol.setText(symbol);
 
         View closeView = findViewById(com.carecloud.carepaylibrary.R.id.closeViewLayout);
@@ -126,7 +130,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         minimumPayment = getMinimumPayment(selectedBalance.getMetadata().getPracticeId());
         if(minimumPayment > 0){
             TextView header = (TextView) findViewById(R.id.partialPaymentHeader);
-            String headerText = Label.getLabel("payment_partial_minimum_amount") + NumberFormat.getCurrencyInstance().format(minimumPayment);
+            String headerText = Label.getLabel("payment_partial_minimum_amount") + currencyFormat.format(minimumPayment);
             header.setText(headerText);
         }
         SystemUtil.showSoftKeyboard(context);
@@ -142,13 +146,13 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         } else if (viewId == R.id.payPartialButton) {
             double amount = Double.parseDouble(amountText.getText().toString());
             if(amount > fullAmount){
-                String errorMessage = Label.getLabel("payment_partial_max_error") + NumberFormat.getCurrencyInstance().format(fullAmount);
+                String errorMessage = Label.getLabel("payment_partial_max_error") + currencyFormat.format(fullAmount);
                 CustomMessageToast toast = new CustomMessageToast(context, errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
                 toast.show();
                 return;
             }
             if(minimumPayment > 0 && amount < minimumPayment){
-                String errorMessage = Label.getLabel("payment_partial_minimum_error") + NumberFormat.getCurrencyInstance().format(minimumPayment);
+                String errorMessage = Label.getLabel("payment_partial_minimum_error") + currencyFormat.format(minimumPayment);
                 CustomMessageToast toast = new CustomMessageToast(context, errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
                 toast.show();
                 return;
