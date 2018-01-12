@@ -72,8 +72,10 @@ public class InsuranceLineItemsListAdapter extends
                 holder.type.setText(Label.getLabel("demographics_insurance_primary_type"));
             } else if (lineItem.getInsuranceType().toLowerCase().equals("secondary")) {
                 holder.type.setText(Label.getLabel("demographics_insurance_secondary_type"));
-            } else {
+            } else if (lineItem.getInsuranceType().toLowerCase().equals("tertiary")) {
                 holder.type.setText(Label.getLabel("demographics_insurance_tertiary_type"));
+            } else if (lineItem.getInsuranceType().toLowerCase().equals("quaternary")){
+                holder.type.setText(Label.getLabel("demographics_insurance_quarternary_type"));
             }
         } else {
             if (lineItem.getInsurancePhotos().size() == 0) {
