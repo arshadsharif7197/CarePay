@@ -29,8 +29,6 @@ import java.util.Map;
 
 public class DemographicsAllSetFragment extends CheckInDemographicsBaseFragment {
 
-    private DemographicDTO demographicDTO;
-
     private WorkflowServiceCallback confirmDemWorkflowCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -106,10 +104,5 @@ public class DemographicsAllSetFragment extends CheckInDemographicsBaseFragment 
         TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getConfirmDemographics();
 
         getWorkflowServiceHelper().execute(transitionDTO, confirmDemWorkflowCallback, body, queries, getWorkflowServiceHelper().getPreferredLanguageHeader());
-    }
-
-    @Override
-    public DTO getDto() {
-        return demographicDTO;
     }
 }
