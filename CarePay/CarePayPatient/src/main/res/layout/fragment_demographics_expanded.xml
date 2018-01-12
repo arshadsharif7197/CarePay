@@ -44,6 +44,7 @@
         android:background="@drawable/settings_button_selector"
         android:gravity="center"
         android:textColor="@color/white"
-        breeze:textKey="profile_save_button_label"
-        tools:text="Save Changes" />
+        breeze:textKey="demographics.additionalDemographics.button.label.saveChanges"
+        tools:text="Save Additional Demographics" />
+
 </LinearLayout>
