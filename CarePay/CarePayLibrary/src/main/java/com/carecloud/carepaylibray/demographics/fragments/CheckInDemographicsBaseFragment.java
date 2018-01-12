@@ -655,6 +655,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                 inputLayout.setErrorEnabled(true);
             }
             if (shouldRequestFocus) {
+                inputLayout.clearFocus();
                 inputLayout.requestFocus();
             }
         }
