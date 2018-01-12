@@ -177,16 +177,17 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
                 }
                 if (insurance.getInsurancePhotos().size() == 0) {
                     showAlert = true;
-                }else if(!hasOnePhoto){
+                } else if (!hasOnePhoto) {
                     hasOnePhoto = true;
                 }
             }
-            if (!demographicDTO.getPayload().getDemographics().getPayload().getInsurances().isEmpty()
-                    && !isThereAnyPrimaryInsurance) {
-                noPrimaryInsuranceFound = true;
-                showAlert = true;
-            }
         }
+        if (!demographicDTO.getPayload().getDemographics().getPayload().getInsurances().isEmpty()
+                && !isThereAnyPrimaryInsurance) {
+            noPrimaryInsuranceFound = true;
+            showAlert = true;
+        }
+
 
         MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_has_identity_doc), hasOnePhoto);
 
