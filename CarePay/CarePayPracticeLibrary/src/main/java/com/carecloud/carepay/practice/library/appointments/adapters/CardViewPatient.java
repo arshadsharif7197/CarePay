@@ -11,6 +11,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.text.NumberFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by cocampo on 3/17/17
@@ -111,7 +112,7 @@ public class CardViewPatient {
     }
 
     private String getFormattedBalance(Double balance) {
-        NumberFormat numForm = NumberFormat.getCurrencyInstance();
+        NumberFormat numForm = NumberFormat.getCurrencyInstance(Locale.US);
 
         return numForm.format(balance == null ? 0 : balance);
     }

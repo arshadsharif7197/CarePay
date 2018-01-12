@@ -23,6 +23,7 @@ import static com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentM
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by lmenendez on 9/28/17
@@ -38,7 +39,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
     private Context context;
     private List<PaymentHistoryItem> paymentHistoryItems = new ArrayList<>();
     private HistoryItemClickListener callback;
-    private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+    private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
     private boolean isLoading = false;
     boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
 

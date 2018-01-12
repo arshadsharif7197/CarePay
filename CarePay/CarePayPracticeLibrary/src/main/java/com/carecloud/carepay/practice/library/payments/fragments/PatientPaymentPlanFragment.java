@@ -44,6 +44,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class PatientPaymentPlanFragment extends BaseCheckinFragment {
@@ -380,7 +381,7 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
 
                     String cleanString = charSequence.toString().replaceAll("[$,.]", "");
                     double parsed = Double.parseDouble(cleanString);
-                    String formatted = NumberFormat.getCurrencyInstance().format((parsed / 100));
+                    String formatted = NumberFormat.getCurrencyInstance(Locale.US).format((parsed / 100));
 
                     current = formatted;
                     paymentPlanMonthlyPayment.setText(formatted);
