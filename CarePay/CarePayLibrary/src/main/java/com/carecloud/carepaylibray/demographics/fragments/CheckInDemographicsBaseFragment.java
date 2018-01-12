@@ -490,7 +490,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     protected void setDefaultError(TextInputLayout inputLayout, boolean shouldRequestFocus) {
         setFieldError(inputLayout, Label.getLabel("demographics_required_validation_msg"), shouldRequestFocus);
-        inputLayout.requestFocus();
     }
 
     protected void unsetFieldError(View baseView, int id) {
@@ -544,11 +543,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                         if (!dontNeedScroll) {
                             scrollView.scrollBy(0, rect.top);
                         }
-//                        if (rect.top > 0) {
-//                            scrollView.scrollBy(0, rect.top - scrollView.getTop());
-//                        } else {
-//                            scrollView.scrollBy(0, rect.top);
-//                        }
                     } else {
                         if (tag.equals(TAG_ERROR_SHOW_GONE)) {
                             view.setVisibility(View.GONE);
@@ -647,7 +641,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     protected void setDefaultError(View baseView, int id, boolean shouldRequestFocus) {
         setFieldError(baseView, id, Label.getLabel("demographics_required_validation_msg"), shouldRequestFocus);
-//        baseView.requestFocus();
     }
 
     protected void setFieldError(View baseView, int id, String error, boolean shouldRequestFocus) {

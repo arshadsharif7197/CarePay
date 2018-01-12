@@ -20,11 +20,25 @@
 
     </FrameLayout>
 
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        android:id="@+id/save_insurance_changes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/button_selector_always_click"
+        android:enabled="true"
+        android:paddingBottom="@dimen/dimen_14dp"
+        android:paddingTop="@dimen/dimen_14dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_13"
+        app:customAssetFont="gotham_rounded_medium"
+        breeze:textKey="demographics_save_changes_button" />
 
     <ScrollView
         android:id="@+id/demographicsScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@id/save_insurance_changes"
         android:layout_below="@id/insurance_toolbar"
         android:background="@color/white"
         android:paddingEnd="@dimen/dimen_24dp"
@@ -41,41 +55,19 @@
                 android:id="@+id/container_main"
                 layout="@layout/add_edit_insurance_view" />
 
-            <LinearLayout
-                android:id="@+id/dialog_add_edit_insurance_bottom_toolbar"
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/remove_insurance_entry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                    android:id="@+id/remove_insurance_entry"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dimen_10dp"
-                    android:layout_marginTop="@dimen/dimen_10dp"
-                    android:background="@drawable/button_red_border"
-                    android:paddingBottom="@dimen/dimen_14dp"
-                    android:paddingTop="@dimen/dimen_14dp"
-                    android:textColor="@color/harvard_crimson"
-                    android:textSize="@dimen/text_size_13"
-                    app:customAssetFont="gotham_rounded_medium"
-                    breeze:textKey="demographics_documents_remove" />
-
-                <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                    android:id="@+id/save_insurance_changes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dimen_10dp"
-                    android:layout_marginTop="@dimen/dimen_10dp"
-                    android:background="@drawable/button_selector_always_click"
-                    android:enabled="true"
-                    android:paddingBottom="@dimen/dimen_14dp"
-                    android:paddingTop="@dimen/dimen_14dp"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_13"
-                    app:customAssetFont="gotham_rounded_medium"
-                    breeze:textKey="demographics_save_changes_button" />
-            </LinearLayout>
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:background="@drawable/button_red_border"
+                android:paddingBottom="@dimen/dimen_14dp"
+                android:paddingTop="@dimen/dimen_14dp"
+                android:textColor="@color/harvard_crimson"
+                android:textSize="@dimen/text_size_13"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="demographics_documents_remove" />
 
         </LinearLayout>
     </ScrollView>

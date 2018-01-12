@@ -133,7 +133,6 @@
                     android:gravity="start"
                     android:padding="@dimen/dimen_10dp"
                     android:text="@string/language_textview"
-                    android:visibility="gone"
                     app:customAssetFont="proxima_nova_semi_bold"
                     breeze:textKey="change_language_link" />
 
