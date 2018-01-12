@@ -18,6 +18,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
@@ -105,5 +106,10 @@ public class DemographicsAllSetFragment extends CheckInDemographicsBaseFragment 
         TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getConfirmDemographics();
 
         getWorkflowServiceHelper().execute(transitionDTO, confirmDemWorkflowCallback, body, queries, getWorkflowServiceHelper().getPreferredLanguageHeader());
+    }
+
+    @Override
+    public DTO getDto() {
+        return demographicDTO;
     }
 }

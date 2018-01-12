@@ -144,18 +144,26 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             @Override
             public void onLanguageSelected(OptionDTO language) {
                 languageContainer.setVisibility(View.GONE);
-                if (presenter.getCurrentStep() < 6) {
-                    changeLanguage(presenter.getLanguageLink(), language.getCode().toLowerCase(), headers);
-                } else {
-                    changeLanguage(presenter.getLanguageLink(), language.getCode().toLowerCase(), headers,
-                            new SimpleCallback() {
-                                @Override
-                                public void callback() {
-                                    presenter.changeLanguage();
-                                    changeMenuLanguage();
-                                }
-                            });
-                }
+//                if (presenter.getCurrentStep() < 6) {
+//                    changeLanguage(presenter.getLanguageLink(), language.getCode().toLowerCase(), headers);
+//                } else {
+//                    changeLanguage(presenter.getLanguageLink(), language.getCode().toLowerCase(), headers,
+//                            new SimpleCallback() {
+//                                @Override
+//                                public void callback() {
+//                                    presenter.changeLanguage();
+//                                    changeMenuLanguage();
+//                                }
+//                            });
+//                }
+                changeLanguage(presenter.getLanguageLink(), language.getCode().toLowerCase(), headers,
+                        new SimpleCallback() {
+                            @Override
+                            public void callback() {
+                                presenter.changeLanguage();
+                                changeMenuLanguage();
+                            }
+                        });
             }
         });
     }

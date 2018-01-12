@@ -51,7 +51,6 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         implements EmergencyContactFragmentInterface, PhysicianFragmentInterface {
 
     private DemographicDataModel dataModel;
-    private DemographicDTO demographicDTO;
 
     private DemographicExtendedInterface callback;
     private PatientModel demographicPersDetailsPayloadDTO;

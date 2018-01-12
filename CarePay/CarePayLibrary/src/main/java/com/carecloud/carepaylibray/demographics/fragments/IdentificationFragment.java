@@ -34,7 +34,6 @@ import java.util.List;
 
 public class IdentificationFragment extends CheckInDemographicsBaseFragment implements MediaViewInterface {
 
-    private DemographicDTO demographicDTO;
     private MediaScannerPresenter mediaScannerPresenter;
     private DocumentScannerAdapter documentScannerAdapter;
 

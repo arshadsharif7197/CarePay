@@ -36,7 +36,6 @@ import com.smartystreets.api.us_zipcode.City;
  */
 public class AddressFragment extends CheckInDemographicsBaseFragment {
 
-    private DemographicDTO demographicDTO;
     private DemographicDataModel dataModel;
     private DemographicAddressPayloadDTO demographicAddressPayloadDTO;
     private EditText cityEditText;
