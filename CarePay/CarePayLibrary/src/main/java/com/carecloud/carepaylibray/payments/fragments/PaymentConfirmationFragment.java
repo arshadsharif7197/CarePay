@@ -24,6 +24,7 @@ import static com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentM
 import static com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod.PAYMENT_METHOD_NEW_CARD;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  * Created by lmenendez on 3/24/17
@@ -74,7 +75,7 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
             paymentsModel = gson.fromJson(paymentPayload, PaymentsModel.class);
             patientPaymentPayload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
         }
-        currencyFormatter = NumberFormat.getCurrencyInstance();
+        currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
     }
 
     @Override

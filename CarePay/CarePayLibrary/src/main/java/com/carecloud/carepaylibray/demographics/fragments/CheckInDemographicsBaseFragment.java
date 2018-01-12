@@ -58,11 +58,11 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     public static final String PREVENT_NAV_BACK = "prevent_nav_back";
 
+    protected DemographicDTO demographicDTO;
     StepProgressBar stepProgressBar;
     boolean preventNavBack = false;
     private boolean userAction = false;
     private ScrollView scrollView;
-
     protected CheckinFlowCallback checkinFlowCallback;
 
     private WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
@@ -490,7 +490,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     protected void setDefaultError(TextInputLayout inputLayout, boolean shouldRequestFocus) {
         setFieldError(inputLayout, Label.getLabel("demographics_required_validation_msg"), shouldRequestFocus);
-        inputLayout.requestFocus();
     }
 
     protected void unsetFieldError(View baseView, int id) {
@@ -544,11 +543,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                         if (!dontNeedScroll) {
                             scrollView.scrollBy(0, rect.top);
                         }
-//                        if (rect.top > 0) {
-//                            scrollView.scrollBy(0, rect.top - scrollView.getTop());
-//                        } else {
-//                            scrollView.scrollBy(0, rect.top);
-//                        }
                     } else {
                         if (tag.equals(TAG_ERROR_SHOW_GONE)) {
                             view.setVisibility(View.GONE);
@@ -647,7 +641,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     protected void setDefaultError(View baseView, int id, boolean shouldRequestFocus) {
         setFieldError(baseView, id, Label.getLabel("demographics_required_validation_msg"), shouldRequestFocus);
-//        baseView.requestFocus();
     }
 
     protected void setFieldError(View baseView, int id, String error, boolean shouldRequestFocus) {
@@ -662,6 +655,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                 inputLayout.setErrorEnabled(true);
             }
             if (shouldRequestFocus) {
+                inputLayout.clearFocus();
                 inputLayout.requestFocus();
             }
         }
@@ -669,6 +663,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     @Override
     public DTO getDto() {
-        return null;
+        return demographicDTO;
     }
 }

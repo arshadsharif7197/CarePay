@@ -56,9 +56,8 @@ import java.io.IOException;
 
 public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implements MediaViewInterface {
 
-    private DemographicDTO demographicDTO;
-    private DemographicDataModel dataModel;
 
+    private DemographicDataModel dataModel;
     private Button buttonChangeCurrentPhoto;
     boolean hasNewImage = false;
     private MediaScannerPresenter mediaScannerPresenter;

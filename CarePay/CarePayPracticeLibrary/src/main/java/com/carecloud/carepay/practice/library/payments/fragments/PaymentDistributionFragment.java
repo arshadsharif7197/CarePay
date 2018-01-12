@@ -45,6 +45,7 @@ import com.google.gson.Gson;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by lmenendez on 3/14/17
@@ -106,7 +107,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     @Override
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
-        currencyFormatter = NumberFormat.getCurrencyInstance();
+        currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
         Bundle args = getArguments();
         if(args!=null){

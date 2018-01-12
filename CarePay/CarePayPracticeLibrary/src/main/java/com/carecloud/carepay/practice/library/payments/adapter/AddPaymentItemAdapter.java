@@ -14,6 +14,7 @@ import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by lmenendez on 3/16/17.
@@ -47,7 +48,7 @@ public class AddPaymentItemAdapter extends RecyclerView.Adapter<AddPaymentItemAd
         this.templateItems = templateItems;
         this.simpleChargeItems = simpleChargeItems;
         this.callback = callback;
-        this.currencyFormatter = NumberFormat.getCurrencyInstance();
+        this.currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
     }
 
     @Override

@@ -16,6 +16,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLi
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by lmenendez on 9/28/17
@@ -24,7 +25,7 @@ import java.util.List;
 public class PaymentHistoryDetailAdapter extends RecyclerView.Adapter<PaymentHistoryDetailAdapter.ViewHolder> {
     private Context context;
     private List<PaymentHistoryLineItem> lineItems = new ArrayList<>();
-    private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+    private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
     /**
      * Constructor

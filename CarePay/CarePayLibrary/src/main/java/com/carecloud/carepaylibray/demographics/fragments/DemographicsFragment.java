@@ -51,7 +51,6 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         implements EmergencyContactFragmentInterface, PhysicianFragmentInterface {
 
     private DemographicDataModel dataModel;
-    private DemographicDTO demographicDTO;
 
     private DemographicExtendedInterface callback;
     private PatientModel demographicPersDetailsPayloadDTO;
@@ -476,6 +475,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         employerAddressEditText2.getOnFocusChangeListener()
                 .onFocusChange(employerAddressEditText2, !StringUtil.isNullOrEmpty(employerAddressEditText2
                         .getText().toString()));
+        employerAddressEditText2.addTextChangedListener(getOptionalViewTextWatcher(view
+                .findViewById(R.id.demogrAddressOptionalLabel)));
 
         zipCodeTextInputLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
         zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeTextView);
@@ -490,8 +491,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
         cityTextInputLayout = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
         cityEditText = (EditText) view.findViewById(R.id.cityTextView);
-        cityEditText.setOnFocusChangeListener(SystemUtil
-                .getHintFocusChangeListener(cityTextInputLayout, null));
+        cityEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(cityTextInputLayout, null));
         cityEditText.setText(StringUtil.captialize(selectedEmployer.getAddress().getCity()).trim());
         cityEditText.getOnFocusChangeListener()
                 .onFocusChange(cityEditText, !StringUtil.isNullOrEmpty(cityEditText.getText().toString()));
@@ -799,7 +799,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
                 if (!StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString().trim()) &&
                         !ValidationHelper.isValidString(zipCodeEditText.getText().toString().trim(),
                                 ValidationHelper.ZIP_CODE_PATTERN)) {
-                    if(isUserAction()){
+                    if (isUserAction()) {
                         showErrorViews(true, (ViewGroup) view.findViewById(R.id.zipCodeContainer));
                     }
                     setFieldError(zipCodeTextInputLayout, Label.getLabel("demographics_zip_code_validation_msg"), isUserAction());
@@ -851,12 +851,11 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
 
 
             } else {
-                zipCodeTextInputLayout.setError(null);
-                zipCodeTextInputLayout.setErrorEnabled(false);
-                stateTextInputLayout.setError(null);
-                stateTextInputLayout.setErrorEnabled(false);
-                cityTextInputLayout.setError(null);
-                cityTextInputLayout.setErrorEnabled(false);
+                unsetFieldError(zipCodeTextInputLayout);
+                showErrorViews(false, (ViewGroup) view.findViewById(R.id.zipCodeContainer));
+                unsetFieldError(stateTextInputLayout);
+                unsetFieldError(cityTextInputLayout);
+                showErrorViews(false, (ViewGroup) view.findViewById(R.id.cityAndStateLayoutContainer));
             }
 
             if (dataModel.getDemographic().getEmploymentInfo().isRequired()

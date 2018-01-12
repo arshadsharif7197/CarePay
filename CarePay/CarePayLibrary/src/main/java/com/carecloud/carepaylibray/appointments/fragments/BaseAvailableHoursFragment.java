@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFragment implements FilterableAvailableHoursAdapter.SelectAppointmentTimeSlotCallback, AvailableLocationsAdapter.SelectLocationCallback {
@@ -192,7 +193,7 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
 
         TextView prepaymentMessage = (TextView) view.findViewById(R.id.prepaymentMessage);
         if(selectedVisitTypeDTO.getAmount() > 0) {
-            String message = Label.getLabel("appointments_prepayment_message") + NumberFormat.getCurrencyInstance().format(selectedVisitTypeDTO.getAmount());
+            String message = Label.getLabel("appointments_prepayment_message") + NumberFormat.getCurrencyInstance(Locale.US).format(selectedVisitTypeDTO.getAmount());
             prepaymentMessage.setText(message);
             prepaymentMessage.setVisibility(View.VISIBLE);
         }else{

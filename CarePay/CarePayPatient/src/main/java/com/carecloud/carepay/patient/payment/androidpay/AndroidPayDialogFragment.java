@@ -49,6 +49,7 @@ import com.newrelic.agent.android.NewRelic;
 
 import java.text.NumberFormat;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -178,7 +179,7 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
         buttonConfirm = view.findViewById(R.id.button_place_order);
 
         TextView textView = (TextView) view.findViewById(R.id.paymentAmount);
-        textView.setText(NumberFormat.getCurrencyInstance().format(paymentAmount));
+        textView.setText(NumberFormat.getCurrencyInstance(Locale.US).format(paymentAmount));
 
 //        initChildFragments();
         getPapiAccount();

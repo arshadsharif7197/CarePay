@@ -23,6 +23,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by pjohnson on 23/03/17
@@ -78,7 +79,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
         minimumPayment = getMinimumPayment();
         if(minimumPayment > 0){
             TextView header = (TextView) view.findViewById(R.id.partialPaymentHeader);
-            String headerText = Label.getLabel("payment_partial_minimum_amount") + NumberFormat.getCurrencyInstance().format(minimumPayment);
+            String headerText = Label.getLabel("payment_partial_minimum_amount") + NumberFormat.getCurrencyInstance(Locale.US).format(minimumPayment);
             header.setText(headerText);
         }
     }
@@ -95,13 +96,13 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
         if ((view.getId() == R.id.enter_amount_button) && !StringUtil.isNullOrEmpty(numberStr)) {
             double amount = Double.parseDouble(numberStr);
             if(amount > fullAmount){
-                String errorMessage = Label.getLabel("payment_partial_max_error") + NumberFormat.getCurrencyInstance().format(fullAmount);
+                String errorMessage = Label.getLabel("payment_partial_max_error") + NumberFormat.getCurrencyInstance(Locale.US).format(fullAmount);
                 CustomMessageToast toast = new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
                 toast.show();
                 return;
             }
             if(minimumPayment > 0 && amount < minimumPayment){
-                String errorMessage = Label.getLabel("payment_partial_minimum_error") + NumberFormat.getCurrencyInstance().format(minimumPayment);
+                String errorMessage = Label.getLabel("payment_partial_minimum_error") + NumberFormat.getCurrencyInstance(Locale.US).format(minimumPayment);
                 CustomMessageToast toast = new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
                 toast.show();
                 return;
