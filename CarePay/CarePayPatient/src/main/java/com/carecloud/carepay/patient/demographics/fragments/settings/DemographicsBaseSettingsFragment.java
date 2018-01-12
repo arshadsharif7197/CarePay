@@ -409,4 +409,9 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
 
     }
 
+    protected void unsetError(TextInputLayout inputLayout){
+        inputLayout.setError(null);
+        inputLayout.setErrorEnabled(false);
+    }
+
 }

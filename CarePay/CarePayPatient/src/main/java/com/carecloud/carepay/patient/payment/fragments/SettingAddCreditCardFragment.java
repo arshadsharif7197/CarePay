@@ -43,7 +43,6 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
         }
     }
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,14 +59,13 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
     @Override
     public void onViewCreated(View view, Bundle icicle) {
         title.setText(Label.getLabel("new_credit_card_heading"));
-        nextButton.setText(Label.getLabel("credit_card_add_new"));
+        nextButton.setText(Label.getLabel("settings.addCreditCard.button.label.addNew"));
         nextButton.setBackgroundResource(R.drawable.bg_green_selector);
         saveCardOnFileCheckBox.setChecked(true);
         saveCardOnFileCheckBox.setEnabled(false);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
     }
-
 
     private WorkflowServiceCallback addNewCreditCardCallback = new WorkflowServiceCallback() {
         @Override

@@ -16,122 +16,131 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight=".4">
+            android:layout_weight=".4"
+            android:background="@color/left_panel_color"
+            android:paddingStart="30dp">
+
+            <ImageView
+                android:id="@+id/checkinLogo"
+                android:layout_width="@dimen/home_logo_width"
+                android:layout_height="@dimen/checkin_logo_height"
+                android:layout_marginTop="@dimen/dimen_25dp"
+                android:contentDescription="@string/home_logo"
+                android:src="?practiceLogoDrawable" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/checkInLeftNavigationTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/checkinLogo"
+                android:layout_marginTop="110dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_30sp"
+                app:customAssetFont="gotham_rounded_bold"
+                breeze:textKey="practice_checkin_header_label"
+                tools:text="Let's get you checked in!" />
+
+            <View
+                android:id="@+id/separator"
+                android:layout_width="@dimen/checkin_separator_width"
+                android:layout_height="@dimen/dimen_1dp"
+                android:layout_below="@id/checkInLeftNavigationTitle"
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:background="@color/gray_white" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/left_panel_color"
-                android:orientation="vertical"
-                android:paddingEnd="@dimen/dimen_5dp"
-                android:paddingStart="@dimen/checkin_main_panel_start_padding">
+                android:layout_height="wrap_content"
+                android:layout_below="@id/separator"
+                android:orientation="vertical">
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="6" />
+                <include
+                    android:id="@+id/checkin_flow_demographics"
+                    layout="@layout/item_checkin_flow" />
+
+                <include
+                    android:id="@+id/checkin_flow_consent"
+                    layout="@layout/item_checkin_flow" />
+
+                <include
+                    android:id="@+id/checkin_flow_medications"
+                    layout="@layout/item_checkin_flow" />
+
+                <include
+                    android:id="@+id/checkin_flow_intake"
+                    layout="@layout/item_checkin_flow" />
+
+                <include
+                    android:id="@+id/checkin_flow_payment"
+                    layout="@layout/item_checkin_flow" />
+
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/optionsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/dimen_25dp">
 
                 <ImageView
-                    android:id="@+id/checkinLogo"
-                    android:layout_width="@dimen/home_logo_width"
-                    android:layout_height="@dimen/checkin_logo_height"
-                    android:contentDescription="@string/home_logo"
-                    android:src="?practiceLogoDrawable" />
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="24" />
-
-                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                    android:id="@+id/checkInLeftNavigationTitle"
+                    android:id="@+id/checkinHomeClickable"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_30sp"
-                    app:customAssetFont="gotham_rounded_bold"
-                    breeze:textKey="practice_checkin_header_label"
-                    tools:text="Let's get you checked in!" />
+                    android:layout_centerVertical="true"
+                    android:clickable="true"
+                    android:contentDescription="@string/content_description_check_in_home"
+                    android:src="@drawable/checkin_ic_icn_home" />
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="4" />
-
-                <View
-                    android:layout_width="@dimen/checkin_separator_width"
-                    android:layout_height="@dimen/dimen_1dp"
-                    android:background="@color/gray_white" />
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="6" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/languageSpinner"
+                    android:layout_width="@dimen/home_spinner_width"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/dimen_20dp"
+                    android:layout_toEndOf="@id/checkinHomeClickable"
+                    android:background="@drawable/bg_blue_overlay"
+                    android:drawableEnd="@drawable/icn_down_white"
+                    android:paddingEnd="@dimen/home_spinner_padding_righ_left"
+                    android:paddingStart="@dimen/home_spinner_padding_righ_left"
+                    android:popupBackground="@drawable/bottom_rounded_white"
+                    android:spinnerMode="dropdown"
+                    android:textColor="@color/white"
+                    app:customAssetFont="gotham_rounded_medium"
+                    tools:text="EN" />
 
-                    <include
-                        android:id="@+id/checkin_flow_demographics"
-                        layout="@layout/item_checkin_flow" />
+            </RelativeLayout>
 
-                    <include
-                        android:id="@+id/checkin_flow_consent"
-                        layout="@layout/item_checkin_flow" />
-
-                    <include
-                        android:id="@+id/checkin_flow_medications"
-                        layout="@layout/item_checkin_flow" />
-
-                    <include
-                        android:id="@+id/checkin_flow_intake"
-                        layout="@layout/item_checkin_flow" />
-
-                    <include
-                        android:id="@+id/checkin_flow_payment"
-                        layout="@layout/item_checkin_flow" />
-
-
-                </LinearLayout>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="54" />
+            <FrameLayout
+                android:id="@+id/languageContainer"
+                android:layout_width="@dimen/dimen_180dp"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/optionsLayout"
+                android:animateLayoutChanges="true"
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_15dp"
+                    android:background="@drawable/bottom_rounded_white"
+                    android:minHeight="@dimen/dimen_60dp">
 
-                    <ImageView
-                        android:id="@+id/checkinHomeClickable"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:clickable="true"
-                        android:contentDescription="@string/content_description_check_in_home"
-                        android:src="@drawable/checkin_ic_icn_home" />
-
-                    <Spinner
-                        android:id="@+id/languageSpinner"
-                        android:layout_width="@dimen/home_spinner_width"
-                        android:layout_height="@dimen/home_spinner_height"
-                        android:layout_marginStart="@dimen/dimen_20dp"
-                        android:layout_toEndOf="@id/checkinHomeClickable"
-                        android:background="@drawable/bg_blue_overlay"
-                        android:paddingEnd="@dimen/home_spinner_padding_righ_left"
-                        android:paddingStart="@dimen/home_spinner_padding_righ_left"
-                        android:visibility="gone" />
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/languageList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
                 </RelativeLayout>
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="6" />
-            </LinearLayout>
+                <ImageView
+                    android:layout_width="@dimen/dimen_25dp"
+                    android:layout_height="@dimen/dimen_25dp"
+                    android:layout_gravity="center|bottom"
+                    android:src="@drawable/sort_down" />
+            </FrameLayout>
 
             <ImageView
                 android:layout_width="wrap_content"
