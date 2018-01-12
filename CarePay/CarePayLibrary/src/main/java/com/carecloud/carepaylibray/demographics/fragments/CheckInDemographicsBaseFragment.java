@@ -58,11 +58,11 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     public static final String PREVENT_NAV_BACK = "prevent_nav_back";
 
+    protected DemographicDTO demographicDTO;
     StepProgressBar stepProgressBar;
     boolean preventNavBack = false;
     private boolean userAction = false;
     private ScrollView scrollView;
-
     protected CheckinFlowCallback checkinFlowCallback;
 
     private WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
@@ -292,8 +292,11 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     protected TextWatcher getValidateEmptyTextWatcher(final TextInputLayout inputLayout) {
         return new TextWatcher() {
+            public int count;
+
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+                this.count = sequence.length();
             }
 
             @Override
@@ -306,7 +309,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                 if (StringUtil.isNullOrEmpty(editable.toString())) {
                     inputLayout.setErrorEnabled(true);
                     inputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
-                } else {
+                } else if (count == 0) {
                     inputLayout.setError(null);
                     inputLayout.setErrorEnabled(false);
                 }
@@ -340,9 +343,11 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     protected TextWatcher clearValidationErrorsOnTextChange(final TextInputLayout inputLayout) {
         return new TextWatcher() {
+            public int count;
+
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
-
+                this.count = sequence.length();
             }
 
             @Override
@@ -352,7 +357,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (!StringUtil.isNullOrEmpty(editable.toString())) {
+                if (!StringUtil.isNullOrEmpty(editable.toString()) && count == 0) {
                     inputLayout.setError(null);
                     inputLayout.setErrorEnabled(false);
                 }
@@ -483,31 +488,8 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         this.userAction = userAction;
     }
 
-    protected void setDefaultError(View baseView, int id, boolean shouldRequestFocus) {
-        setFieldError(baseView, id, Label.getLabel("demographics_required_validation_msg"), shouldRequestFocus);
-//        baseView.requestFocus();
-    }
-
-    protected void setFieldError(View baseView, int id, String error, boolean shouldRequestFocus) {
-        TextInputLayout inputLayout = (TextInputLayout) baseView.findViewById(id);
-        setFieldError(inputLayout, error, shouldRequestFocus);
-    }
-
     protected void setDefaultError(TextInputLayout inputLayout, boolean shouldRequestFocus) {
         setFieldError(inputLayout, Label.getLabel("demographics_required_validation_msg"), shouldRequestFocus);
-        inputLayout.requestFocus();
-    }
-
-    protected void setFieldError(TextInputLayout inputLayout, String error, boolean shouldRequestFocus) {
-        if (inputLayout != null) {
-            if (!inputLayout.isErrorEnabled()) {
-                inputLayout.setErrorEnabled(true);
-                inputLayout.setError(error);
-            }
-            if (shouldRequestFocus) {
-                inputLayout.requestFocus();
-            }
-        }
     }
 
     protected void unsetFieldError(View baseView, int id) {
@@ -557,10 +539,8 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                             }
                         }
                         Rect rect = new Rect();
-                        view.getGlobalVisibleRect(rect);
-                        if (rect.top > 0) {
-                            scrollView.scrollBy(0, rect.top - scrollView.getTop());
-                        } else {
+                        boolean dontNeedScroll = view.getGlobalVisibleRect(rect);
+                        if (!dontNeedScroll) {
                             scrollView.scrollBy(0, rect.top);
                         }
                     } else {
@@ -632,7 +612,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                               String value, boolean isRequired, View optionalView) {
         editText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(textInputLayout, null));
         setVisibility(textInputLayout, isVisible);
-        editText.setText(StringUtil.captialize(value));
+        editText.setText(StringUtil.captialize(value).trim());
         editText.getOnFocusChangeListener().onFocusChange(editText,
                 !StringUtil.isNullOrEmpty(editText.getText().toString().trim()));
         if (isRequired) {
@@ -659,8 +639,30 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         return false;
     }
 
+    protected void setDefaultError(View baseView, int id, boolean shouldRequestFocus) {
+        setFieldError(baseView, id, Label.getLabel("demographics_required_validation_msg"), shouldRequestFocus);
+    }
+
+    protected void setFieldError(View baseView, int id, String error, boolean shouldRequestFocus) {
+        TextInputLayout inputLayout = (TextInputLayout) baseView.findViewById(id);
+        setFieldError(inputLayout, error, shouldRequestFocus);
+    }
+
+    protected void setFieldError(TextInputLayout inputLayout, String error, boolean shouldRequestFocus) {
+        if (inputLayout != null) {
+            if (!inputLayout.isErrorEnabled()) {
+                inputLayout.setError(error);
+                inputLayout.setErrorEnabled(true);
+            }
+            if (shouldRequestFocus) {
+                inputLayout.clearFocus();
+                inputLayout.requestFocus();
+            }
+        }
+    }
+
     @Override
     public DTO getDto() {
-        return null;
+        return demographicDTO;
     }
 }

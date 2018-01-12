@@ -56,9 +56,8 @@ import java.io.IOException;
 
 public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implements MediaViewInterface {
 
-    private DemographicDTO demographicDTO;
-    private DemographicDataModel dataModel;
 
+    private DemographicDataModel dataModel;
     private Button buttonChangeCurrentPhoto;
     boolean hasNewImage = false;
     private MediaScannerPresenter mediaScannerPresenter;
@@ -220,6 +219,8 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
                     }
                     return false;
                 }
+            } else {
+                unsetFieldError(dateBirthLayout);
             }
 
             String phoneValue = ((EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit)).getText().toString();
@@ -237,6 +238,8 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.phoneNumberContainer));
                 }
                 return false;
+            } else {
+                unsetFieldError(phoneLayout);
             }
 
             return true;
