@@ -262,6 +262,8 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         addressEditText2.setText(emergencyContact.getAddress().getAddress2());
         addressEditText2.getOnFocusChangeListener().onFocusChange(addressEditText2,
                 !StringUtil.isNullOrEmpty(addressEditText2.getText().toString().trim()));
+        addressEditText2.addTextChangedListener(getValidateOptionalEmptyTextWatcher(view
+                .findViewById(R.id.demogrAddressOptionalLabel)));
 
         zipCodeTextInputLayout = (TextInputLayout) view
                 .findViewById(R.id.zipCodeTextInputLayout);
@@ -387,8 +389,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                     addressEditText2.setText("");
                     addressEditText2.getOnFocusChangeListener().onFocusChange(addressEditText2,
                             !StringUtil.isNullOrEmpty(addressEditText2.getText().toString()));
-                    zipCodeTextInputLayout.setErrorEnabled(false);
-                    zipCodeTextInputLayout.setError(null);
+                    unsetFieldError(zipCodeTextInputLayout);
                     cityTextInputLayout.setErrorEnabled(false);
                     cityTextInputLayout.setError(null);
                     stateTextInputLayout.setErrorEnabled(false);
@@ -739,8 +740,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                             !StringUtil.isNullOrEmpty(stateEditText.getText().toString().trim()));
                     cityEditText.getOnFocusChangeListener().onFocusChange(cityEditText,
                             !StringUtil.isNullOrEmpty(cityEditText.getText().toString().trim()));
-                    zipCodeTextInputLayout.setError(null);
-                    zipCodeTextInputLayout.setErrorEnabled(false);
+                    unsetFieldError(zipCodeTextInputLayout);
                     checkIfEnableButton(false);
                 }
             }
@@ -951,14 +951,14 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         setError(textInputLayout, Label.getLabel("demographics_required_validation_msg"), true);
     }
 
-    private void setError(TextInputLayout textInputLayout, String errorMessage, boolean requestFocus) {
-        if (!textInputLayout.isErrorEnabled()) {
-            textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(errorMessage);
+    private void setError(TextInputLayout inputLayout, String errorMessage, boolean requestFocus) {
+        if (!inputLayout.isErrorEnabled()) {
+            inputLayout.setError(errorMessage);
+            inputLayout.setErrorEnabled(true);
         }
         if (requestFocus) {
-            textInputLayout.requestFocus();
-            parentScrollView.scrollTo(0, (int) textInputLayout.getY());
+            inputLayout.clearFocus();
+            inputLayout.requestFocus();
         }
     }
 
