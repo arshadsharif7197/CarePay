@@ -59,13 +59,12 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
         Fragment fragment;
         if(retailModel.getPayload().getRetailPracticeList().size() == 1) {
             selectedPractice = retailModel.getPayload().getRetailPracticeList().get(0);
-            retailFragment = RetailFragment.newInstance(retailModel, selectedPractice, lookupUserPractice(selectedPractice), false);
-            fragment = retailFragment;
+            displayRetailStore(retailModel, selectedPractice, lookupUserPractice(selectedPractice), false);
         }else{
             fragment = RetailListFragment.newInstance(retailModel);
+            replaceFragment(fragment, false);
         }
 
-        replaceFragment(fragment, false);
     }
 
     @Override
@@ -97,19 +96,25 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
     @Override
     public void onBackPressed(){
         if(retailFragment == null || !retailFragment.isAdded() || !retailFragment.handleBackButton() ){
-            displayToolbar(true);
+            Fragment current = getSupportFragmentManager().findFragmentById(R.id.container_main);
+            if(current instanceof RetailListFragment) {
+                displayToolbar(true);
+            }
             super.onBackPressed();
         }
     }
 
     @Override
     public void displayRetailStore(RetailModel retailModel, RetailPracticeDTO retailPractice, UserPracticeDTO userPracticeDTO) {
+        displayRetailStore(retailModel, retailPractice, userPracticeDTO, true);
+    }
+
+    private void displayRetailStore(RetailModel retailModel, RetailPracticeDTO retailPractice, UserPracticeDTO userPracticeDTO, boolean addToBackStack) {
         selectedPractice = retailPractice;
         userPracticeDTO.setPatientId(selectedPractice.getPatientId());
         this.userPracticeDTO = userPracticeDTO;
-        retailFragment = RetailFragment.newInstance(retailModel, selectedPractice, userPracticeDTO, true);
-        replaceFragment(retailFragment, true);
-        displayToolbar(false);
+        retailFragment = RetailFragment.newInstance(retailModel, selectedPractice, userPracticeDTO, addToBackStack);
+        replaceFragment(retailFragment, addToBackStack);
     }
 
     @Override
@@ -146,7 +151,7 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         replaceFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount), true);
-//        displayDialogFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount), true);
+        displayToolbar(false);
     }
 
     @Override
@@ -161,7 +166,6 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
             DialogFragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel,
                     selectedPaymentMethod.getLabel(), amount);
             replaceFragment(fragment, true);
-//            displayDialogFragment(fragment, true);
         } else {
             showAddCard(amount, paymentsModel);
         }

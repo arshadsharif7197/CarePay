@@ -2,17 +2,15 @@ package com.carecloud.carepay.patient.retail.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -22,31 +20,17 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.retail.interfaces.RetailInterface;
 import com.carecloud.carepay.patient.retail.models.RetailModel;
 import com.carecloud.carepay.patient.retail.models.RetailPracticeDTO;
-import com.carecloud.carepay.patient.retail.models.sso.Person;
-import com.carecloud.carepay.patient.retail.models.sso.Profile;
-import com.carecloud.carepay.patient.retail.models.sso.SsoModel;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.google.gson.Gson;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Created by lmenendez on 2/8/17
@@ -54,10 +38,9 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class RetailFragment extends BaseFragment {
     private static final String KEY_SHOW_TOOLBAR = "show_toolbar";
-    private static final String BASE_HTML = "<!DOCTYPE html><html><body>%s</body></html>";
-    public static final String BASE_URL = "/shop.html";
-    public static final String BASE_QUERY_STORE = "store";
-    public static final String BASE_QUERY_SSO = "sso";
+    private static final String BASE_URL = "/shop.html";
+//    private static final String BASE_QUERY_STORE = "store";
+//    private static final String BASE_QUERY_SSO = "sso";
 
     private static final String QUERY_ORDER = "transaction_id";
     private static final String QUERY_STORE = "store_id";
@@ -70,8 +53,10 @@ public class RetailFragment extends BaseFragment {
     private RetailInterface callback;
 
     private WebView shoppingWebView;
+    private SwipeRefreshLayout refreshLayout;
+    private Toolbar toolbar;
     private String returnUrl = null;
-    private String loadedUrl;
+    private String lastUrl;
 
     public static RetailFragment newInstance(RetailModel retailModel, RetailPracticeDTO retailPractice, UserPracticeDTO userPracticeDTO, boolean showToolbar){
         Bundle args = new Bundle();
@@ -105,8 +90,6 @@ public class RetailFragment extends BaseFragment {
         retailPractice = DtoHelper.getConvertedDTO(RetailPracticeDTO.class, args);
         userPracticeDTO = DtoHelper.getConvertedDTO(UserPracticeDTO.class, args);
         showToolbar = args.getBoolean(KEY_SHOW_TOOLBAR, true);
-
-        initSsoPayload();
     }
 
     @Override
@@ -126,9 +109,16 @@ public class RetailFragment extends BaseFragment {
     @SuppressLint("SetJavaScriptEnabled")
     public void onViewCreated(View view, Bundle icicle){
         initToolbar(view);
-        if(retailPractice != null && returnUrl == null) {
-
+        if(retailPractice != null) {
+            refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
             shoppingWebView = (WebView) view.findViewById(R.id.shoppingWebView);
+            refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    //reloading causes us to loose sso
+                    reloadSSO(lastUrl, false);
+                }
+            });
             WebView.setWebContentsDebuggingEnabled(true);
             WebSettings settings = shoppingWebView.getSettings();
             settings.setJavaScriptEnabled(true);
@@ -136,38 +126,24 @@ public class RetailFragment extends BaseFragment {
             settings.setAllowFileAccess(true);
             settings.setAllowUniversalAccessFromFileURLs(true);
             shoppingWebView.setWebViewClient(new RetailViewClient());
-            shoppingWebView.addJavascriptInterface(new RetailJavascriptInterface(), "RetailInterface");
+            shoppingWebView.addJavascriptInterface(new WebStoreInterface(), "StoreInterface");
 
-
-//            shoppingWebView.loadDataWithBaseURL("data:text/html", addCallback(retailPractice.getStore().getStoreHtml()), "text/html", "utf-8", "data:text/html");
-//            shoppingWebView.loadData(getIframeHtml(retailPractice.getStore().getStoreHtml()), "text/html", "utf-8");
-
-
-//            shoppingWebView.loadData(retailPractice.getStore().getStoreHtml(), "text/html", "utf-8");
-//            shoppingWebView.loadDataWithBaseURL(HttpConstants.getFormsUrl(), retailPractice.getStore().getStoreHtml(), "text/html", "utf-8", HttpConstants.getFormsUrl());
-
-//            shoppingWebView.loadUrl("file://"+getHtmlFile(retailPractice.getStore().getStoreHtml()));
-
-            loadRetailHome();
-        }
-        if(returnUrl != null){
-            reloadSSO(returnUrl);
-//            shoppingWebView.restoreState(callback.getWebViewBundle());
-//            shoppingWebView.loadUrl(returnUrl);
-//            shoppingWebView.clearHistory();
-            return;
-        }
-        if(loadedUrl != null){
-            reloadSSO(loadedUrl);
+            if(returnUrl != null){
+                reloadSSO(returnUrl, false);
+            }else if (lastUrl != null){
+                reloadSSO(lastUrl, true);
+            }else {
+                loadRetailHome();
+            }
         }
     }
 
     private void loadRetailHome(){
         Uri storeUrl = Uri.parse(HttpConstants.getFormsUrl()+BASE_URL);
-        storeUrl = storeUrl.buildUpon()
-                .appendQueryParameter(BASE_QUERY_STORE, retailPractice.getStore().getStoreId())
-                .appendQueryParameter(BASE_QUERY_SSO, retailPractice.getStore().getSso().getSSO())
-                .build();
+//        storeUrl = storeUrl.buildUpon()
+//                .appendQueryParameter(BASE_QUERY_STORE, retailPractice.getStore().getStoreId())
+//                .appendQueryParameter(BASE_QUERY_SSO, retailPractice.getStore().getSso().getSSO())
+//                .build();
 
         shoppingWebView.loadUrl(storeUrl.toString());
     }
@@ -181,18 +157,19 @@ public class RetailFragment extends BaseFragment {
     }
 
     private void initToolbar(View view){
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.icn_nav_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
+        TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        title.setText(userPracticeDTO.getPracticeName());
         if(showToolbar) {
+            callback.displayToolbar(false);
             toolbar.setVisibility(View.VISIBLE);
-            toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getActivity().onBackPressed();
-                }
-            });
-            TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
-            title.setText(userPracticeDTO.getPracticeName());
         }else {
             toolbar.setVisibility(View.GONE);
         }
@@ -205,39 +182,6 @@ public class RetailFragment extends BaseFragment {
         }
         return false;
     }
-
-    private String getIframeHtml(String html){
-//        html = html.replace("\"", "'");
-        return "<style>body{margin:0;} iframe{width:100vw; height:100vh; margin:0; padding:0; border:none;}</style><iframe srcdoc='"+html+"' ></iframe>";
-    }
-
-    private String getHtmlFile(String html){
-        String fullHtml = String.format(BASE_HTML, html);
-        File htmlFile = new File(getContext().getExternalCacheDir(), "retail.html");
-        FileWriter writer = null;
-        try {
-            if(htmlFile.exists()){
-                htmlFile.delete();
-            }
-
-            htmlFile.createNewFile();
-            writer = new FileWriter(htmlFile);
-            writer.write(fullHtml);
-
-        }catch (IOException ioe){
-            ioe.printStackTrace();
-        }finally {
-            if(writer != null){
-                try {
-                    writer.close();
-                }catch (IOException ioe){
-                    ioe.printStackTrace();
-                }
-            }
-        }
-        return htmlFile.getAbsolutePath();
-    }
-
 
     private void startPaymentRequest(String storeId, String orderId, String amountString){
         try {
@@ -258,45 +202,62 @@ public class RetailFragment extends BaseFragment {
 
     }
 
-    private void reloadSSO(String followUpUrl){
+    private void reloadSSO(String followUpUrl, boolean loadHome){
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("practice_id", userPracticeDTO.getPracticeId());
         queryMap.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
         queryMap.put("store_only", "true");
 
         TransitionDTO transitionDTO = retailModel.getMetadata().getLinks().getRetail();
-        getWorkflowServiceHelper().execute(transitionDTO, getRefreshSsoCallback(followUpUrl), queryMap);
+        getWorkflowServiceHelper().execute(transitionDTO, getRefreshSsoCallback(followUpUrl, loadHome), queryMap);
 
     }
 
-    private WorkflowServiceCallback getRefreshSsoCallback(final String followUpUrl) {
+    private WorkflowServiceCallback getRefreshSsoCallback(final String followUpUrl, final boolean loadHome) {
         return new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
-                showProgressDialog();
+                refreshLayout.setRefreshing(true);
             }
 
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
-                hideProgressDialog();
+                refreshLayout.setRefreshing(false);
                 RetailModel retailModel = DtoHelper.getConvertedDTO(RetailModel.class, workflowDTO);
                 retailPractice = retailModel.getPayload().getRetailPracticeList().get(0);
-                loadRetailHome();
-                shoppingWebView.clearHistory();
+                if(loadHome) {
+                    shoppingWebView.clearHistory();
+                    loadRetailHome();
+                }
                 shoppingWebView.loadUrl(followUpUrl);
             }
 
             @Override
             public void onFailure(String exceptionMessage) {
-                hideProgressDialog();
+                refreshLayout.setRefreshing(false);
+                //forget it... just load
+                shoppingWebView.loadUrl(followUpUrl);
             }
         };
     }
 
+    private class WebStoreInterface{
+
+        @JavascriptInterface
+        public String getSSO(){
+            return retailPractice.getStore().getSso().getSSO();
+        }
+
+        @JavascriptInterface
+        public String getStore(){
+            return retailPractice.getStore().getStoreId();
+        }
+    }
+
 
     private class RetailViewClient extends WebViewClient {
-        private boolean launchPayments = false;
-        private boolean loadReturnUrl = false;
+        private boolean launchPayments = false; //don't maintain the payments launch url
+        private boolean loadedReturnUrl = false;//handle event where the payments return url has been loaded
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView webView, String url) {
@@ -315,148 +276,44 @@ public class RetailFragment extends BaseFragment {
                     launchPayments = true;
                     return true;
                 }
+//                else if(!url.equals(returnUrl)){//this url contains some QP that we cannot remove
+//                    //in case we have stale SSO in the url, need to replace the old SSO info
+//                    uri = uri.buildUpon().clearQuery()
+//                            .appendQueryParameter(BASE_QUERY_STORE, retailPractice.getStore().getStoreId())
+//                            .appendQueryParameter(BASE_QUERY_SSO, retailPractice.getStore().getSso().getSSO())
+//                            .build();
+//                    url = uri.toString();
+//                }
             }
             webView.loadUrl(url);
             return true;
         }
 
         @Override
-        public void onPageStarted(WebView webView, String url, Bitmap favIcon){
-            super.onPageStarted(webView, url, favIcon);
-        }
-
-        @Override
-        public WebResourceResponse shouldInterceptRequest(WebView webView, String url){
-            return super.shouldInterceptRequest(webView, url);
-        }
-
-        @Override
         public void onPageFinished(WebView webView, String url){
-            super.onPageFinished(webView, url);
+            if(lastUrl != null){
+                toolbar.setVisibility(View.VISIBLE);
+                callback.displayToolbar(false);
+            }
             if(!launchPayments) {
-                loadedUrl = url;
-                Log.d("Retail WebView", loadedUrl);
+                lastUrl = url;
+                Log.d("Retail WebView", lastUrl);
             }else {
                 launchPayments = false;
             }
+            if(loadedReturnUrl){
+                webView.clearHistory();
+            }
             if(url.equals(returnUrl)){
                 Log.d("Retail WebView", returnUrl);
-                loadReturnUrl = true;
+                loadedReturnUrl = true;
             }
-            if(loadReturnUrl){
-                webView.clearHistory();
-                loadReturnUrl = false;
+            super.onPageFinished(webView, url);
+            if(!showToolbar && !shoppingWebView.canGoBack()) {//check if this is the last in the stack
+                toolbar.setVisibility(View.GONE);
+                callback.displayToolbar(true);
             }
         }
     }
-
-
-    //region test javascript interface
-    private String addCallback(String storeHtml){
-        return storeHtml +
-                "<script type=\"text/javascript\">Ecwid.OnPageLoad.add(" +
-                "function(page){" +
-                "RetailInterface.retailRedirect(window.location.href);" +
-                "});" +
-                "</script>";
-    }
-
-    private class RetailJavascriptInterface {
-
-        @JavascriptInterface
-        public void retailRedirect(final String url){
-            if(loadedUrl!=null && loadedUrl.equals(url)){
-                return;
-            }
-            shoppingWebView.post(new Runnable() {
-                @Override
-                public void run() {
-                    shoppingWebView.loadDataWithBaseURL("data:text/html", addCallback(url), "text/html", "utf-8", "data:text/html");
-                }
-            });
-        }
-    }
-    //endregion
-
-    //region test sso generation
-    private static final String APP_CLIENT_SECRET = "9xasKgFMZbDErsGgQeCN3EHawKeydaNW";
-    private static final String APP_ID = "breeze-shopping";
-    private String ssoProfile = "";
-    private String storeId = "12522068";//hardcoded MyBreezeClinic StoreId
-
-
-    private void initSsoPayload(){
-        DemographicPayloadDTO demographics = retailModel.getPayload().getDemographicDTO().getPayload();
-        Person person = new Person();
-        person.setName(demographics.getPersonalDetails().getFullName());
-        person.setStreet(demographics.getAddress().getAddress1());
-        person.setCity(demographics.getAddress().getCity());
-        person.setState(demographics.getAddress().getState());
-        person.setPostalCode(demographics.getAddress().getZipcode());
-        person.setPhone(demographics.getAddress().getPhone());
-
-        Profile profile = new Profile();
-        profile.setEmail(getApplicationPreferences().getUserId());
-        profile.setBillingPerson(person);
-
-        SsoModel ssoModel = new SsoModel();
-        ssoModel.setAppId(APP_ID);
-        ssoModel.setUserId(getApplicationPreferences().getUserId());
-        ssoModel.setProfile(profile);
-
-        String ssoString = new Gson().toJson(ssoModel);
-        String ssoEncoded = Base64.encodeToString(ssoString.getBytes(), Base64.NO_WRAP);
-
-        long timeStamp = System.currentTimeMillis() / 1000;
-
-        try {
-            String signature = hmacSha1(ssoEncoded + " " + timeStamp, APP_CLIENT_SECRET);
-
-            ssoProfile = ssoEncoded + " " +
-                    signature + " " +
-                    timeStamp;
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-    }
-
-    private String getHtmlData(){
-        return
-                "<html>" +
-                        "<div> " +
-                        "<script type=\"text/javascript\" src=\"https://app.ecwid.com/script.js?"+storeId+"\" charset=\"utf-8\"></script>" +
-                        "<script type=\"text/javascript\"> xProductBrowser(\"categoriesPerRow=1\",\"views=grid(60,1) list(60)\",\"categoryView=grid\",\"searchView=list\");</script>" +
-                        "<script> var ecwid_sso_profile = '" + ssoProfile + "' </script>" +
-                        "</div>" +
-                        "</html>";
-    }
-
-
-    private static String hmacSha1(String value, String key)
-            throws UnsupportedEncodingException, NoSuchAlgorithmException,
-            InvalidKeyException {
-        String type = "HmacSHA1";
-        SecretKeySpec secret = new SecretKeySpec(key.getBytes(), type);
-        Mac mac = Mac.getInstance(type);
-        mac.init(secret);
-        byte[] bytes = mac.doFinal(value.getBytes());
-        return bytesToHex(bytes);
-    }
-
-    private final static char[] hexArray = "0123456789abcdef".toCharArray();
-
-    private static String bytesToHex(byte[] bytes) {
-        char[] hexChars = new char[bytes.length * 2];
-        int v;
-        for (int j = 0; j < bytes.length; j++) {
-            v = bytes[j] & 0xFF;
-            hexChars[j * 2] = hexArray[v >>> 4];
-            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-        }
-        return new String(hexChars);
-    }
-    //endregion
 
 }
