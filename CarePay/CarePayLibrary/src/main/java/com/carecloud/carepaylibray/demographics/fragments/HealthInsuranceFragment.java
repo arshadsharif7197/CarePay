@@ -42,8 +42,6 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         void editInsurance(DemographicDTO demographicDTO, Integer editedIndex, boolean showAsDialog);
     }
 
-    private DemographicDTO demographicDTO;
-
     private InsuranceLineItemsListAdapter adapter;
     private InsuranceDocumentScannerListener callback;
 

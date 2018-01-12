@@ -58,11 +58,11 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     public static final String PREVENT_NAV_BACK = "prevent_nav_back";
 
+    protected DemographicDTO demographicDTO;
     StepProgressBar stepProgressBar;
     boolean preventNavBack = false;
     private boolean userAction = false;
     private ScrollView scrollView;
-
     protected CheckinFlowCallback checkinFlowCallback;
 
     private WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
@@ -663,6 +663,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     @Override
     public DTO getDto() {
-        return null;
+        return demographicDTO;
     }
 }
