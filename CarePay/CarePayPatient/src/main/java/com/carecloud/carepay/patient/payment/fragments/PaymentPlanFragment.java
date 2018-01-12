@@ -27,8 +27,8 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.fragments.BasePaymentDialogFragment;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -45,6 +45,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class PaymentPlanFragment extends BasePaymentDialogFragment {
@@ -386,7 +387,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
 
                     String cleanString = charSequence.toString().replaceAll("[$,.]", "");
                     double parsed = Double.parseDouble(cleanString);
-                    String formatted = NumberFormat.getCurrencyInstance().format((parsed / 100));
+                    String formatted = NumberFormat.getCurrencyInstance(Locale.US).format((parsed / 100));
 
                     current = formatted;
                     paymentPlanMonthlyPayment.setText(formatted);

@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -76,7 +77,7 @@ public class RefundProcessAdapter extends RecyclerView.Adapter<RefundProcessAdap
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final PaymentHistoryLineItem lineItem = lineItems.get(position);
 
-        holder.amount.setText(NumberFormat.getCurrencyInstance().format(lineItem.getRefundableBalance()));
+        holder.amount.setText(NumberFormat.getCurrencyInstance(Locale.US).format(lineItem.getRefundableBalance()));
         holder.description.setText(parseDescription(lineItem.getDescription()));
 
         LocationDTO locationDTO = locationMap.get(lineItem.getLocationID());

@@ -21,6 +21,7 @@ import com.squareup.picasso.Picasso;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by jorge on 31/12/16
@@ -39,7 +40,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
     private List<UserPracticeDTO> userPractices = new ArrayList<>();
 
     private boolean isLoading = false;
-    private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+    private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
     /**
      * Constructor

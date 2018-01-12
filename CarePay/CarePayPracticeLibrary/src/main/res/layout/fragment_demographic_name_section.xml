@@ -73,30 +73,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
-            android:id="@+id/reviewdemogrMiddleNameTextInputLayout"
-            style="@style/SigninSignupTextInputStyle"
-            app:customAssetFont="proxima_nova_semi_bold"
-            app:hintTextAppearance="@style/FloatingLabelStyle">
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                android:id="@+id/reviewdemogrMiddleNameTextInputLayout"
+                style="@style/SigninSignupTextInputStyle"
+                app:customAssetFont="proxima_nova_semi_bold"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
-                android:id="@+id/reviewdemogrMiddleNameEdit"
-                style="@style/DemographicsReviewEditTextStyle"
-                android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ "
-                android:imeOptions="actionNext"
-                android:inputType="textPersonName"
-                android:maxLength="100"
-                android:nextFocusForward="@+id/reviewdemogrsLastNameEdit"
-                app:customAssetFont="gotham_rounded_book"
-                breeze:hintKey="demographics_middle_name"
-                tools:hint="Middle Name" />
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                    android:id="@+id/reviewdemogrMiddleNameEdit"
+                    style="@style/DemographicsReviewEditTextStyle"
+                    android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ "
+                    android:imeOptions="actionNext"
+                    android:inputType="textPersonName"
+                    android:maxLength="100"
+                    android:nextFocusForward="@+id/reviewdemogrsLastNameEdit"
+                    app:customAssetFont="gotham_rounded_book"
+                    breeze:hintKey="demographics_middle_name"
+                    tools:hint="Middle Name" />
 
-        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
-        <include
-            android:id="@+id/reviewdemogrMiddleNameOptionalLabel"
-            layout="@layout/layout_optional_text_view"
-            android:visibility="visible" />
+            <include
+                android:id="@+id/reviewdemogrMiddleNameOptionalLabel"
+                layout="@layout/layout_optional_text_view"
+                android:visibility="visible" />
 
         </FrameLayout>
 

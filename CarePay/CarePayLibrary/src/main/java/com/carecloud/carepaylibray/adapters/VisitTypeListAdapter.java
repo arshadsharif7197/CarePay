@@ -15,6 +15,7 @@ import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by pjohnson on 13/03/17
@@ -62,7 +63,7 @@ public class VisitTypeListAdapter extends RecyclerView.Adapter<VisitTypeListAdap
         double amount = getVisitAmount(visitTypeDTO.getId());
         if (amount > 0) {
             visitTypeDTO.setAmount(amount);
-            holder.amount.setText(NumberFormat.getCurrencyInstance().format(amount));
+            holder.amount.setText(NumberFormat.getCurrencyInstance(Locale.US).format(amount));
             holder.notificationPaymentImage.setVisibility(View.VISIBLE);
             holder.amount.setVisibility(View.VISIBLE);
         } else {
