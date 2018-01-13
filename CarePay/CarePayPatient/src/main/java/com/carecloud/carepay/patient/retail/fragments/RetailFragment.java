@@ -38,9 +38,7 @@ import java.util.Map;
 
 public class RetailFragment extends BaseFragment {
     private static final String KEY_SHOW_TOOLBAR = "show_toolbar";
-    private static final String BASE_URL = "/shop.html";
-//    private static final String BASE_QUERY_STORE = "store";
-//    private static final String BASE_QUERY_SSO = "sso";
+    private static final String BASE_URL = "/shop-sso.html";
 
     private static final String QUERY_ORDER = "transaction_id";
     private static final String QUERY_STORE = "store_id";
@@ -127,6 +125,8 @@ public class RetailFragment extends BaseFragment {
             settings.setAllowUniversalAccessFromFileURLs(true);
             shoppingWebView.setWebViewClient(new RetailViewClient());
             shoppingWebView.addJavascriptInterface(new WebStoreInterface(), "StoreInterface");
+            shoppingWebView.restoreState(callback.getWebViewBundle());
+            callback.getWebViewBundle().clear();
 
             if(returnUrl != null){
                 reloadSSO(returnUrl, false);
@@ -140,11 +140,6 @@ public class RetailFragment extends BaseFragment {
 
     private void loadRetailHome(){
         Uri storeUrl = Uri.parse(HttpConstants.getFormsUrl()+BASE_URL);
-//        storeUrl = storeUrl.buildUpon()
-//                .appendQueryParameter(BASE_QUERY_STORE, retailPractice.getStore().getStoreId())
-//                .appendQueryParameter(BASE_QUERY_SSO, retailPractice.getStore().getSso().getSSO())
-//                .build();
-
         shoppingWebView.loadUrl(storeUrl.toString());
     }
 
@@ -225,10 +220,6 @@ public class RetailFragment extends BaseFragment {
                 refreshLayout.setRefreshing(false);
                 RetailModel retailModel = DtoHelper.getConvertedDTO(RetailModel.class, workflowDTO);
                 retailPractice = retailModel.getPayload().getRetailPracticeList().get(0);
-                if(loadHome) {
-                    shoppingWebView.clearHistory();
-                    loadRetailHome();
-                }
                 shoppingWebView.loadUrl(followUpUrl);
             }
 
@@ -276,14 +267,6 @@ public class RetailFragment extends BaseFragment {
                     launchPayments = true;
                     return true;
                 }
-//                else if(!url.equals(returnUrl)){//this url contains some QP that we cannot remove
-//                    //in case we have stale SSO in the url, need to replace the old SSO info
-//                    uri = uri.buildUpon().clearQuery()
-//                            .appendQueryParameter(BASE_QUERY_STORE, retailPractice.getStore().getStoreId())
-//                            .appendQueryParameter(BASE_QUERY_SSO, retailPractice.getStore().getSso().getSSO())
-//                            .build();
-//                    url = uri.toString();
-//                }
             }
             webView.loadUrl(url);
             return true;

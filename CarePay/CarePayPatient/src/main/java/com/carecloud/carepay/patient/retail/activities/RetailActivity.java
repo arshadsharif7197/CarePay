@@ -96,11 +96,11 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
     @Override
     public void onBackPressed(){
         if(retailFragment == null || !retailFragment.isAdded() || !retailFragment.handleBackButton() ){
+            super.onBackPressed();
             Fragment current = getSupportFragmentManager().findFragmentById(R.id.container_main);
             if(current instanceof RetailListFragment) {
                 displayToolbar(true);
             }
-            super.onBackPressed();
         }
     }
 
