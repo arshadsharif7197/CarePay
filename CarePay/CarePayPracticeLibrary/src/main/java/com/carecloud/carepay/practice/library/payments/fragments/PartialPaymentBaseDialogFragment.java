@@ -12,6 +12,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  * Created by pjohnson on 3/23/17
@@ -36,7 +37,7 @@ public abstract class PartialPaymentBaseDialogFragment extends BaseDialogFragmen
         super.onViewCreated(view, icicle);
         amountTextView = (TextView) view.findViewById(R.id.enter_amount_text);
 
-        currencyFormat = NumberFormat.getCurrencyInstance();
+        currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
         String symbol = currencyFormat.getCurrency().getSymbol();
         amountSymbol = (TextView) view.findViewById(R.id.amountSymbolTextView);
         amountSymbol.setText(symbol);

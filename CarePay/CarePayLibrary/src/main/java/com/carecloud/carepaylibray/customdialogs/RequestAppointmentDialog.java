@@ -19,6 +19,7 @@ import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 
 public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
 
@@ -85,7 +86,7 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         if(visitTypeDTO.getAmount() > 0){
             prepaidLayout.setVisibility(View.VISIBLE);
             TextView prepaidAmount = (TextView) childActionView.findViewById(R.id.prepaymentAmount);
-            prepaidAmount.setText(NumberFormat.getCurrencyInstance().format(visitTypeDTO.getAmount()));
+            prepaidAmount.setText(NumberFormat.getCurrencyInstance(Locale.US).format(visitTypeDTO.getAmount()));
             appointmentRequestButton.setText(Label.getLabel("appointments_prepayment_button"));
         }else{
             prepaidLayout.setVisibility(View.GONE);

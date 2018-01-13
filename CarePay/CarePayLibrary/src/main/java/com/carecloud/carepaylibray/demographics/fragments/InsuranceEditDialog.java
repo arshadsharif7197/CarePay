@@ -525,7 +525,13 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
     private void enableDependentFields(View view, int[] fields, boolean enabled){
         for(int field : fields){
-            view.findViewById(field).setEnabled(enabled);
+            View target = view.findViewById(field);
+            if(target instanceof TextInputLayout){
+                ((TextInputLayout) target).setError(null);
+                ((TextInputLayout) target).setErrorEnabled(false);
+            }
+            view.requestFocus();
+            target.setEnabled(enabled);
         }
     }
 
