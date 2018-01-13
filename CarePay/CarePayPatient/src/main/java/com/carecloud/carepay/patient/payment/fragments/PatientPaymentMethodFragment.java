@@ -83,7 +83,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         paymentMethodFragmentProgressBar = (ProgressBar) view.findViewById(R.id.paymentMethodFragmentProgressBar);
-//        initAndroidPay();
+        initAndroidPay();
     }
 
     @Override
