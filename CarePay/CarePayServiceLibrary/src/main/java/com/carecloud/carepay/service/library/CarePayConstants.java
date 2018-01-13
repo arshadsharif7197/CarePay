@@ -152,6 +152,7 @@ public class CarePayConstants {
 
     //AdHoc
     public static final String ADHOC_FORMS = "adhocForms";
+    public static final String SELECTED_FORMS = "selectedForms";
 
     //Patient Mode Login
     public static final String LOGIN_OPTION_QR = "login_option_qr";
