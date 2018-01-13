@@ -19,7 +19,7 @@ import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
- * Created by cocampo on 2/6/17.
+ * Created by cocampo on 2/6/17
  */
 
 public abstract class BaseDialogFragment extends DialogFragment implements ISession {
@@ -35,6 +35,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         isPracticeAppPatientMode = ((ISession) getActivity()).getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
+        setNewRelicInteraction(getClass().getName());
     }
 
     @Override
@@ -196,6 +197,10 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         return ((IApplicationSession) getActivity()).getLastInteraction();
     }
 
+    @Override
+    public void setNewRelicInteraction(String interactionName) {
+        ((IApplicationSession) getActivity()).setNewRelicInteraction(interactionName);
+    }
 
     @Override
     public void showProgressDialog() {

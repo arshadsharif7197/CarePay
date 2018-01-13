@@ -58,6 +58,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         if (handler == null) {
             handler = new Handler();
         }
+        setNewRelicInteraction(getClass().getName());
     }
 
     @Override
@@ -125,6 +126,10 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         return ((IApplicationSession) getApplication()).getLastInteraction();
     }
 
+    @Override
+    public void setNewRelicInteraction(String interactionName) {
+        ((IApplicationSession) getApplication()).setNewRelicInteraction(interactionName);
+    }
 
     public Context getContext() {
         return this;
