@@ -57,15 +57,17 @@
             android:layout_alignParentBottom="true"
             android:background="@drawable/patient_mode_dialog_body_bg"
             android:orientation="horizontal"
-            android:padding="@dimen/dimen_10dp"
+            android:paddingTop="@dimen/dimen_10dp"
             android:paddingEnd="@dimen/dimen_24dp"
-            android:paddingStart="@dimen/dimen_24dp">
+            android:paddingStart="@dimen/dimen_24dp"
+            android:paddingBottom="@dimen/dimen_10dp">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/remove_insurance_entry"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dimen_5dp"
+                android:layout_marginBottom="@dimen/dimen_3dp"
                 android:layout_weight="0.3"
                 android:background="@drawable/button_rounded_rose"
                 android:padding="@dimen/dimen_10dp"
@@ -79,6 +81,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_5dp"
+                android:layout_marginBottom="@dimen/dimen_3dp"
                 android:layout_weight="0.7"
                 android:background="@drawable/green_rounded_button_selector_always_click"
                 android:enabled="true"
