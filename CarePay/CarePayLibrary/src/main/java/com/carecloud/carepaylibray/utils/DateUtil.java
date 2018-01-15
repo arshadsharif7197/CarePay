@@ -194,6 +194,23 @@ public class DateUtil {
     }
 
     /**
+     * Format current date as MMM, Day(ordinal) YYYY (eg Oct 3rd, 2016)
+     *
+     * @return The formatted date as string
+     */
+    public String getDateAsMonthAbbrDayOrdinalYear() {
+        String ordinal = instance.getOrdinalSuffix(day); // fetch the ordinal
+        if (getUserLanguage().equals("en")) {
+            return String.format(Locale.getDefault(), Label.getLabel("date_month_literal_day_ordinal_year_format"),//"%s %s%s, %d"
+                    monthLiteralAbbr, day, ordinal, year);
+        } else {
+            return String.format(Locale.getDefault(), Label.getLabel("date_month_literal_day_ordinal_year_format"),//"%s de %s de %s."
+                    day, monthLiteralAbbr, year);
+        }
+    }
+
+
+    /**
      * Format current date as Month, Day(ordinal) (eg October 3rd)
      *
      * @return The formatted date as string

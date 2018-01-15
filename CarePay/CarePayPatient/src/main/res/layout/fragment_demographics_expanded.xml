@@ -41,7 +41,7 @@
         android:id="@+id/buttonAddDemographicInfo"
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:background="@drawable/settings_button_selector"
+        android:background="@drawable/button_selector_always_click"
         android:gravity="center"
         android:textColor="@color/white"
         breeze:textKey="demographics.additionalDemographics.button.label.saveChanges"
