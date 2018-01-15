@@ -124,8 +124,10 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
     }
 
     protected void handleIntegratedPayment(){
-        shamrockCallback.showChooseDeviceList(paymentsModel, amountToMakePayment);
-        logPaymentMethodSelection(getString(R.string.payment_clover));
+        if(shamrockCallback != null) {
+            shamrockCallback.showChooseDeviceList(paymentsModel, amountToMakePayment);
+            logPaymentMethodSelection(getString(R.string.payment_clover));
+        }
     }
 
     private RestCallServiceCallback integratedPaymentsReadyCallback = new RestCallServiceCallback() {

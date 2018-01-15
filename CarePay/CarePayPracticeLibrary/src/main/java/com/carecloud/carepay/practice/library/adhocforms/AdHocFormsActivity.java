@@ -50,7 +50,7 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         setContentView(R.layout.activity_ad_hoc_forms);
         adhocFormsModel = getConvertedDTO(AdHocFormsModel.class);
         Bundle bundle = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
-        SelectedAdHocForms selectedAdHocForms = (SelectedAdHocForms) bundle.getSerializable("selectedForms");
+        SelectedAdHocForms selectedAdHocForms = (SelectedAdHocForms) bundle.getSerializable(CarePayConstants.SELECTED_FORMS);
 
         switchToPatientMode();
 
