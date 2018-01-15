@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class PaymentsTransitionsDTO {
 
-    @SerializedName("make_payment")
+    @SerializedName(value = "make_payment", alternate = "retail_payment")
     @Expose
     private TransitionDTO makePayment = new TransitionDTO();
     @SerializedName("add_credit_card")
