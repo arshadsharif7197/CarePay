@@ -35,6 +35,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -263,6 +264,13 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
             queries.put("practice_id", metadata.getPracticeId());
             queries.put("patient_id", metadata.getPatientId());
         }
+
+        if(!StringUtil.isNullOrEmpty(paymentsModel.getPaymentPayload().getPaymentPostModel().getOrderId())){
+            IntegratedPaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
+            queries.put("store_id", paymentPostModel.getStoreId());
+            queries.put("transaction_id", paymentPostModel.getOrderId());
+        }
+
         if (callback.getAppointmentId() != null) {
             queries.put("appointment_id", callback.getAppointmentId());
         }
@@ -314,16 +322,18 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            callback.showPaymentConfirmation(workflowDTO);
-            if (getDialog() != null) {
-                dismiss();
-            }
 
             String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
             Object[] values = {amountToMakePayment, getString(R.string.payment_card_on_file)};
             MixPanelUtil.logEvent(getString(R.string.event_payment_complete), params, values);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payments_completed), 1);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.total_payments_amount), amountToMakePayment);
+
+            callback.showPaymentConfirmation(workflowDTO);
+            if (getDialog() != null) {
+                dismiss();
+            }
+
         }
 
         @Override

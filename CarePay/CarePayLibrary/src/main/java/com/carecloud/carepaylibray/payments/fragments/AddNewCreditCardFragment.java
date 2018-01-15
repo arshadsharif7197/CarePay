@@ -28,6 +28,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPo
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -234,6 +235,13 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             queries.put("practice_id", metadata.getPracticeId());
             queries.put("patient_id", metadata.getPatientId());
         }
+
+        if(!StringUtil.isNullOrEmpty(paymentsModel.getPaymentPayload().getPaymentPostModel().getOrderId())){
+            IntegratedPaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
+            queries.put("store_id", paymentPostModel.getStoreId());
+            queries.put("transaction_id", paymentPostModel.getOrderId());
+        }
+
         if (callback.getAppointmentId() != null) {
             queries.put("appointment_id", callback.getAppointmentId());
         }
