@@ -6,7 +6,7 @@ import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 
 /**
- * Created by cocampo on 2/20/17.
+ * Created by cocampo on 2/20/17
  */
 
 public interface IApplicationSession {
@@ -23,4 +23,6 @@ public interface IApplicationSession {
     void setLastInteraction(long systemTime);
 
     long getLastInteraction();
+
+    void setNewRelicInteraction(String interactionName);
 }
