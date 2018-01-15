@@ -76,8 +76,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     private View[] checkInFlowViews;
     private MediaResultListener resultListener;
 
-    private boolean isUserInteraction = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Bundle icicle = savedInstanceState;
@@ -111,7 +109,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 findViewById(R.id.languageContainer).setVisibility(View.GONE);
             }
         }, 25);
-        isUserInteraction = true;
     }
 
     private void initializeLanguageSpinner() {
@@ -123,7 +120,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             }
         }
 
-        TextView languageSwitch = (TextView) findViewById(R.id.languageSpinner);
+        final TextView languageSwitch = (TextView) findViewById(R.id.languageSpinner);
         final View languageContainer = findViewById(R.id.languageContainer);
         languageSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,6 +147,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                             public void callback() {
                                 presenter.changeLanguage();
                                 changeMenuLanguage();
+                                languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
                             }
                         });
             }

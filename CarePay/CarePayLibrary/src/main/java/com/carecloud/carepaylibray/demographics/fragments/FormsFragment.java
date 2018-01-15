@@ -6,6 +6,7 @@ import android.view.View;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
@@ -28,6 +29,14 @@ public class FormsFragment extends BaseWebFormFragment {
 
     private ConsentFormDTO consentFormDTO;
     private List<PracticeForm> consentFormList;
+
+    public static FormsFragment newInstance(WorkflowDTO workflowDTO) {
+        Bundle args = new Bundle();
+        args.putString(CarePayConstants.INTAKE_BUNDLE, workflowDTO.toString());
+        FormsFragment fragment = new FormsFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,5 +133,4 @@ public class FormsFragment extends BaseWebFormFragment {
     public DTO getDto() {
         return consentFormDTO;
     }
-
 }
