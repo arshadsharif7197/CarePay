@@ -9,6 +9,7 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
 import com.carecloud.carepaylibray.CarePayApplication;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.newrelic.agent.android.NewRelic;
 
 
 /**
@@ -58,6 +59,11 @@ public class CarePayPatientApplication extends CarePayApplication {
         super.onAtomicRestart();
         applicationMode.clearUserPracticeDTO();
         applicationMode = null;
+    }
+
+    @Override
+    public void setNewRelicInteraction(String interactionName) {
+        NewRelic.setInteractionName(interactionName);
     }
 
     @Override

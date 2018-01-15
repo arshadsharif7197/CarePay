@@ -14,6 +14,7 @@ import android.widget.Button;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -130,7 +131,7 @@ public class AdHocFormsListFragment extends BaseDialogFragment
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             Bundle bundle = new Bundle();
-            bundle.putSerializable("selectedForms", selectedForms);
+            bundle.putSerializable(CarePayConstants.SELECTED_FORMS, selectedForms);
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, bundle);
         }
 
