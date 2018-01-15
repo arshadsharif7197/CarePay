@@ -24,6 +24,9 @@ public class BalanceItemDTO {
     @SerializedName("posting_date")
     @Expose
     private String postingDate;
+    @SerializedName("effective_date")
+    @Expose
+    private String effectiveDate;
     @SerializedName("transaction_type")
     @Expose
     private String transactionType;
@@ -53,7 +56,9 @@ public class BalanceItemDTO {
     private String description;
     @SerializedName("responsibility_type")
     @Expose
-    private @IntegratedPaymentLineItem.LineItemType String responsibilityType;
+    private
+    @IntegratedPaymentLineItem.LineItemType
+    String responsibilityType;
     @SerializedName("new_charge")
     @Expose
     private boolean newCharge = false;
@@ -99,6 +104,14 @@ public class BalanceItemDTO {
 
     public void setPostingDate(String postingDate) {
         this.postingDate = postingDate;
+    }
+
+    public String getEffectiveDate() {
+        return effectiveDate;
+    }
+
+    public void setEffectiveDate(String effectiveDate) {
+        this.effectiveDate = effectiveDate;
     }
 
     public String getTransactionType() {
@@ -173,7 +186,9 @@ public class BalanceItemDTO {
         this.description = description;
     }
 
-    public @IntegratedPaymentLineItem.LineItemType String getResponsibilityType() {
+    public
+    @IntegratedPaymentLineItem.LineItemType
+    String getResponsibilityType() {
         return responsibilityType;
     }
 
