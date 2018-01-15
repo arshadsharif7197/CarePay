@@ -138,7 +138,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         });
 
         initViews(view);
-        checkIfEnableButton();
+        checkIfEnableButton(false);
 
     }
 
@@ -281,7 +281,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
     }
 
     @Override
-    protected void checkIfEnableButton() {
+    protected void checkIfEnableButton(boolean userInteraction) {
         boolean isEnabled = passConstraints(false);
         if (nextButton != null) {
             nextButton.setSelected(isEnabled);
