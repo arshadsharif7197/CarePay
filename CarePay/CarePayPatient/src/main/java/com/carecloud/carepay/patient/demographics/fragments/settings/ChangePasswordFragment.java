@@ -176,7 +176,7 @@ public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
     }
 
     @Override
-    protected void checkIfEnableButton() {
+    protected void checkIfEnableButton(boolean userInteraction) {
         boolean isEnabled = passConstraints(false);
         if (updatePasswordButton != null) {
             updatePasswordButton.setEnabled(isEnabled);

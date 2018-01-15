@@ -8,7 +8,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -32,7 +31,7 @@ import java.util.List;
 
 public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
 
-    protected abstract void checkIfEnableButton();
+    protected abstract void checkIfEnableButton(boolean userInteraction);
 
     protected abstract boolean passConstraints(boolean isUserInteraction);
 
@@ -80,14 +79,17 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
         @Override
         public void afterTextChanged(Editable editable) {
             StringUtil.autoFormatZipcode(editable, lastLength);
-            checkIfEnableButton();
+            checkIfEnableButton(false);
         }
     };
 
     protected TextWatcher getValidateEmptyTextWatcher(final TextInputLayout inputLayout) {
         return new TextWatcher() {
+            public int count;
+
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+                this.count = sequence.length();
             }
 
             @Override
@@ -100,11 +102,10 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
                 if (StringUtil.isNullOrEmpty(editable.toString())) {
                     inputLayout.setErrorEnabled(true);
                     inputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
-                } else {
-                    inputLayout.setError(null);
-                    inputLayout.setErrorEnabled(false);
+                } else if (count == 0) {
+                    unsetFieldError(inputLayout);
                 }
-                checkIfEnableButton();
+                checkIfEnableButton(false);
             }
         };
     }
@@ -127,16 +128,18 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
                 } else {
                     optionalView.setVisibility(View.GONE);
                 }
-                checkIfEnableButton();
+                checkIfEnableButton(false);
             }
         };
     }
 
     protected TextWatcher clearValidationErrorsOnTextChange(final TextInputLayout inputLayout) {
         return new TextWatcher() {
+            public int count;
+
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
-
+                this.count = sequence.length();
             }
 
             @Override
@@ -146,11 +149,10 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (!StringUtil.isNullOrEmpty(editable.toString())) {
-                    inputLayout.setError(null);
-                    inputLayout.setErrorEnabled(false);
+                if (!StringUtil.isNullOrEmpty(editable.toString()) && count == 0) {
+                    unsetFieldError(inputLayout);
                 }
-                checkIfEnableButton();
+                checkIfEnableButton(false);
             }
         };
     }
@@ -190,6 +192,7 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
         @Override
         public void afterTextChanged(Editable editable) {
             StringUtil.autoFormatPhone(editable, lastLength);
+            checkIfEnableButton(false);
         }
     };
 
@@ -226,7 +229,7 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
                 }
                 storeOption.setLabel(option.getLabel());
                 storeOption.setName(option.getName());
-                checkIfEnableButton();
+                checkIfEnableButton(false);
 
             }
         };
@@ -343,7 +346,7 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
                         inputLayout.setError(null);
                         inputLayout.setErrorEnabled(false);
                         optionalLabel.setVisibility(View.GONE);
-                        checkIfEnableButton();
+                        checkIfEnableButton(false);
                     }
                 },
                 dialogTitle);
@@ -375,7 +378,6 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
     };
 
 
-
     protected boolean validateField(View view, boolean isRequired, String value,
                                     int inputLayoutId, boolean shouldRequestFocus) {
         if (isRequired && StringUtil.isNullOrEmpty(value)) {
@@ -396,6 +398,10 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
         setFieldError(inputLayout, error, shouldRequestFocus);
     }
 
+    protected void setFieldError(TextInputLayout inputLayout, boolean shouldRequestFocus) {
+        setFieldError(inputLayout, Label.getLabel("demographics_required_validation_msg"), shouldRequestFocus);
+    }
+
     protected void setFieldError(TextInputLayout inputLayout, String error, boolean shouldRequestFocus) {
         if (inputLayout != null) {
             if (!inputLayout.isErrorEnabled()) {
@@ -403,13 +409,14 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
                 inputLayout.setError(error);
             }
             if (shouldRequestFocus) {
+                inputLayout.clearFocus();
                 inputLayout.requestFocus();
             }
         }
 
     }
 
-    protected void unsetError(TextInputLayout inputLayout){
+    protected void unsetFieldError(TextInputLayout inputLayout) {
         inputLayout.setError(null);
         inputLayout.setErrorEnabled(false);
     }
