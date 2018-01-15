@@ -1,7 +1,6 @@
 package com.carecloud.carepay.service.library;
 
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 
 import com.carecloud.carepay.service.library.base.IApplicationSession;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -102,13 +101,13 @@ public class ApplicationPreferences {
                 .equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)) {
             if (patientUserLanguage == null) {
                 patientUserLanguage = readStringFromSharedPref(PATIENT_USER_LANGUAGE,
-                        Resources.getSystem().getConfiguration().locale.getLanguage());
+                        "en");//Resources.getSystem().getConfiguration().locale.getLanguage());
             }
             return patientUserLanguage;
         }
         if (userLanguage == null) {
             userLanguage = readStringFromSharedPref(PRACTICE_USER_LANGUAGE,
-                    Resources.getSystem().getConfiguration().locale.getLanguage());
+                    "en");//Resources.getSystem().getConfiguration().locale.getLanguage());
         }
         return userLanguage;
     }
