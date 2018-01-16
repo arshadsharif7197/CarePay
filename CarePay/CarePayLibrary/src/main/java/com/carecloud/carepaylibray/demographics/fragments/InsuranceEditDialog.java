@@ -443,7 +443,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                     @Override
                     public void onOptionSelected(DemographicsOption option) {
                         isDataHolderSelf = selectedRelationshipOption.getLabel().toLowerCase().equals(KEY_POLICY_HOLDER_SELF);
-                        setupExtraFields(view, demographicInsurancePayload, insuranceModelProperties);
+//                        setupExtraFields(view, demographicInsurancePayload, insuranceModelProperties);
                         checkIfEnableButton();
                         enableDependentFields(view,
                                 new int[]{R.id.health_insurance_policy_first_name_holder_layout,
@@ -527,10 +527,16 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         for(int field : fields){
             View target = view.findViewById(field);
             if(target instanceof TextInputLayout){
-                ((TextInputLayout) target).setError(null);
-                ((TextInputLayout) target).setErrorEnabled(false);
+                TextInputLayout inputLayout = (TextInputLayout) target;
+                EditText editText = inputLayout.getEditText();
+                if(editText != null && !enabled && editText.getOnFocusChangeListener() != null) {
+                    editText.getOnFocusChangeListener().onFocusChange(editText, true);
+                    editText.setText(null);
+                    editText.getOnFocusChangeListener().onFocusChange(editText, false);
+                }
+                inputLayout.setError(null);
+                inputLayout.setErrorEnabled(false);
             }
-            view.requestFocus();
             target.setEnabled(enabled);
         }
     }

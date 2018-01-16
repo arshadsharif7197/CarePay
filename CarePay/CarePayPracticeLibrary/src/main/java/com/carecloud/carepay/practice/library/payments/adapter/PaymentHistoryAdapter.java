@@ -76,7 +76,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
 
         final PaymentHistoryItem item = paymentHistoryItems.get(position);
 
-        DateUtil dateInstance = DateUtil.getInstance().setDateRaw(item.getPayload().getDate()).shiftDateToGMT();
+        DateUtil dateInstance = DateUtil.getInstance().setDateRaw(item.getPayload().getDate());
         holder.transactionDate.setText(dateInstance.getDateAsMonthLiteralDayOrdinalYear());
         holder.transactionTime.setText(dateInstance.getTime12Hour().concat(","));
 
