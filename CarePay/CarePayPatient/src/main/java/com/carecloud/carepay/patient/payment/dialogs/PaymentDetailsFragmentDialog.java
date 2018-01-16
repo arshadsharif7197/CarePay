@@ -52,9 +52,9 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        onInitialization(view);
     }
 
+    @Override
     protected void onInitialization(View view) {
         view.findViewById(R.id.closeViewLayout).setVisibility(View.GONE);
         Button payNowButton = (Button) view.findViewById(R.id.payment_details_pay_now_button);

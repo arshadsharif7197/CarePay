@@ -37,7 +37,7 @@ public class PaymentItemsListAdapter extends RecyclerView.Adapter<PaymentItemsLi
         holder.paymentDetailLabel.setText(paymentDetailsItem.getDescription());
         holder.paymentDetailAmount.setText(StringUtil.getFormattedBalanceAmount(paymentDetailsItem.getAmount()));
         holder.paymentEffectiveDate.setText(DateUtil.getInstance()
-                .setDateRaw(paymentDetailsItem.getEffectiveDate()).getDateAsMonthDayYearHourMinute());
+                .setDateRaw(paymentDetailsItem.getEffectiveDate()).getDateAsMonthDayYear());
     }
 
     @Override
