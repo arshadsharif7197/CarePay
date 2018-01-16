@@ -114,7 +114,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         public void onClick(View view) {
             Intent intent = new Intent(HowToCheckInActivity.this, SigninActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putSerializable(WorkflowDTO.class.getSimpleName(), signinPatientModeDTO.toString());
+            bundle.putSerializable(WorkflowDTO.class.getName(), signinPatientModeDTO.toString());
             intent.putExtras(bundle);
             startActivity(intent);
             finish();
@@ -141,7 +141,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
             /*To implement click event for Manual Search */
             Intent intent = new Intent(HowToCheckInActivity.this, PersonalInformationActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putSerializable(WorkflowDTO.class.getSimpleName(), signinPatientModeDTO.toString());
+            bundle.putSerializable(WorkflowDTO.class.getName(), signinPatientModeDTO.toString());
             intent.putExtras(bundle);
             startActivity(intent);
             finish();

@@ -15,7 +15,7 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
--dontobfuscate
+#-dontobfuscate
 -keepclassmembers class * extends java.lang.Enum {
     <fields>;
     public static **[] values();
@@ -65,5 +65,8 @@
 
 -keep class com.smartystreets.api.** { *; }
 
+# SugarRecord
+-keep class com.carecloud.carepay.service.library.dtos.** { *; }
+-keep class com.carecloud.carepay.patient.payment.androidpay.models.** { *; }
 
 

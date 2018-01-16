@@ -815,7 +815,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
     @Override
     public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
-        String tag = PaymentDetailsFragmentDialog.class.getSimpleName();
+        String tag = PaymentDetailsFragmentDialog.class.getName();
         FragmentManager fragmentManager = ((BaseActivity) context).getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
         Fragment prev = fragmentManager.findFragmentByTag(tag);
