@@ -321,6 +321,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                 disappearViewById(R.id.remove_insurance_entry);
                 ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(
                         Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
+                saveInsuranceButton.setText(Label.getLabel("demographics.insuranceEdit.button.label.newInsurance"));
             } else {
                 showViewById(R.id.check_in_demographics_left_button);
                 findViewById(R.id.check_in_demographics_left_button).setOnClickListener(getNoInsuranceListener());

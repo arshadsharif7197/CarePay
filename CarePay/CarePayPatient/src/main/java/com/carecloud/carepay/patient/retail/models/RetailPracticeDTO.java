@@ -32,6 +32,9 @@ public class RetailPracticeDTO extends PracticePatientIdsDTO {
         @SerializedName("html")
         private String storeHtml;
 
+        @SerializedName("sso")
+        private RetailPracticeSsoDTO sso;
+
         public String getStoreId() {
             return storeId;
         }
@@ -54,6 +57,14 @@ public class RetailPracticeDTO extends PracticePatientIdsDTO {
 
         public void setStoreHtml(String storeHtml) {
             this.storeHtml = storeHtml;
+        }
+
+        public RetailPracticeSsoDTO getSso() {
+            return sso;
+        }
+
+        public void setSso(RetailPracticeSsoDTO sso) {
+            this.sso = sso;
         }
     }
 }

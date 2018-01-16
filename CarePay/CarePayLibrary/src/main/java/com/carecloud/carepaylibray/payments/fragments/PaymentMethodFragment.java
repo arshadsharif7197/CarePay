@@ -145,9 +145,9 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
     protected void handlePaymentButton(PaymentsMethodsDTO paymentMethod, double amount) {
         switch (paymentMethod.getType()) {
             case CarePayConstants.TYPE_CASH:
-                new LargeAlertDialog(getActivity(), Label.getLabel("payment_see_front_desk_button"),
-                        Label.getLabel("payment_back_button"),
-                        R.color.lightning_yellow, R.drawable.icn_notification_basic, new LargeAlertDialog.LargeAlertInterface() {
+                new LargeAlertDialog(getActivity(), Label.getLabel("payment_cash_message"),
+                        Label.getLabel("payment_ok"),
+                        R.color.lemonGreen, R.drawable.icn_payment_cash_selected, new LargeAlertDialog.LargeAlertInterface() {
                     @Override
                     public void onActionButton() {
                     }
