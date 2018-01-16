@@ -528,7 +528,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             if(target instanceof TextInputLayout){
                 TextInputLayout inputLayout = (TextInputLayout) target;
                 EditText editText = inputLayout.getEditText();
-                if(editText != null && !enabled) {
+                if(editText != null && !enabled && editText.getOnFocusChangeListener() != null) {
                     editText.getOnFocusChangeListener().onFocusChange(editText, true);
                     editText.setText(null);
                     editText.getOnFocusChangeListener().onFocusChange(editText, false);
