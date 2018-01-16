@@ -23,6 +23,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.payments.adapter.CreditCardsListAdapter;
 import com.carecloud.carepaylibray.payments.interfaces.ChooseCreditCardInterface;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
@@ -265,6 +266,19 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         }
         if (callback.getAppointmentId() != null) {
             queries.put("appointment_id", callback.getAppointmentId());
+        }
+
+        if(queries.get("patient_id") == null) {
+            queries.remove("patient_id");
+            if (callback.getAppointment() != null) {
+                queries.put("patient_id", callback.getAppointment().getMetadata().getPatientId());
+            }else{
+                for(PatientBalanceDTO patientBalanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()){
+                    if(patientBalanceDTO.getBalances().get(0).getMetadata().getPracticeId().equals(queries.get("practice_id"))){
+                        queries.put("patient_id", patientBalanceDTO.getBalances().get(0).getMetadata().getPatientId());
+                    }
+                }
+            }
         }
 
         Map<String, String> header = new HashMap<>();
