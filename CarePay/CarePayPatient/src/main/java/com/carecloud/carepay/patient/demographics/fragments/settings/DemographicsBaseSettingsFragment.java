@@ -18,10 +18,8 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
 import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicPhysicianSection;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsField;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
-import com.carecloud.carepaylibray.demographics.dtos.payload.PhysicianDto;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -33,9 +31,9 @@ import java.util.List;
 
 public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
 
-    protected abstract void checkIfEnableButton();
+    protected abstract void checkIfEnableButton(boolean userInteraction);
 
-    protected abstract boolean passConstraints();
+    protected abstract boolean passConstraints(boolean isUserInteraction);
 
     protected void setVisibility(View view, boolean isDisplayed) {
         if (isDisplayed) {
@@ -81,14 +79,17 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
         @Override
         public void afterTextChanged(Editable editable) {
             StringUtil.autoFormatZipcode(editable, lastLength);
-            checkIfEnableButton();
+            checkIfEnableButton(false);
         }
     };
 
     protected TextWatcher getValidateEmptyTextWatcher(final TextInputLayout inputLayout) {
         return new TextWatcher() {
+            public int count;
+
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+                this.count = sequence.length();
             }
 
             @Override
@@ -101,10 +102,10 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
                 if (StringUtil.isNullOrEmpty(editable.toString())) {
                     inputLayout.setErrorEnabled(true);
                     inputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
-                } else {
-                    inputLayout.setError(null);
+                } else if (count == 0) {
+                    unsetFieldError(inputLayout);
                 }
-                checkIfEnableButton();
+                checkIfEnableButton(false);
             }
         };
     }
@@ -127,16 +128,18 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
                 } else {
                     optionalView.setVisibility(View.GONE);
                 }
-                checkIfEnableButton();
+                checkIfEnableButton(false);
             }
         };
     }
 
     protected TextWatcher clearValidationErrorsOnTextChange(final TextInputLayout inputLayout) {
         return new TextWatcher() {
+            public int count;
+
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
-
+                this.count = sequence.length();
             }
 
             @Override
@@ -146,11 +149,10 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (!StringUtil.isNullOrEmpty(editable.toString())) {
-                    inputLayout.setError(null);
-                    inputLayout.setErrorEnabled(false);
+                if (!StringUtil.isNullOrEmpty(editable.toString()) && count == 0) {
+                    unsetFieldError(inputLayout);
                 }
-                checkIfEnableButton();
+                checkIfEnableButton(false);
             }
         };
     }
@@ -190,6 +192,7 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
         @Override
         public void afterTextChanged(Editable editable) {
             StringUtil.autoFormatPhone(editable, lastLength);
+            checkIfEnableButton(false);
         }
     };
 
@@ -226,7 +229,7 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
                 }
                 storeOption.setLabel(option.getLabel());
                 storeOption.setName(option.getName());
-                checkIfEnableButton();
+                checkIfEnableButton(false);
 
             }
         };
@@ -343,10 +346,79 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
                         inputLayout.setError(null);
                         inputLayout.setErrorEnabled(false);
                         optionalLabel.setVisibility(View.GONE);
-                        checkIfEnableButton();
+                        checkIfEnableButton(false);
                     }
                 },
                 dialogTitle);
+    }
+
+    protected void setUpField(TextInputLayout textInputLayout, EditText editText, boolean isVisible,
+                              String value, boolean isRequired, View optionalView) {
+        editText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(textInputLayout, null));
+        setVisibility(textInputLayout, isVisible);
+        editText.setText(StringUtil.captialize(value));
+        editText.getOnFocusChangeListener().onFocusChange(editText,
+                !StringUtil.isNullOrEmpty(editText.getText().toString().trim()));
+        if (isRequired) {
+            editText.addTextChangedListener(getValidateEmptyTextWatcher(textInputLayout));
+        } else if (optionalView != null) {
+            editText.addTextChangedListener(getOptionalViewTextWatcher(optionalView));
+        }
+        if (optionalView != null && !StringUtil.isNullOrEmpty(value)) {
+            optionalView.setVisibility(View.GONE);
+        }
+    }
+
+    protected View.OnClickListener selectEndOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            EditText editText = (EditText) view;
+            editText.setSelection(editText.length());
+        }
+    };
+
+
+    protected boolean validateField(View view, boolean isRequired, String value,
+                                    int inputLayoutId, boolean shouldRequestFocus) {
+        if (isRequired && StringUtil.isNullOrEmpty(value)) {
+            if (shouldRequestFocus) {
+                setDefaultError(view, inputLayoutId, shouldRequestFocus);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    protected void setDefaultError(View baseView, int id, boolean shouldRequestFocus) {
+        setFieldError(baseView, id, Label.getLabel("demographics_required_validation_msg"), shouldRequestFocus);
+    }
+
+    protected void setFieldError(View baseView, int id, String error, boolean shouldRequestFocus) {
+        TextInputLayout inputLayout = (TextInputLayout) baseView.findViewById(id);
+        setFieldError(inputLayout, error, shouldRequestFocus);
+    }
+
+    protected void setFieldError(TextInputLayout inputLayout, boolean shouldRequestFocus) {
+        setFieldError(inputLayout, Label.getLabel("demographics_required_validation_msg"), shouldRequestFocus);
+    }
+
+    protected void setFieldError(TextInputLayout inputLayout, String error, boolean shouldRequestFocus) {
+        if (inputLayout != null) {
+            if (!inputLayout.isErrorEnabled()) {
+                inputLayout.setErrorEnabled(true);
+                inputLayout.setError(error);
+            }
+            if (shouldRequestFocus) {
+                inputLayout.clearFocus();
+                inputLayout.requestFocus();
+            }
+        }
+
+    }
+
+    protected void unsetFieldError(TextInputLayout inputLayout) {
+        inputLayout.setError(null);
+        inputLayout.setErrorEnabled(false);
     }
 
 }

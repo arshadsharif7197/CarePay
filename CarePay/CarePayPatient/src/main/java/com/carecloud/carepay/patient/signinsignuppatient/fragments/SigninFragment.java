@@ -21,10 +21,10 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
+import com.carecloud.carepay.patient.selectlanguage.fragments.SelectLanguageFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
@@ -37,6 +37,8 @@ import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.signinsignup.fragments.ResetPasswordFragment;
+import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
@@ -59,7 +61,7 @@ public class SigninFragment extends BaseFragment {
     private EditText passwordEditText;
     private Button signInButton;
 
-    private FragmentActivityInterface listener;
+    private FragmentActivityInterface callback;
 
     /**
      * @param shouldOpenNotifications a boolean indicating if Notification screen should be opened
@@ -77,7 +79,7 @@ public class SigninFragment extends BaseFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            listener = (FragmentActivityInterface) context;
+            callback = (FragmentActivityInterface) context;
         } catch (ClassCastException e) {
             throw new ClassCastException("Attached Context must implement FragmentActivityInterface");
         }
@@ -86,7 +88,7 @@ public class SigninFragment extends BaseFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        listener = null;
+        callback = null;
     }
 
     @Override
@@ -104,7 +106,7 @@ public class SigninFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        signInDTO = (SignInDTO) listener.getDto();
+        signInDTO = (SignInDTO) callback.getDto();
         setEditTexts(view);
         setClickListeners(view);
         enableSignInButton(emailEditText.getText().toString(), passwordEditText.getText().toString());
@@ -123,7 +125,7 @@ public class SigninFragment extends BaseFragment {
         view.findViewById(R.id.signup_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.replaceFragment(new SignupFragment(), true);
+                callback.replaceFragment(new SignupFragment(), true);
                 reset();
             }
         });
@@ -132,7 +134,7 @@ public class SigninFragment extends BaseFragment {
         view.findViewById(R.id.changeLanguageText).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeLanguage(signInDTO.getMetadata().getTransitions().getLanguage());
+                callback.replaceFragment(SelectLanguageFragment.newInstance(), true);
             }
         });
 
@@ -151,22 +153,14 @@ public class SigninFragment extends BaseFragment {
         view.findViewById(R.id.forgotPasswordTextView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.replaceFragment(ResetPasswordFragment.newInstance(), true);
+                callback.replaceFragment(ResetPasswordFragment.newInstance(), true);
             }
         });
 
     }
 
-    private void changeLanguage(TransitionDTO languageTransition) {
-        Map<String, String> queryMap = new HashMap<>();
-        Map<String, String> header = new HashMap<>();
-        header.put("transition", "true");
-        header.put("x-api-key", HttpConstants.getApiStartKey());
-        getWorkflowServiceHelper().execute(languageTransition, signInCallback, queryMap, header);
-    }
-
     private void signIn() {
-        if (areAllFieldsValid(emailEditText.getText().toString(), passwordEditText.getText().toString())) {
+        if (areAllFieldsValid(emailEditText.getText().toString(), passwordEditText.getText().toString()) && signInButton.isClickable()) {
             setSignInButtonClickable(false);
             unifiedSignIn(emailEditText.getText().toString(), passwordEditText.getText().toString(),
                     signInDTO.getMetadata().getTransitions().getSignIn());
@@ -220,8 +214,8 @@ public class SigninFragment extends BaseFragment {
                     || getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT) {
                 getWorkflowServiceHelper().setAppAuthorizationHelper(null);
             }
-            listener.showErrorToast(CarePayConstants.INVALID_LOGIN_ERROR_MESSAGE);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            callback.showErrorToast(CarePayConstants.INVALID_LOGIN_ERROR_MESSAGE);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -262,6 +256,11 @@ public class SigninFragment extends BaseFragment {
             } else {
                 PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
             }
+
+            MyHealthDto myHealthDto = DtoHelper.getConvertedDTO(MyHealthDto.class, workflowDTO);
+            String userId = myHealthDto.getPayload().getPracticePatientIds().get(0).getUserId();
+            MixPanelUtil.setUser(getContext(), userId, myHealthDto.getPayload().getDemographicDTO());
+
         }
 
         @Override

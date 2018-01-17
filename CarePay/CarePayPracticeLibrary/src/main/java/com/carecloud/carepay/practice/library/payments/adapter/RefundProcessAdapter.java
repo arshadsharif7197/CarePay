@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -38,7 +39,7 @@ import java.util.Map;
 public class RefundProcessAdapter extends RecyclerView.Adapter<RefundProcessAdapter.ViewHolder> {
 
     public interface RefundItemActionCallback {
-        void onItemCheckChanged(List<PaymentHistoryLineItem> groupItems, boolean checked);
+        void onItemCheckChanged(PaymentHistoryLineItem lineItem, boolean checked);
 
         void onItemAmountSelected(PaymentHistoryLineItem lineItem);
     }
@@ -76,7 +77,7 @@ public class RefundProcessAdapter extends RecyclerView.Adapter<RefundProcessAdap
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final PaymentHistoryLineItem lineItem = lineItems.get(position);
 
-        holder.amount.setText(NumberFormat.getCurrencyInstance().format(lineItem.getRefundableBalance()));
+        holder.amount.setText(NumberFormat.getCurrencyInstance(Locale.US).format(lineItem.getRefundableBalance()));
         holder.description.setText(parseDescription(lineItem.getDescription()));
 
         LocationDTO locationDTO = locationMap.get(lineItem.getLocationID());
@@ -110,37 +111,20 @@ public class RefundProcessAdapter extends RecyclerView.Adapter<RefundProcessAdap
                     });
         }
 
-        boolean isGroupHeader = false;
-        boolean isGrouped = false;
-        if(position < getItemCount()-1){
-            PaymentHistoryLineItem nextItem = lineItems.get(position+1);
-            isGroupHeader = nextItem.getCreditTransactionId().equals(lineItem.getCreditTransactionId());
-        }
-        if(position > 0){
-            PaymentHistoryLineItem previousItem = lineItems.get(position-1);
-            isGrouped = previousItem.getCreditTransactionId().equals(lineItem.getCreditTransactionId());
-        }
+        holder.checkBox.setVisibility(View.VISIBLE);
+        holder.checkBox.setOnCheckedChangeListener(null);
+        holder.checkBox.setChecked(lineItem.isChecked());
+        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                lineItem.setChecked(isChecked);
+                callback.onItemCheckChanged(lineItem, isChecked);
+                notifyDataSetChanged();
+            }
+        });
 
-        if(!isGrouped) {
-            holder.checkBox.setVisibility(View.VISIBLE);
-            holder.checkBox.setOnCheckedChangeListener(null);
-            holder.checkBox.setChecked(lineItem.isChecked());
-            holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    callback.onItemCheckChanged(getGroupItems(lineItem, isChecked), isChecked);
-                    notifyDataSetChanged();
-                }
-            });
-        }else {
-            holder.checkBox.setVisibility(View.INVISIBLE);
-        }
+        holder.divider.setVisibility(View.VISIBLE);
 
-        if(isGroupHeader) {
-            holder.divider.setVisibility(View.GONE);
-        }else{
-            holder.divider.setVisibility(View.VISIBLE);
-        }
 
         holder.amount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,17 +169,6 @@ public class RefundProcessAdapter extends RecyclerView.Adapter<RefundProcessAdap
             }
         });
         return lineItems;
-    }
-
-    private List<PaymentHistoryLineItem> getGroupItems(PaymentHistoryLineItem compareItem, boolean checked){
-        List<PaymentHistoryLineItem> groupItems = new ArrayList<>();
-        for(PaymentHistoryLineItem lineItem : lineItems){
-            if(compareItem.getCreditTransactionId().equals(lineItem.getCreditTransactionId())){
-                lineItem.setChecked(checked);
-                groupItems.add(lineItem);
-            }
-        }
-        return groupItems;
     }
 
     private static String parseDescription(String description){

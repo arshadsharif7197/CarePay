@@ -46,6 +46,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
@@ -441,29 +442,41 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                 PracticeModePracticeAppointmentsActivity.this
         );
         displayDialogFragment(dialog, true);
+        setPatientId(appointmentDTO.getMetadata().getPatientId());
     }
 
     private void confirmAppointment(AppointmentDTO appointmentDTO) {
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getConfirmAppointment();
         confirmationMessageText = "appointment_schedule_success_message_HTML";
-        transitionAppointment(transitionDTO, appointmentDTO, true);
+        transitionAppointment(transitionDTO, appointmentDTO, true, getString(R.string.event_appointment_accepted));
     }
 
     private void rejectAppointment(AppointmentDTO appointmentDTO) {
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getDismissAppointment();
         confirmationMessageText = "appointment_rejection_success_message_HTML";
-        transitionAppointment(transitionDTO, appointmentDTO, false);
+        transitionAppointment(transitionDTO, appointmentDTO, false, getString(R.string.event_appointment_rejected));
     }
 
     private void transitionAppointment(TransitionDTO transitionDTO,
                                        AppointmentDTO appointmentDTO,
-                                       boolean updateOnSuccess) {
+                                       boolean updateOnSuccess,
+                                       String event) {
         this.updateOnSuccess = updateOnSuccess;
 
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("appointment_id", appointmentDTO.getPayload().getId());
 
         getWorkflowServiceHelper().execute(transitionDTO, oneAppointmentsServiceCallback, queryMap);
+
+        String[] params = {getString(R.string.param_appointment_type),
+                getString(R.string.param_practice_id),
+                getString(R.string.param_practice_name),
+                getString(R.string.param_patient_id)};
+        String[] values = {appointmentDTO.getPayload().getVisitType().getName(),
+                getApplicationMode().getUserPracticeDTO().getPracticeId(),
+                getApplicationMode().getUserPracticeDTO().getPracticeName(),
+                appointmentDTO.getMetadata().getPatientId()};
+        MixPanelUtil.logEvent(event, params, values);
     }
 
     WorkflowServiceCallback oneAppointmentsServiceCallback = new WorkflowServiceCallback() {
@@ -523,7 +536,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
 
     private void showResponsibilityFragment(PaymentsModel paymentsModel) {
-        String tag = ResponsibilityFragmentDialog.class.getSimpleName();
+        String tag = ResponsibilityFragmentDialog.class.getName();
         ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(paymentsModel);
         FormsResponsibilityFragmentDialog dialog = FormsResponsibilityFragmentDialog
                 .newInstance(paymentsModel,
@@ -638,7 +651,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                         .fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
                 AdHocFormsListFragment fragment = AdHocFormsListFragment
                         .newInstance(appointmentsResultModel, patientId);
-                fragment.show(getSupportFragmentManager(), "forms");
+                displayDialogFragment(fragment, false);
                 fragment.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -665,7 +678,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void onDetailItemClick(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem) {
-        String tag = PaymentDetailsFragmentDialog.class.getSimpleName();
+        String tag = PaymentDetailsFragmentDialog.class.getName();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
         if (prev != null) {
@@ -733,7 +746,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     public void cancelAppointment(AppointmentDTO appointmentDTO) {
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getCancelAppointment();
         confirmationMessageText = "appointment_cancellation_success_message_HTML";
-        transitionAppointment(transitionDTO, appointmentDTO, false);
+        transitionAppointment(transitionDTO, appointmentDTO, false, getString(R.string.event_appointment_cancelled));
     }
 
     @Override

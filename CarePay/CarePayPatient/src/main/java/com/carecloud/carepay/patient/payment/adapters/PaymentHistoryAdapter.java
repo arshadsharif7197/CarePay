@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -20,6 +21,7 @@ import com.squareup.picasso.Picasso;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by jorge on 31/12/16
@@ -38,7 +40,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
     private List<UserPracticeDTO> userPractices = new ArrayList<>();
 
     private boolean isLoading = false;
-    private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+    private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
     /**
      * Constructor
@@ -69,11 +71,15 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
             return;
         }
 
+        holder.transactionFlag.setVisibility(View.GONE);
+
         final PaymentHistoryItem item = paymentHistoryItems.get(position);
 
-        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(item.getPayload().getDate()).shiftDateToGMT();
+        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(item.getPayload().getDate());
         holder.paymentDate.setText(dateUtil.getDateAsMonthLiteralDayOrdinalYear());
-        holder.amount.setText(currencyFormatter.format(item.getPayload().getTotalPaid()));
+
+        double totalPaid = item.getPayload().getTotalPaid();
+        holder.amount.setText(currencyFormatter.format(totalPaid));
 
         holder.image.setVisibility(View.GONE);
         UserPracticeDTO userPracticeDTO = getUserPractice(item.getMetadata().getPracticeId());
@@ -98,6 +104,17 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
                     });
 
         }
+
+        double refunded = item.getPayload().getTotalRefunded();
+        if(refunded > 0){
+            if(refunded < totalPaid){
+                holder.transactionFlag.setText(Label.getLabel("payment_history_partial_refund_flag"));
+            }else{
+                holder.transactionFlag.setText(Label.getLabel("payment_history_full_refund_flag"));
+            }
+            holder.transactionFlag.setVisibility(View.VISIBLE);
+        }
+
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,6 +183,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
         private TextView amount;
         private TextView paymentDate;
         private ImageView image;
+        private TextView transactionFlag;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -175,6 +193,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
             paymentDate = (TextView) itemView.findViewById(R.id.historyDateTextView);
             shortName = (TextView) itemView.findViewById(R.id.historyAvatarTextView);
             image = (ImageView) itemView.findViewById(R.id.historyImageView);
+            transactionFlag = (TextView) itemView.findViewById(R.id.historyTransactionFlag);
         }
     }
 }

@@ -39,6 +39,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -48,7 +49,7 @@ import java.util.Map;
 public class RefundProcessFragment extends BaseDialogFragment implements RefundProcessAdapter.RefundItemActionCallback {
 
     private PracticePaymentNavigationCallback callback;
-    private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+    private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
     private PaymentHistoryItem historyItem;
     private PaymentsModel paymentsModel;
@@ -293,11 +294,11 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
 
 
     @Override
-    public void onItemCheckChanged(List<PaymentHistoryLineItem> groupItems, boolean checked) {
+    public void onItemCheckChanged(PaymentHistoryLineItem lineItem, boolean checked) {
         if(checked){
-            refundLineItems.addAll(groupItems);
+            refundLineItems.add(lineItem);
         }else{
-            refundLineItems.removeAll(groupItems);
+            refundLineItems.remove(lineItem);
         }
         setRefundAmount();
     }

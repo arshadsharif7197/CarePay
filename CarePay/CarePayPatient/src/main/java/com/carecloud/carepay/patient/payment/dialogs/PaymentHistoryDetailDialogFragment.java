@@ -20,6 +20,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  * Created by lmenendez on 10/4/17
@@ -81,7 +82,7 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
         transactionNumber.setText(historyItem.getPayload().getConfirmation());
 
         TextView transactionTotal = (TextView) view.findViewById(R.id.transaction_total);
-        transactionTotal.setText(NumberFormat.getCurrencyInstance().format(totalPaid));
+        transactionTotal.setText(NumberFormat.getCurrencyInstance(Locale.US).format(totalPaid));
 
         TextView practiceName = (TextView) view.findViewById(R.id.practice_name);
         practiceName.setText(userPracticeDTO.getPracticeName());
@@ -97,6 +98,15 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
                 scrollView.scrollTo(0,0);
             }
         }, 100);
+
+        double refundedAmount = historyItem.getPayload().getTotalRefunded();
+        if(refundedAmount > 0D){
+            View refundLayout = view.findViewById(R.id.refund_layout);
+            refundLayout.setVisibility(View.VISIBLE);
+
+            TextView refundAmount = (TextView) view.findViewById(R.id.transaction_refunded);
+            refundAmount.setText(NumberFormat.getCurrencyInstance(Locale.US).format(historyItem.getPayload().getTotalRefunded()));
+        }
 
     }
 

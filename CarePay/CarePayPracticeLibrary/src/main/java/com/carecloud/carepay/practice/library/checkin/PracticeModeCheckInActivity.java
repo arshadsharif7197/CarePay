@@ -26,6 +26,7 @@ import com.carecloud.carepay.practice.library.checkin.dtos.CheckInPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.customdialog.FilterDialog;
 import com.carecloud.carepay.practice.library.models.FilterModel;
+import com.carecloud.carepay.practice.library.payments.dialogs.IntegratedPaymentsChooseDeviceFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.AddPaymentItemFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionEntryFragment;
@@ -38,6 +39,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticePayment
 import com.carecloud.carepay.practice.library.payments.fragments.RefundDetailFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.RefundProcessFragment;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentNavigationCallback;
+import com.carecloud.carepay.practice.library.payments.interfaces.ShamrockPaymentsCallback;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -76,10 +78,9 @@ import java.util.Map;
 import java.util.Set;
 
 public class PracticeModeCheckInActivity extends BasePracticeActivity
-        implements FilterDialog.FilterDialogListener,
-        PracticePaymentNavigationCallback,
+        implements FilterDialog.FilterDialogListener, PracticePaymentNavigationCallback,
         AppointmentDetailDialog.AppointmentDialogCallback,
-        CheckedInAppointmentAdapter.CheckinItemCallback {
+        CheckedInAppointmentAdapter.CheckinItemCallback, ShamrockPaymentsCallback {
 
 
     private RecyclerView checkingInRecyclerView;
@@ -583,6 +584,17 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     @Override
     public void onPaymentPlanAction(PaymentsModel paymentsModel) {
 
+    }
+
+    @Override
+    public void showChooseDeviceList(PaymentsModel paymentsModel, double paymentAmount) {
+        IntegratedPaymentsChooseDeviceFragment fragment = IntegratedPaymentsChooseDeviceFragment.newInstance(paymentsModel, paymentAmount);
+        displayDialogFragment(fragment, false);
+    }
+
+    @Override
+    public void dismissChooseDeviceList(double amount, PaymentsModel paymentsModel) {
+        onPayButtonClicked(amount, paymentsModel);
     }
 
     @Override

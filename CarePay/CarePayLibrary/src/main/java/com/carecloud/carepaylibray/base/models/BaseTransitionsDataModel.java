@@ -22,8 +22,6 @@ public class BaseTransitionsDataModel {
     private String type;
     @SerializedName("properties")
     @Expose
-
-
     private JsonObject properties;
 
     private Gson gson = new Gson();

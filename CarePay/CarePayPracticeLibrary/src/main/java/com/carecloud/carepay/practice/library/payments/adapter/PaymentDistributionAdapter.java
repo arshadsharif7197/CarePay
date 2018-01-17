@@ -23,6 +23,7 @@ import com.squareup.picasso.Picasso;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by lmenendez on 3/14/17
@@ -45,7 +46,7 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
         this.context = context;
         this.balanceItems = balanceItems;
         this.callback = callback;
-        this.currencyFormat = NumberFormat.getCurrencyInstance();
+        this.currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
         this.rowType = rowType;
     }
 

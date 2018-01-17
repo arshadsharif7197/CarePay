@@ -10,11 +10,17 @@ import com.google.gson.annotations.SerializedName;
 public class LabDto {
 
     @Expose
+    @SerializedName("id")
     private Integer id;
+
     @Expose
+    @SerializedName("name")
     private String name;
+
     @Expose
+    @SerializedName("practice")
     private String practice;
+
     @Expose
     @SerializedName("created_at")
     private String createdAt;

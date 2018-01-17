@@ -15,6 +15,7 @@ import com.carecloud.carepay.practice.clover.models.CloverPaymentDTO;
 import com.carecloud.carepay.practice.clover.models.CloverQueuePaymentRecord;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -27,6 +28,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPo
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
 import com.carecloud.carepaylibray.utils.EncryptionUtil;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.clover.sdk.util.CloverAccount;
@@ -140,6 +142,7 @@ public class CloverPaymentActivity extends BaseActivity {
             }else{
                 SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.no_account));
                 logPaymentFail(getString(R.string.no_account), false);
+                logPaymentMixpanel(getString(R.string.event_payment_failed));
                 finish();
             }
         }
@@ -155,6 +158,7 @@ public class CloverPaymentActivity extends BaseActivity {
     public void onBackPressed() {
         setResult(RESULT_CANCELED);
         disconnect();
+        logPaymentMixpanel(getString(R.string.event_payment_cancelled));
         finish();
     }
 
@@ -219,6 +223,7 @@ public class CloverPaymentActivity extends BaseActivity {
                 }else {
                     SystemUtil.showErrorToast(getContext(), Label.getLabel("clover_account_not_authorized"));
                     logPaymentFail("account not authorized", false);
+                    logPaymentMixpanel(getString(R.string.event_payment_failed));
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -271,6 +276,7 @@ public class CloverPaymentActivity extends BaseActivity {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        logPaymentMixpanel(getString(R.string.event_payment_failed));
                         finish();
                     }
                 }, 3000);
@@ -337,12 +343,15 @@ public class CloverPaymentActivity extends BaseActivity {
             } else if (resultCode == RESULT_CANCELED) {
                 SystemUtil.showErrorToast(getContext(), Label.getLabel("clover_payment_canceled"));
                 setResult(resultCode);
+
+                logPaymentMixpanel(getString(R.string.event_payment_cancelled));
                 finish();
 
             } else {
                 SystemUtil.showErrorToast(getContext(), Label.getLabel("clover_payment_failed"));
                 logPaymentFail("Clover payment was not successfully processed", false);
                 setResult(resultCode);
+                logPaymentMixpanel(getString(R.string.event_payment_failed));
                 finish();
             }
         }
@@ -457,6 +466,15 @@ public class CloverPaymentActivity extends BaseActivity {
                 intent.putExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA, workflowDTO.toString());
                 setResult(RESULT_OK, intent);
                 finish();
+
+                String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
+                Object[] values = {amountDouble, getString(R.string.payment_clover)};
+                MixPanelUtil.logEvent(getString(R.string.event_payment_complete), params, values);
+                if(getApplicationMode().getApplicationType() != ApplicationMode.ApplicationType.PRACTICE){
+                    MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payments_completed), 1);
+                    MixPanelUtil.incrementPeopleProperty(getString(R.string.total_payments_amount), amountDouble);
+                }
+
             }
 
             @Override
@@ -464,7 +482,6 @@ public class CloverPaymentActivity extends BaseActivity {
                 hideProgressDialog();
                 System.out.print(exceptionMessage);
                 logPaymentFail("Failed to reach make payment endpoint", true, payment.getJSONObject(), exceptionMessage);
-
             }
         };
     }
@@ -543,6 +560,7 @@ public class CloverPaymentActivity extends BaseActivity {
                     error);
 
             setResult(CarePayConstants.PAYMENT_RETRY_PENDING_RESULT_CODE);
+            logPaymentMixpanel(getString(R.string.event_payment_failed));
             finish();
 
         }
@@ -607,5 +625,9 @@ public class CloverPaymentActivity extends BaseActivity {
 
     }
 
-
+    void logPaymentMixpanel(String event){
+        String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
+        Object[] values = {amountDouble, getString(R.string.payment_clover)};
+        MixPanelUtil.logEvent(event, params, values);
+    }
 }

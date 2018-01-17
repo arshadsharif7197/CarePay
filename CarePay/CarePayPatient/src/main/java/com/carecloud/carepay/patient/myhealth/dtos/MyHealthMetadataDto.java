@@ -1,7 +1,7 @@
 package com.carecloud.carepay.patient.myhealth.dtos;
 
-import com.carecloud.carepay.patient.patientsplash.dtos.TransitionsDTO;
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author pjohnson on 17/07/17.
@@ -9,10 +9,12 @@ import com.google.gson.annotations.Expose;
 public class MyHealthMetadataDto {
 
     @Expose
+    @SerializedName("links")
     private MyHealthLinks links = new MyHealthLinks();
 
     @Expose
-    private TransitionsDTO transitions = new TransitionsDTO();
+    @SerializedName("transitions")
+    private MyHealthTransitionsDto transitions = new MyHealthTransitionsDto();
 
     public MyHealthLinks getLinks() {
         return links;
@@ -22,11 +24,11 @@ public class MyHealthMetadataDto {
         this.links = links;
     }
 
-    public TransitionsDTO getTransitions() {
+    public MyHealthTransitionsDto getTransitions() {
         return transitions;
     }
 
-    public void setTransitions(TransitionsDTO transitions) {
+    public void setTransitions(MyHealthTransitionsDto transitions) {
         this.transitions = transitions;
     }
 }

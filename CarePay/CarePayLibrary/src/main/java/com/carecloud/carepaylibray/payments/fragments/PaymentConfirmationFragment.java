@@ -24,6 +24,7 @@ import static com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentM
 import static com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod.PAYMENT_METHOD_NEW_CARD;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  * Created by lmenendez on 3/24/17
@@ -74,7 +75,7 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
             paymentsModel = gson.fromJson(paymentPayload, PaymentsModel.class);
             patientPaymentPayload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
         }
-        currencyFormatter = NumberFormat.getCurrencyInstance();
+        currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
     }
 
     @Override
@@ -106,7 +107,7 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
 
         DateUtil dateUtil = DateUtil.getInstance().setToCurrent();
         TextView date = (TextView) view.findViewById(R.id.payment_confirm_date);
-        date.setText(dateUtil.toStringWithFormatMmSlashDdSlashYyyy());
+        date.setText(dateUtil.getDateAsMonthLiteralDayOrdinalYear());
 
         TextView practice = (TextView) view.findViewById(R.id.payment_confirm_practice_name);
         practice.setText(paymentsModel.getPaymentPayload().getUserPractices().get(0).getPracticeName());

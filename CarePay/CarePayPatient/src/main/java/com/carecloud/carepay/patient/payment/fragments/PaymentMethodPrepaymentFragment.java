@@ -17,6 +17,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  * Created by lmenendez on 8/21/17
@@ -64,7 +65,7 @@ public class PaymentMethodPrepaymentFragment extends PatientPaymentMethodFragmen
         super.onViewCreated(view, icicle);
 
         TextView prepaymentAmount = (TextView) view.findViewById(R.id.prepaymentAmount);
-        prepaymentAmount.setText(NumberFormat.getCurrencyInstance().format(amountToMakePayment));
+        prepaymentAmount.setText(NumberFormat.getCurrencyInstance(Locale.US).format(amountToMakePayment));
 
     }
 

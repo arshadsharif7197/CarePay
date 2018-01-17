@@ -12,9 +12,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -42,6 +40,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadI
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactInterface;
 import com.carecloud.carepaylibray.utils.AddressUtil;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -80,6 +79,14 @@ public class EmergencyContactFragment extends BaseDialogFragment {
     private TextInputLayout zipCodeTextInputLayout;
     private TextInputLayout cityTextInputLayout;
     private TextInputLayout stateTextInputLayout;
+    private TextInputLayout lastNameInputLayout;
+    private TextInputLayout firstNameInputLayout;
+    private TextInputLayout primaryPhoneTextInputLayout;
+    private TextInputLayout dateBirthTextInputLayout;
+    private TextInputLayout secondaryPhoneTextInputLayout;
+    private TextInputLayout emergencyContactRelationshipInputLayout;
+    private TextInputLayout address1TextInputLayout;
+    private View parentScrollView;
 
     public EmergencyContactFragment() {
 
@@ -112,7 +119,9 @@ public class EmergencyContactFragment extends BaseDialogFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_emergency_contact, container, false);
     }
 
@@ -138,23 +147,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         setUpView(view);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.emergency_contact_menu, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.deleteEmergencyContact) {
-            dto.getPayload().getDemographics().getPayload().setEmergencyContact(null);
-            getActivity().onBackPressed();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void setUpView(View view) {
-
         DemographicPayloadDTO demographicPayload = dto.getPayload().getDemographics().getPayload();
         PatientModel emergencyContact = demographicPayload.getEmergencyContact();
 
@@ -165,13 +158,26 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                 updateEmergencyContactInfo();
             }
         });
+        saveButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View buttonView, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN && !buttonView.isSelected()) {
+                    checkIfEnableButton(true);
+                    return true;
+                }
+                return false;
+            }
+        });
+
         if (!isEmptyEC(emergencyContact)) {
-            saveButton.setText(Label.getLabel("demographics_save_changes_button"));
+            saveButton.setText(Label.getLabel("demographics.emergencyContact.button.label.saveChanges"));
         } else {
             emergencyContact = new PatientModel();
         }
 
-        TextInputLayout firstNameInputLayout = (TextInputLayout) view
+        parentScrollView = view.findViewById(R.id.scrollView);
+
+        firstNameInputLayout = (TextInputLayout) view
                 .findViewById(R.id.firstNameInputLayout);
         firstNameEditText = (EditText) view.findViewById(R.id.firstNameEditText);
         firstNameEditText.setOnFocusChangeListener(SystemUtil
@@ -202,7 +208,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                     .isNullOrEmpty(emergencyContact.getMiddleName()) ? View.VISIBLE : View.GONE);
         }
 
-        TextInputLayout lastNameInputLayout = (TextInputLayout) view
+        lastNameInputLayout = (TextInputLayout) view
                 .findViewById(R.id.lastNameInputLayout);
         lastNameEditText = (EditText) view.findViewById(R.id.lastNameEditText);
         lastNameEditText.setOnFocusChangeListener(SystemUtil
@@ -212,7 +218,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                 !StringUtil.isNullOrEmpty(lastNameEditText.getText().toString().trim()));
         lastNameEditText.addTextChangedListener(getValidateRequiredEmptyTextWatcher(lastNameInputLayout));
 
-        TextInputLayout primaryPhoneTextInputLayout = (TextInputLayout) view
+        primaryPhoneTextInputLayout = (TextInputLayout) view
                 .findViewById(R.id.primaryPhoneTextInputLayout);
         primaryPhoneEditText = (EditText) view.findViewById(R.id.primaryPhoneEditText);
         primaryPhoneEditText.addTextChangedListener(phoneInputFormatter);
@@ -223,8 +229,9 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         primaryPhoneEditText.getOnFocusChangeListener().onFocusChange(primaryPhoneEditText,
                 !StringUtil.isNullOrEmpty(primaryPhoneEditText.getText().toString().trim()));
         primaryPhoneEditText.addTextChangedListener(getValidateRequiredEmptyTextWatcher(primaryPhoneTextInputLayout));
+        primaryPhoneEditText.setOnClickListener(selectEndOnClick);
 
-        TextInputLayout secondaryPhoneTextInputLayout = (TextInputLayout) view
+        secondaryPhoneTextInputLayout = (TextInputLayout) view
                 .findViewById(R.id.secondaryPhoneTextInputLayout);
         secondaryPhoneEditText = (EditText) view.findViewById(R.id.secondaryPhoneEditText);
         secondaryPhoneEditText.addTextChangedListener(phoneInputFormatter);
@@ -237,13 +244,15 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         boolean secondaryPhoneRequired = dataModel.getDemographic().getEmergencyContact().getProperties()
                 .getSecondaryPhoneNumber().isRequired();
         if (secondaryPhoneRequired) {
-            secondaryPhoneEditText.addTextChangedListener(getValidateRequiredEmptyTextWatcher(secondaryPhoneTextInputLayout));
+            secondaryPhoneEditText
+                    .addTextChangedListener(getValidateRequiredEmptyTextWatcher(secondaryPhoneTextInputLayout));
         } else {
             View optionalView = view.findViewById(R.id.secondaryPhoneOptionalTextView);
             secondaryPhoneEditText.addTextChangedListener(getValidateOptionalEmptyTextWatcher(optionalView));
             optionalView.setVisibility(StringUtil
                     .isNullOrEmpty(secondaryPhoneEditText.getText().toString()) ? View.VISIBLE : View.GONE);
         }
+        secondaryPhoneEditText.setOnClickListener(selectEndOnClick);
 
         TextInputLayout address2TextInputLayout = (TextInputLayout) view
                 .findViewById(R.id.address2TextInputLayout);
@@ -253,6 +262,8 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         addressEditText2.setText(emergencyContact.getAddress().getAddress2());
         addressEditText2.getOnFocusChangeListener().onFocusChange(addressEditText2,
                 !StringUtil.isNullOrEmpty(addressEditText2.getText().toString().trim()));
+        addressEditText2.addTextChangedListener(getValidateOptionalEmptyTextWatcher(view
+                .findViewById(R.id.demogrAddressOptionalLabel)));
 
         zipCodeTextInputLayout = (TextInputLayout) view
                 .findViewById(R.id.zipCodeTextInputLayout);
@@ -301,14 +312,16 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                 !StringUtil.isNullOrEmpty(emailEditText.getText().toString().trim()));
         emailEditText.addTextChangedListener(getEmptyValidatorWatcher(emailInputLayout, true));
 
-        TextInputLayout dateBirthTextInput = (TextInputLayout) view.findViewById(R.id.dateOfBirthInputLayout);
+        dateBirthTextInputLayout = (TextInputLayout) view.findViewById(R.id.dateOfBirthInputLayout);
         dateOfBirthEditText = (EditText) view.findViewById(R.id.dateOfBirthEditText);
-        dateOfBirthEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(dateBirthTextInput, null));
-        dateOfBirthEditText.addTextChangedListener(dateInputFormatter);
+        dateOfBirthEditText.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(dateBirthTextInputLayout, null));
         String dateString = emergencyContact.getFormattedDateOfBirth();
         dateOfBirthEditText.setText(dateString);
+        dateOfBirthEditText.addTextChangedListener(dateInputFormatter);
         dateOfBirthEditText.getOnFocusChangeListener().onFocusChange(dateOfBirthEditText,
                 !StringUtil.isNullOrEmpty(dateString));
+        dateOfBirthEditText.setOnClickListener(selectEndOnClick);
 
         TextInputLayout genderInputLayout = (TextInputLayout) view.findViewById(R.id.genderInputLayout);
         genderEditText = (EditText) view.findViewById(R.id.genderEditText);
@@ -330,7 +343,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         genderEditText.getOnFocusChangeListener().onFocusChange(genderEditText,
                 !StringUtil.isNullOrEmpty(emergencyContact.getGender()));
 
-        TextInputLayout emergencyContactRelationshipInputLayout = (TextInputLayout) view
+        emergencyContactRelationshipInputLayout = (TextInputLayout) view
                 .findViewById(R.id.emergencyContactRelationshipInputLayout);
         emergencyContactRelationshipEditText = (EditText) view.findViewById(R.id.emergencyContactRelationshipEditText);
         emergencyContactRelationshipEditText.setOnFocusChangeListener(SystemUtil
@@ -344,8 +357,9 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                                 emergencyContactRelationshipEditText.setText(option.getLabel());
                                 emergencyContactRelationshipEditText.getOnFocusChangeListener()
                                         .onFocusChange(emergencyContactRelationshipEditText,
-                                                !StringUtil.isNullOrEmpty(emergencyContactRelationshipEditText.getText().toString()));
-                                checkIfEnableButton();
+                                                !StringUtil.isNullOrEmpty(emergencyContactRelationshipEditText
+                                                        .getText().toString()));
+                                checkIfEnableButton(false);
                             }
                         },
                         Label.getLabel("demographics_emergency_contact_relationship")));
@@ -353,7 +367,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         emergencyContactRelationshipEditText.getOnFocusChangeListener().onFocusChange(emergencyContactRelationshipEditText,
                 !StringUtil.isNullOrEmpty(emergencyContact.getEmergencyContactRelationship()));
 
-        TextInputLayout address1TextInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
+        address1TextInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
         addressEditText = (EditText) view.findViewById(R.id.addressEditText);
         addressEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(address1TextInputLayout, null));
@@ -375,17 +389,14 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                     addressEditText2.setText("");
                     addressEditText2.getOnFocusChangeListener().onFocusChange(addressEditText2,
                             !StringUtil.isNullOrEmpty(addressEditText2.getText().toString()));
-                    zipCodeTextInputLayout.setErrorEnabled(false);
-                    zipCodeTextInputLayout.setError(null);
-                    cityTextInputLayout.setErrorEnabled(false);
-                    cityTextInputLayout.setError(null);
-                    stateTextInputLayout.setErrorEnabled(false);
-                    stateTextInputLayout.setError(null);
+                    unsetFieldError(zipCodeTextInputLayout);
+                    unsetFieldError(cityTextInputLayout);
+                    unsetFieldError(stateTextInputLayout);
                 } else {
                     addressEditText2.setEnabled(true);
 
                 }
-                checkIfEnableButton();
+                checkIfEnableButton(false);
             }
         });
         addressEditText.setText(emergencyContact.getAddress().getAddress1());
@@ -396,7 +407,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         view.findViewById(R.id.additionalInfoOptionalTextView).setVisibility(View.VISIBLE);
         view.findViewById(R.id.addressInfoOptionalTextView).setVisibility(View.VISIBLE);
 
-        checkIfEnableButton();
+        checkIfEnableButton(false);
     }
 
     private boolean isEmptyEC(PatientModel emergencyContact) {
@@ -410,9 +421,12 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         if (passConstraints(true)) {
             Map<String, String> queries = new HashMap<>();
             if (!dto.getPayload().getAppointmentpayloaddto().isEmpty()) {
-                queries.put("practice_mgmt", dto.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
-                queries.put("practice_id", dto.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
-                queries.put("appointment_id", dto.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
+                queries.put("practice_mgmt", dto.getPayload().getAppointmentpayloaddto().get(0)
+                        .getMetadata().getPracticeMgmt());
+                queries.put("practice_id", dto.getPayload().getAppointmentpayloaddto().get(0)
+                        .getMetadata().getPracticeId());
+                queries.put("appointment_id", dto.getPayload().getAppointmentpayloaddto().get(0)
+                        .getMetadata().getAppointmentId());
             }
             Map<String, String> header = new HashMap<>();
             DemographicDTO updateModel = getUpdateModel();
@@ -428,43 +442,44 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         DemographicEmergencyContactSection dataModel = dto.getMetadata().getNewDataModel()
                 .getDemographic().getEmergencyContact();
         if (StringUtil.isNullOrEmpty(firstNameEditText.getText().toString())) {
+            if (userInteraction) {
+                setError(firstNameInputLayout);
+            }
             return false;
+        } else {
+            unsetFieldError(firstNameInputLayout);
         }
+
         if (dataModel.getProperties().getMiddleName().isRequired()
                 && StringUtil.isNullOrEmpty(middleNameEditText.getText().toString())) {
             return false;
         }
+
         if (StringUtil.isNullOrEmpty(lastNameEditText.getText().toString())) {
+            if (userInteraction) {
+                setError(lastNameInputLayout);
+            }
             return false;
+        } else {
+            unsetFieldError(lastNameInputLayout);
         }
-        if (!StringUtil.isNullOrEmpty(emailEditText.getText().toString())
-                && (!ValidationHelper.isValidEmail(emailEditText.getText().toString().trim()))) {
-            emailInputLayout.setErrorEnabled(true);
-            emailInputLayout.setError(Label.getLabel("demographics_email_validation_msg"));
+
+        if (validatePhoneNumber(primaryPhoneTextInputLayout, primaryPhoneEditText, userInteraction, true))
             return false;
-        } else if (dataModel.getProperties().getEmailAddress().isRequired()
-                && StringUtil.isNullOrEmpty(emailEditText.getText().toString())) {
-            emailInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
+
+        if (validatePhoneNumber(secondaryPhoneTextInputLayout, secondaryPhoneEditText, userInteraction,
+                dataModel.getProperties().getSecondaryPhoneNumber().isRequired()))
             return false;
-        }
-        if (dataModel.getProperties().getDateOfBirth().isRequired()
-                && StringUtil.isNullOrEmpty(dateOfBirthEditText.getText().toString())) {
-            return false;
-        }
-        if (dataModel.getProperties().getGender().isRequired()
-                && StringUtil.isNullOrEmpty(genderEditText.getText().toString())) {
-            return false;
-        }
-        if (StringUtil.isNullOrEmpty(primaryPhoneEditText.getText().toString())) {
-            return false;
-        }
-        if (dataModel.getProperties().getSecondaryPhoneNumber().isRequired()
-                && StringUtil.isNullOrEmpty(secondaryPhoneEditText.getText().toString())) {
-            return false;
-        }
+
         if (StringUtil.isNullOrEmpty(emergencyContactRelationshipEditText.getText().toString())) {
+            if (userInteraction) {
+                setError(emergencyContactRelationshipInputLayout);
+            }
             return false;
+        } else {
+            unsetFieldError(emergencyContactRelationshipInputLayout);
         }
+
         if (!StringUtil.isNullOrEmpty(addressEditText.getText().toString())
                 || !StringUtil.isNullOrEmpty(stateEditText.getText().toString())
                 || !StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())
@@ -472,58 +487,110 @@ public class EmergencyContactFragment extends BaseDialogFragment {
 
 
             if (StringUtil.isNullOrEmpty(addressEditText.getText().toString())) {
-//                if (userInteraction) {
-//                    add.setErrorEnabled(true);
-//                    zipCodeTextInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
-//                    employerAddressEditText.requestFocus();
-//                } else {
-//                    unsetFieldError(view, R.id.address1TextInputLayout);
-//                    showErrorViews(false, (ViewGroup) view.findViewById(R.id.address1DemographicsLayout));
-//                }
+                if (userInteraction) {
+                    setError(address1TextInputLayout);
+                }
                 return false;
+            } else {
+                unsetFieldError(address1TextInputLayout);
+            }
+
+            if (StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())) {
+                if (userInteraction) {
+                    setError(zipCodeTextInputLayout);
+                }
+                return false;
+            } else {
+                unsetFieldError(zipCodeTextInputLayout);
             }
 
             if (!StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString().trim()) &&
                     !ValidationHelper.isValidString(zipCodeEditText.getText().toString().trim(),
                             ValidationHelper.ZIP_CODE_PATTERN)) {
-                zipCodeTextInputLayout.setErrorEnabled(true);
-                zipCodeTextInputLayout.setError(Label.getLabel("demographics_zip_code_validation_msg"));
+                setError(zipCodeTextInputLayout, Label.getLabel("demographics_zip_code_validation_msg"),
+                        userInteraction);
                 return false;
             } else {
-                zipCodeTextInputLayout.setErrorEnabled(false);
-                zipCodeTextInputLayout.setError(null);
-            }
-
-            if (StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())) {
-                if (userInteraction) {
-                    zipCodeTextInputLayout.setErrorEnabled(true);
-                    zipCodeTextInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
-                } else {
-                    zipCodeTextInputLayout.setErrorEnabled(false);
-                    zipCodeTextInputLayout.setError(null);
-                }
-                return false;
-            } else {
-                zipCodeTextInputLayout.setErrorEnabled(false);
-                zipCodeTextInputLayout.setError(null);
+                unsetFieldError(zipCodeTextInputLayout);
             }
 
             if (StringUtil.isNullOrEmpty(cityEditText.getText().toString())) {
                 if (userInteraction) {
-                    cityTextInputLayout.setErrorEnabled(true);
-                    cityTextInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
+                    setError(cityTextInputLayout);
                 }
                 return false;
+            } else {
+                unsetFieldError(cityTextInputLayout);
             }
+
             if (StringUtil.isNullOrEmpty(stateEditText.getText().toString())) {
                 if (userInteraction) {
-                    stateTextInputLayout.setErrorEnabled(true);
-                    stateTextInputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
+                    setError(stateTextInputLayout);
                 }
                 return false;
+            } else {
+                unsetFieldError(stateTextInputLayout);
             }
         }
+
+        if (!StringUtil.isNullOrEmpty(emailEditText.getText().toString())
+                && (!ValidationHelper.isValidEmail(emailEditText.getText().toString().trim()))) {
+            setError(emailInputLayout, Label.getLabel("demographics_email_validation_msg"), userInteraction);
+            return false;
+        } else if (dataModel.getProperties().getEmailAddress().isRequired()
+                && StringUtil.isNullOrEmpty(emailEditText.getText().toString())) {
+            setError(emailInputLayout);
+            return false;
+        } else {
+            unsetFieldError(emailInputLayout);
+        }
+
+        if (dataModel.getProperties().getDateOfBirth().isRequired()
+                && StringUtil.isNullOrEmpty(dateOfBirthEditText.getText().toString())) {
+            return false;
+        }
+
+        if (!StringUtil.isNullOrEmpty(dateOfBirthEditText.getText().toString().trim())) {
+            String dateValidationResult = DateUtil
+                    .getDateOfBirthValidationResultMessage(dateOfBirthEditText.getText().toString().trim());
+            if (dateValidationResult != null) {
+                setError(dateBirthTextInputLayout, dateValidationResult, userInteraction);
+                return false;
+            } else {
+                unsetFieldError(dateBirthTextInputLayout);
+            }
+        } else {
+            unsetFieldError(dateBirthTextInputLayout);
+        }
+
+        if (dataModel.getProperties().getGender().isRequired()
+                && StringUtil.isNullOrEmpty(genderEditText.getText().toString())) {
+            return false;
+        }
         return true;
+    }
+
+    private boolean validatePhoneNumber(TextInputLayout textInputLayout,
+                                        EditText editText,
+                                        boolean userInteraction,
+                                        boolean isRequired) {
+        if (isRequired && StringUtil.isNullOrEmpty(editText.getText().toString())) {
+            if (userInteraction) {
+                setError(textInputLayout);
+            }
+            return true;
+        }
+
+        if (!StringUtil.isNullOrEmpty(editText.getText().toString().trim()) &&
+                !ValidationHelper.isValidString(editText.getText().toString().trim(),
+                        ValidationHelper.PHONE_NUMBER_PATTERN)) {
+            setError(textInputLayout,
+                    Label.getLabel("demographics_phone_number_validation_msg"), userInteraction);
+            return true;
+        } else {
+            unsetFieldError(textInputLayout);
+        }
+        return false;
     }
 
     private DemographicDTO getUpdateModel() {
@@ -671,9 +738,8 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                             !StringUtil.isNullOrEmpty(stateEditText.getText().toString().trim()));
                     cityEditText.getOnFocusChangeListener().onFocusChange(cityEditText,
                             !StringUtil.isNullOrEmpty(cityEditText.getText().toString().trim()));
-                    zipCodeTextInputLayout.setError(null);
-                    zipCodeTextInputLayout.setErrorEnabled(false);
-                    checkIfEnableButton();
+                    unsetFieldError(zipCodeTextInputLayout);
+                    checkIfEnableButton(false);
                 }
             }
 
@@ -755,13 +821,13 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         @Override
         public void afterTextChanged(Editable editable) {
             StringUtil.autoFormatDateOfBirth(editable, lastLength);
+            checkIfEnableButton(false);
         }
     };
 
-    protected void checkIfEnableButton() {
-        boolean isEnabled = passConstraints(false);
+    protected void checkIfEnableButton(boolean userInteraction) {
+        boolean isEnabled = passConstraints(userInteraction);
         if (saveButton != null) {
-            saveButton.setEnabled(isEnabled);
             saveButton.setClickable(isEnabled);
             saveButton.setSelected(isEnabled);
         }
@@ -769,8 +835,11 @@ public class EmergencyContactFragment extends BaseDialogFragment {
 
     protected TextWatcher getValidateRequiredEmptyTextWatcher(final TextInputLayout inputLayout) {
         return new TextWatcher() {
+            public int count;
+
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+                this.count = sequence.length();
             }
 
             @Override
@@ -783,11 +852,10 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                 if (StringUtil.isNullOrEmpty(editable.toString())) {
                     inputLayout.setErrorEnabled(true);
                     inputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
-                } else {
-                    inputLayout.setError(null);
-                    inputLayout.setErrorEnabled(false);
+                } else if(count==0) {
+                    unsetFieldError(inputLayout);
                 }
-                checkIfEnableButton();
+                checkIfEnableButton(false);
             }
         };
     }
@@ -807,11 +875,10 @@ public class EmergencyContactFragment extends BaseDialogFragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 if (editable.length() > 0) {
-                    inputLayout.setError(null);
-                    inputLayout.setErrorEnabled(false);
+                    unsetFieldError(inputLayout);
                 }
                 if (checkEnable) {
-                    checkIfEnableButton();
+                    checkIfEnableButton(false);
                 }
             }
         };
@@ -835,7 +902,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                 } else {
                     optionalView.setVisibility(View.GONE);
                 }
-                checkIfEnableButton();
+                checkIfEnableButton(false);
             }
         };
     }
@@ -875,7 +942,38 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         @Override
         public void afterTextChanged(Editable editable) {
             StringUtil.autoFormatZipcode(editable, lastLength);
-            checkIfEnableButton();
+            checkIfEnableButton(false);
+        }
+    };
+
+    private void setError(TextInputLayout textInputLayout) {
+        setError(textInputLayout, Label.getLabel("demographics_required_validation_msg"), true);
+    }
+
+    private void setError(TextInputLayout inputLayout, String errorMessage, boolean requestFocus) {
+        if (!inputLayout.isErrorEnabled()) {
+            inputLayout.setError(errorMessage);
+            inputLayout.setErrorEnabled(true);
+        }
+        if (requestFocus) {
+            inputLayout.clearFocus();
+            inputLayout.requestFocus();
+            if(!inputLayout.hasFocus()){
+                parentScrollView.scrollTo(0, inputLayout.getScrollY());
+            }
+        }
+    }
+
+    private void unsetFieldError(TextInputLayout textInputLayout) {
+        textInputLayout.setErrorEnabled(false);
+        textInputLayout.setError(null);
+    }
+
+    private View.OnClickListener selectEndOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            EditText editText = (EditText) view;
+            editText.setSelection(editText.length());
         }
     };
 }

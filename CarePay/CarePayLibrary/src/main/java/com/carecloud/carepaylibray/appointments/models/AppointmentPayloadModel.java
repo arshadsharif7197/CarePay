@@ -9,6 +9,7 @@ import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
+import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -23,7 +24,7 @@ public class AppointmentPayloadModel implements Serializable {
 
     @SerializedName("languages")
     @Expose
-    private List<ResourceLanguageDTO> languages = new ArrayList<>();
+    private List<OptionDTO> languages = new ArrayList<>();
     @SerializedName("appointments")
     @Expose
     private List<AppointmentDTO> appointments = new ArrayList<>();
@@ -91,14 +92,14 @@ public class AppointmentPayloadModel implements Serializable {
     /**
      * @return languages
      */
-    public List<ResourceLanguageDTO> getLanguages() {
+    public List<OptionDTO> getLanguages() {
         return languages;
     }
 
     /**
      * @param languages languages
      */
-    public void setLanguages(List<ResourceLanguageDTO> languages) {
+    public void setLanguages(List<OptionDTO> languages) {
         this.languages = languages;
     }
 

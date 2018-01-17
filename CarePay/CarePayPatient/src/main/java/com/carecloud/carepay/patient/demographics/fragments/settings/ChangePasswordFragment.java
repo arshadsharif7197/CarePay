@@ -139,7 +139,7 @@ public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
         updatePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (passConstraints()) {
+                if (passConstraints(false)) {
                     DemographicMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getMetadata();
                     DemographicTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
                     TransitionDTO demographicsSettingsUpdatePasswordDTO = demographicsSettingsTransitionsDTO.getChangePassword();
@@ -176,8 +176,8 @@ public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
     }
 
     @Override
-    protected void checkIfEnableButton() {
-        boolean isEnabled = passConstraints();
+    protected void checkIfEnableButton(boolean userInteraction) {
+        boolean isEnabled = passConstraints(false);
         if (updatePasswordButton != null) {
             updatePasswordButton.setEnabled(isEnabled);
             updatePasswordButton.setClickable(isEnabled);
@@ -185,7 +185,7 @@ public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
     }
 
     @Override
-    protected boolean passConstraints() {
+    protected boolean passConstraints(boolean isUserInteraction) {
         View view = getView();
         if (view == null) {
             return false;

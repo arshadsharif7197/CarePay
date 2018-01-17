@@ -26,6 +26,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  * Created by lmenendez on 9/29/17
@@ -105,7 +106,7 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
         transactionType.setText(getPaymentMethod(historyItem.getPayload().getPapiPaymentMethod()));
 
         TextView transactionTotal = (TextView) view.findViewById(R.id.transaction_total);
-        transactionTotal.setText(NumberFormat.getCurrencyInstance().format(totalPaid));
+        transactionTotal.setText(NumberFormat.getCurrencyInstance(Locale.US).format(totalPaid));
 
         RecyclerView itemsRecycler = (RecyclerView) view.findViewById(R.id.items_recycler);
         itemsRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
@@ -135,7 +136,7 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
             refundLayout.setVisibility(View.VISIBLE);
 
             TextView refundAmount = (TextView) view.findViewById(R.id.transaction_refunded);
-            refundAmount.setText(NumberFormat.getCurrencyInstance().format(historyItem.getPayload().getTotalRefunded()));
+            refundAmount.setText(NumberFormat.getCurrencyInstance(Locale.US).format(historyItem.getPayload().getTotalRefunded()));
 
             if(refundedAmount >= totalPaid){
                 refundButton.setVisibility(View.GONE);

@@ -1,6 +1,7 @@
 package com.carecloud.carepay.service.library.label;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 
 /**
  * This class permits an easily handling of the LangProvider
@@ -9,6 +10,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 public class Label {
 
     private static LabelProvider labelProvider;
+    private static ApplicationMode.ApplicationType applicationType;
 
     private static LabelProvider getLabelProvider() {
         if (labelProvider == null) {
@@ -19,24 +21,20 @@ public class Label {
 
     /**
      * static method to retrieve a label
+     *
      * @param key label key
      * @return a String containing the label value
      */
     public static String getLabel(String key) {
+        if (applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            key = CarePayConstants.PATIENT_MODE_LABELS_PREFIX + key;
+        }
         return getLabelForView(getLabelProvider().getValue(key));
     }
 
     /**
-     * static method to retrieve a label
-     * @param key label key
-     * @return a String containing the label value, if doesnt exist returns defaultValue
-     */
-    public static String getLabel(String key, String defaultValue) {
-        return getLabelProvider().getValue(key, defaultValue);
-    }
-
-    /**
      * static method to know if a label exists
+     *
      * @param key label key
      * @return true if the label exists, false if not
      */
@@ -46,6 +44,7 @@ public class Label {
 
     /**
      * static method to save a label
+     *
      * @param key   label key
      * @param value label value
      */
@@ -55,6 +54,7 @@ public class Label {
 
     /**
      * static method to save a label
+     *
      * @param key   label key
      * @param value label value
      */
@@ -65,7 +65,7 @@ public class Label {
     /**
      * Apply pending labels
      */
-    public static void applyAsyncLabels(){
+    public static void applyAsyncLabels() {
         getLabelProvider().applyAll();
     }
 
@@ -92,5 +92,9 @@ public class Label {
      */
     public static boolean isNullOrEmpty(String string) {
         return (string == null || string.equals(""));
+    }
+
+    public static void setApplicationType(ApplicationMode.ApplicationType applicationType) {
+        Label.applicationType = applicationType;
     }
 }

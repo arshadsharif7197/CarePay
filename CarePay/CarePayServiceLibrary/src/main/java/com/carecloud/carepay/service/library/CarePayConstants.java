@@ -5,6 +5,7 @@ package com.carecloud.carepay.service.library;
  */
 public class CarePayConstants {
 
+
     private CarePayConstants() {
     }
 
@@ -151,6 +152,7 @@ public class CarePayConstants {
 
     //AdHoc
     public static final String ADHOC_FORMS = "adhocForms";
+    public static final String SELECTED_FORMS = "selectedForms";
 
     //Patient Mode Login
     public static final String LOGIN_OPTION_QR = "login_option_qr";
@@ -159,5 +161,6 @@ public class CarePayConstants {
     public static final String CRASH = "crash";
 
     public static final String SEARCH_MODE = "searchMode";
+    public static final String PATIENT_MODE_LABELS_PREFIX = "-P";
 
 }

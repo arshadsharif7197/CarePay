@@ -4,12 +4,12 @@ import android.os.Build;
 import android.provider.Settings;
 
 import com.carecloud.carepay.patient.BuildConfig;
-import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
 import com.carecloud.carepaylibray.CarePayApplication;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.newrelic.agent.android.NewRelic;
 
 
 /**
@@ -25,7 +25,7 @@ public class CarePayPatientApplication extends CarePayApplication {
     public void onCreate() {
         super.onCreate();
 
-        mixpanelAPI = MixpanelAPI.getInstance(this, getString(R.string.mixpanel_application_token));
+        mixpanelAPI = MixpanelAPI.getInstance(this.getApplicationContext(), BuildConfig.MIX_PANEL_TOKEN);
         setHttpConstants();
         registerActivityLifecycleCallbacks(new CarePayActivityLifecycleCallbacks());
     }
@@ -58,6 +58,11 @@ public class CarePayPatientApplication extends CarePayApplication {
         super.onAtomicRestart();
         applicationMode.clearUserPracticeDTO();
         applicationMode = null;
+    }
+
+    @Override
+    public void setNewRelicInteraction(String interactionName) {
+        NewRelic.setInteractionName(interactionName);
     }
 
     @Override

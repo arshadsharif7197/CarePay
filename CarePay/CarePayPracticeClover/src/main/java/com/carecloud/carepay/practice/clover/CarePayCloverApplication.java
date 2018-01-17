@@ -12,6 +12,7 @@ import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
 import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.shamrocksdk.ShamrockSdk;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.newrelic.agent.android.NewRelic;
 
 /**
  * Created by Jahirul Bhuiyan on 10/24/2016
@@ -28,7 +29,7 @@ public class CarePayCloverApplication extends CarePayApplication
     public void onCreate() {
         super.onCreate();
 
-        mixpanelAPI = MixpanelAPI.getInstance(this, getString(R.string.mixpanel_application_token));
+        mixpanelAPI = MixpanelAPI.getInstance(this.getApplicationContext(), BuildConfig.MIX_PANEL_TOKEN);
         setHttpConstants();
         registerActivityLifecycleCallbacks(this);
         ShamrockSdk.init(HttpConstants.getPaymentsApiKey(), HttpConstants.getDeepStreamUrl(), HttpConstants.getPaymentsUrl());
@@ -93,6 +94,11 @@ public class CarePayCloverApplication extends CarePayApplication
         super.onAtomicRestart();
         applicationMode.clearUserPracticeDTO();
         applicationMode = null;
+    }
+
+    @Override
+    public void setNewRelicInteraction(String interactionName) {
+        NewRelic.setInteractionName(interactionName);
     }
 
     @Override

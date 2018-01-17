@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@id/separator"
                 android:textColor="@color/white"
-                android:textSize="@dimen/dimen_30dp"
+                android:textSize="@dimen/text_size_30sp"
                 app:customAssetFont="gotham_rounded_bold"
                 breeze:textKey="adhoc_form_left_message"
                 tools:text="Read and sign the \nfollowing forms" />
@@ -70,6 +70,19 @@
                 app:customAssetFont="gotham_rounded_light"
                 breeze:textKey="demographics_back_text"
                 tools:text="Back" />
+
+            <Spinner
+                android:id="@+id/languageSpinner"
+                android:layout_width="@dimen/home_spinner_width"
+                android:layout_height="@dimen/home_spinner_height"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:layout_marginStart="@dimen/dimen_20dp"
+                android:layout_toEndOf="@id/goBackTextView"
+                android:background="@drawable/bg_blue_overlay"
+                android:paddingEnd="@dimen/home_spinner_padding_righ_left"
+                android:paddingStart="@dimen/home_spinner_padding_righ_left"
+                android:visibility="gone" />
 
         </RelativeLayout>
 

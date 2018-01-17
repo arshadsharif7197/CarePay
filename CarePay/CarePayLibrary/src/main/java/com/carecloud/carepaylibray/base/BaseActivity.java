@@ -23,6 +23,7 @@ import android.view.WindowManager;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.base.IApplicationSession;
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
@@ -57,6 +58,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         if (handler == null) {
             handler = new Handler();
         }
+        setNewRelicInteraction(getClass().getName());
     }
 
     @Override
@@ -124,6 +126,10 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         return ((IApplicationSession) getApplication()).getLastInteraction();
     }
 
+    @Override
+    public void setNewRelicInteraction(String interactionName) {
+        ((IApplicationSession) getApplication()).setNewRelicInteraction(interactionName);
+    }
 
     public Context getContext() {
         return this;
@@ -224,7 +230,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             return null;
         }
 
-        Object rawWorkflowDTO = bundle.get(WorkflowDTO.class.getSimpleName());
+        Object rawWorkflowDTO = bundle.get(WorkflowDTO.class.getName());
         if (rawWorkflowDTO == null) {
             return null;
         }
@@ -241,7 +247,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             return gson.fromJson(workflowDTO.toString(), dtoClass);
         } catch (ClassCastException e) {
             // Object is set as String and not in DB
-            return gson.fromJson(bundle.getString(WorkflowDTO.class.getSimpleName()), dtoClass);
+            return gson.fromJson(bundle.getString(WorkflowDTO.class.getName()), dtoClass);
         }
     }
 

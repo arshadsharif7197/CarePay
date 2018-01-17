@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.medications.models;
 
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -7,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by lmenendez on 2/15/17.
  */
 
-public class MedicationsAllergiesResultsModel {
+public class MedicationsAllergiesResultsModel implements DTO {
 
     @SerializedName("metadata")
     @Expose

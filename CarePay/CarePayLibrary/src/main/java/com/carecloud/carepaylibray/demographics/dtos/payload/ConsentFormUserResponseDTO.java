@@ -15,9 +15,11 @@ public class ConsentFormUserResponseDTO {
     private String formId;
 
     @Expose
+    @SerializedName("response")
     private JsonObject response;
 
     @Expose
+    @SerializedName("metadata")
     private JsonObject metadata;
 
     public String getFormId() {

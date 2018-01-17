@@ -19,6 +19,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentCardData;
@@ -27,6 +28,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentMe
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -90,7 +92,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
     @Override
     public void onViewCreated(View view, Bundle icicle) {
         title.setText(Label.getLabel("payment_new_credit_card"));
-        nextButton.setText(Label.getLabel("payment_details_pay_now"));
+        nextButton.setText(Label.getLabel("add_credit_card_save_button_label"));
     }
 
 
@@ -106,6 +108,8 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             nextButton.setEnabled(true);
             Log.d("addNewCreditCard", "=========================>\nworkflowDTO=" + workflowDTO.toString());
             makePaymentCall();
+
+            MixPanelUtil.logEvent(getString(R.string.event_updated_credit_cards));
         }
 
         @Override
@@ -132,6 +136,12 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             if (getDialog() != null) {
                 dismiss();
             }
+
+            String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
+            Object[] values = {amountToMakePayment, getString(R.string.payment_new_card)};
+            MixPanelUtil.logEvent(getString(R.string.event_payment_complete), params, values);
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payments_completed), 1);
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.total_payments_amount), amountToMakePayment);
         }
 
         @Override
@@ -140,6 +150,10 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             nextButton.setEnabled(true);
             SystemUtil.showErrorToast(getContext(), exceptionMessage);
             Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+
+            String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
+            Object[] values = {amountToMakePayment, getString(R.string.payment_new_card)};
+            MixPanelUtil.logEvent(getString(R.string.event_payment_failed), params, values);
         }
     };
 
@@ -224,11 +238,29 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         if (callback.getAppointmentId() != null) {
             queries.put("appointment_id", callback.getAppointmentId());
         }
+
+        if(queries.get("patient_id") == null) {
+            queries.remove("patient_id");
+            if (callback.getAppointment() != null) {
+                queries.put("patient_id", callback.getAppointment().getMetadata().getPatientId());
+            }else{
+                for(PatientBalanceDTO patientBalanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()){
+                    if(patientBalanceDTO.getBalances().get(0).getMetadata().getPracticeId().equals(queries.get("practice_id"))){
+                        queries.put("patient_id", patientBalanceDTO.getBalances().get(0).getMetadata().getPatientId());
+                    }
+                }
+            }
+        }
+
         Map<String, String> header = new HashMap<>();
         header.put("transition", "true");
 
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment();
         getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, paymentModelJson, queries, header);
+
+        String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
+        Object[] values = {amountToMakePayment, getString(R.string.payment_new_card)};
+        MixPanelUtil.logEvent(getString(R.string.event_payment_started), params, values);
 
     }
 

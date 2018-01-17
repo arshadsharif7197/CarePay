@@ -2,7 +2,6 @@ package com.carecloud.carepay.service.library;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
@@ -166,7 +165,9 @@ public class WorkflowServiceHelper {
         TransitionDTO transitionDTO = new TransitionDTO();
         transitionDTO.setMethod("GET");
         transitionDTO.setUrl(HttpConstants.getApiStartUrl());
-        execute(transitionDTO, callback, null, null, getApplicationStartHeaders());
+        Map<String, String> query = new HashMap<>();
+        query.put("language", applicationPreferences.getUserLanguage());
+        execute(transitionDTO, callback, null, query, getApplicationStartHeaders());
     }
 
     public void execute(@NonNull TransitionDTO transitionDTO,
@@ -531,7 +532,8 @@ public class WorkflowServiceHelper {
         intent.setAction("com.carecloud.carepay.restart");
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        Context context = applicationPreferences.getContext();
+
+        Context context = ((AndroidPlatform) Platform.get()).getContext();
         Toast.makeText(context, "Login Authorization has Expired!\nPlease Login to Application again",
                 Toast.LENGTH_LONG).show();
         context.startActivity(intent);
@@ -540,21 +542,25 @@ public class WorkflowServiceHelper {
     /**
      * Persist all Labels contained in Workflow DTO
      *
-     * @param workflowDTO workflow dto
+     * @param labels the JsonObject containing all the labels
      */
-    public void saveLabels(WorkflowDTO workflowDTO) {
-        JsonObject labels = workflowDTO.getMetadata().getAsJsonObject("labels");
-        String state = workflowDTO.getState();
-        boolean contains = ((AndroidPlatform) Platform.get())
-                .openSharedPreferences(AndroidPlatform.LABELS_FILE_NAME).contains("labelFor" + state);
-        if (labels != null && !contains) {
+    public void saveLabels(JsonObject labels) {
+        saveLabels(labels, "");
+    }
+
+    /**
+     * Persist all Labels contained in Workflow DTO
+     *
+     * @param labels the JsonObject containing all the labels
+     * @param prefix the prefix added in the key (most used for patient labels)
+     */
+    public void saveLabels(JsonObject labels, String prefix) {
+        if (labels != null) {
             Set<Map.Entry<String, JsonElement>> set = labels.entrySet();
             for (Map.Entry<String, JsonElement> entry : set) {
-                Label.putLabelAsync(entry.getKey(), entry.getValue().getAsString());
+                Label.putLabelAsync(prefix + entry.getKey(), entry.getValue().getAsString());
             }
             Label.applyAsyncLabels();
-            SharedPreferences.Editor editor = ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences().edit();
-            editor.putBoolean("labelFor" + state, true).apply();
         }
     }
 

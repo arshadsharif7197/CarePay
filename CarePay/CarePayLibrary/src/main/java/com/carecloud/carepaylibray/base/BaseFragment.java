@@ -8,12 +8,13 @@ import android.view.View;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.base.IApplicationSession;
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
- * Created by cocampo on 2/6/17.
+ * Created by cocampo on 2/6/17
  */
 
 public abstract class BaseFragment extends Fragment implements ISession {
@@ -24,6 +25,7 @@ public abstract class BaseFragment extends Fragment implements ISession {
         super.onCreate(icicle);
 
         isPracticeAppPatientMode = getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
+        setNewRelicInteraction(getClass().getName());
     }
 
     @Override
@@ -132,6 +134,10 @@ public abstract class BaseFragment extends Fragment implements ISession {
         return ((IApplicationSession) getActivity()).getLastInteraction();
     }
 
+    @Override
+    public void setNewRelicInteraction(String interactionName) {
+        ((IApplicationSession) getActivity()).setNewRelicInteraction(interactionName);
+    }
 
     @Override
     public void showProgressDialog() {

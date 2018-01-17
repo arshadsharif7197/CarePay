@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.demographicsettings.models;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author pjohnson on 7/04/17.
@@ -9,9 +10,11 @@ import com.google.gson.annotations.Expose;
 public class DemographicNotificationPayloadDTO {
 
     @Expose
+    @SerializedName("push")
     private boolean push;
 
     @Expose
+    @SerializedName("email")
     private boolean email;
 
     public boolean isPush() {
