@@ -56,9 +56,9 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:layout_alignParentBottom="true"
                 android:layout_below="@+id/header_layout"
-                android:layout_alignParentBottom="true"/>
+                android:background="@color/white" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/avTextView"
@@ -78,7 +78,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@color/white">
+            android:paddingBottom="@dimen/dimen_5dp"
+            android:background="@drawable/round_bottom_white_background">
 
             <include layout="@layout/payment_details_view" />
 
@@ -87,7 +88,8 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white">
+            android:background="@color/white"
+            android:visibility="gone">
 
             <Button
                 android:id="@+id/payment_details_pay_now_button"
@@ -96,7 +98,7 @@
                 android:layout_margin="@dimen/dimen_10dp"
                 android:background="@drawable/button_green_fill_background"
                 android:textColor="@color/white"
-                android:textSize="@dimen/apt_dl_textview_size"/>
+                android:textSize="@dimen/apt_dl_textview_size" />
 
         </FrameLayout>
     </LinearLayout>

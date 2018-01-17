@@ -37,7 +37,7 @@
             android:textColor="@color/lightSlateGray"
             android:textSize="@dimen/text_size_12sp"
             app:customAssetFont="proxima_nova_regular"
-            tools:text="12/22/2017 at 4:00 PM" />
+            tools:text="12/22/2017" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/payment_details_label"
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_toStartOf="@id/paymentEffectiveDate"
+            android:layout_toStartOf="@id/payment_details_value"
             android:ellipsize="end"
             android:gravity="start"
             android:textColor="@color/lightSlateGray"

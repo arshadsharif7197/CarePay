@@ -38,8 +38,6 @@ public class DateUtil {
     private static final int IS_A_TOO_OLD_DATE = -100;
     private static final int IS_A_BAD_FORMAT_DATE = -1;
     private static final int IS_A_CORRECT_DATE = 0;
-    private static final String FORMAT_MM_dd_yyyy_at_h_mm_a_EN = "%s at %s";
-    private static final String FORMAT_MM_dd_yyyy_at_h_mm_a_ES = "%s a las %s";
     private static final String FORMAT_ES_DATE_MONTH_LIT = "%s de %s";
     private static final String FORMAT_ES_DATE_MONTH_LIT_YEAR = "%s de %s de %s";
     private static final String FORMAT_ES_DAY_LIT_DATE_MONTH_LIT = "%s %d de %s";
@@ -209,7 +207,8 @@ public class DateUtil {
             return String.format(Locale.getDefault(), Label.getLabel("date_month_literal_day_ordinal_year_format"),//"%s %s%s, %d"
                     monthLiteralAbbr, day, ordinal, year);
         } else {
-            return String.format(Locale.getDefault(), Label.getLabel("date_month_literal_day_ordinal_year_format"),//"%s de %s de %s."
+            //"%s de %s de %s"
+            return String.format(Locale.getDefault(), FORMAT_ES_DATE_MONTH_LIT_YEAR,
                     day, monthLiteralAbbr, year);
         }
     }
@@ -1205,14 +1204,11 @@ public class DateUtil {
         return dateString.replaceAll("\\.\\d\\d\\dZ", "-00:00");
     }
 
-    public String getDateAsMonthDayYearHourMinute() {
-        String hour = getHoursFormatted(date);
+    public String getDateAsMonthDayYear() {
         if (getUserLanguage().equals("en")) {
-            String date = toStringWithFormatMmSlashDdSlashYyyy();
-            return String.format(Locale.getDefault(), FORMAT_MM_dd_yyyy_at_h_mm_a_EN, date, hour);
+            return toStringWithFormatMmSlashDdSlashYyyy();
         } else {
-            String date = toStringWithFormatDdSlashMmSlashYyyy();
-            return String.format(Locale.getDefault(), FORMAT_MM_dd_yyyy_at_h_mm_a_ES, date, hour);
+            return toStringWithFormatDdSlashMmSlashYyyy();
         }
     }
 }
