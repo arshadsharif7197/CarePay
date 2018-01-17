@@ -116,7 +116,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
         return textView;
     }
 
-    private View findViewById(int id) {
+    protected View findViewById(int id) {
         return view.findViewById(id);
     }
 

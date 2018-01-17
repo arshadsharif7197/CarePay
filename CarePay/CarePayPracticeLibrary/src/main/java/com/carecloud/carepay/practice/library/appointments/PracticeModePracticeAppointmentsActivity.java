@@ -144,6 +144,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
         TextView addAppointmentTextView = (TextView) findViewById(R.id.activity_practice_appointments_add);
         addAppointmentTextView.setOnClickListener(getFindPatientListener(false));
+        addAppointmentTextView.setEnabled(checkInDTO.getPayload().getUserAuthModel().getUserAuthPermissions().canScheduleAppointment);
 
         findViewById(R.id.practice_go_back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -439,6 +440,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         PracticeAppointmentDialog dialog = PracticeAppointmentDialog.newInstance(
                 dialogStyle,
                 appointmentDTO,
+                checkInDTO.getPayload().getUserAuthModel().getUserAuthPermissions(),
                 PracticeModePracticeAppointmentsActivity.this
         );
         displayDialogFragment(dialog, true);

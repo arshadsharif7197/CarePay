@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
+import com.carecloud.carepaylibray.base.models.UserAuthPermissions;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
@@ -20,6 +21,7 @@ public class FormsResponsibilityFragmentDialog extends ResponsibilityFragmentDia
      * @return new instance of a ResponsibilityFragmentDialog
      */
     public static FormsResponsibilityFragmentDialog newInstance(PaymentsModel paymentsModel,
+                                                           UserAuthPermissions authPermissions,
                                                            String leftLabel,
                                                            String rightLabel,
                                                            String emptyMessage,
@@ -28,6 +30,7 @@ public class FormsResponsibilityFragmentDialog extends ResponsibilityFragmentDia
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, headerModel);
+        DtoHelper.bundleDto(args, authPermissions);
         args.putString(KEY_LEFT_BUTTON, leftLabel);
         args.putString(KEY_RIGHT_BUTTON, rightLabel);
         args.putString(KEY_EMPTY_MESSAGE, emptyMessage);
