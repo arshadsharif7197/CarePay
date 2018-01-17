@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@id/separator"
                 android:textColor="@color/white"
-                android:textSize="@dimen/dimen_30dp"
+                android:textSize="@dimen/text_size_30sp"
                 app:customAssetFont="gotham_rounded_bold"
                 breeze:textKey="adhoc_form_left_message"
                 tools:text="Read and sign the \nfollowing forms" />

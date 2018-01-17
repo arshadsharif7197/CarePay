@@ -207,12 +207,12 @@ public class SignupFragment extends BaseFragment {
             public void onClick(View view) {
                 reset();
                 FragmentManager fm = getFragmentManager();
-                SigninFragment fragment = (SigninFragment) fm.findFragmentByTag(SigninFragment.class.getSimpleName());
+                SigninFragment fragment = (SigninFragment) fm.findFragmentByTag(SigninFragment.class.getName());
                 if (fragment == null) {
                     fragment = SigninFragment.newInstance(false);
                 }
                 fm.beginTransaction()
-                        .replace(R.id.layoutSigninSignup, fragment, SigninFragment.class.getSimpleName())
+                        .replace(R.id.layoutSigninSignup, fragment, SigninFragment.class.getName())
                         .commit();
             }
         });

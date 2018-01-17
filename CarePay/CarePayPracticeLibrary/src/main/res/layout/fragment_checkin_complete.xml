@@ -96,17 +96,17 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
-        android:orientation="vertical"
-        android:elevation="@dimen/dimen_14dp">
+        android:elevation="@dimen/dimen_14dp"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="@dimen/dialog_width"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_marginBottom="@dimen/dimen_50dp"
-            android:layout_marginTop="@dimen/dimen_50dp"
-            android:layout_marginStart="@dimen/dimen_50dp"
             android:layout_marginEnd="@dimen/dimen_50dp"
+            android:layout_marginStart="@dimen/dimen_50dp"
+            android:layout_marginTop="@dimen/dimen_50dp"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -123,15 +123,15 @@
                     android:layout_marginBottom="@dimen/dimen_10dp"
                     android:layout_marginEnd="@dimen/dimen_20dp"
                     android:layout_marginStart="@dimen/dimen_10dp"
-                    android:layout_marginTop="@dimen/dimen_10dp" />
+                    android:layout_marginTop="@dimen/dimen_10dp"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/dimen_100dp"
-                    android:orientation="vertical"
-                    android:layout_toEndOf="@id/userImage"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true">
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/userImage"
+                    android:orientation="vertical">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/userNameTextView"
@@ -140,7 +140,7 @@
                         android:textColor="@color/white"
                         android:textSize="28sp"
                         app:customAssetFont="proxima_nova_extra_bold"
-                        tools:text="John Eland" />
+                        tools:text="John Eland"/>
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/appointmentHourTextView"
@@ -150,7 +150,7 @@
                         android:textColor="@color/colorPrimary"
                         android:textSize="28sp"
                         app:customAssetFont="gotham_rounded_bold"
-                        tools:text="2:00 AM" />
+                        tools:text="2:00 AM"/>
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/appointmentProviderTextView"
@@ -159,7 +159,7 @@
                         android:textColor="@color/pastel_blue"
                         android:textSize="@dimen/text_size_18sp"
                         app:customAssetFont="proxima_nova_regular"
-                        tools:text="with Dr. Anne Rather" />
+                        tools:text="with Dr. Anne Rather"/>
 
                 </LinearLayout>
 
@@ -168,15 +168,16 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:background="@drawable/patient_mode_dialog_body_bg"
+                android:orientation="vertical"
                 android:padding="20dp">
 
                 <LinearLayout
+                    android:id="@+id/statusContainer"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
                     android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     android:paddingBottom="@dimen/completeCheckInItemMargin"
                     android:paddingTop="@dimen/completeCheckInItemMargin">
 
@@ -188,7 +189,7 @@
                         android:textSize="@dimen/completeCheckInItemTextSize"
                         app:customAssetFont="gotham_rounded_light"
                         breeze:textKey="checkin_complete_status_label"
-                        tools:text="Status" />
+                        tools:text="Status"/>
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/appointmentStatusTextView"
@@ -201,7 +202,7 @@
                         android:textColor="@color/textview_default_textcolor"
                         android:textSize="@dimen/completeCheckInItemValueTextSize"
                         app:customAssetFont="gotham_rounded_medium"
-                        tools:text="Just checked-in" />
+                        tools:text="Just checked-in"/>
 
                 </LinearLayout>
 
@@ -209,13 +210,14 @@
                     android:id="@+id/separator1"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_1dp"
-                    android:background="@color/divider_color" />
+                    android:background="@color/divider_color"/>
 
                 <LinearLayout
+                    android:id="@+id/visitTypeContainer"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
                     android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     android:paddingBottom="@dimen/completeCheckInItemMargin"
                     android:paddingTop="@dimen/completeCheckInItemMargin">
 
@@ -227,7 +229,7 @@
                         android:textSize="@dimen/completeCheckInItemTextSize"
                         app:customAssetFont="gotham_rounded_light"
                         breeze:textKey="checkin_complete_visit_type_label"
-                        tools:text="Visit Type" />
+                        tools:text="Visit Type"/>
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/appointmentVisitTypeTextView"
@@ -240,7 +242,7 @@
                         android:textColor="@color/textview_default_textcolor"
                         android:textSize="@dimen/completeCheckInItemValueTextSize"
                         app:customAssetFont="gotham_rounded_medium"
-                        tools:text="New Patient" />
+                        tools:text="New Patient"/>
 
                 </LinearLayout>
 
@@ -249,7 +251,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_1dp"
                     android:layout_marginBottom="10dp"
-                    android:background="@color/divider_color" />
+                    android:background="@color/divider_color"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/paymentDetailsLabel"
@@ -257,17 +259,28 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dimen_20dp"
                     android:layout_marginTop="@dimen/dimen_20dp"
-                    android:textSize="@dimen/text_size_18sp"
                     android:textAllCaps="true"
+                    android:textSize="@dimen/text_size_18sp"
                     app:customAssetFont="proxima_nova_extra_bold"
                     breeze:textKey="payment_details_label"
-                    tools:text="Payment Details" />
+                    tools:text="Payment Details"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/signedFormsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:visibility="gone">
+
+
+                </android.support.v7.widget.RecyclerView>
 
                 <LinearLayout
+                    android:id="@+id/paymentTypeLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
                     android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     android:paddingBottom="@dimen/completeCheckInItemMargin"
                     android:paddingTop="@dimen/completeCheckInItemMargin">
 
@@ -275,8 +288,8 @@
                         android:id="@+id/paymentTypeLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:maxWidth="@dimen/dimen_150dp"
                         android:gravity="start"
+                        android:maxWidth="@dimen/dimen_150dp"
                         android:textColor="@color/textview_default_textcolor"
                         android:textSize="@dimen/completeCheckInItemTextSize"
                         app:customAssetFont="gotham_rounded_light"
@@ -294,7 +307,7 @@
                         android:textColor="@color/textview_default_textcolor"
                         android:textSize="@dimen/completeCheckInItemValueTextSize"
                         app:customAssetFont="gotham_rounded_medium"
-                        tools:text="Payment Plan (1 of 4)" />
+                        tools:text="Payment Plan (1 of 4)"/>
 
                 </LinearLayout>
 
@@ -303,7 +316,7 @@
                     android:id="@+id/separator3"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_1dp"
-                    android:background="@color/divider_color" />
+                    android:background="@color/divider_color"/>
 
                 <LinearLayout
                     android:id="@+id/paymentInformation"
@@ -314,8 +327,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"
                         android:gravity="center_vertical"
+                        android:orientation="horizontal"
                         android:paddingBottom="@dimen/completeCheckInItemMargin"
                         android:paddingTop="@dimen/completeCheckInItemMargin">
 
@@ -323,13 +336,13 @@
                             android:id="@+id/paymentMethodLabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:maxWidth="@dimen/dimen_150dp"
                             android:gravity="start"
+                            android:maxWidth="@dimen/dimen_150dp"
                             android:textColor="@color/textview_default_textcolor"
                             android:textSize="@dimen/completeCheckInItemTextSize"
                             app:customAssetFont="gotham_rounded_light"
                             breeze:textKey="payment_confirm_method"
-                            tools:text="Method" />
+                            tools:text="Method"/>
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                             android:id="@+id/paymentMethodTextView"
@@ -342,7 +355,7 @@
                             android:textColor="@color/textview_default_textcolor"
                             android:textSize="@dimen/completeCheckInItemValueTextSize"
                             app:customAssetFont="gotham_rounded_medium"
-                            tools:text="Credit Card" />
+                            tools:text="Credit Card"/>
 
                     </LinearLayout>
 
@@ -350,13 +363,13 @@
                         android:id="@+id/separator4"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dimen_1dp"
-                        android:background="@color/divider_color" />
+                        android:background="@color/divider_color"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"
                         android:gravity="center_vertical"
+                        android:orientation="horizontal"
                         android:paddingBottom="@dimen/completeCheckInItemMargin"
                         android:paddingTop="@dimen/completeCheckInItemMargin">
 
@@ -364,13 +377,13 @@
                             android:id="@+id/totalPaidLabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:maxWidth="@dimen/dimen_150dp"
                             android:gravity="start"
+                            android:maxWidth="@dimen/dimen_150dp"
                             android:textColor="@color/textview_default_textcolor"
                             android:textSize="@dimen/completeCheckInItemTextSize"
                             app:customAssetFont="gotham_rounded_light"
                             breeze:textKey="payment_confirm_total"
-                            tools:text="Total Paid" />
+                            tools:text="Total Paid"/>
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                             android:id="@+id/totalPaidTextView"
@@ -383,7 +396,7 @@
                             android:textColor="@color/textview_default_textcolor"
                             android:textSize="@dimen/completeCheckInItemValueTextSize"
                             app:customAssetFont="gotham_rounded_medium"
-                            tools:text="$27.00 (of $108.00)" />
+                            tools:text="$27.00 (of $108.00)"/>
 
                     </LinearLayout>
 
@@ -391,13 +404,13 @@
                         android:id="@+id/separator5"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dimen_1dp"
-                        android:background="@color/divider_color" />
+                        android:background="@color/divider_color"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"
                         android:gravity="center_vertical"
+                        android:orientation="horizontal"
                         android:paddingBottom="@dimen/completeCheckInItemMargin"
                         android:paddingTop="@dimen/completeCheckInItemMargin">
 
@@ -405,13 +418,13 @@
                             android:id="@+id/confirmationNumberLabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:maxWidth="@dimen/dimen_150dp"
                             android:gravity="start"
+                            android:maxWidth="@dimen/dimen_150dp"
                             android:textColor="@color/textview_default_textcolor"
                             android:textSize="@dimen/completeCheckInItemTextSize"
                             app:customAssetFont="gotham_rounded_light"
                             breeze:textKey="payment_confirm_number"
-                            tools:text="Confirmation Number" />
+                            tools:text="Confirmation Number"/>
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                             android:id="@+id/confirmationNumberTextView"
@@ -424,7 +437,7 @@
                             android:textColor="@color/textview_default_textcolor"
                             android:textSize="@dimen/completeCheckInItemValueTextSize"
                             app:customAssetFont="gotham_rounded_medium"
-                            tools:text="45678" />
+                            tools:text="45678"/>
 
                     </LinearLayout>
 
@@ -432,7 +445,7 @@
                         android:id="@+id/separator6"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dimen_1dp"
-                        android:background="@color/divider_color" />
+                        android:background="@color/divider_color"/>
 
                 </LinearLayout>
 

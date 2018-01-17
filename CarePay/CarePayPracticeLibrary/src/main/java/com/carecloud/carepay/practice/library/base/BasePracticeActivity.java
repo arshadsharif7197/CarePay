@@ -92,7 +92,7 @@ public abstract class BasePracticeActivity extends BaseActivity
     }
 
     protected void processExternalPayment(PaymentExecution paymentExecution, Intent data) {
-        throw new NotImplementedException("Process external payment has not been implemented by " + getClass().getSimpleName());
+        throw new NotImplementedException("Process external payment has not been implemented by " + getClass().getName());
     }
 
     protected void processExternalPaymentFailure(PaymentExecution paymentExecution, int resultCode) {

@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.myhealth.dtos;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author pjohnson on 17/07/17.
@@ -8,8 +9,11 @@ import com.google.gson.annotations.Expose;
 public class MedicationProviderDto {
 
     @Expose
+    @SerializedName("id")
     private Integer id;
+
     @Expose
+    @SerializedName("name")
     private String name;
 
     public Integer getId() {

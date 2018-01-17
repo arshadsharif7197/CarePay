@@ -24,7 +24,7 @@ public class DtoHelper {
         if(bundle == null){
             return null;
         }
-        String jsonString = bundle.getString(dtoClass.getSimpleName());
+        String jsonString = bundle.getString(dtoClass.getName());
 
         return getConvertedDTO(dtoClass, jsonString);
     }
@@ -87,11 +87,11 @@ public class DtoHelper {
     }
 
     public static void bundleDto(Bundle bundle, Object dto) {
-        bundle.putString(dto.getClass().getSimpleName(), getStringDTO(dto));
+        bundle.putString(dto.getClass().getName(), getStringDTO(dto));
     }
 
     public static void putExtra(Intent intent, Object dto) {
-        intent.putExtra(WorkflowDTO.class.getSimpleName(), getStringDTO(dto));
+        intent.putExtra(WorkflowDTO.class.getName(), getStringDTO(dto));
     }
 
 }
