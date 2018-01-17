@@ -25,7 +25,7 @@ public class NewDemographicsPresenterImpl extends DemographicsPresenterImpl {
 
     @Override
     protected String getHealthInsuranceFragmentTag() {
-        return NewHealthInsuranceFragment.class.getSimpleName();
+        return NewHealthInsuranceFragment.class.getName();
     }
 
     @Override

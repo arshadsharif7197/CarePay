@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.myhealth.dtos;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author pjohnson on 17/07/17.
@@ -8,16 +9,27 @@ import com.google.gson.annotations.Expose;
 public class MyHealthDataDto {
 
     @Expose
+    @SerializedName("medications")
     private MyHealthMedicationsDto medications = new MyHealthMedicationsDto();
+
     @Expose
+    @SerializedName("labs")
     private MyHealthLabsDto labs = new MyHealthLabsDto();
+
     @Expose
+    @SerializedName("allergies")
     private MyHealthAllergiesDto allergies = new MyHealthAllergiesDto();
+
     @Expose
+    @SerializedName("assertions")
     private MyHealthAssertionsDto assertions = new MyHealthAssertionsDto();
+
     @Expose
+    @SerializedName("providers")
     private MyHealthProvidersDto providers = new MyHealthProvidersDto();
+
     @Expose
+    @SerializedName("patient")
     private MyHealthPatientDto patient = new MyHealthPatientDto();
 
 

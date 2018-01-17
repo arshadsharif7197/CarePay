@@ -189,7 +189,7 @@ public class PatientNavigationHelper {
         workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(context));
 
         Bundle bundle = new Bundle();
-        bundle.putLong(WorkflowDTO.class.getSimpleName(), workFlowRecord.save());
+        bundle.putLong(WorkflowDTO.class.getName(), workFlowRecord.save());
         intent.putExtras(bundle);
         intent.putExtra(NavigationStateConstants.EXTRA_INFO, info);
 

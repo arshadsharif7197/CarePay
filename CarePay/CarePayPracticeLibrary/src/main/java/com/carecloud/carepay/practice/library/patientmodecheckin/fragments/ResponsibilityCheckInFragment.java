@@ -169,7 +169,7 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
 
     @Override
     public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
-        String tag = PaymentDetailsFragmentDialog.class.getSimpleName();
+        String tag = PaymentDetailsFragmentDialog.class.getName();
         FragmentTransaction ft = getChildFragmentManager().beginTransaction();
         Fragment prev = getChildFragmentManager().findFragmentByTag(tag);
         if (prev != null) {

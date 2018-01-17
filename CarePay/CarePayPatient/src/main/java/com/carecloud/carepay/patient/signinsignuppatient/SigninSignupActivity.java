@@ -37,7 +37,7 @@ public class SigninSignupActivity extends BasePatientActivity implements Fragmen
                     .getBoolean(CarePayConstants.OPEN_NOTIFICATIONS, false);
             SigninFragment fragment = SigninFragment.newInstance(shouldOpenNotifications);
             fragmentManager.beginTransaction()
-                    .replace(R.id.layoutSigninSignup, fragment, SigninFragment.class.getSimpleName())
+                    .replace(R.id.layoutSigninSignup, fragment, SigninFragment.class.getName())
                     .commit();
         }
         if (!getApplicationPreferences().isTutorialShown()) {

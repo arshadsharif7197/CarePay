@@ -442,6 +442,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                 PracticeModePracticeAppointmentsActivity.this
         );
         displayDialogFragment(dialog, true);
+        setPatientId(appointmentDTO.getMetadata().getPatientId());
     }
 
     private void confirmAppointment(AppointmentDTO appointmentDTO) {
@@ -535,7 +536,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
 
     private void showResponsibilityFragment(PaymentsModel paymentsModel) {
-        String tag = ResponsibilityFragmentDialog.class.getSimpleName();
+        String tag = ResponsibilityFragmentDialog.class.getName();
         ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(paymentsModel);
         FormsResponsibilityFragmentDialog dialog = FormsResponsibilityFragmentDialog
                 .newInstance(paymentsModel,
@@ -650,7 +651,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                         .fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
                 AdHocFormsListFragment fragment = AdHocFormsListFragment
                         .newInstance(appointmentsResultModel, patientId);
-                fragment.show(getSupportFragmentManager(), "forms");
+                displayDialogFragment(fragment, false);
                 fragment.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -677,7 +678,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void onDetailItemClick(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem) {
-        String tag = PaymentDetailsFragmentDialog.class.getSimpleName();
+        String tag = PaymentDetailsFragmentDialog.class.getName();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
         if (prev != null) {
