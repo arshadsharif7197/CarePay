@@ -12,7 +12,9 @@ public class AppointmentCancellationFee {
     @Expose
     @SerializedName("visit_type")
     private Integer visitType;
+
     @Expose
+    @SerializedName("amount")
     private String amount;
 
     public Integer getVisitType() {

@@ -15,6 +15,7 @@ public class DemographicNotificationMetadataDTO {
     private String userId;
 
     @Expose
+    @SerializedName("username")
     private String username;
 
     @SerializedName("created_dt")

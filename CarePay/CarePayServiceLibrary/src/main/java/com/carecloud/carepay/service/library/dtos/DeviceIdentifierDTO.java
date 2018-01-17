@@ -20,8 +20,10 @@ public class DeviceIdentifierDTO {
     @SerializedName("deviceOSVersion")
     @Expose
     private String deviceOSVersion;
+    @SerializedName("version")
     @Expose
     private String version;
+    @SerializedName("devicePlatform")
     @Expose
     private String devicePlatform;
 

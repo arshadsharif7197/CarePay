@@ -13,20 +13,31 @@ import java.util.List;
 public class AllergyDto {
 
     @Expose
+    @SerializedName("id")
     private Integer id;
+
     @Expose
+    @SerializedName("name")
     private String name;
+
     @Expose
+    @SerializedName("status")
     private String status;
+
     @Expose
     @SerializedName("onset_at")
     private String onsetAt;
+
     @Expose
     @SerializedName("patient_id")
     private Integer patientId;
+
     @Expose
+    @SerializedName("reactions")
     private List<ReactionDto> reactions = new ArrayList<>();
+
     @Expose
+    @SerializedName("practice")
     private String practice;
 
     public Integer getId() {
