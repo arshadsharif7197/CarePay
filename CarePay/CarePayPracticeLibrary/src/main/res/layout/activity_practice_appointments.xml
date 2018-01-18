@@ -139,7 +139,7 @@
                     android:paddingEnd="20dp"
                     android:paddingStart="20dp"
                     android:paddingTop="10dp"
-                    android:textColor="@color/white"
+                    android:textColor="@color/white_enabled_selector"
                     android:textSize="@dimen/text_size_16sp"
                     breeze:textKey="add_appointment_label"
                     android:contentDescription="@string/content_description_add_appointment"/>
@@ -157,7 +157,7 @@
                     android:paddingEnd="20dp"
                     android:paddingStart="20dp"
                     android:paddingTop="10dp"
-                    android:textColor="@color/white"
+                    android:textColor="@color/white_enabled_selector"
                     android:textSize="@dimen/text_size_16sp"
                     breeze:textKey="appoitment_edit_date_range_button"/>
 
@@ -173,7 +173,7 @@
                     android:paddingEnd="20dp"
                     android:paddingStart="20dp"
                     android:paddingTop="10dp"
-                    android:textColor="@color/white"
+                    android:textColor="@color/white_enabled_selector"
                     android:textSize="@dimen/text_size_16sp"
                     android:visibility="gone"
                     breeze:textKey="all_appointments_label"/>
@@ -190,7 +190,7 @@
                     android:paddingEnd="20dp"
                     android:paddingStart="20dp"
                     android:paddingTop="10dp"
-                    android:textColor="@color/white"
+                    android:textColor="@color/white_enabled_selector"
                     android:textSize="@dimen/text_size_16sp" />
             </RelativeLayout>
 

@@ -163,7 +163,7 @@
                     android:paddingEnd="20dp"
                     android:paddingStart="20dp"
                     android:paddingTop="10dp"
-                    android:textColor="@color/white"
+                    android:textColor="@color/white_enabled_selector"
                     android:textSize="@dimen/text_size_16sp"
                     breeze:textKey="date_range_picker_dialog_title"/>
 
