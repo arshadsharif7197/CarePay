@@ -601,10 +601,4 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         }
 
     }
-
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-////        findViewById(R.id.languageContainer).setVisibility(View.GONE);
-//        return super.dispatchTouchEvent(ev);
-//    }
 }
