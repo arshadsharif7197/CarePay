@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,16 +15,14 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
 import com.carecloud.carepay.practice.library.customdialog.ChangeModeDialog;
 import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
 import com.carecloud.carepay.practice.library.homescreen.adapters.OfficeNewsListAdapter;
@@ -65,7 +64,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private LinearLayout homeAlertLinearLl;
     private List<String> modeSwitchOptions = new ArrayList<>();
     private HomeScreenMode homeScreenMode;
-    private Spinner languageSpinner;
+    private TextView languageSpinner;
 
     private boolean isUserInteraction = false;
 
@@ -101,9 +100,16 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     @Override
-    public void onUserInteraction(){
+    public void onUserInteraction() {
         super.onUserInteraction();
         isUserInteraction = true;
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                findViewById(R.id.languageContainer).setVisibility(View.GONE);
+            }
+        }, 25);
     }
 
     private void populateLanguageSpinner() {
@@ -111,33 +117,47 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         Gson gson = new Gson();
         PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO
                 = gson.fromJson(payloadAsJsonObject, PracticeHomeScreenPayloadDTO.class);
-        final List<String> languages = new ArrayList<>();
+        final List<OptionDTO> languages = new ArrayList<>();
         for (OptionDTO language : practiceHomeScreenPayloadDTO.getLanguages()) {
-            languages.add(language.getCode().toUpperCase());
+            languages.add(language);
         }
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.home_spinner_item, languages);
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        languageSpinner.setAdapter(spinnerArrayAdapter);
-        languageSpinner.setSelection(spinnerArrayAdapter.getPosition(getApplicationPreferences()
-                .getUserLanguage().toUpperCase()), false);
+        String selectedLanguageStr = getApplicationPreferences().getUserLanguage();
+        OptionDTO selectedLanguage = languages.get(0);
+        for (OptionDTO language : languages) {
+            if (selectedLanguageStr.equals(language.getCode())) {
+                selectedLanguage = language;
+            }
+        }
 
+        final View languageContainer = findViewById(R.id.languageContainer);
+        languageSpinner = (TextView) findViewById(R.id.languageSpinner);
+        languageSpinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                languageContainer.setVisibility(languageContainer.getVisibility() == View.VISIBLE
+                        ? View.GONE : View.VISIBLE);
+            }
+        });
+        languageSpinner.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
         JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getLinks();
         final PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject,
                 PracticeHomeScreenTransitionsDTO.class);
         final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
         headers.put("username", getApplicationPreferences().getUserName());
         headers.put("username_patient", getApplicationPreferences().getPatientId());
-        languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        RecyclerView languageList = (RecyclerView) findViewById(R.id.languageList);
+        LanguageAdapter languageAdapter = new LanguageAdapter(languages, selectedLanguage);
+        languageList.setAdapter(languageAdapter);
+        languageList.setLayoutManager(new LinearLayoutManager(getContext()));
+        languageAdapter.setCallback(new LanguageAdapter.LanguageInterface() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(!isUserInteraction){
+            public void onLanguageSelected(OptionDTO language) {
+                languageContainer.setVisibility(View.GONE);
+                if (!isUserInteraction) {
                     return;
                 }
-                changeLanguage(transitionsDTO.getLanguage(), languages.get(position).toLowerCase(), headers);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+                changeLanguage(transitionsDTO.getLanguage(),
+                        language.getCode().toLowerCase(), headers);
             }
         });
     }
@@ -147,7 +167,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         homeAlertLinearLl = (LinearLayout) findViewById(R.id.homeAlertLayout);
         homeLockImageView = (ImageView) findViewById(R.id.homeLockIcon);
         modeSwitchImageView = (ImageView) findViewById(R.id.homeModeSwitchClickable);
-        languageSpinner = (Spinner) findViewById(R.id.languageSpinner);
+        languageSpinner = (TextView) findViewById(R.id.languageSpinner);
     }
 
     private void populateWithLabels() {

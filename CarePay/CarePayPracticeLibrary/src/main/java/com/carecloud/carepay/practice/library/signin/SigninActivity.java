@@ -199,33 +199,6 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         });
     }
 
-//    private void setUpLanguageSpinner() {
-//        for (OptionDTO language : signinDTO.getPayload().getLanguages()) {
-//            languages.add(language.getCode().toUpperCase());
-//        }
-//        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.home_spinner_item, languages);
-//        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        languageSwitch = (Spinner) findViewById(R.id.signinLangSpinner);
-//        languageSwitch.setAdapter(spinnerArrayAdapter);
-//        languageSwitch.setSelection(spinnerArrayAdapter.getPosition(getApplicationPreferences()
-//                .getUserLanguage().toUpperCase()), false);
-//
-//        languageSwitch.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                if(!isUserInteraction){
-//                    return;
-//                }
-//                changeLanguage(signinDTO.getMetadata().getLinks().getLanguage(),
-//                        languages.get(position).toLowerCase(), getWorkflowServiceHelper().getApplicationStartHeaders());
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//            }
-//        });
-//    }
-
     private void displayVersionNumber() {
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
