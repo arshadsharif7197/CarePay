@@ -552,7 +552,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                     .newInstance(appointmentsResultModel,
                             Label.getLabel("practice_list_select_a_provider"),
                             Label.getLabel("practice_list_continue"));
-            fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+            fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
         }
 
 
@@ -603,7 +603,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                     .newInstance(appointmentsResultModel,
                             Label.getLabel("practice_list_select_a_provider"),
                             Label.getLabel("practice_list_continue"));
-            fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+            fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
         }
 
         @Override

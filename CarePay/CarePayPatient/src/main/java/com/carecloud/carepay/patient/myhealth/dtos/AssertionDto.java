@@ -10,21 +10,31 @@ import com.google.gson.annotations.SerializedName;
 public class AssertionDto {
 
     @Expose
+    @SerializedName("id")
     private Integer id;
+
     @Expose
+    @SerializedName("name")
     private String name;
+
     @Expose
+    @SerializedName("status")
     private String status;
+
     @Expose
     @SerializedName("created_at")
     private String createdAt;
+
     @Expose
     @SerializedName("patient_id")
     private Integer patientId;
+
     @Expose
     @SerializedName("assertion_type")
     private String assertionType;
+
     @Expose
+    @SerializedName("practice")
     private String practice;
 
     public Integer getId() {
