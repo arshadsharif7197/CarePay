@@ -121,7 +121,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void startPaymentProcess(PaymentsModel paymentsModel) {
-        String tag = PaymentDetailsFragmentDialog.class.getSimpleName();
+        String tag = PaymentDetailsFragmentDialog.class.getName();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
         if (prev != null) {
