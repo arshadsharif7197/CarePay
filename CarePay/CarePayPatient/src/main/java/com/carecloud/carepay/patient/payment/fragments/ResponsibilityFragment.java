@@ -202,7 +202,8 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         }
         ft.addToBackStack(null);
 
-        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog.newInstance(paymentDTO, paymentLineItem, selectedBalance);
+        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
+                .newInstance(paymentDTO, paymentLineItem, selectedBalance, false);
         dialog.show(ft, tag);
     }
 

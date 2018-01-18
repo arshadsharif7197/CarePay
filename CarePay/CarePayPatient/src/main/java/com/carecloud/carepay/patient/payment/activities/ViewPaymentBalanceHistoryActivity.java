@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
+import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentHistoryDetailDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.NoPaymentsFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
@@ -119,8 +121,17 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void startPaymentProcess(PaymentsModel paymentsModel) {
-        ResponsibilityFragment responsibilityFragment = ResponsibilityFragment.newInstance(paymentsModel, selectedBalancesItem, false);
-        replaceFragment(responsibilityFragment, true);
+        String tag = PaymentDetailsFragmentDialog.class.getSimpleName();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
+                .newInstance(paymentsModel, selectedBalancesItem.getPayload().get(0),
+                        selectedBalancesItem, true);
+        dialog.show(ft, tag);
     }
 
     @Override
@@ -132,7 +143,6 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         replaceFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount), true);
         displayToolbar(false, toolBarTitle);
-
         MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment));
     }
 
