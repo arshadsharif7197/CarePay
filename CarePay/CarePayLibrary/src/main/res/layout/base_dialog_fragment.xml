@@ -5,8 +5,8 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:orientation="horizontal"
-    android:paddingBottom="50dp"
-    android:paddingTop="50dp">
+    android:paddingBottom="@dimen/fragmentDialogPaddingBottom"
+    android:paddingTop="@dimen/fragmentDialogPaddingTop">
 
     <LinearLayout
         android:id="@+id/closeViewLayout"
