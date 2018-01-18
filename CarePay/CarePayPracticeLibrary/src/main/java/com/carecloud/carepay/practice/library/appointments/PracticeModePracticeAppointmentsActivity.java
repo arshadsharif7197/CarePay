@@ -43,6 +43,7 @@ import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentDetailInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -759,6 +760,16 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
+
+    }
+
+    @Override
+    public void onPayLaterClicked(PendingBalanceDTO pendingBalanceDTO) {
+
+    }
+
+    @Override
+    public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
 
     }
 }
