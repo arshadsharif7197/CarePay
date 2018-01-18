@@ -1,6 +1,8 @@
 package com.carecloud.carepay.patient.myhealth.dtos;
 
 import com.carecloud.carepaylibray.base.models.PagingDto;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +12,9 @@ import java.util.List;
  */
 public class MyHealthMedicationsDto extends PagingDto {
 
-    List<MedicationDto> medications = new ArrayList<>();
+    @Expose
+    @SerializedName("medications")
+    private List<MedicationDto> medications = new ArrayList<>();
 
     public List<MedicationDto> getMedications() {
         return medications;
