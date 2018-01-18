@@ -212,47 +212,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         });
     }
 
-//    private void initializeLanguageSpinner() {
-//        final List<String> languages = new ArrayList<>();
-//        if (appointmentsResultModel != null) {
-//            for (OptionDTO language : appointmentsResultModel.getPayload().getLanguages()) {
-//                languages.add(language.getCode().toUpperCase());
-//            }
-//        } else {
-//            for (OptionDTO language : paymentsModel.getPaymentPayload().getLanguages()) {
-//                languages.add(language.getCode().toUpperCase());
-//            }
-//        }
-//        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.home_spinner_item, languages);
-//        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        Spinner languageSpinner = (Spinner) findViewById(R.id.languageSpinner);
-//        languageSpinner.setAdapter(spinnerArrayAdapter);
-//        languageSpinner.setSelection(spinnerArrayAdapter.getPosition(getApplicationPreferences()
-//                .getUserLanguage().toUpperCase()), false);
-//        final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
-//        headers.put("username", getApplicationPreferences().getUserName());
-//        headers.put("username_patient", getApplicationPreferences().getPatientId());
-//        languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                if (!isUserInteraction) {
-//                    return;
-//                }
-//                TransitionDTO transition;
-//                if (appointmentsResultModel != null) {
-//                    transition = appointmentsResultModel.getMetadata().getLinks().getLanguage();
-//                } else {
-//                    transition = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getLanguage();
-//                }
-//                changeLanguage(transition, languages.get(position).toLowerCase(), headers);
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//            }
-//        });
-//    }
-
     private void initAppMode() {
         if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
             //need to switch to PatientMode
