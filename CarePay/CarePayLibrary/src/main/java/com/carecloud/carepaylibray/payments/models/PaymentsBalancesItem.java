@@ -1,11 +1,17 @@
 package com.carecloud.carepaylibray.payments.models;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * @author pjohnson on 1/05/17.
  */
 
 public class PaymentsBalancesItem {
+
+    @SerializedName("metadata")
     private PendingBalanceMetadataDTO metadata = new PendingBalanceMetadataDTO();
+
+    @SerializedName("balance")
     private PendingBalancePayloadDTO balance;
 
     public PendingBalanceMetadataDTO getMetadata() {

@@ -1,5 +1,8 @@
 package com.carecloud.carepay.patient.myhealth.dtos;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +11,9 @@ import java.util.List;
  */
 public class MyHealthPatientDto {
 
-    List<PatientDto> patients = new ArrayList<>();
+    @Expose
+    @SerializedName("patients")
+    private List<PatientDto> patients = new ArrayList<>();
 
     public List<PatientDto> getPatients() {
         return patients;
