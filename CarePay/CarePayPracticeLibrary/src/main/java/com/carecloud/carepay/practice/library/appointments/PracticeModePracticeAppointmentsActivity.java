@@ -542,6 +542,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(paymentsModel);
         FormsResponsibilityFragmentDialog dialog = FormsResponsibilityFragmentDialog
                 .newInstance(paymentsModel,
+                        checkInDTO.getPayload().getUserAuthModel().getUserAuthPermissions(),
                         Label.getLabel("adhoc_show_forms_button_label"),
                         Label.getLabel("add_appointment_label"),
                         Label.getLabel("payment_balance_empty_appointment_screen"),

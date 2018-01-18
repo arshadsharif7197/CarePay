@@ -1,6 +1,8 @@
 package com.carecloud.carepay.practice.library.payments.dialogs;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
@@ -13,6 +15,8 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
  */
 
 public class FormsResponsibilityFragmentDialog extends ResponsibilityFragmentDialog {
+
+    private UserAuthPermissions authPermissions;
 
     /**
      * @param paymentsModel the payment model
@@ -42,8 +46,23 @@ public class FormsResponsibilityFragmentDialog extends ResponsibilityFragmentDia
     }
 
     @Override
+    public void onCreate(Bundle icicle){
+        super.onCreate(icicle);
+        Bundle args = getArguments();
+        authPermissions = DtoHelper.getConvertedDTO(UserAuthPermissions.class, args);
+    }
+
+    @Override
     protected int getContentLayout() {
         return R.layout.fragment_dialog_payment_responsibility_forms;
     }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        enableById(R.id.payment_pay_button, authPermissions.canScheduleAppointment);
+    }
+
 
 }

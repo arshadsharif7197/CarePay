@@ -258,13 +258,6 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         }
     }
 
-    private void enableById(int id, boolean enabled){
-        View view = findViewById(id);
-        if(view != null){
-            view.setEnabled(enabled);
-        }
-    }
-
     private void initializeButton(int id, String text, View.OnClickListener listener) {
         if (null == text) {
             disappearViewById(id);
