@@ -154,6 +154,8 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
                 processRefund();
             }
         });
+        refundButton.setEnabled(paymentsModel.getPaymentPayload().getUserAuthModel()
+                .getUserAuthPermissions().canMakeRefund);
 //        disableCloverRefunds();
     }
 

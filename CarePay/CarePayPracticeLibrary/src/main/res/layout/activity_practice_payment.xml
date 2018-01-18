@@ -157,7 +157,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="10dp"
                     android:layout_toStartOf="@+id/activity_practice_appointments_add"
-                    android:background="@drawable/bg_blue_overlay"
+                    android:background="@drawable/main_buttons_rounded"
                     android:gravity="center_vertical"
                     android:paddingBottom="10dp"
                     android:paddingEnd="20dp"
