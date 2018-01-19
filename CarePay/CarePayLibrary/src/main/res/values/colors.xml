@@ -84,6 +84,7 @@
     <color name="white_opacity_30">#4Dffffff</color>
 
     <color name="transparent_20">#33ffffff</color>
+    <color name="transparent_10">#19ffffff</color>
     <color name="optional_gray">#90a4ae</color>
     <color name="soft_sky">#9FE5ED</color>
     <color name="confirm_pin_sub_title">@color/soft_sky</color>

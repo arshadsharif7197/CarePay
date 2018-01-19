@@ -1,9 +1,12 @@
 package com.carecloud.carepay.practice.library.payments.dialogs;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
+import com.carecloud.carepaylibray.base.models.UserAuthPermissions;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
@@ -13,6 +16,8 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 
 public class FormsResponsibilityFragmentDialog extends ResponsibilityFragmentDialog {
 
+    private UserAuthPermissions authPermissions;
+
     /**
      * @param paymentsModel the payment model
      * @param leftLabel     the label of the left bottom button
@@ -20,6 +25,7 @@ public class FormsResponsibilityFragmentDialog extends ResponsibilityFragmentDia
      * @return new instance of a ResponsibilityFragmentDialog
      */
     public static FormsResponsibilityFragmentDialog newInstance(PaymentsModel paymentsModel,
+                                                           UserAuthPermissions authPermissions,
                                                            String leftLabel,
                                                            String rightLabel,
                                                            String emptyMessage,
@@ -28,6 +34,7 @@ public class FormsResponsibilityFragmentDialog extends ResponsibilityFragmentDia
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, headerModel);
+        DtoHelper.bundleDto(args, authPermissions);
         args.putString(KEY_LEFT_BUTTON, leftLabel);
         args.putString(KEY_RIGHT_BUTTON, rightLabel);
         args.putString(KEY_EMPTY_MESSAGE, emptyMessage);
@@ -39,8 +46,23 @@ public class FormsResponsibilityFragmentDialog extends ResponsibilityFragmentDia
     }
 
     @Override
+    public void onCreate(Bundle icicle){
+        super.onCreate(icicle);
+        Bundle args = getArguments();
+        authPermissions = DtoHelper.getConvertedDTO(UserAuthPermissions.class, args);
+    }
+
+    @Override
     protected int getContentLayout() {
         return R.layout.fragment_dialog_payment_responsibility_forms;
     }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        enableById(R.id.payment_pay_button, authPermissions.canScheduleAppointment);
+    }
+
 
 }

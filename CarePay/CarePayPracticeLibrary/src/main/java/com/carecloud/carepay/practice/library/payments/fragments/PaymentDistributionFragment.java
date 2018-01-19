@@ -28,6 +28,7 @@ import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.base.models.UserAuthPermissions;
 import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -93,6 +94,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     private ProviderDTO defaultProvider;
 
     private boolean hasPaymentError = false;
+    private UserAuthPermissions authPermissions;
 
     @Override
     public void onAttach(Context context){
@@ -114,6 +116,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             Gson gson = new Gson();
             String paymentPayload = args.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
             paymentsModel = gson.fromJson(paymentPayload, PaymentsModel.class);
+            authPermissions = paymentsModel.getPaymentPayload().getUserAuthModel().getUserAuthPermissions();
         }
     }
 
@@ -248,6 +251,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             }
         });
 
+        payButton.setEnabled(authPermissions.canMakePayment);
+        addButton.setEnabled(authPermissions.canAddCharges);
+        addButtonEmpty.setEnabled(authPermissions.canAddCharges);
     }
 
     private void setInitialValues(View view){
@@ -501,7 +507,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         }
 
         double totalAmount = round(paymentAmount + chargesAmount);
-        payButton.setEnabled(totalAmount > 0);
+        payButton.setEnabled(totalAmount > 0 && authPermissions.canMakePayment);
 
         setCurrency(paymentTotal, totalAmount);
     }

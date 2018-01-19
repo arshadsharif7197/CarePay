@@ -5,6 +5,7 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.base.models.UserAuthModel;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItemPayload;
 import com.carecloud.carepaylibray.payments.models.history.PaymentsTransactionHistory;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
@@ -87,7 +88,12 @@ public class PaymentsPayloadDTO implements Serializable {
     @Expose
     private List<OptionDTO> languages = new ArrayList<>();
     @SerializedName("organization_id")
+    @Expose
     private String organizationId;
+    @SerializedName("auth")
+    @Expose
+    private UserAuthModel userAuthModel = new UserAuthModel();
+
 
     public List<PatientModel> getPatients() {
         return patients;
@@ -315,6 +321,14 @@ public class PaymentsPayloadDTO implements Serializable {
 
     public void setLanguages(List<OptionDTO> languages) {
         this.languages = languages;
+    }
+
+    public UserAuthModel getUserAuthModel() {
+        return userAuthModel;
+    }
+
+    public void setUserAuthModel(UserAuthModel userAuthModel) {
+        this.userAuthModel = userAuthModel;
     }
 
     /**

@@ -145,6 +145,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
         TextView addAppointmentTextView = (TextView) findViewById(R.id.activity_practice_appointments_add);
         addAppointmentTextView.setOnClickListener(getFindPatientListener(false));
+        addAppointmentTextView.setEnabled(checkInDTO.getPayload().getUserAuthModel().getUserAuthPermissions().canScheduleAppointment);
 
         findViewById(R.id.practice_go_back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -440,6 +441,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         PracticeAppointmentDialog dialog = PracticeAppointmentDialog.newInstance(
                 dialogStyle,
                 appointmentDTO,
+                checkInDTO.getPayload().getUserAuthModel().getUserAuthPermissions(),
                 PracticeModePracticeAppointmentsActivity.this
         );
         displayDialogFragment(dialog, true);
@@ -541,6 +543,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(paymentsModel);
         FormsResponsibilityFragmentDialog dialog = FormsResponsibilityFragmentDialog
                 .newInstance(paymentsModel,
+                        checkInDTO.getPayload().getUserAuthModel().getUserAuthPermissions(),
                         Label.getLabel("adhoc_show_forms_button_label"),
                         Label.getLabel("add_appointment_label"),
                         Label.getLabel("payment_balance_empty_appointment_screen"),

@@ -116,7 +116,14 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
         return textView;
     }
 
-    private View findViewById(int id) {
+    protected void enableById(int id, boolean enabled){
+        View view = findViewById(id);
+        if(view != null){
+            view.setEnabled(enabled);
+        }
+    }
+
+    protected View findViewById(int id) {
         return view.findViewById(id);
     }
 
