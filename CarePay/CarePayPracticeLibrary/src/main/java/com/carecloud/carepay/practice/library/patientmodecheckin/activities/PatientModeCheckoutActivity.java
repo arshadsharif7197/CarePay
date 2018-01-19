@@ -3,20 +3,22 @@ package com.carecloud.carepay.practice.library.patientmodecheckin.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAvailableHoursDialogFragment;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeChooseProviderDialog;
 import com.carecloud.carepay.practice.library.appointments.dtos.PracticeAppointmentDTO;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
+import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckOutFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
@@ -70,10 +72,8 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -128,9 +128,16 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onUserInteraction(){
+    public void onUserInteraction() {
         super.onUserInteraction();
         isUserInteraction = true;
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                findViewById(R.id.languageContainer).setVisibility(View.GONE);
+            }
+        }, 25);
     }
 
     /**
@@ -160,29 +167,37 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     private void initializeLanguageSpinner() {
-        final List<String> languages = new ArrayList<>();
-        if (appointmentsResultModel != null) {
-            for (OptionDTO language : appointmentsResultModel.getPayload().getLanguages()) {
-                languages.add(language.getCode().toUpperCase());
-            }
-        } else {
-            for (OptionDTO language : paymentsModel.getPaymentPayload().getLanguages()) {
-                languages.add(language.getCode().toUpperCase());
+        String selectedLanguageStr = getApplicationPreferences().getUserLanguage();
+        OptionDTO selectedLanguage = appointmentsResultModel.getPayload().getLanguages().get(0);
+        for (OptionDTO language : appointmentsResultModel.getPayload().getLanguages()) {
+            if (selectedLanguageStr.equals(language.getCode())) {
+                selectedLanguage = language;
             }
         }
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.home_spinner_item, languages);
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner languageSpinner = (Spinner) findViewById(R.id.languageSpinner);
-        languageSpinner.setAdapter(spinnerArrayAdapter);
-        languageSpinner.setSelection(spinnerArrayAdapter.getPosition(getApplicationPreferences()
-                .getUserLanguage().toUpperCase()), false);
+
+        final TextView languageSwitch = (TextView) findViewById(R.id.languageSpinner);
+        final View languageContainer = findViewById(R.id.languageContainer);
+        languageSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                languageContainer.setVisibility(languageContainer.getVisibility() == View.VISIBLE
+                        ? View.GONE : View.VISIBLE);
+            }
+        });
+        languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
         final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
         headers.put("username", getApplicationPreferences().getUserName());
         headers.put("username_patient", getApplicationPreferences().getPatientId());
-        languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        RecyclerView languageList = (RecyclerView) findViewById(R.id.languageList);
+        LanguageAdapter languageAdapter = new LanguageAdapter(appointmentsResultModel.getPayload().getLanguages(),
+                selectedLanguage);
+        languageList.setAdapter(languageAdapter);
+        languageList.setLayoutManager(new LinearLayoutManager(getContext()));
+        languageAdapter.setCallback(new LanguageAdapter.LanguageInterface() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(!isUserInteraction){
+            public void onLanguageSelected(OptionDTO language) {
+                languageContainer.setVisibility(View.GONE);
+                if (!isUserInteraction) {
                     return;
                 }
                 TransitionDTO transition;
@@ -191,11 +206,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                 } else {
                     transition = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getLanguage();
                 }
-                changeLanguage(transition, languages.get(position).toLowerCase(), headers);
-            }
+                changeLanguage(transition, language.getCode().toLowerCase(), headers);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
     }
