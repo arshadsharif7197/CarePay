@@ -71,6 +71,7 @@
 #Prevent crashes in App
 -keep class com.google.** { *; }
 -keep class com.carecloud.carepaylibray.medications.models.** { *; }
+-keep class com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO { *; }
 
 
 # SugarRecord
