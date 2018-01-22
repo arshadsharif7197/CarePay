@@ -528,14 +528,14 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             View target = view.findViewById(field);
             if(target instanceof TextInputLayout){
                 TextInputLayout inputLayout = (TextInputLayout) target;
+                inputLayout.setError(null);
+                inputLayout.setErrorEnabled(false);
                 EditText editText = inputLayout.getEditText();
                 if(editText != null && !enabled && editText.getOnFocusChangeListener() != null) {
                     editText.getOnFocusChangeListener().onFocusChange(editText, true);
                     editText.setText(null);
                     editText.getOnFocusChangeListener().onFocusChange(editText, false);
                 }
-                inputLayout.setError(null);
-                inputLayout.setErrorEnabled(false);
             }
             target.setEnabled(enabled);
         }
@@ -885,6 +885,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                         policyBirthDateHolderInput.setError(dateValidationResult);
                     }
                     return false;
+                }else{
+                    policyBirthDateHolderInput.setError(null);
+                    policyBirthDateHolderInput.setErrorEnabled(false);
                 }
             }
         }
@@ -980,6 +983,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         @Override
         public void afterTextChanged(Editable editable) {
             StringUtil.autoFormatDateOfBirth(editable, lastLength);
+            checkIfEnableButton();
         }
     };
 
