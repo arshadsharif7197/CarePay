@@ -83,7 +83,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal"
-            android:padding="@dimen/dimen_10dp">
+            android:padding="@dimen/dimen_10dp"
+            android:visibility="gone">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/make_partial_payment_button"

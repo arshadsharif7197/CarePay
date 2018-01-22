@@ -75,7 +75,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                 callback.onPartialPaymentClicked(paymentPayload.getAmount(), selectedBalance);
             }
         });
-
+        boolean canMakePayments = true;
         if (paymentReceiptModel != null) {
             String practiceName = selectedBalance.getMetadata().getPracticeName();
             String totalAmount = StringUtil.getFormattedBalanceAmount(paymentPayload.getAmount());
@@ -99,9 +99,8 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                 });
             }
 
-            boolean canMakePayments = paymentReceiptModel.getPaymentPayload().canMakePayments(selectedBalance.getMetadata().getPracticeId());
-            payNowButton.setVisibility(canMakePayments ? View.VISIBLE : View.GONE);
-
+            canMakePayments = paymentReceiptModel.getPaymentPayload()
+                    .canMakePayments(selectedBalance.getMetadata().getPracticeId());
         }
 
         RecyclerView paymentDetailsRecyclerView = ((RecyclerView) view
@@ -113,7 +112,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         paymentDetailsRecyclerView.setAdapter(adapter);
 
         boolean showPaymentButtons = getArguments().getBoolean("showPaymentButtons", false);
-        if (showPaymentButtons) {
+        if (showPaymentButtons && canMakePayments) {
             view.findViewById(R.id.paymentButtonsContainer).setVisibility(View.VISIBLE);
 //            view.findViewById(R.id.planButtonsContainer).setVisibility(View.VISIBLE);
         }
