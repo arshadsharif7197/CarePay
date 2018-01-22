@@ -83,8 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal"
-            android:padding="@dimen/dimen_10dp"
-            android:visibility="gone">
+            android:padding="@dimen/dimen_10dp">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/make_partial_payment_button"
@@ -97,7 +96,8 @@
                 android:foreground="?android:selectableItemBackground"
                 android:textColor="@color/colorPrimary"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="payment_partial_amount_button" />
+                breeze:textKey="payment.detail.button.label.partialPayment"
+                tools:text="Partial Payment" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/payment_details_pay_now_button"
@@ -110,7 +110,8 @@
                 android:foreground="?android:selectableItemBackground"
                 android:textColor="@color/white"
                 android:textSize="@dimen/apt_dl_textview_size"
-                app:customAssetFont="gotham_rounded_medium" />
+                app:customAssetFont="gotham_rounded_medium"
+                tools:text="Pay Now" />
 
         </LinearLayout>
 
