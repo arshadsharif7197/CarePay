@@ -14,15 +14,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.adapters.ProviderAdapter;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentFragment;
 import com.carecloud.carepaylibray.appointments.interfaces.ProviderInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentPayloadModel;
@@ -45,7 +44,6 @@ public class ChooseProviderFragment extends BaseAppointmentFragment
         implements ProviderAdapter.OnProviderListItemClickListener {
 
     private RecyclerView providersRecyclerView;
-    private ProgressBar appointmentProgressBar;
     private AppointmentsResultModel appointmentsResultModel;
     private AppointmentsResultModel resourcesToScheduleModel;
 
@@ -135,8 +133,6 @@ public class ChooseProviderFragment extends BaseAppointmentFragment
         });
 
         providersRecyclerView = ((RecyclerView) view.findViewById(R.id.providers_recycler_view));
-        appointmentProgressBar = (ProgressBar) view.findViewById(R.id.providers_progress_bar);
-        appointmentProgressBar.setVisibility(View.GONE);
 
         //Fetch provider data
         getResourcesInformation();
@@ -161,7 +157,6 @@ public class ChooseProviderFragment extends BaseAppointmentFragment
         @Override
         public void onPreExecute() {
             showProgressDialog();
-            appointmentProgressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -190,17 +185,17 @@ public class ChooseProviderFragment extends BaseAppointmentFragment
                             chooseProviderFragment);
                     providersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                     providersRecyclerView.setAdapter(providerAdapter);
+                    getView().findViewById(R.id.emptyStateScreen).setVisibility(View.GONE);
+                } else {
+                    getView().findViewById(R.id.emptyStateScreen).setVisibility(View.VISIBLE);
                 }
             }
-
-            appointmentProgressBar.setVisibility(View.GONE);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             showErrorNotification(exceptionMessage);
-            appointmentProgressBar.setVisibility(View.GONE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

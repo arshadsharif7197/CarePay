@@ -34,7 +34,8 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        isPracticeAppPatientMode = ((ISession) getActivity()).getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
+        isPracticeAppPatientMode = ((ISession) getActivity()).getApplicationMode().getApplicationType()
+                == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
         setNewRelicInteraction(getClass().getName());
     }
 
@@ -183,17 +184,17 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     }
 
     @Override
-    public void onAtomicRestart(){
+    public void onAtomicRestart() {
         ((IApplicationSession) getActivity()).onAtomicRestart();
     }
 
     @Override
-    public void setLastInteraction(long systemTime){
+    public void setLastInteraction(long systemTime) {
         ((IApplicationSession) getActivity()).setLastInteraction(systemTime);
     }
 
     @Override
-    public long getLastInteraction(){
+    public long getLastInteraction() {
         return ((IApplicationSession) getActivity()).getLastInteraction();
     }
 
@@ -220,10 +221,10 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
 
     @Override
     public void showErrorNotification(String errorMessage) {
-        if(getDialog() != null){
+        if (getDialog() != null) {
             CustomMessageToast toast = new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
             toast.show();
-        }else {
+        } else {
             ISession session = (ISession) getActivity();
             if (null != session) {
                 session.showErrorNotification(errorMessage);
@@ -258,7 +259,6 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     }
 
     private void setNavigationBarVisibility() {
-
         View decorView = getDialog().getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
