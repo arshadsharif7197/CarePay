@@ -75,7 +75,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                 callback.onPartialPaymentClicked(paymentPayload.getAmount(), selectedBalance);
             }
         });
-        boolean canMakePayments = true;
+        boolean canMakePayments = false;
         if (paymentReceiptModel != null) {
             String practiceName = selectedBalance.getMetadata().getPracticeName();
             String totalAmount = StringUtil.getFormattedBalanceAmount(paymentPayload.getAmount());
