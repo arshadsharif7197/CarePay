@@ -550,8 +550,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             if (!HttpConstants.isUseUnifiedAuth()) {
                 // log out previous user from Cognito
                 getAppAuthorizationHelper().getPool().getUser().signOut();
-                getAppAuthorizationHelper().setUser(null);
             }
+            getAppAuthorizationHelper().setUser(null);
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
             CloverMainActivity.this.finish();
         }
