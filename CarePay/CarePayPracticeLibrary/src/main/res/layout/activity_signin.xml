@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?practiceBackgroundColor"
@@ -35,22 +34,12 @@
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="go_back_label" />
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/signinLangSpinner"
+        <include
+            layout="@layout/lang_spinner"
+            android:layout_marginTop="@dimen/dimen_20dp"
             android:layout_width="@dimen/home_spinner_width"
             android:layout_height="@dimen/home_spinner_height"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="@dimen/dimen_20dp"
-            android:background="@drawable/bg_blue_overlay"
-            android:drawableEnd="@drawable/icn_down_white"
-            android:paddingEnd="@dimen/home_spinner_padding_righ_left"
-            android:paddingStart="@dimen/home_spinner_padding_righ_left"
-            android:popupBackground="@drawable/bottom_rounded_white"
-            android:spinnerMode="dropdown"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_20sp"
-            app:customAssetFont="gotham_rounded_medium"
-            tools:text="EN" />
+            android:layout_alignParentEnd="true" />
 
         <ImageView
             android:id="@+id/imageView"

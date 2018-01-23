@@ -169,7 +169,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             }
         }
 
-        languageSwitch = (TextView) findViewById(R.id.signinLangSpinner);
+        languageSwitch = (TextView) findViewById(R.id.languageSpinner);
         final View languageContainer = findViewById(R.id.languageContainer);
         languageSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
