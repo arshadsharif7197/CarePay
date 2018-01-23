@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <include
+        android:id="@+id/add_appointment_toolbar"
+        layout="@layout/add_appointment_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/providers_sticky_header_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/apt_skicky_header_height"
+        android:layout_below="@id/add_appointment_toolbar"
+        android:layout_gravity="center_vertical"
+        android:background="@color/light_gray"
+        android:gravity="center_vertical"
+        android:paddingEnd="0dp"
+        android:paddingStart="@dimen/list_apt_padding_right"
+        android:textColor="@color/lightSlateGray"
+        android:textSize="@dimen/textview_textsize"
+        android:visibility="gone"
+        app:customAssetFont="proxima_nova_semi_bold" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/providers_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/providers_sticky_header_title" />
+
+    <RelativeLayout
+        android:id="@+id/emptyStateScreen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/add_appointment_toolbar"
+        android:visibility="gone">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:padding="@dimen/dimen_10dp"
+            android:textColor="@color/charcoal"
+            android:textSize="@dimen/text_size_21"
+            app:customAssetFont="gotham_rounded_book"
+            breeze:textKey="appointment.chooseProvider.message.label.emptyScreenTitle"
+            tools:text="No provider available" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/dimen_20dp"
+            android:src="@drawable/icn_empty_state_providers" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:paddingEnd="@dimen/dimen_25dp"
+            android:paddingStart="@dimen/dimen_25dp"
+            android:textColor="@color/cadet_gray"
+            android:textSize="@dimen/text_size_14"
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="appointment.chooseProvider.message.label.emptyScreenSubTitle"
+            tools:text="There are currently no providers available to schedule an appointment with" />
+
+    </RelativeLayout>
+</RelativeLayout>
