@@ -18,5 +18,7 @@ public interface PaymentPlanInterface extends PaymentMethodInterface {
 
     void onAddPaymentPlanCard(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel);
 
+    void onDisplayPaymentPlanTerms(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel);
+
     void onSubmitPaymentPlan();
 }

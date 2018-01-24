@@ -374,7 +374,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
 
             PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
             paymentPlanModel.setAmount(monthlyPaymentAmount);
-            paymentPlanModel.setFrequencyCode(PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS);
+            paymentPlanModel.setFrequencyCode(PaymentPlanModel.FREQUENCY_MONTHLY);
             paymentPlanModel.setInstallments(monthlyPaymentCount);
             paymentPlanModel.setEnabled(true);
 
@@ -412,6 +412,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
                         lineItem.setAmount(amountHolder);
                         amountHolder = 0;
                     }
+
+                    lineItems.add(lineItem);
                 }
             }
         }

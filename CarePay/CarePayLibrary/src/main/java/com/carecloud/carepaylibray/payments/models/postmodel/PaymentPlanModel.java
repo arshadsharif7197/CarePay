@@ -1,20 +1,28 @@
 package com.carecloud.carepaylibray.payments.models.postmodel;
 
-import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
+import android.support.annotation.StringDef;
+
 import com.google.gson.annotations.SerializedName;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * Created by lmenendez on 1/23/18
  */
 
 public class PaymentPlanModel {
+    public static final String FREQUENCY_MONTHLY = "monthly";
 
+    @Retention(RetentionPolicy.SOURCE)
+    @StringDef({FREQUENCY_MONTHLY})
+    public @interface FrequencyDef {}
 
     @SerializedName("start_dt")
     private String startDate;
 
     @SerializedName("frequency_code")
-    @PaymentSettingsBalanceRangeRule.IntervalRange
+    @FrequencyDef
     private String frequencyCode;
 
     @SerializedName("day_of_month")
@@ -40,12 +48,12 @@ public class PaymentPlanModel {
         this.startDate = startDate;
     }
 
-    @PaymentSettingsBalanceRangeRule.IntervalRange
+    @FrequencyDef
     public String getFrequencyCode() {
         return frequencyCode;
     }
 
-    public void setFrequencyCode(@PaymentSettingsBalanceRangeRule.IntervalRange String frequencyCode) {
+    public void setFrequencyCode(@FrequencyDef String frequencyCode) {
         this.frequencyCode = frequencyCode;
     }
 
