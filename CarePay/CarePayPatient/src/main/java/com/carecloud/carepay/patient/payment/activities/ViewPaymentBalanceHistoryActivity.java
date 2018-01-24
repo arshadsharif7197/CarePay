@@ -17,7 +17,7 @@ import com.carecloud.carepay.patient.payment.fragments.NoPaymentsFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
-import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
+import com.carecloud.carepay.patient.payment.fragments.PaymentPlanPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
@@ -30,6 +30,9 @@ import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAddCreditCardFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanChooseCreditCardFragment;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
@@ -37,6 +40,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.google.android.gms.wallet.MaskedWallet;
@@ -47,7 +51,7 @@ import java.util.List;
 /**
  * Created by jorge on 29/12/16
  */
-public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity implements PaymentFragmentActivityInterface {
+public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity implements PaymentFragmentActivityInterface, PaymentPlanInterface {
 
     private static boolean isPaymentDone;
     private PaymentsModel paymentsDTO;
@@ -210,15 +214,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void onPaymentPlanAction(PaymentsModel paymentsModel) {
-        PaymentPlanFragment fragment = new PaymentPlanFragment();
-
-        Bundle args = new Bundle();
-        Gson gson = new Gson();
-        String paymentsDTOString = gson.toJson(paymentsDTO);
-        args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-        fragment.setArguments(args);
-
+        PaymentPlanFragment fragment = PaymentPlanFragment.newInstance(paymentsModel, selectedBalancesItem);
         replaceFragment(fragment, true);
+        displayToolbar(false, null);
     }
 
     @Override
@@ -341,5 +339,38 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         if (targetFragment != null) {
             targetFragment.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public void onStartPaymentPlan(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
+        PaymentPlanPaymentMethodFragment fragment = PaymentPlanPaymentMethodFragment.newInstance(paymentsModel, paymentPlanPostModel);
+        replaceFragment(fragment, true);
+    }
+
+    @Override
+    public void onDismissPaymentPlan(PaymentsModel paymentsModel) {
+        onBackPressed();
+        displayToolbar(true, toolBarTitle);
+    }
+
+    @Override
+    public void onSelectPaymentPlanMethod(PaymentsMethodsDTO selectedPaymentMethod, PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            PaymentPlanChooseCreditCardFragment fragment = PaymentPlanChooseCreditCardFragment.newInstance(paymentsModel, selectedPaymentMethod.getLabel(), paymentPlanPostModel);
+            replaceFragment(fragment, true);
+        } else {
+            onAddPaymentPlanCard(paymentsModel, paymentPlanPostModel);
+        }
+    }
+
+    @Override
+    public void onAddPaymentPlanCard(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
+        PaymentPlanAddCreditCardFragment fragment = PaymentPlanAddCreditCardFragment.newInstance(paymentsModel, paymentPlanPostModel);
+        replaceFragment(fragment, true);
+    }
+
+    @Override
+    public void onSubmitPaymentPlan() {
+
     }
 }

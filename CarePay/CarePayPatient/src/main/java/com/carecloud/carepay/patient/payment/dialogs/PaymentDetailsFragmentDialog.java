@@ -75,6 +75,15 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                 callback.onPartialPaymentClicked(paymentPayload.getAmount(), selectedBalance);
             }
         });
+        View paymentPlanButton = view.findViewById(R.id.createPaymentPlanButton);
+        paymentPlanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+                callback.onPaymentPlanAction(paymentReceiptModel);
+            }
+        });
+
         boolean canMakePayments = false;
         if (paymentReceiptModel != null) {
             String practiceName = selectedBalance.getMetadata().getPracticeName();

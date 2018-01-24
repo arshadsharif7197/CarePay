@@ -166,7 +166,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
     }
 
 
-    private void makePaymentCall() {
+    protected void makePaymentCall() {
         IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
         if (postModel != null && postModel.getAmount() > 0) {
             processPayment(postModel);
@@ -272,7 +272,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
 
     }
 
-    private IntegratedPaymentCardData getCreditCardModel() {
+    protected IntegratedPaymentCardData getCreditCardModel() {
         IntegratedPaymentCardData creditCardModel = new IntegratedPaymentCardData();
         creditCardModel.setCardType(creditCardsPayloadDTO.getCardType());
         creditCardModel.setCardNumber(creditCardsPayloadDTO.getCardNumber());

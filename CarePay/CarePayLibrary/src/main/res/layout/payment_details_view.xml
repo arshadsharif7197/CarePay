@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/dimen_10dp"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/createPaymentPlanButton"
@@ -65,7 +65,8 @@
             android:textSize="@dimen/text_size_12sp"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="payment.detail.button.label.statement"
-            tools:text="Statement" />
+            tools:text="Statement"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <LinearLayout
