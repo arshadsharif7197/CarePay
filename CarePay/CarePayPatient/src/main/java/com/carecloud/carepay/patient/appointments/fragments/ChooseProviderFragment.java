@@ -196,7 +196,7 @@ public class ChooseProviderFragment extends BaseAppointmentFragment
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             showErrorNotification(exceptionMessage);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e("Server Error", exceptionMessage);
         }
     };
 
