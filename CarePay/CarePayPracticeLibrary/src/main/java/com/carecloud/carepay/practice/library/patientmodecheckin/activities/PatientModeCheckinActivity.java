@@ -92,9 +92,9 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         super.onCreate(icicle);
         setContentView(R.layout.activity_demographic_review);
 
+        presenter = new PatientModeDemographicsPresenter(this, icicle, this);
         initializeHomeButton();
         initializeLeftNavigation();
-        presenter = new PatientModeDemographicsPresenter(this, icicle, this);
         initializeLanguageSpinner();
 
     }
@@ -155,8 +155,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     private void changeMenuLanguage() {
-        ((TextView) findViewById(R.id.checkInLeftNavigationTitle))
-                .setText(Label.getLabel("practice_checkin_header_label"));
         initializeLeftNavigation();
     }
 
@@ -269,6 +267,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     private void initializeLeftNavigation() {
+        ((TextView) findViewById(R.id.checkInLeftNavigationTitle))
+                .setText(Label.getLabel("practice_checkin_header_label"));
         checkInFlowViews = new View[]{
                 findViewById(R.id.checkin_flow_demographics),
                 findViewById(R.id.checkin_flow_consent),

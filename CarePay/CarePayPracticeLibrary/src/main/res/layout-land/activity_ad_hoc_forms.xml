@@ -26,8 +26,8 @@
 
             <ImageView
                 android:id="@+id/goBackImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dimen_40dp"
+                android:layout_height="@dimen/dimen_40dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
                 android:layout_marginBottom="@dimen/dimen_20dp"
@@ -69,34 +69,26 @@
                 android:layout_marginStart="@dimen/dimen_10dp"
                 android:layout_toEndOf="@id/goBackImageView"
                 android:textColor="@color/white"
+                android:textSize="@dimen/text_size_20sp"
                 app:customAssetFont="gotham_rounded_light"
                 breeze:textKey="demographics_back_text"
                 tools:text="Back" />
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/languageSpinner"
+            <include
+                layout="@layout/lang_spinner"
                 android:layout_width="@dimen/home_spinner_width"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/home_spinner_height"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="@dimen/dimen_20dp"
-                android:layout_marginStart="@dimen/dimen_20dp"
-                android:layout_toEndOf="@id/goBackTextView"
-                android:background="@drawable/bg_blue_overlay"
-                android:drawableEnd="@drawable/icn_down_white"
-                android:paddingEnd="@dimen/home_spinner_padding_righ_left"
-                android:paddingStart="@dimen/home_spinner_padding_righ_left"
-                android:popupBackground="@drawable/bottom_rounded_white"
-                android:spinnerMode="dropdown"
-                android:textColor="@color/white"
-                app:customAssetFont="gotham_rounded_medium"
-                tools:text="EN" />
+                android:layout_marginStart="@dimen/dimen_25dp"
+                android:layout_toEndOf="@id/goBackTextView" />
 
             <FrameLayout
                 android:id="@+id/languageContainer"
                 android:layout_width="@dimen/dimen_180dp"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/languageSpinner"
-                android:layout_marginStart="45dp"
+                android:layout_marginStart="@dimen/dimen_50dp"
                 android:animateLayoutChanges="true"
                 android:visibility="gone">
 

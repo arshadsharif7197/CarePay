@@ -106,6 +106,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
         setContentView(R.layout.activity_patient_checkout);
         initViews();
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
@@ -122,8 +123,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                 MixPanelUtil.startTimer(getString(R.string.timer_checkout));
             }
         }
-        initializeLanguageSpinner();
         initAppMode();
+        initializeLanguageSpinner();
         shouldAddBackStack = true;
     }
 
