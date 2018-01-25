@@ -88,4 +88,5 @@ public class PaymentPlanPayloadDTO {
     public void setPaymentPlanDetails(PaymentPlanDetailsDTO paymentPlanDetails) {
         this.paymentPlanDetails = paymentPlanDetails;
     }
+
 }

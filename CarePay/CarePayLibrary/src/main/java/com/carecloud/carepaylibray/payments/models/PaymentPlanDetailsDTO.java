@@ -12,6 +12,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PaymentPlanDetailsDTO extends PaymentPlanModel {
     public static final String STATUS_PROCESSING = "processing";
@@ -34,6 +36,15 @@ public class PaymentPlanDetailsDTO extends PaymentPlanModel {
     @Expose
     @PlanStatus
     private String paymentPlanStatus;
+
+    @SerializedName("history")
+    @Expose
+    private List<PaymentPlanHistory> paymentPlanHistoryList = new ArrayList<>();
+
+    @SerializedName("amount_paid")
+    @Expose
+    private double amountPaid;
+
 
     public String getFirstName() {
         return firstName;
@@ -59,6 +70,23 @@ public class PaymentPlanDetailsDTO extends PaymentPlanModel {
     public void setPaymentPlanStatus(@PlanStatus String paymentPlanStatus) {
         this.paymentPlanStatus = paymentPlanStatus;
     }
+
+    public List<PaymentPlanHistory> getPaymentPlanHistoryList() {
+        return paymentPlanHistoryList;
+    }
+
+    public void setPaymentPlanHistoryList(List<PaymentPlanHistory> paymentPlanHistoryList) {
+        this.paymentPlanHistoryList = paymentPlanHistoryList;
+    }
+
+    public double getAmountPaid() {
+        return amountPaid;
+    }
+
+    public void setAmountPaid(double amountPaid) {
+        this.amountPaid = amountPaid;
+    }
+
 
 
 }
