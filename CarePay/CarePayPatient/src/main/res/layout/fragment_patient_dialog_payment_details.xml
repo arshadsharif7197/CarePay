@@ -97,7 +97,7 @@
                 android:foreground="?android:selectableItemBackground"
                 android:textColor="@color/colorPrimary"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="payment.detail.button.label.partialPayment"
+                breeze:textKey="payment_partial_payment_text"
                 tools:text="Partial Payment" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
@@ -112,6 +112,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/apt_dl_textview_size"
                 app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="practice_payments_detail_dialog_pay_total"
                 tools:text="Pay Now" />
 
         </LinearLayout>

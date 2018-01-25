@@ -16,15 +16,6 @@ public class PaymentsTransitionsDTO {
     @SerializedName("delete_credit_card")
     @Expose
     private PaymentsDeleteCreditCardsDTO deleteCreditCard = new PaymentsDeleteCreditCardsDTO();
-    @SerializedName("add_payment_plan")
-    @Expose
-    private TransitionDTO addPaymentPlan = new TransitionDTO();
-    @SerializedName("delete_payment_plan")
-    @Expose
-    private PayementsDeletePaymentPlanDTO deletePaymentPlan = new PayementsDeletePaymentPlanDTO();
-    @SerializedName("modify_payment_plan")
-    @Expose
-    private PaymentsModifyPaymentPlanDTO modifyPaymentPlan = new PaymentsModifyPaymentPlanDTO();
     @SerializedName("logout")
     @Expose
     private TransitionDTO logout = new TransitionDTO();
@@ -43,6 +34,15 @@ public class PaymentsTransitionsDTO {
     @SerializedName("record_payment")
     @Expose
     private TransitionDTO recordPayment = new TransitionDTO();
+    @SerializedName("create_payment_plan")
+    @Expose
+    private TransitionDTO createPaymentPlan = new TransitionDTO();
+    @SerializedName("delete_payment_plan")
+    @Expose
+    private TransitionDTO deletePaymentPlan = new TransitionDTO();
+    @SerializedName("update_payment_plan")
+    @Expose
+    private TransitionDTO uodatePaymentPlan = new TransitionDTO();
 
     /**
      * @return The makePayment
@@ -84,48 +84,6 @@ public class PaymentsTransitionsDTO {
      */
     public void setDeleteCreditCard(PaymentsDeleteCreditCardsDTO deleteCreditCard) {
         this.deleteCreditCard = deleteCreditCard;
-    }
-
-    /**
-     * @return The addPaymentPlan
-     */
-    public TransitionDTO getAddPaymentPlan() {
-        return addPaymentPlan;
-    }
-
-    /**
-     * @param addPaymentPlan The add_payment_plan
-     */
-    public void setAddPaymentPlan(TransitionDTO addPaymentPlan) {
-        this.addPaymentPlan = addPaymentPlan;
-    }
-
-    /**
-     * @return The deletePaymentPlan
-     */
-    public PayementsDeletePaymentPlanDTO getDeletePaymentPlan() {
-        return deletePaymentPlan;
-    }
-
-    /**
-     * @param deletePaymentPlan The delete_payment_plan
-     */
-    public void setDeletePaymentPlan(PayementsDeletePaymentPlanDTO deletePaymentPlan) {
-        this.deletePaymentPlan = deletePaymentPlan;
-    }
-
-    /**
-     * @return The modifyPaymentPlan
-     */
-    public PaymentsModifyPaymentPlanDTO getModifyPaymentPlan() {
-        return modifyPaymentPlan;
-    }
-
-    /**
-     * @param modifyPaymentPlan The modify_payment_plan
-     */
-    public void setModifyPaymentPlan(PaymentsModifyPaymentPlanDTO modifyPaymentPlan) {
-        this.modifyPaymentPlan = modifyPaymentPlan;
     }
 
     /**
@@ -180,5 +138,29 @@ public class PaymentsTransitionsDTO {
 
     public void setRecordPayment(TransitionDTO recordPayment) {
         this.recordPayment = recordPayment;
+    }
+
+    public TransitionDTO getCreatePaymentPlan() {
+        return createPaymentPlan;
+    }
+
+    public void setCreatePaymentPlan(TransitionDTO createPaymentPlan) {
+        this.createPaymentPlan = createPaymentPlan;
+    }
+
+    public TransitionDTO getDeletePaymentPlan() {
+        return deletePaymentPlan;
+    }
+
+    public void setDeletePaymentPlan(TransitionDTO deletePaymentPlan) {
+        this.deletePaymentPlan = deletePaymentPlan;
+    }
+
+    public TransitionDTO getUodatePaymentPlan() {
+        return uodatePaymentPlan;
+    }
+
+    public void setUodatePaymentPlan(TransitionDTO uodatePaymentPlan) {
+        this.uodatePaymentPlan = uodatePaymentPlan;
     }
 }

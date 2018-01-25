@@ -8,4 +8,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 
 public interface PaymentDetailInterface extends ResponsibilityPaymentInterface {
     void onDetailCancelClicked(PaymentsModel paymentsModel);
+
+    void onPaymentPlanAction(PaymentsModel paymentsModel);
+
 }

@@ -27,46 +27,51 @@
         android:layout_marginTop="@dimen/dimen_15dp"
         android:background="@color/light_gray_dialog" />
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/planButtonsContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dimen_10dp"
-        android:visibility="gone">
+        android:paddingTop="@dimen/dimen_10dp"
+        android:paddingBottom="@dimen/dimen_10dp"
+        android:paddingStart="@dimen/dimen_5dp"
+        android:paddingEnd="@dimen/dimen_5dp"
+        android:orientation="horizontal"
+        android:visibility="visible">
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/createPaymentPlanButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
+            android:layout_weight="1"
             android:layout_marginEnd="@dimen/dimen_5dp"
+            android:layout_marginStart="@dimen/dimen_5dp"
             android:background="@drawable/button_default_background"
             android:foreground="?android:selectableItemBackground"
-            android:paddingEnd="@dimen/dimen_10dp"
-            android:paddingStart="@dimen/dimen_10dp"
+            android:padding="@dimen/dimen_10dp"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_12sp"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="payment_create_payment_plan"
             tools:text="create payment plan" />
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/make_partial_payment_button"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
+            android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="@dimen/dimen_5dp"
+            android:layout_marginStart="@dimen/dimen_5dp"
             android:background="@drawable/button_default_background"
             android:foreground="?android:selectableItemBackground"
-            android:paddingEnd="@dimen/dimen_10dp"
-            android:paddingStart="@dimen/dimen_10dp"
+            android:padding="@dimen/dimen_10dp"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_12sp"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="payment.detail.button.label.statement"
-            tools:text="Statement" />
-    </RelativeLayout>
+            tools:text="Statement"
+            android:visibility="gone"/>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/payment_receipt_total_paid"
