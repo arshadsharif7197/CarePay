@@ -10,9 +10,10 @@ import com.carecloud.carepaylibrary.R;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.isNotEmptyString;
 
-import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -351,8 +352,7 @@ public class StringUtil {
      * @return formatted balance amount
      */
     public static String getFormattedBalanceAmount(double amount) {
-        DecimalFormat decimalFormat = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
-        return CarePayConstants.DOLLAR + decimalFormat.format(amount);
+        return NumberFormat.getCurrencyInstance(Locale.US).format(amount);
     }
 
     /**
