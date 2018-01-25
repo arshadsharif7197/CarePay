@@ -140,8 +140,8 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         passwordTextInputLayout = (TextInputLayout) findViewById(R.id.passwordTextInputLayout);
         showPasswordButton = findViewById(R.id.show_password_button);
 
+        setUpLanguageSpinner();
         if (signInScreenMode == SignInScreenMode.PRACTICE_MODE_SIGNIN) {
-            setUpLanguageSpinner();
             displayVersionNumber();
         } else if (signInScreenMode == SignInScreenMode.PATIENT_MODE_SIGNIN) {
             TextView signInTitle = (TextView) findViewById(R.id.signinTitleTextview);
