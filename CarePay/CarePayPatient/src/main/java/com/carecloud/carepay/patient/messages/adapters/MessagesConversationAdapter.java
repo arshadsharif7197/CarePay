@@ -101,7 +101,10 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
             holder.participantInitials.setVisibility(View.VISIBLE);
 
             holder.participantName.setText(StringUtil.captialize(message.getAuthor().getName()).trim());
-            holder.participantPosition.setText(getPosition(message.getAuthor()));
+            String participantPosition = getPosition(message.getAuthor());
+            if (!StringUtil.isNullOrEmpty(participantPosition)) {
+                holder.participantPosition.setText(", " + participantPosition);
+            }
 
             holder.metaView.setVisibility(View.VISIBLE);
         }

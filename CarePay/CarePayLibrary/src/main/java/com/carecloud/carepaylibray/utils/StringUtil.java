@@ -8,8 +8,6 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.isNotEmptyString;
-
 import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,6 +15,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.isNotEmptyString;
 
 public class StringUtil {
 
@@ -423,13 +423,13 @@ public class StringUtil {
         return builder.length() > 0 ? builder.substring(0, builder.length() - 1) : "";
     }
 
-    public static String getOrdinal(String language, int number){
-        if(!ordinalMap.containsKey(language)){
+    public static String getOrdinal(String language, int number) {
+        if (!ordinalMap.containsKey(language)) {
             loadOrdinals(language);
         }
-        if(ordinalMap.containsKey(language)){
+        if (ordinalMap.containsKey(language)) {
             String[] ordinals = ordinalMap.get(language);
-            switch (language){
+            switch (language) {
                 case "en":
                     switch (number % 100) {
                         case 11:
@@ -449,10 +449,19 @@ public class StringUtil {
         return "";
     }
 
-    private static void loadOrdinals(String language){
-        switch (language){
+    private static void loadOrdinals(String language) {
+        switch (language) {
             case "es":
+                String thEs = Label.getLabel("practice_checkin_detail_dialog_ordinal_th");
+                String stEs = Label.getLabel("practice_checkin_detail_dialog_ordinal_st");
+                String ndEs = Label.getLabel("practice_checkin_detail_dialog_ordinal_nd");
+                String rdEs = Label.getLabel("practice_checkin_detail_dialog_ordinal_rd");
+                String to = Label.getLabel("practice_checkin_detail_dialog_ordinal_to");
+                String mo = Label.getLabel("practice_checkin_detail_dialog_ordinal_mo");
+                String no = Label.getLabel("practice_checkin_detail_dialog_ordinal_no");
 
+                String[] ordinalsEs = {thEs, stEs, ndEs, rdEs, to, to, to, mo, thEs, no, mo};
+                ordinalMap.put(language, ordinalsEs);
                 break;
             case "en":
                 String th = Label.getLabel("practice_checkin_detail_dialog_ordinal_th");
