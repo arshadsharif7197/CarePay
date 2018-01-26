@@ -187,13 +187,13 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
                 queryAppend = '?';
             }
             uri = Uri.parse(url + queryAppend + "token=" + iSession.getAppAuthorizationHelper().getIdToken());
+            MixPanelUtil.logEvent(context.getString(R.string.event_messages_openCarecloudLink),
+                    context.getString(R.string.param_link_type), uri.toString());
         }
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
         try {
             context.startActivity(intent);
-            MixPanelUtil.logEvent(context.getString(R.string.event_messages_openCarecloudLink),
-                    context.getString(R.string.param_link_type), uri.toString());
         } catch (ActivityNotFoundException e) {
             Log.w("URLSpan", "Actvity was not found for intent, " + intent.toString());
         }
