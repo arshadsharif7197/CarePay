@@ -12,7 +12,7 @@ public class UserAuthModel {
     private String role;
 
     @SerializedName("permissions")
-    private UserAuthPermissions userAuthPermissions;
+    private UserAuthPermissions userAuthPermissions = new UserAuthPermissions();
 
     public String getRole() {
         return role;
