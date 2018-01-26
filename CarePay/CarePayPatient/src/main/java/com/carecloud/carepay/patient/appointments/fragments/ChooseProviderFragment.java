@@ -162,32 +162,34 @@ public class ChooseProviderFragment extends BaseAppointmentFragment
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            Gson gson = new Gson();
-            resourcesToScheduleModel = gson.fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
+            if(isAdded()) {
+                Gson gson = new Gson();
+                resourcesToScheduleModel = gson.fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
 
-            if (resourcesToScheduleModel != null && !resourcesToScheduleModel.getPayload()
-                    .getResourcesToSchedule().isEmpty()) {
-                resources = getResourcesFromPayload(resourcesToScheduleModel.getPayload());
-                if (resources.size() > 0) {
-                    Collections.sort(resources, new Comparator<AppointmentResourcesDTO>() {
-                        @Override
-                        public int compare(final AppointmentResourcesDTO object1, final AppointmentResourcesDTO object2) {
-                            return object1.getResource().getProvider().getName()
-                                    .compareTo(object2.getResource().getProvider().getName());
-                        }
-                    });
-                }
+                if (resourcesToScheduleModel != null && !resourcesToScheduleModel.getPayload()
+                        .getResourcesToSchedule().isEmpty()) {
+                    resources = getResourcesFromPayload(resourcesToScheduleModel.getPayload());
+                    if (resources.size() > 0) {
+                        Collections.sort(resources, new Comparator<AppointmentResourcesDTO>() {
+                            @Override
+                            public int compare(final AppointmentResourcesDTO object1, final AppointmentResourcesDTO object2) {
+                                return object1.getResource().getProvider().getName()
+                                        .compareTo(object2.getResource().getProvider().getName());
+                            }
+                        });
+                    }
 
-                List<Object> resourcesListWithHeader = getResourcesListWithHeader();
-                if (resourcesListWithHeader != null && resourcesListWithHeader.size() > 0) {
-                    ProviderAdapter providerAdapter = new ProviderAdapter(
-                            getActivity(), resourcesListWithHeader, ChooseProviderFragment.this,
-                            chooseProviderFragment);
-                    providersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    providersRecyclerView.setAdapter(providerAdapter);
-                    getView().findViewById(R.id.emptyStateScreen).setVisibility(View.GONE);
-                } else {
-                    getView().findViewById(R.id.emptyStateScreen).setVisibility(View.VISIBLE);
+                    List<Object> resourcesListWithHeader = getResourcesListWithHeader();
+                    if (resourcesListWithHeader != null && resourcesListWithHeader.size() > 0) {
+                        ProviderAdapter providerAdapter = new ProviderAdapter(
+                                getActivity(), resourcesListWithHeader, ChooseProviderFragment.this,
+                                chooseProviderFragment);
+                        providersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                        providersRecyclerView.setAdapter(providerAdapter);
+                        getView().findViewById(R.id.emptyStateScreen).setVisibility(View.GONE);
+                    } else {
+                        getView().findViewById(R.id.emptyStateScreen).setVisibility(View.VISIBLE);
+                    }
                 }
             }
         }
@@ -195,8 +197,10 @@ public class ChooseProviderFragment extends BaseAppointmentFragment
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(exceptionMessage);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            if(isAdded()) {
+                showErrorNotification(exceptionMessage);
+                Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            }
         }
     };
 

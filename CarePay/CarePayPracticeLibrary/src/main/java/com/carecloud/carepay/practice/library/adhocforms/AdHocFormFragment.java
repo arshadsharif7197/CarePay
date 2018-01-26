@@ -129,7 +129,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
 
     @Override
     protected String getBaseUrl() {
-        return HttpConstants.getFormsUrl() + "/practice-forms/";
+        return HttpConstants.getFormsUrl() + "/practice-forms/inex.html";
     }
 
     @Override
