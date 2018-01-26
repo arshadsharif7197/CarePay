@@ -136,6 +136,8 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     @Override
     public void onAllergyClicked(AllergyDto allergy) {
         addFragment(AllergyDetailFragment.newInstance(allergy.getId()), true);
+        MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewAllergyDetail),
+                getString(R.string.param_allergy_name), allergy.getName());
     }
 
     @Override
@@ -146,6 +148,8 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     @Override
     public void onMedicationClicked(MedicationDto medication) {
         addFragment(MedicationDetailFragment.newInstance(medication.getId()), true);
+        MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewMedicationDetail),
+                getString(R.string.param_medication_name), medication.getDrugName());
     }
 
     @Override
@@ -162,6 +166,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     @Override
     public void onLabClicked(LabDto lab) {
         selectedLab = lab;
+        MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewLabResult));
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PermissionChecker.PERMISSION_GRANTED && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
@@ -193,6 +198,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
                     String.valueOf(patientDto.getId()));
 
             downloadPdf(url, patientDto.getFullName(), ".pdf", "Medical Record");
+            MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewMedicalRecord));
         } else {
             showErrorNotification("Unable to find Patient Record");
         }

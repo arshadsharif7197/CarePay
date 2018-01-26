@@ -24,6 +24,7 @@ import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthProviderDto;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 
 import java.util.List;
 
@@ -110,6 +111,7 @@ public class MyHealthMainFragment extends BaseFragment {
                 seeAll.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewLabList));
                         callback.showListFragment(MyHealthListFragment.LABS);
                     }
                 });
@@ -145,6 +147,7 @@ public class MyHealthMainFragment extends BaseFragment {
                 seeAll.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewMedicationList));
                         callback.showListFragment(MyHealthListFragment.MEDICATIONS);
                     }
                 });
@@ -180,6 +183,7 @@ public class MyHealthMainFragment extends BaseFragment {
                 seeAll.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewAllergyList));
                         callback.showListFragment(MyHealthListFragment.ALLERGIES);
                     }
                 });
@@ -214,6 +218,7 @@ public class MyHealthMainFragment extends BaseFragment {
                 seeAll.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewConditionList));
                         callback.showListFragment(MyHealthListFragment.CONDITIONS);
                     }
                 });
@@ -249,6 +254,7 @@ public class MyHealthMainFragment extends BaseFragment {
                 seeAll.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewCareTeamList));
                         callback.showListFragment(MyHealthListFragment.CARE_TEAM);
                     }
                 });
