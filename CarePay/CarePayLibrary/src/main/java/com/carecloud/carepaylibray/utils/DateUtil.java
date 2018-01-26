@@ -32,7 +32,8 @@ public class DateUtil {
     private static final String FORMAT_MM_SLASH_DD_SLASH_YYYY_EN = "MM/dd/yyyy";
     private static final String FORMAT_MM_SLASH_DD_SLASH_YYYY_ES = "dd/MM/yyyy";
     private static final String FORMAT_HOURS_AM_PM = "h:mm a";
-    private static final String FORMAT_MONTH_DAY_TIME12 = "MMM dd, h:mm a";
+    private static final String FORMAT_MONTH_DAY_TIME12_EN = "MMM dd, h:mm a";
+    private static final String FORMAT_MONTH_DAY_TIME12_ES = "dd, MMM. h:mm a";
     private static final String FORMAT_FULL_DATE_TIME12 = "MMM dd, yyyy, h:mm a";
     private static final int IS_A_FUTURE_DATE = 100;
     private static final int IS_A_TOO_OLD_DATE = -100;
@@ -264,7 +265,11 @@ public class DateUtil {
      * @return The formatted date as string
      */
     public String toStringWithFormatMmSlashDdSlashYyyy() {
-        return toStringWithFormat(FORMAT_MM_SLASH_DD_SLASH_YYYY_EN);
+        if (getUserLanguage().equals("en")) {
+            return toStringWithFormat(FORMAT_MM_SLASH_DD_SLASH_YYYY_EN);
+        } else {
+            return toStringWithFormat(FORMAT_MM_SLASH_DD_SLASH_YYYY_ES);
+        }
     }
 
     /**
@@ -1147,27 +1152,27 @@ public class DateUtil {
                 if (daysElapsed == 1) {
                     return Label.getLabel("label_yesterday");
                 }
-                return daysElapsed + Label.getLabel("label_days_ago");
+                return String.format(Label.getLabel("label_days_ago"), daysElapsed);//"%s days ago"
             } else if (daysElapsed < 28) {
                 int weeksElapsed = daysElapsed / 7;
                 if (weeksElapsed == 1) {
                     return Label.getLabel("label_last_week");
                 } else {
-                    return weeksElapsed + Label.getLabel("label_weeks_ago");
+                    return String.format(Label.getLabel("label_weeks_ago"), weeksElapsed);//"%s weeks ago"
                 }
             } else if (isSameYear(getDate(), compareDate)) {
                 int monthsElapsed = getMonthsElapsed(getDate(), compareDate);
                 if (monthsElapsed == 1) {
                     return Label.getLabel("label_last_month");
                 } else {
-                    return monthsElapsed + Label.getLabel("label_months_ago");
+                    return String.format(Label.getLabel("label_months_ago"), monthsElapsed);//"%s months ago"
                 }
             } else {
                 int yearsElapsed = getYearsElapsed(getDate(), compareDate);
                 if (yearsElapsed == 1) {
                     return Label.getLabel("label_last_year");
                 } else {
-                    return yearsElapsed + Label.getLabel("label_years_ago");
+                    return String.format(Label.getLabel("label_years_ago"), yearsElapsed);//"%s years ago"
                 }
             }
         }
@@ -1197,7 +1202,11 @@ public class DateUtil {
     }
 
     public String getDateAsMonthDayTime() {
-        return toStringWithFormat(FORMAT_MONTH_DAY_TIME12);
+        if (getUserLanguage().equals("en")) {
+            return toStringWithFormat(FORMAT_MONTH_DAY_TIME12_EN);
+        } else {
+            return toStringWithFormat(FORMAT_MONTH_DAY_TIME12_ES);
+        }
     }
 
     private String hackDate(String dateString) {
