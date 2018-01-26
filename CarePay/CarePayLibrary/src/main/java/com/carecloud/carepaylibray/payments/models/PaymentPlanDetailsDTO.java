@@ -41,11 +41,6 @@ public class PaymentPlanDetailsDTO extends PaymentPlanModel {
     @Expose
     private List<PaymentPlanHistory> paymentPlanHistoryList = new ArrayList<>();
 
-    @SerializedName("amount_paid")
-    @Expose
-    private double amountPaid;
-
-
     public String getFirstName() {
         return firstName;
     }
@@ -78,15 +73,5 @@ public class PaymentPlanDetailsDTO extends PaymentPlanModel {
     public void setPaymentPlanHistoryList(List<PaymentPlanHistory> paymentPlanHistoryList) {
         this.paymentPlanHistoryList = paymentPlanHistoryList;
     }
-
-    public double getAmountPaid() {
-        return amountPaid;
-    }
-
-    public void setAmountPaid(double amountPaid) {
-        this.amountPaid = amountPaid;
-    }
-
-
 
 }

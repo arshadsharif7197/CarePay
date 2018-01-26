@@ -98,7 +98,7 @@ public class PatientPendingPaymentFragment extends BaseFragment implements Payme
 
     @Override
     public void onPaymentPlanItemClickListener(PaymentPlanDTO paymentPlan) {
-
+        callback.loadPaymentPlanScreen(paymentsDTO, paymentPlan);
     }
 
     private List<PaymentListItem> getPendingBalancesList(PaymentsModel paymentModel) {

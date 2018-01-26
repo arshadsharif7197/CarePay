@@ -58,7 +58,6 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
 
     @Override
     protected void onInitialization(View view) {
-        view.findViewById(R.id.closeViewLayout).setVisibility(View.GONE);
         View payNowButton = view.findViewById(R.id.payment_details_pay_now_button);
         payNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,7 +96,6 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
 
             ImageView dialogCloseHeader = (ImageView) view.findViewById(R.id.dialog_close_header);
             if (dialogCloseHeader != null) {
-                dialogCloseHeader.setVisibility(View.VISIBLE);
                 dialogCloseHeader.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

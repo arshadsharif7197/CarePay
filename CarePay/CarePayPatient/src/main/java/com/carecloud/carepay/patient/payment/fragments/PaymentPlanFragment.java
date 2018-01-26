@@ -264,7 +264,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
 
     private double calculateMonthlyPayment(int numberPayments){
         double paymentAmount = paymentPlanAmount / numberPayments;
-        return Math.round(paymentAmount * 100)/100;
+        return Math.ceil(paymentAmount * 100)/100D;
     }
 
     private int calculatePaymentCount(double monthlyAmount){

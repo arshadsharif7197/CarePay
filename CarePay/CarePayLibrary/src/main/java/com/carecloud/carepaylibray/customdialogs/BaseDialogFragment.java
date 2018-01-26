@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.customdialogs;
 
+import android.app.Dialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -8,18 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.ISession;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public abstract class BaseDialogFragment extends DialogFragment implements View.OnClickListener {
     private static final int FULLSCREEN_VALUE = 0x10000000;
 
+    private Dialog dialog;
     private View view;
     private boolean isPracticeAppPatientMode;
 
@@ -28,19 +28,12 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.base_dialog_fragment, container, false);
 
-        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-
         isPracticeAppPatientMode = ((ISession) getActivity()).getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
         if (isPracticeAppPatientMode) {
             setNavigationBarVisibility();
         }
 
         setCancelable(getCancelable());
-
-        view.findViewById(R.id.closeViewLayout).setOnClickListener(this);
-        ((CarePayTextView) view.findViewById(R.id.closeTextView)).setText(getCancelString());
-        ((ImageView) view.findViewById(R.id.cancel_img)).setImageResource(getCancelImageResource());
 
         // Set content
         View contentView = inflater.inflate(getContentLayout(), null);
@@ -49,6 +42,30 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
         hideKeyboardOnViewTouch(view);
         return view;
     }
+
+    @Override
+    public void setupDialog(Dialog dialog, int style) {
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.dialog = getDialog();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        setCancelable(false);
+
+        if (isPracticeAppPatientMode) {
+            setNavigationBarVisibility();
+        }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (dialog != null) {
+            View decorView = dialog.getWindow().getDecorView();
+            hideKeyboardOnViewTouch(decorView);
+        }
+        ((ISession) getActivity()).setLastInteraction(System.currentTimeMillis());
+    }
+
 
     @Override
     public void onClick(View view) {

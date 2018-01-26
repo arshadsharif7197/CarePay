@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/white"/>
+            <size android:height="@dimen/dimen_60dp"
+                  android:width="@dimen/dimen_60dp"/>
+        </shape>
+    </item>
 
     <item android:id="@android:id/background">
         <shape android:innerRadiusRatio="4"
@@ -24,7 +31,6 @@
                    android:type="sweep"
                    android:thicknessRatio="6">
                 <solid android:color="@color/emerald"/>
-
             </shape>
         </rotate>
     </item>
