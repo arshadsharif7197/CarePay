@@ -36,6 +36,8 @@ import com.carecloud.carepaylibray.payments.fragments.PaymentPlanChooseCreditCar
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -77,7 +79,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     private void initFragments() {
-        if (hasPayments() || hasCharges()) {
+        if (hasPayments() || hasPaymentPlans() || hasCharges()) {
             replaceFragment(new PaymentBalanceHistoryFragment(), false);
         } else {
             showNoPaymentsLayout();
@@ -103,6 +105,18 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
         return false;
     }
+
+    private boolean hasPaymentPlans(){
+        if(!paymentsDTO.getPaymentPayload().getPatientPaymentPlans().isEmpty()){
+            for(PaymentPlanDTO  paymentPlanDTO : paymentsDTO.getPaymentPayload().getPatientPaymentPlans()){
+                if(paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanStatus().equals(PaymentPlanDetailsDTO.STATUS_PROCESSING)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
     @Override
     protected void onResume() {
