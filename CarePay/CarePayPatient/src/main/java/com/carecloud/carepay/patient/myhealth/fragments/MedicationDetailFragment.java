@@ -21,6 +21,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -143,6 +144,9 @@ public class MedicationDetailFragment extends BaseFragment {
                     url = "http://vsearch.nlm.nih.gov/vivisimo/cgi-bin/query-meta?v%3Aproject=medlineplus&query="
                             + medication.getDrugName();
                 }
+
+                MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewMedicationEducation),
+                        getString(R.string.param_medication_name), medication.getDrugName());
 
                 if (shouldCallBreezeService) {
                     queryMap.put("code", code);

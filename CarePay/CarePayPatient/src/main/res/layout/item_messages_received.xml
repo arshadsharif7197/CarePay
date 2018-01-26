@@ -72,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_size_12sp"
                     android:textColor="@color/lightSlateGray"
-                    tools:text="John"
+                    tools:text="Mr. Diego Del Aguila"
                     app:customAssetFont="proxima_nova_semi_bold"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -81,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_size_12sp"
                     android:textColor="@color/lightSlateGray"
-                    tools:text=", front desk"
+                    tools:text="Personal Medico"
                     app:customAssetFont="proxima_nova_semi_bold"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
