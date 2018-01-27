@@ -25,16 +25,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.checkin.adapters.CheckedInAppointmentAdapter;
 import com.carecloud.carepay.practice.library.checkin.adapters.PagePickerAdapter;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerWindow;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepay.service.library.platform.AndroidPlatform;
+import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
@@ -447,8 +451,9 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         final Typeface bold = Typeface.createFromAsset(getContext().getAssets(), CustomAssetStyleable.FONT_PROXIMA_NOVA_EXTRA_BOLD);
 
         String[] sufixes = getOrdinalSufix();
+        String language = ApplicationPreferences.getInstance().getUserLanguage();
         if (placeInQueue != null) {
-            String place = ordinal(placeInQueue.getRank(), sufixes) + " " + Label.getLabel("practice_checkin_detail_dialog_in_queue");
+            String place = StringUtil.getOrdinal(language, placeInQueue.getRank()) + " " + Label.getLabel("practice_checkin_detail_dialog_in_queue");//ordinal(, sufixes)
             int rank = placeInQueue.getRank();
             switch (rank) {
                 case 1: {

@@ -11,7 +11,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -25,12 +27,17 @@ public class DateUtil {
 
     public static final String TAG = "DateUtil";
 
-    private static final String FORMAT_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
-    private static final String FORMAT_ISO_8601 = "yyyy-MM-dd'T'HH:mm:ss";
-    private static final String FORMAT_YYYY_DASH_MM_DASH_DD = "yyyy-MM-dd";
-    private static final String FORMAT_MM_DASH_DD_DASH_YYYY = "MM-dd-yyyy";
+    private static final String FORMAT_TIMEZONE_EN = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
+    private static final String FORMAT_TIMEZONE_ES = "dd-MM-yyyy'T'HH:mm:ssZZZZZ";
+    private static final String FORMAT_ISO_8601_EN = "yyyy-MM-dd'T'HH:mm:ss";
+    private static final String FORMAT_ISO_8601_ES = "dd-MM-yyyy'T'HH:mm:ss";
+    private static final String FORMAT_YYYY_DASH_MM_DASH_DD_EN = "yyyy-MM-dd";
+    private static final String FORMAT_YYYY_DASH_MM_DASH_DD_ES = "yyyy-MM-dd";
+    private static final String FORMAT_MM_DASH_DD_DASH_YYYY_EN = "MM-dd-yyyy";
+    private static final String FORMAT_MM_DASH_DD_DASH_YYYY_ES = "dd-MM-yyyy";
     private static final String FORMAT_MM_SLASH_DD_SLASH_YYYY_EN = "MM/dd/yyyy";
     private static final String FORMAT_MM_SLASH_DD_SLASH_YYYY_ES = "dd/MM/yyyy";
+
     private static final String FORMAT_HOURS_AM_PM = "h:mm a";
     private static final String FORMAT_MONTH_DAY_TIME12_EN = "MMM dd, h:mm a";
     private static final String FORMAT_MONTH_DAY_TIME12_ES = "dd, MMM. h:mm a";
@@ -45,7 +52,8 @@ public class DateUtil {
 
 
     private static DateUtil instance;
-    private String[] formats;
+    //    private String[] mapFormats;
+    private static Map<String, String[]> mapFormats = new HashMap<>();
     private Date date;
     private int day;
     private int month; // Attention! 0-indexed month
@@ -68,35 +76,81 @@ public class DateUtil {
             instance = new DateUtil();
             // by default set the date to current date
             instance.setDate(Calendar.getInstance(Locale.getDefault()).getTime());
-
-            instance.formats = new String[]{
-                    FORMAT_TIMEZONE,
-                    FORMAT_ISO_8601,
-                    FORMAT_YYYY_DASH_MM_DASH_DD,
-                    FORMAT_MM_DASH_DD_DASH_YYYY,
-                    FORMAT_MM_SLASH_DD_SLASH_YYYY_EN
-            };
+            String language = ApplicationPreferences.getInstance().getUserLanguage();
+            if (!mapFormats.containsKey(language)) {
+                loadFormats(language);
+            }
+//            instance.mapFormats = new String[]{
+//                    FORMAT_TIMEZONE_EN,
+//                    FORMAT_ISO_8601_EN,
+//                    FORMAT_YYYY_DASH_MM_DASH_DD_EN,
+//                    FORMAT_MM_DASH_DD_DASH_YYYY_EN,
+//                    FORMAT_MM_SLASH_DD_SLASH_YYYY_EN
+//            };
         }
         return instance;
     }
 
+    private static void loadFormats(String language) {
+        switch (language) {
+            case "es":
+
+                String[] formatEs = new String[]{
+                        FORMAT_TIMEZONE_ES,
+                        FORMAT_ISO_8601_ES,
+                        FORMAT_YYYY_DASH_MM_DASH_DD_ES,
+                        FORMAT_MM_DASH_DD_DASH_YYYY_ES,
+                        FORMAT_MM_SLASH_DD_SLASH_YYYY_ES
+                };
+                mapFormats.put(language, formatEs);
+                break;
+            case "en":
+                String[] formatEn = new String[]{
+                        FORMAT_TIMEZONE_EN,
+                        FORMAT_ISO_8601_EN,
+                        FORMAT_YYYY_DASH_MM_DASH_DD_EN,
+                        FORMAT_MM_DASH_DD_DASH_YYYY_EN,
+                        FORMAT_MM_SLASH_DD_SLASH_YYYY_EN
+                };
+                mapFormats.put(language, formatEn);
+                break;
+            default:
+
+        }
+    }
+
+    public DateUtil setDateRaw(String dateString) {
+        return setDateRaw(dateString, false);
+    }
+
     /**
      * Set the a date to be formatted;
-     * The expected format any of the following formats
+     * The expected format any of the following mapFormats
      * yyyy-MM-dd'T'HH:mm:ssZ
      * yyyy-MM-dd
      * MM-dd-yyyy
      * MM/dd/yyyy
      *
-     * @param dateString The date as string
+     * @param dateString      The date as string
+     * @param useUserLanguage boolean indicating if the date should be parsed according to the user language
      * @return The current DateUtil object
      */
-    public DateUtil setDateRaw(String dateString) {
+    public DateUtil setDateRaw(String dateString, boolean useUserLanguage) {
         if (dateString == null) {
             Log.e(TAG, "Date string is NULL");
             return this.setToCurrent();
         }
         dateString = hackDate(dateString);
+        if (!mapFormats.containsKey("en")) {
+            loadFormats("en");
+        }
+        String[] formats = mapFormats.get("en");
+        if (useUserLanguage) {
+            if (!mapFormats.containsKey(getUserLanguage())) {
+                loadFormats("en");
+            }
+            formats = mapFormats.get(ApplicationPreferences.getInstance().getUserLanguage());
+        }
         for (String format : formats) {
             try {
                 SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.getDefault());
@@ -110,7 +164,7 @@ public class DateUtil {
             }
         }
 
-        Log.e(TAG, "Date string was not formatted in known formats");
+        Log.e(TAG, "Date string was not formatted in known mapFormats");
 
         return this;
     }
@@ -247,7 +301,7 @@ public class DateUtil {
      * @return The formatted date as string
      */
     public String toStringWithFormatMmDashDdDashYyyy() {
-        return toStringWithFormat(FORMAT_MM_DASH_DD_DASH_YYYY);
+        return toStringWithFormat(FORMAT_MM_DASH_DD_DASH_YYYY_EN);
     }
 
     /**
@@ -256,7 +310,7 @@ public class DateUtil {
      * @return The formatted date as string
      */
     public String toStringWithFormatYyyyDashMmDashDd() {
-        return toStringWithFormat(FORMAT_YYYY_DASH_MM_DASH_DD);
+        return toStringWithFormat(FORMAT_YYYY_DASH_MM_DASH_DD_EN);
     }
 
     /**
@@ -287,7 +341,7 @@ public class DateUtil {
      * @return The string
      */
     public String toStringWithFormatIso8601() {
-        return toStringWithFormat(FORMAT_ISO_8601);
+        return toStringWithFormat(FORMAT_ISO_8601_EN);
     }
 
     /**
@@ -868,7 +922,11 @@ public class DateUtil {
      * @return The dat in the new format as a string
      */
     public static int validateDateOfBirth(String dateString) {
+        String language = ApplicationPreferences.getInstance().getUserLanguage();
         String formatString = "MM/dd/yyyy";
+        if (language.equals("es")) {
+            formatString = "dd/MM/yyyy";
+        }
         try {
             SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.getDefault());
             format.setLenient(false);
