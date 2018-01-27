@@ -2,6 +2,9 @@ package com.carecloud.carepay.patient.payment.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,6 +75,7 @@ public class PaymentPlanTermsFragment extends BasePaymentDialogFragment {
 
     @Override
     public void onViewCreated(View view, Bundle icicle){
+        setupTitleViews(view);
         View createButton = view.findViewById(R.id.createButton);
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +86,38 @@ public class PaymentPlanTermsFragment extends BasePaymentDialogFragment {
 
         TextView termsText = (TextView) view.findViewById(R.id.paymentPlanTermsText);
         termsText.setText(Label.getLabel("payment_agree_to_pay_terms"));
+    }
+
+    private void setupTitleViews(View view) {
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        if (toolbar != null) {
+            TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+            title.setText(Label.getLabel("payment_terms"));
+            toolbar.setTitle("");
+            if (getDialog() == null) {
+                toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
+                toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        getActivity().onBackPressed();
+                    }
+                });
+            } else {
+                View close = view.findViewById(R.id.closeViewLayout);
+                if (close != null) {
+                    close.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dismiss();
+                        }
+                    });
+                }
+                ViewGroup.LayoutParams layoutParams = title.getLayoutParams();
+                layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                title.setLayoutParams(layoutParams);
+                title.setGravity(Gravity.CENTER_HORIZONTAL);
+            }
+        }
     }
 
     private void submitPaymentPlan(){

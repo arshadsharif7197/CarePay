@@ -40,6 +40,10 @@ public class PaymentPlanPayloadDTO {
     @Expose
     private PaymentPlanDetailsDTO paymentPlanDetails = new PaymentPlanDetailsDTO();
 
+    @SerializedName("amount_paid")
+    @Expose
+    private double amountPaid;
+
     public double getAmount() {
         return amount;
     }
@@ -87,5 +91,13 @@ public class PaymentPlanPayloadDTO {
 
     public void setPaymentPlanDetails(PaymentPlanDetailsDTO paymentPlanDetails) {
         this.paymentPlanDetails = paymentPlanDetails;
+    }
+
+    public double getAmountPaid() {
+        return amountPaid;
+    }
+
+    public void setAmountPaid(double amountPaid) {
+        this.amountPaid = amountPaid;
     }
 }

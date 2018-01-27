@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -44,6 +46,27 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
 
         return dialog;
     }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        View closeView = view.findViewById(R.id.closeViewLayout);
+        if(closeView != null) {
+            closeView.setOnClickListener(this);
+        }
+        TextView closeText = (TextView) view.findViewById(R.id.closeTextView);
+        if(closeText != null) {
+            closeText.setText(getCancelString());
+        }
+        ImageView cancelImage = (ImageView) view.findViewById(R.id.cancel_img);
+        if(cancelImage != null) {
+            cancelImage.setImageResource(getCancelImageResource());
+        }
+
+        return view;
+    }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

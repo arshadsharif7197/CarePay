@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.payments.interfaces;
 
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
@@ -21,4 +22,6 @@ public interface PaymentPlanInterface extends PaymentMethodInterface {
     void onDisplayPaymentPlanTerms(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel);
 
     void onSubmitPaymentPlan();
+
+    void onMakeOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
 }
