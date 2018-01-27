@@ -440,9 +440,16 @@ public class StringUtil {
                             return number + ordinals[number % 10];
                     }
                 case "es":
-
-
-                    break;
+                    if (number < 10) {
+                        return number + ordinals[0];
+                    } else {
+                        switch (number) {
+                            case 10:
+                                return number + ordinals[10];
+                            default:
+                                return number + ordinals[number % 10];
+                        }
+                    }
                 default:
             }
         }

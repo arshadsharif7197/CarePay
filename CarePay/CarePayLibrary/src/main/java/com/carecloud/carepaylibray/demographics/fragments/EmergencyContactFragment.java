@@ -655,7 +655,8 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         }
         String dateOfBirth = dateOfBirthEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(dateOfBirth)) {
-            emergencyContact.setDateOfBirth(dateOfBirth);
+            emergencyContact.setDateOfBirth(DateUtil.getInstance().setDateRaw(dateOfBirth, true)
+                    .toStringWithFormatYyyyDashMmDashDd());
         }
         String gender = genderEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(gender)) {
@@ -852,7 +853,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                 if (StringUtil.isNullOrEmpty(editable.toString())) {
                     inputLayout.setErrorEnabled(true);
                     inputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
-                } else if(count==0) {
+                } else if (count == 0) {
                     unsetFieldError(inputLayout);
                 }
                 checkIfEnableButton(false);
@@ -958,7 +959,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         if (requestFocus) {
             inputLayout.clearFocus();
             inputLayout.requestFocus();
-            if(!inputLayout.hasFocus()){
+            if (!inputLayout.hasFocus()) {
                 parentScrollView.scrollTo(0, inputLayout.getScrollY());
             }
         }
