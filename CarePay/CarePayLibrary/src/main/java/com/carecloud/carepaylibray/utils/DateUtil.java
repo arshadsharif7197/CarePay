@@ -147,7 +147,7 @@ public class DateUtil {
         String[] formats = mapFormats.get("en");
         if (useUserLanguage) {
             if (!mapFormats.containsKey(getUserLanguage())) {
-                loadFormats("en");
+                loadFormats(getUserLanguage());
             }
             formats = mapFormats.get(ApplicationPreferences.getInstance().getUserLanguage());
         }
