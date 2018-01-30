@@ -249,6 +249,7 @@ public class RetailFragment extends BaseFragment {
     private class RetailViewClient extends WebViewClient {
         private boolean launchPayments = false; //don't maintain the payments launch url
         private boolean loadedReturnUrl = false;//handle event where the payments return url has been loaded
+        private String launchUrl = null;
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView webView, String url) {
@@ -295,6 +296,13 @@ public class RetailFragment extends BaseFragment {
             if(!showToolbar && !shoppingWebView.canGoBack()) {//check if this is the last in the stack
                 toolbar.setVisibility(View.GONE);
                 callback.displayToolbar(true);
+            }
+
+            if(lastUrl == null){
+                launchUrl = url;
+            }
+            if(lastUrl.equals(url) && launchUrl.equals(url)){
+                webView.clearHistory();
             }
         }
     }

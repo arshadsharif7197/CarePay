@@ -81,7 +81,10 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
             String locationName = paymentPlanItem.getMetadata().getPracticeName();
             holder.shortName.setText(StringUtil.getShortName(locationName));
             holder.locationName.setText(locationName);
-            holder.amount.setText(currencyFormatter.format(paymentPlanItem.getPayload().getAmount()));
+
+            double totalAmount = paymentPlanItem.getPayload().getAmount();
+            double amountPaid = paymentPlanItem.getPayload().getAmountPaid();
+            holder.amount.setText(currencyFormatter.format(totalAmount - amountPaid));
 
             String planDetails = currencyFormatter.format(
                     paymentPlanItem.getPayload().getPaymentPlanDetails().getAmount()) + "/" +

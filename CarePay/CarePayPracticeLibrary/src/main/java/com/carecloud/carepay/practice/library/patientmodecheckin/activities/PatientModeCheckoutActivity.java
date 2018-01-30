@@ -772,6 +772,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putBoolean("shouldReload", true);
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
         if (currentFragment instanceof TranslatableFragment) {
             ((TranslatableFragment) currentFragment).saveInstanceForTranslation(outState);
