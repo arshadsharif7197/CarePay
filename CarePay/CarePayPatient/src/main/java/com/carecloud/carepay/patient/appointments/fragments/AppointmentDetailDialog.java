@@ -177,7 +177,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
             providerInitials.setText(StringUtil.getShortName(provider.getName()));
             providerName.setText(provider.getName());
             providerSpecialty.setText(provider.getSpecialty().getName());
-            callButton.setEnabled(!StringUtil.isNullOrEmpty(provider.getPhone()));
+            callButton.setEnabled(!StringUtil.isNullOrEmpty(getPhoneNumber()));
 
             int size = getResources().getDimensionPixelSize(R.dimen.apt_dl_image_ht_wdh);
             Picasso.with(getContext())
@@ -383,6 +383,19 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         return String.format(formatString, fields);
     }
 
+    private String getPhoneNumber(){
+        String phone = appointmentDTO.getPayload().getProvider().getPhone();
+        if(StringUtil.isNullOrEmpty(phone)){
+            for(LocationDTO.PhoneDTO phoneDTO : appointmentDTO.getPayload().getLocation().getPhoneDTOs()){
+                if(phoneDTO.isPrimary()){
+                    phone = phoneDTO.getPhoneNumber();
+                    break;
+                }
+            }
+        }
+        return phone;
+    }
+
 
     private void launchMapView(String address) {
         if (SystemUtil.isNotEmptyString(address)) {
@@ -431,8 +444,10 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private View.OnClickListener callClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            String phone = appointmentDTO.getPayload().getProvider().getPhone();
-            startPhoneCall(phone);
+            String phone = getPhoneNumber();
+            if(!StringUtil.isNullOrEmpty(phone)) {
+                startPhoneCall(phone);
+            }
         }
     };
 
