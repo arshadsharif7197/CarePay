@@ -112,7 +112,7 @@ public class PhysicianDto {
             sb.append(firstName);
         }
         if (lastName != null) {
-            sb.append(" ").append(lastName.substring(0, 1)).append(".");
+            sb.append(" ").append(lastName);
         }
         return StringUtil.captialize(sb.toString());
     }

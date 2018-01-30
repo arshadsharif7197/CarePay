@@ -43,7 +43,11 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.Demograp
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.InsuranceModelProperties;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter;
+import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.interfaces.DTOInterface;
 import com.carecloud.carepaylibray.media.MediaScannerPresenter;
 import com.carecloud.carepaylibray.media.MediaViewInterface;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -53,10 +57,6 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.marcok.stepprogressbar.StepProgressBar;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_BACK_DTO;
@@ -64,7 +64,11 @@ import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAd
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_BACK;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_FRONT;
 
-public class InsuranceEditDialog extends BaseDialogFragment implements MediaViewInterface {
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class InsuranceEditDialog extends BaseDialogFragment implements MediaViewInterface, DTOInterface {
 
     public static final String EDITED_INDEX = "EditedIndex";
     public static final String IS_PATIENT_MODE = "IsPatientMode";
@@ -105,6 +109,11 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private DemographicsOption selectedTypeOption = new DemographicsOption();
     private DemographicsOption selectedRelationshipOption = new DemographicsOption();
     private DemographicsOption selectedGenderOption = new DemographicsOption();
+
+    @Override
+    public DTO getDto() {
+        return demographicDTO;
+    }
 
 
     public interface InsuranceEditDialogListener {
@@ -242,6 +251,12 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         hideKeyboardOnViewTouch(view);
         hideKeyboardOnViewTouch(view.findViewById(R.id.dialog_content_layout));
         hideKeyboardOnViewTouch(view.findViewById(R.id.container_main));
+
+        if(callback instanceof CheckinFlowCallback){
+            CheckinFlowCallback checkinFlowCallback = (CheckinFlowCallback) callback;
+            checkinFlowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, checkinFlowCallback.getTotalSteps(), CheckinFlowCallback.INSURANCE);
+            checkinFlowCallback.setCurrentStep(CheckinFlowCallback.INSURANCE);
+        }
 
         return view;
     }

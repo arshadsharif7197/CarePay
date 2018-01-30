@@ -106,9 +106,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
-        setContentView(R.layout.activity_patient_checkout);
-        initViews();
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
         appointmentId = extra.getString(CarePayConstants.APPOINTMENT_ID);
         if (savedInstanceState == null || savedInstanceState.getBoolean("shouldReload", false)) {
@@ -124,6 +121,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             }
         }
         initAppMode();
+        setContentView(R.layout.activity_patient_checkout);
+        initViews();
         initializeLanguageSpinner();
         shouldAddBackStack = true;
     }
