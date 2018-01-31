@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black_opacity_70">
+
+    <RelativeLayout
+        android:id="@+id/exitImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="@dimen/dimen_20dp"
+        android:layout_marginTop="@dimen/dimen_20dp">
+
+        <ImageView
+            android:id="@+id/button_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/dialog_button_bg" />
+
+        <ImageView
+            android:id="@+id/cancel_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/icn_close" />
+    </RelativeLayout>
+
+    <com.carecloud.carepaylibray.common.ZoomImageView
+        android:id="@+id/documentImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="@dimen/dimen_60dp"
+        android:layout_marginEnd="@dimen/dimen_100dp"
+        android:layout_marginStart="@dimen/dimen_100dp"
+        android:layout_marginTop="@dimen/dimen_60dp" />
+
+</RelativeLayout>
