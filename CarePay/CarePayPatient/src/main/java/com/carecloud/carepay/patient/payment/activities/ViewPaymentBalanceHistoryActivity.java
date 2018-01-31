@@ -399,8 +399,16 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void onSubmitPaymentPlan() {
-
+    public void onSubmitPaymentPlan(WorkflowDTO workflowDTO) {
+        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+        List<PaymentPlanDTO> paymentPlanList =  this.paymentsDTO.getPaymentPayload().getPatientPaymentPlans();
+        for(PaymentPlanDTO paymentPlanDTO : paymentsModel.getPaymentPayload().getPatientPaymentPlans()){
+            paymentPlanList.add(paymentPlanDTO);
+        }
+        for(int i=0; i<getSupportFragmentManager().getBackStackEntryCount(); i++) {
+            getSupportFragmentManager().popBackStack();
+        }
+        initFragments();
     }
 
     @Override

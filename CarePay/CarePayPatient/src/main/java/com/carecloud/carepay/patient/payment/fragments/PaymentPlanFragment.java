@@ -67,6 +67,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     private EditText planName;
     private EditText numberPayments;
     private EditText monthlyPayment;
+    private TextView lastPaymentMessage;
 
     private List<DemographicsOption> dateOptions;
     private DemographicsOption paymentDateOption;
@@ -197,6 +198,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
                     monthlyPaymentCount = Integer.parseInt(input);
                     monthlyPaymentAmount = calculateMonthlyPayment(monthlyPaymentCount);
                     monthlyPayment.setText(currencyFormatter.format(monthlyPaymentAmount));
+                    setLastPaymentMessage(monthlyPaymentAmount);
                 }catch (NumberFormatException nfe){
                     nfe.printStackTrace();
                 }
@@ -214,6 +216,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
                     monthlyPaymentAmount = Double.parseDouble(input);
                     monthlyPaymentCount = calculatePaymentCount(monthlyPaymentAmount);
                     numberPayments.setText(String.valueOf(monthlyPaymentCount));
+                    setLastPaymentMessage(monthlyPaymentAmount);
                 }catch (NumberFormatException nfe){
                     nfe.printStackTrace();
                 }
@@ -221,6 +224,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         }));
 
 
+        lastPaymentMessage = (TextView) view.findViewById(R.id.lastPaymentMessage);
+        lastPaymentMessage.setVisibility(View.INVISIBLE);
     }
 
     private void setupButtons(View view){
@@ -270,6 +275,17 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     private int calculatePaymentCount(double monthlyAmount){
         double numberPayments = paymentPlanAmount / monthlyAmount;
         return (int) Math.ceil(numberPayments);
+    }
+
+    private void setLastPaymentMessage(double paymentAmount){
+        double remainder = (paymentPlanAmount * 100) % (paymentAmount * 100);
+        if(remainder != 0){
+            double amount = Math.ceil(remainder)/100D;
+            lastPaymentMessage.setText(Label.getLabel("payment_last_adjustment_text") + " " + currencyFormatter.format(amount));
+            lastPaymentMessage.setVisibility(View.VISIBLE);
+        }else{
+            lastPaymentMessage.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void getPaymentPlanSettings(){

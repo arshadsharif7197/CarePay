@@ -142,7 +142,7 @@ public class PaymentPlanTermsFragment extends BasePaymentDialogFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            callback.onSubmitPaymentPlan();//todo
+            callback.onSubmitPaymentPlan(workflowDTO);
         }
 
         @Override
