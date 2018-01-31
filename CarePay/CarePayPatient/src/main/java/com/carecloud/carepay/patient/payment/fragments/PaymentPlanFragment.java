@@ -156,8 +156,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         total.setText(currencyFormatter.format(paymentPlanAmount));
 
         TextView parameters = (TextView) view.findViewById(R.id.payment_plan_parameters);
-        String labelStub = "This balance must be paid over a maximum of %d months and requires a minimum payment of %s.";
-        parameters.setText(String.format(Locale.US, labelStub, //Label.getLabel("payment_plan_parameters"), TODO setup this label
+        parameters.setText(String.format(Locale.US, Label.getLabel("payment_plan_parameters"),
                 paymentPlanBalanceRules.getMaxDuration().getValue(),
                 currencyFormatter.format(paymentPlanBalanceRules.getMinAmount().getValue())));
     }
