@@ -50,10 +50,10 @@ import java.util.Map;
 
 public class ChooseCreditCardFragment extends BasePaymentDialogFragment implements CreditCardsListAdapter.CreditCardSelectionListener {
 
-    private Button nextButton;
+    protected Button nextButton;
     private RecyclerView creditCardsRecyclerView;
 
-    private int selectedCreditCard = -1;
+    protected int selectedCreditCard = -1;
     protected PaymentsModel paymentsModel;
     private UserPracticeDTO userPracticeDTO;
     protected double amountToMakePayment;
@@ -300,7 +300,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         MixPanelUtil.logEvent(getString(R.string.event_payment_started), params, values);
     }
 
-    private IntegratedPaymentCardData getCreditCardModel() {
+    protected IntegratedPaymentCardData getCreditCardModel() {
         PaymentCreditCardsPayloadDTO creditCardPayload = creditCardList.get(selectedCreditCard).getPayload();
 
         IntegratedPaymentCardData creditCardModel = new IntegratedPaymentCardData();
@@ -313,7 +313,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         return creditCardModel;
     }
 
-    private PapiPaymentMethod getPapiPaymentMethod() {
+    protected PapiPaymentMethod getPapiPaymentMethod() {
         PaymentCreditCardsPayloadDTO creditCardPayload = creditCardList.get(selectedCreditCard).getPayload();
         if (creditCardPayload.getCreditCardsId() == null) {
             return null;

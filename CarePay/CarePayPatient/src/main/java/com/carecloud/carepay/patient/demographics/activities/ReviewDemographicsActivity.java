@@ -180,7 +180,9 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
     public void updateCheckInFlow(String key, int totalPages, int currentPage) {
         TextView textView = (TextView) findViewById(R.id.toolbar_title);
-        textView.setText(String.format(Label.getLabel(key), currentPage, totalPages));
+        if(textView != null) {
+            textView.setText(String.format(Label.getLabel(key), currentPage, totalPages));
+        }
     }
 
     /**

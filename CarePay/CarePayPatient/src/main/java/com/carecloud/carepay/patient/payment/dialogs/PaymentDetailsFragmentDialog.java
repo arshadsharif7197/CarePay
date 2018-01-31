@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -59,8 +58,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
 
     @Override
     protected void onInitialization(View view) {
-        view.findViewById(R.id.closeViewLayout).setVisibility(View.GONE);
-        Button payNowButton = (Button) view.findViewById(R.id.payment_details_pay_now_button);
+        View payNowButton = view.findViewById(R.id.payment_details_pay_now_button);
         payNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,13 +66,23 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                 callback.onPayButtonClicked(paymentPayload.getAmount(), paymentReceiptModel);
             }
         });
-        Button partialPaymentButton = (Button) view.findViewById(R.id.make_partial_payment_button);
+        View partialPaymentButton = view.findViewById(R.id.make_partial_payment_button);
         partialPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dismiss();
                 callback.onPartialPaymentClicked(paymentPayload.getAmount(), selectedBalance);
             }
         });
+        View paymentPlanButton = view.findViewById(R.id.createPaymentPlanButton);
+        paymentPlanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+                callback.onPaymentPlanAction(paymentReceiptModel);
+            }
+        });
+
         boolean canMakePayments = false;
         if (paymentReceiptModel != null) {
             String practiceName = selectedBalance.getMetadata().getPracticeName();
@@ -86,11 +94,8 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
             ((TextView) view.findViewById(R.id.payment_receipt_total_value)).setText(totalAmount);
             ((TextView) view.findViewById(R.id.avTextView)).setText(StringUtil.getShortName(practiceName));
 
-            payNowButton.setText(Label.getLabel("payment_details_pay_now"));
-
             ImageView dialogCloseHeader = (ImageView) view.findViewById(R.id.dialog_close_header);
             if (dialogCloseHeader != null) {
-                dialogCloseHeader.setVisibility(View.VISIBLE);
                 dialogCloseHeader.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -114,7 +119,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         boolean showPaymentButtons = getArguments().getBoolean("showPaymentButtons", false);
         if (showPaymentButtons && canMakePayments) {
             view.findViewById(R.id.paymentButtonsContainer).setVisibility(View.VISIBLE);
-//            view.findViewById(R.id.planButtonsContainer).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.planButtonsContainer).setVisibility(View.VISIBLE);
         }
     }
 
