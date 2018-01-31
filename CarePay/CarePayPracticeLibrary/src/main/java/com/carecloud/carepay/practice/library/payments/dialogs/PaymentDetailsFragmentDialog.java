@@ -91,7 +91,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
             view.findViewById(R.id.payment_receipt_details_view)
                     .setBackground(getResources().getDrawable(R.drawable.background_bottom_rounded_white_border));
             view.findViewById(R.id.payment_details_total_paid)
-                    .setBackground(getResources().getDrawable(R.drawable.top_rounded_blue_background));
+                    .setBackground(getResources().getDrawable(R.drawable.practice_mode_dialog_header_bg));
         }
 
         String totalAmount = StringUtil.getFormattedBalanceAmount(paymentPayload.getAmount());
