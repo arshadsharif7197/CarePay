@@ -275,6 +275,12 @@ public class RetailFragment extends BaseFragment {
 
         @Override
         public void onPageFinished(WebView webView, String url){
+            if(lastUrl == null){
+                launchUrl = url;
+            }else if(lastUrl.equals(url) && launchUrl.equals(url)){
+                webView.clearHistory();
+            }
+
             if(lastUrl != null){
                 toolbar.setVisibility(View.VISIBLE);
                 callback.displayToolbar(false);
@@ -298,12 +304,6 @@ public class RetailFragment extends BaseFragment {
                 callback.displayToolbar(true);
             }
 
-            if(lastUrl == null){
-                launchUrl = url;
-            }
-            if(lastUrl.equals(url) && launchUrl.equals(url)){
-                webView.clearHistory();
-            }
         }
     }
 
