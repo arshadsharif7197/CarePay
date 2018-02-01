@@ -930,6 +930,10 @@
         <item name="android:windowFullscreen">false</item>
     </style>
 
+    <style name="Base_Dialog_FullScreen" parent="Theme.AppCompat.Light.Dialog.MinWidth">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
     <style name="notificationPopUpTopToBottomAnimation">
         <item name="@android:windowEnterAnimation">@anim/enter_from_top</item>
         <item name="@android:windowExitAnimation">@anim/exit_to_top</item>
