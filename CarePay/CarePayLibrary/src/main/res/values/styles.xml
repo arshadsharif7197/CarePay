@@ -935,18 +935,18 @@
     </style>
 
     <style name="notificationPopUpTopToBottomAnimation">
-        <item name="@android:windowEnterAnimation">@anim/enter_from_top</item>
-        <item name="@android:windowExitAnimation">@anim/exit_to_top</item>
+        <item name="android:windowEnterAnimation">@anim/enter_from_top</item>
+        <item name="android:windowExitAnimation">@anim/exit_to_top</item>
     </style>
 
     <style name="notificationPopUpLeftToRightAnimation">
-        <item name="@android:windowEnterAnimation">@anim/enter_from_left</item>
-        <item name="@android:windowExitAnimation">@anim/exit_to_right</item>
+        <item name="android:windowEnterAnimation">@anim/enter_from_left</item>
+        <item name="android:windowExitAnimation">@anim/exit_to_right</item>
     </style>
 
     <style name="notificationPopUpRightToLeftAnimation">
-        <item name="@android:windowEnterAnimation">@anim/enter_from_right</item>
-        <item name="@android:windowExitAnimation">@anim/exit_to_left</item>
+        <item name="android:windowEnterAnimation">@anim/enter_from_right</item>
+        <item name="android:windowExitAnimation">@anim/exit_to_left</item>
     </style>
 
 
