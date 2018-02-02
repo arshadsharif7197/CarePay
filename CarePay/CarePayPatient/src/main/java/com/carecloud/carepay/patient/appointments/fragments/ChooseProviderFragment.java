@@ -187,6 +187,8 @@ public class ChooseProviderFragment extends BaseAppointmentFragment
                         providersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                         providersRecyclerView.setAdapter(providerAdapter);
                         getView().findViewById(R.id.emptyStateScreen).setVisibility(View.GONE);
+                    } else {
+                        getView().findViewById(R.id.emptyStateScreen).setVisibility(View.VISIBLE);
                     }
                 } else {
                     getView().findViewById(R.id.emptyStateScreen).setVisibility(View.VISIBLE);
