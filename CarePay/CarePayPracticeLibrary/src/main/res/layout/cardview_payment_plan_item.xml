@@ -23,34 +23,80 @@
             android:layout_height="@dimen/appointment_card_header_height"
             android:layout_marginTop="-2dp">
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/paymentAmountTextView"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="@dimen/dimen_150dp"
+                android:orientation="horizontal"
                 android:background="@drawable/background_top_rounded_yellow_border"
-                android:gravity="center_horizontal"
                 android:paddingTop="@dimen/dimen_28dp"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_50sp"
-                tools:text="$9,108.00"
-                app:customAssetFont="gotham_rounded_medium" />
+                android:gravity="center_horizontal">
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/providerImageTextView"
-                android:layout_width="@dimen/provider_card_avatar_size"
-                android:layout_height="@dimen/provider_card_avatar_size"
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/paymentAmountTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_50sp"
+                    tools:text="$9,108.00"
+                    app:customAssetFont="gotham_rounded_medium" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/planInstallmentFrequency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_20sp"
+                    tools:text="/mo"
+                    app:customAssetFont="gotham_rounded_medium"
+                    />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:textSize="@dimen/text_size_38"
-                android:background="@drawable/round_list_tv" />
+                android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/providerImageView"
-                android:layout_width="@dimen/provider_card_avatar_size"
-                android:layout_height="@dimen/provider_card_avatar_size"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:visibility="gone" />
+                <FrameLayout
+                    android:layout_width="@dimen/provider_card_avatar_size"
+                    android:layout_height="@dimen/provider_card_avatar_size"
+                    android:layout_marginEnd="@dimen/text_size_13">
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/providerImageTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="@dimen/text_size_38"
+                        android:background="@drawable/round_list_tv" />
+
+                    <ImageView
+                        android:id="@+id/providerImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone" />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="@dimen/provider_card_avatar_size"
+                    android:layout_height="@dimen/provider_card_avatar_size"
+                    android:layout_marginStart="@dimen/text_size_13">
+
+                    <ProgressBar
+                        android:id="@+id/paymentPlanProgress"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:indeterminate="false"
+                        android:max="100"
+                        android:progress="25"
+                        android:progressDrawable="@drawable/payment_plan_progress"/>
+
+                </FrameLayout>
+
+            </LinearLayout>
 
 
         </RelativeLayout>

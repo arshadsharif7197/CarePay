@@ -1,18 +1,12 @@
-package com.carecloud.carepay.patient.payment.fragments;
+package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
-import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -24,10 +18,10 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import java.util.List;
 
 /**
- * Created by lmenendez on 1/23/18
+ * Created by lmenendez on 2/2/18
  */
 
-public class PaymentPlanPaymentMethodFragment extends PaymentMethodFragment {
+public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMethodDialogFragment {
 
     private PaymentPlanInterface callback;
     private PaymentPlanPostModel paymentPlanPostModel;
@@ -37,12 +31,12 @@ public class PaymentPlanPaymentMethodFragment extends PaymentMethodFragment {
      * @param paymentPlanPostModel post model for payment plan to execute
      * @return an instance of PatientPaymentMethodFragment
      */
-    public static PaymentPlanPaymentMethodFragment newInstance(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
+    public static PracticePaymentPlanPaymentMethodFragment newInstance(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanPostModel);
 
-        PaymentPlanPaymentMethodFragment fragment = new PaymentPlanPaymentMethodFragment();
+        PracticePaymentPlanPaymentMethodFragment fragment = new PracticePaymentPlanPaymentMethodFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,26 +66,6 @@ public class PaymentPlanPaymentMethodFragment extends PaymentMethodFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
-        return inflater.inflate(R.layout.fragment_payment_method, container, false);
-    }
-
-    @Override
-    protected void setupTitleViews(View view) {
-        super.setupTitleViews(view);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
-        if (toolbar != null) {
-            toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getActivity().onBackPressed();
-                }
-            });
-        }
-    }
-
-    @Override
     protected void handlePaymentButton(PaymentsMethodsDTO paymentMethod, double amount) {
         switch (paymentMethod.getType()) {
             case CarePayConstants.TYPE_CASH:
@@ -100,6 +74,7 @@ public class PaymentPlanPaymentMethodFragment extends PaymentMethodFragment {
             case CarePayConstants.TYPE_CREDIT_CARD:
                 callback.onSelectPaymentPlanMethod(paymentMethod, paymentsModel, paymentPlanPostModel);
                 logPaymentMethodSelection(getString(R.string.payment_credit_card));
+                dismiss();
                 break;
             default:
         }

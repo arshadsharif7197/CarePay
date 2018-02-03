@@ -544,11 +544,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         FormsResponsibilityFragmentDialog dialog = FormsResponsibilityFragmentDialog
                 .newInstance(paymentsModel,
                         checkInDTO.getPayload().getUserAuthModel().getUserAuthPermissions(),
-                        Label.getLabel("adhoc_show_forms_button_label"),
-                        Label.getLabel("add_appointment_label"),
-                        Label.getLabel("payment_balance_empty_appointment_screen"),
-                        headerModel);
-        dialog.setShowLeftButtonAlways(true);
+                        headerModel, paymentsModel.getPaymentPayload().getPatientBalances().get(0));
         dialog.show(getSupportFragmentManager(), tag);
     }
 
@@ -615,6 +611,11 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     @Override
     public void onRightActionTapped(PaymentsModel paymentsModel, double amount) {
         newAppointment();
+    }
+
+    @Override
+    public void onMiddleActionTapped(PaymentsModel paymentsModel, double amount) {
+
     }
 
     @Override

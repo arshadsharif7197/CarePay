@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/screen_background"
     android:paddingBottom="@dimen/dimen_25dp"
-    tools:context=".payments.PatientModePracticePaymentsActivity"
+    tools:context=".payments.PatientModePaymentsActivity"
     tools:ignore="MissingPrefix">
 
     <include
@@ -63,12 +63,15 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/appointmentProgressBar">
+        android:layout_below="@+id/appointmentProgressBar"
+        android:layout_above="@+id/btnHome"
+        android:paddingTop="@dimen/dimen_10dp"
+        android:paddingBottom="@dimen/dimen_10dp">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/appointmentsRecyclerView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:orientation="horizontal"
             android:scrollbars="horizontal" />

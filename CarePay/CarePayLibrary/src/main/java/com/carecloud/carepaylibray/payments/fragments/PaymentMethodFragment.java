@@ -189,7 +189,7 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
         }
     };
 
-    private List<PaymentsMethodsDTO> getPaymentMethodList() {
+    protected List<PaymentsMethodsDTO> getPaymentMethodList() {
         UserPracticeDTO userPracticeDTO = callback.getPracticeInfo(paymentsModel);
         for(PaymentsPayloadSettingsDTO paymentSetting : paymentsModel.getPaymentPayload().getPaymentSettings()){
             if(paymentSetting.getMetadata().getPracticeId().equals(userPracticeDTO.getPracticeId()) &&

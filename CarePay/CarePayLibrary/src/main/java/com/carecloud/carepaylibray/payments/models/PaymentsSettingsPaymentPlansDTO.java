@@ -26,7 +26,7 @@ public class PaymentsSettingsPaymentPlansDTO {
 
     @SerializedName("add_balance_to_new_plan")
     @Expose
-    private boolean addBalanceToNew = false;
+    private boolean addBalanceToNew = true;
 
     public boolean isPaymentPlansEnabled() {
         return paymentPlansEnabled;

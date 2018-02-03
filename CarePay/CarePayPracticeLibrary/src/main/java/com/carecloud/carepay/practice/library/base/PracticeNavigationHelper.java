@@ -15,7 +15,7 @@ import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckoutActivity;
-import com.carecloud.carepay.practice.library.payments.PatientModePracticePaymentsActivity;
+import com.carecloud.carepay.practice.library.payments.PatientModePaymentsActivity;
 import com.carecloud.carepay.practice.library.payments.PaymentsActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
@@ -188,7 +188,7 @@ public class PracticeNavigationHelper {
                     ((PatientModeCheckinActivity) context).getPaymentInformation(workflowDTO.toString());
                     return;
                 } else {
-                    intent = new Intent(context, PatientModePracticePaymentsActivity.class);
+                    intent = new Intent(context, PatientModePaymentsActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 }
                 break;

@@ -8,7 +8,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppBaseTheme">
         <activity
-            android:name=".payments.PatientModePracticePaymentsActivity"
+            android:name=".payments.PatientModePaymentsActivity"
             android:screenOrientation="sensorLandscape" />
         <activity
             android:name=".signin.ResetPasswordActivity"

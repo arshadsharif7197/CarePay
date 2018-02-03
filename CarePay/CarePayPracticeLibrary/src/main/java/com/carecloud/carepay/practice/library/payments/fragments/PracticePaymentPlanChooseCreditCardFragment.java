@@ -1,13 +1,13 @@
-package com.carecloud.carepaylibray.payments.fragments;
+package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -18,10 +18,10 @@ import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 /**
- * Created by lmenendez on 1/23/18
+ * Created by lmenendez on 2/2/18
  */
 
-public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragment {
+public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseCreditCardFragment {
 
     private PaymentPlanInterface callback;
     protected PaymentPlanPostModel paymentPlanPostModel;
@@ -32,7 +32,7 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
      * @param paymentPlanPostModel       the post model for the plan
      * @return an instance of PracticeChooseCreditCardFragment
      */
-    public static PaymentPlanChooseCreditCardFragment newInstance(PaymentsModel paymentsDTO,
+    public static PracticePaymentPlanChooseCreditCardFragment newInstance(PaymentsModel paymentsDTO,
                                                                   String selectedPaymentMethodLabel,
                                                                   PaymentPlanPostModel paymentPlanPostModel) {
         Bundle args = new Bundle();
@@ -41,7 +41,7 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
         args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethodLabel);
 
 
-        PaymentPlanChooseCreditCardFragment chooseCreditCardFragment = new PaymentPlanChooseCreditCardFragment();
+        PracticePaymentPlanChooseCreditCardFragment chooseCreditCardFragment = new PracticePaymentPlanChooseCreditCardFragment();
         chooseCreditCardFragment.setArguments(args);
         return chooseCreditCardFragment;
     }
@@ -78,15 +78,22 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
 
         nextButton.setOnClickListener(nextButtonListener);
         nextButton.setText(Label.getLabel("payment_plan_continue"));
+
+        View closeButton = view.findViewById(R.id.closeViewLayout);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+                callback.onStartPaymentPlan(paymentsModel, paymentPlanPostModel);
+            }
+        });
     }
 
     private View.OnClickListener addNewCardButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             callback.onAddPaymentPlanCard(paymentsModel, paymentPlanPostModel);
-            if (getDialog() != null) {
-                dismiss();
-            }
+            dismiss();
         }
     };
 
@@ -106,6 +113,7 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
                 paymentPlanPostModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
 
                 callback.onDisplayPaymentPlanTerms(paymentsModel, paymentPlanPostModel);
+                dismiss();
             }
         }
     };

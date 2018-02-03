@@ -148,7 +148,7 @@
             android:visibility="visible">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/cancelPlanButton"
+                android:id="@+id/editPlanButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dimen_5dp"
@@ -166,7 +166,7 @@
                 tools:text="Edit Plan"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/statement_button"
+                android:id="@+id/schedule_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
