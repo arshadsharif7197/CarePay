@@ -20,7 +20,6 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.isNotEmptyString;
 
 public class StringUtil {
 
-    private static final String ORDINAL_INDICATOR_ES = ".º";
     private static Map<String, String[]> ordinalMap = new HashMap<>();
 
     /**
@@ -441,7 +440,7 @@ public class StringUtil {
                             return number + ordinals[number % 10];
                     }
                 case "es":
-                    return number + ORDINAL_INDICATOR_ES;
+                    return number + Label.getLabel("ordinal_indicator");
                 default:
             }
         }
