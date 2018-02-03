@@ -40,7 +40,7 @@ public class DateUtil {
 
     private static final String FORMAT_HOURS_AM_PM = "h:mm a";
     private static final String FORMAT_MONTH_DAY_TIME12_EN = "MMM dd, h:mm a";
-    private static final String FORMAT_MONTH_DAY_TIME12_ES = "dd, MMM. h:mm a";
+    private static final String FORMAT_MONTH_DAY_TIME12_ES = "dd MMM h:mm a";
     private static final String FORMAT_FULL_DATE_TIME12 = "MMM dd, yyyy, h:mm a";
     private static final int IS_A_FUTURE_DATE = 100;
     private static final int IS_A_TOO_OLD_DATE = -100;

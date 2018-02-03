@@ -162,7 +162,7 @@ public class ChooseProviderFragment extends BaseAppointmentFragment
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            if(isAdded()) {
+            if (isAdded()) {
                 Gson gson = new Gson();
                 resourcesToScheduleModel = gson.fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
 
@@ -190,6 +190,8 @@ public class ChooseProviderFragment extends BaseAppointmentFragment
                     } else {
                         getView().findViewById(R.id.emptyStateScreen).setVisibility(View.VISIBLE);
                     }
+                } else {
+                    getView().findViewById(R.id.emptyStateScreen).setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -197,7 +199,7 @@ public class ChooseProviderFragment extends BaseAppointmentFragment
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            if(isAdded()) {
+            if (isAdded()) {
                 showErrorNotification(exceptionMessage);
                 Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
             }

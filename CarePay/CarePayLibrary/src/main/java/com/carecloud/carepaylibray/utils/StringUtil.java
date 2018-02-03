@@ -440,16 +440,7 @@ public class StringUtil {
                             return number + ordinals[number % 10];
                     }
                 case "es":
-                    if (number < 10) {
-                        return number + ordinals[0];
-                    } else {
-                        switch (number) {
-                            case 10:
-                                return number + ordinals[10];
-                            default:
-                                return number + ordinals[number % 10];
-                        }
-                    }
+                    return number + Label.getLabel("ordinal_indicator");
                 default:
             }
         }
