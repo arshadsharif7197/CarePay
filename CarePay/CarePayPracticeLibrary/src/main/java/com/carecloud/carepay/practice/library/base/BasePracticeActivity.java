@@ -16,7 +16,6 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
-import com.newrelic.agent.android.NewRelic;
 
 import org.apache.commons.lang3.NotImplementedException;
 
@@ -34,7 +33,6 @@ public abstract class BasePracticeActivity extends BaseActivity
                 R.style.PracticeModeActivity : R.style.PatientModeActivity);
         setSystemUiVisibility();
         setNavigationBarVisibility();
-        NewRelic.setInteractionName(getClass().getName());
         Log.d("New Relic", getClass().getName());
     }
 
@@ -94,7 +92,7 @@ public abstract class BasePracticeActivity extends BaseActivity
     }
 
     protected void processExternalPayment(PaymentExecution paymentExecution, Intent data) {
-        throw new NotImplementedException("Process external payment has not been implemented by " + getClass().getSimpleName());
+        throw new NotImplementedException("Process external payment has not been implemented by " + getClass().getName());
     }
 
     protected void processExternalPaymentFailure(PaymentExecution paymentExecution, int resultCode) {

@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragment;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -26,9 +26,10 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.Provid
 
     /**
      * Constructor.
-     * @param context context
-     * @param providersArrayList list of providers
-     * @param listener Onclick listener
+     *
+     * @param context                context
+     * @param providersArrayList     list of providers
+     * @param listener               Onclick listener
      * @param chooseProviderFragment screen instance
      */
     public ProviderAdapter(Context context, List<Object> providersArrayList,

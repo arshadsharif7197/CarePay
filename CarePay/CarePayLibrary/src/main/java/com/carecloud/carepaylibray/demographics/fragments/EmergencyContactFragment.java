@@ -390,10 +390,8 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                     addressEditText2.getOnFocusChangeListener().onFocusChange(addressEditText2,
                             !StringUtil.isNullOrEmpty(addressEditText2.getText().toString()));
                     unsetFieldError(zipCodeTextInputLayout);
-                    cityTextInputLayout.setErrorEnabled(false);
-                    cityTextInputLayout.setError(null);
-                    stateTextInputLayout.setErrorEnabled(false);
-                    stateTextInputLayout.setError(null);
+                    unsetFieldError(cityTextInputLayout);
+                    unsetFieldError(stateTextInputLayout);
                 } else {
                     addressEditText2.setEnabled(true);
 
@@ -657,7 +655,8 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         }
         String dateOfBirth = dateOfBirthEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(dateOfBirth)) {
-            emergencyContact.setDateOfBirth(dateOfBirth);
+            emergencyContact.setDateOfBirth(DateUtil.getInstance().setDateRaw(dateOfBirth, true)
+                    .toStringWithFormatYyyyDashMmDashDd());
         }
         String gender = genderEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(gender)) {
@@ -837,8 +836,11 @@ public class EmergencyContactFragment extends BaseDialogFragment {
 
     protected TextWatcher getValidateRequiredEmptyTextWatcher(final TextInputLayout inputLayout) {
         return new TextWatcher() {
+            public int count;
+
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+                this.count = sequence.length();
             }
 
             @Override
@@ -851,9 +853,8 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                 if (StringUtil.isNullOrEmpty(editable.toString())) {
                     inputLayout.setErrorEnabled(true);
                     inputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
-                } else {
-                    inputLayout.setError(null);
-                    inputLayout.setErrorEnabled(false);
+                } else if (count == 0) {
+                    unsetFieldError(inputLayout);
                 }
                 checkIfEnableButton(false);
             }
@@ -875,8 +876,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 if (editable.length() > 0) {
-                    inputLayout.setError(null);
-                    inputLayout.setErrorEnabled(false);
+                    unsetFieldError(inputLayout);
                 }
                 if (checkEnable) {
                     checkIfEnableButton(false);
@@ -959,6 +959,9 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         if (requestFocus) {
             inputLayout.clearFocus();
             inputLayout.requestFocus();
+            if (!inputLayout.hasFocus()) {
+                parentScrollView.scrollTo(0, inputLayout.getScrollY());
+            }
         }
     }
 

@@ -81,10 +81,9 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
                     DemographicDTO.class);
             demographicsSettingsDTO.getPayload().setPatientCreditCards(removeCreditCardResponseDTO.getPayload().getPatientCreditCards());
             callback.onCreditCardOperation(demographicsSettingsDTO);
+            MixPanelUtil.logEvent(getString(R.string.event_updated_credit_cards), getString(R.string.param_is_payment), false);
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
             getActivity().onBackPressed();
-
-            MixPanelUtil.logEvent(getString(R.string.event_updated_credit_cards), getString(R.string.param_is_payment), false);
         }
 
         @Override

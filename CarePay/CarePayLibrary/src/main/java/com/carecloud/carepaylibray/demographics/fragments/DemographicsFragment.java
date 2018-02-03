@@ -51,7 +51,6 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         implements EmergencyContactFragmentInterface, PhysicianFragmentInterface {
 
     private DemographicDataModel dataModel;
-    private DemographicDTO demographicDTO;
 
     private DemographicExtendedInterface callback;
     private PatientModel demographicPersDetailsPayloadDTO;
@@ -435,7 +434,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             selectedEmployer = new EmployerDto();
         }
 
-        final TextInputLayout employerNameTextInputLayout = (TextInputLayout) view.findViewById(R.id.employerNameTextInputLayout);
+        final TextInputLayout employerNameTextInputLayout = (TextInputLayout) view
+                .findViewById(R.id.employerNameTextInputLayout);
         EditText employerNameEditText = (EditText) view.findViewById(R.id.employerNameEditText);
         employerNameEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(employerNameTextInputLayout, null));
@@ -456,8 +456,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             @Override
             public void afterTextChanged(Editable editable) {
                 if (editable.length() > 0) {
-                    employerNameTextInputLayout.setError(null);
-                    employerNameTextInputLayout.setErrorEnabled(false);
+                    unsetFieldError(employerNameTextInputLayout);
                     showErrorViews(false, (ViewGroup) view.findViewById(R.id.employerNameDemographicsLayout));
                 }
                 selectedEmployer.setName(editable.toString());

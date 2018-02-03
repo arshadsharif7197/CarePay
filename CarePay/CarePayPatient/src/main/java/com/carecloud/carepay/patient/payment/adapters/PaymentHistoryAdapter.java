@@ -21,6 +21,7 @@ import com.squareup.picasso.Picasso;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by jorge on 31/12/16
@@ -39,7 +40,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
     private List<UserPracticeDTO> userPractices = new ArrayList<>();
 
     private boolean isLoading = false;
-    private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+    private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
     /**
      * Constructor
@@ -74,8 +75,8 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
 
         final PaymentHistoryItem item = paymentHistoryItems.get(position);
 
-        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(item.getPayload().getDate()).shiftDateToGMT();
-        holder.paymentDate.setText(dateUtil.getDateAsMonthLiteralDayOrdinalYear());
+        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(item.getPayload().getDate());
+        holder.paymentDate.setText(dateUtil.getDateAsMonthAbbrDayOrdinalYear());
 
         double totalPaid = item.getPayload().getTotalPaid();
         holder.amount.setText(currencyFormatter.format(totalPaid));

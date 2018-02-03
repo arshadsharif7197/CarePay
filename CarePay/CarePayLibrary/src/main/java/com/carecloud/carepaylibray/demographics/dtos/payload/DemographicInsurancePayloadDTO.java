@@ -1,6 +1,8 @@
 package com.carecloud.carepaylibray.demographics.dtos.payload;
 
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -165,6 +167,13 @@ public class DemographicInsurancePayloadDTO extends PatientModel {
 
     public String getPolicyDateOfBirthHolder() {
         return policyDateOfBirthHolder;
+    }
+
+    public String getFormattedPolicyDateOfBirthHolder() {
+        if (StringUtil.isNullOrEmpty(policyDateOfBirthHolder)) {
+            return "";
+        }
+        return DateUtil.getInstance().setDateRaw(policyDateOfBirthHolder).toStringWithFormatMmSlashDdSlashYyyy();
     }
 
     public void setPolicyDateOfBirthHolder(String policyDateOfBirthHolder) {

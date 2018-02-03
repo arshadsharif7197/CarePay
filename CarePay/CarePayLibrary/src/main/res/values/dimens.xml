@@ -459,5 +459,7 @@
     <dimen name="confirmationPracticeNameMargin">20dp</dimen>
     <dimen name="dimen_35dp">35dp</dimen>
     <dimen name="dimen_38dp">38dp</dimen>
+    <dimen name="fragmentDialogPaddingBottom">20dp</dimen>
+    <dimen name="fragmentDialogPaddingTop">0dp</dimen>
 
 </resources>

@@ -1,92 +1,116 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.ListView;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.payment.dialogs.ChooseCreditCardDialog;
-import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.QueryStrings;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
+import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
+import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.payments.fragments.BasePaymentDialogFragment;
-import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
+import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPayloadPlansDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanLineItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
-import java.text.DecimalFormat;
+import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
+
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 
-public class PaymentPlanFragment extends BasePaymentDialogFragment {
-
-    private static final String LOG_TAG = PaymentPlanFragment.class.getSimpleName();
-
-    private int minNumberOfMonths = 2;
-    private int maxNumberOfMonths = 120;
-    private int minMonthlyPayment = 10;
-    private double maxMonthlyPayment = 9999999999.99;
+public class PaymentPlanFragment extends BasePaymentDialogFragment implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
 
     private PaymentsModel paymentsModel;
+    private PendingBalanceDTO selectedBalance;
+    private PaymentPlanInterface callback;
+    private PaymentSettingsBalanceRangeRule paymentPlanBalanceRules = new PaymentSettingsBalanceRangeRule();
 
-    private Button createPlanButton;
-    private TextView addedCreditCard;
-    private TextView addChangeCreditCard;
-    private EditText paymentPlanName;
-    private EditText paymentPlanMonthNo;
-    private EditText paymentPlanMonthlyPayment;
-    private TextInputLayout paymentPlanMonthInput;
-    private TextInputLayout paymentPlanMonthlyInput;
+    private NumberFormat currencyFormatter;
+    private double paymentPlanAmount;
 
-    private double totalBalance;
-    private boolean isEmptyMonthNo = true;
-    private boolean isEmptyMonthlyPayment = true;
-    private boolean isEmptyCreditCard = true;
-    private boolean isMNEdited;
-    private boolean isMPEdited;
-    private PaymentNavigationCallback callback;
+    private View createPlanButton;
+    private EditText planName;
+    private EditText numberPayments;
+    private EditText monthlyPayment;
+
+    private List<DemographicsOption> dateOptions;
+    private DemographicsOption paymentDateOption;
+    private double monthlyPaymentAmount;
+    private int monthlyPaymentCount;
+
+    private boolean isRecalculating = false;
+
+
+    public static PaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance){
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, paymentsModel);
+        DtoHelper.bundleDto(args, selectedBalance);
+
+        PaymentPlanFragment fragment = new PaymentPlanFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
 
     @Override
     protected void attachCallback(Context context) {
         try{
             if(context instanceof PaymentViewHandler){
-                callback = ((PaymentViewHandler) context).getPaymentPresenter();
+                callback = (PaymentPlanInterface) ((PaymentViewHandler) context).getPaymentPresenter();
             }else {
-                callback = (PaymentNavigationCallback) context;
+                callback = (PaymentPlanInterface) context;
             }
         }catch(ClassCastException cce){
             throw new ClassCastException("Attached context must implement PaymentNavigationCallback");
         }
+    }
+
+    @Override
+    public void onCreate(Bundle icicle){
+        super.onCreate(icicle);
+        Bundle args = getArguments();
+        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+        selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
+        paymentPlanAmount = calculateTotalAmount();
+        dateOptions = generateDateOptions();
+        paymentDateOption = dateOptions.get(0);
+        getPaymentPlanSettings();
+        currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
     }
 
     @Override
@@ -98,245 +122,362 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_payment_plan, container, false);
+    }
 
-        View view = inflater.inflate(R.layout.fragment_payment_plan, container, false);
+    @Override
+    public void onViewCreated(View view, Bundle icicle){
+        setupToolBar(view);
+        setupHeader(view);
+        setupFields(view);
+        setupButtons(view);
+        setAdapter(view);
+    }
 
-        paymentPlanName = (EditText) view.findViewById(R.id.payment_plan_name_edit);
-        paymentPlanMonthNo = (EditText) view.findViewById(R.id.payment_plan_month_no_edit);
-        paymentPlanMonthlyPayment = (EditText) view.findViewById(R.id.payment_plan_monthly_payment_edit);
-        createPlanButton = (Button) view.findViewById(R.id.create_payment_plan_button);
-
-        addedCreditCard = (TextView) view.findViewById(R.id.payment_plan_credit_card);
-        addChangeCreditCard = (TextView) view.findViewById(R.id.payment_plan_credit_card_button);
-        addChangeCreditCard.setOnClickListener(new View.OnClickListener() {
+    private void setupToolBar(View view){
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view1) {
-
-                if (isEmptyCreditCard) {
-                    //Goto Add credit card screen
-                    addNewCreditCard();
-                } else {
-                    //Goto Credit card screen to Choose
-                    ChooseCreditCardDialog creditCardDialog = new ChooseCreditCardDialog(
-                            getActivity(), paymentsModel, creditCardClickListener);
-                    creditCardDialog.show();
-                }
+            public void onClick(View view) {
+                callback.onDismissPaymentPlan(paymentsModel);
             }
         });
-
-        Gson gson = new Gson();
-        String paymentsDTOString = getArguments().getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
-        paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
-
-        if (paymentsModel != null) {
-            setLabels();
-            setEditTexts(view);
-        }
-
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        toolbar.setTitle("");
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(Label.getLabel("payment_plan_heading"));
 
-        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
-        toolbar.setTitle("");
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(),
-                R.drawable.icn_nav_back));
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
-        Spinner monthDays = (Spinner) view.findViewById(R.id.payment_plan_month_day);
-        ArrayList<String> items = new ArrayList<>();
-        for (int i = 0; i < 31; ) {
-            items.add("" + ++i);
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, items);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        monthDays.setAdapter(adapter);
-        monthDays.setOnItemSelectedListener(itemSelectedListener);
-
-        String copayStr = "";
-        String previousBalanceStr = "";
-
-        if (paymentsModel != null) {
-            List<PaymentPatientBalancesPayloadDTO> paymentList
-                    = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getPayload();
-
-            if (paymentList != null && paymentList.size() > 1) {
-                for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
-                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PREVIOUS_BALANCE)) {
-                        previousBalanceStr = payment.getTotal();
-                    } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
-                        copayStr = payment.getTotal();
-                    }
-                }
-
-                try {
-                    double copay = Double.parseDouble(copayStr);
-                    double previousBalance = Double.parseDouble(previousBalanceStr);
-                    totalBalance = copay + previousBalance;
-
-                    NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
-                    ((TextView) view.findViewById(R.id.payment_plan_total)).setText(CarePayConstants.DOLLAR.concat(formatter.format(totalBalance)));
-                    ((TextView) view.findViewById(R.id.payment_plan_prev_balance)).setText(CarePayConstants.DOLLAR.concat(previousBalanceStr));
-                    ((TextView) view.findViewById(R.id.payment_plan_copay)).setText(CarePayConstants.DOLLAR.concat(copayStr));
-                } catch (NumberFormatException ex) {
-                    ex.printStackTrace();
-                    Log.e(LOG_TAG, ex.getMessage());
-                }
-            }
-        }
-
-        return view;
     }
 
-    private void enableCreatePlanButton() {
-        if (paymentPlanMonthNo.getText().length() > 0
-                && paymentPlanMonthlyPayment.getText().length() > 0
-                && !isEmptyCreditCard) {
-            createPlanButton.setEnabled(true);
-        }
+    private void setupHeader(View view){
+        TextView total = (TextView) view.findViewById(R.id.payment_plan_total);
+        total.setText(currencyFormatter.format(paymentPlanAmount));
+
+        TextView parameters = (TextView) view.findViewById(R.id.payment_plan_parameters);
+        String labelStub = "This balance must be paid over a maximum of %d months and requires a minimum payment of %s.";
+        parameters.setText(String.format(Locale.US, labelStub, //Label.getLabel("payment_plan_parameters"), TODO setup this label
+                paymentPlanBalanceRules.getMaxDuration().getValue(),
+                currencyFormatter.format(paymentPlanBalanceRules.getMinAmount().getValue())));
     }
 
-    private void setEditTexts(View view) {
-        TextInputLayout paymentPlanNameInput = (TextInputLayout) view.findViewById(R.id.payment_plan_name_input);
-        String nameLabel = Label.getLabel("payment_plan_name");
-        paymentPlanNameInput.setTag(nameLabel);
-        paymentPlanName.setHint(nameLabel);
-        paymentPlanName.setTag(paymentPlanNameInput);
+    private void setupFields(View view){
+        planName = (EditText) view.findViewById(R.id.paymentPlanName);
+        TextInputLayout planNameInputLayout = (TextInputLayout) view.findViewById(R.id.paymentPlanNameInputLayout);
+        planName.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(planNameInputLayout, null));
+        View planNameOptional = view.findViewById(R.id.paymentPlanNameOptional);
+        planNameOptional.setVisibility(View.VISIBLE);
+        planName.addTextChangedListener(getOptionalViewTextWatcher(planNameOptional));
 
-        paymentPlanMonthInput = (TextInputLayout) view.findViewById(R.id.payment_plan_month_no_input);
-        String monthNumber = Label.getLabel("payment_number_of_months");
-        paymentPlanMonthInput.setTag(monthNumber);
-        paymentPlanMonthNo.setHint(monthNumber);
-        paymentPlanMonthNo.setTag(paymentPlanMonthInput);
-
-        paymentPlanMonthlyInput = (TextInputLayout) view.findViewById(R.id.payment_plan_monthly_payment_input);
-        String monthlyPayment = Label.getLabel("payment_monthly_payment");
-        paymentPlanMonthlyInput.setTag(monthlyPayment);
-        paymentPlanMonthlyPayment.setHint(monthlyPayment);
-        paymentPlanMonthlyPayment.setTag(paymentPlanMonthlyInput);
-
-        setTextListeners();
-        setChangeFocusListeners();
-
-        paymentPlanName.clearFocus();
-        paymentPlanMonthNo.clearFocus();
-        paymentPlanMonthlyPayment.clearFocus();
-    }
-
-    private void setLabels() {
-        createPlanButton.setOnClickListener(new View.OnClickListener() {
+        final EditText paymentDate = (EditText) view.findViewById(R.id.paymentDrawDay);
+        TextInputLayout drawDayInputLayout = (TextInputLayout) view.findViewById(R.id.paymentDrawDayInputLayout);
+        paymentDate.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(drawDayInputLayout, null));
+        paymentDate.setText(paymentDateOption.getLabel());
+        paymentDate.getOnFocusChangeListener().onFocusChange(paymentDate, true);
+        paymentDate.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view1) {
-                createPaymentPlan();
+            public void onClick(View v) {
+                showChooseDialog(getContext(), dateOptions, Label.getLabel("payment_day_of_the_month"), new ValueInputCallback() {
+                    @Override
+                    public void onValueInput(String input) {
+                        paymentDate.setText(input);
+                    }
+                });
             }
         });
 
-        List<PaymentsPatientsCreditCardsPayloadListDTO> payload = paymentsModel.getPaymentPayload().getPatientCreditCards();
-        if (payload.size() > 0) {
-            if (payload != null && payload.size() > 0) {
-                // Get default credit card
-                PaymentCreditCardsPayloadDTO creditCard = payload.get(0).getPayload();
-                String creditCardName = creditCard.getCardType();
-                addedCreditCard.setText(StringUtil.getEncodedCardNumber(
-                        creditCardName, creditCard.getCardNumber()));
-                addedCreditCard.setVisibility(View.VISIBLE);
-
-                addChangeCreditCard.setText(Label.getLabel("payment_change_card"));
-                isEmptyCreditCard = false;
-            } else {
-                isEmptyCreditCard = true;
-                addChangeCreditCard.setText(Label.getLabel("payment_add_card_button"));
+        numberPayments = (EditText) view.findViewById(R.id.paymentMonthCount);
+        TextInputLayout numberPaymentsInputLayout = (TextInputLayout) view.findViewById(R.id.paymentMonthCountInputLayout);
+        numberPayments.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(numberPaymentsInputLayout, null));
+        numberPayments.addTextChangedListener(getRequiredTextWatcher(numberPaymentsInputLayout, new ValueInputCallback() {
+            @Override
+            public void onValueInput(String input) {
+                isRecalculating = true;
+                try{
+                    monthlyPaymentCount = Integer.parseInt(input);
+                    monthlyPaymentAmount = calculateMonthlyPayment(monthlyPaymentCount);
+                    monthlyPayment.setText(currencyFormatter.format(monthlyPaymentAmount));
+                }catch (NumberFormatException nfe){
+                    nfe.printStackTrace();
+                }
             }
-        } else {
-            isEmptyCreditCard = true;
-            addChangeCreditCard.setText(Label.getLabel("payment_add_card_button"));
-        }
+        }));
 
-        addChangeCreditCard.setTextColor(getActivity().getResources().getColor(R.color.colorPrimary));
+        monthlyPayment = (EditText) view.findViewById(R.id.paymentAmount);
+        TextInputLayout paymentAmountInputLayout = (TextInputLayout) view.findViewById(R.id.paymentAmountInputLayout);
+        monthlyPayment.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(paymentAmountInputLayout, currencyFocusChangeListener));
+        monthlyPayment.addTextChangedListener(getRequiredTextWatcher(paymentAmountInputLayout, new ValueInputCallback() {
+            @Override
+            public void onValueInput(String input) {
+                isRecalculating = true;
+                try{
+                    monthlyPaymentAmount = Double.parseDouble(input);
+                    monthlyPaymentCount = calculatePaymentCount(monthlyPaymentAmount);
+                    numberPayments.setText(String.valueOf(monthlyPaymentCount));
+                }catch (NumberFormatException nfe){
+                    nfe.printStackTrace();
+                }
+            }
+        }));
+
+
     }
 
-    ChooseCreditCardDialog.ChooseCreditCardClickListener creditCardClickListener
-            = new ChooseCreditCardDialog.ChooseCreditCardClickListener() {
+    private void setupButtons(View view){
+        View addToExisting = view.findViewById(R.id.payment_plan_add_existing);
+        addToExisting.setVisibility(View.GONE);//TODO implement logoc for checking if has existing and practice settings allow adding
 
-        @Override
-        public void onCreditCardSelection(int selectedIndex) {
-            List<PaymentsPatientsCreditCardsPayloadListDTO> payload
-                    = paymentsModel.getPaymentPayload().getPatientCreditCards();
+        createPlanButton = view.findViewById(R.id.create_payment_plan_button);
+        createPlanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createPaymentPlan();
+                SystemUtil.hideSoftKeyboard(getContext(), view);
+            }
+        });
 
-            if (payload != null && payload.size() > 0) {
-                // Get default credit card
-                PaymentCreditCardsPayloadDTO creditCard = payload.get(selectedIndex).getPayload();
-                String creditCardName = creditCard.getCardType();
-                addedCreditCard.setText(StringUtil.getEncodedCardNumber(creditCardName, creditCard.getCardNumber()));
-                addedCreditCard.setVisibility(View.VISIBLE);
-                addChangeCreditCard.setText(Label.getLabel("payment_change_card"));
-                isEmptyCreditCard = false;
+        enableCreatePlanButton();
+    }
+
+    private void setAdapter(View view){
+        RecyclerView balanceRecycler = (RecyclerView) view.findViewById(R.id.balance_recycler);
+        balanceRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), selectedBalance.getPayload(), this);
+        balanceRecycler.setAdapter(adapter);
+    }
+
+    private void enableCreatePlanButton() {
+        createPlanButton.setEnabled(validateFields(false));
+    }
+
+    private double calculateTotalAmount(){
+        double totalAmount = 0;
+        if(selectedBalance != null) {
+            for (PendingBalancePayloadDTO balancePayloadDTO : selectedBalance.getPayload()) {
+                if(StringUtil.isNullOrEmpty(balancePayloadDTO.getType()) || balancePayloadDTO.getType().equals(PATIENT_BALANCE)) {//prevent responsibility types from being added
+                    totalAmount += balancePayloadDTO.getAmount();
+                }
             }
         }
-    };
+        return totalAmount;
+    }
 
-    AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
+    private double calculateMonthlyPayment(int numberPayments){
+        double paymentAmount = paymentPlanAmount / numberPayments;
+        return Math.ceil(paymentAmount * 100)/100D;
+    }
 
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            String item = (String) parent.getItemAtPosition(position);
-            String suffix;
-            switch (item) {
-                case "1":
-                case "21":
-                case "31":
-                    suffix = "st";
-                    break;
-                case "2":
-                case "22":
-                    suffix = "nd";
-                    break;
-                case "3":
-                case "23":
-                    suffix = "rd";
-                    break;
-                default:
-                    suffix = "th";
-                    break;
-            }
+    private int calculatePaymentCount(double monthlyAmount){
+        double numberPayments = paymentPlanAmount / monthlyAmount;
+        return (int) Math.ceil(numberPayments);
+    }
 
-            TextView selectedItem = (TextView) parent.getChildAt(0);
-            if (selectedItem != null) {
-                selectedItem.setText(item.concat(suffix));
-                selectedItem.setTextColor(getActivity().getResources().getColor(R.color.colorPrimary));
-                SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), selectedItem);
+    private void getPaymentPlanSettings(){
+        String practiceId = selectedBalance.getMetadata().getPracticeId();
+        for(PaymentsPayloadSettingsDTO settingsDTO : paymentsModel.getPaymentPayload().getPaymentSettings()){
+            if(practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())){
+                for(PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getPayload().getPaymentPlans().getBalanceRangeRules()){
+                    double ruleAmount = balanceRangeRule.getMinBalanceRequired().getValue();
+                    if(paymentPlanAmount > ruleAmount &&
+                            ruleAmount > paymentPlanBalanceRules.getMinBalanceRequired().getValue()){
+                        paymentPlanBalanceRules = balanceRangeRule;
+                    }
+                }
+                return;
             }
         }
+    }
 
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
+    private List<DemographicsOption> generateDateOptions(){
+        List<DemographicsOption> optionList = new ArrayList<>();
+        for(int i = 0; i < 30; i++){
+            DemographicsOption option = new DemographicsOption();
+            option.setLabel(StringUtil.getOrdinal(getApplicationPreferences().getUserLanguage(), i+1));
+            option.setName(String.valueOf(i+1));
 
+            optionList.add(option);
         }
-    };
+        return optionList;
+    }
 
-//    private String getCreditCardName(String cardType) {
-//        if (paymentsModel != null) {
-//            List<PaymentsSettingsPayloadCreditCardTypesDTO> creditCardType
-//                    = paymentsModel.getPaymentPayload().getPaymentSettings().getPayload().getCreditCardType();
-//
-//            if (creditCardType != null && creditCardType.size() > 0) {
-//                for (int i = 0; i < creditCardType.size(); i++) {
-//                    PaymentsSettingsPayloadCreditCardTypesDTO creditCardTypesDTO = creditCardType.get(i);
-//                    if (creditCardTypesDTO.getType().equalsIgnoreCase(cardType)) {
-//                        return creditCardTypesDTO.getLabel();
-//                    }
-//                }
-//            }
-//        }
-//        return cardType;
-//    }
+    private boolean validateFields(boolean isUserInteraction){
+        int paymentDay = 0;
+        try{
+            paymentDay = Integer.parseInt(paymentDateOption.getName());
+        }catch (NumberFormatException nfe){
+            nfe.printStackTrace();
+        }
+        if(paymentDay < 1 || paymentDay > 30){
+           if(isUserInteraction){
+               setError(R.id.paymentDrawDayInputLayout, Label.getLabel("validation_required_field"));
+           }
+           return false;
+        }else {
+            clearError(R.id.paymentDrawDayInputLayout);
+        }
 
-    private void setTextListeners() {
-        paymentPlanMonthNo.addTextChangedListener(new TextWatcher() {
+        if(monthlyPaymentCount < paymentPlanBalanceRules.getMinDuration().getValue()){
+            if(isUserInteraction){
+                setError(R.id.paymentMonthCountInputLayout,
+                        String.format(Label.getLabel("payment_plan_min_months_error"),
+                                String.valueOf(paymentPlanBalanceRules.getMinDuration().getValue())));
+            }
+            return false;
+        }else{
+            clearError(R.id.paymentMonthCountInputLayout);
+        }
 
+        if(monthlyPaymentCount > paymentPlanBalanceRules.getMaxDuration().getValue()){
+            if(isUserInteraction){
+                setError(R.id.paymentMonthCountInputLayout,
+                        String.format(Label.getLabel("payment_plan_max_months_error"),
+                                String.valueOf(paymentPlanBalanceRules.getMaxDuration().getValue())));
+            }
+            return false;
+        }else{
+            clearError(R.id.paymentMonthCountInputLayout);
+        }
+
+        if(monthlyPaymentAmount < paymentPlanBalanceRules.getMinAmount().getValue()){
+            if(isUserInteraction){
+                setError(R.id.paymentAmountInputLayout,
+                        String.format(Label.getLabel("payment_plan_min_amount_error"),
+                                currencyFormatter.format(paymentPlanBalanceRules.getMinAmount().getValue())));
+            }
+            return false;
+        }else{
+            clearError(R.id.paymentAmountInputLayout);
+        }
+
+        if(monthlyPaymentAmount > paymentPlanBalanceRules.getMaxAmount().getValue()){
+            if(isUserInteraction){
+                setError(R.id.paymentAmountInputLayout,
+                        String.format(Label.getLabel("payment_plan_max_amount_error"),
+                                currencyFormatter.format(paymentPlanBalanceRules.getMaxAmount().getValue())));
+            }
+            return false;
+        }else{
+            clearError(R.id.paymentAmountInputLayout);
+        }
+
+
+        return true;
+    }
+
+    private void createPaymentPlan() {
+        if (validateFields(false)) {
+            PaymentPlanPostModel postModel = new PaymentPlanPostModel();
+            postModel.setMetadata(selectedBalance.getMetadata());
+            postModel.setAmount(paymentPlanAmount);
+            postModel.setDescription(planName.getText().toString());
+            postModel.setLineItems(getPaymentPlanLineItems());
+
+            PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
+            paymentPlanModel.setAmount(monthlyPaymentAmount);
+            paymentPlanModel.setFrequencyCode(PaymentPlanModel.FREQUENCY_MONTHLY);
+            paymentPlanModel.setInstallments(monthlyPaymentCount);
+            paymentPlanModel.setEnabled(true);
+
+            try {
+                paymentPlanModel.setDayOfMonth(Integer.parseInt(paymentDateOption.getName()));
+            }catch (NumberFormatException nfe){
+                nfe.printStackTrace();
+            }
+
+            postModel.setPaymentPlanModel(paymentPlanModel);
+
+            callback.onStartPaymentPlan(paymentsModel, postModel);
+        }
+    }
+
+    private List<PaymentPlanLineItem> getPaymentPlanLineItems(){
+        double amountHolder = paymentPlanAmount;
+        List<PaymentPlanLineItem> lineItems = new ArrayList<>();
+        for(PendingBalancePayloadDTO pendingBalance : selectedBalance.getPayload()){
+            if(StringUtil.isNullOrEmpty(pendingBalance.getType()) || pendingBalance.getType().equals(PATIENT_BALANCE)){//ignore responsibility types
+                for(BalanceItemDTO balanceItem : pendingBalance.getDetails()){
+                    if(amountHolder <= 0){
+                        break;
+                    }
+
+                    PaymentPlanLineItem lineItem = new PaymentPlanLineItem();
+                    lineItem.setDescription(balanceItem.getDescription());
+                    lineItem.setType(IntegratedPaymentLineItem.TYPE_APPLICATION);
+                    lineItem.setTypeId(balanceItem.getId().toString());
+
+                    if(amountHolder >= balanceItem.getAmount()){
+                        lineItem.setAmount(balanceItem.getAmount());
+                        amountHolder -= balanceItem.getAmount();
+                    }else{
+                        lineItem.setAmount(amountHolder);
+                        amountHolder = 0;
+                    }
+
+                    lineItems.add(lineItem);
+                }
+            }
+        }
+        return lineItems;
+    }
+
+    private void setError(int id, String error){
+        if(getView() != null) {
+            TextInputLayout inputLayout = (TextInputLayout) getView().findViewById(id);
+            inputLayout.setErrorEnabled(true);
+            inputLayout.setError(error);
+        }
+    }
+
+    private void clearError(int id){
+        if(getView() != null) {
+            TextInputLayout inputLayout = (TextInputLayout) getView().findViewById(id);
+            inputLayout.setError(null);
+            inputLayout.setErrorEnabled(false);
+        }
+    }
+
+    @Override
+    public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
+        String tag = PaymentDetailsFragmentDialog.class.getName();
+        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+        Fragment prev = getChildFragmentManager().findFragmentByTag(tag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
+                .newInstance(paymentsModel, paymentLineItem, selectedBalance, false);
+        dialog.show(ft, tag);
+
+    }
+
+    private TextWatcher getOptionalViewTextWatcher(final View optionalView) {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (StringUtil.isNullOrEmpty(editable.toString())) {
+                    optionalView.setVisibility(View.VISIBLE);
+                } else {
+                    optionalView.setVisibility(View.GONE);
+                }
+                enableCreatePlanButton();
+            }
+        };
+    }
+
+    private TextWatcher getRequiredTextWatcher(final TextInputLayout inputLayout, final ValueInputCallback valueInputCallback){
+        return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
 
@@ -344,244 +485,103 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (isMNEdited && !isMPEdited) {
+                String input = editable.toString();
+                if(StringUtil.isNullOrEmpty(input)){
+                    inputLayout.setErrorEnabled(true);
+                    inputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
+                }else{
+                    inputLayout.setError(null);
+                    inputLayout.setErrorEnabled(false);
+                    if(!isRecalculating) {
+                        valueInputCallback.onValueInput(input);
+                    }else{
+                        isRecalculating = false;
+                    }
+                    enableCreatePlanButton();
+                }
+            }
+        };
+    }
+
+    private View.OnFocusChangeListener currencyFocusChangeListener = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View view, boolean hasFocus) {
+            TextView textView = (TextView) view;
+            isRecalculating = true;
+            if(!StringUtil.isNullOrEmpty(textView.getText().toString())) {
+                if (hasFocus) {
                     try {
-                        String number = paymentPlanMonthNo.getText().toString();
-                        isEmptyMonthNo = StringUtil.isNullOrEmpty(number);
-                        if (!isEmptyMonthNo) {
-                            paymentPlanMonthInput.setError(null);
-                            paymentPlanMonthInput.setErrorEnabled(false);
-
-                            int noOfMonths = Integer.parseInt(number);
-                            paymentPlanMonthlyPayment.setText(String.format("%s",
-                                    StringUtil.getFormattedBalanceAmount(totalBalance / noOfMonths)));
-                            paymentPlanMonthlyPayment.requestFocus();
-                        }
-                    } catch (NumberFormatException nfe) {
-                        Log.e(LOG_TAG, nfe.getMessage());
+                        Number number = currencyFormatter.parse(textView.getText().toString());
+                        textView.setText(String.valueOf(number.doubleValue()));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        textView.setText(currencyFormatter.format(Double.parseDouble(textView.getText().toString())));
+                    }catch (NumberFormatException nfe){
+                        nfe.printStackTrace();
                     }
                 }
-
-                enableCreatePlanButton();
             }
-        });
-
-        paymentPlanMonthlyPayment.addTextChangedListener(new TextWatcher() {
-
-            private String current = "";
-
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
-                if (!charSequence.toString().equals(current)) {
-                    paymentPlanMonthlyPayment.removeTextChangedListener(this);
-
-                    String cleanString = charSequence.toString().replaceAll("[$,.]", "");
-                    double parsed = Double.parseDouble(cleanString);
-                    String formatted = NumberFormat.getCurrencyInstance().format((parsed / 100));
-
-                    current = formatted;
-                    paymentPlanMonthlyPayment.setText(formatted);
-                    paymentPlanMonthlyPayment.requestFocus();
-                    paymentPlanMonthlyPayment.setSelection(formatted.length());
-                    paymentPlanMonthlyPayment.addTextChangedListener(this);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (!isMNEdited && isMPEdited) {
-                    String monthlyPayment = paymentPlanMonthlyPayment.getText().toString();
-                    isEmptyMonthlyPayment = StringUtil.isNullOrEmpty(monthlyPayment);
-                    if (!isEmptyMonthlyPayment) {
-                        paymentPlanMonthlyInput.setError(null);
-                        paymentPlanMonthlyInput.setErrorEnabled(false);
-
-                        double payment = Double.parseDouble(monthlyPayment.replaceAll("[$,]", ""));
-                        int numberOfMonths = (int) Math.round(totalBalance / payment);
-                        paymentPlanMonthNo.setText(String.format("%s", numberOfMonths));
-                        paymentPlanMonthNo.requestFocus();
-                    }
-                }
-
-                enableCreatePlanButton();
-            }
-        });
-    }
-
-    private void setChangeFocusListeners() {
-        paymentPlanName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
-
-        paymentPlanMonthNo.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus) {
-                    isMNEdited = true;
-                    isMPEdited = false;
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, hasFocus);
-            }
-        });
-
-        paymentPlanMonthlyPayment.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus) {
-                    isMNEdited = false;
-                    isMPEdited = true;
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, hasFocus);
-            }
-        });
-    }
-
-    private boolean allValid() {
-        paymentPlanMonthInput.setErrorEnabled(true);
-        paymentPlanMonthlyInput.setErrorEnabled(true);
-
-        PaymentsSettingsPayloadPlansDTO paymentPlans = paymentsModel.getPaymentPayload()
-                .getPaymentSettings().get(0).getPayload().getPaymentPlans();//todo need to lookup appropriate settings for prctice id on selected balance
-
-        if (paymentPlans != null) {
-            String minimumPayment = paymentPlans.getMinimumPayment();
-            if (!StringUtil.isNullOrEmpty(minimumPayment)) {
-                minMonthlyPayment = Integer.parseInt(minimumPayment);
-            }
-
-            String maximumPayment = paymentPlans.getMaximumPayment();
-            if (!StringUtil.isNullOrEmpty(maximumPayment)) {
-                maxMonthlyPayment = Double.parseDouble(maximumPayment);
-            }
-
-            String minimumCyclesMonths = paymentPlans.getMinimumCyclesMonths();
-            if (!StringUtil.isNullOrEmpty(minimumCyclesMonths)) {
-                minNumberOfMonths = Integer.parseInt(minimumCyclesMonths);
-            }
-
-            String maximumCyclesMonths = paymentPlans.getMaximumCyclesMonths();
-            if (!StringUtil.isNullOrEmpty(maximumCyclesMonths)) {
-                maxNumberOfMonths = Integer.parseInt(maximumCyclesMonths);
-            }
-        }
-
-        try {
-            int noOfMonths = Integer.parseInt(paymentPlanMonthNo.getText().toString());
-            if (noOfMonths < minNumberOfMonths) {
-                //minimum number of month should be 2
-                paymentPlanMonthInput.setError(String.format(
-                        Label.getLabel("payment_plan_min_months_error"), minNumberOfMonths));
-                paymentPlanMonthNo.requestFocus();
-                return false;
-            } else if (noOfMonths > maxNumberOfMonths) {
-                //maximum number of months should be 120 (10 yrs)
-                paymentPlanMonthInput.setError(String.format(
-                        Label.getLabel("payment_plan_max_months_error"), maxNumberOfMonths));
-                paymentPlanMonthNo.requestFocus();
-                return false;
-            }
-
-            double payment = Double.parseDouble(paymentPlanMonthlyPayment.getText().toString().replaceAll("[$,]", ""));
-            if (payment < minMonthlyPayment) {
-                //Minimum monthly payment amount = $10.00
-                paymentPlanMonthlyInput.setError(String.format(
-                        Label.getLabel("payment_plan_min_amount_error"),
-                        StringUtil.getFormattedBalanceAmount(minMonthlyPayment)));
-                paymentPlanMonthlyPayment.requestFocus();
-                return false;
-            } else if (payment > maxMonthlyPayment) {
-                //maximum monthly payment amount = $9999999999.99
-                paymentPlanMonthlyInput.setError(String.format(
-                        Label.getLabel("payment_plan_max_amount_error"),
-                        StringUtil.getFormattedBalanceAmount(maxMonthlyPayment)));
-                paymentPlanMonthlyPayment.requestFocus();
-                return false;
-            }
-        } catch (NumberFormatException nfe) {
-            Log.e(LOG_TAG, nfe.getMessage());
-            return false;
-        }
-
-        return true;
-    }
-
-    private void addNewCreditCard() {
-        callback.showAddCard(0, paymentsModel);
-//        FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
-//        PatientAddNewCreditCardFragment fragment = (PatientAddNewCreditCardFragment)
-//                fragmentmanager.findFragmentByTag(PatientAddNewCreditCardFragment.class.getSimpleName());
-//        if (fragment == null) {
-//            fragment = new PatientAddNewCreditCardFragment();
-//        }
-//
-//        Bundle args = new Bundle();
-//        Gson gson = new Gson();
-//        args.putSerializable(CarePayConstants.INTAKE_BUNDLE, paymentsModel);
-//        args.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(paymentsModel.getPaymentPayload().getPapiAccounts()));
-//        fragment.setArguments(args);
-//
-//        if (getActivity() instanceof PaymentActivity) {
-//            ((PaymentActivity) getActivity()).navigateToFragment(fragment, true);
-//        } else if (getActivity() instanceof DemographicsSettingsActivity) {
-//            ((DemographicsSettingsActivity) getActivity()).navigateToFragment(fragment, true);
-//        } else if (getActivity() instanceof ViewPaymentBalanceHistoryActivity) {
-//            ((ViewPaymentBalanceHistoryActivity) getActivity()).navigateToFragment(fragment, true);
-//        }
-    }
-
-    private void createPaymentPlan() {
-        if (allValid()) {
-            Gson gson = new Gson();
-            Map<String, String> queries = new HashMap<>();
-            JsonObject queryStringObject = paymentsModel.getPaymentsMetadata()
-                    .getPaymentsTransitions().getAddPaymentPlan().getQueryString();
-            QueryStrings queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
-
-            queries.put(queryStrings.getPracticeMgmt().getName(),
-                    paymentsModel.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeMgmt());
-            queries.put(queryStrings.getPracticeId().getName(),
-                    paymentsModel.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeId());
-            queries.put(queryStrings.getPatientId().getName(),
-                    paymentsModel.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPatientId());
-
-            TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getAddPaymentPlan();
-            getWorkflowServiceHelper().execute(transitionDTO, createPlanCallback, queries);
-        }
-    }
-
-    private WorkflowServiceCallback createPlanCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            showErrorNotification(exceptionMessage);
-            Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            isRecalculating = false;
         }
     };
+
+    private void showChooseDialog(Context context,
+                                  List<DemographicsOption> options,
+                                  String title,
+                                  final ValueInputCallback valueInputCallback) {
+
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+        // add cancel button
+        dialog.setNegativeButton(Label.getLabel("demographics_cancel_label"), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int pos) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        // create dialog layout
+        View customView = LayoutInflater.from(context).inflate(R.layout.alert_list_layout, null, false);
+        dialog.setView(customView);
+        TextView titleTextView = (TextView) customView.findViewById(R.id.title_view);
+        titleTextView.setText(title);
+        titleTextView.setVisibility(View.VISIBLE);
+
+
+        // create the adapter
+        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
+        CustomOptionsAdapter customOptionsAdapter = new CustomOptionsAdapter(context, options);
+        listView.setAdapter(customOptionsAdapter);
+
+
+        final AlertDialog alert = dialog.create();
+        alert.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        alert.show();
+
+        // set item click listener
+        AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long row) {
+                DemographicsOption selectedOption = (DemographicsOption) adapterView.getAdapter()
+                        .getItem(position);
+                paymentDateOption = selectedOption;
+                valueInputCallback.onValueInput(selectedOption.getLabel());
+                alert.dismiss();
+                enableCreatePlanButton();
+            }
+        };
+        listView.setOnItemClickListener(clickListener);
+    }
+
+    private interface ValueInputCallback{
+        void onValueInput(String input);
+    }
+
 }

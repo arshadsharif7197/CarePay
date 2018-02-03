@@ -56,9 +56,8 @@ import java.io.IOException;
 
 public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implements MediaViewInterface {
 
-    private DemographicDTO demographicDTO;
-    private DemographicDataModel dataModel;
 
+    private DemographicDataModel dataModel;
     private Button buttonChangeCurrentPhoto;
     boolean hasNewImage = false;
     private MediaScannerPresenter mediaScannerPresenter;
@@ -201,14 +200,14 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
                             .getLastName().isRequired(), lastNameValue, R.id.lastNameContainer,
                     R.id.reviewdemogrLastNameTextInput, isUserAction())) return false;
 
-            String dobValue = ((EditText) view.findViewById(R.id.revewidemogrDOBEdit)).getText().toString();
+            EditText dateOfBirth = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
+            String dobValue = dateOfBirth.getText().toString();
             if (validateField(view, dataModel.getDemographic().getPersonalDetails().getProperties()
                             .getDateOfBirth().isRequired(), dobValue, R.id.dobContainer,
                     R.id.reviewdemogrDOBTextInput, isUserAction())) return false;
 
             //This validation is required regardless of whether fields are required
             TextInputLayout dateBirthLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
-            EditText dateOfBirth = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
             if (dateBirthLayout.getVisibility() == View.VISIBLE &&
                     !StringUtil.isNullOrEmpty(dateOfBirth.getText().toString().trim())) {
                 String dateValidationResult = DateUtil
@@ -219,6 +218,8 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
                         showErrorViews(true, (ViewGroup) view.findViewById(R.id.dobContainer));
                     }
                     return false;
+                }else{
+                    unsetFieldError(dateBirthLayout);
                 }
             } else {
                 unsetFieldError(dateBirthLayout);
@@ -288,7 +289,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         String dateOfBirth = dobEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(dateOfBirth)) {
             // the date is DateUtil as
-            demographicPersDetailsPayloadDTO.setDateOfBirth(DateUtil.getInstance().setDateRaw(dateOfBirth).toStringWithFormatYyyyDashMmDashDd());
+            demographicPersDetailsPayloadDTO.setDateOfBirth(DateUtil.getInstance().setDateRaw(dateOfBirth, true).toStringWithFormatYyyyDashMmDashDd());
         }
 
         if (!StringUtil.isNullOrEmpty(base64ProfileImage)) {

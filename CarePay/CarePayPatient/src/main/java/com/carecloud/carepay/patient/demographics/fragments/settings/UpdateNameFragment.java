@@ -148,7 +148,7 @@ public class UpdateNameFragment extends DemographicsBaseSettingsFragment {
 
                 @Override
                 public void afterTextChanged(Editable editable) {
-                    checkIfEnableButton();
+                    checkIfEnableButton(false);
                 }
             });
         }
@@ -222,7 +222,7 @@ public class UpdateNameFragment extends DemographicsBaseSettingsFragment {
     };
 
     @Override
-    protected void checkIfEnableButton() {
+    protected void checkIfEnableButton(boolean userInteraction) {
         boolean isEnabled = passConstraints(false);
         if (updateProfileButton != null) {
             updateProfileButton.setEnabled(isEnabled);

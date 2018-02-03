@@ -81,9 +81,11 @@
     <!-- Checkin -->
     <color name="white_opacity_60">#99ffffff</color>
     <color name="black_opacity_70">#3c000000</color>
+    <color name="black_opacity_30">#4D000000</color>
     <color name="white_opacity_30">#4Dffffff</color>
 
     <color name="transparent_20">#33ffffff</color>
+    <color name="transparent_10">#19ffffff</color>
     <color name="optional_gray">#90a4ae</color>
     <color name="soft_sky">#9FE5ED</color>
     <color name="confirm_pin_sub_title">@color/soft_sky</color>

@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dialog_header_height"
             android:alpha="0.9"
-            android:background="@drawable/patient_mode_dialog_header_bg"
+            android:background="@drawable/practice_mode_dialog_header_bg"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
@@ -84,10 +84,11 @@
         android:id="@+id/payButtonContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
         android:background="@drawable/patient_mode_dialog_body_bg"
         android:padding="@dimen/dimen_10dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true">
+        android:visibility="gone">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/payment_details_pay_now_button"
@@ -97,7 +98,7 @@
             android:background="@drawable/green_rounded_button_selector"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_22sp"
-            app:customAssetFont="gotham_rounded_medium"/>
+            app:customAssetFont="gotham_rounded_medium" />
 
     </FrameLayout>
 
@@ -107,7 +108,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/payButtonContainer"
         android:layout_below="@id/payment_details_total_paid"
-        android:background="@color/white" />
+        android:background="@drawable/round_bottom_white_background" />
 
 
 </RelativeLayout>

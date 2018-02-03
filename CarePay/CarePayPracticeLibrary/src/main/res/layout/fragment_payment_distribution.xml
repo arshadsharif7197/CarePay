@@ -308,7 +308,7 @@
                                 android:background="@drawable/blue_border_rounded_button_selector"
                                 android:paddingEnd="@dimen/dimen_20dp"
                                 android:paddingStart="@dimen/dimen_20dp"
-                                android:textColor="@color/colorPrimary"
+                                android:textColor="@color/primary_color_enabled_selector"
                                 android:textSize="@dimen/text_size_14"
                                 breeze:textKey="payment_add_item_button"
                                 app:customAssetFont="gotham_rounded_medium"/>
@@ -387,7 +387,7 @@
                     android:background="@drawable/blue_border_rounded_button_selector"
                     android:paddingEnd="@dimen/dimen_60dp"
                     android:paddingStart="@dimen/dimen_60dp"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/primary_color_enabled_selector"
                     android:textSize="@dimen/text_size_22"
                     tools:text="Add Item"
                     breeze:textKey="payment_add_item"

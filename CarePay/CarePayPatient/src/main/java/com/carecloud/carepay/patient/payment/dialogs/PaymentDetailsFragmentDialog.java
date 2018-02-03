@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,18 +23,21 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
     private PendingBalanceDTO selectedBalance;
 
     /**
-     * @param paymentsModel  the payment model
-     * @param paymentPayload the PendingBalancePayloadDTO
+     * @param paymentsModel      the payment model
+     * @param paymentPayload     the PendingBalancePayloadDTO
+     * @param showPaymentButtons show payments button
      * @return new instance of a PaymentDetailsFragmentDialog
      */
     public static PaymentDetailsFragmentDialog newInstance(PaymentsModel paymentsModel,
                                                            PendingBalancePayloadDTO paymentPayload,
-                                                           PendingBalanceDTO selectedBalance) {
+                                                           PendingBalanceDTO selectedBalance,
+                                                           boolean showPaymentButtons) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPayload);
         DtoHelper.bundleDto(args, selectedBalance);
+        args.putBoolean("showPaymentButtons", showPaymentButtons);
 
         PaymentDetailsFragmentDialog dialog = new PaymentDetailsFragmentDialog();
         dialog.setArguments(args);
@@ -44,7 +46,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, getArguments());
     }
@@ -52,20 +54,36 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        onInitialization(view);
     }
 
+    @Override
     protected void onInitialization(View view) {
-        view.findViewById(R.id.closeViewLayout).setVisibility(View.GONE);
-        Button payNowButton = (Button) view.findViewById(R.id.payment_details_pay_now_button);
+        View payNowButton = view.findViewById(R.id.payment_details_pay_now_button);
         payNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.onPayButtonClicked(paymentPayload.getAmount(), paymentReceiptModel);
                 dismiss();
+                callback.onPayButtonClicked(paymentPayload.getAmount(), paymentReceiptModel);
+            }
+        });
+        View partialPaymentButton = view.findViewById(R.id.make_partial_payment_button);
+        partialPaymentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+                callback.onPartialPaymentClicked(paymentPayload.getAmount(), selectedBalance);
+            }
+        });
+        View paymentPlanButton = view.findViewById(R.id.createPaymentPlanButton);
+        paymentPlanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+                callback.onPaymentPlanAction(paymentReceiptModel);
             }
         });
 
+        boolean canMakePayments = false;
         if (paymentReceiptModel != null) {
             String practiceName = selectedBalance.getMetadata().getPracticeName();
             String totalAmount = StringUtil.getFormattedBalanceAmount(paymentPayload.getAmount());
@@ -76,11 +94,8 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
             ((TextView) view.findViewById(R.id.payment_receipt_total_value)).setText(totalAmount);
             ((TextView) view.findViewById(R.id.avTextView)).setText(StringUtil.getShortName(practiceName));
 
-            payNowButton.setText(Label.getLabel("payment_details_pay_now"));
-
             ImageView dialogCloseHeader = (ImageView) view.findViewById(R.id.dialog_close_header);
             if (dialogCloseHeader != null) {
-                dialogCloseHeader.setVisibility(View.VISIBLE);
                 dialogCloseHeader.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -89,9 +104,8 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                 });
             }
 
-            boolean canMakePayments = paymentReceiptModel.getPaymentPayload().canMakePayments(selectedBalance.getMetadata().getPracticeId());
-            payNowButton.setVisibility(canMakePayments ? View.VISIBLE : View.GONE);
-
+            canMakePayments = paymentReceiptModel.getPaymentPayload()
+                    .canMakePayments(selectedBalance.getMetadata().getPracticeId());
         }
 
         RecyclerView paymentDetailsRecyclerView = ((RecyclerView) view
@@ -101,6 +115,12 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         PaymentItemsListAdapter adapter = new PaymentItemsListAdapter(getContext(),
                 paymentPayload.getDetails());
         paymentDetailsRecyclerView.setAdapter(adapter);
+
+        boolean showPaymentButtons = getArguments().getBoolean("showPaymentButtons", false);
+        if (showPaymentButtons && canMakePayments) {
+            view.findViewById(R.id.paymentButtonsContainer).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.planButtonsContainer).setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

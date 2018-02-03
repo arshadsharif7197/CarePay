@@ -34,15 +34,12 @@
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="go_back_label" />
 
-        <Spinner
-            android:id="@+id/signinLangSpinner"
+        <include
+            layout="@layout/lang_spinner"
+            android:layout_marginTop="@dimen/dimen_20dp"
             android:layout_width="@dimen/home_spinner_width"
             android:layout_height="@dimen/home_spinner_height"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="@dimen/dimen_20dp"
-            android:background="@drawable/bg_blue_overlay"
-            android:paddingEnd="@dimen/home_spinner_padding_righ_left"
-            android:paddingStart="@dimen/home_spinner_padding_righ_left" />
+            android:layout_alignParentEnd="true" />
 
         <ImageView
             android:id="@+id/imageView"
@@ -52,6 +49,37 @@
             android:layout_marginTop="@dimen/dimen_20dp"
             android:src="?practiceLogoDrawable" />
     </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/languageContainer"
+        android:layout_width="@dimen/dimen_140dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/headerLayout"
+        android:layout_marginEnd="@dimen/dimen_15dp"
+        android:animateLayoutChanges="true"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_15dp"
+            android:background="@drawable/bottom_rounded_white"
+            android:minHeight="@dimen/dimen_60dp">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/languageList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="@dimen/dimen_25dp"
+            android:layout_height="@dimen/dimen_25dp"
+            android:layout_gravity="center|top"
+            android:src="@drawable/sort_up" />
+    </FrameLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

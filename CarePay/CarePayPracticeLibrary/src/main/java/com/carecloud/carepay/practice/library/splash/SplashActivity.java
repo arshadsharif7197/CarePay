@@ -12,6 +12,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
@@ -37,10 +38,7 @@ public class SplashActivity extends BasePracticeActivity {
 
         getWorkflowServiceHelper().executeApplicationStartRequest(applicationStartCallback);
 
-        //clear old Labels from Preferences
-        SharedPreferences preferences = ((AndroidPlatform) Platform.get())
-                .openSharedPreferences(AndroidPlatform.LABELS_FILE_NAME);
-        preferences.edit().clear().apply();
+        Label.clearLabels();
 
         setUncaughtExceptionHandler();
     }

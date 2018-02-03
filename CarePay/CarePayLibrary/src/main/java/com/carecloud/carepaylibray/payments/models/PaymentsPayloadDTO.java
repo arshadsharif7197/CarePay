@@ -5,6 +5,7 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.base.models.UserAuthModel;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItemPayload;
 import com.carecloud.carepaylibray.payments.models.history.PaymentsTransactionHistory;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Rahul on 11/30/16.
+ * Created by Rahul on 11/30/16
  */
 
 public class PaymentsPayloadDTO implements Serializable {
@@ -44,9 +45,9 @@ public class PaymentsPayloadDTO implements Serializable {
     @SerializedName("patient_credit_cards")
     @Expose
     private List<PaymentsPatientsCreditCardsPayloadListDTO> patientCreditCards = new ArrayList<>();
-    @SerializedName("patient_payment_plans")
+    @SerializedName("payment_plans")
     @Expose
-    private PaymentsPatientsPlansDTO patientPaymentPlans = new PaymentsPatientsPlansDTO();
+    private List<PaymentPlanDTO> patientPaymentPlans = new ArrayList<>();
     @SerializedName("patient_history")
     @Expose
     private PaymentsPatientHistoryDTO patientHistory = new PaymentsPatientHistoryDTO();
@@ -87,7 +88,12 @@ public class PaymentsPayloadDTO implements Serializable {
     @Expose
     private List<OptionDTO> languages = new ArrayList<>();
     @SerializedName("organization_id")
+    @Expose
     private String organizationId;
+    @SerializedName("auth")
+    @Expose
+    private UserAuthModel userAuthModel = new UserAuthModel();
+
 
     public List<PatientModel> getPatients() {
         return patients;
@@ -108,14 +114,14 @@ public class PaymentsPayloadDTO implements Serializable {
     /**
      * @return The patientPaymentPlans
      */
-    public PaymentsPatientsPlansDTO getPatientPaymentPlans() {
+    public List<PaymentPlanDTO> getPatientPaymentPlans() {
         return patientPaymentPlans;
     }
 
     /**
      * @param patientPaymentPlans The patient_payment_plans
      */
-    public void setPatientPaymentPlans(PaymentsPatientsPlansDTO patientPaymentPlans) {
+    public void setPatientPaymentPlans(List<PaymentPlanDTO> patientPaymentPlans) {
         this.patientPaymentPlans = patientPaymentPlans;
     }
 
@@ -315,6 +321,14 @@ public class PaymentsPayloadDTO implements Serializable {
 
     public void setLanguages(List<OptionDTO> languages) {
         this.languages = languages;
+    }
+
+    public UserAuthModel getUserAuthModel() {
+        return userAuthModel;
+    }
+
+    public void setUserAuthModel(UserAuthModel userAuthModel) {
+        this.userAuthModel = userAuthModel;
     }
 
     /**

@@ -23,6 +23,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.payments.adapter.CreditCardsListAdapter;
 import com.carecloud.carepaylibray.payments.interfaces.ChooseCreditCardInterface;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
@@ -35,6 +36,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -48,10 +50,10 @@ import java.util.Map;
 
 public class ChooseCreditCardFragment extends BasePaymentDialogFragment implements CreditCardsListAdapter.CreditCardSelectionListener {
 
-    private Button nextButton;
+    protected Button nextButton;
     private RecyclerView creditCardsRecyclerView;
 
-    private int selectedCreditCard = -1;
+    protected int selectedCreditCard = -1;
     protected PaymentsModel paymentsModel;
     private UserPracticeDTO userPracticeDTO;
     protected double amountToMakePayment;
@@ -263,8 +265,28 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
             queries.put("practice_id", metadata.getPracticeId());
             queries.put("patient_id", metadata.getPatientId());
         }
+
+        if(!StringUtil.isNullOrEmpty(paymentsModel.getPaymentPayload().getPaymentPostModel().getOrderId())){
+            IntegratedPaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
+            queries.put("store_id", paymentPostModel.getStoreId());
+            queries.put("transaction_id", paymentPostModel.getOrderId());
+        }
+
         if (callback.getAppointmentId() != null) {
             queries.put("appointment_id", callback.getAppointmentId());
+        }
+
+        if(queries.get("patient_id") == null) {
+            queries.remove("patient_id");
+            if (callback.getAppointment() != null) {
+                queries.put("patient_id", callback.getAppointment().getMetadata().getPatientId());
+            }else{
+                for(PatientBalanceDTO patientBalanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()){
+                    if(patientBalanceDTO.getBalances().get(0).getMetadata().getPracticeId().equals(queries.get("practice_id"))){
+                        queries.put("patient_id", patientBalanceDTO.getBalances().get(0).getMetadata().getPatientId());
+                    }
+                }
+            }
         }
 
         Map<String, String> header = new HashMap<>();
@@ -278,7 +300,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         MixPanelUtil.logEvent(getString(R.string.event_payment_started), params, values);
     }
 
-    private IntegratedPaymentCardData getCreditCardModel() {
+    protected IntegratedPaymentCardData getCreditCardModel() {
         PaymentCreditCardsPayloadDTO creditCardPayload = creditCardList.get(selectedCreditCard).getPayload();
 
         IntegratedPaymentCardData creditCardModel = new IntegratedPaymentCardData();
@@ -291,7 +313,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         return creditCardModel;
     }
 
-    private PapiPaymentMethod getPapiPaymentMethod() {
+    protected PapiPaymentMethod getPapiPaymentMethod() {
         PaymentCreditCardsPayloadDTO creditCardPayload = creditCardList.get(selectedCreditCard).getPayload();
         if (creditCardPayload.getCreditCardsId() == null) {
             return null;
@@ -314,16 +336,18 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            callback.showPaymentConfirmation(workflowDTO);
-            if (getDialog() != null) {
-                dismiss();
-            }
 
             String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
             Object[] values = {amountToMakePayment, getString(R.string.payment_card_on_file)};
             MixPanelUtil.logEvent(getString(R.string.event_payment_complete), params, values);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payments_completed), 1);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.total_payments_amount), amountToMakePayment);
+
+            callback.showPaymentConfirmation(workflowDTO);
+            if (getDialog() != null) {
+                dismiss();
+            }
+
         }
 
         @Override

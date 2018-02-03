@@ -19,6 +19,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentCardData;
@@ -28,6 +29,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPo
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -164,7 +166,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
     }
 
 
-    private void makePaymentCall() {
+    protected void makePaymentCall() {
         IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
         if (postModel != null && postModel.getAmount() > 0) {
             processPayment(postModel);
@@ -234,9 +236,30 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             queries.put("practice_id", metadata.getPracticeId());
             queries.put("patient_id", metadata.getPatientId());
         }
+
+        if(!StringUtil.isNullOrEmpty(paymentsModel.getPaymentPayload().getPaymentPostModel().getOrderId())){
+            IntegratedPaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
+            queries.put("store_id", paymentPostModel.getStoreId());
+            queries.put("transaction_id", paymentPostModel.getOrderId());
+        }
+
         if (callback.getAppointmentId() != null) {
             queries.put("appointment_id", callback.getAppointmentId());
         }
+
+        if(queries.get("patient_id") == null) {
+            queries.remove("patient_id");
+            if (callback.getAppointment() != null) {
+                queries.put("patient_id", callback.getAppointment().getMetadata().getPatientId());
+            }else{
+                for(PatientBalanceDTO patientBalanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()){
+                    if(patientBalanceDTO.getBalances().get(0).getMetadata().getPracticeId().equals(queries.get("practice_id"))){
+                        queries.put("patient_id", patientBalanceDTO.getBalances().get(0).getMetadata().getPatientId());
+                    }
+                }
+            }
+        }
+
         Map<String, String> header = new HashMap<>();
         header.put("transition", "true");
 
@@ -249,7 +272,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
 
     }
 
-    private IntegratedPaymentCardData getCreditCardModel() {
+    protected IntegratedPaymentCardData getCreditCardModel() {
         IntegratedPaymentCardData creditCardModel = new IntegratedPaymentCardData();
         creditCardModel.setCardType(creditCardsPayloadDTO.getCardType());
         creditCardModel.setCardNumber(creditCardsPayloadDTO.getCardNumber());

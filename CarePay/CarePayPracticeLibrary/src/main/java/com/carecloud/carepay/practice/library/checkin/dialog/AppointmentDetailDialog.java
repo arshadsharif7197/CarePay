@@ -25,16 +25,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.checkin.adapters.CheckedInAppointmentAdapter;
 import com.carecloud.carepay.practice.library.checkin.adapters.PagePickerAdapter;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerWindow;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepay.service.library.platform.AndroidPlatform;
+import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
@@ -164,7 +168,6 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         onInitialization();
         callGetCheckInStatusAPI(); //API call for getting check-in status
         onSetValuesFromDTO();
-//        onSettingStyle();
 
         if (getPatientBalance() == 0) {
             paymentButton.setEnabled(false);
@@ -242,7 +245,8 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
             medicationsCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_medications"));
             intakeCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_intake"));
             responsibilityCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_responsibility"));
-            title = String.format(Label.getLabel("practice_checkin_started_elapsed"), DateUtil.getContextualTimeElapsed(dateUtil.getDate(), new Date()));
+            title = String.format(Label.getLabel("practice_checkin_started_elapsed"),
+                    DateUtil.getContextualTimeElapsed(dateUtil.getDate(), new Date()));
         } else if (theRoom == CheckedInAppointmentAdapter.CHECKED_IN) {
             checkboxLayout.setVisibility(View.INVISIBLE);
             checkBoxes.add(demographicsCheckbox);
@@ -251,7 +255,8 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
             checkBoxes.add(responsibilityCheckbox);
             checkBoxes.add(medicationsCheckbox);
             medicationsCheckbox.setVisibility(View.GONE);
-            title = String.format(Label.getLabel("practice_checkin_complete_elapsed"), DateUtil.getContextualTimeElapsed(dateUtil.getDate(), new Date()));
+            title = String.format(Label.getLabel("practice_checkin_complete_elapsed"),
+                    DateUtil.getContextualTimeElapsed(dateUtil.getDate(), new Date()));
         } else if (theRoom == CheckedInAppointmentAdapter.CHECKING_OUT) {
             hourLabel.setBackgroundResource(R.drawable.right_rounded_background_light_gray);
             demographicsCheckbox.setText(Label.getLabel("next_appointment_title"));
@@ -259,7 +264,8 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
             medicationsCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_consent_forms"));
             intakeCheckbox.setVisibility(View.INVISIBLE);
             responsibilityCheckbox.setText(Label.getLabel("practice_checkin_detail_dialog_payment"));
-            title = String.format(Label.getLabel("practice_checkout_started_elapsed"), DateUtil.getContextualTimeElapsed(dateUtil.getDate(), new Date()));
+            title = String.format(Label.getLabel("practice_checkout_started_elapsed"),
+                    DateUtil.getContextualTimeElapsed(dateUtil.getDate(), new Date()));
         } else if (theRoom == CheckedInAppointmentAdapter.CHECKED_OUT) {
             hourLabel.setBackgroundResource(R.drawable.right_rounded_background_light_gray);
             checkboxLayout.setVisibility(View.INVISIBLE);
@@ -381,7 +387,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                 getPatientBalanceDetails(true);
             }
 
-            if(transition != null && callback != null) {
+            if (transition != null && callback != null) {
                 ((ISession) context).getWorkflowServiceHelper().execute(transition, callback, queryMap);
             }
         }
@@ -417,9 +423,9 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 AppointmentDTO appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, workflowDTO);
-                if(isCheckin) {
+                if (isCheckin) {
                     updateCheckinStatus(appointmentDTO.getPayload().getAppointmentStatus().getCheckinStatusDTO());
-                }else{
+                } else {
                     updateCheckoutStatus(appointmentDTO.getPayload().getAppointmentStatus().getCheckinStatusDTO());
                 }
                 updatePageOptions(workflowDTO);
@@ -445,8 +451,9 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         final Typeface bold = Typeface.createFromAsset(getContext().getAssets(), CustomAssetStyleable.FONT_PROXIMA_NOVA_EXTRA_BOLD);
 
         String[] sufixes = getOrdinalSufix();
+        String language = ApplicationPreferences.getInstance().getUserLanguage();
         if (placeInQueue != null) {
-            String place = ordinal(placeInQueue.getRank(), sufixes) + " " + Label.getLabel("practice_checkin_detail_dialog_in_queue");
+            String place = StringUtil.getOrdinal(language, placeInQueue.getRank()) + " " + Label.getLabel("practice_checkin_detail_dialog_in_queue");//ordinal(, sufixes)
             int rank = placeInQueue.getRank();
             switch (rank) {
                 case 1: {
@@ -642,18 +649,18 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
     }
 
-    private void updatePatientBalanceStatus(PaymentsModel paymentsModel){
+    private void updatePatientBalanceStatus(PaymentsModel paymentsModel) {
         List<PendingBalanceDTO> pendingBalances = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances();
-        if(!pendingBalances.isEmpty()){
+        if (!pendingBalances.isEmpty()) {
             patientBalancesLayout.setVisibility(View.VISIBLE);
             PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(getContext(), getAllPendingBalancePayloads(pendingBalances), this);
             patientBalancesRecycler.setAdapter(adapter);
         }
     }
 
-    protected List<PendingBalancePayloadDTO> getAllPendingBalancePayloads(List<PendingBalanceDTO> pendingBalances){
+    protected List<PendingBalancePayloadDTO> getAllPendingBalancePayloads(List<PendingBalanceDTO> pendingBalances) {
         List<PendingBalancePayloadDTO> pendingBalancePayloads = new ArrayList<>();
-        for(PendingBalanceDTO pendingBalance : pendingBalances){
+        for (PendingBalanceDTO pendingBalance : pendingBalances) {
             pendingBalancePayloads.addAll(pendingBalance.getPayload());
         }
         return pendingBalancePayloads;
@@ -740,7 +747,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
             @Override
             public void onPreExecute() {
-                if(!showInline) {
+                if (!showInline) {
                     sessionHandler.showProgressDialog();
                 }
             }
@@ -749,7 +756,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 sessionHandler.hideProgressDialog();
                 PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
-                if(showInline){
+                if (showInline) {
                     paymentDetailsModel = patientDetails;
                     updatePatientBalanceStatus(patientDetails);
                     pageButton.setEnabled(patientDetails.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getNotificationOptions().hasPushNotification());
@@ -815,7 +822,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
     @Override
     public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
-        String tag = PaymentDetailsFragmentDialog.class.getSimpleName();
+        String tag = PaymentDetailsFragmentDialog.class.getName();
         FragmentManager fragmentManager = ((BaseActivity) context).getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
         Fragment prev = fragmentManager.findFragmentByTag(tag);
@@ -823,7 +830,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
             ft.remove(prev);
         }
         PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-                .newInstance( paymentDetailsModel, paymentLineItem, true);
+                .newInstance(paymentDetailsModel, paymentLineItem, true);
         dialog.addOnDismissListener(new OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {

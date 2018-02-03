@@ -13,5 +13,7 @@
 
     <dimen name="visit_type_dialog_width">510dp</dimen>
     <dimen name="dialog_width">510dp</dimen>
+    <dimen name="fragmentDialogPaddingBottom">50dp</dimen>
+    <dimen name="fragmentDialogPaddingTop">50dp</dimen>
 
 </resources>

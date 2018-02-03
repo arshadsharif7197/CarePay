@@ -17,6 +17,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:background="@color/left_panel_color"
             android:orientation="vertical"
             android:paddingEnd="@dimen/dimen_5dp"
@@ -24,8 +26,8 @@
 
             <ImageView
                 android:id="@+id/goBackImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dimen_40dp"
+                android:layout_height="@dimen/dimen_40dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
                 android:layout_marginBottom="@dimen/dimen_20dp"
@@ -53,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@id/separator"
                 android:textColor="@color/white"
-                android:textSize="@dimen/dimen_30dp"
+                android:textSize="@dimen/text_size_30sp"
                 app:customAssetFont="gotham_rounded_bold"
                 breeze:textKey="adhoc_form_left_message"
                 tools:text="Read and sign the \nfollowing forms" />
@@ -67,21 +69,49 @@
                 android:layout_marginStart="@dimen/dimen_10dp"
                 android:layout_toEndOf="@id/goBackImageView"
                 android:textColor="@color/white"
+                android:textSize="@dimen/text_size_20sp"
                 app:customAssetFont="gotham_rounded_light"
                 breeze:textKey="demographics_back_text"
                 tools:text="Back" />
 
-            <Spinner
-                android:id="@+id/languageSpinner"
+            <include
+                layout="@layout/lang_spinner"
                 android:layout_width="@dimen/home_spinner_width"
                 android:layout_height="@dimen/home_spinner_height"
-                android:layout_marginStart="@dimen/dimen_20dp"
-                android:layout_marginBottom="@dimen/dimen_10dp"
-                android:layout_toEndOf="@id/goBackTextView"
                 android:layout_alignParentBottom="true"
-                android:background="@drawable/bg_blue_overlay"
-                android:paddingEnd="@dimen/home_spinner_padding_righ_left"
-                android:paddingStart="@dimen/home_spinner_padding_righ_left" />
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:layout_marginStart="@dimen/dimen_25dp"
+                android:layout_toEndOf="@id/goBackTextView" />
+
+            <FrameLayout
+                android:id="@+id/languageContainer"
+                android:layout_width="@dimen/dimen_180dp"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/languageSpinner"
+                android:layout_marginStart="@dimen/dimen_50dp"
+                android:animateLayoutChanges="true"
+                android:visibility="gone">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_15dp"
+                    android:background="@drawable/bottom_rounded_white"
+                    android:minHeight="@dimen/dimen_60dp">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/languageList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_25dp"
+                    android:layout_height="@dimen/dimen_25dp"
+                    android:layout_gravity="center|bottom"
+                    android:src="@drawable/sort_down" />
+            </FrameLayout>
 
         </RelativeLayout>
 

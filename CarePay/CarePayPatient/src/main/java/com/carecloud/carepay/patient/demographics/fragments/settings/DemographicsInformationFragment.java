@@ -138,7 +138,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         });
 
         initViews(view);
-        checkIfEnableButton();
+        checkIfEnableButton(false);
 
     }
 
@@ -281,7 +281,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
     }
 
     @Override
-    protected void checkIfEnableButton() {
+    protected void checkIfEnableButton(boolean userInteraction) {
         boolean isEnabled = passConstraints(false);
         if (nextButton != null) {
             nextButton.setSelected(isEnabled);
@@ -296,22 +296,25 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
             return false;
         }
 
-        String dobValue = ((EditText) view.findViewById(R.id.revewidemogrDOBEdit)).getText().toString();
+        String dobValue = dateOfBirthEditText.getText().toString();
         if (validateField(view, dataModel.getDemographic().getPersonalDetails().getProperties()
                         .getDateOfBirth().isRequired(), dobValue,
                 R.id.reviewdemogrDOBTextInput, isUserInteraction)) return false;
 
         //This validation is required regardless of whether fields are required
         TextInputLayout dateBirthLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
-        EditText dateOfBirth = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
         if (dateBirthLayout.getVisibility() == View.VISIBLE &&
-                !StringUtil.isNullOrEmpty(dateOfBirth.getText().toString().trim())) {
+                !StringUtil.isNullOrEmpty(dateOfBirthEditText.getText().toString().trim())) {
             String dateValidationResult = DateUtil
-                    .getDateOfBirthValidationResultMessage(dateOfBirth.getText().toString().trim());
+                    .getDateOfBirthValidationResultMessage(dateOfBirthEditText.getText().toString().trim());
             if (dateValidationResult != null) {
                 setFieldError(dateBirthLayout, dateValidationResult, isUserInteraction);
                 return false;
+            } else {
+                unsetFieldError(dateBirthLayout);
             }
+        } else {
+            unsetFieldError(dateBirthLayout);
         }
 
         String phoneValue = ((EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit)).getText().toString();
@@ -442,7 +445,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         String dobString = dateOfBirthEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(dobString)) {
             // the date is DateUtil as
-            patientModel.setDateOfBirth(DateUtil.getInstance().setDateRaw(dobString).toStringWithFormatYyyyDashMmDashDd());
+            patientModel.setDateOfBirth(DateUtil.getInstance().setDateRaw(dobString, true).toStringWithFormatYyyyDashMmDashDd());
         }
 
         String gender = selectedGender.getName();

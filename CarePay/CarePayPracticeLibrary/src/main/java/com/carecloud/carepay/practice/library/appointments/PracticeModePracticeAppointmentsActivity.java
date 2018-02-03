@@ -43,6 +43,7 @@ import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentDetailInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -144,6 +145,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
         TextView addAppointmentTextView = (TextView) findViewById(R.id.activity_practice_appointments_add);
         addAppointmentTextView.setOnClickListener(getFindPatientListener(false));
+        addAppointmentTextView.setEnabled(checkInDTO.getPayload().getUserAuthModel().getUserAuthPermissions().canScheduleAppointment);
 
         findViewById(R.id.practice_go_back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -439,9 +441,11 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         PracticeAppointmentDialog dialog = PracticeAppointmentDialog.newInstance(
                 dialogStyle,
                 appointmentDTO,
+                checkInDTO.getPayload().getUserAuthModel().getUserAuthPermissions(),
                 PracticeModePracticeAppointmentsActivity.this
         );
         displayDialogFragment(dialog, true);
+        setPatientId(appointmentDTO.getMetadata().getPatientId());
     }
 
     private void confirmAppointment(AppointmentDTO appointmentDTO) {
@@ -535,10 +539,11 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
 
     private void showResponsibilityFragment(PaymentsModel paymentsModel) {
-        String tag = ResponsibilityFragmentDialog.class.getSimpleName();
+        String tag = ResponsibilityFragmentDialog.class.getName();
         ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(paymentsModel);
         FormsResponsibilityFragmentDialog dialog = FormsResponsibilityFragmentDialog
                 .newInstance(paymentsModel,
+                        checkInDTO.getPayload().getUserAuthModel().getUserAuthPermissions(),
                         Label.getLabel("adhoc_show_forms_button_label"),
                         Label.getLabel("add_appointment_label"),
                         Label.getLabel("payment_balance_empty_appointment_screen"),
@@ -650,7 +655,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                         .fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
                 AdHocFormsListFragment fragment = AdHocFormsListFragment
                         .newInstance(appointmentsResultModel, patientId);
-                fragment.show(getSupportFragmentManager(), "forms");
+                displayDialogFragment(fragment, false);
                 fragment.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -677,7 +682,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void onDetailItemClick(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem) {
-        String tag = PaymentDetailsFragmentDialog.class.getSimpleName();
+        String tag = PaymentDetailsFragmentDialog.class.getName();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
         if (prev != null) {
@@ -755,6 +760,16 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
+
+    }
+
+    @Override
+    public void onPayLaterClicked(PendingBalanceDTO pendingBalanceDTO) {
+
+    }
+
+    @Override
+    public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
 
     }
 }

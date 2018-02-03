@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.common.DocumentDetailFragment;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPhotoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
@@ -47,7 +49,7 @@ public class DocumentScannerAdapter {
     public static final int FRONT_PIC = 1;
     public static final int BACK_PIC = 2;
 
-    public interface ImageLoadCallback{
+    public interface ImageLoadCallback {
         void onImageLoadCompleted(boolean success);
     }
 
@@ -63,33 +65,38 @@ public class DocumentScannerAdapter {
 
     /**
      * Adapter for managing Document Scanner Views
-     * @param context context
-     * @param view base view
+     *
+     * @param context               context
+     * @param view                  base view
      * @param mediaScannerPresenter media scanner presenter
-     * @param applicationType application mode
+     * @param applicationType       application mode
      */
-    public DocumentScannerAdapter(Context context, View view, MediaScannerPresenter mediaScannerPresenter, ApplicationMode.ApplicationType applicationType){
+    public DocumentScannerAdapter(Context context, View view, MediaScannerPresenter mediaScannerPresenter,
+                                  ApplicationMode.ApplicationType applicationType) {
         this(context, view, mediaScannerPresenter, applicationType, true);
     }
 
     /**
      * Adapter for managing Document Scanner Views
-     * @param context context
-     * @param view base view
+     *
+     * @param context               context
+     * @param view                  base view
      * @param mediaScannerPresenter media scanner presenter
-     * @param applicationType application mode
+     * @param applicationType       application mode
      */
-    public DocumentScannerAdapter(Context context, View view, MediaScannerPresenter mediaScannerPresenter, ApplicationMode.ApplicationType applicationType, boolean initScanViews){
+    public DocumentScannerAdapter(Context context, View view, MediaScannerPresenter mediaScannerPresenter,
+                                  ApplicationMode.ApplicationType applicationType,
+                                  boolean initScanViews) {
         this.context = context;
         this.mediaScannerPresenter = mediaScannerPresenter;
         this.applicationType = applicationType;
-        if(initScanViews) {
+        if (initScanViews) {
             initViews(view);
         }
     }
 
 
-    private void initViews(View view){
+    private void initViews(View view) {
         imageFront = (ImageView) view.findViewById(R.id.demogrDocsFrontScanImage);
         imageBack = (ImageView) view.findViewById(R.id.demogrDocsBackScanImage);
 
@@ -116,17 +123,18 @@ public class DocumentScannerAdapter {
 
     /**
      * Setup Documents from Dto Data
+     *
      * @param docPayloadDTO DemographicIdDocPayloadDTO
      */
-    public void setIdDocumentsFromData(DemographicIdDocPayloadDTO docPayloadDTO){
+    public void setIdDocumentsFromData(DemographicIdDocPayloadDTO docPayloadDTO) {
         String frontPic = null;
         String backPic = null;
-        if(docPayloadDTO !=null && !docPayloadDTO.getIdDocPhothos().isEmpty()){
-            for(DemographicIdDocPhotoDTO docPhotoDTO : docPayloadDTO.getIdDocPhothos()){
-                if(docPhotoDTO.getPage()==FRONT_PIC){
+        if (docPayloadDTO != null && !docPayloadDTO.getIdDocPhothos().isEmpty()) {
+            for (DemographicIdDocPhotoDTO docPhotoDTO : docPayloadDTO.getIdDocPhothos()) {
+                if (docPhotoDTO.getPage() == FRONT_PIC) {
                     frontPic = docPhotoDTO.getIdDocPhoto();
                 }
-                if(docPhotoDTO.getPage()==BACK_PIC){
+                if (docPhotoDTO.getPage() == BACK_PIC) {
                     backPic = docPhotoDTO.getIdDocPhoto();
                 }
             }
@@ -138,28 +146,44 @@ public class DocumentScannerAdapter {
 
         if (!StringUtil.isNullOrEmpty(frontPic)) {
             setImageView(frontPic, imageFront, false);
+            final String finalFrontPic = frontPic;
+            imageFront.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(finalFrontPic);
+                    fragment.show(((BaseActivity) context).getSupportFragmentManager(), "detail");
+                }
+            });
         }
-
 
         if (!StringUtil.isNullOrEmpty(backPic)) {
             setImageView(backPic, imageBack, false);
+            final String finalBackPic = backPic;
+            imageBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(finalBackPic);
+                    fragment.show(((BaseActivity) context).getSupportFragmentManager(), "detail");
+                }
+            });
         }
     }
 
     /**
      * Setup Insurance Photos from Dto Data
+     *
      * @param insurancePayloadDTO DemographicInsurancePayloadDTO
      */
-    public void setInsuranceDocumentsFromData(DemographicInsurancePayloadDTO insurancePayloadDTO){
+    public void setInsuranceDocumentsFromData(DemographicInsurancePayloadDTO insurancePayloadDTO) {
         String frontPic = null;
         String backPic = null;
 
-        if(insurancePayloadDTO != null && !insurancePayloadDTO.getInsurancePhotos().isEmpty()){
-            for(DemographicInsurancePhotoDTO photoDTO : insurancePayloadDTO.getInsurancePhotos()){
-                if(photoDTO.getPage() == FRONT_PIC){
+        if (insurancePayloadDTO != null && !insurancePayloadDTO.getInsurancePhotos().isEmpty()) {
+            for (DemographicInsurancePhotoDTO photoDTO : insurancePayloadDTO.getInsurancePhotos()) {
+                if (photoDTO.getPage() == FRONT_PIC) {
                     frontPic = photoDTO.getInsurancePhoto();
                 }
-                if(photoDTO.getPage() == BACK_PIC){
+                if (photoDTO.getPage() == BACK_PIC) {
                     backPic = photoDTO.getInsurancePhoto();
                 }
             }
@@ -167,21 +191,38 @@ public class DocumentScannerAdapter {
 
         if (!StringUtil.isNullOrEmpty(frontPic)) {
             setImageView(frontPic, imageFront, false);
+            final String finalFrontPic = frontPic;
+            imageFront.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(finalFrontPic);
+                    fragment.show(((BaseActivity) context).getSupportFragmentManager(), "detail");
+                }
+            });
         }
 
 
         if (!StringUtil.isNullOrEmpty(backPic)) {
             setImageView(backPic, imageBack, false);
+            final String finalBackPic = backPic;
+            imageBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(finalBackPic);
+                    fragment.show(((BaseActivity) context).getSupportFragmentManager(), "detail");
+                }
+            });
         }
     }
 
     /**
      * Show image from path
-     * @param filePath can be a file path, other URI, or Base64 string
-     * @param view view to add image
+     *
+     * @param filePath     can be a file path, other URI, or Base64 string
+     * @param view         view to add image
      * @param updateButton should update the corresponding button text
      */
-    public void setImageView(String filePath, final View view, final boolean updateButton){
+    public void setImageView(String filePath, final View view, final boolean updateButton) {
         final ImageView imageView = (ImageView) view;
 
         imageView.measure(View.MeasureSpec.EXACTLY, View.MeasureSpec.EXACTLY);
@@ -194,28 +235,31 @@ public class DocumentScannerAdapter {
 
     /**
      * Show image from path
-     * @param filePath can be a file path, other URI, or Base64 string
-     * @param view view to add image
-     * @param updateButton should update the corresponding button text
-     * @param width target width
-     * @param height target height
+     *
+     * @param filePath           can be a file path, other URI, or Base64 string
+     * @param view               view to add image
+     * @param updateButton       should update the corresponding button text
+     * @param width              target width
+     * @param height             target height
      * @param placeholderImageId placeholder drawable id
-     * @param callback completion callback
+     * @param callback           completion callback
      */
-    public void setImageView(String filePath, final View view, final boolean updateButton, final int width, final int height, final int placeholderImageId, final ImageLoadCallback callback) {
+    public void setImageView(final String filePath, final View view, final boolean updateButton,
+                             final int width, final int height, final int placeholderImageId,
+                             final ImageLoadCallback callback) {
         final ImageView imageView = (ImageView) view;
 
         File file = new File(filePath);
         Uri fileUri;
-        if(file.exists()){
+        if (file.exists()) {
             fileUri = Uri.fromFile(file);
-        }else{
+        } else {
             //check if we have a base64 image instead of an URI
             Bitmap bitmap = SystemUtil.convertStringToBitmap(filePath);
-            if(bitmap!=null) {
-                File temp = ImageCaptureHelper.getBitmapFileUrl(context, bitmap, "temp_"+System.currentTimeMillis());
+            if (bitmap != null) {
+                File temp = ImageCaptureHelper.getBitmapFileUrl(context, bitmap, "temp_" + System.currentTimeMillis());
                 fileUri = Uri.fromFile(temp);
-            }else {
+            } else {
                 fileUri = Uri.parse(filePath);
             }
         }
@@ -225,91 +269,99 @@ public class DocumentScannerAdapter {
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .transform(new RoundedCornersTransformation(10, 0));
 
-        if(width > 0 || height > 0){
+        if (width > 0 || height > 0) {
             picassoRequest = picassoRequest
                     .resize(width, height)
                     .centerInside();
         }
 
         picassoRequest.into(imageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        if(width > 0 || height > 0) {
-                            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                            ViewGroup.LayoutParams lp = imageView.getLayoutParams();
-                            lp.width = width;
-                            lp.height = height;
-                            imageView.setLayoutParams(lp);
-                        }
-                        if(updateButton) {
-                            if (view.getId() == getFrontImageId()) {
-                                setFrontRescan();
-                            }
-
-                            if (view.getId() == getBackImageId()) {
-                                setBackRescan();
-                            }
-                        }
-                        if(callback!=null){
-                            callback.onImageLoadCompleted(true);
-                        }
+            @Override
+            public void onSuccess() {
+                if (width > 0 || height > 0) {
+                    imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                    ViewGroup.LayoutParams lp = imageView.getLayoutParams();
+                    lp.width = width;
+                    lp.height = height;
+                    imageView.setLayoutParams(lp);
+                }
+                if (updateButton) {
+                    if (view.getId() == getFrontImageId()) {
+                        setFrontRescan();
                     }
 
+                    if (view.getId() == getBackImageId()) {
+                        setBackRescan();
+                    }
+                }
+                imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onError() {
-                        int imageId = placeholderImageId;
-                        if(imageId <= 0 ){
-                            imageId = R.drawable.icn_placeholder_document;
-                        }
-                        imageView.setImageDrawable(ContextCompat.getDrawable(context,
-                                imageId));
-                        if(callback!=null){
-                            callback.onImageLoadCompleted(false);
-                        }
+                    public void onClick(View view) {
+                        DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(filePath);
+                        fragment.show(((BaseActivity) context).getSupportFragmentManager(), "detail");
                     }
                 });
+                if (callback != null) {
+                    callback.onImageLoadCompleted(true);
+                }
+            }
+
+            @Override
+            public void onError() {
+                int imageId = placeholderImageId;
+                if (imageId <= 0) {
+                    imageId = R.drawable.icn_placeholder_document;
+                }
+                imageView.setImageDrawable(ContextCompat.getDrawable(context,
+                        imageId));
+                if (callback != null) {
+                    callback.onImageLoadCompleted(false);
+                }
+            }
+        });
 
     }
 
-    public int getFrontImageId(){
+    public int getFrontImageId() {
         return imageFront.getId();
     }
 
-    public int getBackImageId(){
+    public int getBackImageId() {
         return imageBack.getId();
     }
 
-    public void setFrontRescan(){
+    public void setFrontRescan() {
         scanFrontButton.setText(Label.getLabel("demographics_documents_rescan_front"));
     }
 
-    public void setBackRescan(){
+    public void setBackRescan() {
         scanBackButton.setText(Label.getLabel("demographics_documents_rescan_back"));
     }
 
     /**
      * Get Base64 encoded string from File or URI
+     *
      * @param filePath file path or Uri
      * @return Base64 string if filepath is valid
      */
-    public static String getBase64(Context context, String filePath){
-        if(filePath == null){
+    public static String getBase64(Context context, String filePath) {
+        if (filePath == null) {
             return null;
         }
 
         File file = new File(filePath);
         Bitmap bitmap = null;
-        if(file.exists()) {
+        if (file.exists()) {
             bitmap = BitmapFactory.decodeFile(filePath);
-        }else{
+        } else {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(filePath));
-            }catch (IOException ioe){
+            } catch (IOException ioe) {
                 //do nothing
             }
         }
 
-        if(bitmap != null){
+        if (bitmap != null) {
             return SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
         }
         return null;

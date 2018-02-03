@@ -21,7 +21,7 @@ import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
 import com.carecloud.carepay.practice.library.patientmodecheckin.PatientModeDemographicsPresenter;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePartialPaymentDialogFragment;
@@ -76,8 +76,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     private View[] checkInFlowViews;
     private MediaResultListener resultListener;
 
-    private boolean isUserInteraction = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Bundle icicle = savedInstanceState;
@@ -94,9 +92,9 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         super.onCreate(icicle);
         setContentView(R.layout.activity_demographic_review);
 
+        presenter = new PatientModeDemographicsPresenter(this, icicle, this);
         initializeHomeButton();
         initializeLeftNavigation();
-        presenter = new PatientModeDemographicsPresenter(this, icicle, this);
         initializeLanguageSpinner();
 
     }
@@ -111,7 +109,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 findViewById(R.id.languageContainer).setVisibility(View.GONE);
             }
         }, 25);
-        isUserInteraction = true;
     }
 
     private void initializeLanguageSpinner() {
@@ -123,7 +120,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             }
         }
 
-        TextView languageSwitch = (TextView) findViewById(R.id.languageSpinner);
+        final TextView languageSwitch = (TextView) findViewById(R.id.languageSpinner);
         final View languageContainer = findViewById(R.id.languageContainer);
         languageSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,25 +141,20 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             @Override
             public void onLanguageSelected(OptionDTO language) {
                 languageContainer.setVisibility(View.GONE);
-                if (presenter.getCurrentStep() < 6) {
-                    changeLanguage(presenter.getLanguageLink(), language.getCode().toLowerCase(), headers);
-                } else {
-                    changeLanguage(presenter.getLanguageLink(), language.getCode().toLowerCase(), headers,
-                            new SimpleCallback() {
-                                @Override
-                                public void callback() {
-                                    presenter.changeLanguage();
-                                    changeMenuLanguage();
-                                }
-                            });
-                }
+                changeLanguage(presenter.getLanguageLink(), language.getCode().toLowerCase(), headers,
+                        new SimpleCallback() {
+                            @Override
+                            public void callback() {
+                                presenter.changeLanguage();
+                                changeMenuLanguage();
+                                languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
+                            }
+                        });
             }
         });
     }
 
     private void changeMenuLanguage() {
-        ((TextView) findViewById(R.id.checkInLeftNavigationTitle))
-                .setText(Label.getLabel("practice_checkin_header_label"));
         initializeLeftNavigation();
     }
 
@@ -275,6 +267,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     private void initializeLeftNavigation() {
+        ((TextView) findViewById(R.id.checkInLeftNavigationTitle))
+                .setText(Label.getLabel("practice_checkin_header_label"));
         checkInFlowViews = new View[]{
                 findViewById(R.id.checkin_flow_demographics),
                 findViewById(R.id.checkin_flow_consent),
@@ -305,7 +299,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     public void getPaymentInformation(final String workflowJson) {
         ResponsibilityCheckInFragment responsibilityFragment = new ResponsibilityCheckInFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(PaymentsModel.class.getSimpleName(), workflowJson);
+        bundle.putString(PaymentsModel.class.getName(), workflowJson);
         responsibilityFragment.setArguments(bundle);
         presenter.navigateToFragment(responsibilityFragment, true);
         updateCheckInFlow(CheckinFlowState.PAYMENT, 1, 1);
@@ -427,7 +421,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void onPaymentPlanAction(PaymentsModel paymentsModel) {
-        PatientPaymentPlanFragment fragment = new PatientPaymentPlanFragment();
+        PracticePaymentPlanFragment fragment = new PracticePaymentPlanFragment();
 
         Bundle args = new Bundle();
         Gson gson = new Gson();
@@ -607,10 +601,4 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         }
 
     }
-
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-////        findViewById(R.id.languageContainer).setVisibility(View.GONE);
-//        return super.dispatchTouchEvent(ev);
-//    }
 }

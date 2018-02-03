@@ -20,6 +20,7 @@ public class NotificationModel {
     @Expose
     private String practiceId;
 
+    @SerializedName("alert")
     @Expose
     private String alert;
 
