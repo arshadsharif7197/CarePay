@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.payment.fragments;
+package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,12 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.payments.fragments.BasePaymentDialogFragment;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
@@ -32,11 +31,17 @@ import java.util.Map;
 
 public class PaymentPlanTermsFragment extends BasePaymentDialogFragment {
 
-    private PaymentsModel paymentsModel;
-    private PaymentPlanPostModel paymentPlanPostModel;
-    private PaymentPlanInterface callback;
+    protected PaymentsModel paymentsModel;
+    protected PaymentPlanPostModel paymentPlanPostModel;
+    protected PaymentPlanInterface callback;
 
 
+    /**
+     * Constructor
+     * @param paymentsModel payment model
+     * @param paymentPlanPostModel post model
+     * @return new instance
+     */
     public static PaymentPlanTermsFragment newInstance(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel){
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
@@ -88,7 +93,7 @@ public class PaymentPlanTermsFragment extends BasePaymentDialogFragment {
         termsText.setText(Label.getLabel("payment_agree_to_pay_terms"));
     }
 
-    private void setupTitleViews(View view) {
+    protected void setupTitleViews(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         if (toolbar != null) {
             TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
@@ -103,21 +108,16 @@ public class PaymentPlanTermsFragment extends BasePaymentDialogFragment {
                     }
                 });
             } else {
-                View close = view.findViewById(R.id.closeViewLayout);
-                if (close != null) {
-                    close.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            dismiss();
-                        }
-                    });
-                }
                 ViewGroup.LayoutParams layoutParams = title.getLayoutParams();
                 layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
                 title.setLayoutParams(layoutParams);
                 title.setGravity(Gravity.CENTER_HORIZONTAL);
             }
         }
+    }
+
+    protected void onPaymentPlanSubmitted(WorkflowDTO workflowDTO){
+        callback.onSubmitPaymentPlan(workflowDTO);
     }
 
     private void submitPaymentPlan(){
@@ -142,7 +142,7 @@ public class PaymentPlanTermsFragment extends BasePaymentDialogFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            callback.onSubmitPaymentPlan();//todo
+            onPaymentPlanSubmitted(workflowDTO);
         }
 
         @Override

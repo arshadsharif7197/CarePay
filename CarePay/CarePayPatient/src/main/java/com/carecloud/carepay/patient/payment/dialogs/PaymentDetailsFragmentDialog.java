@@ -12,7 +12,10 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.adapters.PaymentItemsListAdapter;
 import com.carecloud.carepaylibray.customdialogs.BasePaymentDetailsFragmentDialog;
+import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -66,7 +69,10 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                 callback.onPayButtonClicked(paymentPayload.getAmount(), paymentReceiptModel);
             }
         });
+
         View partialPaymentButton = view.findViewById(R.id.make_partial_payment_button);
+        partialPaymentButton.setVisibility(isPartialPayAvailable(selectedBalance.getMetadata().getPracticeId(), paymentPayload.getAmount())
+                ? View.VISIBLE : View.GONE);
         partialPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,7 +80,10 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                 callback.onPartialPaymentClicked(paymentPayload.getAmount(), selectedBalance);
             }
         });
+
         View paymentPlanButton = view.findViewById(R.id.createPaymentPlanButton);
+        paymentPlanButton.setVisibility(isPaymentPlanAvailable(selectedBalance.getMetadata().getPracticeId(), paymentPayload.getAmount())
+                ? View.VISIBLE : View.GONE);
         paymentPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -131,6 +140,41 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
     @Override
     protected int getContentLayout() {
         return R.layout.fragment_patient_dialog_payment_details;
+    }
+
+    protected boolean isPartialPayAvailable(String practiceId, double total) {
+        if (practiceId != null) {
+            for (PaymentsPayloadSettingsDTO payloadSettingsDTO : paymentReceiptModel.getPaymentPayload().getPaymentSettings()) {
+                if (practiceId.equals(payloadSettingsDTO.getMetadata().getPracticeId())) {
+                    if (payloadSettingsDTO.getPayload().getRegularPayments().isAllowPartialPayments()) {
+                        double minBalance = payloadSettingsDTO.getPayload().getRegularPayments().getPartialPaymentsThreshold();
+                        double minPayment = payloadSettingsDTO.getPayload().getRegularPayments().getMinimumPartialPaymentAmount();
+                        return total >= minBalance && total >= minPayment;
+                    }
+
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    protected boolean isPaymentPlanAvailable(String practiceId, double balance){
+        if(practiceId != null) {
+            for(PaymentsPayloadSettingsDTO payloadSettingsDTO : paymentReceiptModel.getPaymentPayload().getPaymentSettings()) {
+                if (practiceId.equals(payloadSettingsDTO.getMetadata().getPracticeId())) {
+                    PaymentsSettingsPaymentPlansDTO paymentPlanSettings = payloadSettingsDTO.getPayload().getPaymentPlans();
+                    if (paymentPlanSettings.isPaymentPlansEnabled()) {
+                        for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
+                            if (balance > rule.getMinBalanceRequired().getValue()) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 }

@@ -2,11 +2,16 @@ package com.carecloud.carepay.practice.library.payments.dialogs;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.models.UserAuthPermissions;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
@@ -19,25 +24,23 @@ public class FormsResponsibilityFragmentDialog extends ResponsibilityFragmentDia
     private UserAuthPermissions authPermissions;
 
     /**
-     * @param paymentsModel the payment model
-     * @param leftLabel     the label of the left bottom button
-     * @param rightLabel    the label of the right bottom button
-     * @return new instance of a ResponsibilityFragmentDialog
+     * Ger Instance
+     * @param paymentsModel payment model
+     * @param authPermissions permissions
+     * @param headerModel heaer
+     * @param selectedBalance patient balance
+     * @return instance
      */
     public static FormsResponsibilityFragmentDialog newInstance(PaymentsModel paymentsModel,
                                                            UserAuthPermissions authPermissions,
-                                                           String leftLabel,
-                                                           String rightLabel,
-                                                           String emptyMessage,
-                                                           ResponsibilityHeaderModel headerModel) {
+                                                           ResponsibilityHeaderModel headerModel,
+                                                                PatientBalanceDTO selectedBalance) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, headerModel);
         DtoHelper.bundleDto(args, authPermissions);
-        args.putString(KEY_LEFT_BUTTON, leftLabel);
-        args.putString(KEY_RIGHT_BUTTON, rightLabel);
-        args.putString(KEY_EMPTY_MESSAGE, emptyMessage);
+        DtoHelper.bundleDto(args, selectedBalance);
 
         FormsResponsibilityFragmentDialog dialog = new FormsResponsibilityFragmentDialog();
         dialog.setArguments(args);
@@ -53,15 +56,24 @@ public class FormsResponsibilityFragmentDialog extends ResponsibilityFragmentDia
     }
 
     @Override
-    protected int getContentLayout() {
-        return R.layout.fragment_dialog_payment_responsibility_forms;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
+        return inflater.inflate(R.layout.fragment_dialog_payment_responsibility_forms, container, false);
     }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        enableById(R.id.payment_pay_button, authPermissions.canScheduleAppointment);
+        View addAppt = view.findViewById(R.id.payment_pay_button);
+        addAppt.setEnabled(authPermissions.canScheduleAppointment);
+
+        TextView message = (TextView) view.findViewById(R.id.no_payment_message);
+        message.setText(Label.getLabel("payment_balance_empty_appointment_screen"));
+
+        View leftButton = view.findViewById(R.id.payment_plan_button);
+        leftButton.setVisibility(View.VISIBLE);
+
     }
 
 
