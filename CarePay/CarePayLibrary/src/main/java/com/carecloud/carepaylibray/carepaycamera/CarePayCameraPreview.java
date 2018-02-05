@@ -339,7 +339,8 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
      * True if this device has a camera
      */
     private boolean checkCameraHardware() {
-        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
+        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA) ||
+                context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT);
     }
 
     /**
