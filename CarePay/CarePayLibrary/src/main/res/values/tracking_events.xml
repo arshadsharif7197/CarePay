@@ -96,6 +96,7 @@
     <string name="people_has_insurance_doc">Has Insurance Document</string>
     <string name="people_enabled_push">Has Push Notifications Enabled</string>
     <string name="people_enabled_email">Has Email Notifications Enabled</string>
+    <string name="people_enabled_sms">Has SMS Notifications Enabled</string>
 
 
     <!--Enum Values-->
