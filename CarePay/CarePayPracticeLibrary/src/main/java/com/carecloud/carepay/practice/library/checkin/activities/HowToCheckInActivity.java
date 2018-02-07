@@ -207,6 +207,10 @@ public class HowToCheckInActivity extends BasePracticeActivity {
 
             MixPanelUtil.setUser(this, scanQRCodeResultDTO.getUserId(), null);
 
+            String[] params = {getString(R.string.param_login_type), getString(R.string.param_app_mode)};
+            Object[] values = {getString(R.string.login_qr), getString(R.string.app_mode_patient)};
+            MixPanelUtil.logEvent(getString(R.string.event_signin_loginSuccess), params, values);
+
             // getApplicationMode().getUserPracticeDTO().setUserName(scanQRCodeResultDTO.getUserName());
             Map<String, String> queryMap = new HashMap<String, String>();
             queryMap.put("appointment_id", scanQRCodeResultDTO.getAppointmentId());
