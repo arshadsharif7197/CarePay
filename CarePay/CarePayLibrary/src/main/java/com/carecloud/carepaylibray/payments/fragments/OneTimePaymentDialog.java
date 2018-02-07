@@ -1,10 +1,15 @@
 package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
+import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanHistory;
@@ -32,6 +37,7 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
     private PaymentPlanDTO paymentPlanDTO;
     private PaymentsModel paymentsDTO;
     private Context context;
+    private OneTimePaymentInterface callback;
 
     private Map<String, PaymentPlanLineItem> currentPlanItems = new HashMap<>();
     private Map<String, BalanceItemDTO> currentBalanceItems = new HashMap<>();
@@ -43,13 +49,21 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
      * @param paymentsDTO     payment model
      * @param paymentPlanDTO  payment plan
      */
-    public OneTimePaymentDialog(Context context, PaymentsModel paymentsDTO, PaymentPlanDTO paymentPlanDTO) {
+    public OneTimePaymentDialog(Context context, PaymentsModel paymentsDTO, PaymentPlanDTO paymentPlanDTO, OneTimePaymentInterface callback) {
         super(context, paymentsDTO, null);
         this.context = context;
         this.paymentsDTO = paymentsDTO;
         this.paymentPlanDTO = paymentPlanDTO;
-        initPlanItems();
-        initBalanceItems();
+        this.callback = callback;
+//        initPlanItems();
+//        initBalanceItems();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Button payButton = (Button) findViewById(R.id.payPartialButton);
+        payButton.setText(Label.getLabel("payment_plan_one_time_payment"));
     }
 
     @Override
@@ -83,7 +97,7 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
         try {
             double amount = Double.parseDouble(enterPartialAmountEditText.getText().toString());
             createPaymentModel(amount);
-            payListener.onPayButtonClicked(amount, paymentsDTO);
+            callback.onStartOneTimePayment(paymentsDTO, paymentPlanDTO);
             dismiss();
         } catch (NumberFormatException nfe) {
             nfe.printStackTrace();
@@ -125,7 +139,7 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
             postModel = new IntegratedPaymentPostModel();
         }
         postModel.setAmount(amount);
-        postModel.setLineItems(getLineItems(amount));
+//        postModel.setLineItems(getLineItems(amount));
 
         paymentsDTO.getPaymentPayload().setPaymentPostModel(postModel);
     }

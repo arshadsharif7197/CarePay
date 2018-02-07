@@ -327,7 +327,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     }
 
 
-    private WorkflowServiceCallback makePaymentCallback = new WorkflowServiceCallback() {
+    protected WorkflowServiceCallback makePaymentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();
