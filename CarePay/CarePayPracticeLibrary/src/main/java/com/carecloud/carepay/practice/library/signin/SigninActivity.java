@@ -619,10 +619,18 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     private void identifyPracticeUser(String userId) {
         MixPanelUtil.setUser(this, userId, null);
         MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_is_practice_user), true);
+
+        String[] params = {getString(R.string.param_login_type), getString(R.string.param_app_mode)};
+        Object[] values = {getString(R.string.login_password), getString(R.string.app_mode_practice)};
+        MixPanelUtil.logEvent(getString(R.string.event_signin_loginSuccess), params, values);
     }
 
     private void identifyPatientUser(String userId) {
         MixPanelUtil.setUser(this, userId, null);
+
+        String[] params = {getString(R.string.param_login_type), getString(R.string.param_app_mode)};
+        Object[] values = {getString(R.string.login_password), getString(R.string.app_mode_patient)};
+        MixPanelUtil.logEvent(getString(R.string.event_signin_loginSuccess), params, values);
     }
 
 }
