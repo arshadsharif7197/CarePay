@@ -161,6 +161,6 @@ public class CarePayConstants {
     public static final String CRASH = "crash";
 
     public static final String SEARCH_MODE = "searchMode";
-    public static final String PATIENT_MODE_LABELS_PREFIX = "-P";
+    public static final String PATIENT_MODE_LABELS_PREFIX = "P-";
 
 }

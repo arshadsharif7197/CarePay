@@ -13,12 +13,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.base.BasePracticeDialogFragment;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
-import com.carecloud.carepaylibray.customdialogs.BaseDialogFragment;
+import com.carecloud.carepaylibray.base.models.UserAuthPermissions;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -27,12 +28,14 @@ import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class PracticeAppointmentDialog extends BaseDialogFragment {
+public class PracticeAppointmentDialog extends BasePracticeDialogFragment {
 
     public static final String COMMA = ",";
 
     private PracticeAppointmentDialogListener callback;
     private AppointmentDTO appointmentDTO;
+    private UserAuthPermissions authPermissions;
+
     private int headerColor;
     private int timeColor;
     private String leftActionLabel;
@@ -71,16 +74,19 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     /**
      * @param style          dialog style to determine buttons and colors
      * @param appointmentDTO appointment information
+     * @param authPermissions auth permissions
      * @param callback       listener
      * @return instance of PracticeAppointmentDialog
      */
     public static PracticeAppointmentDialog newInstance(AppointmentDisplayStyle style,
                                                         AppointmentDTO appointmentDTO,
+                                                        UserAuthPermissions authPermissions,
                                                         PracticeAppointmentDialogListener callback) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
         args.putSerializable("style", style);
         DtoHelper.bundleDto(args, appointmentDTO);
+        DtoHelper.bundleDto(args, authPermissions);
 
         PracticeAppointmentDialog dialog = new PracticeAppointmentDialog();
         dialog.setArguments(args);
@@ -96,6 +102,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         Bundle arguments = getArguments();
         this.style = (AppointmentDisplayStyle) arguments.getSerializable("style");
         this.appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, arguments);
+        this.authPermissions = DtoHelper.getConvertedDTO(UserAuthPermissions.class, arguments);
 
     }
 
@@ -178,6 +185,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                 timeColor = R.color.colorPrimary;
                 leftActionLabel = Label.getLabel("cancel_appointment_short_label");
                 rightActionLabel = Label.getLabel("start_checkin_label");
+                middleActionLabel = Label.getLabel("adhoc_show_forms_button_label");
                 break;
             case REQUESTED:
                 headerColor = R.color.lightning_yellow;
@@ -193,8 +201,9 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                 middleActionLabel = Label.getLabel("adhoc_show_forms_button_label");
                 break;
             default:
-                headerColor = R.color.colorPrimary;
+                headerColor = R.color.dark_blue;
                 timeColor = R.color.white;
+                middleActionLabel = Label.getLabel("adhoc_show_forms_button_label");
         }
     }
 
@@ -228,6 +237,25 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                 dismiss();
             }
         });
+
+
+        switch (style){
+            case REQUESTED:
+                if(!authPermissions.canAcceptAppointmentRequest) {
+                    enableById(R.id.button_left_action, false);
+                    enableById(R.id.button_right_action, false);
+                }
+                break;
+            case PENDING:
+            case CHECKED_IN:
+                if(!authPermissions.canCancelAppointment) {
+                    enableById(R.id.button_left_action, false);
+                }
+                break;
+            default:
+                enableById(R.id.button_left_action, true);
+                enableById(R.id.button_right_action, true);
+        }
     }
 
     private void initializeButton(int id, String text, View.OnClickListener listener) {

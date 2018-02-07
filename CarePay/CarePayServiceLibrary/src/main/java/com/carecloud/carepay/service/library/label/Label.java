@@ -97,4 +97,8 @@ public class Label {
     public static void setApplicationType(ApplicationMode.ApplicationType applicationType) {
         Label.applicationType = applicationType;
     }
+
+    public static void clearLabels(){
+        getLabelProvider().clearLabels();
+    }
 }

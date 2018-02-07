@@ -36,4 +36,6 @@ public interface LabelProvider {
      * Apply all pending label to Shared Pref Storage
      */
     void applyAll();
+
+    void clearLabels();
 }

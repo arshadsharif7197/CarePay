@@ -22,7 +22,7 @@ import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog
 import com.carecloud.carepay.practice.library.payments.dialogs.IntegratedPaymentsChooseDeviceFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.AddPaymentItemFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionEntryFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentHistoryFragment;
@@ -465,7 +465,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void onPaymentPlanAction(PaymentsModel paymentsModel) {
-        PatientPaymentPlanFragment fragment = new PatientPaymentPlanFragment();
+        PracticePaymentPlanFragment fragment = new PracticePaymentPlanFragment();
 
         Bundle args = new Bundle();
         Gson gson = new Gson();

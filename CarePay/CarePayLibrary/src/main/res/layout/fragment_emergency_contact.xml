@@ -21,7 +21,7 @@
         android:gravity="center"
         android:textAllCaps="true"
         android:textColor="@color/white"
-        breeze:textKey="emergency_contact_save_button"
+        breeze:textKey="demographics.emergencyContact.button.label.saveNew"
         tools:text="Save Emergency Contact" />
 
     <include

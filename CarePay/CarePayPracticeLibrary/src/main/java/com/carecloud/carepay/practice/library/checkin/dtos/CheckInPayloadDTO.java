@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.checkin.dtos;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
+import com.carecloud.carepaylibray.base.models.UserAuthModel;
 import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
@@ -41,6 +42,9 @@ public class CheckInPayloadDTO {
     @SerializedName("page_messages")
     @Expose
     private List<String> pageMessages = new ArrayList<>();
+    @SerializedName("auth")
+    @Expose
+    private UserAuthModel userAuthModel = new UserAuthModel();
 
     /**
      *
@@ -156,4 +160,11 @@ public class CheckInPayloadDTO {
         this.pageMessages = pageMessages;
     }
 
+    public UserAuthModel getUserAuthModel() {
+        return userAuthModel;
+    }
+
+    public void setUserAuthModel(UserAuthModel userAuthModel) {
+        this.userAuthModel = userAuthModel;
+    }
 }

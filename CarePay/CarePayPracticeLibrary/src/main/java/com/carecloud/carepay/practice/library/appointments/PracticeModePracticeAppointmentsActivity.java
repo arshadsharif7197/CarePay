@@ -43,6 +43,7 @@ import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentDetailInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -144,6 +145,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
         TextView addAppointmentTextView = (TextView) findViewById(R.id.activity_practice_appointments_add);
         addAppointmentTextView.setOnClickListener(getFindPatientListener(false));
+        addAppointmentTextView.setEnabled(checkInDTO.getPayload().getUserAuthModel().getUserAuthPermissions().canScheduleAppointment);
 
         findViewById(R.id.practice_go_back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -439,6 +441,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         PracticeAppointmentDialog dialog = PracticeAppointmentDialog.newInstance(
                 dialogStyle,
                 appointmentDTO,
+                checkInDTO.getPayload().getUserAuthModel().getUserAuthPermissions(),
                 PracticeModePracticeAppointmentsActivity.this
         );
         displayDialogFragment(dialog, true);
@@ -540,11 +543,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(paymentsModel);
         FormsResponsibilityFragmentDialog dialog = FormsResponsibilityFragmentDialog
                 .newInstance(paymentsModel,
-                        Label.getLabel("adhoc_show_forms_button_label"),
-                        Label.getLabel("add_appointment_label"),
-                        Label.getLabel("payment_balance_empty_appointment_screen"),
-                        headerModel);
-        dialog.setShowLeftButtonAlways(true);
+                        checkInDTO.getPayload().getUserAuthModel().getUserAuthPermissions(),
+                        headerModel, paymentsModel.getPaymentPayload().getPatientBalances().get(0));
         dialog.show(getSupportFragmentManager(), tag);
     }
 
@@ -611,6 +611,11 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     @Override
     public void onRightActionTapped(PaymentsModel paymentsModel, double amount) {
         newAppointment();
+    }
+
+    @Override
+    public void onMiddleActionTapped(PaymentsModel paymentsModel, double amount) {
+
     }
 
     @Override
@@ -756,6 +761,16 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
+
+    }
+
+    @Override
+    public void onPayLaterClicked(PendingBalanceDTO pendingBalanceDTO) {
+
+    }
+
+    @Override
+    public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
 
     }
 }

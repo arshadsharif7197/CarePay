@@ -123,7 +123,7 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
 
     @Override
     protected String getBaseUrl() {
-        return HttpConstants.getFormsUrl() + "/practice-forms/";
+        return HttpConstants.getFormsUrl() + "/practice-forms/index.html";
     }
 
     @Override

@@ -65,9 +65,13 @@
 
 -keep class com.smartystreets.api.** { *; }
 
+-keep class sun.misc.** { *; }
+-dontwarn com.google.common.**
+
 #Prevent crashes in App
 -keep class com.google.** { *; }
 -keep class com.carecloud.carepaylibray.medications.models.** { *; }
+-keep class com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO { *; }
 
 
 # SugarRecord

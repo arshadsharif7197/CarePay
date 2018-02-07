@@ -411,6 +411,10 @@ public class PersonalInformationActivity extends BasePracticeActivity {
 
                 MixPanelUtil.setUser(getContext(), signInDTO.getPayload().getPatientModePersonalInfoCheck().getMetadata().getUserId(), null);
 
+                String[] params = {getString(R.string.param_login_type), getString(R.string.param_app_mode)};
+                Object[] values = {getString(R.string.login_manual), getString(R.string.app_mode_patient)};
+                MixPanelUtil.logEvent(getString(R.string.event_signin_loginSuccess), params, values);
+
                 transitionDTO = signInPatientModeDTO.getMetadata().getTransitions().getAction();
                 getWorkflowServiceHelper().execute(transitionDTO, patientModeAppointmentsCallback, queryMap, headers);
             } else {

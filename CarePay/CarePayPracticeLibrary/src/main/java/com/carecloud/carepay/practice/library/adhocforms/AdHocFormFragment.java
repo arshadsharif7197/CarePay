@@ -105,13 +105,15 @@ public class AdHocFormFragment extends BaseWebFormFragment {
                 userResponse = jsonFormSaveResponseArray.get(displayedFormsIndex);
             } else {
                 String uuid = payload.get("uuid").toString().replace("\"", "");
-                for (ConsentFormUserResponseDTO response : adhocFormsModel.getPayload().getPatientFormsResponse()) {
-                    if (uuid.equals(response.getFormId())) {
-                        JsonObject json = new JsonObject();
-                        json.addProperty("uuid", response.getFormId());
-                        json.add("response", response.getResponse());
-                        userResponse = json;
-                        break;
+                if(adhocFormsModel.getPayload().getPatientFormsResponse() != null) {
+                    for (ConsentFormUserResponseDTO response : adhocFormsModel.getPayload().getPatientFormsResponse()) {
+                        if (uuid.equals(response.getFormId())) {
+                            JsonObject json = new JsonObject();
+                            json.addProperty("uuid", response.getFormId());
+                            json.add("response", response.getResponse());
+                            userResponse = json;
+                            break;
+                        }
                     }
                 }
             }
@@ -127,7 +129,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
 
     @Override
     protected String getBaseUrl() {
-        return HttpConstants.getFormsUrl() + "/practice-forms/";
+        return HttpConstants.getFormsUrl() + "/practice-forms/inex.html";
     }
 
     @Override

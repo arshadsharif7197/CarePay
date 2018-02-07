@@ -28,11 +28,10 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialog;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialogFragment;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PapiAccountsDTO;
-import com.carecloud.carepaylibray.payments.models.MerchantServiceMetadataDTO;
-import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
 import com.carecloud.carepaylibray.payments.models.CreditCardBillingInformationDTO;
+import com.carecloud.carepaylibray.payments.models.MerchantServiceMetadataDTO;
+import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.TokenizationService;
@@ -94,7 +93,6 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     private City smartyStreetsResponse;
     protected double amountToMakePayment;
     protected DemographicAddressPayloadDTO addressPayloadDTO;
-    private List<PapiAccountsDTO> papiAccountsDTO;
     protected PaymentCreditCardsPayloadDTO creditCardsPayloadDTO;
     protected CreditCardBillingInformationDTO billingInformationDTO;
     protected IAuthoriseCreditCardResponse authoriseCreditCardResponseCallback;
@@ -114,7 +112,6 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
             if (arguments.containsKey(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE)) {
                 payloadString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
                 PaymentsModel paymentsModel = gson.fromJson(payloadString, PaymentsModel.class);
-                papiAccountsDTO = paymentsModel.getPaymentPayload().getPapiAccounts();
                 merchantServicesList = paymentsModel.getPaymentPayload().getMerchantServices();
             }
             if (arguments.containsKey(CarePayConstants.PAYMENT_AMOUNT_BUNDLE)) {

@@ -12,8 +12,12 @@ import android.view.ViewGroup;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.adapters.PaymentBalancesAdapter;
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentListItem;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -21,7 +25,9 @@ import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by jorge on 02/01/17
@@ -86,13 +92,18 @@ public class PatientPendingPaymentFragment extends BaseFragment implements Payme
 
 
     @Override
-    public void onBalanceListItemClickListener(int position) {
-        PaymentsBalancesItem selectedBalancesItem = getPendingBalancesList(paymentsDTO).get(position);
-        callback.loadPaymentAmountScreen(selectedBalancesItem, paymentsDTO);
+    public void onBalanceListItemClickListener(PaymentsBalancesItem pendingBalance) {
+        callback.loadPaymentAmountScreen(pendingBalance, paymentsDTO);
     }
 
-    private List<PaymentsBalancesItem> getPendingBalancesList(PaymentsModel paymentModel) {
-        List<PaymentsBalancesItem> list = new ArrayList<>();
+    @Override
+    public void onPaymentPlanItemClickListener(PaymentPlanDTO paymentPlan) {
+        callback.loadPaymentPlanScreen(paymentsDTO, paymentPlan);
+    }
+
+    private List<PaymentListItem> getPendingBalancesList(PaymentsModel paymentModel) {
+        List<PaymentListItem> list = new ArrayList<>();
+        //add regular balance items
         for (PatientBalanceDTO patientBalanceDTO : paymentModel.getPaymentPayload().getPatientBalances()) {
             for (PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()) {
                 PendingBalanceMetadataDTO metadataDTO = pendingBalanceDTO.getMetadata();
@@ -101,6 +112,20 @@ public class PatientPendingPaymentFragment extends BaseFragment implements Payme
                     paymentsBalancesItem.setMetadata(metadataDTO);
                     paymentsBalancesItem.setBalance(pendingBalancePayloadDTO);
                     list.add(paymentsBalancesItem);
+                }
+            }
+        }
+        //add payment plans
+        if(!paymentModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()) {
+            Map<String, UserPracticeDTO> practiceMap = new HashMap<>();
+            for(UserPracticeDTO userPracticeDTO : paymentModel.getPaymentPayload().getUserPractices()){
+                practiceMap.put(userPracticeDTO.getPracticeId(), userPracticeDTO);
+            }
+
+            for (PaymentPlanDTO paymentPlanDTO : paymentModel.getPaymentPayload().getPatientPaymentPlans()) {
+                if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanStatus().equals(PaymentPlanDetailsDTO.STATUS_PROCESSING)) {
+                    paymentPlanDTO.getMetadata().setPracticeName(practiceMap.get(paymentPlanDTO.getMetadata().getPracticeId()).getPracticeName());
+                    list.add(paymentPlanDTO);
                 }
             }
         }
@@ -122,5 +147,17 @@ public class PatientPendingPaymentFragment extends BaseFragment implements Payme
 
         return false;
     }
+
+    private boolean hasPaymentPlans(){
+        if(!paymentsDTO.getPaymentPayload().getPatientPaymentPlans().isEmpty()){
+            for(PaymentPlanDTO paymentPlanDTO : paymentsDTO.getPaymentPayload().getPatientPaymentPlans()){
+                if(paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanStatus().equals(PaymentPlanDetailsDTO.STATUS_PROCESSING)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
 }

@@ -18,6 +18,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
@@ -27,8 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DemographicsAllSetFragment extends CheckInDemographicsBaseFragment {
-
-    private DemographicDTO demographicDTO;
 
     private WorkflowServiceCallback confirmDemWorkflowCallback = new WorkflowServiceCallback() {
         @Override
