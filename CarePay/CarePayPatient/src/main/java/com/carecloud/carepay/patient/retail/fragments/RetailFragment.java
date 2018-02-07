@@ -275,7 +275,7 @@ public class RetailFragment extends BaseFragment {
 
         @Override
         public void onPageFinished(WebView webView, String url){
-            if(lastUrl == null){
+            if(lastUrl == null || launchUrl == null){
                 launchUrl = url;
             }else if(lastUrl.equals(url) && launchUrl.equals(url)){
                 webView.clearHistory();
