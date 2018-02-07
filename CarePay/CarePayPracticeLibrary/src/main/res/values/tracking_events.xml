@@ -17,6 +17,7 @@
     <!--Screen Load Events-->.....
 
     <!--Parameters-->
+    <string name="param_app_mode">Application Mode</string>
 
     <!--Incremental Properties-->
     <string name="count_appointment_scheduled">Total Appointments Scheduled</string>
@@ -25,5 +26,12 @@
 
     <!--People Properties-->
     <string name="people_is_practice_user">Is Practice User</string>
+
+    <!--Enum Values-->
+    <string name="login_qr">QR Code</string>
+    <string name="login_manual">Manual Search</string>
+    <string name="login_scan">ID Scan</string>
+    <string name="app_mode_practice">Practice Mode</string>
+    <string name="app_mode_patient">Patient Mode</string>
 
 </resources>
