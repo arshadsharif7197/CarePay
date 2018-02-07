@@ -125,6 +125,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
             @Override
             public void onClick(View view) {
                 callback.onMakeOneTimePayment(paymentsModel, paymentPlanDTO);
+                dismiss();
             }
         });
     }
