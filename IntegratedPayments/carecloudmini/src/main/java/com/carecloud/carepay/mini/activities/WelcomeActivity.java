@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -71,6 +72,7 @@ public class WelcomeActivity extends FullScreenActivity {
     private boolean isResumed = false;
 
     private PowerManager.WakeLock wakeLock;
+    private WifiManager.WifiLock wifiLock;
 
     @Override
     protected void onCreate(Bundle icicle){
@@ -99,8 +101,17 @@ public class WelcomeActivity extends FullScreenActivity {
             scheduleDeviceRefresh();
             //Acquire wakelock
             PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-            wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, TAG);
+            if(wakeLock == null) {
+                wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, TAG);
+            }
             wakeLock.acquire();
+
+            WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+            if(wifiLock == null){
+                wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL, TAG);
+            }
+            wifiLock.acquire();
+
         }
 
     }
@@ -113,6 +124,10 @@ public class WelcomeActivity extends FullScreenActivity {
 
             if(wakeLock != null){
                 wakeLock.release();
+            }
+
+            if(wifiLock != null){
+                wifiLock.release();
             }
         }
         super.onStop();
