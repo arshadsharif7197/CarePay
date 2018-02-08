@@ -35,7 +35,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
-import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.KeyboardWatcher;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
@@ -47,11 +46,11 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.marcok.stepprogressbar.StepProgressBar;
 
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 
 /**
@@ -417,8 +416,10 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
             public void onFailure(String exceptionMessage) {
                 nextButton.setEnabled(true);
                 hideProgressDialog();
-                showErrorNotification(exceptionMessage);
-                Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+                if(isAdded()) {
+                    showErrorNotification(exceptionMessage);
+                    Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+                }
             }
         };
     }
