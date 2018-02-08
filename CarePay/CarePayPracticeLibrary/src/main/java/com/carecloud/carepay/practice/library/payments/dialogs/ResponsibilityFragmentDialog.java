@@ -227,6 +227,8 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
             });
         }
 
+        leftButton.setVisibility(View.GONE);//TODO remove this when ready to release PP
+
         View middleButton = view.findViewById(R.id.partial_pay_button);
         if(middleButton != null) {
             middleButton.setVisibility(isPartialPayAvailable(owedAmount)

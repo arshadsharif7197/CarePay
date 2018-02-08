@@ -89,7 +89,9 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             showErrorNotification(exceptionMessage);
-            Log.e(getActivity().getString(R.string.alert_title_server_error), exceptionMessage);
+            if(getActivity() != null) {
+                Log.e(getActivity().getString(R.string.alert_title_server_error), exceptionMessage);
+            }
         }
     };
 
@@ -424,7 +426,9 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         };
     }
 
-    protected View.OnClickListener getSelectOptionsListener(final List<DemographicsOption> options, final OnOptionSelectedListener listener, final String title) {
+    protected View.OnClickListener getSelectOptionsListener(final List<DemographicsOption> options,
+                                                            final OnOptionSelectedListener listener,
+                                                            final String title) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -17,6 +17,10 @@ public class DemographicNotificationPayloadDTO {
     @SerializedName("email")
     private boolean email;
 
+    @Expose
+    @SerializedName("sms")
+    private boolean sms;
+
     public boolean isPush() {
         return push;
     }
@@ -31,5 +35,13 @@ public class DemographicNotificationPayloadDTO {
 
     public void setEmail(boolean email) {
         this.email = email;
+    }
+
+    public boolean isSms() {
+        return sms;
+    }
+
+    public void setSms(boolean sms) {
+        this.sms = sms;
     }
 }
