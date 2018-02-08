@@ -151,13 +151,13 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
                     postModel.setPapiPaymentMethod(papiPaymentMethod);
                     postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
 
-                    makePayment();
+                    makePlanPayment();
                 }
             }
         }
     };
 
-    private void makePayment(){
+    private void makePlanPayment(){
         Map<String, String> queries = new HashMap<>();
         queries.put("practice_mgmt", paymentPlanDTO.getMetadata().getPracticeMgmt());
         queries.put("practice_id", paymentPlanDTO.getMetadata().getPracticeId());
@@ -169,10 +169,8 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
 
         Gson gson = new Gson();
         String paymentModelJson = gson.toJson(paymentsModel.getPaymentPayload().getPaymentPostModel());
-        TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment();
+        TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePlanPayment();
         getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, paymentModelJson, queries, header);
-
-
     }
 
 

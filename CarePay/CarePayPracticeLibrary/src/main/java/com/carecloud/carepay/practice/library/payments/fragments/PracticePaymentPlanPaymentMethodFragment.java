@@ -8,6 +8,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
@@ -25,6 +26,7 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
 
     private PaymentPlanInterface callback;
     private PaymentPlanPostModel paymentPlanPostModel;
+    private PaymentPlanDTO paymentPlanDTO;
 
     /**
      * @param paymentsModel the payments DTO
@@ -35,6 +37,21 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanPostModel);
+
+        PracticePaymentPlanPaymentMethodFragment fragment = new PracticePaymentPlanPaymentMethodFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    /**
+     * @param paymentsModel the payments DTO
+     * @param paymentPlanDTO existing payment plan to make payment for
+     * @return an instance of PracticePaymentPlanPaymentMethodFragment
+     */
+    public static PracticePaymentPlanPaymentMethodFragment newInstance(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, paymentsModel);
+        DtoHelper.bundleDto(args, paymentPlanDTO);
 
         PracticePaymentPlanPaymentMethodFragment fragment = new PracticePaymentPlanPaymentMethodFragment();
         fragment.setArguments(args);
@@ -63,6 +80,7 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
         super.onCreate(icicle);
         Bundle args = getArguments();
         paymentPlanPostModel = DtoHelper.getConvertedDTO(PaymentPlanPostModel.class, args);
+        paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
     }
 
     @Override
@@ -72,7 +90,12 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
                 super.handlePaymentButton(paymentMethod, amount);
                 break;
             case CarePayConstants.TYPE_CREDIT_CARD:
-                callback.onSelectPaymentPlanMethod(paymentMethod, paymentsModel, paymentPlanPostModel);
+                if(paymentPlanPostModel != null) {
+                    callback.onSelectPaymentPlanMethod(paymentMethod, paymentsModel, paymentPlanPostModel);
+                }
+                if(paymentPlanDTO != null){
+                    callback.onSelectPaymentPlanMethod(paymentMethod, paymentsModel, paymentPlanDTO);
+                }
                 logPaymentMethodSelection(getString(R.string.payment_credit_card));
                 dismiss();
                 break;
