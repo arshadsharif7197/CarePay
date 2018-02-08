@@ -424,7 +424,9 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         };
     }
 
-    protected View.OnClickListener getSelectOptionsListener(final List<DemographicsOption> options, final OnOptionSelectedListener listener, final String title) {
+    protected View.OnClickListener getSelectOptionsListener(final List<DemographicsOption> options,
+                                                            final OnOptionSelectedListener listener,
+                                                            final String title) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {

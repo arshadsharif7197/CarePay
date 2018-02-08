@@ -325,12 +325,12 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
         }
     }
 
-    private View.OnClickListener getEditTextClickListener(List<DemographicsOption> options,
-                                                          final TextInputLayout inputLayout,
-                                                          final EditText editText,
-                                                          final View optionalLabel,
-                                                          final DemographicsOption demographicsOption,
-                                                          final String dialogTitle) {
+    protected View.OnClickListener getEditTextClickListener(List<DemographicsOption> options,
+                                                            final TextInputLayout inputLayout,
+                                                            final EditText editText,
+                                                            final View optionalLabel,
+                                                            final DemographicsOption demographicsOption,
+                                                            final String dialogTitle) {
         return getSelectOptionsListener(options,
                 new OnOptionSelectedListener() {
                     @Override
@@ -345,7 +345,9 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
                                 .onFocusChange(editText, !StringUtil.isNullOrEmpty(editText.getText().toString()));
                         inputLayout.setError(null);
                         inputLayout.setErrorEnabled(false);
-                        optionalLabel.setVisibility(View.GONE);
+                        if (optionalLabel != null) {
+                            optionalLabel.setVisibility(View.GONE);
+                        }
                         checkIfEnableButton(false);
                     }
                 },
