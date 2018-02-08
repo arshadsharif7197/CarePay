@@ -80,7 +80,8 @@ public class CardViewPatient {
         this.appointmentStartTime = DateUtil.getInstance().setDateRaw(dto.getStartTime()).getDate();
         this.isAppointmentOver = dto.isAppointmentOver();
         this.balance = getFormattedBalance(balance);
-        this.locationId = dto.getLocation().getId().toString();
+        this.locationId = dto.getLocation().getId() != null ?
+                dto.getLocation().getId().toString() : null;
         String code = dto.getAppointmentStatus().getCode();
         this.isRequested = code.equalsIgnoreCase(CarePayConstants.REQUESTED);
         this.isCheckedIn = code.equalsIgnoreCase(CarePayConstants.CHECKED_IN) ||
@@ -93,7 +94,8 @@ public class CardViewPatient {
                 code.equalsIgnoreCase(CarePayConstants.BILLED) ||
                 code.equalsIgnoreCase(CarePayConstants.MANUALLY_BILLED);
         this.checkinStatus = dto.getAppointmentStatus().getCheckinStatusDTO();
-        this.providerId = dto.getProvider().getId().toString();
+        this.providerId = dto.getProvider().getId() != null ?
+                dto.getProvider().getId().toString() : null;
         this.providerName = dto.getProvider().getName();
         if (dto.getAppointmentStatus().getLastUpdated() != null) {
             this.lastUpdate = DateUtil.getInstance().setDateRaw(dto.getAppointmentStatus().getLastUpdated().replaceAll("\\.\\d\\d\\dZ", "-00:00")).getDate();
