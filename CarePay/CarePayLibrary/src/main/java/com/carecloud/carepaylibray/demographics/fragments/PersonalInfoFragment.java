@@ -27,6 +27,7 @@ import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
@@ -62,6 +63,9 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
     boolean hasNewImage = false;
     private MediaScannerPresenter mediaScannerPresenter;
     private String base64ProfileImage;
+    private EditText phoneNumberTypeEditText;
+    private DemographicsOption selectedPhoneType = new DemographicsOption();
+
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -150,6 +154,20 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         phoneNumberEditText.addTextChangedListener(phoneInputFormatter);
         phoneNumberEditText.setOnClickListener(selectEndOnClick);
 
+
+        TextInputLayout phoneTypeInputLayout = (TextInputLayout) view.findViewById(R.id.phoneTypeInputLayout);
+        phoneNumberTypeEditText = (EditText) view.findViewById(R.id.phoneTypeEditText);
+        phoneNumberTypeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(phoneTypeInputLayout, null));
+        selectedPhoneType.setLabel(demographicPayload.getAddress().getPhoneNumberType());
+        selectedPhoneType.setName(demographicPayload.getAddress().getPhoneNumberType());
+        phoneNumberTypeEditText.setOnClickListener(getSelectOptionsListener(dataModel
+                        .getDemographic().getAddress().getProperties().getPhoneType().getOptions(),
+                getDefaultOnOptionsSelectedListener(phoneNumberTypeEditText, selectedPhoneType, null),
+                Label.getLabel("phone_type_label")));
+        initSelectableInput(phoneNumberTypeEditText, selectedPhoneType,
+                demographicPayload.getAddress().getPhoneNumberType(), null);
+        phoneNumberTypeEditText.setText(demographicPayload.getAddress().getPhoneNumberType());
+
     }
 
     private void initCameraViews(View view) {
@@ -218,7 +236,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
                         showErrorViews(true, (ViewGroup) view.findViewById(R.id.dobContainer));
                     }
                     return false;
-                }else{
+                } else {
                     unsetFieldError(dateBirthLayout);
                 }
             } else {
@@ -242,6 +260,14 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
                 return false;
             } else {
                 unsetFieldError(phoneLayout);
+            }
+
+            if (validateField(view, dataModel.getDemographic().getAddress().getProperties()
+                            .getPhoneType().isRequired(), selectedPhoneType.getName(), R.id.phoneNumberContainer,
+                    R.id.phoneTypeInputLayout, isUserAction())) {
+                return false;
+            } else {
+                unsetFieldError((TextInputLayout) view.findViewById(R.id.phoneTypeInputLayout));
             }
 
             return true;

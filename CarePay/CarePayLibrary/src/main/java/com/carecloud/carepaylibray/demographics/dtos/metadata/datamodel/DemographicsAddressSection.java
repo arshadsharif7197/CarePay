@@ -51,6 +51,10 @@ public class DemographicsAddressSection {
         @Expose
         private DemographicsField phone = new DemographicsField();
 
+        @SerializedName("phone_type")
+        @Expose
+        private DemographicsField phoneType = new DemographicsField();
+
         public DemographicsField getPhone() {
             return phone;
         }
@@ -105,6 +109,14 @@ public class DemographicsAddressSection {
 
         public void setCountry(DemographicsField country) {
             this.country = country;
+        }
+
+        public DemographicsField getPhoneType() {
+            return phoneType;
+        }
+
+        public void setPhoneType(DemographicsField phoneType) {
+            this.phoneType = phoneType;
         }
     }
 }
