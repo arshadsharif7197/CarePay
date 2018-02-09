@@ -91,7 +91,6 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                 callback.onPaymentPlanAction(paymentReceiptModel);
             }
         });
-        paymentPlanButton.setVisibility(View.GONE);//TODO remove this when ready to release PP
 
         boolean canMakePayments = false;
         if (paymentReceiptModel != null) {

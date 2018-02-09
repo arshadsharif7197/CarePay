@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -55,15 +54,13 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private PaymentsModel paymentsDTO;
     private double minimumPayment;
     private PendingBalanceDTO selectedBalance;
-    protected NumberFormat currencyFormat;
+    private NumberFormat currencyFormat;
 
 
-    private double insuranceCopay;
-    private double patientBalance;
     private boolean amountChangeFlag = true;
     private String balanceBeforeTextChange;
 
-    private PaymentConfirmationInterface payListener;
+    protected PaymentConfirmationInterface payListener;
 
     /**
      * Contructor
@@ -122,7 +119,9 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         View closeView = findViewById(com.carecloud.carepaylibrary.R.id.closeViewLayout);
         closeView.setOnClickListener(this);
 
-        calculateFullAmount(partialPaymentTotalAmountTitle);
+        fullAmount = calculateFullAmount();
+        String title = Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount(fullAmount);
+        partialPaymentTotalAmountTitle.setText(title);
 
         if(selectedBalance == null){
             selectedBalance = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
@@ -262,15 +261,16 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
             } else {
                 payPartialButton.setEnabled(false);
             }
-            partialPaymentTotalAmountTitle.setText(Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount((double) Math.round((fullAmount - amountPay) * 100) / 100));
+            String title = Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount((double) Math.round((fullAmount - amountPay) * 100) / 100);
+            partialPaymentTotalAmountTitle.setText(title);
         } else {
-            //amountSymbol.setTextColor(context.getResources().getColor(R.color.white_transparent));
+            String title = Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount(fullAmount);
             payPartialButton.setEnabled(false);
-            partialPaymentTotalAmountTitle.setText(Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount(fullAmount));
+            partialPaymentTotalAmountTitle.setText(title);
         }
     }
 
-    private void onPaymentClick(EditText enterPartialAmountEditText) {
+    protected void onPaymentClick(EditText enterPartialAmountEditText) {
         try {
             double amount = Double.parseDouble(enterPartialAmountEditText.getText().toString());
             createPaymentModel(amount);
@@ -282,23 +282,18 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         }
     }
 
-    private void calculateFullAmount(TextView partialPaymentTotalAmountTitle) {
-        if (paymentsDTO != null && !paymentsDTO.getPaymentPayload().getPatientBalances().isEmpty()) {
+    protected double calculateFullAmount() {
+        double fullAmount = 0;
+        if (selectedBalance != null) {
             List<PendingBalancePayloadDTO> paymentList = selectedBalance.getPayload();
 
             if (paymentList != null && paymentList.size() > 0) {
                 for (PendingBalancePayloadDTO payment : paymentList) {
-                    if (payment.getType().equalsIgnoreCase(CarePayConstants.PATIENT_BALANCE)) {
-                        patientBalance = payment.getAmount();
-                    } else if (payment.getType().equalsIgnoreCase(CarePayConstants.INSURANCE_COPAY)) {
-                        insuranceCopay = payment.getAmount();
-                    }
+                    fullAmount += payment.getAmount();
                 }
-
-                fullAmount = patientBalance + insuranceCopay;
-                partialPaymentTotalAmountTitle.setText(Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount(fullAmount));
             }
         }
+        return fullAmount;
     }
 
     private void createPaymentModel(double payAmount) {
@@ -380,7 +375,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         return responsibilityTypes;
     }
 
-    private double getMinimumPayment(String practiceId){
+    protected double getMinimumPayment(String practiceId){
         if(practiceId != null) {
             for (PaymentsPayloadSettingsDTO payloadSettingsDTO : paymentsDTO.getPaymentPayload().getPaymentSettings()) {
                 if (practiceId.equals(payloadSettingsDTO.getMetadata().getPracticeId())) {

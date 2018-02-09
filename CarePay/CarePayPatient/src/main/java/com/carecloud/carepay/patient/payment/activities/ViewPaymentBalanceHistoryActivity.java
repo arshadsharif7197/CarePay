@@ -13,6 +13,7 @@ import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentHistoryDetailDialogFragment;
+import com.carecloud.carepaylibray.payments.fragments.OneTimePaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.NoPaymentsFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
@@ -414,7 +415,30 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void onMakeOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+        new OneTimePaymentDialog(getContext(), paymentsModel, paymentPlanDTO, this).show();
+    }
 
+    @Override
+    public void onStartOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+        PaymentPlanPaymentMethodFragment fragment = PaymentPlanPaymentMethodFragment.newInstance(paymentsModel, paymentPlanDTO);
+        replaceFragment(fragment, true);
+        displayToolbar(false, toolBarTitle);
+    }
+
+    @Override
+    public void onSelectPaymentPlanMethod(PaymentsMethodsDTO selectedPaymentMethod, PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            PaymentPlanChooseCreditCardFragment fragment = PaymentPlanChooseCreditCardFragment.newInstance(paymentsModel, selectedPaymentMethod.getLabel(), paymentPlanDTO);
+            replaceFragment(fragment, true);
+        } else {
+            onAddPaymentPlanCard(paymentsModel, paymentPlanDTO);
+        }
+    }
+
+    @Override
+    public void onAddPaymentPlanCard(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+        PaymentPlanAddCreditCardFragment fragment = PaymentPlanAddCreditCardFragment.newInstance(paymentsModel, paymentPlanDTO);
+        replaceFragment(fragment, true);
     }
 
     @Override
