@@ -25,7 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.checkin.adapters.CheckedInAppointmentAdapter;
 import com.carecloud.carepay.practice.library.checkin.adapters.PagePickerAdapter;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
@@ -37,8 +36,6 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepay.service.library.platform.AndroidPlatform;
-import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
@@ -480,7 +477,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                     checkBox = checkBoxes.get(0);
                     checkBox.setTextColor(ContextCompat.getColor(context, R.color.textview_default_textcolor));
                     placeInQueue = queueMap.get(1);
-                    place = ordinal(1, sufixes) + "\n" + StringUtil.captialize(placeInQueue.getFirstName());
+                    place = StringUtil.getOrdinal(language, 1) + "\n" + StringUtil.captialize(placeInQueue.getFirstName());
 
                     spannableString = new SpannableString(place);
                     spannableString.setSpan(new CarePayTypefaceSpan(bold), 0, place.indexOf("\n"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -508,7 +505,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                     checkBox = checkBoxes.get(0);
                     checkBox.setTextColor(ContextCompat.getColor(context, R.color.textview_default_textcolor));
                     placeInQueue = queueMap.get(1);
-                    place = ordinal(1, sufixes) + "\n" + StringUtil.captialize(placeInQueue.getFirstName());
+                    place = StringUtil.getOrdinal(language, 1) + "\n" + StringUtil.captialize(placeInQueue.getFirstName());
 
                     spannableString = new SpannableString(place);
                     spannableString.setSpan(new CarePayTypefaceSpan(bold), 0, place.indexOf("\n"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -518,7 +515,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                     checkBox = checkBoxes.get(4);
                     checkBox.setTextColor(ContextCompat.getColor(context, R.color.textview_default_textcolor));
                     placeInQueue = queueMap.get(2);
-                    place = ordinal(2, sufixes) + "\n" + StringUtil.captialize(placeInQueue.getFirstName());
+                    place = StringUtil.getOrdinal(language, 2) + "\n" + StringUtil.captialize(placeInQueue.getFirstName());
 
                     spannableString = new SpannableString(place);
                     spannableString.setSpan(new CarePayTypefaceSpan(bold), 0, place.indexOf("\n"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -550,7 +547,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                     rank--;
                     while (counter > -1) {
                         placeInQueue = queueMap.get(rank);
-                        place = ordinal(rank, sufixes) + "\n" + StringUtil.captialize(placeInQueue.getFirstName());
+                        place = StringUtil.getOrdinal(language, rank) + "\n" + StringUtil.captialize(placeInQueue.getFirstName());
                         checkBox = checkBoxes.get(counter);
                         checkBox.setTextColor(ContextCompat.getColor(context, R.color.textview_default_textcolor));
 
@@ -702,17 +699,6 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                 pageButton.setEnabled(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getNotificationOptions().hasPushNotification());
             }
         });
-    }
-
-    private String ordinal(int number, String[] sufixes) {
-        switch (number % 100) {
-            case 11:
-            case 12:
-            case 13:
-                return number + sufixes[0];
-            default:
-                return number + sufixes[number % 10];
-        }
     }
 
     private void getPatientBalanceDetails(boolean showInline) {
