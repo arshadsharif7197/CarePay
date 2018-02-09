@@ -375,7 +375,6 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void onDismissPaymentPlan(PaymentsModel paymentsModel) {
         onBackPressed();
-        displayToolbar(true, toolBarTitle);
     }
 
     @Override
