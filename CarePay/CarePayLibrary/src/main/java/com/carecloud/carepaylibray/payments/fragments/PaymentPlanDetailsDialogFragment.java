@@ -90,7 +90,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         TextView practiceInitials = (TextView) view.findViewById(R.id.avTextView);
         practiceInitials.setText(StringUtil.getShortName(practiceName));
 
-        int paymentCount = planPayload.getPaymentPlanDetails().getPaymentPlanHistoryList().size();
+        int paymentCount = planPayload.getPaymentPlanDetails().getFilteredHistory().size();
         int installmentTotal = planPayload.getPaymentPlanDetails().getInstallments();
         TextView installmentCount = (TextView) view.findViewById(R.id.paymentsInstallmentsCount);
         installmentCount.setText(String.format(Label.getLabel("payment_plan_payments_made_value"), paymentCount, installmentTotal));

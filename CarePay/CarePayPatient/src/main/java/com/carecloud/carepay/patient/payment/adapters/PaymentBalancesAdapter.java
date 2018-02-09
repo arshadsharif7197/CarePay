@@ -92,7 +92,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
             holder.planDetail.setText(planDetails);
 
             holder.planProgress.setMax(paymentPlanItem.getPayload().getPaymentPlanDetails().getInstallments());
-            holder.planProgress.setProgress(paymentPlanItem.getPayload().getPaymentPlanDetails().getPaymentPlanHistoryList().size());
+            holder.planProgress.setProgress(paymentPlanItem.getPayload().getPaymentPlanDetails().getFilteredHistory().size());
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

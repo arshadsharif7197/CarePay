@@ -25,6 +25,10 @@ public class PaymentPlanHistory {
     @Expose
     private List<PaymentPlanLineItem> paymentPlanLineItems = new ArrayList<>();
 
+    @SerializedName("one_time_payment")
+    @Expose
+    private boolean oneTimePayment = false;
+
     public double getAmount() {
         return amount;
     }
@@ -47,5 +51,13 @@ public class PaymentPlanHistory {
 
     public void setPaymentPlanLineItems(List<PaymentPlanLineItem> paymentPlanLineItems) {
         this.paymentPlanLineItems = paymentPlanLineItems;
+    }
+
+    public boolean isOneTimePayment() {
+        return oneTimePayment;
+    }
+
+    public void setOneTimePayment(boolean oneTimePayment) {
+        this.oneTimePayment = oneTimePayment;
     }
 }
