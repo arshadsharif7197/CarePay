@@ -196,6 +196,9 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
                 try{
                     monthlyPaymentCount = Integer.parseInt(input);
                     monthlyPaymentAmount = calculateMonthlyPayment(monthlyPaymentCount);
+                    if(monthlyPayment.getOnFocusChangeListener() != null){
+                        monthlyPayment.getOnFocusChangeListener().onFocusChange(monthlyPayment, true);
+                    }
                     monthlyPayment.setText(currencyFormatter.format(monthlyPaymentAmount));
                     setLastPaymentMessage(monthlyPaymentAmount);
                 }catch (NumberFormatException nfe){
@@ -214,6 +217,9 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
                 try{
                     monthlyPaymentAmount = Double.parseDouble(input);
                     monthlyPaymentCount = calculatePaymentCount(monthlyPaymentAmount);
+                    if(numberPayments.getOnFocusChangeListener() != null){
+                        numberPayments.getOnFocusChangeListener().onFocusChange(numberPayments, true);
+                    }
                     numberPayments.setText(String.valueOf(monthlyPaymentCount));
                     setLastPaymentMessage(monthlyPaymentAmount);
                 }catch (NumberFormatException nfe){

@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.base;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -157,6 +158,12 @@ public abstract class BasePracticeActivity extends BaseActivity
         Map<String, String> query = new HashMap<>();
         query.put("language", languageCode);
         getWorkflowServiceHelper().execute(transition, getLanguageCallback(callback), null, query, headers);
+    }
+
+    @Override
+    protected void onProgressDialogCancel(DialogInterface dialog){
+        setSystemUiVisibility();
+        setNavigationBarVisibility();
     }
 
     private WorkflowServiceCallback getLanguageCallback(final SimpleCallback callback) {
