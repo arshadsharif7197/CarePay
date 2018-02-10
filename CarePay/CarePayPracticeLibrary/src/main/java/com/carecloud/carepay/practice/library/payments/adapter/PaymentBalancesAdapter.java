@@ -90,7 +90,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
             holder.planInstallmentFrequency.setText(getFrequencyString(detailsDTO.getFrequencyCode()));
 
             holder.paymentPlanProgress.setMax(paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments());
-            holder.paymentPlanProgress.setProgress(paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanHistoryList().size());
+            holder.paymentPlanProgress.setProgress(paymentPlanDTO.getPayload().getPaymentPlanDetails().getFilteredHistory().size());
 
             holder.payButton.setOnClickListener(new View.OnClickListener() {
                 @Override

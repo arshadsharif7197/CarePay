@@ -10,22 +10,15 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
-import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentPlanHistory;
 import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
-import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
-import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanLineItem;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -55,8 +48,6 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
         this.paymentsDTO = paymentsDTO;
         this.paymentPlanDTO = paymentPlanDTO;
         this.callback = callback;
-//        initPlanItems();
-//        initBalanceItems();
     }
 
     @Override
@@ -89,7 +80,6 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
     @Override
     protected double calculateFullAmount() {
         return SystemUtil.safeSubtract(paymentPlanDTO.getPayload().getAmount(), paymentPlanDTO.getPayload().getAmountPaid());
-//        return Math.round((paymentPlanDTO.getPayload().getAmount() - paymentPlanDTO.getPayload().getAmountPaid())*100)/100;
     }
 
     @Override
@@ -105,33 +95,6 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
         }
     }
 
-    private void initPlanItems(){
-        currentPlanItems.clear();
-        for(PaymentPlanLineItem lineItem : paymentPlanDTO.getPayload().getLineItems()){
-            currentPlanItems.put(lineItem.getTypeId(), lineItem);
-        }
-        for(PaymentPlanHistory historyItem : paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanHistoryList()){
-            for(PaymentPlanLineItem lineItem : historyItem.getPaymentPlanLineItems()){
-                PaymentPlanLineItem currentItem = currentPlanItems.get(lineItem.getTypeId());
-                currentItem.setAmount(SystemUtil.safeSubtract(currentItem.getAmount(), lineItem.getAmount()));
-            }
-        }
-    }
-
-    private void initBalanceItems(){
-        currentBalanceItems.clear();
-        for(PatientBalanceDTO patientBalanceDTO : paymentsDTO.getPaymentPayload().getPatientBalances()){
-            for(PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()){
-                if(pendingBalanceDTO.getMetadata().getPracticeId().equals(paymentPlanDTO.getMetadata().getPracticeId())){
-                    for(PendingBalancePayloadDTO payloadDTO : pendingBalanceDTO.getPayload()){
-                        for(BalanceItemDTO balanceItemDTO : payloadDTO.getDetails()){
-                            currentBalanceItems.put(String.valueOf(balanceItemDTO.getId()), balanceItemDTO);
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     private void createPaymentModel(double amount){
         IntegratedPaymentPostModel postModel = paymentsDTO.getPaymentPayload().getPaymentPostModel();
@@ -139,59 +102,9 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
             postModel = new IntegratedPaymentPostModel();
         }
         postModel.setAmount(amount);
-//        postModel.setLineItems(getLineItems(amount));
 
         paymentsDTO.getPaymentPayload().setPaymentPostModel(postModel);
     }
-
-    private List<IntegratedPaymentLineItem> getLineItems(double amount){
-        List<IntegratedPaymentLineItem> lineItems = new ArrayList<>();
-        for(PaymentPlanLineItem paymentPlanLineItem : paymentPlanDTO.getPayload().getLineItems()){
-            if(amount <= 0D){//once we have depleted the entire amount we can stop
-                break;
-            }
-
-            PaymentPlanLineItem currentLineItem = currentPlanItems.get(paymentPlanLineItem.getTypeId());
-            BalanceItemDTO currentBalanceItem = currentBalanceItems.get(paymentPlanLineItem.getTypeId());
-            IntegratedPaymentLineItem newLineItem = new IntegratedPaymentLineItem();
-
-            if(currentBalanceItem == null){
-                //this balance item has probably been fully paid off so go to next item
-                continue;
-            }
-
-            if(amount > currentLineItem.getAmount()){
-                if(currentLineItem.getAmount() >= currentBalanceItem.getBalance()){
-                    newLineItem.setAmount(currentBalanceItem.getBalance());//use the balance item amount to ensure we don't go over
-                }else{
-                    newLineItem.setAmount(currentLineItem.getAmount());//use the current plan item amount to max it out
-                }
-
-            }else{
-                if(amount > currentBalanceItem.getBalance()){
-                    newLineItem.setAmount(currentBalanceItem.getBalance());//use the balance amount because its less than the amount trying to be paid
-                }else{
-                    newLineItem.setAmount(amount);
-                }
-            }
-            newLineItem.setDescription(currentLineItem.getDescription());
-            newLineItem.setId(currentLineItem.getTypeId());
-            newLineItem.setItemType(currentLineItem.getType());
-            if(currentBalanceItem.getProviderId() != null) {
-                newLineItem.setProviderID(currentBalanceItem.getProviderId().toString());
-            }
-            if(currentBalanceItem.getLocationId() != null) {
-                newLineItem.setLocationID(currentBalanceItem.getLocationId().toString());
-            }
-
-            lineItems.add(newLineItem);
-            amount = SystemUtil.safeSubtract(amount, newLineItem.getAmount());
-
-        }
-
-        return lineItems;
-    }
-
 
 
 }

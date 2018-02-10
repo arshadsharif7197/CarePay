@@ -478,7 +478,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         for(PaymentsPayloadSettingsDTO settingsDTO : paymentsModel.getPaymentPayload().getPaymentSettings()){
             if(settingsDTO.getMetadata().getPracticeId() != null &&
                     settingsDTO.getMetadata().getPracticeId().equals(practiceId)){
-                return !settingsDTO.getPayload().getPaymentPlans().isAddBalanceToNew();
+                return settingsDTO.getPayload().getPaymentPlans().isAddBalanceToExisting();
             }
         }
         return false;
