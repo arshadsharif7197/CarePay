@@ -154,7 +154,7 @@
                             android:imeOptions="actionNext"
                             app:customAssetFont="proxima_nova_regular"
                             app:hintTextAppearance="@style/FloatingLabelStyle"
-                            breeze:hintKey="payment_method_title"
+                            breeze:hintKey="payment_plan_name"
                             tools:hint="Plan Name" />
 
                     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>

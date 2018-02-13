@@ -34,7 +34,7 @@ import java.util.Map;
 public class PaymentPlanEditFragment extends PaymentPlanFragment {
 
 
-    private PaymentPlanDTO paymentPlanDTO;
+    protected PaymentPlanDTO paymentPlanDTO;
 
     /**
      * @param paymentsModel  the payment model
@@ -99,7 +99,14 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment {
                 }
             }
         });
-        view.findViewById(R.id.headerMessage).setVisibility(View.GONE);
+        View headerMessage = view.findViewById(R.id.headerMessage);
+        if (headerMessage != null) {
+            headerMessage.setVisibility(View.GONE);
+        }
+        View addExistingPlan = view.findViewById(R.id.payment_plan_add_existing);
+        if (addExistingPlan != null) {
+            addExistingPlan.setVisibility(View.GONE);
+        }
         setUpPaymentMethodLabel(view);
     }
 

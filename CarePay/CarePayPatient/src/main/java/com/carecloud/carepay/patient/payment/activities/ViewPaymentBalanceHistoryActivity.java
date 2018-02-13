@@ -450,7 +450,6 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void onEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
-        selectedBalancesItem = getPendingBalanceFromPracticeId(paymentPlanDTO.getMetadata().getPracticeId());
         PaymentPlanEditFragment fragment = PaymentPlanEditFragment.newInstance(paymentsModel, paymentPlanDTO);
         replaceFragment(fragment, true);
         displayToolbar(false, null);
@@ -469,17 +468,12 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                     break;
                 }
             }
-            Log.e("Pablo", "entro");
         }
         initFragments();
     }
 
-    private PendingBalanceDTO getPendingBalanceFromPracticeId(String practiceId) {
-        for (PendingBalanceDTO balance : paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances()) {
-            if (practiceId.equals(balance.getMetadata().getPracticeId())) {
-                return balance;
-            }
-        }
-        return null;
+    @Override
+    public void onDismissEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+        
     }
 }

@@ -523,7 +523,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         };
     }
 
-    private TextWatcher getRequiredTextWatcher(final TextInputLayout inputLayout, final ValueInputCallback valueInputCallback) {
+    private TextWatcher getRequiredTextWatcher(final TextInputLayout inputLayout,
+                                               final ValueInputCallback valueInputCallback) {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
