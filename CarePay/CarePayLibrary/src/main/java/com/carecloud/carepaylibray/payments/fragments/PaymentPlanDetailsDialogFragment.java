@@ -39,11 +39,12 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
     private PaymentPlanInterface callback;
 
     /**
-     * @param paymentsModel      the payment model
-     * @param paymentPlanDTO     the Payment Plan Dto
+     * @param paymentsModel  the payment model
+     * @param paymentPlanDTO the Payment Plan Dto
      * @return new instance of a PaymentPlanDetailsDialogFragment
      */
-    public static PaymentPlanDetailsDialogFragment newInstance(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+    public static PaymentPlanDetailsDialogFragment newInstance(PaymentsModel paymentsModel,
+                                                               PaymentPlanDTO paymentPlanDTO) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
@@ -56,17 +57,17 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
     }
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
-        try{
+        try {
             callback = (PaymentPlanInterface) context;
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement PaymentPlanInterface");
         }
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
         paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
@@ -128,6 +129,15 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
                 dismiss();
             }
         });
+
+        View editButton = view.findViewById(R.id.editPlanButton);
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.onEditPaymentPlan(paymentsModel, paymentPlanDTO);
+                dismiss();
+            }
+        });
     }
 
     @Override
@@ -140,19 +150,19 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         return R.layout.fragment_payment_plan_details;
     }
 
-    private String getFrequencyString(String planFrequency){
-        switch (planFrequency){
+    private String getFrequencyString(String planFrequency) {
+        switch (planFrequency) {
             case PaymentPlanModel.FREQUENCY_MONTHLY:
             default:
                 return Label.getLabel("payment_plan_frequency_month");
         }
     }
 
-    private String getNextDate(PaymentPlanPayloadDTO planPayload){
+    private String getNextDate(PaymentPlanPayloadDTO planPayload) {
         int drawDay = planPayload.getPaymentPlanDetails().getDayOfMonth();
         Calendar calendar = Calendar.getInstance();
         int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
-        if(currentDay > drawDay){
+        if (currentDay > drawDay) {
             calendar.add(Calendar.MONTH, 1);
         }
         calendar.set(Calendar.DAY_OF_MONTH, drawDay);
