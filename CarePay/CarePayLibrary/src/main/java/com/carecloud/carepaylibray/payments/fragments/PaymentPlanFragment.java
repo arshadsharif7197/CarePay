@@ -53,7 +53,7 @@ import java.util.Locale;
 public class PaymentPlanFragment extends BasePaymentDialogFragment implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
 
     protected PaymentsModel paymentsModel;
-    private PendingBalanceDTO selectedBalance;
+    protected PendingBalanceDTO selectedBalance;
     protected PaymentPlanInterface callback;
 
     private PaymentSettingsBalanceRangeRule paymentPlanBalanceRules = new PaymentSettingsBalanceRangeRule();
@@ -61,18 +61,19 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     protected NumberFormat currencyFormatter;
     protected double paymentPlanAmount;
 
-    private View createPlanButton;
-    private EditText planName;
-    private EditText numberPayments;
-    private EditText monthlyPayment;
+    protected TextView createPlanButton;
+    protected EditText planName;
+    protected EditText numberPayments;
+    protected EditText monthlyPayment;
     private TextView lastPaymentMessage;
 
     private List<DemographicsOption> dateOptions;
-    private DemographicsOption paymentDateOption;
-    private double monthlyPaymentAmount;
-    private int monthlyPaymentCount;
+    protected DemographicsOption paymentDateOption;
+    protected double monthlyPaymentAmount;
+    protected int monthlyPaymentCount;
 
-    private boolean isRecalculating = false;
+    private boolean isCalculatingAmount = false;
+    private boolean isCalclatingTime = false;
 
 
     public static PaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance){
@@ -95,7 +96,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
                 callback = (PaymentPlanInterface) context;
             }
         }catch(ClassCastException cce){
-            throw new ClassCastException("Attached context must implement PaymentNavigationCallback");
+            throw new ClassCastException("Attached context must implement PaymentPlanInterface");
         }
     }
 
@@ -157,7 +158,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         if(parameters != null) {
             parameters.setText(String.format(Locale.US, Label.getLabel("payment_plan_parameters"),
                     paymentPlanBalanceRules.getMaxDuration().getValue(),
-                    currencyFormatter.format(paymentPlanBalanceRules.getMinAmount().getValue())));
+                    currencyFormatter.format(paymentPlanBalanceRules.getMinPaymentRequired().getValue())));
         }
     }
 
@@ -192,7 +193,11 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         numberPayments.addTextChangedListener(getRequiredTextWatcher(numberPaymentsInputLayout, new ValueInputCallback() {
             @Override
             public void onValueInput(String input) {
-                isRecalculating = true;
+//                if(isCalclatingTime){
+//                    isCalclatingTime = false;
+//                    return;
+//                }
+//                isCalculatingAmount = true;
                 try{
                     monthlyPaymentCount = Integer.parseInt(input);
                     monthlyPaymentAmount = calculateMonthlyPayment(monthlyPaymentCount);
@@ -213,7 +218,11 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         monthlyPayment.addTextChangedListener(getRequiredTextWatcher(paymentAmountInputLayout, new ValueInputCallback() {
             @Override
             public void onValueInput(String input) {
-                isRecalculating = true;
+                if(isCalculatingAmount){
+                    isCalculatingAmount = false;
+                    return;
+                }
+//                isCalclatingTime = true;
                 try{
                     monthlyPaymentAmount = Double.parseDouble(input);
                     monthlyPaymentCount = calculatePaymentCount(monthlyPaymentAmount);
@@ -240,7 +249,14 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         }else{
             addToExisting.setVisibility(View.GONE);
         }
-        createPlanButton = view.findViewById(R.id.create_payment_plan_button);
+        addToExisting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addBalanceToExisting();
+            }
+        });
+
+        createPlanButton = (TextView) view.findViewById(R.id.create_payment_plan_button);
         createPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -265,7 +281,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         createPlanButton.setEnabled(validateFields(false));
     }
 
-    private double calculateTotalAmount(){
+    protected double calculateTotalAmount(){
         double totalAmount = 0;
         if(selectedBalance != null) {
             for (PendingBalancePayloadDTO balancePayloadDTO : selectedBalance.getPayload()) {
@@ -303,9 +319,9 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         for(PaymentsPayloadSettingsDTO settingsDTO : paymentsModel.getPaymentPayload().getPaymentSettings()){
             if(practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())){
                 for(PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getPayload().getPaymentPlans().getBalanceRangeRules()){
-                    double ruleAmount = balanceRangeRule.getMinBalanceRequired().getValue();
+                    double ruleAmount = balanceRangeRule.getMinBalance().getValue();
                     if(paymentPlanAmount > ruleAmount &&
-                            ruleAmount > paymentPlanBalanceRules.getMinBalanceRequired().getValue()){
+                            ruleAmount > paymentPlanBalanceRules.getMinBalance().getValue()){
                         paymentPlanBalanceRules = balanceRangeRule;
                     }
                 }
@@ -342,11 +358,11 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
             clearError(R.id.paymentDrawDayInputLayout);
         }
 
-        if(monthlyPaymentCount < paymentPlanBalanceRules.getMinDuration().getValue()){
+        if(monthlyPaymentCount < 2){
             if(isUserInteraction){
                 setError(R.id.paymentMonthCountInputLayout,
                         String.format(Label.getLabel("payment_plan_min_months_error"),
-                                String.valueOf(paymentPlanBalanceRules.getMinDuration().getValue())));
+                                String.valueOf(2)));
             }
             return false;
         }else{
@@ -364,22 +380,22 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
             clearError(R.id.paymentMonthCountInputLayout);
         }
 
-        if(monthlyPaymentAmount < paymentPlanBalanceRules.getMinAmount().getValue()){
+        if(monthlyPaymentAmount < paymentPlanBalanceRules.getMinPaymentRequired().getValue()){
             if(isUserInteraction){
                 setError(R.id.paymentAmountInputLayout,
                         String.format(Label.getLabel("payment_plan_min_amount_error"),
-                                currencyFormatter.format(paymentPlanBalanceRules.getMinAmount().getValue())));
+                                currencyFormatter.format(paymentPlanBalanceRules.getMinPaymentRequired().getValue())));
             }
             return false;
         }else{
             clearError(R.id.paymentAmountInputLayout);
         }
 
-        if(monthlyPaymentAmount > paymentPlanBalanceRules.getMaxAmount().getValue()){
+        if(monthlyPaymentAmount > paymentPlanBalanceRules.getMaxBalance().getValue()){
             if(isUserInteraction){
                 setError(R.id.paymentAmountInputLayout,
                         String.format(Label.getLabel("payment_plan_max_amount_error"),
-                                currencyFormatter.format(paymentPlanBalanceRules.getMaxAmount().getValue())));
+                                currencyFormatter.format(paymentPlanBalanceRules.getMaxBalance().getValue())));
             }
             return false;
         }else{
@@ -388,6 +404,10 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
 
 
         return true;
+    }
+
+    protected void addBalanceToExisting(){
+        callback.onAddBalanceToExitingPlan(paymentsModel, selectedBalance);
     }
 
     protected void createPaymentPlan() {
@@ -416,7 +436,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         }
     }
 
-    private List<PaymentPlanLineItem> getPaymentPlanLineItems(){
+    protected List<PaymentPlanLineItem> getPaymentPlanLineItems(){
         double amountHolder = paymentPlanAmount;
         List<PaymentPlanLineItem> lineItems = new ArrayList<>();
         for(PendingBalancePayloadDTO pendingBalance : selectedBalance.getPayload()){
@@ -534,11 +554,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
                 }else{
                     inputLayout.setError(null);
                     inputLayout.setErrorEnabled(false);
-                    if(!isRecalculating) {
-                        valueInputCallback.onValueInput(input);
-                    }else{
-                        isRecalculating = false;
-                    }
+                    valueInputCallback.onValueInput(input);
                     enableCreatePlanButton();
                 }
             }
@@ -548,8 +564,11 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     private View.OnFocusChangeListener currencyFocusChangeListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View view, boolean hasFocus) {
+//            if(isCalclatingTime){
+//                return;
+//            }
             TextView textView = (TextView) view;
-            isRecalculating = true;
+            isCalculatingAmount = true;
             if(!StringUtil.isNullOrEmpty(textView.getText().toString())) {
                 if (hasFocus) {
                     try {
@@ -566,7 +585,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
                     }
                 }
             }
-            isRecalculating = false;
+            isCalculatingAmount = false;
         }
     };
 

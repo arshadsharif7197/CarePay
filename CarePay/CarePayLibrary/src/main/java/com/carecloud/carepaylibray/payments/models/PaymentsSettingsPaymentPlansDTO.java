@@ -63,4 +63,12 @@ public class PaymentsSettingsPaymentPlansDTO {
     public void setAddBalanceToExisting(boolean addBalanceToExisting) {
         this.addBalanceToExisting = addBalanceToExisting;
     }
+
+    public boolean isCanHaveMultiple() {
+        return canHaveMultiple;
+    }
+
+    public void setCanHaveMultiple(boolean canHaveMultiple) {
+        this.canHaveMultiple = canHaveMultiple;
+    }
 }

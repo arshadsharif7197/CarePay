@@ -65,16 +65,16 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
             for (PaymentsPayloadSettingsDTO payloadSettingsDTO : paymentsDTO.getPaymentPayload().getPaymentSettings()) {
                 if (practiceId.equals(payloadSettingsDTO.getMetadata().getPracticeId())) {
                     for(PaymentSettingsBalanceRangeRule rule : payloadSettingsDTO.getPayload().getPaymentPlans().getBalanceRangeRules()){
-                        double ruleAmount = rule.getMinBalanceRequired().getValue();
+                        double ruleAmount = rule.getMinBalance().getValue();
                         if(planTotal > ruleAmount &&
-                                ruleAmount > selectedRule.getMinBalanceRequired().getValue()){
+                                ruleAmount > selectedRule.getMinBalance().getValue()){
                             selectedRule = rule;
                         }
                     }
                 }
             }
         }
-        return selectedRule.getMinAmount().getValue();
+        return selectedRule.getMinPaymentRequired().getValue();
     }
 
     @Override

@@ -5,28 +5,28 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
+import com.carecloud.carepaylibray.payments.fragments.AddExistingPaymentPlanFragment;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 /**
- * Created by lmenendez on 2/2/18
+ * Created by lmenendez on 2/13/18
  */
 
-public class PatientModePaymentPlanFragment extends PaymentPlanFragment {
+public class PatientModeAddExistingPaymentPlanFragment extends AddExistingPaymentPlanFragment {
 
-
-    public static PatientModePaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance) {
+    public static PatientModeAddExistingPaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO existingPlan){
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
+        DtoHelper.bundleDto(args, existingPlan);
 
-        PatientModePaymentPlanFragment fragment = new PatientModePaymentPlanFragment();
+        PatientModeAddExistingPaymentPlanFragment fragment = new PatientModeAddExistingPaymentPlanFragment();
         fragment.setArguments(args);
         return fragment;
     }
-
 
     @Override
     protected void setupToolBar(View view) {
@@ -38,6 +38,7 @@ public class PatientModePaymentPlanFragment extends PaymentPlanFragment {
                 callback.onDismissPaymentPlan(paymentsModel);
             }
         });
+
     }
 
     @Override
@@ -56,12 +57,6 @@ public class PatientModePaymentPlanFragment extends PaymentPlanFragment {
         if(validateFields(false)){
             dismiss();
         }
-    }
-
-    @Override
-    protected void addBalanceToExisting(){
-        super.addBalanceToExisting();
-        dismiss();
     }
 
 
