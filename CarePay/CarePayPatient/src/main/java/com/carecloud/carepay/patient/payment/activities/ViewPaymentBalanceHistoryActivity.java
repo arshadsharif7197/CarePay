@@ -26,6 +26,8 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.payments.fragments.ActivePlansFragment;
+import com.carecloud.carepaylibray.payments.fragments.AddExistingPaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.OneTimePaymentDialog;
@@ -35,6 +37,9 @@ import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAddCreditCardFr
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanTermsFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanTermsFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
@@ -475,5 +480,23 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void onDismissEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
 
+    }
+
+    @Override
+    public void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance) {
+        if(paymentsModel.getPaymentPayload().getFilteredPlans(selectedBalance.getMetadata().getPracticeId()).size() == 1){
+            onSelectedPlanToAdd(paymentsModel,
+                    selectedBalance,
+                    paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0));
+        }else{
+            ActivePlansFragment fragment = ActivePlansFragment.newInstance(paymentsModel, selectedBalance);
+            replaceFragment(fragment, true);
+        }
+    }
+
+    @Override
+    public void onSelectedPlanToAdd(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO selectedPlan) {
+        AddExistingPaymentPlanFragment fragment = AddExistingPaymentPlanFragment.newInstance(paymentsModel, selectedBalance, selectedPlan);
+        replaceFragment(fragment, true);
     }
 }

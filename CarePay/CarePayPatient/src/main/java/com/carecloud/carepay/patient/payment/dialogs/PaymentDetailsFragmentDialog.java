@@ -166,10 +166,11 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                     PaymentsSettingsPaymentPlansDTO paymentPlanSettings = payloadSettingsDTO.getPayload().getPaymentPlans();
                     if (paymentPlanSettings.isPaymentPlansEnabled()) {
                         for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
-                            if (balance > rule.getMinBalanceRequired().getValue()) {
+                            if (balance > rule.getMinBalance().getValue()) {
                                 return true;
                             }
                         }
+
                     }
                 }
             }

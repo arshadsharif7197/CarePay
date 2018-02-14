@@ -343,4 +343,21 @@ public class PaymentsPayloadDTO implements Serializable {
         }
         return false;
     }
+
+
+    /**
+     * get filtered list of plans for a single practice
+     * @param practiceId practice id
+     * @return filtered list of plans for the specified practice
+     */
+    public List<PaymentPlanDTO> getFilteredPlans(String practiceId){
+        List<PaymentPlanDTO> filteredList = new ArrayList<>();
+        for(PaymentPlanDTO paymentPlanDTO : getPatientPaymentPlans()){
+            if(paymentPlanDTO.getMetadata().getPracticeId() != null &&
+                    paymentPlanDTO.getMetadata().getPracticeId().equals(practiceId)){
+                filteredList.add(paymentPlanDTO);
+            }
+        }
+        return filteredList;
+    }
 }

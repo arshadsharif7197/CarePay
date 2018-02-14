@@ -363,7 +363,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
                 .getPaymentSettings().get(0).getPayload().getPaymentPlans();
         if(paymentPlanSettings.isPaymentPlansEnabled()){
             for(PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()){
-                if(balance > rule.getMinBalanceRequired().getValue()){
+                if(balance > rule.getMinBalance().getValue()){
                     return true;
                 }
             }
