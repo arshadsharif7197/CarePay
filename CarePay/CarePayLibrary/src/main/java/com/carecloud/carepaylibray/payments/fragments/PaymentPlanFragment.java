@@ -42,13 +42,13 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
+
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
 
 public class PaymentPlanFragment extends BasePaymentDialogFragment implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
 
@@ -75,8 +75,6 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
 
     private boolean isCalculatingAmount = false;
     private boolean isCalclatingTime = false;
-
-    private PaymentPlanDTO paymentPlanDTO;
 
     /**
      * @param paymentsModel   the payment model
@@ -112,7 +110,6 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         Bundle args = getArguments();
         paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
         selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
-        paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
         paymentPlanAmount = calculateTotalAmount(selectedBalance);
         dateOptions = generateDateOptions();
         paymentDateOption = dateOptions.get(0);
@@ -202,11 +199,11 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         numberPayments.addTextChangedListener(getRequiredTextWatcher(numberPaymentsInputLayout, new ValueInputCallback() {
             @Override
             public void onValueInput(String input) {
-//                if(isCalclatingTime){
-//                    isCalclatingTime = false;
-//                    return;
-//                }
-//                isCalculatingAmount = true;
+                if(isCalclatingTime){
+                    isCalclatingTime = false;
+                    return;
+                }
+                isCalculatingAmount = true;
                 try {
                     monthlyPaymentCount = Integer.parseInt(input);
                     monthlyPaymentAmount = calculateMonthlyPayment(monthlyPaymentCount);
@@ -231,9 +228,10 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
                     isCalculatingAmount = false;
                     return;
                 }
-//                isCalclatingTime = true;
+                isCalclatingTime = true;
                 try {
                     monthlyPaymentAmount = Double.parseDouble(input);
+                    monthlyPaymentAmount = Math.round(monthlyPaymentAmount * 100) / 100D;//make sure we don't consider eztra decimals here.. these will get formatted out
                     monthlyPaymentCount = calculatePaymentCount(monthlyPaymentAmount);
                     if (numberPayments.getOnFocusChangeListener() != null) {
                         numberPayments.getOnFocusChangeListener().onFocusChange(numberPayments, true);
@@ -575,9 +573,9 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     private View.OnFocusChangeListener currencyFocusChangeListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View view, boolean hasFocus) {
-//            if(isCalclatingTime){
-//                return;
-//            }
+            if(isCalculatingAmount || isCalclatingTime){
+                return;
+            }
             TextView textView = (TextView) view;
             isCalculatingAmount = true;
             if (!StringUtil.isNullOrEmpty(textView.getText().toString())) {

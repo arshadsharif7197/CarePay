@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.payments.fragments.AddExistingPaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -52,11 +53,9 @@ public class PatientModeAddExistingPaymentPlanFragment extends AddExistingPaymen
     }
 
     @Override
-    protected void createPaymentPlan(){
-        super.createPaymentPlan();
-        if(validateFields(false)){
-            dismiss();
-        }
+    protected void onPlanEdited(WorkflowDTO workflowDTO){
+        super.onPlanEdited(workflowDTO);
+        dismiss();
     }
 
 

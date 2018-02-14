@@ -72,7 +72,7 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
 
 
     @Override
-    protected double calculateTotalAmount(){
+    protected double calculateTotalAmount(PendingBalanceDTO selectedBalance){
         double totalAmount = SystemUtil.safeSubtract(existingPlan.getPayload().getAmount(),
                 existingPlan.getPayload().getAmountPaid());
         if(selectedBalance != null) {
@@ -182,7 +182,7 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            callback.onPaymentPlanEdited(workflowDTO);
+            onPlanEdited(workflowDTO);
         }
 
         @Override
@@ -192,5 +192,8 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
         }
     };
 
+    protected void onPlanEdited(WorkflowDTO workflowDTO){
+        callback.onPaymentPlanEdited(workflowDTO);
+    }
 
 }

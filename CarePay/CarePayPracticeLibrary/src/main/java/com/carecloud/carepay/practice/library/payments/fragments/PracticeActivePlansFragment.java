@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.payments.fragments.ActivePlansFragment;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -37,5 +38,12 @@ public class PracticeActivePlansFragment extends ActivePlansFragment {
         });
 
     }
+
+    @Override
+    public void onPaymentPlanItemSelected(PaymentPlanDTO paymentPlan) {
+        super.onPaymentPlanItemSelected(paymentPlan);
+        dismiss();
+    }
+
 
 }
