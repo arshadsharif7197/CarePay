@@ -96,8 +96,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     private AppointmentResourcesDTO appointmentResourcesDTO;
     private VisitTypeDTO visitTypeDTO;
 
-    private boolean shouldAddBackStack = false;
-
     private WorkflowDTO paymentConfirmationWorkflow;
     private boolean paymentStarted = false;
 
@@ -124,7 +122,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         setContentView(R.layout.activity_patient_checkout);
         initViews();
         initializeLanguageSpinner();
-        shouldAddBackStack = true;
     }
 
     @Override
@@ -211,14 +208,15 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                     public void callback() {
                         changeLeftMenuLabels();
                         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
+                        getSupportFragmentManager().popBackStackImmediate();
                         if (fragment instanceof NextAppointmentFragment) {
                             showNextAppointmentFragment(appointmentId);
                         } else if (fragment instanceof ResponsibilityCheckOutFragment) {
                             showResponsibilityFragment();
                         } else if (fragment instanceof CheckOutFormFragment) {
-                            getSupportFragmentManager().popBackStackImmediate();
                             showCheckOutFormFragment();
                         }
+                        languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
                     }
                 });
             }
@@ -259,11 +257,11 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     private void showCheckOutFormFragment() {
-        replaceFragment(CheckOutFormFragment.newInstance(appointmentsResultModel), shouldAddBackStack);
+        replaceFragment(CheckOutFormFragment.newInstance(appointmentsResultModel), true);
     }
 
     private void showNextAppointmentFragment(String appointmentId) {
-        replaceFragment(NextAppointmentFragment.newInstance(appointmentId), shouldAddBackStack);
+        addFragment(NextAppointmentFragment.newInstance(appointmentId), true);
     }
 
     private void showResponsibilityFragment() {
@@ -273,7 +271,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         DtoHelper.bundleDto(bundle, paymentsModel);
         responsibilityFragment.setArguments(bundle);
 
-        replaceFragment(responsibilityFragment, shouldAddBackStack);
+        replaceFragment(responsibilityFragment, true);
     }
 
     @Override
@@ -562,7 +560,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     @Override
     public boolean shouldAllowNavigateBack() {
-        return getSupportFragmentManager().getBackStackEntryCount() > 0;
+        return getSupportFragmentManager().getBackStackEntryCount() > 1;
     }
 
     @Override
