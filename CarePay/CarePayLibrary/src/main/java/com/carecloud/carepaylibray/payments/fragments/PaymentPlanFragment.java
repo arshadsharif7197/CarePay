@@ -74,7 +74,6 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
 
     protected int monthlyPaymentCount;
     private boolean isRecalculating = false;
-    private PaymentPlanDTO paymentPlanDTO;
 
     /**
      * @param paymentsModel   the payment model
@@ -110,7 +109,6 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         Bundle args = getArguments();
         paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
         selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
-        paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
         paymentPlanAmount = calculateTotalAmount(selectedBalance);
         dateOptions = generateDateOptions();
         paymentDateOption = dateOptions.get(0);
