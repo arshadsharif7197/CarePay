@@ -261,6 +261,10 @@ public class SigninFragment extends BaseFragment {
             String userId = myHealthDto.getPayload().getPracticePatientIds().get(0).getUserId();
             MixPanelUtil.setUser(getContext(), userId, myHealthDto.getPayload().getDemographicDTO());
 
+            MixPanelUtil.logEvent(getString(R.string.event_signin_loginSuccess),
+                    getString(R.string.param_login_type),
+                    getString(R.string.login_password));
+
         }
 
         @Override

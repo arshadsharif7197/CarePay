@@ -91,7 +91,6 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                 callback.onPaymentPlanAction(paymentReceiptModel);
             }
         });
-        paymentPlanButton.setVisibility(View.GONE);//TODO remove this when ready to release PP
 
         boolean canMakePayments = false;
         if (paymentReceiptModel != null) {
@@ -167,10 +166,11 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                     PaymentsSettingsPaymentPlansDTO paymentPlanSettings = payloadSettingsDTO.getPayload().getPaymentPlans();
                     if (paymentPlanSettings.isPaymentPlansEnabled()) {
                         for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
-                            if (balance > rule.getMinBalanceRequired().getValue()) {
+                            if (balance > rule.getMinBalance().getValue()) {
                                 return true;
                             }
                         }
+
                     }
                 }
             }

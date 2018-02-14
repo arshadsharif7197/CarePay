@@ -206,10 +206,27 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                 } else {
                     transition = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getLanguage();
                 }
-                changeLanguage(transition, language.getCode().toLowerCase(), headers);
-
+                changeLanguage(transition, language.getCode().toLowerCase(), headers, new SimpleCallback() {
+                    @Override
+                    public void callback() {
+                        changeLeftMenuLabels();
+                        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
+                        if (fragment instanceof NextAppointmentFragment) {
+                            showNextAppointmentFragment(appointmentId);
+                        } else if (fragment instanceof ResponsibilityCheckOutFragment) {
+                            showResponsibilityFragment();
+                        } else if (fragment instanceof CheckOutFormFragment) {
+                            getSupportFragmentManager().popBackStackImmediate();
+                            showCheckOutFormFragment();
+                        }
+                    }
+                });
             }
         });
+    }
+
+    private void changeLeftMenuLabels() {
+        ((TextView) findViewById(R.id.checkoutMessage)).setText(Label.getLabel("practice_checkout_header_label"));
     }
 
     private void initAppMode() {

@@ -24,9 +24,13 @@ public class PaymentsSettingsPaymentPlansDTO {
     @Expose
     private List<PaymentSettingsBalanceRangeRule> balanceRangeRules = new ArrayList<>();
 
-    @SerializedName("add_balance_to_new_plan")
+    @SerializedName("add_balance_to_existing")
     @Expose
-    private boolean addBalanceToNew = true;
+    private boolean addBalanceToExisting = false;
+
+    @SerializedName("can_create_multiple_plans")
+    @Expose
+    private boolean canHaveMultiple = false;
 
     public boolean isPaymentPlansEnabled() {
         return paymentPlansEnabled;
@@ -52,11 +56,19 @@ public class PaymentsSettingsPaymentPlansDTO {
         this.balanceRangeRules = balanceRangeRules;
     }
 
-    public boolean isAddBalanceToNew() {
-        return addBalanceToNew;
+    public boolean isAddBalanceToExisting() {
+        return addBalanceToExisting;
     }
 
-    public void setAddBalanceToNew(boolean addBalanceToNew) {
-        this.addBalanceToNew = addBalanceToNew;
+    public void setAddBalanceToExisting(boolean addBalanceToExisting) {
+        this.addBalanceToExisting = addBalanceToExisting;
+    }
+
+    public boolean isCanHaveMultiple() {
+        return canHaveMultiple;
+    }
+
+    public void setCanHaveMultiple(boolean canHaveMultiple) {
+        this.canHaveMultiple = canHaveMultiple;
     }
 }

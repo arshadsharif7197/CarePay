@@ -5,9 +5,8 @@ import android.app.Application;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 
-import com.carecloud.carepay.practice.library.signin.SigninActivity;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
@@ -45,8 +44,8 @@ public class CarePayPracticeApplication extends CarePayApplication
     private void setHttpConstants() {
         DeviceIdentifierDTO deviceIdentifierDTO = new DeviceIdentifierDTO();
         deviceIdentifierDTO.setDeviceIdentifier(Settings.Secure.ANDROID_ID);
-        deviceIdentifierDTO.setDeviceType("Android");
-        deviceIdentifierDTO.setDevicePlatform("android");
+        deviceIdentifierDTO.setDeviceType(CarePayConstants.ANDROID_DEVICE);
+        deviceIdentifierDTO.setDevicePlatform(CarePayConstants.PLATFORM_ANDROID);
         deviceIdentifierDTO.setDeviceOSVersion(Build.VERSION.RELEASE);
         deviceIdentifierDTO.setVersion(BuildConfig.VERSION_NAME);
         HttpConstants.setDeviceInformation(deviceIdentifierDTO);
@@ -94,12 +93,7 @@ public class CarePayPracticeApplication extends CarePayApplication
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-        if (activity instanceof SigninActivity) {
-            // log out previous user from Cognito
-            Log.v(this.getClass().getSimpleName(), "sign out Cognito");
-            //getAppAuthorizationHelper().getPool().getUser().signOut();
-            //getAppAuthorizationHelper().setUser(null);
-        }
+
     }
 
     @Override

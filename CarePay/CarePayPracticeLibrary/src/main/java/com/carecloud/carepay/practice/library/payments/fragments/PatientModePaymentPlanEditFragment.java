@@ -5,37 +5,36 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 /**
- * Created by lmenendez on 2/2/18
+ * @author pjohnson on 12/02/18.
  */
 
-public class PatientModePaymentPlanFragment extends PaymentPlanFragment {
+public class PatientModePaymentPlanEditFragment extends PaymentPlanEditFragment {
 
-
-    public static PatientModePaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance) {
+    public static PatientModePaymentPlanEditFragment newInstance(PaymentsModel paymentsModel,
+                                                                 PaymentPlanDTO paymentPlanDTO) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
-        DtoHelper.bundleDto(args, selectedBalance);
+        DtoHelper.bundleDto(args, paymentPlanDTO);
 
-        PatientModePaymentPlanFragment fragment = new PatientModePaymentPlanFragment();
+        PatientModePaymentPlanEditFragment fragment = new PatientModePaymentPlanEditFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-
     @Override
     protected void setupToolBar(View view) {
-        View closeButton = view.findViewById(R.id.closeViewLayout);
+        View closeButton = view.findViewById(com.carecloud.carepaylibrary.R.id.closeViewLayout);
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
-                callback.onDismissPaymentPlan(paymentsModel);
+                callback.onDismissEditPaymentPlan(paymentsModel, paymentPlanDTO);
             }
         });
     }
@@ -51,18 +50,8 @@ public class PatientModePaymentPlanFragment extends PaymentPlanFragment {
     }
 
     @Override
-    protected void createPaymentPlan(){
-        super.createPaymentPlan();
-        if(validateFields(false)){
-            dismiss();
-        }
+    public void onViewCreated(View view, Bundle icicle) {
+        super.onViewCreated(view, icicle);
+        view.findViewById(R.id.bottomContainer).setVisibility(View.GONE);
     }
-
-    @Override
-    protected void addBalanceToExisting(){
-        super.addBalanceToExisting();
-        dismiss();
-    }
-
-
 }

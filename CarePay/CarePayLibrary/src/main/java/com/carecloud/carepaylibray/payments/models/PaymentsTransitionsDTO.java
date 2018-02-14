@@ -42,8 +42,10 @@ public class PaymentsTransitionsDTO {
     private TransitionDTO deletePaymentPlan = new TransitionDTO();
     @SerializedName("update_payment_plan")
     @Expose
-    private TransitionDTO uodatePaymentPlan = new TransitionDTO();
-
+    private TransitionDTO updatePaymentPlan = new TransitionDTO();
+    @SerializedName("plan_payment")
+    @Expose
+    private TransitionDTO makePlanPayment = new TransitionDTO();
     /**
      * @return The makePayment
      */
@@ -156,11 +158,19 @@ public class PaymentsTransitionsDTO {
         this.deletePaymentPlan = deletePaymentPlan;
     }
 
-    public TransitionDTO getUodatePaymentPlan() {
-        return uodatePaymentPlan;
+    public TransitionDTO getUpdatePaymentPlan() {
+        return updatePaymentPlan;
     }
 
-    public void setUodatePaymentPlan(TransitionDTO uodatePaymentPlan) {
-        this.uodatePaymentPlan = uodatePaymentPlan;
+    public void setUpdatePaymentPlan(TransitionDTO updatePaymentPlan) {
+        this.updatePaymentPlan = updatePaymentPlan;
+    }
+
+    public TransitionDTO getMakePlanPayment() {
+        return makePlanPayment;
+    }
+
+    public void setMakePlanPayment(TransitionDTO makePlanPayment) {
+        this.makePlanPayment = makePlanPayment;
     }
 }

@@ -12,7 +12,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostMode
  * Created by lmenendez on 1/23/18
  */
 
-public interface PaymentPlanInterface extends PaymentMethodInterface {
+public interface PaymentPlanInterface extends PaymentMethodInterface, OneTimePaymentInterface {
 
     void onStartPaymentPlan(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel);
 
@@ -26,7 +26,15 @@ public interface PaymentPlanInterface extends PaymentMethodInterface {
 
     void onSubmitPaymentPlan(WorkflowDTO workflowDTO);
 
-    void onMakeOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
-
     void displayBalanceDetails(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem, PendingBalanceDTO selectedBalance);
+
+    void onEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
+
+    void onPaymentPlanEdited(WorkflowDTO workflowDTO);
+
+    void onDismissEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
+
+    void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance);
+
+    void onSelectedPlanToAdd(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO selectedPlan);
 }
