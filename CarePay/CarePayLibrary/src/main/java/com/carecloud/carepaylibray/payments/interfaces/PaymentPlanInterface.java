@@ -32,6 +32,8 @@ public interface PaymentPlanInterface extends PaymentMethodInterface, OneTimePay
 
     void onPaymentPlanEdited(WorkflowDTO workflowDTO);
 
+    void onDismissEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
+
     void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance);
 
     void onSelectedPlanToAdd(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO selectedPlan);

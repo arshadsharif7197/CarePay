@@ -33,14 +33,15 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
     private static final int VIEW_TYPE_BALANCE = 0;
     private static final int VIEW_TYPE_PLAN = 1;
 
-    private final List<? extends PaymentListItem> listItems;
+    private List<? extends PaymentListItem> listItems;
     private final UserPracticeDTO userPractice;
     private PaymentRecyclerViewCallback callback;
     private Context context;
 
     /**
      * Constructor
-     * @param context context
+     *
+     * @param context         context
      * @param patientBalances listItems
      * @param userPracticeDTO dto
      */
@@ -55,10 +56,10 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
     @Override
     public PaymentBalancesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View paymentListItemView;
-        if(viewType == VIEW_TYPE_BALANCE) {
+        if (viewType == VIEW_TYPE_BALANCE) {
             paymentListItemView = LayoutInflater.from(context).inflate(
                     R.layout.cardview_payments_item, parent, false);
-        }else{
+        } else {
             paymentListItemView = LayoutInflater.from(context).inflate(
                     R.layout.cardview_payment_plan_item, parent, false);
         }
@@ -67,12 +68,12 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
 
     @Override
     public void onBindViewHolder(final PaymentBalancesAdapter.ViewHolder holder, int position) {
-        if(getItemViewType(position)==VIEW_TYPE_BALANCE) {
+        if (getItemViewType(position) == VIEW_TYPE_BALANCE) {
             final PatientBalanceDTO patientBalanceDTO = (PatientBalanceDTO) listItems.get(position);
             double responsibility = 0D;
             try {
                 responsibility = Double.valueOf(patientBalanceDTO.getPendingRepsonsibility());
-            }catch (NumberFormatException nfe){
+            } catch (NumberFormatException nfe) {
                 nfe.printStackTrace();
             }
             holder.paymentAmountTextView.setText(StringUtil.getFormattedBalanceAmount(responsibility));
@@ -83,7 +84,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
                 }
             });
 
-        }else{
+        } else {
             final PaymentPlanDTO paymentPlanDTO = (PaymentPlanDTO) listItems.get(position);
             PaymentPlanDetailsDTO detailsDTO = paymentPlanDTO.getPayload().getPaymentPlanDetails();
             holder.paymentAmountTextView.setText(StringUtil.getFormattedBalanceAmount(detailsDTO.getAmount()));
@@ -104,7 +105,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
         String photoUrl = userPractice.getPracticePhoto();
         if (TextUtils.isEmpty(photoUrl)) {
             holder.providerImageTextView.setText(StringUtil.getShortName(userPractice.getPracticeName()));
-        }else{
+        } else {
             Picasso.with(context).load(photoUrl)
                     .transform(new CircleImageTransform())
                     .resize(100, 100)
@@ -129,19 +130,24 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
     }
 
     @Override
-    public int getItemViewType(int position){
-        if(listItems.get(position) instanceof PatientBalanceDTO){
+    public int getItemViewType(int position) {
+        if (listItems.get(position) instanceof PatientBalanceDTO) {
             return VIEW_TYPE_BALANCE;
         }
         return VIEW_TYPE_PLAN;
     }
 
-    private String getFrequencyString(String planFrequency){
-        switch (planFrequency){
+    private String getFrequencyString(String planFrequency) {
+        switch (planFrequency) {
             case PaymentPlanModel.FREQUENCY_MONTHLY:
             default:
                 return Label.getLabel("payment_plan_frequency_month");
         }
+    }
+
+    public void setData(List<? extends PaymentListItem> listItems) {
+        this.listItems = listItems;
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
@@ -35,6 +36,10 @@ import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragmen
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAddCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanTermsFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanTermsFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
@@ -61,7 +66,6 @@ import java.util.List;
  */
 public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity implements PaymentFragmentActivityInterface, PaymentPlanInterface {
 
-    private static boolean isPaymentDone;
     private PaymentsModel paymentsDTO;
     private UserPracticeDTO selectedUserPractice;
     private PendingBalanceDTO selectedBalancesItem;
@@ -111,10 +115,10 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         return false;
     }
 
-    private boolean hasPaymentPlans(){
-        if(!paymentsDTO.getPaymentPayload().getPatientPaymentPlans().isEmpty()){
-            for(PaymentPlanDTO  paymentPlanDTO : paymentsDTO.getPaymentPayload().getPatientPaymentPlans()){
-                if(paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanStatus().equals(PaymentPlanDetailsDTO.STATUS_PROCESSING)){
+    private boolean hasPaymentPlans() {
+        if (!paymentsDTO.getPaymentPayload().getPatientPaymentPlans().isEmpty()) {
+            for (PaymentPlanDTO paymentPlanDTO : paymentsDTO.getPaymentPayload().getPatientPaymentPlans()) {
+                if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanStatus().equals(PaymentPlanDetailsDTO.STATUS_PROCESSING)) {
                     return true;
                 }
             }
@@ -404,11 +408,11 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void onSubmitPaymentPlan(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        List<PaymentPlanDTO> paymentPlanList =  this.paymentsDTO.getPaymentPayload().getPatientPaymentPlans();
-        for(PaymentPlanDTO paymentPlanDTO : paymentsModel.getPaymentPayload().getPatientPaymentPlans()){
+        List<PaymentPlanDTO> paymentPlanList = this.paymentsDTO.getPaymentPayload().getPatientPaymentPlans();
+        for (PaymentPlanDTO paymentPlanDTO : paymentsModel.getPaymentPayload().getPatientPaymentPlans()) {
             paymentPlanList.add(paymentPlanDTO);
         }
-        for(int i=0; i<getSupportFragmentManager().getBackStackEntryCount(); i++) {
+        for (int i = 0; i < getSupportFragmentManager().getBackStackEntryCount(); i++) {
             getSupportFragmentManager().popBackStack();
         }
         initFragments();
@@ -451,11 +455,30 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void onEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
-
+        PaymentPlanEditFragment fragment = PaymentPlanEditFragment.newInstance(paymentsModel, paymentPlanDTO);
+        replaceFragment(fragment, true);
+        displayToolbar(false, null);
     }
 
     @Override
     public void onPaymentPlanEdited(WorkflowDTO workflowDTO) {
+        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+        if (!paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()) {
+            PaymentPlanDTO modifiedPaymentPlan = paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0);
+            for (PaymentPlanDTO paymentPlan : paymentsDTO.getPaymentPayload().getPatientPaymentPlans()) {
+                if (modifiedPaymentPlan.getMetadata().getPaymentPlanId()
+                        .equals(paymentPlan.getMetadata().getPaymentPlanId())) {
+                    paymentsDTO.getPaymentPayload().getPatientPaymentPlans().remove(paymentPlan);
+                    paymentsDTO.getPaymentPayload().getPatientPaymentPlans().add(modifiedPaymentPlan);
+                    break;
+                }
+            }
+        }
+        initFragments();
+    }
+
+    @Override
+    public void onDismissEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
 
     }
 

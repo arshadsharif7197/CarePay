@@ -20,6 +20,7 @@ import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDial
 import com.carecloud.carepay.practice.library.payments.dialogs.PracticePaymentPlanDetailsDialogFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientModeAddExistingPaymentPlanFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PatientModePaymentPlanEditFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientModePaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeActivePlansFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
@@ -70,6 +71,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
 
     private PaymentsModel paymentResultModel;
     private PatientBalanceDTO selectedBalance;
+    private PaymentBalancesAdapter paymentBalancesAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,7 +123,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
         recyclerView.setVisibility(View.VISIBLE);
         findViewById(R.id.emptyPaymentsImageView).setVisibility(View.GONE);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        PaymentBalancesAdapter paymentBalancesAdapter = new PaymentBalancesAdapter(this, getBalances(paymentsModel),
+        paymentBalancesAdapter = new PaymentBalancesAdapter(this, getBalances(paymentsModel),
                 paymentsModel.getPaymentPayload().getUserPractices().get(0), this);
         recyclerView.setAdapter(paymentBalancesAdapter);
 
@@ -130,7 +132,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
 
     }
 
-    private List<PaymentListItem> getBalances(PaymentsModel paymentsModel){
+    private List<PaymentListItem> getBalances(PaymentsModel paymentsModel) {
         List<PaymentListItem> output = new ArrayList<>();
         output.addAll(paymentsModel.getPaymentPayload().getPatientBalances());
         output.addAll(paymentsModel.getPaymentPayload().getPatientPaymentPlans());
@@ -158,7 +160,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
 
     @Override
     public void startPaymentProcess(PaymentsModel paymentsModel) {
-        if(selectedBalance == null){
+        if (selectedBalance == null) {
             selectedBalance = paymentsModel.getPaymentPayload().getPatientBalances().get(0);
         }
         boolean showPartial = paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments().isAllowPartialPayments();
@@ -205,16 +207,16 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-        if(!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid()==0D){
+        if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
             StringBuilder builder = new StringBuilder();
-            for(IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()){
+            for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
                 builder.append(processingError.getError());
                 builder.append("\n");
             }
             int last = builder.lastIndexOf("\n");
             builder.replace(last, builder.length(), "");
             showErrorNotification(builder.toString());
-        }else {
+        } else {
             Bundle args = new Bundle();
             args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
 
@@ -248,7 +250,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
 
     @Override
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
-        if(paymentsModel!=null && !paymentsModel.getPaymentPayload().getUserPractices().isEmpty()){
+        if (paymentsModel != null && !paymentsModel.getPaymentPayload().getUserPractices().isEmpty()) {
             return paymentsModel.getPaymentPayload().getUserPractices().get(0);
         }
         return null;
@@ -350,7 +352,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
 
     @Override
     protected void processExternalPaymentFailure(PaymentExecution paymentExecution, int resultCode) {
-        if(resultCode == CarePayConstants.PAYMENT_RETRY_PENDING_RESULT_CODE){
+        if (resultCode == CarePayConstants.PAYMENT_RETRY_PENDING_RESULT_CODE) {
             //Display a success notification and do some cleanup
             PaymentQueuedDialogFragment dialogFragment = new PaymentQueuedDialogFragment();
             DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
@@ -412,8 +414,8 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
     @Override
     public void onSubmitPaymentPlan(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        List<PaymentPlanDTO> paymentPlanList =  this.paymentResultModel.getPaymentPayload().getPatientPaymentPlans();
-        for(PaymentPlanDTO paymentPlanDTO : paymentsModel.getPaymentPayload().getPatientPaymentPlans()){
+        List<PaymentPlanDTO> paymentPlanList = this.paymentResultModel.getPaymentPayload().getPatientPaymentPlans();
+        for (PaymentPlanDTO paymentPlanDTO : paymentsModel.getPaymentPayload().getPatientPaymentPlans()) {
             paymentPlanList.add(paymentPlanDTO);
         }
         setUpUI();
@@ -457,12 +459,33 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
 
     @Override
     public void onEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
-
+        PatientModePaymentPlanEditFragment fragment = PatientModePaymentPlanEditFragment.newInstance(paymentsModel, paymentPlanDTO);
+        displayDialogFragment(fragment, true);
     }
 
     @Override
     public void onPaymentPlanEdited(WorkflowDTO workflowDTO) {
+        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+        if (!paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()) {
+            PaymentPlanDTO modifiedPaymentPlan = paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0);
+            for (int i = 0; i < paymentResultModel.getPaymentPayload().getPatientPaymentPlans().size(); i++) {
+                PaymentPlanDTO paymentPlan = paymentResultModel.getPaymentPayload().getPatientPaymentPlans().get(i);
+                if (modifiedPaymentPlan.getMetadata().getPaymentPlanId()
+                        .equals(paymentPlan.getMetadata().getPaymentPlanId())) {
+                    paymentResultModel.getPaymentPayload().getPatientPaymentPlans().remove(paymentPlan);
+                    paymentResultModel.getPaymentPayload().getPatientPaymentPlans().add(i, modifiedPaymentPlan);
+                    paymentBalancesAdapter.setData(getBalances(paymentResultModel));
+                    break;
+                }
+            }
+        }
+    }
 
+    @Override
+    public void onDismissEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+        PracticePaymentPlanDetailsDialogFragment fragment = PracticePaymentPlanDetailsDialogFragment
+                .newInstance(paymentResultModel, paymentPlanDTO);
+        displayDialogFragment(fragment, false);
     }
 
     @Override

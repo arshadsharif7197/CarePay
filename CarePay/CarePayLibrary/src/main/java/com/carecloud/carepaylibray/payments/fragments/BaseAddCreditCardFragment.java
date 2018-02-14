@@ -35,7 +35,7 @@ import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.TokenizationService;
-import com.carecloud.carepaylibray.payments.utils.CardPattern;
+import com.carecloud.carepaylibray.payments.utils.CreditCardUtil;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.PayeezyRequestTask;
@@ -191,7 +191,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
                     }
                     pos += 5;
                 }
-                String type = getCreditCardType(getCardNumber());
+                String type = CreditCardUtil.getCreditCardType(getCardNumber());
                 if (!StringUtil.isNullOrEmpty(getCardNumber()) && type != null) {
                     cardTypeTextView.setVisibility(View.VISIBLE);
                     cardTypeTextView.setText(type);
@@ -247,56 +247,6 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
 
         }
     };
-
-    protected String getCreditCardType(String cardNumber) {
-        String type;
-        if (cardNumber.startsWith("4") || cardNumber.matches(CardPattern.VISA)) {
-            type = "Visa";
-        } else if (cardNumber.matches(CardPattern.MASTERCARD_SHORTER) || cardNumber.matches(CardPattern
-                .MASTERCARD_SHORT) || cardNumber.matches(CardPattern.MASTERCARD)) {
-            type = "Mastercard";
-        } else if (cardNumber.matches(CardPattern.AMERICAN_EXPRESS)) {
-            type = "American Express";
-        } else if (cardNumber.matches(CardPattern.DISCOVER_SHORT)
-                || cardNumber.matches(CardPattern.DISCOVER)) {
-            type = "Discover";
-        } else if (cardNumber.matches(CardPattern.JCB_SHORT) || cardNumber.matches(CardPattern.JCB)) {
-            type = "JCB";
-        } else if (cardNumber.matches(CardPattern.DINERS_CLUB_SHORT)
-                || cardNumber.matches(CardPattern.DINERS_CLUB)) {
-            type = "Diners Club";
-        } else {
-            type = null;
-        }
-        return type;
-    }
-
-    /**
-     * Is valid boolean.
-     *
-     * @return the boolean
-     */
-    public boolean isValid() {
-        if (getCardNumber().matches(CardPattern.VISA_VALID)) {
-            return true;
-        }
-        if (getCardNumber().matches(CardPattern.MASTERCARD_VALID)) {
-            return true;
-        }
-        if (getCardNumber().matches(CardPattern.AMERICAN_EXPRESS_VALID)) {
-            return true;
-        }
-        if (getCardNumber().matches(CardPattern.DISCOVER_VALID)) {
-            return true;
-        }
-        if (getCardNumber().matches(CardPattern.DINERS_CLUB_VALID)) {
-            return true;
-        }
-        if (getCardNumber().matches(CardPattern.JCB_VALID)) {
-            return true;
-        }
-        return false;
-    }
 
     public String getCardNumber() {
         return creditCardNoEditText.getText().toString().replace(" ", "").trim();
@@ -449,7 +399,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         String expiryDate = pickDateTextView.getText().toString();
         expiryDate = expiryDate.substring(0, 2) + expiryDate.substring(expiryDate.length() - 2);
         creditCardsPayloadDTO.setExpireDt(expiryDate);
-        creditCardsPayloadDTO.setCardType(getCreditCardType(getCardNumber()));
+        creditCardsPayloadDTO.setCardType(CreditCardUtil.getCreditCardType(getCardNumber()));
         billingInformationDTO.setLine1(address1EditText.getText().toString().trim());
         billingInformationDTO.setLine2(address2EditText.getText().toString().trim());
         billingInformationDTO.setZip(zipCodeEditText.getText().toString().trim());
@@ -655,7 +605,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     }
 
     private boolean validateCreditCardDetails() {
-        if (!isValid()) {
+        if (!CreditCardUtil.isCreditCardNumberValid(getCardNumber())) {
             nextButton.setEnabled(false);
             nextButton.setClickable(false);
             return false;
