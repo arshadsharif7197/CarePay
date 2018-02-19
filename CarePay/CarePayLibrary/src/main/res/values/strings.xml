@@ -406,9 +406,10 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="alert_title">Alert</string>
     <string name="alert_title_server_error">Server Error</string>
     <string name="restrict_address_characters">0123456789 abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ#.,;:\'°</string>
-    <string name="restrict_digits_letters_space">0123456789 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
-    <string name="restrict_letters_space">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
-    <string name="restrict_letters">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <string name="restrict_digits_letters_space">0123456789 abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ</string>
+    <string name="restrict_digits_letters">0123456789abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ</string>
+    <string name="restrict_letters_space">abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ</string>
+    <string name="restrict_letters">abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ</string>
     <string name="restrict_digits_slash">1234567890/</string>
     <string name="restrict_digits_space">012345 67890</string>
     <string name="restrict_digits">1234567890</string>
