@@ -25,6 +25,8 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
 
     private PendingBalanceDTO selectedBalance;
 
+    private boolean mustAddToExisting = false;
+
     /**
      * @param paymentsModel      the payment model
      * @param paymentPayload     the PendingBalancePayloadDTO
@@ -81,7 +83,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
             }
         });
 
-        View paymentPlanButton = view.findViewById(R.id.createPaymentPlanButton);
+        TextView paymentPlanButton = (TextView) view.findViewById(R.id.createPaymentPlanButton);
         paymentPlanButton.setVisibility(isPaymentPlanAvailable(selectedBalance.getMetadata().getPracticeId(), paymentPayload.getAmount())
                 ? View.VISIBLE : View.GONE);
         paymentPlanButton.setOnClickListener(new View.OnClickListener() {
@@ -91,6 +93,9 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                 callback.onPaymentPlanAction(paymentReceiptModel);
             }
         });
+        if(mustAddToExisting) {
+            paymentPlanButton.setText(Label.getLabel("payment_plan_add_existing"));
+        }
 
         boolean canMakePayments = false;
         if (paymentReceiptModel != null) {
@@ -166,8 +171,17 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                     PaymentsSettingsPaymentPlansDTO paymentPlanSettings = payloadSettingsDTO.getPayload().getPaymentPlans();
                     if (paymentPlanSettings.isPaymentPlansEnabled()) {
                         for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
-                            if (balance > rule.getMinBalance().getValue()) {
-                                return true;
+                            if (balance >= rule.getMinBalance().getValue() &&
+                                    balance <= rule.getMaxBalance().getValue()) {
+                                if(paymentReceiptModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()){
+                                    return true;
+                                }else if(paymentPlanSettings.isCanHaveMultiple()){//need to check if multiple plans is enabled
+                                    return true;
+                                }else if(paymentPlanSettings.isAddBalanceToExisting()){//check if balance can be added to existing
+                                    mustAddToExisting = true;
+                                    return true;
+                                }
+                                return false;
                             }
                         }
 

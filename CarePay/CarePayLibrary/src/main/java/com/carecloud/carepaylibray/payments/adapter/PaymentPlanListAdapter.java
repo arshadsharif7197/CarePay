@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -28,12 +29,13 @@ public class PaymentPlanListAdapter extends RecyclerView.Adapter<PaymentPlanList
     private List<PaymentPlanDTO> listItems = new ArrayList<>();
     private OnPaymentPlanSelectedListener listener;
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
-
+    private PaymentsModel paymentsModel;
 
     public PaymentPlanListAdapter(Context context, List<PaymentPlanDTO> paymentPlans, OnPaymentPlanSelectedListener listener, PaymentsModel paymentsModel) {
         this.context = context;
         this.listItems = paymentPlans;
         this.listener = listener;
+        this.paymentsModel = paymentsModel;
     }
 
     @Override
@@ -47,17 +49,17 @@ public class PaymentPlanListAdapter extends RecyclerView.Adapter<PaymentPlanList
     public void onBindViewHolder(ViewHolder holder, int position) {
         final PaymentPlanDTO paymentPlanItem = (PaymentPlanDTO) listItems.get(position);
 
-        String locationName = paymentPlanItem.getMetadata().getPracticeName();
-        holder.shortName.setText(StringUtil.getShortName(locationName));
-        holder.locationName.setText(locationName);
+        String practiceName = getPracticeName(paymentPlanItem.getMetadata().getPracticeId());
+        holder.shortName.setText(StringUtil.getShortName(practiceName));
+        holder.locationName.setText(practiceName);
 
         double totalAmount = paymentPlanItem.getPayload().getAmount();
         double amountPaid = paymentPlanItem.getPayload().getAmountPaid();
         holder.amount.setText(currencyFormatter.format(totalAmount - amountPaid));
 
         String planDetails = currencyFormatter.format(
-                paymentPlanItem.getPayload().getPaymentPlanDetails().getAmount()) + "/" +
-                paymentPlanItem.getPayload().getPaymentPlanDetails().getFrequencyCode();
+                paymentPlanItem.getPayload().getPaymentPlanDetails().getAmount()) +
+                paymentPlanItem.getPayload().getPaymentPlanDetails().getFrequencyString();
         holder.planDetail.setText(planDetails);
 
         holder.planProgress.setMax(paymentPlanItem.getPayload().getPaymentPlanDetails().getInstallments());
@@ -96,6 +98,15 @@ public class PaymentPlanListAdapter extends RecyclerView.Adapter<PaymentPlanList
 
     public interface OnPaymentPlanSelectedListener {
         void onPaymentPlanItemSelected(PaymentPlanDTO paymentPlan);
+    }
+
+    private String getPracticeName(String practiceId){
+        for(UserPracticeDTO userPracticeDTO : paymentsModel.getPaymentPayload().getUserPractices()){
+            if(practiceId != null && practiceId.equals(userPracticeDTO.getPracticeId())){
+                return userPracticeDTO.getPracticeName();
+            }
+        }
+        return "";
     }
 
 }

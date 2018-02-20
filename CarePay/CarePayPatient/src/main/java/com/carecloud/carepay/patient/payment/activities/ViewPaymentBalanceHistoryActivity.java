@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
@@ -39,9 +38,6 @@ import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFr
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanTermsFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanTermsFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
@@ -50,6 +46,8 @@ import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
@@ -238,8 +236,12 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void onPaymentPlanAction(PaymentsModel paymentsModel) {
-        PaymentPlanFragment fragment = PaymentPlanFragment.newInstance(paymentsModel, selectedBalancesItem);
-        replaceFragment(fragment, true);
+        if(mustAddToExisting(paymentsModel)){
+            onAddBalanceToExitingPlan(paymentsModel, selectedBalancesItem);
+        }else {
+            PaymentPlanFragment fragment = PaymentPlanFragment.newInstance(paymentsModel, selectedBalancesItem);
+            replaceFragment(fragment, true);
+        }
         displayToolbar(false, null);
     }
 
@@ -499,4 +501,19 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         AddExistingPaymentPlanFragment fragment = AddExistingPaymentPlanFragment.newInstance(paymentsModel, selectedBalance, selectedPlan);
         replaceFragment(fragment, true);
     }
+
+    private boolean mustAddToExisting(PaymentsModel paymentsModel){
+        if(paymentsModel.getPaymentPayload().getFilteredPlans(selectedBalancesItem.getMetadata().getPracticeId()).isEmpty()){
+            return false;
+        }
+        String practiceId = selectedBalancesItem.getMetadata().getPracticeId();
+        for(PaymentsPayloadSettingsDTO settingsDTO : paymentsModel.getPaymentPayload().getPaymentSettings()){
+            if(practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())){
+                PaymentsSettingsPaymentPlansDTO paymentPlanSettings = settingsDTO.getPayload().getPaymentPlans();
+                return !paymentPlanSettings.isCanHaveMultiple() && paymentPlanSettings.isAddBalanceToExisting();
+            }
+        }
+        return false;
+    }
+
 }

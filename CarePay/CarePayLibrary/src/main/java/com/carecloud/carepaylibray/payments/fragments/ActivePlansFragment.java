@@ -89,7 +89,7 @@ public class ActivePlansFragment extends BaseDialogFragment implements PaymentPl
         });
         toolbar.setTitle("");
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
-        title.setText(Label.getLabel("payment_plan_heading"));
+        title.setText(Label.getLabel("payment_plan_active_plan"));
 
     }
 
@@ -103,7 +103,7 @@ public class ActivePlansFragment extends BaseDialogFragment implements PaymentPl
 
     }
 
-    private List<PaymentPlanDTO> getPaymentPlansList(){
+    protected List<PaymentPlanDTO> getPaymentPlansList(){
         String practiceId = selectedBalance.getMetadata().getPracticeId();
         return paymentsModel.getPaymentPayload().getFilteredPlans(practiceId);
     }

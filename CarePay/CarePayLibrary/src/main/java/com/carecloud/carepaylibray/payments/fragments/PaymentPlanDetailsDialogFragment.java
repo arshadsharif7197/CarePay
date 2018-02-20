@@ -17,7 +17,6 @@ import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
@@ -83,7 +82,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         installmentDetail.setText(currencyFormatter.format(planPayload.getPaymentPlanDetails().getAmount()));
 
         TextView installmentFrequency = (TextView) view.findViewById(R.id.planInstallmentFrequency);
-        installmentFrequency.setText(getFrequencyString(planPayload.getPaymentPlanDetails().getFrequencyCode()));
+        installmentFrequency.setText(planPayload.getPaymentPlanDetails().getFrequencyString());
 
         String practiceName = userPracticeDTO.getPracticeName();
         TextView practiceNameText = (TextView) view.findViewById(R.id.practice_name);
@@ -148,14 +147,6 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
     @Override
     protected int getContentLayout() {
         return R.layout.fragment_payment_plan_details;
-    }
-
-    private String getFrequencyString(String planFrequency) {
-        switch (planFrequency) {
-            case PaymentPlanModel.FREQUENCY_MONTHLY:
-            default:
-                return Label.getLabel("payment_plan_frequency_month");
-        }
     }
 
     private String getNextDate(PaymentPlanPayloadDTO planPayload) {

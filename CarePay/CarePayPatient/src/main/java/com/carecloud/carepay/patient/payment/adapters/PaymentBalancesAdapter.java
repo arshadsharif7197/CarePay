@@ -88,7 +88,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
 
             String planDetails = currencyFormatter.format(
                     paymentPlanItem.getPayload().getPaymentPlanDetails().getAmount()) + "/" +
-                    paymentPlanItem.getPayload().getPaymentPlanDetails().getFrequencyCode();
+                    paymentPlanItem.getPayload().getPaymentPlanDetails().getFrequencyString();
             holder.planDetail.setText(planDetails);
 
             holder.planProgress.setMax(paymentPlanItem.getPayload().getPaymentPlanDetails().getInstallments());
