@@ -2,13 +2,9 @@ package com.carecloud.carepay.patient.myhealth;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.DownloadManager;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -35,6 +31,7 @@ import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.PdfUtil;
 
 import java.util.List;
 
@@ -197,7 +194,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
             String url = String.format("%s?%s=%s", transitionDTO.getUrl(), "patient_id",
                     String.valueOf(patientDto.getId()));
 
-            downloadPdf(url, patientDto.getFullName(), ".pdf", "Medical Record");
+            PdfUtil.downloadPdf(getContext(), url, patientDto.getFullName(), ".pdf", "Medical Record");
             MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewMedicalRecord));
         } else {
             showErrorNotification("Unable to find Patient Record");
@@ -222,25 +219,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     private void prepareLabPdf(final LabDto lab) {
         TransitionDTO getPdfTransition = myHealthDto.getMetadata().getLinks().getLabsPdf();
         String url = String.format("%s?%s=%s", getPdfTransition.getUrl(), "labs_id", lab.getId());
-        downloadPdf(url, lab.getName(), ".pdf", lab.getPractice());
+        PdfUtil.downloadPdf(getContext(), url, lab.getName(), ".pdf", lab.getPractice());
     }
 
-    private void downloadPdf(String url, String title,
-                             String fileExtension, String description) {
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-        request.setTitle(title + fileExtension);
-        request.setDescription(description);
-        request.setVisibleInDownloadsUi(true);
-        request.allowScanningByMediaScanner();
-        request.setMimeType("application/pdf");
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.addRequestHeader("Accept", "application/pdf");
-        request.addRequestHeader("username", getAppAuthorizationHelper().getCurrUser());
-        request.addRequestHeader("Authorization", getAppAuthorizationHelper().getIdToken());
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, title + fileExtension);
-
-        DownloadManager downloadManager = (DownloadManager) getContext()
-                .getSystemService(Context.DOWNLOAD_SERVICE);
-        downloadManager.enqueue(request);
-    }
 }

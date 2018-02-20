@@ -93,6 +93,8 @@ public class PaymentsPayloadDTO implements Serializable {
     @SerializedName("auth")
     @Expose
     private UserAuthModel userAuthModel = new UserAuthModel();
+    @SerializedName("patient_statements")
+    private List<PatientStatementDTO> patientStatements = new ArrayList<>();
 
 
     public List<PatientModel> getPatients() {
@@ -331,13 +333,22 @@ public class PaymentsPayloadDTO implements Serializable {
         this.userAuthModel = userAuthModel;
     }
 
+    public List<PatientStatementDTO> getPatientStatements() {
+        return patientStatements;
+    }
+
+    public void setPatientStatements(List<PatientStatementDTO> patientStatements) {
+        this.patientStatements = patientStatements;
+    }
+
     /**
      * Make sure the current practice can accept payments
+     *
      * @return true if practice has merchant service account enabled
      */
-    public boolean canMakePayments(String practiceId){
-        for (UserPracticeDTO userPracticeDTO : getUserPractices()){
-            if(userPracticeDTO.getPracticeId() != null && userPracticeDTO.getPracticeId().equals(practiceId)){
+    public boolean canMakePayments(String practiceId) {
+        for (UserPracticeDTO userPracticeDTO : getUserPractices()) {
+            if (userPracticeDTO.getPracticeId() != null && userPracticeDTO.getPracticeId().equals(practiceId)) {
                 return userPracticeDTO.isPayeezyEnabled();
             }
         }
@@ -347,14 +358,15 @@ public class PaymentsPayloadDTO implements Serializable {
 
     /**
      * get filtered list of plans for a single practice
+     *
      * @param practiceId practice id
      * @return filtered list of plans for the specified practice
      */
-    public List<PaymentPlanDTO> getFilteredPlans(String practiceId){
+    public List<PaymentPlanDTO> getFilteredPlans(String practiceId) {
         List<PaymentPlanDTO> filteredList = new ArrayList<>();
-        for(PaymentPlanDTO paymentPlanDTO : getPatientPaymentPlans()){
-            if(paymentPlanDTO.getMetadata().getPracticeId() != null &&
-                    paymentPlanDTO.getMetadata().getPracticeId().equals(practiceId)){
+        for (PaymentPlanDTO paymentPlanDTO : getPatientPaymentPlans()) {
+            if (paymentPlanDTO.getMetadata().getPracticeId() != null &&
+                    paymentPlanDTO.getMetadata().getPracticeId().equals(practiceId)) {
                 filteredList.add(paymentPlanDTO);
             }
         }

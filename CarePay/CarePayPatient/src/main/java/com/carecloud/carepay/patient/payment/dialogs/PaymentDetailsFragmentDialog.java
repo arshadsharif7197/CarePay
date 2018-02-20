@@ -12,14 +12,19 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.adapters.PaymentItemsListAdapter;
 import com.carecloud.carepaylibray.customdialogs.BasePaymentDetailsFragmentDialog;
+import com.carecloud.carepaylibray.payments.models.PatientStatementDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.StatementDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.PdfUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
+
+import java.util.List;
 
 public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDialog {
 
@@ -130,6 +135,35 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
             view.findViewById(R.id.paymentButtonsContainer).setVisibility(View.VISIBLE);
             view.findViewById(R.id.planButtonsContainer).setVisibility(View.VISIBLE);
         }
+
+        List<PatientStatementDTO> patientStatementList = paymentReceiptModel.getPaymentPayload().getPatientStatements();
+        PatientStatementDTO statement = null;
+        for (PatientStatementDTO patientStatementDTO : patientStatementList) {
+            if (patientStatementDTO.getMetadata().getPracticeId()
+                    .equals(selectedBalance.getMetadata().getPracticeId())) {
+                statement = patientStatementDTO;
+                break;
+            }
+        }
+        if (statement != null && !statement.getStatements().isEmpty()) {
+            View statementButton = view.findViewById(R.id.statement_button);
+            statementButton.setVisibility(View.VISIBLE);
+            final PatientStatementDTO finalStatement = statement;
+            statementButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    downloadStatementPdf(finalStatement.getStatements().get(0));
+                }
+            });
+        }
+    }
+
+    private void downloadStatementPdf(StatementDTO statementDTO) {
+        String url = String.format("%s?%s=%s", paymentReceiptModel.getPaymentsMetadata()
+                        .getPaymentsLinks().getPatientStatements().getUrl(), "statement_id",
+                String.valueOf(statementDTO.getId()));
+        String fileName = String.format("%s %s", "Statement - ", selectedBalance.getMetadata().getPracticeName());
+        PdfUtil.downloadPdf(getContext(), url, fileName, ".pdf", statementDTO.getStatementDate());
     }
 
     @Override
@@ -151,7 +185,6 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                         double minPayment = payloadSettingsDTO.getPayload().getRegularPayments().getMinimumPartialPaymentAmount();
                         return total >= minBalance && total >= minPayment;
                     }
-
                     return false;
                 }
             }
@@ -159,9 +192,9 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         return true;
     }
 
-    protected boolean isPaymentPlanAvailable(String practiceId, double balance){
-        if(practiceId != null) {
-            for(PaymentsPayloadSettingsDTO payloadSettingsDTO : paymentReceiptModel.getPaymentPayload().getPaymentSettings()) {
+    protected boolean isPaymentPlanAvailable(String practiceId, double balance) {
+        if (practiceId != null) {
+            for (PaymentsPayloadSettingsDTO payloadSettingsDTO : paymentReceiptModel.getPaymentPayload().getPaymentSettings()) {
                 if (practiceId.equals(payloadSettingsDTO.getMetadata().getPracticeId())) {
                     PaymentsSettingsPaymentPlansDTO paymentPlanSettings = payloadSettingsDTO.getPayload().getPaymentPlans();
                     if (paymentPlanSettings.isPaymentPlansEnabled()) {
