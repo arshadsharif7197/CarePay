@@ -14,9 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by lmenendez on 3/9/17.
+ * Created by pjohnson on 02/21/18.
  */
-
 public class PracticeLocationSearchAdapter extends RecyclerView.Adapter<PracticeLocationSearchAdapter.PracticeViewHolder> {
 
     public interface SelectPracticeLocationAdapterCallback {
