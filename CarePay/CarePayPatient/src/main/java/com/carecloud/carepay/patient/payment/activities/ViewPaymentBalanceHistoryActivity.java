@@ -13,13 +13,11 @@ import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentHistoryDetailDialogFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFragment;
+import com.carecloud.carepay.patient.payment.fragments.PaymentDisabledAlertDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.NoPaymentsFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanPaymentMethodFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanTermsFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
@@ -34,6 +32,9 @@ import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAddCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanChooseCreditCardFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanTermsFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
@@ -56,7 +57,8 @@ import java.util.List;
 /**
  * Created by jorge on 29/12/16
  */
-public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity implements PaymentFragmentActivityInterface, PaymentPlanInterface {
+public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity implements PaymentFragmentActivityInterface,
+        PaymentPlanInterface, PaymentDisabledAlertDialogFragment.DisabledPaymentAlertCallback {
 
     private static boolean isPaymentDone;
     private PaymentsModel paymentsDTO;
@@ -108,10 +110,10 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         return false;
     }
 
-    private boolean hasPaymentPlans(){
-        if(!paymentsDTO.getPaymentPayload().getPatientPaymentPlans().isEmpty()){
-            for(PaymentPlanDTO  paymentPlanDTO : paymentsDTO.getPaymentPayload().getPatientPaymentPlans()){
-                if(paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanStatus().equals(PaymentPlanDetailsDTO.STATUS_PROCESSING)){
+    private boolean hasPaymentPlans() {
+        if (!paymentsDTO.getPaymentPayload().getPatientPaymentPlans().isEmpty()) {
+            for (PaymentPlanDTO paymentPlanDTO : paymentsDTO.getPaymentPayload().getPatientPaymentPlans()) {
+                if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanStatus().equals(PaymentPlanDetailsDTO.STATUS_PROCESSING)) {
                     return true;
                 }
             }
@@ -299,8 +301,17 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void loadPaymentAmountScreen(PaymentsBalancesItem selectedBalancesItem, PaymentsModel paymentDTO) {
         setPendingBalance(selectedBalancesItem);
-        selectedUserPractice = DtoHelper.getConvertedDTO(UserPracticeDTO.class, DtoHelper.getStringDTO(selectedBalancesItem.getMetadata()));
-        startPaymentProcess(paymentDTO);
+        selectedUserPractice = DtoHelper.getConvertedDTO(UserPracticeDTO.class,
+                DtoHelper.getStringDTO(selectedBalancesItem.getMetadata()));
+        if (paymentDTO.getPaymentPayload().canMakePayments(selectedBalancesItem.getMetadata().getPracticeId())) {
+            startPaymentProcess(paymentDTO);
+        } else {
+            PaymentDisabledAlertDialogFragment fragment = PaymentDisabledAlertDialogFragment
+                    .newInstance(Label.getLabel("payments.pendingPayments.patientFeedbackPopup.label.title"),
+                            Label.getLabel("payments.pendingPayments.patientFeedbackPopup.label.description"),
+                            selectedBalancesItem);
+            displayDialogFragment(fragment, true);
+        }
     }
 
     @Override
@@ -402,11 +413,11 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void onSubmitPaymentPlan(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        List<PaymentPlanDTO> paymentPlanList =  this.paymentsDTO.getPaymentPayload().getPatientPaymentPlans();
-        for(PaymentPlanDTO paymentPlanDTO : paymentsModel.getPaymentPayload().getPatientPaymentPlans()){
+        List<PaymentPlanDTO> paymentPlanList = this.paymentsDTO.getPaymentPayload().getPatientPaymentPlans();
+        for (PaymentPlanDTO paymentPlanDTO : paymentsModel.getPaymentPayload().getPatientPaymentPlans()) {
             paymentPlanList.add(paymentPlanDTO);
         }
-        for(int i=0; i<getSupportFragmentManager().getBackStackEntryCount(); i++) {
+        for (int i = 0; i < getSupportFragmentManager().getBackStackEntryCount(); i++) {
             getSupportFragmentManager().popBackStack();
         }
         initFragments();
@@ -422,5 +433,15 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
                 .newInstance(paymentsModel, paymentLineItem, selectedBalance, false);
         displayDialogFragment(dialog, false);
+    }
+
+    @Override
+    public void onContinueClicked() {
+        startPaymentProcess(paymentsDTO);
+    }
+
+    @Override
+    public void onAlertClicked() {
+        //TODO: Not yet
     }
 }
