@@ -232,12 +232,14 @@ public class FilterDialog extends PopupWindow
     private void saveFilter() {
         String practiceId = ((BaseActivity) context).getApplicationMode().getUserPracticeDTO().getPracticeId();
         String userId = ((BaseActivity) context).getApplicationMode().getUserPracticeDTO().getUserId();
-        ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences()
-                .edit().putStringSet(practiceId + userId + ApplicationPreferences.PREFERENCE_FILTERED_PROVIDERS,
-                getFilteredDoctorsIds()).apply();
-        ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences().edit()
-                .putStringSet(practiceId + userId + ApplicationPreferences.PREFERENCE_FILTERED_LOCATIONS,
-                getFilteredLocationsIds()).apply();
+        ApplicationPreferences.getInstance().setSelectedProvidersId(practiceId, userId, getFilteredDoctorsIds());
+        ApplicationPreferences.getInstance().setSelectedLocationsId(practiceId, userId, getFilteredLocationsIds());
+//        ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences()
+//                .edit().putStringSet(practiceId + userId + ApplicationPreferences.PREFERENCE_FILTERED_PROVIDERS,
+//                getFilteredDoctorsIds()).apply();
+//        ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences().edit()
+//                .putStringSet(practiceId + userId + ApplicationPreferences.PREFERENCE_FILTERED_LOCATIONS,
+//                getFilteredLocationsIds()).apply();
     }
 
     private Set<String> getFilteredDoctorsIds() {

@@ -11,9 +11,9 @@ import java.util.List;
  * Model for appointment locations.
  */
 public class LocationDTO {
+
     @Expose(serialize = false)
     private boolean error = false;
-
 
     @SerializedName("id")
     @Expose
@@ -35,72 +35,56 @@ public class LocationDTO {
     private List<PhoneDTO> phoneDTOs = new ArrayList<>();
 
     /**
-     * 
-     * @return
-     *     The id
+     * @return The id
      */
     public Integer getId() {
         return id;
     }
 
     /**
-     * 
-     * @param id
-     *     The id
+     * @param id The id
      */
     public void setId(Integer id) {
         this.id = id;
     }
 
     /**
-     * 
-     * @return
-     *     The name
+     * @return The name
      */
     public String getName() {
         return name;
     }
 
     /**
-     * 
-     * @param name
-     *     The name
+     * @param name The name
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * 
-     * @return
-     *     The isVisibleAppointmentScheduler
+     * @return The isVisibleAppointmentScheduler
      */
     public Boolean getIsVisibleAppointmentScheduler() {
         return isVisibleAppointmentScheduler;
     }
 
     /**
-     * 
-     * @param isVisibleAppointmentScheduler
-     *     The is_visible_appointment_scheduler
+     * @param isVisibleAppointmentScheduler The is_visible_appointment_scheduler
      */
     public void setIsVisibleAppointmentScheduler(Boolean isVisibleAppointmentScheduler) {
         this.isVisibleAppointmentScheduler = isVisibleAppointmentScheduler;
     }
 
     /**
-     * 
-     * @return
-     *     The address
+     * @return The address
      */
     public AppointmentAddressDTO getAddress() {
         return address;
     }
 
     /**
-     * 
-     * @param address
-     *     The address
+     * @param address The address
      */
     public void setAddress(AppointmentAddressDTO address) {
         this.address = address;

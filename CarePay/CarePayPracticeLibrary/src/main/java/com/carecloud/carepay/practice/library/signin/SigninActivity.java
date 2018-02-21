@@ -1,6 +1,5 @@
 package com.carecloud.carepay.practice.library.signin;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -28,8 +27,10 @@ import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionUserPractice;
+import com.carecloud.carepay.practice.library.signin.fragments.ChoosePracticeLocationFragment;
 import com.carecloud.carepay.practice.library.signin.fragments.PracticeSearchFragment;
 import com.carecloud.carepay.practice.library.signin.interfaces.SelectPracticeCallback;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -43,6 +44,7 @@ import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTo
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.interfaces.DTO;
@@ -60,6 +62,7 @@ import com.newrelic.agent.android.NewRelic;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Jahirul Bhuiyan on 10/13/2016.
@@ -444,15 +447,43 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     }
 
     @Override
-    public void onSelectPractice(PracticeSelectionDTO model, PracticeSelectionUserPractice userPractice) {
-        TransitionDTO transitionDTO = model.getMetadata().getTransitions().getAuthenticate();
+    public void onSelectPractice(PracticeSelectionUserPractice userPractice) {
+        if (userPractice.getLocations().size() <= 1) {
+            authenticate(userPractice);
+        } else {
+            showChoosePracticeLocationFragment(userPractice);
+        }
+    }
+
+    private void authenticate(PracticeSelectionUserPractice userPractice) {
+        TransitionDTO transitionDTO = practiceSelectionModel.getMetadata().getTransitions().getAuthenticate();
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("language", getApplicationPreferences().getUserLanguage());
         queryMap.put("practice_mgmt", userPractice.getPracticeMgmt());
         queryMap.put("practice_id", userPractice.getPracticeId());
         getWorkflowServiceHelper().execute(transitionDTO, signInCallback, queryMap);
-
         identifyPracticeUser(userPractice.getUserId());
+    }
+
+    @Override
+    public void onSelectPracticeLocation(PracticeSelectionUserPractice selectedPractice, LocationDTO selectedLocation) {
+        ApplicationPreferences.getInstance().setPracticeId(selectedPractice.getPracticeId());
+        ApplicationPreferences.getInstance().setPracticeLocationId(selectedLocation.getId());
+        Set<String> locationIds = ApplicationPreferences.getInstance()
+                .getSelectedLocationsIds(selectedPractice.getPracticeId(), selectedPractice.getUserId());
+        if (!locationIds.contains(String.valueOf(selectedLocation.getId()))) {
+            locationIds.add(String.valueOf(selectedLocation.getId()));
+            ApplicationPreferences.getInstance()
+                    .setSelectedLocationsId(selectedPractice.getPracticeId(),
+                            selectedPractice.getUserId(), locationIds);
+        }
+
+        authenticate(selectedPractice);
+    }
+
+    private void showChoosePracticeLocationFragment(PracticeSelectionUserPractice userPractice) {
+        ChoosePracticeLocationFragment fragment = ChoosePracticeLocationFragment.newInstance(userPractice);
+        fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
     }
 
     @Override
@@ -462,8 +493,8 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     }
 
     @Override
-    public Context getContext() {
-        return this;
+    public void onSelectPracticeLocationCanceled(PracticeSelectionUserPractice selectedPractice) {
+        showPracticeSearchFragment(selectedPractice);
     }
 
     public void requestPasswordFocus() {
@@ -518,7 +549,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
                 setSignInButtonClickable(true);
                 identifyPracticeUser(practiceList.get(0).getUserId());
             } else {
-                showPracticeSearchFragment(workflowDTO);
+                showPracticeSearchFragment(null);
             }
         }
 
@@ -559,12 +590,8 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         PracticeNavigationHelper.navigateToWorkflow(this, workflowDTO);
     }
 
-    private void showPracticeSearchFragment(WorkflowDTO workflowDTO) {
-        Gson gson = new Gson();
-        Bundle args = new Bundle();
-        args.putString(CarePayConstants.PRACTICE_SELECTION_BUNDLE, gson.toJson(workflowDTO));
-        PracticeSearchFragment fragment = new PracticeSearchFragment();
-        fragment.setArguments(args);
+    private void showPracticeSearchFragment(PracticeSelectionUserPractice selectedPractice) {
+        PracticeSearchFragment fragment = PracticeSearchFragment.newInstance(selectedPractice);
         fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
     }
 
