@@ -48,7 +48,7 @@
 
             <include
                 android:id="@+id/toolbar_layout"
-                layout="@layout/toolbar_responsibility" />
+                layout="@layout/toolbar_title_only" />
 
         </FrameLayout>
 

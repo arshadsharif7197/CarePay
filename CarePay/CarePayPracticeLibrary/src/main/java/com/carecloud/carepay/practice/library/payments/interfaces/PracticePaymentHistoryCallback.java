@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.payments.interfaces;
 
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 
@@ -17,5 +18,9 @@ public interface PracticePaymentHistoryCallback {
     void startRefundProcess(PaymentHistoryItem historyItem, PaymentsModel paymentsModel);
 
     void completeRefundProcess(PaymentHistoryItem historyItem, PaymentsModel paymentsModel);
+
+    void displayPaymentPlansList(PaymentsModel paymentsModel);
+
+    void onPaymentPlanSelected(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
 }
 

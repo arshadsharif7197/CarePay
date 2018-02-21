@@ -78,6 +78,23 @@
                 android:textSize="@dimen/text_size_34sp"
                 tools:text="John Jones"
                 app:customAssetFont="proxima_nova_semi_bold" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/viewPaymentPlans"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/blue_border_rounded_button_selector"
+                android:gravity="center"
+                android:paddingTop="@dimen/dimen_10dp"
+                android:paddingBottom="@dimen/dimen_10dp"
+                android:paddingStart="@dimen/dimen_30dp"
+                android:paddingEnd="@dimen/dimen_30dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_12sp"
+                android:visibility="gone"
+                app:customAssetFont="gotham_rounded_medium"
+                tools:text="3 Payment Plans"/>
+
         </LinearLayout>
 
         <FrameLayout

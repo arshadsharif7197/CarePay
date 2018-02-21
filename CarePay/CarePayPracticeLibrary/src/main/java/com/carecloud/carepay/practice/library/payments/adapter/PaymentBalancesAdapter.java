@@ -13,12 +13,10 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
-import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentListItem;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Callback;
@@ -88,7 +86,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
             final PaymentPlanDTO paymentPlanDTO = (PaymentPlanDTO) listItems.get(position);
             PaymentPlanDetailsDTO detailsDTO = paymentPlanDTO.getPayload().getPaymentPlanDetails();
             holder.paymentAmountTextView.setText(StringUtil.getFormattedBalanceAmount(detailsDTO.getAmount()));
-            holder.planInstallmentFrequency.setText(getFrequencyString(detailsDTO.getFrequencyCode()));
+            holder.planInstallmentFrequency.setText(detailsDTO.getFrequencyString());
 
             holder.paymentPlanProgress.setMax(paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments());
             holder.paymentPlanProgress.setProgress(paymentPlanDTO.getPayload().getPaymentPlanDetails().getFilteredHistory().size());
@@ -105,6 +103,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
         String photoUrl = userPractice.getPracticePhoto();
         if (TextUtils.isEmpty(photoUrl)) {
             holder.providerImageTextView.setText(StringUtil.getShortName(userPractice.getPracticeName()));
+            holder.providerImageView.setVisibility(View.GONE);
         } else {
             Picasso.with(context).load(photoUrl)
                     .transform(new CircleImageTransform())
@@ -118,10 +117,10 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
                         @Override
                         public void onError() {
                             holder.providerImageTextView.setText(StringUtil.getShortName(userPractice.getPracticeName()));
+                            holder.providerImageView.setVisibility(View.GONE);
                         }
                     });
         }
-
     }
 
     @Override
@@ -135,14 +134,6 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
             return VIEW_TYPE_BALANCE;
         }
         return VIEW_TYPE_PLAN;
-    }
-
-    private String getFrequencyString(String planFrequency) {
-        switch (planFrequency) {
-            case PaymentPlanModel.FREQUENCY_MONTHLY:
-            default:
-                return Label.getLabel("payment_plan_frequency_month");
-        }
     }
 
     public void setData(List<? extends PaymentListItem> listItems) {

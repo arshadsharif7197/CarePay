@@ -2,6 +2,7 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -81,6 +82,14 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
         Bundle args = getArguments();
         paymentPlanPostModel = DtoHelper.getConvertedDTO(PaymentPlanPostModel.class, args);
         paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle icicle){
+        super.onViewCreated(view, icicle);
+        //hide swipe card because these cards are not reusable
+        View swipeCreditCardNowLayout = view.findViewById(R.id.swipeCreditCardNowLayout);
+        swipeCreditCardNowLayout.setVisibility(View.GONE);
     }
 
     @Override
