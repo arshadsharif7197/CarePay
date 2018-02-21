@@ -70,9 +70,10 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
         PaymentSettingsBalanceRangeRule selectedRule = new PaymentSettingsBalanceRangeRule();
         PaymentsPayloadSettingsDTO payloadSettingsDTO = paymentsModel.getPaymentPayload().getPaymentSettings().get(0);
         for(PaymentSettingsBalanceRangeRule rule : payloadSettingsDTO.getPayload().getPaymentPlans().getBalanceRangeRules()){
-            double ruleAmount = rule.getMinBalance().getValue();
-            if(planTotal > ruleAmount &&
-                    ruleAmount > selectedRule.getMinBalance().getValue()){
+            double minAmount = rule.getMinBalance().getValue();
+            double maxAmount = rule.getMaxBalance().getValue();
+            if(planTotal >= minAmount && planTotal <= maxAmount &&
+                    minAmount > selectedRule.getMinBalance().getValue()){
                 selectedRule = rule;
             }
         }

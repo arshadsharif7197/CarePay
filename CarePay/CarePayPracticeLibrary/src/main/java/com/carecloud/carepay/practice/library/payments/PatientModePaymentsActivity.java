@@ -49,6 +49,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentListItem;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
@@ -59,6 +60,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -106,14 +108,19 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
 
     private boolean hasNoPayments() {
         boolean hasNoPayments = true;
-        if (paymentResultModel.getPaymentPayload().getPatientBalances().isEmpty()) {
-            return true;
-        }
-        for (PatientBalanceDTO patientBalanceDTO : paymentResultModel.getPaymentPayload().getPatientBalances()) {
+        Iterator<PatientBalanceDTO> iterator = paymentResultModel.getPaymentPayload().getPatientBalances().iterator();
+        while (iterator.hasNext()){
+            PatientBalanceDTO patientBalanceDTO = iterator.next();
             if (Double.parseDouble(patientBalanceDTO.getPendingRepsonsibility()) > 0) {
-                hasNoPayments = false;
-                break;
+                if(hasNoPayments) {
+                    hasNoPayments = false;
+                }
+            }else{
+                iterator.remove();//remove all 0 balances to prevent them from showing in the list
             }
+        }
+        if (!paymentResultModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()){
+            hasNoPayments = false;
         }
         return hasNoPayments;
     }
@@ -163,7 +170,6 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
         if (selectedBalance == null) {
             selectedBalance = paymentsModel.getPaymentPayload().getPatientBalances().get(0);
         }
-        boolean showPartial = paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments().isAllowPartialPayments();
         ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newClinicHeader(paymentsModel);
         ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
                 .newInstance(paymentsModel, headerModel, selectedBalance);
@@ -200,7 +206,13 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
 
     @Override
     public void onPaymentPlanAction(PaymentsModel paymentsModel) {
-
+        PendingBalanceDTO selectedPendingBalance = selectedBalance.getBalances().get(0);
+        if(mustAddToExisting(paymentsModel)){
+            onAddBalanceToExitingPlan(paymentsModel, selectedPendingBalance);
+        }else {
+            PatientModePaymentPlanFragment fragment = PatientModePaymentPlanFragment.newInstance(paymentsModel, selectedPendingBalance);
+            displayDialogFragment(fragment, false);
+        }
     }
 
     @Override
@@ -270,8 +282,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
 
     @Override
     public void onLeftActionTapped(PaymentsModel paymentsModel, double owedAmount) {
-        PatientModePaymentPlanFragment fragment = PatientModePaymentPlanFragment.newInstance(paymentsModel, selectedBalance.getBalances().get(0));
-        displayDialogFragment(fragment, false);
+        onPaymentPlanAction(paymentsModel);
     }
 
     @Override
@@ -484,7 +495,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
     @Override
     public void onDismissEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
         PracticePaymentPlanDetailsDialogFragment fragment = PracticePaymentPlanDetailsDialogFragment
-                .newInstance(paymentResultModel, paymentPlanDTO);
+                .newInstance(paymentsModel, paymentPlanDTO);
         displayDialogFragment(fragment, false);
     }
 
@@ -504,5 +515,13 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
     public void onSelectedPlanToAdd(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO selectedPlan) {
         PatientModeAddExistingPaymentPlanFragment fragment = PatientModeAddExistingPaymentPlanFragment.newInstance(paymentsModel, selectedBalance, selectedPlan);
         displayDialogFragment(fragment, false);
+    }
+
+    private boolean mustAddToExisting(PaymentsModel paymentsModel){
+        if(paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()){
+            return false;
+        }
+        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getPaymentPlans();
+        return !paymentPlanSettings.isCanHaveMultiple() && paymentPlanSettings.isAddBalanceToExisting();
     }
 }

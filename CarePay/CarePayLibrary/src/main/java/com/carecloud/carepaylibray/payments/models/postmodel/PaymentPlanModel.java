@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.payments.models.postmodel;
 
 import android.support.annotation.StringDef;
 
+import com.carecloud.carepay.service.library.label.Label;
 import com.google.gson.annotations.SerializedName;
 
 import java.lang.annotation.Retention;
@@ -96,4 +97,13 @@ public class PaymentPlanModel {
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
     }
+
+    public String getFrequencyString() {
+        switch (frequencyCode) {
+            case PaymentPlanModel.FREQUENCY_MONTHLY:
+            default:
+                return Label.getLabel("payment_plan_frequency_month");
+        }
+    }
+
 }

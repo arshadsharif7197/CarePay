@@ -31,7 +31,9 @@ import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.models.UserAuthPermissions;
 import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
@@ -65,6 +67,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     private View newChargesLayout;
     private RecyclerView newChargesRecycler;
     private Button payButton;
+    private Button paymentPlanButton;
     private View emptyBalanceLayout;
 
     private BounceHelper balanceViewSwipeHelper;
@@ -95,6 +98,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
     private boolean hasPaymentError = false;
     private UserAuthPermissions authPermissions;
+
+    private boolean mustAddToExisting = false;
 
     @Override
     public void onAttach(Context context){
@@ -177,6 +182,11 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             }
         });
 
+        paymentPlanButton.setVisibility(isPaymentPlanAvailable(paymentAmount)
+                ? View.VISIBLE : View.GONE);
+        if(mustAddToExisting){
+            paymentPlanButton.setText(Label.getLabel("payment_plan_add_existing"));
+        }
     }
 
     private void setupToolbar(View view, String titleString){
@@ -208,11 +218,12 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         addButton.setOnClickListener(addItem);
         addButtonEmpty.setOnClickListener(addItem);
 
-        Button leftButton = (Button) view.findViewById(R.id.payment_left_button);
-        leftButton.setOnClickListener(new View.OnClickListener() {
+        paymentPlanButton = (Button) view.findViewById(R.id.payment_left_button);
+        paymentPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 callback.onPaymentPlanAction(paymentsModel);
+                hideDialog();
             }
         });
 
@@ -809,6 +820,28 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
     private static double round(double amount){
         return (double) Math.round(amount * 100) / 100;
+    }
+
+    private boolean isPaymentPlanAvailable(double balance){
+        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = paymentsModel.getPaymentPayload()
+                .getPaymentSettings().get(0).getPayload().getPaymentPlans();
+        if(paymentPlanSettings.isPaymentPlansEnabled()){
+            for(PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()){
+                if (balance >= rule.getMinBalance().getValue() &&
+                        balance <= rule.getMaxBalance().getValue()) {
+                    if(paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()){
+                        return true;
+                    }else if(paymentPlanSettings.isCanHaveMultiple()){//need to check if multiple plans is enabled
+                        return true;
+                    }else if(paymentPlanSettings.isAddBalanceToExisting()){//check if balance can be added to existing
+                        mustAddToExisting = true;
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        }
+        return false;
     }
 
 }

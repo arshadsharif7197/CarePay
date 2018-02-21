@@ -327,9 +327,10 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         for (PaymentsPayloadSettingsDTO settingsDTO : paymentsModel.getPaymentPayload().getPaymentSettings()) {
             if (practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())) {
                 for (PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getPayload().getPaymentPlans().getBalanceRangeRules()) {
-                    double ruleAmount = balanceRangeRule.getMinBalance().getValue();
-                    if (paymentPlanAmount > ruleAmount &&
-                            ruleAmount > paymentPlanBalanceRules.getMinBalance().getValue()) {
+                    double minAmount = balanceRangeRule.getMinBalance().getValue();
+                    double maxAmount = balanceRangeRule.getMaxBalance().getValue();
+                    if (paymentPlanAmount >= minAmount && paymentPlanAmount <= maxAmount &&
+                            minAmount > paymentPlanBalanceRules.getMinBalance().getValue()) {
                         paymentPlanBalanceRules = balanceRangeRule;
                     }
                 }
