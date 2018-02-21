@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayload
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
@@ -59,7 +60,7 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
         try {
             if (context instanceof PaymentViewHandler) {
                 callback = ((PaymentViewHandler) context).getPaymentPresenter();
-            }else if (context instanceof AppointmentViewHandler){
+            } else if (context instanceof AppointmentViewHandler) {
                 callback = (PaymentMethodInterface) ((AppointmentViewHandler) context).getAppointmentPresenter();
             } else {
                 callback = (PaymentMethodInterface) context;
@@ -112,7 +113,7 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
         Button createPaymentPlanButton = (Button) view.findViewById(R.id.createPaymentPlanButton);
         createPaymentPlanButton.setOnClickListener(createPaymentPlanButtonListener);
         createPaymentPlanButton.setText(Label.getLabel("payment_create_plan_text"));
-        createPaymentPlanButton.setEnabled(false);//TODO enable this when ready to support payment plans
+        createPaymentPlanButton.setEnabled(userHasPermissionsToCreatePaymentPlan());
 
         paymentMethodList = (ListView) view.findViewById(R.id.list_payment_types);
         final PaymentMethodAdapter paymentMethodAdapter = new PaymentMethodAdapter(getContext(), paymentMethodsList, paymentTypeMap);
@@ -126,6 +127,12 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
             }
         });
 
+    }
+
+    private boolean userHasPermissionsToCreatePaymentPlan() {
+        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = paymentsModel.getPaymentPayload()
+                .getPaymentSettings().get(0).getPayload().getPaymentPlans();
+        return paymentPlanSettings.isPaymentPlansEnabled() && paymentPlanSettings.isRequestNewPlan();
     }
 
     private void initPaymentTypeMap() {
@@ -191,16 +198,16 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
 
     protected List<PaymentsMethodsDTO> getPaymentMethodList() {
         UserPracticeDTO userPracticeDTO = callback.getPracticeInfo(paymentsModel);
-        for(PaymentsPayloadSettingsDTO paymentSetting : paymentsModel.getPaymentPayload().getPaymentSettings()){
-            if(paymentSetting.getMetadata().getPracticeId().equals(userPracticeDTO.getPracticeId()) &&
-                    paymentSetting.getMetadata().getPracticeMgmt().equals(userPracticeDTO.getPracticeMgmt())){
+        for (PaymentsPayloadSettingsDTO paymentSetting : paymentsModel.getPaymentPayload().getPaymentSettings()) {
+            if (paymentSetting.getMetadata().getPracticeId().equals(userPracticeDTO.getPracticeId()) &&
+                    paymentSetting.getMetadata().getPracticeMgmt().equals(userPracticeDTO.getPracticeMgmt())) {
                 return paymentSetting.getPayload().getRegularPayments().getPaymentMethods();
             }
         }
         return paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments().getPaymentMethods();
     }
 
-    protected void logPaymentMethodSelection(String type){
+    protected void logPaymentMethodSelection(String type) {
         MixPanelUtil.logEvent(getString(R.string.event_payment_method_selected), getString(R.string.param_payment_type), type);
     }
 
