@@ -30,9 +30,11 @@ public class ApplicationPreferences {
     public static final String PREFERENCE_FILTERED_LOCATIONS = "filteredLocations";
     public static final String PATIENT_USER_LANGUAGE = "practiceUserLanguage";
     public static final String PRACTICE_USER_LANGUAGE = "user_selected_language";
+    private static final String PREFERENCE_LOCATION_ID = "locationId";
 
     private String patientId;
     private String practiceId;
+    private Integer practiceLocationId;
     private String prefix;
     private String userId;
     private String userLanguage;
@@ -148,6 +150,22 @@ public class ApplicationPreferences {
         }
 
         return readStringFromSharedPref(PREFERENCE_PRACTICE_ID);
+    }
+
+    /**
+     * @return practiceId
+     */
+    public Integer getPracticeLocationId() {
+        if (practiceLocationId != null) {
+            return practiceLocationId;
+        }
+
+        return readIntFromSharedPref(PREFERENCE_LOCATION_ID);
+    }
+
+    public void setPracticeLocationId(Integer practiceLocationId) {
+        this.practiceLocationId = practiceLocationId;
+        writeIntegerToSharedPref(PREFERENCE_LOCATION_ID, practiceLocationId);
     }
 
     /**
@@ -307,8 +325,20 @@ public class ApplicationPreferences {
         return readStringSetFromSharedPref(practiceId + userId + PREFERENCE_FILTERED_PROVIDERS);
     }
 
+    public void setSelectedProvidersId(String practiceId, String userId, Set<String> filteredDoctorsIds) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putStringSet(practiceId + userId + ApplicationPreferences.PREFERENCE_FILTERED_PROVIDERS,
+                filteredDoctorsIds).apply();
+    }
+
     public Set<String> getSelectedLocationsIds(String practiceId, String userId) {
         return readStringSetFromSharedPref(practiceId + userId + PREFERENCE_FILTERED_LOCATIONS);
+    }
+
+    public void setSelectedLocationsId(String practiceId, String userId, Set<String> filteredLocationsIds) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putStringSet(practiceId + userId + ApplicationPreferences.PREFERENCE_FILTERED_LOCATIONS,
+                filteredLocationsIds).apply();
     }
 
     public String getUserName() {
