@@ -113,7 +113,7 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
         Button createPaymentPlanButton = (Button) view.findViewById(R.id.createPaymentPlanButton);
         createPaymentPlanButton.setOnClickListener(createPaymentPlanButtonListener);
         createPaymentPlanButton.setText(Label.getLabel("payment_create_plan_text"));
-        createPaymentPlanButton.setEnabled(userHasPermissionsToCreatePaymentPlan());
+        createPaymentPlanButton.setEnabled(false);//TODO enable this when ready to support payment plans
 
         paymentMethodList = (ListView) view.findViewById(R.id.list_payment_types);
         final PaymentMethodAdapter paymentMethodAdapter = new PaymentMethodAdapter(getContext(), paymentMethodsList, paymentTypeMap);
@@ -127,12 +127,6 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
             }
         });
 
-    }
-
-    private boolean userHasPermissionsToCreatePaymentPlan() {
-        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = paymentsModel.getPaymentPayload()
-                .getPaymentSettings().get(0).getPayload().getPaymentPlans();
-        return paymentPlanSettings.isPaymentPlansEnabled() && paymentPlanSettings.isRequestNewPlan();
     }
 
     private void initPaymentTypeMap() {
