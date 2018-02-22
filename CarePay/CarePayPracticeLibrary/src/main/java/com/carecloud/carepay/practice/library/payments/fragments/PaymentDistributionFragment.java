@@ -191,9 +191,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     }
 
     private boolean userHasPermissionsToCreatePaymentPlan() {
-        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = paymentsModel.getPaymentPayload()
-                .getPaymentSettings().get(0).getPayload().getPaymentPlans();
-        return paymentPlanSettings.isPaymentPlansEnabled() && paymentPlanSettings.isRequestNewPlan();
+        return paymentsModel.getPaymentPayload()
+                .getUserAuthModel().getUserAuthPermissions().canCreatePaymentPlan;
     }
 
     private void setupToolbar(View view, String titleString) {
