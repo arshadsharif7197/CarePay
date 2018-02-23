@@ -60,6 +60,7 @@ import com.google.gson.Gson;
 import com.newrelic.agent.android.NewRelic;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -471,6 +472,9 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         ApplicationPreferences.getInstance().setPracticeLocationId(selectedLocation.getId());
         Set<String> locationIds = ApplicationPreferences.getInstance()
                 .getSelectedLocationsIds(selectedPractice.getPracticeId(), selectedPractice.getUserId());
+        if (locationIds == null) {
+            locationIds = new HashSet<>();
+        }
         if (!locationIds.contains(String.valueOf(selectedLocation.getId()))) {
             locationIds.add(String.valueOf(selectedLocation.getId()));
             ApplicationPreferences.getInstance()

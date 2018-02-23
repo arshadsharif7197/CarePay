@@ -102,7 +102,7 @@
                     android:layout_marginStart="@dimen/dimen_12dp"
                     android:layout_marginTop="@dimen/dimen_15dp"
                     android:textColor="@color/charcoal"
-                    android:textSize="@dimen/text_size_18sp"
+                    android:textSize="@dimen/text_size_17"
                     app:customAssetFont="proxima_nova_regular"
                     breeze:hintKey="payment_method_title"
                     tools:text="Payment Method" />
@@ -114,11 +114,12 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginBottom="@dimen/dimen_15dp"
+                    android:textSize="16sp"
                     android:layout_marginEnd="@dimen/dimen_12dp"
                     android:layout_marginTop="@dimen/dimen_15dp"
                     android:textColor="@color/colorPrimary"
                     app:customAssetFont="proxima_nova_semi_bold"
-                    tools:text="VISA ***2345" />
+                    tools:text="MASTERCARD ***2345" />
 
                 <View
                     android:layout_width="match_parent"
