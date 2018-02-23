@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayload
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
@@ -59,7 +60,7 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
         try {
             if (context instanceof PaymentViewHandler) {
                 callback = ((PaymentViewHandler) context).getPaymentPresenter();
-            }else if (context instanceof AppointmentViewHandler){
+            } else if (context instanceof AppointmentViewHandler) {
                 callback = (PaymentMethodInterface) ((AppointmentViewHandler) context).getAppointmentPresenter();
             } else {
                 callback = (PaymentMethodInterface) context;
@@ -191,16 +192,16 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
 
     protected List<PaymentsMethodsDTO> getPaymentMethodList() {
         UserPracticeDTO userPracticeDTO = callback.getPracticeInfo(paymentsModel);
-        for(PaymentsPayloadSettingsDTO paymentSetting : paymentsModel.getPaymentPayload().getPaymentSettings()){
-            if(paymentSetting.getMetadata().getPracticeId().equals(userPracticeDTO.getPracticeId()) &&
-                    paymentSetting.getMetadata().getPracticeMgmt().equals(userPracticeDTO.getPracticeMgmt())){
+        for (PaymentsPayloadSettingsDTO paymentSetting : paymentsModel.getPaymentPayload().getPaymentSettings()) {
+            if (paymentSetting.getMetadata().getPracticeId().equals(userPracticeDTO.getPracticeId()) &&
+                    paymentSetting.getMetadata().getPracticeMgmt().equals(userPracticeDTO.getPracticeMgmt())) {
                 return paymentSetting.getPayload().getRegularPayments().getPaymentMethods();
             }
         }
         return paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments().getPaymentMethods();
     }
 
-    protected void logPaymentMethodSelection(String type){
+    protected void logPaymentMethodSelection(String type) {
         MixPanelUtil.logEvent(getString(R.string.event_payment_method_selected), getString(R.string.param_payment_type), type);
     }
 
