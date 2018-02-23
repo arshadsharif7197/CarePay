@@ -126,7 +126,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment {
             TextView paymentMethod = (TextView) view.findViewById(R.id.creditCardNumberTextView);
             String paymentMethodMessage = CreditCardUtil.getCreditCardType(creditCard.getPayload().getToken());
             if (paymentMethodMessage == null) {
-                paymentMethodMessage = creditCard.getPayload().getCardType().toUpperCase();
+                paymentMethodMessage = creditCard.getPayload().getCardType();
             }
             paymentMethod.setText(paymentMethodMessage + " ***" + creditCard.getPayload().getCardNumber());
         }
