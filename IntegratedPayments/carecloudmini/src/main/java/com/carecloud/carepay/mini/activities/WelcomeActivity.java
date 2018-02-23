@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
@@ -71,6 +72,7 @@ public class WelcomeActivity extends FullScreenActivity {
     private int paymentAttempt = 0;
     private boolean isDisconnecting = false;
     private boolean isResumed = false;
+    private boolean hasNetworkFailed = false;
 
     private PowerManager.WakeLock wakeLock;
     private WifiManager.WifiLock wifiLock;
@@ -350,14 +352,18 @@ public class WelcomeActivity extends FullScreenActivity {
 
         @Override
         public void onConnectionFailure(String errorMessage) {
-            Log.d(TAG, errorMessage);
+            Log.d(TAG, "Connection Failure: " + errorMessage);
 
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    connectDevice();
-                }
-            }, CONNECTION_RETRY_DELAY);
+            if(!hasNetworkFailed && isResumed) {
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        connectDevice();
+                    }
+                }, CONNECTION_RETRY_DELAY);
+            }else{
+                Looper.getMainLooper().getThread().interrupt();
+            }
         }
 
         @Override
@@ -366,12 +372,14 @@ public class WelcomeActivity extends FullScreenActivity {
             Log.d(TAG, "Device Disconnected");
             isDisconnecting = false;
 
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    connectDevice();
-                }
-            }, CONNECTION_RETRY_DELAY);
+            if(!hasNetworkFailed) {
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        connectDevice();
+                    }
+                }, CONNECTION_RETRY_DELAY);
+            }
         }
     };
 
@@ -643,20 +651,21 @@ public class WelcomeActivity extends FullScreenActivity {
                 if(shouldRetry(errorMessage)) {
                     CustomErrorToast.showWithMessage(WelcomeActivity.this, errorMessage);
                     updateMessage(String.format(getString(R.string.welcome_retrying), paymentAttempt + 1));
-                    verifyPersisted(errorMessage, paymentRequestId, isRefund, requestObject);
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(isRefund){
-                                postRefundRequest(paymentRequestId, requestObject);
-                            }else {
-                                postPaymentRequest(paymentRequestId, requestObject);
+                    if(verifyPersisted(errorMessage, paymentRequestId, isRefund, requestObject)){
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(isRefund){
+                                    postRefundRequest(paymentRequestId, requestObject);
+                                }else {
+                                    postPaymentRequest(paymentRequestId, requestObject);
+                                }
                             }
-                        }
-                    }, paymentAttempt * POST_RETRY_DELAY);
+                        }, paymentAttempt * POST_RETRY_DELAY);
+                    }
                 }else{
                     if(paymentAttempt >= MAX_RETRIES){
-                        if(verifyPersisted(errorMessage, paymentRequestId, isRefund, requestObject)) {
+                        if(!verifyPersisted(errorMessage, paymentRequestId, isRefund, requestObject)) {
                             Gson gson = new Gson();
                             QueueUnprocessedPaymentRecord unprocessedPaymentRecord = new QueueUnprocessedPaymentRecord();
                             unprocessedPaymentRecord.setPaymentRequestId(paymentRequestId);
@@ -687,26 +696,38 @@ public class WelcomeActivity extends FullScreenActivity {
         return !errorMessage.contains("payment request has already been completed") && paymentAttempt <= MAX_RETRIES;
     }
 
-    private boolean verifyPersisted(String errorMessage, String requestId, boolean isRefunding, JsonElement requestObject){
+    private boolean verifyPersisted(String errorMessage, final String requestId, boolean isRefunding, final JsonElement requestObject){
         if(errorMessage != null && errorMessage.contains("transaction response needed")){
-            Gson gson = new Gson();
+            final Gson gson = new Gson();
             if(!isRefunding){
                 PaymentRequest ackRequest = DevicePayment.getPaymentAck(requestId);
                 if (ackRequest != null &&
                         (!ackRequest.getState().equals(StateDef.STATE_CAPTURED) ||
-                        ackRequest.getTransactionResponse() == null ||
-                        ackRequest.getPaymentMethod() == null ||
-                        ackRequest.getPaymentMethod().getCardData() == null)) {
-                    PaymentRequest paymentRequest = gson.fromJson(requestObject, PaymentRequest.class);//this is the expected payment request payload
-                    DevicePayment.updatePaymentRequest(WelcomeActivity.this, requestId, paymentRequest, paymentRequestCallback);
+                                ackRequest.getTransactionResponse() == null ||
+                                ackRequest.getPaymentMethod() == null ||
+                                ackRequest.getPaymentMethod().getCardData() == null)) {
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            PaymentRequest paymentRequest = gson.fromJson(requestObject, PaymentRequest.class);//this is the expected payment request payload
+                            DevicePayment.updatePaymentRequest(WelcomeActivity.this, requestId, paymentRequest, paymentRequestCallback);
+                            postPaymentRequest(requestId, requestObject);
+                        }
+                    }, (paymentAttempt * POST_RETRY_DELAY * 2));//requires waiting double because Shamrock Payments is messing with the record
                 }
             }else {
                 RefundRequest ackRequest = DeviceRefund.getRefundAck(requestId);
                 if (ackRequest != null &&
                         (!ackRequest.getState().equals(StateDef.STATE_CAPTURED) ||
-                        ackRequest.getTransactionResponse() == null)) {
-                    RefundRequest refundRequest = gson.fromJson(requestObject, RefundRequest.class);//this is the expected refund request payload
-                    DeviceRefund.updateRefundRequest(WelcomeActivity.this, requestId, refundRequest, refundRequestCallback);
+                                ackRequest.getTransactionResponse() == null)) {
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            RefundRequest refundRequest = gson.fromJson(requestObject, RefundRequest.class);//this is the expected refund request payload
+                            DeviceRefund.updateRefundRequest(WelcomeActivity.this, requestId, refundRequest, refundRequestCallback);
+                            postRefundRequest(requestId, requestObject);
+                        }
+                    }, (paymentAttempt * POST_RETRY_DELAY * 2));//requires waiting double because Shamrock Payments is messing with the record
                 }
             }
             return false;
@@ -727,8 +748,10 @@ public class WelcomeActivity extends FullScreenActivity {
                 ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
                 if(isResumed && networkInfo != null && networkInfo.isConnected()){
+                    hasNetworkFailed = false;
                     connectDevice();
                 }else{
+                    hasNetworkFailed = true;
                     Log.w(TAG, "Activity is Resumed: "+isResumed);
                     Log.w(TAG, "Network Info: "+ (networkInfo != null? networkInfo.getState() : " NULL"));
                 }
@@ -743,7 +766,7 @@ public class WelcomeActivity extends FullScreenActivity {
     private Runnable deviceStateRefresh = new Runnable() {
         @Override
         public void run() {
-            if(connectedDevice == null || !connectedDevice.getState().equals(DeviceDef.STATE_IN_USE)){
+            if(!hasNetworkFailed && (connectedDevice == null || !connectedDevice.getState().equals(DeviceDef.STATE_IN_USE))){
                 connectDevice();
             }
             scheduleDeviceRefresh();
