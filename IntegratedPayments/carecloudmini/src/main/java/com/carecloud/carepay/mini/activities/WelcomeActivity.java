@@ -363,6 +363,7 @@ public class WelcomeActivity extends FullScreenActivity {
                 }, CONNECTION_RETRY_DELAY);
             }else{
                 Looper.getMainLooper().getThread().interrupt();
+                updateMessage(getString(R.string.welcome_connect_error));
             }
         }
 
@@ -752,6 +753,7 @@ public class WelcomeActivity extends FullScreenActivity {
                     connectDevice();
                 }else{
                     hasNetworkFailed = true;
+                    updateMessage(getString(R.string.welcome_connect_error));
                     Log.w(TAG, "Activity is Resumed: "+isResumed);
                     Log.w(TAG, "Network Info: "+ (networkInfo != null? networkInfo.getState() : " NULL"));
                 }
