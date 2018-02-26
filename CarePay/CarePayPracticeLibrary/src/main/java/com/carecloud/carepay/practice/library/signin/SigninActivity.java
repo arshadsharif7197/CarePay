@@ -470,18 +470,11 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     public void onSelectPracticeLocation(PracticeSelectionUserPractice selectedPractice, LocationDTO selectedLocation) {
         ApplicationPreferences.getInstance().setPracticeId(selectedPractice.getPracticeId());
         ApplicationPreferences.getInstance().setPracticeLocationId(selectedLocation.getId());
-        Set<String> locationIds = ApplicationPreferences.getInstance()
-                .getSelectedLocationsIds(selectedPractice.getPracticeId(), selectedPractice.getUserId());
-        if (locationIds == null) {
-            locationIds = new HashSet<>();
-        }
-        if (!locationIds.contains(String.valueOf(selectedLocation.getId()))) {
-            locationIds.add(String.valueOf(selectedLocation.getId()));
-            ApplicationPreferences.getInstance()
-                    .setSelectedLocationsId(selectedPractice.getPracticeId(),
-                            selectedPractice.getUserId(), locationIds);
-        }
-
+        Set<String> locationIds = new HashSet<>();
+        locationIds.add(String.valueOf(selectedLocation.getId()));
+        ApplicationPreferences.getInstance()
+                .setSelectedLocationsId(selectedPractice.getPracticeId(),
+                        selectedPractice.getUserId(), locationIds);
         authenticate(selectedPractice);
     }
 

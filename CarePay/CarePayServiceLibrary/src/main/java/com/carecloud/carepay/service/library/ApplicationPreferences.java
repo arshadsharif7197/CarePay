@@ -5,10 +5,13 @@ import android.content.SharedPreferences;
 import com.carecloud.carepay.service.library.base.IApplicationSession;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.Defs;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
 import com.google.gson.Gson;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -31,6 +34,7 @@ public class ApplicationPreferences {
     public static final String PATIENT_USER_LANGUAGE = "practiceUserLanguage";
     public static final String PRACTICE_USER_LANGUAGE = "user_selected_language";
     private static final String PREFERENCE_LOCATION_ID = "locationId";
+    private static final String PREFERENCE_LOCATION = "locations";
 
     private String patientId;
     private String practiceId;
@@ -347,5 +351,21 @@ public class ApplicationPreferences {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public Set<String> getPracticesWithBreezeEnabled(String practiceId) {
+        return getSharedPreferences().getStringSet(PREFERENCE_LOCATION + practiceId, null);
+    }
+
+    public void setPracticesWithBreezeEnabled(List<UserPracticeDTO> practiceInformation) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        for (UserPracticeDTO practice : practiceInformation) {
+            List<String> locations = practice.getLocations();
+            if (locations != null) {
+                Set<String> locationsSet = new HashSet<String>(locations);
+                editor.putStringSet(PREFERENCE_LOCATION + practice.getPracticeId(), locationsSet);
+            }
+        }
+        editor.apply();
     }
 }
