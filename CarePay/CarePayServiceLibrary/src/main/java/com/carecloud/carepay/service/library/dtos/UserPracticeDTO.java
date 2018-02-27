@@ -53,7 +53,7 @@ public class UserPracticeDTO {
     private boolean cloverEnabled = false;
     @SerializedName("locations")
     @Expose
-    private List<String> locations;
+    private List<AvailableLocationDTO> locations;
 
     /**
      * @return The prefix
@@ -183,11 +183,11 @@ public class UserPracticeDTO {
         this.cloverEnabled = cloverEnabled;
     }
 
-    public List<String> getLocations() {
+    public List<AvailableLocationDTO> getLocations() {
         return locations;
     }
 
-    public void setLocations(List<String> locations) {
+    public void setLocations(List<AvailableLocationDTO> locations) {
         this.locations = locations;
     }
 }
