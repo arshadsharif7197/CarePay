@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import com.carecloud.carepay.service.library.base.IApplicationSession;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.Defs;
+import com.carecloud.carepay.service.library.dtos.AvailableLocationDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
@@ -360,9 +361,12 @@ public class ApplicationPreferences {
     public void setPracticesWithBreezeEnabled(List<UserPracticeDTO> practiceInformation) {
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         for (UserPracticeDTO practice : practiceInformation) {
-            List<String> locations = practice.getLocations();
+            List<AvailableLocationDTO> locations = practice.getLocations();
             if (locations != null) {
-                Set<String> locationsSet = new HashSet<String>(locations);
+                Set<String> locationsSet = new HashSet<>();
+                for(AvailableLocationDTO location : locations){
+                    locationsSet.add(location.getGuid());
+                }
                 editor.putStringSet(PREFERENCE_LOCATION + practice.getPracticeId(), locationsSet);
             }
         }

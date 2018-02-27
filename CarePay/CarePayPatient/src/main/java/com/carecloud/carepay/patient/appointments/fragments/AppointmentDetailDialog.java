@@ -330,7 +330,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         boolean isTheLocationWithBreezeEnabled = enabledLocations == null;
         if (enabledLocations != null) {
             for (String locationId : enabledLocations) {
-                if (locationId.equals(String.valueOf(appointmentDTO.getPayload().getLocation().getId()))) {
+                if (locationId.equals(appointmentDTO.getPayload().getLocation().getGuid())) {
                     isTheLocationWithBreezeEnabled = true;
                     break;
                 }
