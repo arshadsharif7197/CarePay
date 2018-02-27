@@ -1,7 +1,13 @@
 package com.carecloud.carepay.patient.payment.dialogs;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -28,9 +34,11 @@ import java.util.List;
 
 public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDialog {
 
+    private static final int MY_PERMISSIONS_STATEMENT_WRITE_EXTERNAL_STORAGE = 100;
     private PendingBalanceDTO selectedBalance;
 
     private boolean mustAddToExisting = false;
+    private PatientStatementDTO finalStatement;
 
     /**
      * @param paymentsModel      the payment model
@@ -153,17 +161,25 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         if (statement != null && !statement.getStatements().isEmpty()) {
             View statementButton = view.findViewById(R.id.statement_button);
             statementButton.setVisibility(View.VISIBLE);
-            final PatientStatementDTO finalStatement = statement;
+            finalStatement = statement;
             statementButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    downloadStatementPdf(finalStatement.getStatements().get(0));
+                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            != PermissionChecker.PERMISSION_GRANTED && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                MY_PERMISSIONS_STATEMENT_WRITE_EXTERNAL_STORAGE);
+                    }else{
+                        downloadStatementPdf();
+                    }
+
                 }
             });
         }
     }
 
-    private void downloadStatementPdf(StatementDTO statementDTO) {
+    private void downloadStatementPdf() {
+        StatementDTO statementDTO = finalStatement.getStatements().get(0);
         String url = String.format("%s?%s=%s", paymentReceiptModel.getPaymentsMetadata()
                         .getPaymentsLinks().getPatientStatements().getUrl(), "statement_id",
                 String.valueOf(statementDTO.getId()));
@@ -223,6 +239,16 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
             }
         }
         return false;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_PERMISSIONS_STATEMENT_WRITE_EXTERNAL_STORAGE
+                && (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+            downloadStatementPdf();
+        }
     }
 
 }
