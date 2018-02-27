@@ -363,7 +363,7 @@ public class ApplicationPreferences {
         for (UserPracticeDTO practice : practiceInformation) {
             List<AvailableLocationDTO> locations = practice.getLocations();
             if (locations != null) {
-                Set<String> locationsSet = new HashSet<String>();
+                Set<String> locationsSet = new HashSet<>();
                 for(AvailableLocationDTO location : locations){
                     locationsSet.add(location.getGuid());
                 }
