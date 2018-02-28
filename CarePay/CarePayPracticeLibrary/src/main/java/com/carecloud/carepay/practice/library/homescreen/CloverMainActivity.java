@@ -143,7 +143,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         final PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject,
                 PracticeHomeScreenTransitionsDTO.class);
         final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
-        headers.put("username", getApplicationPreferences().getUserName());
+//        headers.put("username", getApplicationPreferences().getUserName());
         headers.put("username_patient", getApplicationPreferences().getPatientId());
         RecyclerView languageList = (RecyclerView) findViewById(R.id.languageList);
         LanguageAdapter languageAdapter = new LanguageAdapter(languages, selectedLanguage);

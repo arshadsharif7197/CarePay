@@ -1,9 +1,16 @@
 package com.carecloud.carepay.patient.signinsignuppatient.fragments;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.security.keystore.KeyGenParameterSpec;
+import android.security.keystore.KeyPermanentlyInvalidatedException;
+import android.security.keystore.KeyProperties;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -15,6 +22,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
@@ -22,6 +31,8 @@ import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
 import com.carecloud.carepay.patient.selectlanguage.fragments.SelectLanguageFragment;
+import com.carecloud.carepay.patient.utils.FingerprintUiHelper;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -38,6 +49,7 @@ import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.signinsignup.fragments.ResetPasswordFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.EncryptionUtil;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -45,6 +57,19 @@ import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.Gson;
 import com.newrelic.agent.android.NewRelic;
 
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyPairGenerator;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
+import java.security.Signature;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+import java.security.spec.ECGenParameterSpec;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,14 +79,18 @@ import java.util.Map;
  */
 public class SigninFragment extends BaseFragment {
 
+    private static final String KEY_NAME = "carePayKey";
     private SignInDTO signInDTO;
     private TextInputLayout signInEmailTextInputLayout;
     private TextInputLayout passwordTextInputLayout;
     private EditText emailEditText;
     private EditText passwordEditText;
     private Button signInButton;
+    private Signature mSignature;
+    KeyStore mKeyStore;
 
     private FragmentActivityInterface callback;
+    private KeyPairGenerator mKeyPairGenerator;
 
     /**
      * @param shouldOpenNotifications a boolean indicating if Notification screen should be opened
@@ -94,6 +123,18 @@ public class SigninFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try {
+            mSignature = Signature.getInstance("SHA256withECDSA");
+            mKeyStore = KeyStore.getInstance("AndroidKeyStore");
+            mKeyPairGenerator = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC, "AndroidKeyStore");
+            createKeyPair();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        }
     }
 
     @Nullable
@@ -118,7 +159,7 @@ public class SigninFragment extends BaseFragment {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                signIn();
+                signIn(emailEditText.getText().toString(), passwordEditText.getText().toString());
             }
         });
 
@@ -157,13 +198,37 @@ public class SigninFragment extends BaseFragment {
             }
         });
 
+        FingerprintManagerCompat fingerprintManagerCompat = FingerprintManagerCompat.from(getContext());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && FingerprintUiHelper.isFingerprintAuthAvailable(fingerprintManagerCompat)
+                && ApplicationPreferences.getInstance().getUserName() != null
+                && !ApplicationPreferences.getInstance().getUserName().equals("-")) {
+            view.findViewById(R.id.touchIdButton).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.touchIdButton).setOnClickListener(new View.OnClickListener() {
+                @TargetApi(Build.VERSION_CODES.M)
+                @Override
+                public void onClick(View v) {
+                    FingerprintAuthenticationDialogFragment fragment = FingerprintAuthenticationDialogFragment.newInstance();
+                    if (initSignature()) {
+                        // Show the fingerprint dialog. The user has the option to use the fingerprint with
+                        // crypto, or you can fall back to using a server-side verified password.
+                        fragment.setCryptoObject(new FingerprintManagerCompat.CryptoObject(mSignature));
+                        callback.displayDialogFragment(fragment, true);
+                    }
+
+                }
+            });
+        } else {
+            signInButton.setLayoutParams(new RelativeLayout
+                    .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        }
+
     }
 
-    private void signIn() {
-        if (areAllFieldsValid(emailEditText.getText().toString(), passwordEditText.getText().toString()) && signInButton.isClickable()) {
+    public void signIn(String email, String pwd) {
+        if (areAllFieldsValid(email, pwd) && signInButton.isClickable()) {
             setSignInButtonClickable(false);
-            unifiedSignIn(emailEditText.getText().toString(), passwordEditText.getText().toString(),
-                    signInDTO.getMetadata().getTransitions().getSignIn());
+            unifiedSignIn(email, pwd, signInDTO.getMetadata().getTransitions().getSignIn());
         }
     }
 
@@ -181,7 +246,7 @@ public class SigninFragment extends BaseFragment {
         Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
         if (signInDTO.isValidUser()) {
             Gson gson = new Gson();
-            getWorkflowServiceHelper().execute(signInTransition, unifiedLoginCallback, gson.toJson(signInDTO),
+            getWorkflowServiceHelper().execute(signInTransition, getUnifiedLoginCallback(userName, password), gson.toJson(signInDTO),
                     queryParams, headers);
             getAppAuthorizationHelper().setUser(userName);
             getApplicationPreferences().setUserId(userName);
@@ -189,38 +254,40 @@ public class SigninFragment extends BaseFragment {
         }
     }
 
-    private WorkflowServiceCallback unifiedLoginCallback = new WorkflowServiceCallback() {
+    private WorkflowServiceCallback getUnifiedLoginCallback(final String user, final String password) {
+        return new WorkflowServiceCallback() {
 
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            Gson gson = new Gson();
-            String signInResponseString = gson.toJson(workflowDTO);
-            UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString,
-                    UnifiedSignInResponse.class);
-            authenticate(signInResponse, signInDTO.getMetadata().getTransitions().getRefresh(),
-                    signInDTO.getMetadata().getTransitions().getAuthenticate());
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            setSignInButtonClickable(true);
-            if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE
-                    || getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT) {
-                getWorkflowServiceHelper().setAppAuthorizationHelper(null);
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
             }
-            callback.showErrorToast(CarePayConstants.INVALID_LOGIN_ERROR_MESSAGE);
-            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                Gson gson = new Gson();
+                String signInResponseString = gson.toJson(workflowDTO);
+                UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString,
+                        UnifiedSignInResponse.class);
+                authenticate(signInResponse, signInDTO.getMetadata().getTransitions().getRefresh(),
+                        signInDTO.getMetadata().getTransitions().getAuthenticate(), user, password);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                setSignInButtonClickable(true);
+                if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE
+                        || getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT) {
+                    getWorkflowServiceHelper().setAppAuthorizationHelper(null);
+                }
+                callback.showErrorToast(CarePayConstants.INVALID_LOGIN_ERROR_MESSAGE);
+                Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+            }
+        };
+    }
 
     private void authenticate(UnifiedSignInResponse signInResponse, TransitionDTO refreshTransition,
-                              TransitionDTO authenticateTransition) {
+                              TransitionDTO authenticateTransition, String user, String password) {
         UnifiedAuthenticationTokens authTokens = signInResponse.getPayload().getAuthorizationModel()
                 .getCognito().getAuthenticationTokens();
         getAppAuthorizationHelper().setAuthorizationTokens(authTokens);
@@ -232,49 +299,54 @@ public class SigninFragment extends BaseFragment {
 
         String languageId = getApplicationPreferences().getUserLanguage();
         header.put("Accept-Language", languageId);
-        getWorkflowServiceHelper().execute(authenticateTransition, signInCallback, query, header);
+        getWorkflowServiceHelper().execute(authenticateTransition, getSignInCallback(user, password), query, header);
     }
 
-    private WorkflowServiceCallback signInCallback = new WorkflowServiceCallback() {
+    private WorkflowServiceCallback getSignInCallback(final String user, final String password) {
+        return new WorkflowServiceCallback() {
 
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            setSignInButtonClickable(true);
-            boolean shouldShowNotificationScreen = getArguments()
-                    .getBoolean(CarePayConstants.OPEN_NOTIFICATIONS);
-            getApplicationPreferences().setUserPhotoUrl(null);
-            getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants
-                    .DEMOGRAPHICS_ADDRESS_BUNDLE, null);
-            if (shouldShowNotificationScreen) {
-                manageNotificationAsLandingScreen(workflowDTO.toString());
-            } else {
-                PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
             }
 
-            MyHealthDto myHealthDto = DtoHelper.getConvertedDTO(MyHealthDto.class, workflowDTO);
-            String userId = myHealthDto.getPayload().getPracticePatientIds().get(0).getUserId();
-            MixPanelUtil.setUser(getContext(), userId, myHealthDto.getPayload().getDemographicDTO());
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                setSignInButtonClickable(true);
+                boolean shouldShowNotificationScreen = getArguments()
+                        .getBoolean(CarePayConstants.OPEN_NOTIFICATIONS);
+                getApplicationPreferences().setUserPhotoUrl(null);
+                getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants
+                        .DEMOGRAPHICS_ADDRESS_BUNDLE, null);
+                if (shouldShowNotificationScreen) {
+                    manageNotificationAsLandingScreen(workflowDTO.toString());
+                } else {
+                    PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
+                }
+                ApplicationPreferences.getInstance().setUserName(user);
+                String encryptedPassword = EncryptionUtil.encrypt(getContext(), password, user);
+                ApplicationPreferences.getInstance().setUserPassword(encryptedPassword);
 
-            MixPanelUtil.logEvent(getString(R.string.event_signin_loginSuccess),
-                    getString(R.string.param_login_type),
-                    getString(R.string.login_password));
+                MyHealthDto myHealthDto = DtoHelper.getConvertedDTO(MyHealthDto.class, workflowDTO);
+                String userId = myHealthDto.getPayload().getPracticePatientIds().get(0).getUserId();
+                MixPanelUtil.setUser(getContext(), userId, myHealthDto.getPayload().getDemographicDTO());
 
-        }
+                MixPanelUtil.logEvent(getString(R.string.event_signin_loginSuccess),
+                        getString(R.string.param_login_type),
+                        getString(R.string.login_password));
 
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            setSignInButtonClickable(true);
-            showErrorNotification(exceptionMessage);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                setSignInButtonClickable(true);
+                showErrorNotification(exceptionMessage);
+                Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            }
+        };
+    }
 
     private void manageNotificationAsLandingScreen(String workflow) {
         final Gson gson = new Gson();
@@ -338,13 +410,12 @@ public class SigninFragment extends BaseFragment {
 
     private boolean checkEmail(String email) {
         boolean isEmptyEmail = StringUtil.isNullOrEmpty(email);
+        if (isEmptyEmail) {
+            setEmailError(getString(com.carecloud.carepaylibrary.R.string.signin_signup_error_empty_email));
+        }
         boolean isEmailValid = ValidationHelper.isValidEmail(email);
-        if (isEmptyEmail || !isEmailValid) {
-            if (isEmptyEmail) {
-                setEmailError(getString(com.carecloud.carepaylibrary.R.string.signin_signup_error_empty_email));
-            } else {
-                setEmailError(getString(com.carecloud.carepaylibrary.R.string.signin_signup_error_invalid_email));
-            }
+        if (!isEmailValid) {
+            setEmailError(getString(com.carecloud.carepaylibrary.R.string.signin_signup_error_invalid_email));
         }
         return !isEmptyEmail && isEmailValid;
     }
@@ -452,7 +523,7 @@ public class SigninFragment extends BaseFragment {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 SystemUtil.hideSoftKeyboard(getActivity());
-                signIn();
+                signIn(emailEditText.getText().toString(), passwordEditText.getText().toString());
                 return true;
             }
         });
@@ -491,5 +562,55 @@ public class SigninFragment extends BaseFragment {
 
     public void setSignInButtonEnabled(boolean enable) {
         signInButton.setEnabled(enable);
+    }
+
+
+    /**
+     * Generates an asymmetric key pair in the Android Keystore. Every use of the private key must
+     * be authorized by the user authenticating with fingerprint. Public key use is unrestricted.
+     */
+    @TargetApi(Build.VERSION_CODES.M)
+    public void createKeyPair() {
+        // The enrolling flow for fingerprint. This is where you ask the user to set up fingerprint
+        // for your flow. Use of keys is necessary if you need to know if the set of
+        // enrolled fingerprints has changed.
+        try {
+            // Set the alias of the entry in Android KeyStore where the key will appear
+            // and the constrains (purposes) in the constructor of the Builder
+            mKeyPairGenerator.initialize(
+                    new KeyGenParameterSpec.Builder(KEY_NAME, KeyProperties.PURPOSE_SIGN)
+                            .setDigests(KeyProperties.DIGEST_SHA256)
+                            .setAlgorithmParameterSpec(new ECGenParameterSpec("secp256r1"))
+                            // Require the user to authenticate with a fingerprint to authorize
+                            // every use of the private key
+                            .setUserAuthenticationRequired(true)
+                            .build());
+            mKeyPairGenerator.generateKeyPair();
+        } catch (InvalidAlgorithmParameterException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Initialize the {@link Signature} instance with the created key in the
+     * {@link #createKeyPair()} method.
+     *
+     * @return {@code true} if initialization is successful, {@code false} if the lock screen has
+     * been disabled or reset after the key was generated, or if a fingerprint got enrolled after
+     * the key was generated.
+     */
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private boolean initSignature() {
+        try {
+            mKeyStore.load(null);
+            PrivateKey key = (PrivateKey) mKeyStore.getKey(KEY_NAME, null);
+            mSignature.initSign(key);
+            return true;
+        } catch (KeyPermanentlyInvalidatedException e) {
+            return false;
+        } catch (KeyStoreException | CertificateException | UnrecoverableKeyException | IOException
+                | NoSuchAlgorithmException | InvalidKeyException e) {
+            throw new RuntimeException("Failed to init Cipher", e);
+        }
     }
 }

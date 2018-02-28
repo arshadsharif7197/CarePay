@@ -27,6 +27,8 @@ public class ApplicationPreferences {
     private static final String PREFERENCE_PRACTICE_ID = "practice_id";
     private static final String PREFERENCE_PREFIX = "prefix";
     private static final String PREFERENCE_USER_ID = "user_id";
+    private static final String PREFERENCE_USERNAME = "username";
+    private static final String PREFERENCE_PASSWORD = "password";
     private static final String PREFERENCE_PATIENT_PHOTO_URL = "patient_photo_url";
     private static final String PREFERENCE_IS_TUTORIAL_SHOWN = "is_tutorial_shown";
     private static final String PREFERENCE_APPOINTMENT_NAVIGATION_OPTION = "appointment_navigation_option";
@@ -52,6 +54,7 @@ public class ApplicationPreferences {
     private String userName;
 
     private static ApplicationPreferences instance;
+    private String userPassword;
 
 
     public static ApplicationPreferences getInstance() {
@@ -347,10 +350,14 @@ public class ApplicationPreferences {
     }
 
     public String getUserName() {
+        if (userName == null) {
+            userName = readStringFromSharedPref(PREFERENCE_USERNAME);
+        }
         return userName;
     }
 
     public void setUserName(String userName) {
+        writeStringToSharedPref(PREFERENCE_USERNAME, userName);
         this.userName = userName;
     }
 
@@ -364,12 +371,24 @@ public class ApplicationPreferences {
             List<AvailableLocationDTO> locations = practice.getLocations();
             if (locations != null) {
                 Set<String> locationsSet = new HashSet<>();
-                for(AvailableLocationDTO location : locations){
+                for (AvailableLocationDTO location : locations) {
                     locationsSet.add(location.getGuid());
                 }
                 editor.putStringSet(PREFERENCE_LOCATION + practice.getPracticeId(), locationsSet);
             }
         }
         editor.apply();
+    }
+
+    public String getUserPassword() {
+        if (userPassword == null) {
+            userPassword = readStringFromSharedPref(PREFERENCE_PASSWORD);
+        }
+        return userPassword;
+    }
+
+    public void setUserPassword(String userPassword) {
+        writeStringToSharedPref(PREFERENCE_PASSWORD, userPassword);
+        this.userPassword = userPassword;
     }
 }
