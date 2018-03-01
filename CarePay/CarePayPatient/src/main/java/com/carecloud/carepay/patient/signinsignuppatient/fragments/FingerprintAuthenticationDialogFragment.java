@@ -175,11 +175,13 @@ public class FingerprintAuthenticationDialogFragment extends DialogFragment
     Runnable mResetErrorTextRunnable = new Runnable() {
         @Override
         public void run() {
+            if (getActivity() != null) {
 //            statusTextView.setTextColor(
 //                    statusTextView.getResources().getColor(R.color.hint_color));
-            statusTextView.setText(Label.getLabel("signin.fingerPrintDialog.textView.label.touchSensor"));
-            mIcon.setImageResource(R.drawable.ic_touch_id);
-            mIcon.setBackground(getResources().getDrawable(R.drawable.button_blue_fill_background));
+                statusTextView.setText(Label.getLabel("signin.fingerPrintDialog.textView.label.touchSensor"));
+                mIcon.setImageResource(R.drawable.ic_touch_id);
+                mIcon.setBackground(getResources().getDrawable(R.drawable.button_blue_fill_background));
+            }
         }
     };
 
