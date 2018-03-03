@@ -122,7 +122,7 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         });
         languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
         final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
-        headers.put("username", getApplicationPreferences().getUserName());
+//        headers.put("username", getApplicationPreferences().getUserName());
         headers.put("username_patient", getApplicationPreferences().getPatientId());
         RecyclerView languageList = (RecyclerView) findViewById(R.id.languageList);
         LanguageAdapter languageAdapter = new LanguageAdapter(adhocFormsModel.getPayload().getLanguages(),
