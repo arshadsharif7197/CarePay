@@ -14,7 +14,6 @@
 
     <style name="ButtonRounded" parent="Widget.AppCompat.Button">
         <item name="android:layout_width">@dimen/content_width_buttons</item>
-        <item name="android:minHeight">@dimen/dp_30</item>
         <item name="android:background">@drawable/rounded_button_primary</item>
         <item name="android:paddingTop">@dimen/button_padding_vertical</item>
         <item name="android:paddingBottom">@dimen/button_padding_vertical</item>
@@ -26,7 +25,6 @@
 
     <style name="ButtonRoundedOutline" parent="Widget.AppCompat.Button">
         <item name="android:layout_width">@dimen/content_width_buttons</item>
-        <item name="android:minHeight">@dimen/dp_30</item>
         <item name="android:background">@drawable/rounded_button_outline</item>
         <item name="android:paddingTop">@dimen/button_padding_vertical</item>
         <item name="android:paddingBottom">@dimen/button_padding_vertical</item>
@@ -64,7 +62,7 @@
     </style>
 
     <style name="InputField" parent="Base.V7.Widget.AppCompat.EditText">
-        <item name="android:layout_marginTop">@dimen/dp_5</item>
+        <item name="android:layout_marginTop">@dimen/dp_10</item>
         <item name="android:background">@drawable/rounded_input_white</item>
         <item name="android:gravity">start</item>
         <item name="android:textColorHint">@color/inputHint</item>
@@ -75,7 +73,7 @@
 
     <style name="LogoLarge">
         <item name="android:layout_width">@dimen/logo_width_large</item>
-        <item name="android:paddingLeft">@dimen/dp_40</item>
+        <item name="android:paddingLeft">@dimen/dp_60</item>
         <item name="android:src">@drawable/carecloud_logo</item>
         <item name="android:adjustViewBounds">true</item>
     </style>
