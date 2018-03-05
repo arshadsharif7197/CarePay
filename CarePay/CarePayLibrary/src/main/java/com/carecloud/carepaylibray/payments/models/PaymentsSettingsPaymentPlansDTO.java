@@ -36,6 +36,10 @@ public class PaymentsSettingsPaymentPlansDTO {
     @Expose
     private List<PaymentSettingsBalanceRangeRule> balanceRangeRules = new ArrayList<>();
 
+    @SerializedName("terms_and_conditions")
+    @Expose
+    private TermsAndConditionsDTO termsAndConditions = new TermsAndConditionsDTO();
+
     public boolean isPaymentPlansEnabled() {
         return paymentPlansEnabled;
     }
@@ -82,5 +86,13 @@ public class PaymentsSettingsPaymentPlansDTO {
 
     public void setRequestNewPlan(boolean requestNewPlan) {
         this.requestNewPlan = requestNewPlan;
+    }
+
+    public TermsAndConditionsDTO getTermsAndConditions() {
+        return termsAndConditions;
+    }
+
+    public void setTermsAndConditions(TermsAndConditionsDTO termsAndConditions) {
+        this.termsAndConditions = termsAndConditions;
     }
 }
