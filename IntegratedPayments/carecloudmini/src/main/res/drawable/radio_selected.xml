@@ -4,14 +4,14 @@
     <item>
         <shape android:shape="oval">
             <solid android:color="@color/radio_selected_background"/>
-            <size android:height="@dimen/dp_30" android:width="@dimen/dp_30"/>
+            <size android:height="@dimen/selector_size" android:width="@dimen/selector_size"/>
         </shape>
     </item>
 
-    <item android:top="@dimen/dp_10"
-        android:bottom="@dimen/dp_10"
-        android:left="@dimen/dp_10"
-        android:right="@dimen/dp_10">
+    <item android:top="@dimen/selector_inset"
+        android:bottom="@dimen/selector_inset"
+        android:left="@dimen/selector_inset"
+        android:right="@dimen/selector_inset">
         <shape android:shape="oval">
             <solid android:color="@color/white"/>
         </shape>
