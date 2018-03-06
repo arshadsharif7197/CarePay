@@ -580,7 +580,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         } else {
             showChooseProviderDialogFragment();
         }
-        
+
     }
 
     @Override
