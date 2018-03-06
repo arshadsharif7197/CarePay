@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
@@ -39,6 +41,7 @@ import com.carecloud.shamrocksdk.payment.interfaces.RefundRequestCallback;
 import com.carecloud.shamrocksdk.payment.models.PaymentRequest;
 import com.carecloud.shamrocksdk.payment.models.RefundRequest;
 import com.carecloud.shamrocksdk.payment.models.StreamRecord;
+import com.carecloud.shamrocksdk.payment.models.defs.StateDef;
 import com.carecloud.shamrocksdk.utils.AuthorizationUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -69,8 +72,10 @@ public class WelcomeActivity extends FullScreenActivity {
     private int paymentAttempt = 0;
     private boolean isDisconnecting = false;
     private boolean isResumed = false;
+    private boolean hasNetworkFailed = false;
 
     private PowerManager.WakeLock wakeLock;
+    private WifiManager.WifiLock wifiLock;
 
     @Override
     protected void onCreate(Bundle icicle){
@@ -95,11 +100,21 @@ public class WelcomeActivity extends FullScreenActivity {
         setPracticeDetails();
         if(connectedDevice == null || !connectedDevice.isProcessing()) {
             connectDevice();
+            handler.removeCallbacksAndMessages(null);
             scheduleDeviceRefresh();
             //Acquire wakelock
             PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-            wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, TAG);
+            if(wakeLock == null) {
+                wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, TAG);
+            }
             wakeLock.acquire();
+
+            WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+            if(wifiLock == null){
+                wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL, TAG);
+            }
+            wifiLock.acquire();
+
         }
 
     }
@@ -112,6 +127,10 @@ public class WelcomeActivity extends FullScreenActivity {
 
             if(wakeLock != null){
                 wakeLock.release();
+            }
+
+            if(wifiLock != null){
+                wifiLock.release();
             }
         }
         super.onStop();
@@ -333,14 +352,19 @@ public class WelcomeActivity extends FullScreenActivity {
 
         @Override
         public void onConnectionFailure(String errorMessage) {
-            Log.d(TAG, errorMessage);
+            Log.d(TAG, "Connection Failure: " + errorMessage);
 
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    connectDevice();
-                }
-            }, CONNECTION_RETRY_DELAY);
+            if(!hasNetworkFailed && isResumed) {
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        connectDevice();
+                    }
+                }, CONNECTION_RETRY_DELAY);
+            }else{
+                Looper.getMainLooper().getThread().interrupt();
+                updateMessage(getString(R.string.welcome_connect_error));
+            }
         }
 
         @Override
@@ -349,12 +373,14 @@ public class WelcomeActivity extends FullScreenActivity {
             Log.d(TAG, "Device Disconnected");
             isDisconnecting = false;
 
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    connectDevice();
-                }
-            }, CONNECTION_RETRY_DELAY);
+            if(!hasNetworkFailed) {
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        connectDevice();
+                    }
+                }, CONNECTION_RETRY_DELAY);
+            }
         }
     };
 
@@ -450,13 +476,13 @@ public class WelcomeActivity extends FullScreenActivity {
         }
 
         @Override
-        public void onPaymentComplete(String paymentRequestId) {
+        public void onPaymentComplete(String paymentRequestId, JsonElement requestObject) {
             Log.d(TAG, "Payment completed for: "+paymentRequestId);
 
             if(connectedDevice.isRefunding()){
-                postRefundRequest(paymentRequestId);
+                postRefundRequest(paymentRequestId, requestObject);
             }else {
-                postPaymentRequest(paymentRequestId);
+                postPaymentRequest(paymentRequestId, requestObject);
             }
         }
 
@@ -576,26 +602,26 @@ public class WelcomeActivity extends FullScreenActivity {
         }
     };
 
-    private void postPaymentRequest(String paymentRequestId){
+    private void postPaymentRequest(String paymentRequestId, JsonElement requestObject){
         StreamRecord streamRecord = new StreamRecord();
         streamRecord.setDeepstreamRecordId(paymentRequestId);
 
         Gson gson = new Gson();
         String token = AuthorizationUtil.getAuthorizationToken(this).replace("\n", "");
-        getRestHelper().executePostPayment(getPostPaymentCallback(paymentRequestId, false), token, gson.toJson(streamRecord));
+        getRestHelper().executePostPayment(getPostPaymentCallback(paymentRequestId, false, requestObject), token, gson.toJson(streamRecord));
     }
 
-    private void postRefundRequest(String paymentRequestId){
+    private void postRefundRequest(String paymentRequestId, JsonElement requestObject){
         StreamRecord streamRecord = new StreamRecord();
         streamRecord.setDeepstreamRecordId(paymentRequestId);
 
         Gson gson = new Gson();
         String token = AuthorizationUtil.getAuthorizationToken(this).replace("\n", "");
-        getRestHelper().executePostRefund(getPostPaymentCallback(paymentRequestId, true), token, gson.toJson(streamRecord));
+        getRestHelper().executePostRefund(getPostPaymentCallback(paymentRequestId, true, requestObject), token, gson.toJson(streamRecord));
     }
 
 
-    private RestCallServiceCallback getPostPaymentCallback(final String paymentRequestId, final boolean isRefund) {
+    private RestCallServiceCallback getPostPaymentCallback(final String paymentRequestId, final boolean isRefund, final JsonElement requestObject) {
         return new RestCallServiceCallback() {
             @Override
             public void onPreExecute() {
@@ -623,26 +649,36 @@ public class WelcomeActivity extends FullScreenActivity {
 
             @Override
             public void onFailure(String errorMessage) {
-                CustomErrorToast.showWithMessage(WelcomeActivity.this, errorMessage);
                 if(shouldRetry(errorMessage)) {
+                    CustomErrorToast.showWithMessage(WelcomeActivity.this, errorMessage);
                     updateMessage(String.format(getString(R.string.welcome_retrying), paymentAttempt + 1));
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(isRefund){
-                                postRefundRequest(paymentRequestId);
-                            }else {
-                                postPaymentRequest(paymentRequestId);
+                    if(verifyPersisted(errorMessage, paymentRequestId, isRefund, requestObject)){
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(isRefund){
+                                    postRefundRequest(paymentRequestId, requestObject);
+                                }else {
+                                    postPaymentRequest(paymentRequestId, requestObject);
+                                }
                             }
-                        }
-                    }, paymentAttempt * POST_RETRY_DELAY);
+                        }, paymentAttempt * POST_RETRY_DELAY);
+                    }
                 }else{
                     if(paymentAttempt >= MAX_RETRIES){
-                        QueuePaymentRecord queuePaymentRecord = new QueuePaymentRecord();
-                        queuePaymentRecord.setPaymentRequestId(paymentRequestId);
-                        queuePaymentRecord.setRefund(isRefund);
-                        queuePaymentRecord.save();
-
+                        if(!verifyPersisted(errorMessage, paymentRequestId, isRefund, requestObject)) {
+                            Gson gson = new Gson();
+                            QueueUnprocessedPaymentRecord unprocessedPaymentRecord = new QueueUnprocessedPaymentRecord();
+                            unprocessedPaymentRecord.setPaymentRequestId(paymentRequestId);
+                            unprocessedPaymentRecord.setRefund(connectedDevice.isRefunding());
+                            unprocessedPaymentRecord.setPayload(gson.toJson(requestObject));
+                            unprocessedPaymentRecord.save();
+                        }else{
+                            QueuePaymentRecord queuePaymentRecord = new QueuePaymentRecord();
+                            queuePaymentRecord.setPaymentRequestId(paymentRequestId);
+                            queuePaymentRecord.setRefund(isRefund);
+                            queuePaymentRecord.save();
+                        }
                         launchQueueService();
                     }
                     resetDevice(paymentRequestId);
@@ -661,6 +697,45 @@ public class WelcomeActivity extends FullScreenActivity {
         return !errorMessage.contains("payment request has already been completed") && paymentAttempt <= MAX_RETRIES;
     }
 
+    private boolean verifyPersisted(String errorMessage, final String requestId, boolean isRefunding, final JsonElement requestObject){
+        if(errorMessage != null && errorMessage.contains("transaction response needed")){
+            final Gson gson = new Gson();
+            if(!isRefunding){
+                PaymentRequest ackRequest = DevicePayment.getPaymentAck(requestId);
+                if (ackRequest != null &&
+                        (!ackRequest.getState().equals(StateDef.STATE_CAPTURED) ||
+                                ackRequest.getTransactionResponse() == null ||
+                                ackRequest.getPaymentMethod() == null ||
+                                ackRequest.getPaymentMethod().getCardData() == null)) {
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            PaymentRequest paymentRequest = gson.fromJson(requestObject, PaymentRequest.class);//this is the expected payment request payload
+                            DevicePayment.updatePaymentRequest(WelcomeActivity.this, requestId, paymentRequest, paymentRequestCallback);
+                            postPaymentRequest(requestId, requestObject);
+                        }
+                    }, (paymentAttempt * POST_RETRY_DELAY * 2));//requires waiting double because Shamrock Payments is messing with the record
+                }
+            }else {
+                RefundRequest ackRequest = DeviceRefund.getRefundAck(requestId);
+                if (ackRequest != null &&
+                        (!ackRequest.getState().equals(StateDef.STATE_CAPTURED) ||
+                                ackRequest.getTransactionResponse() == null)) {
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            RefundRequest refundRequest = gson.fromJson(requestObject, RefundRequest.class);//this is the expected refund request payload
+                            DeviceRefund.updateRefundRequest(WelcomeActivity.this, requestId, refundRequest, refundRequestCallback);
+                            postRefundRequest(requestId, requestObject);
+                        }
+                    }, (paymentAttempt * POST_RETRY_DELAY * 2));//requires waiting double because Shamrock Payments is messing with the record
+                }
+            }
+            return false;
+        }
+        return true;
+    }
+
     private void resetDevice(String paymentRequestId){
         releasePaymentRequest(paymentRequestId);
         paymentAttempt = 0;
@@ -674,8 +749,11 @@ public class WelcomeActivity extends FullScreenActivity {
                 ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
                 if(isResumed && networkInfo != null && networkInfo.isConnected()){
+                    hasNetworkFailed = false;
                     connectDevice();
                 }else{
+                    hasNetworkFailed = true;
+                    updateMessage(getString(R.string.welcome_connect_error));
                     Log.w(TAG, "Activity is Resumed: "+isResumed);
                     Log.w(TAG, "Network Info: "+ (networkInfo != null? networkInfo.getState() : " NULL"));
                 }
@@ -690,7 +768,7 @@ public class WelcomeActivity extends FullScreenActivity {
     private Runnable deviceStateRefresh = new Runnable() {
         @Override
         public void run() {
-            if(connectedDevice == null || !connectedDevice.getState().equals(DeviceDef.STATE_IN_USE)){
+            if(!hasNetworkFailed && (connectedDevice == null || !connectedDevice.getState().equals(DeviceDef.STATE_IN_USE))){
                 connectDevice();
             }
             scheduleDeviceRefresh();

@@ -16,6 +16,15 @@ public class CarePayConstants {
     // Generic Constants
     public static final int HOME_PRESSED = 999;
 
+    //DeviceType
+    public static final String CLOVER_DEVICE = "Clover";
+    public static final String CLOVER_2_DEVICE = "Clover 2";
+    public static final String ANDROID_DEVICE = "Android";
+
+    //Platform
+    public static final String PLATFORM_ANDROID = "android";
+
+
     //Appointments Constants
     public static final String PENDING = "P";
     public static final String CHECKED_IN = "I";
@@ -112,7 +121,6 @@ public class CarePayConstants {
     public static final String MEDICATION_ALLERGIES_SEARCH_MODE_EXTRA = "medication_allergies_search_mode_extra";
 
     //Clover Constants
-    public static final String CLOVER_DEVICE = "Clover";
     public static final String CLOVER_PAYMENT_INTENT = "com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity";
     public static final String CLOVER_REFUND_INTENT = "com.carecloud.carepay.practice.clover.payments.CloverRefundActivity";
     public static final int CLOVER_PAYMENT_INTENT_REQUEST_CODE = 0x37;
@@ -152,6 +160,7 @@ public class CarePayConstants {
 
     //AdHoc
     public static final String ADHOC_FORMS = "adhocForms";
+    public static final String SELECTED_FORMS = "selectedForms";
 
     //Patient Mode Login
     public static final String LOGIN_OPTION_QR = "login_option_qr";
@@ -160,6 +169,6 @@ public class CarePayConstants {
     public static final String CRASH = "crash";
 
     public static final String SEARCH_MODE = "searchMode";
-    public static final String PATIENT_MODE_LABELS_PREFIX = "-P";
+    public static final String PATIENT_MODE_LABELS_PREFIX = "P-";
 
 }

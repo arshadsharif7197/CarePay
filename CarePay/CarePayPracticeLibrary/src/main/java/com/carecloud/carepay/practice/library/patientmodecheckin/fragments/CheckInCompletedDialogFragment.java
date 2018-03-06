@@ -34,6 +34,7 @@ import com.squareup.picasso.Picasso;
 import java.text.NumberFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by lmenendez on 4/11/17
@@ -225,7 +226,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
             TextView confirmationNumberTextView = (TextView) view.findViewById(R.id.confirmationNumberTextView);
             confirmationNumberTextView.setText(patientPaymentPayload.getConfirmation());
 
-            NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+            NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
             TextView totalPaidTextView = (TextView) view.findViewById(R.id.totalPaidTextView);
             totalPaidTextView.setText(currencyFormatter.format(patientPaymentPayload.getTotalPaid()));
 

@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.base;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,7 +17,6 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
-import com.newrelic.agent.android.NewRelic;
 
 import org.apache.commons.lang3.NotImplementedException;
 
@@ -34,7 +34,6 @@ public abstract class BasePracticeActivity extends BaseActivity
                 R.style.PracticeModeActivity : R.style.PatientModeActivity);
         setSystemUiVisibility();
         setNavigationBarVisibility();
-        NewRelic.setInteractionName(getClass().getName());
         Log.d("New Relic", getClass().getName());
     }
 
@@ -94,7 +93,7 @@ public abstract class BasePracticeActivity extends BaseActivity
     }
 
     protected void processExternalPayment(PaymentExecution paymentExecution, Intent data) {
-        throw new NotImplementedException("Process external payment has not been implemented by " + getClass().getSimpleName());
+        throw new NotImplementedException("Process external payment has not been implemented by " + getClass().getName());
     }
 
     protected void processExternalPaymentFailure(PaymentExecution paymentExecution, int resultCode) {
@@ -159,6 +158,12 @@ public abstract class BasePracticeActivity extends BaseActivity
         Map<String, String> query = new HashMap<>();
         query.put("language", languageCode);
         getWorkflowServiceHelper().execute(transition, getLanguageCallback(callback), null, query, headers);
+    }
+
+    @Override
+    protected void onProgressDialogCancel(DialogInterface dialog){
+        setSystemUiVisibility();
+        setNavigationBarVisibility();
     }
 
     private WorkflowServiceCallback getLanguageCallback(final SimpleCallback callback) {

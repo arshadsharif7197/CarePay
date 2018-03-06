@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -58,6 +59,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         if (handler == null) {
             handler = new Handler();
         }
+        setNewRelicInteraction(getClass().getName());
     }
 
     @Override
@@ -125,6 +127,10 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         return ((IApplicationSession) getApplication()).getLastInteraction();
     }
 
+    @Override
+    public void setNewRelicInteraction(String interactionName) {
+        ((IApplicationSession) getApplication()).setNewRelicInteraction(interactionName);
+    }
 
     public Context getContext() {
         return this;
@@ -145,6 +151,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             progressDialog = new ProgressDialogUtil(isPracticeAppPatientMode, this);
         }
 
+        progressDialog.setOnCancelListener(progressCancelListener);
         progressDialog.setCancelable(false);
         progressDialog.show();
     }
@@ -152,8 +159,13 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     @Override
     public void hideProgressDialog() {
         if (null != progressDialog && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-            progressDialog = null;
+            //adding try catch here to prevent case where dialog is not attached to window manager
+            try {
+                progressDialog.dismiss();
+                progressDialog = null;
+            }catch (IllegalArgumentException iax){
+                iax.printStackTrace();
+            }
         }
     }
 
@@ -225,7 +237,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             return null;
         }
 
-        Object rawWorkflowDTO = bundle.get(WorkflowDTO.class.getSimpleName());
+        Object rawWorkflowDTO = bundle.get(WorkflowDTO.class.getName());
         if (rawWorkflowDTO == null) {
             return null;
         }
@@ -242,7 +254,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             return gson.fromJson(workflowDTO.toString(), dtoClass);
         } catch (ClassCastException e) {
             // Object is set as String and not in DB
-            return gson.fromJson(bundle.getString(WorkflowDTO.class.getSimpleName()), dtoClass);
+            return gson.fromJson(bundle.getString(WorkflowDTO.class.getName()), dtoClass);
         }
     }
 
@@ -394,6 +406,17 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             }
         }
     };
+
+    private DialogInterface.OnCancelListener progressCancelListener = new DialogInterface.OnCancelListener() {
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            onProgressDialogCancel(dialog);
+        }
+    };
+
+    protected void onProgressDialogCancel(DialogInterface dialog){
+
+    }
 
     protected void setUncaughtExceptionHandler() {
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {

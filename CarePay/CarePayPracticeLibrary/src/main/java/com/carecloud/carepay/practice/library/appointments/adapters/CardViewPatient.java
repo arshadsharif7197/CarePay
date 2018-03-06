@@ -11,6 +11,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.text.NumberFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by cocampo on 3/17/17
@@ -79,7 +80,8 @@ public class CardViewPatient {
         this.appointmentStartTime = DateUtil.getInstance().setDateRaw(dto.getStartTime()).getDate();
         this.isAppointmentOver = dto.isAppointmentOver();
         this.balance = getFormattedBalance(balance);
-        this.locationId = dto.getLocation().getId().toString();
+        this.locationId = dto.getLocation().getId() != null ?
+                dto.getLocation().getId().toString() : null;
         String code = dto.getAppointmentStatus().getCode();
         this.isRequested = code.equalsIgnoreCase(CarePayConstants.REQUESTED);
         this.isCheckedIn = code.equalsIgnoreCase(CarePayConstants.CHECKED_IN) ||
@@ -92,7 +94,8 @@ public class CardViewPatient {
                 code.equalsIgnoreCase(CarePayConstants.BILLED) ||
                 code.equalsIgnoreCase(CarePayConstants.MANUALLY_BILLED);
         this.checkinStatus = dto.getAppointmentStatus().getCheckinStatusDTO();
-        this.providerId = dto.getProvider().getId().toString();
+        this.providerId = dto.getProvider().getId() != null ?
+                dto.getProvider().getId().toString() : null;
         this.providerName = dto.getProvider().getName();
         if (dto.getAppointmentStatus().getLastUpdated() != null) {
             this.lastUpdate = DateUtil.getInstance().setDateRaw(dto.getAppointmentStatus().getLastUpdated().replaceAll("\\.\\d\\d\\dZ", "-00:00")).getDate();
@@ -111,7 +114,7 @@ public class CardViewPatient {
     }
 
     private String getFormattedBalance(Double balance) {
-        NumberFormat numForm = NumberFormat.getCurrencyInstance();
+        NumberFormat numForm = NumberFormat.getCurrencyInstance(Locale.US);
 
         return numForm.format(balance == null ? 0 : balance);
     }

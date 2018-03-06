@@ -5,10 +5,11 @@ package com.carecloud.carepaylibray.consentforms.models;
  */
 
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ConsentFormDTO {
+public class ConsentFormDTO implements DTO {
 
     @SerializedName("metadata")
     @Expose

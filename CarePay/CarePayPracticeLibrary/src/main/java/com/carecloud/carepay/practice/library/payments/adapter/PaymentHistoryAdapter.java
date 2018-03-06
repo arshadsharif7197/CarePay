@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItemPayload;
@@ -23,6 +21,7 @@ import static com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentM
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by lmenendez on 9/28/17
@@ -38,9 +37,8 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
     private Context context;
     private List<PaymentHistoryItem> paymentHistoryItems = new ArrayList<>();
     private HistoryItemClickListener callback;
-    private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+    private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
     private boolean isLoading = false;
-    boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
 
     /**
      * Constructor
@@ -75,7 +73,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
 
         final PaymentHistoryItem item = paymentHistoryItems.get(position);
 
-        DateUtil dateInstance = DateUtil.getInstance().setDateRaw(item.getPayload().getDate()).shiftDateToGMT();
+        DateUtil dateInstance = DateUtil.getInstance().setDateRaw(item.getPayload().getDate());
         holder.transactionDate.setText(dateInstance.getDateAsMonthLiteralDayOrdinalYear());
         holder.transactionTime.setText(dateInstance.getTime12Hour().concat(","));
 

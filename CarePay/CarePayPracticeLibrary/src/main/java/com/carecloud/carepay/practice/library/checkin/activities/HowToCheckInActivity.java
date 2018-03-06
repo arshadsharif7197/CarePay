@@ -114,7 +114,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         public void onClick(View view) {
             Intent intent = new Intent(HowToCheckInActivity.this, SigninActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putSerializable(WorkflowDTO.class.getSimpleName(), signinPatientModeDTO.toString());
+            bundle.putSerializable(WorkflowDTO.class.getName(), signinPatientModeDTO.toString());
             intent.putExtras(bundle);
             startActivity(intent);
             finish();
@@ -141,7 +141,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
             /*To implement click event for Manual Search */
             Intent intent = new Intent(HowToCheckInActivity.this, PersonalInformationActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putSerializable(WorkflowDTO.class.getSimpleName(), signinPatientModeDTO.toString());
+            bundle.putSerializable(WorkflowDTO.class.getName(), signinPatientModeDTO.toString());
             intent.putExtras(bundle);
             startActivity(intent);
             finish();
@@ -206,6 +206,10 @@ public class HowToCheckInActivity extends BasePracticeActivity {
             getAppAuthorizationHelper().setUser(scanQRCodeResultDTO.getUserName());
 
             MixPanelUtil.setUser(this, scanQRCodeResultDTO.getUserId(), null);
+
+            String[] params = {getString(R.string.param_login_type), getString(R.string.param_app_mode)};
+            Object[] values = {getString(R.string.login_qr), getString(R.string.app_mode_patient)};
+            MixPanelUtil.logEvent(getString(R.string.event_signin_loginSuccess), params, values);
 
             // getApplicationMode().getUserPracticeDTO().setUserName(scanQRCodeResultDTO.getUserName());
             Map<String, String> queryMap = new HashMap<String, String>();

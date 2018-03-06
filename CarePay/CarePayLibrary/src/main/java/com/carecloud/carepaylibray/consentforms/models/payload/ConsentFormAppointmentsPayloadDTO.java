@@ -1,5 +1,7 @@
 package com.carecloud.carepaylibray.consentforms.models.payload;
 
+import com.carecloud.carepaylibray.intake.models.AppointmentMetadataModel;
+import com.carecloud.carepaylibray.intake.models.PayloadAppointmentModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,24 +13,24 @@ public class ConsentFormAppointmentsPayloadDTO {
 
     @SerializedName("metadata")
     @Expose
-    private ConsentFormAppoMetadataDTO appointmentMetadata = new ConsentFormAppoMetadataDTO();
+    private AppointmentMetadataModel appointmentMetadata = new AppointmentMetadataModel();
     @SerializedName("payload")
     @Expose
-    private ConsentFormAppoPayloadDTO appointmentPayload = new ConsentFormAppoPayloadDTO();
+    private PayloadAppointmentModel appointmentPayload = new PayloadAppointmentModel();
 
-    public ConsentFormAppoPayloadDTO getAppointmentPayload() {
+    public PayloadAppointmentModel getAppointmentPayload() {
         return appointmentPayload;
     }
 
-    public void setAppointmentPayload(ConsentFormAppoPayloadDTO appointmentPayload) {
+    public void setAppointmentPayload(PayloadAppointmentModel appointmentPayload) {
         this.appointmentPayload = appointmentPayload;
     }
 
-    public ConsentFormAppoMetadataDTO getAppointmentMetadata() {
+    public AppointmentMetadataModel getAppointmentMetadata() {
         return appointmentMetadata;
     }
 
-    public void setAppointmentMetadata(ConsentFormAppoMetadataDTO appointmentMetadata) {
+    public void setAppointmentMetadata(AppointmentMetadataModel appointmentMetadata) {
         this.appointmentMetadata = appointmentMetadata;
     }
 

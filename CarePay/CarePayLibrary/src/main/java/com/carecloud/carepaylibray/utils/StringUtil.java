@@ -5,16 +5,22 @@ import android.text.Editable;
 import android.util.Log;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 
-import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.isNotEmptyString;
 
 public class StringUtil {
+
+    private static Map<String, String[]> ordinalMap = new HashMap<>();
 
     /**
      * Determines if the specified String object is null or equal to
@@ -154,7 +160,7 @@ public class StringUtil {
             zipCodeString.insert(5, "-");
         }
 
-        return zipCodeString.toString();
+        return zipCodeString.toString().trim();
     }
 
     /**
@@ -346,8 +352,7 @@ public class StringUtil {
      * @return formatted balance amount
      */
     public static String getFormattedBalanceAmount(double amount) {
-        DecimalFormat decimalFormat = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
-        return CarePayConstants.DOLLAR + decimalFormat.format(amount);
+        return NumberFormat.getCurrencyInstance(Locale.US).format(amount);
     }
 
     /**
@@ -416,5 +421,58 @@ public class StringUtil {
             builder.append(delimiter);
         }
         return builder.length() > 0 ? builder.substring(0, builder.length() - 1) : "";
+    }
+
+    public static String getOrdinal(String language, int number) {
+        if (!ordinalMap.containsKey(language)) {
+            loadOrdinals(language);
+        }
+        if (ordinalMap.containsKey(language)) {
+            String[] ordinals = ordinalMap.get(language);
+            switch (language) {
+                case "en":
+                    switch (number % 100) {
+                        case 11:
+                        case 12:
+                        case 13:
+                            return number + ordinals[0];
+                        default:
+                            return number + ordinals[number % 10];
+                    }
+                case "es":
+                    return number + Label.getLabel("ordinal_indicator");
+                default:
+            }
+        }
+        return "";
+    }
+
+    private static void loadOrdinals(String language) {
+        switch (language) {
+            case "es":
+                String thEs = Label.getLabel("practice_checkin_detail_dialog_ordinal_th");
+                String stEs = Label.getLabel("practice_checkin_detail_dialog_ordinal_st");
+                String ndEs = Label.getLabel("practice_checkin_detail_dialog_ordinal_nd");
+                String rdEs = Label.getLabel("practice_checkin_detail_dialog_ordinal_rd");
+                String to = Label.getLabel("practice_checkin_detail_dialog_ordinal_to");
+                String mo = Label.getLabel("practice_checkin_detail_dialog_ordinal_mo");
+                String no = Label.getLabel("practice_checkin_detail_dialog_ordinal_no");
+
+                String[] ordinalsEs = {thEs, stEs, ndEs, rdEs, to, to, to, mo, thEs, no, mo};
+                ordinalMap.put(language, ordinalsEs);
+                break;
+            case "en":
+                String th = Label.getLabel("practice_checkin_detail_dialog_ordinal_th");
+                String st = Label.getLabel("practice_checkin_detail_dialog_ordinal_st");
+                String nd = Label.getLabel("practice_checkin_detail_dialog_ordinal_nd");
+                String rd = Label.getLabel("practice_checkin_detail_dialog_ordinal_rd");
+
+                String[] ordinals = {th, st, nd, rd, th, th, th, th, th, th};
+                ordinalMap.put(language, ordinals);
+                break;
+            default:
+
+        }
+
     }
 }

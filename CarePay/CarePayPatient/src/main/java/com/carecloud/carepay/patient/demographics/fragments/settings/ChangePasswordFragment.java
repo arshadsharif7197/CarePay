@@ -139,7 +139,7 @@ public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
         updatePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (passConstraints()) {
+                if (passConstraints(false)) {
                     DemographicMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getMetadata();
                     DemographicTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
                     TransitionDTO demographicsSettingsUpdatePasswordDTO = demographicsSettingsTransitionsDTO.getChangePassword();
@@ -150,7 +150,8 @@ public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
                     properties.put("proposed_password", newPasswordEditText.getText().toString().trim());
                     JSONObject attributes = new JSONObject(properties);
                     String encodedAttributes = new String(Base64.encodeBase64(attributes.toString().getBytes()));
-                    Map<String, String> header = new HashMap<>();
+
+                    Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
                     header.put("maintenance", encodedAttributes);
 
                     DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
@@ -176,8 +177,8 @@ public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
     }
 
     @Override
-    protected void checkIfEnableButton() {
-        boolean isEnabled = passConstraints();
+    protected void checkIfEnableButton(boolean userInteraction) {
+        boolean isEnabled = passConstraints(false);
         if (updatePasswordButton != null) {
             updatePasswordButton.setEnabled(isEnabled);
             updatePasswordButton.setClickable(isEnabled);
@@ -185,7 +186,7 @@ public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
     }
 
     @Override
-    protected boolean passConstraints() {
+    protected boolean passConstraints(boolean isUserInteraction) {
         View view = getView();
         if (view == null) {
             return false;
@@ -199,24 +200,30 @@ public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
             return false;
         }
 
+        TextInputLayout passwordLayout = (TextInputLayout) view.findViewById(R.id.newPasswordTextInputLayout);
         if(!ValidationHelper.isValidPassword(newPasswordEditText.getText().toString().trim())){
-            TextInputLayout passwordLayout = (TextInputLayout) view.findViewById(R.id.newPasswordTextInputLayout);
             passwordLayout.setErrorEnabled(true);
             passwordLayout.setError(Label.getLabel("password_hint_text"));
             return false;
+        }else{
+            passwordLayout.setError(null);
+            passwordLayout.setErrorEnabled(false);
         }
 
         if (StringUtil.isNullOrEmpty(repeatPasswordEditText.getText().toString().trim())) {
             return false;
         }
 
+        TextInputLayout repeatPasswordLabel = (TextInputLayout) view
+                .findViewById(R.id.repeatPasswordTextInputLayout);
         if (!repeatPasswordEditText.getText().toString().trim()
                 .equals(newPasswordEditText.getText().toString().trim())) {
-            TextInputLayout repeatPasswordLabel = (TextInputLayout) view
-                    .findViewById(R.id.repeatPasswordTextInputLayout);
             repeatPasswordLabel.setErrorEnabled(true);
             repeatPasswordLabel.setError(Label.getLabel("settings_repeat_password_error"));
             return false;
+        }else{
+            repeatPasswordLabel.setError(null);
+            repeatPasswordLabel.setErrorEnabled(false);
         }
 
         return true;

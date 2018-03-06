@@ -13,6 +13,7 @@ public class PendingBalancePayloadDTO {
     public static final String CO_PAY_TYPE = "Insurance CoPay";
     public static final String CO_INSURANCE_TYPE = "Co-Insurance";
     public static final String DEDUCTIBLE_TYPE = "Insurance Deductible";
+    public static final String PATIENT_BALANCE = "Patient Balance";
 
     @SerializedName("type")
     @Expose

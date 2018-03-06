@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/toolbar_registration_titleonly"
+        android:id="@+id/registration_toolbar"/>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_40"
+        android:layout_gravity="center_horizontal">
+
+        <ImageView
+            android:id="@+id/practice_initials"
+            android:layout_width="@dimen/image_select_image"
+            android:layout_height="@dimen/image_select_image"
+            android:adjustViewBounds="true"
+            android:src="@drawable/practice_initials_bkg"/>
+
+        <com.carecloud.carepay.mini.views.CarePayEditText
+            android:id="@+id/practice_initials_name"
+            android:layout_width="@dimen/image_select_image"
+            android:layout_height="@dimen/image_select_image"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:maxLength="3"
+            android:maxLines="1"
+            android:inputType="text"
+            android:imeOptions="actionDone"
+            android:textColor="@color/practiceInitialsText"
+            android:textSize="@dimen/practice_initials"
+            tools:text="PNJ"
+            app:customFont="gotham_rounded_bold.otf"/>
+
+    </FrameLayout>
+</LinearLayout>

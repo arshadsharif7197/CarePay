@@ -15,8 +15,10 @@
         android:layout_gravity="top|end"/>
 
     <LinearLayout
-        android:layout_width="@dimen/content_width_start"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_30"
+        android:layout_marginEnd="@dimen/dp_30"
         android:orientation="vertical"
         android:layout_gravity="center"
         android:gravity="center_horizontal">
@@ -25,7 +27,7 @@
             android:id="@+id/carecloud_logo"
             android:layout_height="wrap_content"
             style="@style/LogoLarge"
-            android:layout_marginBottom="@dimen/dp_60"
+            android:layout_marginBottom="@dimen/dp_40"
             android:contentDescription="@string/content_logo"/>
 
         <View
@@ -36,9 +38,9 @@
         <com.carecloud.carepay.mini.views.CarePayTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_40"
-            android:paddingStart="@dimen/dp_40"
-            android:paddingEnd="@dimen/dp_40"
+            android:layout_marginTop="@dimen/dp_30"
+            android:paddingStart="@dimen/dp_20"
+            android:paddingEnd="@dimen/dp_20"
             android:gravity="center"
             android:textColor="@color/blueText"
             android:textSize="@dimen/instructions_text"
@@ -48,7 +50,7 @@
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_40">
+            android:layout_marginTop="@dimen/dp_30">
 
             <com.carecloud.carepay.mini.views.CarePayButton
                 android:id="@+id/button_start"

@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/screen_background"
     android:paddingBottom="@dimen/dimen_25dp"
-    tools:context=".payments.PatientModePracticePaymentsActivity"
+    tools:context=".payments.PatientModePaymentsActivity"
     tools:ignore="MissingPrefix">
 
     <include
@@ -31,11 +31,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/logoImageView"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/dimen_72dp"
+        android:layout_marginTop="@dimen/dimen_50dp"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_36sp"
         app:customAssetFont="gotham_rounded_medium"
-        breeze:textKey="no_payment_title" />
+        breeze:textKey="no_payment_title"
+        tools:text="Select a pending payment"/>
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/subtitle"
@@ -47,7 +48,8 @@
         android:textColor="@color/confirm_pin_sub_title"
         android:textSize="@dimen/text_size_22sp"
         app:customAssetFont="proxima_nova_regular"
-        breeze:textKey="no_payment_description" />
+        breeze:textKey="no_payment_description"
+        tools:text="We'll list all your pending payments here" />
 
     <ProgressBar
         android:id="@+id/appointmentProgressBar"
@@ -63,12 +65,15 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/appointmentProgressBar">
+        android:layout_below="@+id/appointmentProgressBar"
+        android:layout_above="@+id/btnHome"
+        android:paddingTop="@dimen/dimen_10dp"
+        android:paddingBottom="@dimen/dimen_10dp">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/appointmentsRecyclerView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:orientation="horizontal"
             android:scrollbars="horizontal" />

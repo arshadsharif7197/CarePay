@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -168,6 +167,12 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         });
 
         makePartialPaymentButton.setVisibility(isPartialPayAvailable(selectedBalance.getMetadata().getPracticeId(), total) ? View.VISIBLE : View.GONE);
+
+        boolean canMakePayments = paymentDTO.getPaymentPayload().canMakePayments(selectedBalance.getMetadata().getPracticeId());
+        if(!canMakePayments){
+            payTotalAmountButton.setVisibility(View.GONE);
+            makePartialPaymentButton.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -189,7 +194,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
 
     @Override
     public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
-        String tag = PaymentDetailsFragmentDialog.class.getSimpleName();
+        String tag = PaymentDetailsFragmentDialog.class.getName();
         FragmentTransaction ft = getChildFragmentManager().beginTransaction();
         Fragment prev = getChildFragmentManager().findFragmentByTag(tag);
         if (prev != null) {
@@ -197,7 +202,8 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         }
         ft.addToBackStack(null);
 
-        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog.newInstance(paymentDTO, paymentLineItem);
+        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
+                .newInstance(paymentDTO, paymentLineItem, selectedBalance, false);
         dialog.show(ft, tag);
     }
 

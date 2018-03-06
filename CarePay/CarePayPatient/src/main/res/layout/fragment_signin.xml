@@ -102,12 +102,37 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/signin_button"
-                style="@style/SigninSignupButtonStyle"
-                android:text="@string/submit_button"
-                app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="signin_button" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/touchIdButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/signin_button"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignTop="@+id/signin_button"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:background="@drawable/button_selector"
+                    android:paddingEnd="@dimen/dimen_10dp"
+                    android:paddingStart="@dimen/dimen_10dp"
+                    android:src="@drawable/ic_touch_id"
+                    android:visibility="gone" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                    android:id="@+id/signin_button"
+                    style="@style/SigninSignupButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@id/touchIdButton"
+                    android:text="@string/submit_button"
+                    app:customAssetFont="gotham_rounded_medium"
+                    breeze:textKey="signin_button" />
+
+            </RelativeLayout>
+
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/signup_button"

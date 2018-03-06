@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
 import com.carecloud.carepay.practice.library.patientmodecheckin.models.PatientModeCheckinDTO;
@@ -141,5 +142,16 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
 
     public TransitionDTO getLanguageLink() {
         return demographicDTO.getMetadata().getLinks().getLanguage();
+    }
+
+    public void changeLanguage() {
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentById(com.carecloud.carepaylibrary.R.id.root_layout);
+        if (fragment != null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.detach(fragment);
+            transaction.attach(fragment);
+            transaction.commit();
+        }
     }
 }

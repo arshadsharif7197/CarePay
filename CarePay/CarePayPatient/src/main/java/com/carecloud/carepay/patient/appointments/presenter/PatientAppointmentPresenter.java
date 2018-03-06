@@ -17,7 +17,7 @@ import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragme
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
-import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -413,7 +413,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         practiceId = appointmentDTO.getMetadata().getPracticeId();
         practiceMgmt = appointmentDTO.getMetadata().getPracticeMgmt();
         patientId = appointmentDTO.getMetadata().getPatientId();
-        AppointmentDetailDialog detailDialog = AppointmentDetailDialog.newInstance(appointmentDTO);
+        AppointmentDetailDialog detailDialog = AppointmentDetailDialog.newInstance(appointmentDTO, getPracticeInfo(appointmentDTO).isBreezePractice());
         viewHandler.displayDialogFragment(detailDialog, false);
     }
 
@@ -691,6 +691,33 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     @Override
     public Fragment getAndroidPayTargetFragment() {
         return androidPayTargetFragment;
+    }
+
+    private UserPracticeDTO getPracticeInfo(AppointmentDTO appointmentDTO){
+        for(UserPracticeDTO userPracticeDTO : appointmentsResultModel.getPayload().getUserPractices()){
+            if(userPracticeDTO.getPracticeId() != null && userPracticeDTO.getPracticeId().equals(practiceId)){
+                return userPracticeDTO;
+            }
+        }
+        UserPracticeDTO userPracticeDTO = new UserPracticeDTO();
+        for (UserPracticeDTO resourcesPracticeDTO : appointmentsResultModel
+                .getPayload().getUserPractices()) {
+            if (resourcesPracticeDTO.getPracticeId().equals(practiceId)) {
+                userPracticeDTO.setPracticeMgmt(resourcesPracticeDTO.getPracticeMgmt());
+                userPracticeDTO.setPracticeId(resourcesPracticeDTO.getPracticeId());
+                userPracticeDTO.setPracticeName(resourcesPracticeDTO.getPracticeName());
+                userPracticeDTO.setPracticePhoto(resourcesPracticeDTO.getPracticePhoto());
+                userPracticeDTO.setPatientId(patientId);
+
+                return userPracticeDTO;
+            }
+        }
+
+        userPracticeDTO.setPatientId(patientId);
+        userPracticeDTO.setPracticeId(practiceId);
+        userPracticeDTO.setPracticeMgmt(practiceMgmt);
+
+        return userPracticeDTO;
     }
 
     @Override

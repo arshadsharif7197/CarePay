@@ -1,14 +1,18 @@
 package com.carecloud.carepay.service.library;
 
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 
 import com.carecloud.carepay.service.library.base.IApplicationSession;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.Defs;
+import com.carecloud.carepay.service.library.dtos.AvailableLocationDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepay.service.library.platform.AndroidPlatform;
+import com.carecloud.carepay.service.library.platform.Platform;
 import com.google.gson.Gson;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -19,45 +23,29 @@ public class ApplicationPreferences {
 
     private static final String DEFAULT_STRING_PREFERENCES = "-";
 
-    public static final String PREFERENCE_CAREPAY = "Preference_CarePay";
-
-    private static final String PREFERENCE_USER_SELECTED_LANGUAGE = "user_selected_language";
-
-    private static final String PREFERENCE_PRACTICE_SELECTED_LANGUAGE = "practice_user_selected_language";
-
     private static final String PREFERENCE_PATIENT_ID = "patient_id";
-
     private static final String PREFERENCE_PRACTICE_ID = "practice_id";
-
-    private static final String PREFERENCE_PRACTICE_MANAGEMENT = "practice_management";
-
     private static final String PREFERENCE_PREFIX = "prefix";
-
     private static final String PREFERENCE_USER_ID = "user_id";
-
-    private static final String PREFERENCE_IS_PATIENT_MODE_APPOINTMENTS = "is_patient_mode_appointments";
-
+    private static final String PREFERENCE_USERNAME = "username";
+    private static final String PREFERENCE_PASSWORD = "password";
     private static final String PREFERENCE_PATIENT_PHOTO_URL = "patient_photo_url";
-
     private static final String PREFERENCE_IS_TUTORIAL_SHOWN = "is_tutorial_shown";
-
-    public static final String PREFERENCE_FILTERED_PROVIDERS = "filteredDoctors";
-
-    public static final String PREFERENCE_FILTERED_LOCATIONS = "filteredLocations";
-
     private static final String PREFERENCE_APPOINTMENT_NAVIGATION_OPTION = "appointment_navigation_option";
-
-    private Context context;
+    public static final String PREFERENCE_FILTERED_PROVIDERS = "filteredDoctors";
+    public static final String PREFERENCE_FILTERED_LOCATIONS = "filteredLocations";
+    public static final String PATIENT_USER_LANGUAGE = "practiceUserLanguage";
+    public static final String PRACTICE_USER_LANGUAGE = "user_selected_language";
+    private static final String PREFERENCE_LOCATION_ID = "locationId";
+    private static final String PREFERENCE_LOCATION = "locations";
 
     private String patientId;
     private String practiceId;
-    private String practiceManagement;
+    private Integer practiceLocationId;
     private String prefix;
     private String userId;
     private String userLanguage;
     private String patientUserLanguage;
-    private String practiceLanguage;
-    private Boolean navigateToAppointments;
     private Boolean isTutorialShown;
     private String photoUrl;
     private
@@ -65,24 +53,15 @@ public class ApplicationPreferences {
     Integer navigationOption;
     private String userName;
 
-    public ApplicationPreferences(Context context) {
-        this.context = context;
-    }
+    private static ApplicationPreferences instance;
+    private String userPassword;
 
-    public void setNavigateToAppointments(boolean newValue) {
-        navigateToAppointments = newValue;
-        writeStringToSharedPref(PREFERENCE_USER_SELECTED_LANGUAGE, userLanguage);
-    }
 
-    /**
-     * @return true if app is navigating to appointments
-     */
-    public boolean isNavigatingToAppointments() {
-        if (null != navigateToAppointments) {
-            return navigateToAppointments;
+    public static ApplicationPreferences getInstance() {
+        if (instance == null) {
+            instance = new ApplicationPreferences();
         }
-
-        return readBooleanFromSharedPref(PREFERENCE_IS_PATIENT_MODE_APPOINTMENTS);
+        return instance;
     }
 
     /**
@@ -111,56 +90,36 @@ public class ApplicationPreferences {
     }
 
     public void setUserLanguage(String newValue) {
-        if (((IApplicationSession) context).getApplicationMode().getApplicationType()
+        if (((IApplicationSession) ((AndroidPlatform) Platform.get()).getContext())
+                .getApplicationMode().getApplicationType()
                 .equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)) {
             patientUserLanguage = newValue;
+            writeStringToSharedPref(PATIENT_USER_LANGUAGE, userLanguage);
             return;
         }
         userLanguage = newValue;
         patientUserLanguage = newValue;
-        writeStringToSharedPref(PREFERENCE_USER_SELECTED_LANGUAGE, userLanguage);
+        writeStringToSharedPref(PRACTICE_USER_LANGUAGE, userLanguage);
     }
 
     /**
      * @return user preferred language. Returns default value if not set.
      */
     public String getUserLanguage() {
-        if (((IApplicationSession) context).getApplicationMode().getApplicationType()
+        if (((IApplicationSession) ((AndroidPlatform) Platform.get()).getContext())
+                .getApplicationMode().getApplicationType()
                 .equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)) {
+            if (patientUserLanguage == null) {
+                patientUserLanguage = readStringFromSharedPref(PATIENT_USER_LANGUAGE,
+                        "en");//Resources.getSystem().getConfiguration().locale.getLanguage());
+            }
             return patientUserLanguage;
         }
         if (userLanguage == null) {
-            userLanguage = readStringFromSharedPref(PREFERENCE_USER_SELECTED_LANGUAGE,
-                    Resources.getSystem().getConfiguration().locale.getLanguage());
+            userLanguage = readStringFromSharedPref(PRACTICE_USER_LANGUAGE,
+                    "en");//Resources.getSystem().getConfiguration().locale.getLanguage());
         }
         return userLanguage;
-    }
-
-    /**
-     * @return user preferred language. Returns null if not set.
-     */
-    public String getUserLanguageRaw() {
-        if (null != userLanguage) {
-            return userLanguage;
-        }
-
-        return readStringFromSharedPref(PREFERENCE_USER_SELECTED_LANGUAGE);
-    }
-
-    public void setPracticeLanguage(String newValue) {
-        practiceLanguage = newValue;
-        writeStringToSharedPref(PREFERENCE_PRACTICE_SELECTED_LANGUAGE, userLanguage);
-    }
-
-    /**
-     * @return practice preferred language
-     */
-    public String getPracticeLanguage() {
-        if (null != practiceLanguage) {
-            return practiceLanguage;
-        }
-
-        return readStringFromSharedPref(PREFERENCE_PRACTICE_SELECTED_LANGUAGE, "en");
     }
 
     /**
@@ -202,22 +161,19 @@ public class ApplicationPreferences {
     }
 
     /**
-     * @param newValue practiceManagement
+     * @return practiceId
      */
-    public void setPracticeManagement(String newValue) {
-        practiceManagement = newValue;
-        writeStringToSharedPref(PREFERENCE_PRACTICE_MANAGEMENT, practiceManagement);
-    }
-
-    /**
-     * @return practiceManagement
-     */
-    public String getPracticeManagement() {
-        if (null != practiceManagement) {
-            return practiceManagement;
+    public Integer getPracticeLocationId() {
+        if (practiceLocationId != null) {
+            return practiceLocationId;
         }
 
-        return readStringFromSharedPref(PREFERENCE_PRACTICE_MANAGEMENT);
+        return readIntFromSharedPref(PREFERENCE_LOCATION_ID);
+    }
+
+    public void setPracticeLocationId(Integer practiceLocationId) {
+        this.practiceLocationId = practiceLocationId;
+        writeIntegerToSharedPref(PREFERENCE_LOCATION_ID, practiceLocationId);
     }
 
     /**
@@ -351,11 +307,7 @@ public class ApplicationPreferences {
     }
 
     private SharedPreferences getSharedPreferences() {
-        return context.getSharedPreferences(PREFERENCE_CAREPAY, Context.MODE_PRIVATE);
-    }
-
-    public Context getContext() {
-        return context;
+        return ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences();
     }
 
     /**
@@ -381,15 +333,62 @@ public class ApplicationPreferences {
         return readStringSetFromSharedPref(practiceId + userId + PREFERENCE_FILTERED_PROVIDERS);
     }
 
+    public void setSelectedProvidersId(String practiceId, String userId, Set<String> filteredDoctorsIds) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putStringSet(practiceId + userId + ApplicationPreferences.PREFERENCE_FILTERED_PROVIDERS,
+                filteredDoctorsIds).apply();
+    }
+
     public Set<String> getSelectedLocationsIds(String practiceId, String userId) {
         return readStringSetFromSharedPref(practiceId + userId + PREFERENCE_FILTERED_LOCATIONS);
     }
 
+    public void setSelectedLocationsId(String practiceId, String userId, Set<String> filteredLocationsIds) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putStringSet(practiceId + userId + ApplicationPreferences.PREFERENCE_FILTERED_LOCATIONS,
+                filteredLocationsIds).apply();
+    }
+
     public String getUserName() {
+        if (userName == null) {
+            userName = readStringFromSharedPref(PREFERENCE_USERNAME);
+        }
         return userName;
     }
 
     public void setUserName(String userName) {
+        writeStringToSharedPref(PREFERENCE_USERNAME, userName);
         this.userName = userName;
+    }
+
+    public Set<String> getPracticesWithBreezeEnabled(String practiceId) {
+        return getSharedPreferences().getStringSet(PREFERENCE_LOCATION + practiceId, null);
+    }
+
+    public void setPracticesWithBreezeEnabled(List<UserPracticeDTO> practiceInformation) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        for (UserPracticeDTO practice : practiceInformation) {
+            List<AvailableLocationDTO> locations = practice.getLocations();
+            if (locations != null) {
+                Set<String> locationsSet = new HashSet<>();
+                for (AvailableLocationDTO location : locations) {
+                    locationsSet.add(location.getGuid());
+                }
+                editor.putStringSet(PREFERENCE_LOCATION + practice.getPracticeId(), locationsSet);
+            }
+        }
+        editor.apply();
+    }
+
+    public String getUserPassword() {
+        if (userPassword == null) {
+            userPassword = readStringFromSharedPref(PREFERENCE_PASSWORD);
+        }
+        return userPassword;
+    }
+
+    public void setUserPassword(String userPassword) {
+        writeStringToSharedPref(PREFERENCE_PASSWORD, userPassword);
+        this.userPassword = userPassword;
     }
 }

@@ -168,7 +168,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         Fragment prev = fm.findFragmentByTag(tag);
         if (prev != null) {
             fm.popBackStackImmediate(tag, 0);
-            return;
         }
 
         transaction.replace(R.id.root_layout, fragment, tag);
@@ -181,12 +180,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
     @Override
     public void navigateToConsentForms(WorkflowDTO workflowDTO) {
-        Bundle bundle = new Bundle();
-        bundle.putString(CarePayConstants.INTAKE_BUNDLE, workflowDTO.toString());
-
-        FormsFragment fragment = new FormsFragment();
-        fragment.setArguments(bundle);
-
+        FormsFragment fragment = FormsFragment.newInstance(workflowDTO);
         navigateToFragment(fragment, true);
     }
 
@@ -253,11 +247,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             demographicsView.setMediaResultListener(insuranceEditDialog);
         } else {
             navigateToFragment(insuranceEditDialog, true);
-//            FragmentManager fm = getSupportFragmentManager();
-//            FragmentTransaction transaction = fm.beginTransaction();
-//            transaction.add(R.id.root_layout, insuranceEditDialog, insuranceEditDialog.getClass().getCanonicalName());
-//            transaction.addToBackStack(null);
-//            transaction.commitAllowingStateLoss();
         }
     }
 
@@ -366,13 +355,17 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             healthInsuranceFragment.updateInsuranceList(demographicDTO);
             fm.popBackStack(InsuranceEditDialog.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
             navigateToFragment(healthInsuranceFragment, true);
+            if (proceed) {
+                fm.executePendingTransactions();
+                healthInsuranceFragment.openNextFragment(this.demographicDTO);
+            }
             return;
         }
 
         if (!healthInsuranceFragment.isAdded()) {
             healthInsuranceFragment.updateInsuranceList(demographicDTO);
-            fm.popBackStack(tag,0);
-        }else if (demographicDTO == null || proceed) {
+            fm.popBackStack(tag, 0);
+        } else if (demographicDTO == null || proceed) {
             fm.executePendingTransactions();
             healthInsuranceFragment.openNextFragment(this.demographicDTO);
         } else {

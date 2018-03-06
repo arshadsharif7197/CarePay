@@ -11,8 +11,11 @@
              android:id="@+id/registration_toolbar" />
 
     <LinearLayout
-        android:layout_width="@dimen/content_width_wide"
-        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_20"
+        android:layout_marginEnd="@dimen/dp_20"
+        android:layout_marginTop="@dimen/dp_5"
         android:layout_gravity="center"
         android:layout_marginBottom="@dimen/dp_20"
         android:gravity="center_horizontal"
@@ -32,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/dp_20">
+            android:layout_marginTop="@dimen/dp_10">
 
             <ImageView
                 android:id="@+id/practice_initials"
@@ -97,7 +100,7 @@
             android:id="@+id/button_edit_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_5"
             android:gravity="center"
             android:text="@string/registration_review_edit_image"
             android:textAllCaps="true"
@@ -108,9 +111,9 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp_130"
+            android:layout_height="@dimen/dp_100"
             android:orientation="horizontal"
-            android:layout_marginTop="@dimen/dp_20">
+            android:layout_marginTop="@dimen/dp_30">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -176,8 +179,9 @@
 
                     <com.carecloud.carepay.mini.views.CarePayTextView
                         android:id="@+id/device_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:lines="1"
                         android:maxLines="1"
                         android:ellipsize="end"
@@ -222,8 +226,9 @@
 
                     <com.carecloud.carepay.mini.views.CarePayTextView
                         android:id="@+id/location_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:lines="1"
                         android:maxLines="1"
                         android:ellipsize="end"
@@ -268,8 +273,9 @@
 
                     <com.carecloud.carepay.mini.views.CarePayTextView
                         android:id="@+id/practice_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:lines="1"
                         android:maxLines="1"
                         android:ellipsize="end"
@@ -308,16 +314,10 @@
 
         </LinearLayout>
 
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-
         <LinearLayout
             android:layout_width="@dimen/content_width_buttons"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_20"
+            android:layout_marginTop="@dimen/dp_40"
             android:orientation="horizontal">
 
             <FrameLayout

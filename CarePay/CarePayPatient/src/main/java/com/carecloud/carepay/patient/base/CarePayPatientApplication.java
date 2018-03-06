@@ -4,11 +4,13 @@ import android.os.Build;
 import android.provider.Settings;
 
 import com.carecloud.carepay.patient.BuildConfig;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
 import com.carecloud.carepaylibray.CarePayApplication;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.newrelic.agent.android.NewRelic;
 
 
 /**
@@ -35,8 +37,8 @@ public class CarePayPatientApplication extends CarePayApplication {
     private void setHttpConstants() {
         DeviceIdentifierDTO deviceIdentifierDTO=new DeviceIdentifierDTO();
         deviceIdentifierDTO.setDeviceIdentifier(Settings.Secure.ANDROID_ID);
-        deviceIdentifierDTO.setDeviceType("Android");
-        deviceIdentifierDTO.setDevicePlatform("android");
+        deviceIdentifierDTO.setDeviceType(CarePayConstants.ANDROID_DEVICE);
+        deviceIdentifierDTO.setDevicePlatform(CarePayConstants.PLATFORM_ANDROID);
         deviceIdentifierDTO.setDeviceOSVersion(Build.VERSION.RELEASE);
         deviceIdentifierDTO.setVersion(BuildConfig.VERSION_NAME);
 //        deviceIdentifierDTO.setVersion("1.0.6");
@@ -50,6 +52,7 @@ public class CarePayPatientApplication extends CarePayApplication {
         HttpConstants.setUseUnifiedAuth(BuildConfig.useUnifiedAuth);
         HttpConstants.setMixpanelAPI(mixpanelAPI);
         HttpConstants.setEnvironment(BuildConfig.ENVIRONMENT);
+        HttpConstants.setRetailPaymentsRedirectUrl(BuildConfig.RETAIL_REDIRECT_URL);
     }
 
     @Override
@@ -57,6 +60,11 @@ public class CarePayPatientApplication extends CarePayApplication {
         super.onAtomicRestart();
         applicationMode.clearUserPracticeDTO();
         applicationMode = null;
+    }
+
+    @Override
+    public void setNewRelicInteraction(String interactionName) {
+        NewRelic.setInteractionName(interactionName);
     }
 
     @Override

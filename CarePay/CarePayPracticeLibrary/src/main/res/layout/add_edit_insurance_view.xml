@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:layout_marginBottom="@dimen/dimen_20dp"
     android:layout_marginTop="@dimen/dimen_20dp"
-    android:layout_marginBottom="@dimen/dimen_20dp">
+    android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/healthInsuranceProvidersLayout"
@@ -18,10 +17,10 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/healthInsuranceProvidersInputLayout"
             style="@style/SigninSignupTextInputStyle"
-            app:customAssetFont="proxima_nova_semi_bold"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
+            android:tag="@string/tag_demographics_error_color"
             android:textColorHint="@color/demographics_color_error"
-            android:tag="@string/tag_demographics_error_color">
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/health_insurance_providers"
@@ -54,10 +53,10 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/otherProviderInputLayout"
             style="@style/SigninSignupTextInputStyle"
-            app:customAssetFont="proxima_nova_semi_bold"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
+            android:tag="@string/tag_demographics_error_color"
             android:textColorHint="@color/demographics_color_error"
-            android:tag="@string/tag_demographics_error_color">
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/otherProviderEditText"
@@ -84,10 +83,10 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/healthInsurancePlanInputLayout"
             style="@style/SigninSignupTextInputStyle"
-            app:customAssetFont="proxima_nova_semi_bold"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
+            android:tag="@string/tag_demographics_error_color"
             android:textColorHint="@color/demographics_color_error"
-            android:tag="@string/tag_demographics_error_color">
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/health_insurance_plans"
@@ -123,20 +122,21 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            app:customAssetFont="proxima_nova_semi_bold"
+            android:tag="@string/tag_demographics_error_scroll"
             android:textColorHint="@color/demographics_color_error"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
-            android:tag="@string/tag_demographics_error_scroll">
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/health_insurance_card_number"
                 style="@style/DemographicsReviewEditTextStyle"
+                android:digits="@string/restrict_digits_letters"
+                android:imeOptions="actionNext"
                 android:inputType="text"
                 android:textAllCaps="true"
-                android:imeOptions="actionNext"
                 app:customAssetFont="gotham_rounded_book"
                 breeze:hintKey="demographics_insurance_card_number"
-                tools:hint="Insurance Card Number"/>
+                tools:hint="Insurance Card Number" />
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
@@ -145,20 +145,21 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            app:customAssetFont="proxima_nova_semi_bold"
+            android:tag="@string/tag_demographics_error_scroll"
             android:textColorHint="@color/demographics_color_error"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
-            android:tag="@string/tag_demographics_error_scroll">
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/health_insurance_group_number"
                 style="@style/DemographicsReviewEditTextStyle"
+                android:digits="@string/restrict_digits_letters"
+                android:imeOptions="actionNext"
                 android:inputType="text"
                 android:textAllCaps="true"
-                android:imeOptions="actionNext"
                 app:customAssetFont="gotham_rounded_book"
                 breeze:hintKey="demographics_insurance_group_number"
-                tools:hint="Group Number"/>
+                tools:hint="Group Number" />
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
     </LinearLayout>
 
@@ -170,10 +171,10 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/healthInsuranceTypeInputLayout"
             style="@style/SigninSignupTextInputStyle"
-            app:customAssetFont="proxima_nova_semi_bold"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
+            android:tag="@string/tag_demographics_error_color"
             android:textColorHint="@color/demographics_color_error"
-            android:tag="@string/tag_demographics_error_color">
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/health_insurance_types"
@@ -205,10 +206,10 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/healthInsuranceRelationshipInputLayout"
             style="@style/SigninSignupTextInputStyle"
-            app:customAssetFont="proxima_nova_semi_bold"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
+            android:tag="@string/tag_demographics_error_color"
             android:textColorHint="@color/demographics_color_error"
-            android:tag="@string/tag_demographics_error_color">
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/health_insurance_relationship"
@@ -242,10 +243,10 @@
             style="@style/SigninSignupTextInputStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:customAssetFont="proxima_nova_semi_bold"
+            android:tag="@string/tag_demographics_error_scroll"
             android:textColorHint="@color/demographics_color_error"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
-            android:tag="@string/tag_demographics_error_scroll">
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/health_insurance_policy_first_name_holder"
@@ -256,7 +257,7 @@
                 android:textAllCaps="true"
                 app:customAssetFont="gotham_rounded_book"
                 breeze:hintKey="demographics_insurance_policy_holder"
-                tools:hint="Policy Holder First Name"/>
+                tools:hint="Policy Holder First Name" />
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -272,22 +273,22 @@
             style="@style/SigninSignupTextInputStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:customAssetFont="proxima_nova_semi_bold"
+            android:tag="@string/tag_demographics_error_scroll"
             android:textColorHint="@color/demographics_color_error"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
-            android:tag="@string/tag_demographics_error_scroll">
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/health_insurance_policy_last_name_holder"
                 style="@style/DemographicsReviewEditTextStyle"
                 android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+                android:imeOptions="actionNext"
                 android:inputType="textPersonName"
                 android:maxLength="100"
                 android:textAllCaps="true"
-                android:imeOptions="actionNext"
                 app:customAssetFont="gotham_rounded_book"
                 breeze:hintKey="demographics_insurance_policy_holder_last_name"
-                tools:hint="Policy Holder Last Name"/>
+                tools:hint="Policy Holder Last Name" />
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -302,9 +303,9 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/health_insurance_policy_birth_date_holder_layout"
             style="@style/SigninSignupTextInputStyle"
+            android:tag="@string/tag_demographics_error_scroll"
             android:textColorHint="@color/demographics_color_error"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
-            android:tag="@string/tag_demographics_error_scroll">
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/health_insurance_policy_birth_date_holder"
@@ -314,8 +315,8 @@
                 android:inputType="date"
                 android:maxLength="10"
                 app:customAssetFont="gotham_rounded_book"
-                tools:hint="Date of Birth"
-                breeze:hintKey="demographics_review_date_of_birth" />
+                breeze:hintKey="demographics_review_date_of_birth"
+                tools:hint="Date of Birth" />
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -329,10 +330,10 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/healthInsuranceGenderInputLayout"
             style="@style/SigninSignupTextInputStyle"
-            app:customAssetFont="proxima_nova_semi_bold"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
+            android:tag="@string/tag_demographics_error_color"
             android:textColorHint="@color/demographics_color_error"
-            android:tag="@string/tag_demographics_error_color">
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/health_insurance_gender"

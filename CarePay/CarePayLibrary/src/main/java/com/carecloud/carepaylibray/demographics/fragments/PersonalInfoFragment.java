@@ -27,6 +27,7 @@ import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
@@ -56,13 +57,15 @@ import java.io.IOException;
 
 public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implements MediaViewInterface {
 
-    private DemographicDTO demographicDTO;
-    private DemographicDataModel dataModel;
 
+    private DemographicDataModel dataModel;
     private Button buttonChangeCurrentPhoto;
     boolean hasNewImage = false;
     private MediaScannerPresenter mediaScannerPresenter;
     private String base64ProfileImage;
+    private EditText phoneNumberTypeEditText;
+    private DemographicsOption selectedPhoneType = new DemographicsOption();
+
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -144,13 +147,26 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         boolean phoneNumberRequired = dataModel.getDemographic().getAddress().getProperties().getPhone().isRequired();
         setUpField(phoneNumberInputLayout, phoneNumberEditText,
                 dataModel.getDemographic().getAddress().getProperties().getPhone().isDisplayed(),
-                demographicPayload.getAddress().getPhone(), phoneNumberRequired, null);
+                StringUtil.formatPhoneNumber(demographicPayload.getAddress().getPhone()), phoneNumberRequired, null);
         if (!phoneNumberRequired) {
             phoneNumberEditText.addTextChangedListener(clearValidationErrorsOnTextChange(phoneNumberInputLayout));
         }
         phoneNumberEditText.addTextChangedListener(phoneInputFormatter);
-        phoneNumberEditText.setText(StringUtil.formatPhoneNumber(demographicPayload.getAddress().getPhone()));
         phoneNumberEditText.setOnClickListener(selectEndOnClick);
+
+
+        TextInputLayout phoneTypeInputLayout = (TextInputLayout) view.findViewById(R.id.phoneTypeInputLayout);
+        phoneNumberTypeEditText = (EditText) view.findViewById(R.id.phoneTypeEditText);
+        phoneNumberTypeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(phoneTypeInputLayout, null));
+        selectedPhoneType.setLabel(demographicPayload.getAddress().getPhoneNumberType());
+        selectedPhoneType.setName(demographicPayload.getAddress().getPhoneNumberType());
+        phoneNumberTypeEditText.setOnClickListener(getSelectOptionsListener(dataModel
+                        .getDemographic().getAddress().getProperties().getPhoneType().getOptions(),
+                getDefaultOnOptionsSelectedListener(phoneNumberTypeEditText, selectedPhoneType, null),
+                Label.getLabel("phone_type_label")));
+        initSelectableInput(phoneNumberTypeEditText, selectedPhoneType,
+                demographicPayload.getAddress().getPhoneNumberType(), null);
+        phoneNumberTypeEditText.setText(demographicPayload.getAddress().getPhoneNumberType());
 
     }
 
@@ -202,14 +218,14 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
                             .getLastName().isRequired(), lastNameValue, R.id.lastNameContainer,
                     R.id.reviewdemogrLastNameTextInput, isUserAction())) return false;
 
-            String dobValue = ((EditText) view.findViewById(R.id.revewidemogrDOBEdit)).getText().toString();
+            EditText dateOfBirth = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
+            String dobValue = dateOfBirth.getText().toString();
             if (validateField(view, dataModel.getDemographic().getPersonalDetails().getProperties()
                             .getDateOfBirth().isRequired(), dobValue, R.id.dobContainer,
                     R.id.reviewdemogrDOBTextInput, isUserAction())) return false;
 
             //This validation is required regardless of whether fields are required
             TextInputLayout dateBirthLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
-            EditText dateOfBirth = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
             if (dateBirthLayout.getVisibility() == View.VISIBLE &&
                     !StringUtil.isNullOrEmpty(dateOfBirth.getText().toString().trim())) {
                 String dateValidationResult = DateUtil
@@ -220,7 +236,11 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
                         showErrorViews(true, (ViewGroup) view.findViewById(R.id.dobContainer));
                     }
                     return false;
+                } else {
+                    unsetFieldError(dateBirthLayout);
                 }
+            } else {
+                unsetFieldError(dateBirthLayout);
             }
 
             String phoneValue = ((EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit)).getText().toString();
@@ -238,6 +258,16 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
                     showErrorViews(true, (ViewGroup) view.findViewById(R.id.phoneNumberContainer));
                 }
                 return false;
+            } else {
+                unsetFieldError(phoneLayout);
+            }
+
+            if (validateField(view, dataModel.getDemographic().getAddress().getProperties()
+                            .getPhoneType().isRequired(), selectedPhoneType.getName(), R.id.phoneNumberContainer,
+                    R.id.phoneTypeInputLayout, isUserAction())) {
+                return false;
+            } else {
+                unsetFieldError((TextInputLayout) view.findViewById(R.id.phoneTypeInputLayout));
             }
 
             return true;
@@ -285,7 +315,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         String dateOfBirth = dobEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(dateOfBirth)) {
             // the date is DateUtil as
-            demographicPersDetailsPayloadDTO.setDateOfBirth(DateUtil.getInstance().setDateRaw(dateOfBirth).toStringWithFormatYyyyDashMmDashDd());
+            demographicPersDetailsPayloadDTO.setDateOfBirth(DateUtil.getInstance().setDateRaw(dateOfBirth, true).toStringWithFormatYyyyDashMmDashDd());
         }
 
         if (!StringUtil.isNullOrEmpty(base64ProfileImage)) {

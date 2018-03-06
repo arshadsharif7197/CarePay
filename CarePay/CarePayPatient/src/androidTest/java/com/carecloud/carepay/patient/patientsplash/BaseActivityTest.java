@@ -155,7 +155,7 @@ public class BaseActivityTest {
      */
     public ApplicationPreferences getApplicationPreferences() {
         if (applicationPreferences == null) {
-            applicationPreferences = new ApplicationPreferences(getContext());
+            applicationPreferences = ApplicationPreferences.getInstance();
         }
         return applicationPreferences;
     }

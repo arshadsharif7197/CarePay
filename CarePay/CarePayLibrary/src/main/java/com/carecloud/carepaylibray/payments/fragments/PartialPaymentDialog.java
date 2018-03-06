@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -37,6 +36,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by lmenendez on 2/28/17
@@ -54,13 +54,13 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private PaymentsModel paymentsDTO;
     private double minimumPayment;
     private PendingBalanceDTO selectedBalance;
+    private NumberFormat currencyFormat;
 
-    private double insuranceCopay;
-    private double patientBalance;
+
     private boolean amountChangeFlag = true;
     private String balanceBeforeTextChange;
 
-    private PaymentConfirmationInterface payListener;
+    protected PaymentConfirmationInterface payListener;
 
     /**
      * Contructor
@@ -73,6 +73,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         this.context = context;
         this.paymentsDTO = paymentsDTO;
         this.selectedBalance = selectedBalance;
+        this.currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
 
         try {
             if (context instanceof PaymentViewHandler) {
@@ -112,13 +113,15 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         payPartialButton.setOnClickListener(this);
         payPartialButton.setEnabled(false);
 
-        String symbol = NumberFormat.getCurrencyInstance().getCurrency().getSymbol();
+        String symbol = currencyFormat.getCurrency().getSymbol();
         amountSymbol.setText(symbol);
 
         View closeView = findViewById(com.carecloud.carepaylibrary.R.id.closeViewLayout);
         closeView.setOnClickListener(this);
 
-        calculateFullAmount(partialPaymentTotalAmountTitle);
+        fullAmount = calculateFullAmount();
+        String title = Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount(fullAmount);
+        partialPaymentTotalAmountTitle.setText(title);
 
         if(selectedBalance == null){
             selectedBalance = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
@@ -126,7 +129,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         minimumPayment = getMinimumPayment(selectedBalance.getMetadata().getPracticeId());
         if(minimumPayment > 0){
             TextView header = (TextView) findViewById(R.id.partialPaymentHeader);
-            String headerText = Label.getLabel("payment_partial_minimum_amount") + NumberFormat.getCurrencyInstance().format(minimumPayment);
+            String headerText = Label.getLabel("payment_partial_minimum_amount") + currencyFormat.format(minimumPayment);
             header.setText(headerText);
         }
         SystemUtil.showSoftKeyboard(context);
@@ -142,13 +145,13 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         } else if (viewId == R.id.payPartialButton) {
             double amount = Double.parseDouble(amountText.getText().toString());
             if(amount > fullAmount){
-                String errorMessage = Label.getLabel("payment_partial_max_error") + NumberFormat.getCurrencyInstance().format(fullAmount);
+                String errorMessage = Label.getLabel("payment_partial_max_error") + currencyFormat.format(fullAmount);
                 CustomMessageToast toast = new CustomMessageToast(context, errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
                 toast.show();
                 return;
             }
             if(minimumPayment > 0 && amount < minimumPayment){
-                String errorMessage = Label.getLabel("payment_partial_minimum_error") + NumberFormat.getCurrencyInstance().format(minimumPayment);
+                String errorMessage = Label.getLabel("payment_partial_minimum_error") + currencyFormat.format(minimumPayment);
                 CustomMessageToast toast = new CustomMessageToast(context, errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
                 toast.show();
                 return;
@@ -258,15 +261,16 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
             } else {
                 payPartialButton.setEnabled(false);
             }
-            partialPaymentTotalAmountTitle.setText(Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount((double) Math.round((fullAmount - amountPay) * 100) / 100));
+            String title = Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount((double) Math.round((fullAmount - amountPay) * 100) / 100);
+            partialPaymentTotalAmountTitle.setText(title);
         } else {
-            //amountSymbol.setTextColor(context.getResources().getColor(R.color.white_transparent));
+            String title = Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount(fullAmount);
             payPartialButton.setEnabled(false);
-            partialPaymentTotalAmountTitle.setText(Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount(fullAmount));
+            partialPaymentTotalAmountTitle.setText(title);
         }
     }
 
-    private void onPaymentClick(EditText enterPartialAmountEditText) {
+    protected void onPaymentClick(EditText enterPartialAmountEditText) {
         try {
             double amount = Double.parseDouble(enterPartialAmountEditText.getText().toString());
             createPaymentModel(amount);
@@ -278,23 +282,18 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         }
     }
 
-    private void calculateFullAmount(TextView partialPaymentTotalAmountTitle) {
-        if (paymentsDTO != null && !paymentsDTO.getPaymentPayload().getPatientBalances().isEmpty()) {
+    protected double calculateFullAmount() {
+        double fullAmount = 0;
+        if (selectedBalance != null) {
             List<PendingBalancePayloadDTO> paymentList = selectedBalance.getPayload();
 
             if (paymentList != null && paymentList.size() > 0) {
                 for (PendingBalancePayloadDTO payment : paymentList) {
-                    if (payment.getType().equalsIgnoreCase(CarePayConstants.PATIENT_BALANCE)) {
-                        patientBalance = payment.getAmount();
-                    } else if (payment.getType().equalsIgnoreCase(CarePayConstants.INSURANCE_COPAY)) {
-                        insuranceCopay = payment.getAmount();
-                    }
+                    fullAmount += payment.getAmount();
                 }
-
-                fullAmount = patientBalance + insuranceCopay;
-                partialPaymentTotalAmountTitle.setText(Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount(fullAmount));
             }
         }
+        return fullAmount;
     }
 
     private void createPaymentModel(double payAmount) {
@@ -376,7 +375,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         return responsibilityTypes;
     }
 
-    private double getMinimumPayment(String practiceId){
+    protected double getMinimumPayment(String practiceId){
         if(practiceId != null) {
             for (PaymentsPayloadSettingsDTO payloadSettingsDTO : paymentsDTO.getPaymentPayload().getPaymentSettings()) {
                 if (practiceId.equals(payloadSettingsDTO.getMetadata().getPracticeId())) {

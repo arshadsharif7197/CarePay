@@ -148,7 +148,7 @@ public class UpdateNameFragment extends DemographicsBaseSettingsFragment {
 
                 @Override
                 public void afterTextChanged(Editable editable) {
-                    checkIfEnableButton();
+                    checkIfEnableButton(false);
                 }
             });
         }
@@ -187,7 +187,7 @@ public class UpdateNameFragment extends DemographicsBaseSettingsFragment {
 
 
     private void updateName() {
-        if (passConstraints()) {
+        if (passConstraints(false)) {
             DemographicDTO updateModel = getUpdateModel();
             Gson gson = new Gson();
             String jsonPayload = gson.toJson(updateModel.getPayload().getDemographics().getPayload());
@@ -222,8 +222,8 @@ public class UpdateNameFragment extends DemographicsBaseSettingsFragment {
     };
 
     @Override
-    protected void checkIfEnableButton() {
-        boolean isEnabled = passConstraints();
+    protected void checkIfEnableButton(boolean userInteraction) {
+        boolean isEnabled = passConstraints(false);
         if (updateProfileButton != null) {
             updateProfileButton.setEnabled(isEnabled);
             updateProfileButton.setClickable(isEnabled);
@@ -231,7 +231,7 @@ public class UpdateNameFragment extends DemographicsBaseSettingsFragment {
     }
 
     @Override
-    protected boolean passConstraints() {
+    protected boolean passConstraints(boolean isUserInteraction) {
         View view = getView();
         if (view == null) {
             return false;

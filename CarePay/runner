@@ -21,18 +21,24 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "development"
     echo "${green}*** BUILDING DEVELOPMENT PRACTICE APK ***${reset}"
     ./gradlew :CarePayPracticeTablet:assembleDevelopment --profile --configure-on-demand
 
-    PRACTICE_APP=$(echo $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk/$(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk/ | grep -i '.*practice.*release.*\.apk') )
+    PRACTICE_APP=$(echo $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk/development/release/$(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk/development/release/ | grep -i '.*practice.*release.*\.apk') )
 
     echo "${green}*** DEPLOYING DEVELOPMENT PRACTICE APK TO AWS ***${reset}"
-    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk s3://automation-zeus/ --recursive
+    mkdir $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/temp/
+    find $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk/ -name "*development*.apk" -exec cp {}  $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/temp/ \;
+
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/temp s3://automation-zeus/ --recursive
 
     echo "${green}*** BUILDING DEVELOPMENT PATIENT APK ***${reset}"
     ./gradlew :CarePayPatient:assembleDevelopment --profile --configure-on-demand
 
-    PATIENT_APP=$(echo $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/$(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/ | grep -i '.*patient.*release.*\.apk') )
+    PATIENT_APP=$(echo $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/development/release/$(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/development/release/ | grep -i '.*patient-*release.*\.apk') )
 
     echo "${green}*** DEPLOYING DEVELOPMENT PATIENT APK TO AWS ***${reset}"
-    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk s3://automation-zeus/ --recursive
+    mkdir $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp/
+    find $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/ -name "*development*.apk" -exec cp {}  $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp/ \;
+
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp s3://automation-zeus/ --recursive
 
 elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "QA" ]]; then
 
@@ -43,13 +49,19 @@ elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "QA" ]]; th
     ./gradlew :CarePayPracticeTablet:assembleQa --profile --configure-on-demand
 
     echo "${green}*** DEPLOYING QA PRACTICE APK TO AWS ***${reset}"
-    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk s3://automation-zeus/ --recursive
+    mkdir $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/temp/
+    find $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk/ -name "*qa*.apk" -exec cp {}  $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/temp/ \;
+
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/temp s3://automation-zeus/ --recursive
 
     echo "${green}*** BUILDING QA PATIENT APK ***${reset}"
     ./gradlew :CarePayPatient:assembleQa --profile --configure-on-demand
 
     echo "${green}*** DEPLOYING QA PATIENT APK TO AWS ***${reset}"
-    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk s3://automation-zeus/ --recursive
+    mkdir $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp/
+    find $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/ -name "*qa*.apk" -exec cp {}  $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp/ \;
+
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp s3://automation-zeus/ --recursive
 
 elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "Staging" ]]; then
 
@@ -60,13 +72,19 @@ elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "Staging" ]
     ./gradlew :CarePayPracticeTablet:assembleStaging --profile --configure-on-demand
 
     echo "${green}*** DEPLOYING STAGING PRACTICE APKS TO AWS ***${reset}"
-    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk s3://automation-zeus/ --recursive
+    mkdir $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/temp/
+    find $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk/ -name "*staging*.apk" -exec cp {}  $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/temp/ \;
+
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/temp s3://automation-zeus/ --recursive
 
     echo "${green}*** BUILDING STAGING PATIENT APK ***${reset}"
     ./gradlew :CarePayPatient:assembleStaging --profile --configure-on-demand
 
     echo "${green}*** DEPLOYING STAGING PATIENT APKS TO AWS ***${reset}"
-    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk s3://automation-zeus/ --recursive
+    mkdir $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp/
+    find $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/ -name "*staging*.apk" -exec cp {}  $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp/ \;
+
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp s3://automation-zeus/ --recursive
 
 elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "master" ]]; then
 
@@ -77,12 +95,20 @@ elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "master" ]]
     ./gradlew :CarePayPracticeTablet:assembleProduction --profile --configure-on-demand
 
     echo "${green}*** DEPLOYING PRODUCTION PRACTICE APK TO AWS ***${reset}"
-    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk s3://automation-zeus/ --recursive
+    mkdir $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/temp/
+    find $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk/ -name "*production*.apk" -exec cp {}  $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/temp/ \;
+
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/temp s3://automation-zeus/ --recursive
+
     echo "${green}*** BUILDING PRODUCTION PATIENT APK ***${reset}"
     ./gradlew :CarePayPatient:assembleProduction --profile --configure-on-demand
 
     echo "${green}*** DEPLOYING PRODUCTION PATIENT APK TO AWS ***${reset}"
-    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk s3://automation-zeus/ --recursive
+    mkdir $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp/
+    find $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/ -name "*production*.apk" -exec cp {}  $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp/ \;
+
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp s3://automation-zeus/ --recursive
+
 fi
 
 #####################################################################################

@@ -41,6 +41,8 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
     private Spinner langSpinner;
     private Context context;
 
+    private boolean isUserInteraction = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +52,12 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         initViews();
         initializeLabels();
         setClickables();
+    }
+
+    @Override
+    public void onUserInteraction(){
+        super.onUserInteraction();
+        isUserInteraction = true;
     }
 
     private void initViews() {
@@ -119,6 +127,9 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         langSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(!isUserInteraction){
+                    return;
+                }
                 // save selected in preferences
                 if (languages != null && languages.size() > position) {
                     getApplicationPreferences().setUserLanguage(languages.get(position).toLowerCase());

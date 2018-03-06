@@ -19,6 +19,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
@@ -76,6 +77,18 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+        setMenuLabels();
+    }
+
+    private void setMenuLabels() {
+        navigationView.getMenu().findItem(R.id.nav_my_health).setTitle(Label.getLabel("navigation_link_my_health"));
+        navigationView.getMenu().findItem(R.id.nav_appointments).setTitle(Label.getLabel("navigation_link_appointments"));
+        navigationView.getMenu().findItem(R.id.nav_payments).setTitle(Label.getLabel("navigation_link_payments"));
+        navigationView.getMenu().findItem(R.id.nav_messages).setTitle(Label.getLabel("navigation_link_messages"));
+        navigationView.getMenu().findItem(R.id.nav_purchase).setTitle(Label.getLabel("shop_button"));
+        navigationView.getMenu().findItem(R.id.nav_notification).setTitle(Label.getLabel("notifications_heading"));
+        navigationView.getMenu().findItem(R.id.nav_settings).setTitle(Label.getLabel("navigation_link_profile_settings"));
+        navigationView.getMenu().findItem(R.id.nav_logout).setTitle(Label.getLabel("navigation_link_sign_out"));
     }
 
     private void setUserImage() {
@@ -179,11 +192,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity
             return false;
         }
 
-        if(payload != null){
+        if (payload != null) {
             //do transition with payload
             getWorkflowServiceHelper().execute(transition, callback, payload, queryMap, headersMap);
-        }
-        else if (headersMap.isEmpty()) {
+        } else if (headersMap.isEmpty()) {
             //do regular transition
             getWorkflowServiceHelper().execute(transition, callback, queryMap);
         } else {
@@ -369,7 +381,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         MenuPatientActivity.transitionNotifications = transitionNotifications;
     }
 
-    public static void setTransitionRetail(TransitionDTO transitionRetail){
+    public static void setTransitionRetail(TransitionDTO transitionRetail) {
         MenuPatientActivity.transitionRetail = transitionRetail;
     }
 

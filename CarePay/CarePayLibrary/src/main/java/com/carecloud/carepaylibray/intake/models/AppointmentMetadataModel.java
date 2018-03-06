@@ -5,7 +5,6 @@ package com.carecloud.carepaylibray.intake.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-
 public class AppointmentMetadataModel {
 
     @SerializedName("user_id")

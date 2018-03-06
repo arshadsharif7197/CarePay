@@ -1,12 +1,17 @@
 package com.carecloud.carepay.patient.myhealth.dtos;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * @author pjohnson on 18/07/17.
  */
 
 public class ReactionDto {
 
+    @SerializedName("name")
     private String name;
+
+    @SerializedName("severity")
     private String severity;
 
     public String getName() {

@@ -4,4 +4,6 @@
     <item name="demographicsMainHeading" type="id"/>
     <item name="demographicsSubHeading" type="id"/>
     <item name="demographicsHeading" type="id"/>
+    <item name="payment_plan_parameters" type="id"/>
+    <item name="balance_recycler" type="id"/>
 </resources>

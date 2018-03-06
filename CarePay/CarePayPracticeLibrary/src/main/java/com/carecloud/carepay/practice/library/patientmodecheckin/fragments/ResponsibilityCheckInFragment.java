@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
+import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckoutActivity;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
@@ -43,7 +44,7 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
         try {
             if (context instanceof DemographicsView) {
                 flowCallback = ((DemographicsView) context).getPresenter();
-            } else {
+            } else if (!(context instanceof PatientModeCheckoutActivity)) {
                 flowCallback = (CheckinFlowCallback) context;
             }
         } catch (ClassCastException cce) {
@@ -159,17 +160,17 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(flowCallback == null){
+        if (flowCallback == null) {
             attachCallback(getContext());
         }
-        if(flowCallback != null) {
+        if (flowCallback != null) {
             flowCallback.setCheckinFlow(CheckinFlowState.PAYMENT, 1, 1);
         }
     }
 
     @Override
     public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
-        String tag = PaymentDetailsFragmentDialog.class.getSimpleName();
+        String tag = PaymentDetailsFragmentDialog.class.getName();
         FragmentTransaction ft = getChildFragmentManager().beginTransaction();
         Fragment prev = getChildFragmentManager().findFragmentByTag(tag);
         if (prev != null) {

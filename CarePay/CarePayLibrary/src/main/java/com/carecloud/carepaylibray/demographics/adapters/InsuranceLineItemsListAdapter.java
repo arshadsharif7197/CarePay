@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
@@ -68,13 +69,18 @@ public class InsuranceLineItemsListAdapter extends
                 holder.name.setTextColor(context.getResources().getColor(R.color.textview_default_textcolor));
                 holder.edit.setText(Label.getLabel("practice_checin_edit_clickable_label"));
             }
+            String language = ApplicationPreferences.getInstance().getUserLanguage();
+            int numeral = 1;
             if (lineItem.getInsuranceType().toLowerCase().equals("primary")) {
-                holder.type.setText(Label.getLabel("demographics_insurance_primary_type"));
+                numeral = 1;
             } else if (lineItem.getInsuranceType().toLowerCase().equals("secondary")) {
-                holder.type.setText(Label.getLabel("demographics_insurance_secondary_type"));
-            } else {
-                holder.type.setText(Label.getLabel("demographics_insurance_tertiary_type"));
+                numeral = 2;
+            } else if (lineItem.getInsuranceType().toLowerCase().equals("tertiary")) {
+                numeral = 3;
+            } else if (lineItem.getInsuranceType().toLowerCase().equals("quaternary")) {
+                numeral = 4;
             }
+            holder.type.setText(StringUtil.getOrdinal(language, numeral));
         } else {
             if (lineItem.getInsurancePhotos().size() == 0) {
                 holder.alertLayout.setVisibility(View.VISIBLE);

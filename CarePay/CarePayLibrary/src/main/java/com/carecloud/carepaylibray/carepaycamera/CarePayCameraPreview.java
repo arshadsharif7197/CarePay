@@ -312,6 +312,9 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         try {
             // set Camera parameters
             Camera.Parameters params = camera.getParameters();
+            List<Camera.Size> supportedSizes = params.getSupportedPictureSizes();
+            Camera.Size size = supportedSizes.get(0);
+            params.setPictureSize(size.width, size.height);
             List<String> focusModes = params.getSupportedFocusModes();
             if (focusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
                 // Autofocus mode is supported
@@ -336,7 +339,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
      * True if this device has a camera
      */
     private boolean checkCameraHardware() {
-        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
+        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
     }
 
     /**
@@ -379,18 +382,19 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
                 ImageCaptureHelper.setOrientation(270);
                 capturedBitmap = rotateBitmap(capturedBitmap, 270);
             }
-            Rect rectFrame = shadowRect;
 
             double scaleWidth = (float) capturedBitmap.getWidth() / getHeight();
             double scaleHeight = (float) capturedBitmap.getHeight() / getWidth();
 
+            Rect rectFrame = shadowRect;
             int cropedWidth = (int) (scaleWidth * rectFrame.height());
             int cropedHeight = (int) (scaleHeight * rectFrame.width());
 
             int left = (int) (rectFrame.top * scaleWidth) - 5;
             int top = (int) (rectFrame.left * scaleHeight) - 5;
 
-            Log.d("Scales:", "scaleWidth: " + scaleWidth + "  scaleHeight: " + scaleHeight + "  cropedWidth: " + cropedWidth + "  cropedHeight: " + cropedHeight + "  left: " + left + "  top: " + top);
+            Log.d("Scales:", "scaleWidth: " + scaleWidth + "  scaleHeight: " + scaleHeight + "  cropedWidth: "
+                    + cropedWidth + "  cropedHeight: " + cropedHeight + "  left: " + left + "  top: " + top);
 
             capturedBitmap = Bitmap.createBitmap(capturedBitmap, left, top, cropedWidth, cropedHeight);
 

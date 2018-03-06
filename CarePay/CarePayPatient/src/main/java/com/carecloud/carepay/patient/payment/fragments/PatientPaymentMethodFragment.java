@@ -202,7 +202,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
 
     private void initAndroidPay() {
         androidPayAdapter = new AndroidPayAdapter(getActivity(), paymentsModel.getPaymentPayload().getMerchantServices());
-        androidPayAdapter.initAndroidPay(this);
+//        androidPayAdapter.initAndroidPay(this);//TODO need to reenable this when ready to support Android Pay in Prod
 //        showOrHideProgressDialog(true);
     }
 

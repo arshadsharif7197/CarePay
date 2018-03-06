@@ -43,6 +43,7 @@
     <dimen name="dimen_160dp">160dp</dimen>
     <dimen name="dimen_164dp">164dp</dimen>
     <dimen name="dimen_200dp">200dp</dimen>
+    <dimen name="dimen_210dp">210dp</dimen>
     <dimen name="dimen_220dp">220dp</dimen>
     <dimen name="dimen_230dp">230dp</dimen>
     <dimen name="dimen_300dp">300dp</dimen>
@@ -459,5 +460,7 @@
     <dimen name="confirmationPracticeNameMargin">20dp</dimen>
     <dimen name="dimen_35dp">35dp</dimen>
     <dimen name="dimen_38dp">38dp</dimen>
+    <dimen name="fragmentDialogPaddingBottom">20dp</dimen>
+    <dimen name="fragmentDialogPaddingTop">0dp</dimen>
 
 </resources>

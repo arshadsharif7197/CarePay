@@ -10,47 +10,67 @@ import com.google.gson.annotations.SerializedName;
 public class MedicationDto {
 
     @Expose
+    @SerializedName("id")
     private Integer id;
+
     @Expose
     @SerializedName("drug_name")
     private String drugName;
+
     @Expose
     @SerializedName("frequency_description")
     private String frequencyDescription;
+
     @Expose
     @SerializedName("strength_description")
     private String strengthDescription;
+
     @Expose
     @SerializedName("route_description")
     private String routeDescription;
+
     @Expose
     @SerializedName("prescription_instructions")
     private String prescriptionInstructions;
+
     @Expose
+    @SerializedName("status")
     private String status;
+
     @Expose
     @SerializedName("rx_norm_code")
     private String rxNormCode;
+
     @Expose
     @SerializedName("loinc")
     private String loinc;
+
     @Expose
     @SerializedName("snomed")
     private String snomed;
+
     @Expose
+    @SerializedName("quantity")
     private Double quantity;
+
     @Expose
     @SerializedName("refill_count")
     private Integer refillCount;
+
     @Expose
     @SerializedName("refill_max_count")
     private Integer refillMaxCount;
+
     @Expose
     @SerializedName("effective_from")
     private String effectiveFrom;
+
     @Expose
+    @SerializedName("provider")
     private MedicationProviderDto provider;
+
     @Expose
+    @SerializedName("practice")
     private String practice;
 
     public Integer getId() {

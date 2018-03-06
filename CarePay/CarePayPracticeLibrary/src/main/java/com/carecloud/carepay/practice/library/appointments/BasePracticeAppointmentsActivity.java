@@ -221,7 +221,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
                                    AppointmentsResultModel appointmentsResultModel,
                                    ResourcesToScheduleDTO resourcesToScheduleDTO) {
         resourcesToSchedule = appointmentsResultModel;
-        String tag = VisitTypeFragmentDialog.class.getSimpleName();
+        String tag = VisitTypeFragmentDialog.class.getName();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
         if (prev != null) {
@@ -299,7 +299,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
                         .newInstance(resourcesToScheduleModel,
                                 Label.getLabel("practice_list_select_a_provider"),
                                 Label.getLabel("practice_list_continue"));
-                fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+                fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
             }
         }
 

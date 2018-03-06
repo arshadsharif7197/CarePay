@@ -23,7 +23,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
  * Created by harish_revuri on 9/7/2016.
  * Activity supporting Signin and Sign-up
  */
-public class SigninSignupActivity extends BasePatientActivity implements FragmentActivityInterface {
+public class SigninSignupActivity extends BasePatientActivity implements FragmentActivityInterface, FingerPrintInterface {
 
     private SignInDTO signInSignUpDTO;
 
@@ -37,7 +37,7 @@ public class SigninSignupActivity extends BasePatientActivity implements Fragmen
                     .getBoolean(CarePayConstants.OPEN_NOTIFICATIONS, false);
             SigninFragment fragment = SigninFragment.newInstance(shouldOpenNotifications);
             fragmentManager.beginTransaction()
-                    .replace(R.id.layoutSigninSignup, fragment, SigninFragment.class.getSimpleName())
+                    .replace(R.id.layoutSigninSignup, fragment, SigninFragment.class.getName())
                     .commit();
         }
         if (!getApplicationPreferences().isTutorialShown()) {
@@ -74,5 +74,13 @@ public class SigninSignupActivity extends BasePatientActivity implements Fragmen
     @Override
     public void addFragment(Fragment fragment, boolean addToBackStack) {
         addFragment(R.id.layoutSigninSignup, fragment, addToBackStack);
+    }
+
+    @Override
+    public void authenticate(String user, String pwd) {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.layoutSigninSignup);
+        if (fragment instanceof SigninFragment) {
+            ((SigninFragment) fragment).signIn(user, pwd);
+        }
     }
 }

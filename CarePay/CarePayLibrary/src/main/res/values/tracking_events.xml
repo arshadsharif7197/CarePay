@@ -35,6 +35,18 @@
     <string name="event_payment_method_selected">Selected Payment Method</string>
     <string name="event_payment_start_prepayment">Prepayment Started</string>
     <string name="event_payment_cancellation_started">Cancellation Payment Started</string>
+    <string name="event_myHealth_viewMedicationList">View Medications List</string>
+    <string name="event_myHealth_viewConditionList">View Conditions List</string>
+    <string name="event_myHealth_viewAllergyList">View Allergies List</string>
+    <string name="event_myHealth_viewLabList">View Labs List</string>
+    <string name="event_myHealth_viewCareTeamList">View Care Team List</string>
+    <string name="event_myHealth_viewMedicationDetail">View Medications Detail</string>
+    <string name="event_myHealth_viewMedicationEducation">View Medication Education</string>
+    <string name="event_myHealth_viewAllergyDetail">View Allergies Detail</string>
+    <string name="event_myHealth_viewLabResult">View Lab Result</string>
+    <string name="event_myHealth_viewMedicalRecord">View Medical Record</string>
+    <string name="event_messages_openCarecloudLink">Open CareCloud Link</string>
+    <string name="event_signin_loginSuccess">Successful Login</string>
 
 
     <!--Parameters-->
@@ -56,7 +68,10 @@
     <string name="param_provider_id">Provider Id</string>
     <string name="param_provider_name">Provider Name</string>
     <string name="param_patient_id">Patient Id</string>
-
+    <string name="param_medication_name">Medication Name</string>
+    <string name="param_allergy_name">Allergy Name</string>
+    <string name="param_link_type">Link Type</string>
+    <string name="param_login_type">Login Type</string>
 
 
     <!--Incremental Properties-->
@@ -83,6 +98,7 @@
     <string name="people_has_insurance_doc">Has Insurance Document</string>
     <string name="people_enabled_push">Has Push Notifications Enabled</string>
     <string name="people_enabled_email">Has Email Notifications Enabled</string>
+    <string name="people_enabled_sms">Has SMS Notifications Enabled</string>
 
 
     <!--Enum Values-->
@@ -106,5 +122,7 @@
     <string name="payment_check">Check</string>
     <string name="payment_clover">Clover</string>
     <string name="payment_credit_card">Credit Card</string>
+    <string name="login_password">Password</string>
+    <string name="login_touch">Touch ID</string>
 
 </resources>

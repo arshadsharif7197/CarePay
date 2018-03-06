@@ -2,19 +2,18 @@ package com.carecloud.carepay.practice.library.adhocforms;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
 import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.CompleteCheckActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -29,13 +28,8 @@ import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
-import com.carecloud.carepaylibray.translation.TranslatableFragment;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,13 +41,16 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
     private ArrayList<PracticeForm> forms;
     private AdHocRecyclerViewAdapter adapter;
 
+    private boolean isUserInteraction = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
         setContentView(R.layout.activity_ad_hoc_forms);
         adhocFormsModel = getConvertedDTO(AdHocFormsModel.class);
         Bundle bundle = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
-        SelectedAdHocForms selectedAdHocForms = (SelectedAdHocForms) bundle.getSerializable("selectedForms");
+        SelectedAdHocForms selectedAdHocForms = (SelectedAdHocForms) bundle.getSerializable(CarePayConstants.SELECTED_FORMS);
 
         switchToPatientMode();
 
@@ -92,29 +89,56 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         }
     }
 
-    private void initializeLanguageSpinner() {
-        final List<String> languages = new ArrayList<>();
-        for (OptionDTO language : adhocFormsModel.getPayload().getLanguages()) {
-            languages.add(language.getCode().toUpperCase());
-        }
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.home_spinner_item, languages);
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner languageSpinner = (Spinner) findViewById(R.id.languageSpinner);
-        languageSpinner.setAdapter(spinnerArrayAdapter);
-        languageSpinner.setSelection(spinnerArrayAdapter.getPosition(getApplicationPreferences()
-                .getUserLanguage().toUpperCase()), false);
-        final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
-        headers.put("username", getApplicationPreferences().getUserName());
-        headers.put("username_patient", getApplicationPreferences().getPatientId());
-        languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        isUserInteraction = true;
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                changeLanguage(adhocFormsModel.getMetadata().getLinks().getLanguage(),
-                        languages.get(position).toLowerCase(), headers);
+            public void run() {
+                findViewById(R.id.languageContainer).setVisibility(View.GONE);
             }
+        }, 25);
+    }
 
+    private void initializeLanguageSpinner() {
+        String selectedLanguageStr = getApplicationPreferences().getUserLanguage();
+        OptionDTO selectedLanguage = adhocFormsModel.getPayload().getLanguages().get(0);
+        for (OptionDTO language : adhocFormsModel.getPayload().getLanguages()) {
+            if (selectedLanguageStr.equals(language.getCode())) {
+                selectedLanguage = language;
+            }
+        }
+
+        final TextView languageSwitch = (TextView) findViewById(R.id.languageSpinner);
+        final View languageContainer = findViewById(R.id.languageContainer);
+        languageSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onClick(View view) {
+                languageContainer.setVisibility(languageContainer.getVisibility() == View.VISIBLE
+                        ? View.GONE : View.VISIBLE);
+            }
+        });
+        languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
+        final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
+//        headers.put("username", getApplicationPreferences().getUserName());
+        headers.put("username_patient", getApplicationPreferences().getPatientId());
+        RecyclerView languageList = (RecyclerView) findViewById(R.id.languageList);
+        LanguageAdapter languageAdapter = new LanguageAdapter(adhocFormsModel.getPayload().getLanguages(),
+                selectedLanguage);
+        languageList.setAdapter(languageAdapter);
+        languageList.setLayoutManager(new LinearLayoutManager(getContext()));
+        languageAdapter.setCallback(new LanguageAdapter.LanguageInterface() {
+            @Override
+            public void onLanguageSelected(OptionDTO language) {
+                languageContainer.setVisibility(View.GONE);
+                if (!isUserInteraction) {
+                    return;
+                }
+                changeLanguage(adhocFormsModel.getMetadata().getLinks().getLanguage(),
+                        language.getCode().toLowerCase(), headers);
+
             }
         });
     }

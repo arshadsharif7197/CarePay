@@ -36,6 +36,9 @@ public class DemographicAddressPayloadDTO {
     @SerializedName("fax_number")
     @Expose
     private String faxNumber;
+    @SerializedName("phone_type")
+    @Expose
+    private String phoneNumberType;
 
     /**
      * @return The phone
@@ -149,5 +152,13 @@ public class DemographicAddressPayloadDTO {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getPhoneNumberType() {
+        return phoneNumberType;
+    }
+
+    public void setPhoneNumberType(String phoneNumberType) {
+        this.phoneNumberType = phoneNumberType;
     }
 }

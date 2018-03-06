@@ -71,7 +71,7 @@ public class AppointmentPayloadModel implements Serializable {
     @SerializedName("patient_forms_filled")
     private List<ConsentFormUserResponseDTO> patientFormsFilled = new ArrayList<>();
     @Expose
-    @SerializedName("user_practices")
+    @SerializedName(value = "user_practices", alternate = "practice_information")
     private List<UserPracticeDTO> userPractices = new ArrayList<>();
     @Expose
     @SerializedName("filled_forms")

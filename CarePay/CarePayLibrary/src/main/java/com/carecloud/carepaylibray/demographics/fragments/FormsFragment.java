@@ -6,12 +6,14 @@ import android.view.View;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -27,6 +29,14 @@ public class FormsFragment extends BaseWebFormFragment {
 
     private ConsentFormDTO consentFormDTO;
     private List<PracticeForm> consentFormList;
+
+    public static FormsFragment newInstance(WorkflowDTO workflowDTO) {
+        Bundle args = new Bundle();
+        args.putString(CarePayConstants.INTAKE_BUNDLE, workflowDTO.toString());
+        FormsFragment fragment = new FormsFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,7 +88,7 @@ public class FormsFragment extends BaseWebFormFragment {
 
     @Override
     protected String getBaseUrl() {
-        return HttpConstants.getFormsUrl() + "/practice-forms/";
+        return HttpConstants.getFormsUrl() + "/practice-forms/index.html";
     }
 
     @Override
@@ -119,4 +129,8 @@ public class FormsFragment extends BaseWebFormFragment {
         return CheckinFlowState.CONSENT;
     }
 
+    @Override
+    public DTO getDto() {
+        return consentFormDTO;
+    }
 }

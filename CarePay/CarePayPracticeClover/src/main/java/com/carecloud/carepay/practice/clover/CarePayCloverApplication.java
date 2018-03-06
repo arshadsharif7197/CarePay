@@ -6,12 +6,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
 import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.shamrocksdk.ShamrockSdk;
+import com.clover.sdk.util.Platform;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.newrelic.agent.android.NewRelic;
 
 /**
  * Created by Jahirul Bhuiyan on 10/24/2016
@@ -37,8 +40,8 @@ public class CarePayCloverApplication extends CarePayApplication
     private void setHttpConstants() {
         DeviceIdentifierDTO deviceIdentifierDTO = new DeviceIdentifierDTO();
         deviceIdentifierDTO.setDeviceIdentifier(Settings.Secure.ANDROID_ID);
-        deviceIdentifierDTO.setDeviceType("Clover");
-        deviceIdentifierDTO.setDevicePlatform("android");
+        deviceIdentifierDTO.setDeviceType(getDeviceType());
+        deviceIdentifierDTO.setDevicePlatform(CarePayConstants.PLATFORM_ANDROID);
         deviceIdentifierDTO.setDeviceOSVersion(Build.VERSION.RELEASE);
         deviceIdentifierDTO.setVersion(BuildConfig.VERSION_NAME);
         HttpConstants.setDeviceInformation(deviceIdentifierDTO);
@@ -96,6 +99,11 @@ public class CarePayCloverApplication extends CarePayApplication
     }
 
     @Override
+    public void setNewRelicInteraction(String interactionName) {
+        NewRelic.setInteractionName(interactionName);
+    }
+
+    @Override
     public ApplicationMode getApplicationMode() {
         if (applicationMode == null) {
             applicationMode = new ApplicationMode();
@@ -103,5 +111,13 @@ public class CarePayCloverApplication extends CarePayApplication
         }
 
         return applicationMode;
+    }
+
+    private String getDeviceType(){
+        if(Platform.isCloverStation()){
+            return CarePayConstants.CLOVER_DEVICE;
+        }else{
+            return CarePayConstants.CLOVER_2_DEVICE;
+        }
     }
 }
