@@ -49,6 +49,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
+import com.carecloud.carepaylibray.appointments.models.TransitionsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
@@ -152,8 +153,10 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             showResponsibilityFragment();
         } else if (NavigationStateConstants.PATIENT_FORM_CHECKOUT.equals(workflowDTO.getState())) {
             LinksDTO linksDTO = appointmentsResultModel.getMetadata().getLinks();
+            TransitionsDTO transitionsDTO = appointmentsResultModel.getMetadata().getTransitions();
             appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
             appointmentsResultModel.getMetadata().getLinks().setResourcesToSchedule(linksDTO.getResourcesToSchedule());
+            appointmentsResultModel.getMetadata().getTransitions().setContinueTransition(transitionsDTO.getContinueTransition());
             showCheckOutFormFragment();
         }
 
