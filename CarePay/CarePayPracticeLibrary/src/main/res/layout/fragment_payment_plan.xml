@@ -419,8 +419,8 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/respons_button_text_size"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="payment_create_plan"
-                tools:text="Create Plan" />
+                breeze:textKey="payment_create_payment_plan"
+                tools:text="Create Payment Plan" />
 
         </FrameLayout>
 
