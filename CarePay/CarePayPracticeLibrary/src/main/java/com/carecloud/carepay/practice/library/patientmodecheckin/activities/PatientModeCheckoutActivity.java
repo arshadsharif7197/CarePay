@@ -46,8 +46,10 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
+import com.carecloud.carepaylibray.appointments.models.TransitionsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
@@ -150,7 +152,11 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             showResponsibilityFragment();
         } else if (NavigationStateConstants.PATIENT_FORM_CHECKOUT.equals(workflowDTO.getState())) {
+            LinksDTO linksDTO = appointmentsResultModel.getMetadata().getLinks();
+            TransitionsDTO transitionsDTO = appointmentsResultModel.getMetadata().getTransitions();
             appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+            appointmentsResultModel.getMetadata().getLinks().setResourcesToSchedule(linksDTO.getResourcesToSchedule());
+            appointmentsResultModel.getMetadata().getTransitions().setContinueTransition(transitionsDTO.getContinueTransition());
             showCheckOutFormFragment();
         }
 
@@ -575,13 +581,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
             getWorkflowServiceHelper().execute(transitionDTO, resourcesToScheduleCallback, queries, header);
         } else {
-            PracticeChooseProviderDialog fragment = PracticeChooseProviderDialog
-                    .newInstance(appointmentsResultModel,
-                            Label.getLabel("practice_list_select_a_provider"),
-                            Label.getLabel("practice_list_continue"));
-            fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
+            showChooseProviderDialogFragment();
         }
-
 
     }
 
@@ -626,11 +627,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                     AppointmentsResultModel.class);
             appointmentsResultModel.getPayload().setResourcesToSchedule(resultModel.getPayload()
                     .getResourcesToSchedule());
-            PracticeChooseProviderDialog fragment = PracticeChooseProviderDialog
-                    .newInstance(appointmentsResultModel,
-                            Label.getLabel("practice_list_select_a_provider"),
-                            Label.getLabel("practice_list_continue"));
-            fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
+            showChooseProviderDialogFragment();
         }
 
         @Override
@@ -640,6 +637,14 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+    private void showChooseProviderDialogFragment() {
+        PracticeChooseProviderDialog fragment = PracticeChooseProviderDialog
+                .newInstance(appointmentsResultModel,
+                        Label.getLabel("practice_list_select_a_provider"),
+                        Label.getLabel("practice_list_continue"));
+        fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
+    }
 
     WorkflowServiceCallback continueCallback = new WorkflowServiceCallback() {
         @Override
