@@ -178,10 +178,7 @@ public class ValidationHelper {
      * @return true if valid email
      */
     public static boolean isValidEmail(String email) {
-        if (email != null) {
-            return isValidString(email, EMAIL_PATTERN);
-        }
-        return false;
+        return isValidString(email, EMAIL_PATTERN);
     }
 
 }
