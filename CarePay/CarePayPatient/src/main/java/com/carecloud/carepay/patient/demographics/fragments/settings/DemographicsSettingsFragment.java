@@ -123,6 +123,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
         emailNotificationCheckBox.setChecked(demographicsSettingsDTO.getPayload().getDemographicSettingsNotificationDTO().getPayload().isEmail());
         smsNotificationCheckBox = (CheckBox) view.findViewById(R.id.smsNotificationCheckBox);
         smsNotificationCheckBox.setChecked(demographicsSettingsDTO.getPayload().getDemographicSettingsNotificationDTO().getPayload().isSms());
+        smsNotificationCheckBox.setVisibility(View.GONE);
 
         MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_enabled_push), pushNotificationCheckBox.isChecked());
         MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_enabled_email), emailNotificationCheckBox.isChecked());
