@@ -114,7 +114,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dimen_15dp"
                     android:layout_marginTop="@dimen/dimen_15dp"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:layout_width="wrap_content"
