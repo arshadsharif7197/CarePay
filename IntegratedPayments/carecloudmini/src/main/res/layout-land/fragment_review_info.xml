@@ -7,54 +7,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical">
-            <include layout="@layout/toolbar_registration_titleonly"
-                     android:id="@+id/registration_toolbar" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/button_exit"
-                android:layout_width="@dimen/dp_48"
-                android:layout_height="@dimen/dp_48"
-                android:src="@drawable/close_blue"
-                android:scaleType="centerInside"
-                android:padding="@dimen/dp_10"
-                android:layout_gravity="top|start"/>
-
-            <com.electapps.fontviews.FontButton
-                android:id="@+id/button_signout"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/dp_10"
-                style="@style/ButtonRoundedOutlineSmall"
-                android:text="@string/settings_exit"
-                android:layout_gravity="center_vertical|end"
-                app:customFont="gotham_rounded_medium.otf"/>
-
-        </FrameLayout>
-
-    </FrameLayout>
+    <include layout="@layout/toolbar_registration_progress"
+             android:id="@+id/registration_toolbar" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dp_20"
-        android:layout_marginEnd="@dimen/dp_20"
-        android:layout_marginTop="@dimen/dp_5"
+        android:layout_width="@dimen/content_width_wide"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_marginBottom="@dimen/dp_20"
         android:gravity="center_horizontal"
         android:orientation="vertical">
+
+        <com.carecloud.carepay.mini.views.CarePayTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/registration_review_subtitle"
+            android:textColor="@color/blueText"
+            android:textSize="@dimen/instructions_text"
+            app:customFont="proximanova_regular.otf"/>
 
         <FrameLayout
             android:id="@+id/practice_initials_layout"
@@ -126,7 +97,7 @@
             android:id="@+id/button_edit_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginTop="@dimen/dp_10"
             android:gravity="center"
             android:text="@string/registration_review_edit_image"
             android:textAllCaps="true"
@@ -137,7 +108,7 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp_100"
+            android:layout_height="@dimen/dp_130"
             android:orientation="horizontal"
             android:layout_marginTop="@dimen/dp_20">
 
@@ -205,8 +176,9 @@
 
                     <com.carecloud.carepay.mini.views.CarePayTextView
                         android:id="@+id/device_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:lines="1"
                         android:maxLines="1"
                         android:ellipsize="end"
@@ -251,8 +223,9 @@
 
                     <com.carecloud.carepay.mini.views.CarePayTextView
                         android:id="@+id/location_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:lines="1"
                         android:maxLines="1"
                         android:ellipsize="end"
@@ -297,8 +270,9 @@
 
                     <com.carecloud.carepay.mini.views.CarePayTextView
                         android:id="@+id/practice_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:lines="1"
                         android:maxLines="1"
                         android:ellipsize="end"
@@ -337,18 +311,23 @@
 
         </LinearLayout>
 
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
         <LinearLayout
             android:layout_width="@dimen/content_width_buttons"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_40"
+            android:layout_marginTop="@dimen/dp_20"
             android:orientation="horizontal">
 
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginEnd="@dimen/dp_5"
-                android:visibility="gone">
+                android:layout_marginEnd="@dimen/dp_5">
 
                 <com.carecloud.carepay.mini.views.CarePayButton
                     android:id="@+id/button_back"
@@ -371,7 +350,7 @@
                     style="@style/ButtonRounded"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/settings_save"
+                    android:text="@string/registration_review_register_device"
                     app:customFont="gotham_rounded_medium.otf"/>
 
                 <include layout="@layout/progress_loader"/>
