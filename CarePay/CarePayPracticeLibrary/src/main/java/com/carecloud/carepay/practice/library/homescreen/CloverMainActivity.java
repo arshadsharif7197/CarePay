@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -79,7 +80,11 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         homeScreenDTO = getConvertedDTO(HomeScreenDTO.class);
         homeScreenMode = HomeScreenMode.valueOf(homeScreenDTO.getState().toUpperCase());
-        setContentView(R.layout.activity_main_practice_mode);
+        if (homeScreenMode.equals(HomeScreenMode.PRACTICE_HOME)) {
+            setContentView(R.layout.activity_main_practice_mode);
+        } else {
+            setContentView(R.layout.activity_main_patient_mode);
+        }
 
         // init UI fields
         initUIFields();
@@ -87,27 +92,27 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         populateWithLabels();
         populateLanguageSpinner();
 
-        if(modeSwitchImageView != null) {
+        if (modeSwitchImageView != null) {
             modeSwitchImageView.setOnClickListener(this);
         }
         View lock = findViewById(R.id.homeLockIcon);
-        if(lock != null){
+        if (lock != null) {
             lock.setOnClickListener(this);
         }
-        View checkin = findViewById(R.id.homeCheckinClickable);
-        if(checkin != null){
-            checkin.setOnClickListener(this);
+        View checkinLayout = findViewById(R.id.homeCheckinClickable);
+        if (checkinLayout != null) {
+            checkinLayout.setOnClickListener(this);
         }
         View appointments = findViewById(R.id.homeAppointmentsClickable);
-        if(appointments != null){
+        if (appointments != null) {
             appointments.setOnClickListener(this);
         }
         View payments = findViewById(R.id.homePaymentsClickable);
-        if(payments != null){
+        if (payments != null) {
             payments.setOnClickListener(this);
         }
         View checkout = findViewById(R.id.homeCheckoutClickable);
-        if(checkout != null) {
+        if (checkout != null) {
             checkout.setOnClickListener(this);
         }
 
@@ -125,7 +130,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             @Override
             public void run() {
                 View language = findViewById(R.id.languageContainer);
-                if(language != null){
+                if (language != null) {
                     language.setVisibility(View.GONE);
                 }
             }
@@ -150,7 +155,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         }
 
         final View languageContainer = findViewById(R.id.languageContainer);
-        if(languageContainer != null) {
+        if (languageContainer != null) {
             languageSpinner = (TextView) findViewById(R.id.languageSpinner);
             languageSpinner.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -200,49 +205,61 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void changeScreenMode(HomeScreenMode homeScreenMode) {
-        TextView checkinLabel = (TextView) findViewById(R.id.homeCheckinLabel);
+        TextView checkinLabelTextView = (TextView) findViewById(R.id.homeCheckinLabel);
         if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-            if(homeCheckInLl != null) {
+            if (homeCheckInLl != null) {
                 homeCheckInLl.setVisibility(View.GONE);
             }
-            if(homeAlertLinearLl != null) {
+            if (homeAlertLinearLl != null) {
                 homeAlertLinearLl.setVisibility(View.GONE);
             }
-            if(modeSwitchImageView != null) {
+            if (modeSwitchImageView != null) {
                 modeSwitchImageView.setVisibility(View.GONE);
             }
-            if(homeLockImageView != null) {
+            if (homeLockImageView != null) {
                 homeLockImageView.setVisibility(View.VISIBLE);
             }
-            if(languageSpinner != null) {
+            if (languageSpinner != null) {
                 languageSpinner.setVisibility(View.VISIBLE);
             }
             setNavigationBarVisibility();
             View checkout = findViewById(R.id.homeCheckoutClickable);
-            if(checkout != null) {
+            if (checkout != null) {
                 checkout.setVisibility(View.VISIBLE);
             }
-            if(checkinLabel != null) {
-                checkinLabel.setText(Label.getLabel("checkin_button_patient_mode"));
+            if (checkinLabelTextView != null) {
+                checkinLabelTextView.setText(Label.getLabel("checkin_button_patient_mode"));
+            }
+            boolean showShop = true;
+            if (showShop) {
+                findViewById(R.id.homeShopClickable).setVisibility(View.VISIBLE);
+                findViewById(R.id.separator).setVisibility(View.VISIBLE);
+
+                ImageView checkinImageView = (ImageView) findViewById(R.id.homeCheckinImageView);
+                redesignTopLayouts(checkinLabelTextView, checkinImageView, R.id.checkInFakeCenter);
+
+                TextView checkOutLabelTextView = (TextView) findViewById(R.id.homeCheckoutLabel);
+                ImageView checkoutImageView = (ImageView) findViewById(R.id.checkoutImageView);
+                redesignTopLayouts(checkOutLabelTextView, checkoutImageView, R.id.checkoutFakeCenter);
             }
         } else {
-            if(homeCheckInLl != null) {
+            if (homeCheckInLl != null) {
                 homeCheckInLl.setVisibility(View.VISIBLE);
             }
-            if(homeAlertLinearLl != null) {
+            if (homeAlertLinearLl != null) {
                 homeAlertLinearLl.setVisibility(View.GONE);//// TODO: 10/3/17 this is temporary until alerts is ready to use
             }
-            if(modeSwitchImageView != null) {
+            if (modeSwitchImageView != null) {
                 modeSwitchImageView.setVisibility(View.VISIBLE);
             }
-            if(homeLockImageView != null) {
+            if (homeLockImageView != null) {
                 homeLockImageView.setVisibility(View.GONE);
             }
-            if(languageSpinner != null) {
+            if (languageSpinner != null) {
                 languageSpinner.setVisibility(View.GONE);
             }
-            if(checkinLabel != null) {
-                checkinLabel.setText(Label.getLabel("checkin_button"));
+            if (checkinLabelTextView != null) {
+                checkinLabelTextView.setText(Label.getLabel("checkin_button"));
             }
 
             if (homeScreenDTO != null && homeScreenDTO.getPayload() != null) {
@@ -257,6 +274,22 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         }
     }
 
+    private void redesignTopLayouts(TextView textView, ImageView imageView, int fakeView) {
+        RelativeLayout.LayoutParams textViewParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        textViewParams.addRule(RelativeLayout.CENTER_VERTICAL);
+        textViewParams.addRule(RelativeLayout.END_OF, fakeView);
+        textViewParams.setMarginEnd(20);
+        textView.setLayoutParams(textViewParams);
+
+        RelativeLayout.LayoutParams imageViewParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        imageViewParams.addRule(RelativeLayout.CENTER_VERTICAL);
+        imageViewParams.addRule(RelativeLayout.START_OF, fakeView);
+        imageViewParams.setMarginEnd(20);
+        imageView.setLayoutParams(imageViewParams);
+    }
+
     private void setAppointmentCount(PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO) {
         HomeScreenAppointmentCountsDTO homeScreenAppointmentCountsDTO = practiceHomeScreenPayloadDTO
                 .getAppointmentCounts();
@@ -264,7 +297,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             int checkinCounter = homeScreenAppointmentCountsDTO.getCheckingInCount() != null ?
                     homeScreenAppointmentCountsDTO.getCheckingInCount() : 0;
             TextView counter = (TextView) findViewById(R.id.checkedInCounterTextview);
-            if(counter != null) {
+            if (counter != null) {
                 counter.setText(String.valueOf(checkinCounter));
             }
         }
@@ -274,7 +307,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         HomeScreenAlertsDTO alertsDTO = practiceHomeScreenPayloadDTO.getAlerts();
         if (alertsDTO != null) {
             TextView alertText = (TextView) findViewById(R.id.alertTextView);
-            if(alertText != null) {
+            if (alertText != null) {
                 int alertCounter = alertsDTO.getCount();
                 alertText.setText(String.valueOf(alertCounter));
             }
@@ -321,7 +354,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         public void onReceive(Context context, Intent intent) {
             String count = intent.getExtras().getString("appointments_checking_in");
             TextView counter = ((TextView) findViewById(R.id.checkedInCounterTextview));
-            if(count != null) {
+            if (count != null) {
                 counter.setText(count);
             }
         }
@@ -365,7 +398,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void setViewsDisabled(ViewGroup viewGroup) {
-        if(viewGroup != null) {
+        if (viewGroup != null) {
             viewGroup.setEnabled(false);
             for (int i = 0; i < viewGroup.getChildCount(); i++) {
                 View view = viewGroup.getChildAt(i);
@@ -639,7 +672,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             List<HomeScreenOfficeNewsDTO> officeNews = practiceHomePayloadDTO.getOfficeNews();
             if (!officeNews.isEmpty()) {
                 RecyclerView newsList = (RecyclerView) findViewById(R.id.office_news_list);
-                if(newsList != null) {
+                if (newsList != null) {
                     newsList.setVisibility(View.VISIBLE);
                     findViewById(R.id.office_news_header).setVisibility(View.VISIBLE);
                     LinearLayoutManager layoutManager = new LinearLayoutManager(CloverMainActivity.this,
