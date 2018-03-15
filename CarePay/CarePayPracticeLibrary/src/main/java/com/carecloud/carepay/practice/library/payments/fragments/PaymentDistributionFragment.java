@@ -259,7 +259,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         });
 
         View historyButton = view.findViewById(R.id.button_history);
-        historyButton.setVisibility(paymentsModel.getPaymentPayload().getTransactionHistory().getPaymentHistoryList().isEmpty() ? View.INVISIBLE : View.VISIBLE);
+        boolean hasHistory = !paymentsModel.getPaymentPayload().getTransactionHistory().getPaymentHistoryList().isEmpty();
+        boolean hasPlans = !paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty();
+        historyButton.setVisibility(hasHistory || hasPlans ? View.VISIBLE : View.INVISIBLE);
         historyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
