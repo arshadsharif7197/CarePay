@@ -205,8 +205,9 @@
 
                     <com.carecloud.carepay.mini.views.CarePayTextView
                         android:id="@+id/device_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:lines="1"
                         android:maxLines="1"
                         android:ellipsize="end"
@@ -251,8 +252,9 @@
 
                     <com.carecloud.carepay.mini.views.CarePayTextView
                         android:id="@+id/location_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:lines="1"
                         android:maxLines="1"
                         android:ellipsize="end"
@@ -297,11 +299,12 @@
 
                     <com.carecloud.carepay.mini.views.CarePayTextView
                         android:id="@+id/practice_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
                         android:lines="1"
                         android:maxLines="1"
-                        android:ellipsize="end"
                         android:textColor="@color/listItemText"
                         android:textSize="@dimen/list_item_text"
                         app:customFont="gotham_rounded_book.otf"
