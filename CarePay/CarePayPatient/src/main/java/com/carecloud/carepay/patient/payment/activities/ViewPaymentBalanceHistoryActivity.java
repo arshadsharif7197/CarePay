@@ -13,10 +13,10 @@ import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentHistoryDetailDialogFragment;
-import com.carecloud.carepay.patient.payment.fragments.PaymentDisabledAlertDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.NoPaymentsFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment;
+import com.carecloud.carepay.patient.payment.fragments.PaymentDisabledAlertDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -37,9 +37,6 @@ import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAddCreditCardFr
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanTermsFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanTermsFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
@@ -215,6 +212,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
         PaymentsModel updatePaymentModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         updateBalances(updatePaymentModel.getPaymentPayload().getPatientBalances());
+        if(updatePaymentModel.getPaymentPayload().getPaymentPlanUpdate() != null){
+            updatePaymentPlan(updatePaymentModel.getPaymentPayload().getPaymentPlanUpdate());
+        }
         initFragments();
     }
 
@@ -367,6 +367,16 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         }
     }
 
+    private void updatePaymentPlan(PaymentPlanDTO paymentPlanUpdate){
+        for(PaymentPlanDTO paymentPlanDTO : paymentsDTO.getPaymentPayload().getPatientPaymentPlans()){
+            if(paymentPlanDTO.getMetadata().getPaymentPlanId().equals(paymentPlanUpdate.getMetadata().getPaymentPlanId())){
+                paymentPlanDTO.setMetadata(paymentPlanUpdate.getMetadata());
+                paymentPlanDTO.setPayload(paymentPlanUpdate.getPayload());
+                return;
+            }
+        }
+    }
+
     private UserPracticeDTO getUserPracticeById(String practiceId) {
         for (UserPracticeDTO userPracticeDTO : paymentsDTO.getPaymentPayload().getUserPractices()) {
             if (userPracticeDTO.getPracticeId().equals(practiceId)) {
@@ -426,13 +436,13 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public void onSubmitPaymentPlan(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         List<PaymentPlanDTO> paymentPlanList = this.paymentsDTO.getPaymentPayload().getPatientPaymentPlans();
-        for (PaymentPlanDTO paymentPlanDTO : paymentsModel.getPaymentPayload().getPatientPaymentPlans()) {
-            paymentPlanList.add(paymentPlanDTO);
-        }
+        paymentPlanList.addAll(paymentsModel.getPaymentPayload().getPatientPaymentPlans());
+
         for (int i = 0; i < getSupportFragmentManager().getBackStackEntryCount(); i++) {
             getSupportFragmentManager().popBackStack();
         }
-        initFragments();
+
+        completePaymentProcess(workflowDTO);
     }
 
     @Override

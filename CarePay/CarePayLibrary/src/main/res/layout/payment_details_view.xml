@@ -51,7 +51,7 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/statement_button"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="@dimen/dimen_5dp"
             android:layout_marginStart="@dimen/dimen_5dp"

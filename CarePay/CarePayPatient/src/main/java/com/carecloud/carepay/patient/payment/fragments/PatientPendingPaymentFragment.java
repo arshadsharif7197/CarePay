@@ -76,7 +76,7 @@ public class PatientPendingPaymentFragment extends BaseFragment implements Payme
         RecyclerView historyRecyclerView = (RecyclerView) view.findViewById(R.id.payment_list_recycler);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-            if (hasPayments()) {
+        if (hasPayments() || hasPaymentPlans()) {
             PaymentBalancesAdapter paymentBalancesAdapter = new PaymentBalancesAdapter(
                     getActivity(), getPendingBalancesList(paymentsDTO), PatientPendingPaymentFragment.this, paymentsDTO);
             historyRecyclerView.setAdapter(paymentBalancesAdapter);
