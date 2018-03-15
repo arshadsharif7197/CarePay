@@ -63,6 +63,9 @@ public class PaymentsPayloadDTO implements Serializable {
     @SerializedName("patient_payments")
     @Expose
     private PatientPaymentsDTO patientPayments = new PatientPaymentsDTO();
+    @SerializedName("payment_plan")
+    @Expose
+    private PaymentPlanDTO paymentPlanUpdate;
     @SerializedName("patients")
     @Expose
     private List<PatientModel> patients = new ArrayList<>();
@@ -371,5 +374,13 @@ public class PaymentsPayloadDTO implements Serializable {
             }
         }
         return filteredList;
+    }
+
+    public PaymentPlanDTO getPaymentPlanUpdate() {
+        return paymentPlanUpdate;
+    }
+
+    public void setPaymentPlanUpdate(PaymentPlanDTO paymentPlanUpdate) {
+        this.paymentPlanUpdate = paymentPlanUpdate;
     }
 }

@@ -310,12 +310,21 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
 
     @NonNull
     private Map<String, String> createQueryMap() {
-        PendingBalanceDTO patientBalanceDTO = paymentResultModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
-
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("patient_id", patientBalanceDTO.getMetadata().getPatientId());
-        queryMap.put("practice_mgmt", patientBalanceDTO.getMetadata().getPracticeMgmt());
-        queryMap.put("practice_id", patientBalanceDTO.getMetadata().getPracticeId());
+
+        if(!paymentResultModel.getPaymentPayload().getPatientBalances().isEmpty() &&
+                !paymentResultModel.getPaymentPayload().getPatientBalances().get(0).getBalances().isEmpty()) {
+            PendingBalanceDTO patientBalanceDTO = paymentResultModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
+
+            queryMap.put("patient_id", patientBalanceDTO.getMetadata().getPatientId());
+            queryMap.put("practice_mgmt", patientBalanceDTO.getMetadata().getPracticeMgmt());
+            queryMap.put("practice_id", patientBalanceDTO.getMetadata().getPracticeId());
+        }else if(!paymentResultModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()){
+            PaymentPlanDTO paymentPlanDTO = paymentResultModel.getPaymentPayload().getPatientPaymentPlans().get(0);
+            queryMap.put("patient_id", paymentPlanDTO.getMetadata().getPatientId());
+            queryMap.put("practice_mgmt", paymentPlanDTO.getMetadata().getPracticeMgmt());
+            queryMap.put("practice_id", paymentPlanDTO.getMetadata().getPracticeId());
+        }
         return queryMap;
     }
 
@@ -426,10 +435,10 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
     public void onSubmitPaymentPlan(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         List<PaymentPlanDTO> paymentPlanList = this.paymentResultModel.getPaymentPayload().getPatientPaymentPlans();
-        for (PaymentPlanDTO paymentPlanDTO : paymentsModel.getPaymentPayload().getPatientPaymentPlans()) {
-            paymentPlanList.add(paymentPlanDTO);
-        }
-        setUpUI();
+        paymentPlanList.addAll(paymentsModel.getPaymentPayload().getPatientPaymentPlans());
+        this.paymentResultModel.getPaymentPayload().setPatientBalances(paymentsModel.getPaymentPayload().getPatientBalances());
+
+        completePaymentProcess(workflowDTO);
     }
 
     @Override
