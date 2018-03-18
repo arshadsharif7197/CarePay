@@ -1,0 +1,53 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.carecloud.carepay.patient.payment.fragments.NoPaymentsFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/dimen_30dp">
+
+        <ImageView
+            android:id="@+id/no_apt_placeholder_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/icn_empty_state_payments" />
+
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/no_payment_message_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/no_apt_message_title_margin_top"
+            android:gravity="center"
+            android:textColor="@color/textview_default_textcolor"
+            android:textSize="@dimen/text_size_21"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="no_payment_title" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/no_payment_message_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/no_apt_message_desc_margin"
+            android:layout_marginStart="@dimen/no_apt_message_desc_margin"
+            android:layout_marginTop="@dimen/no_apt_message_desc_margin_top"
+            android:gravity="center"
+            android:textColor="@color/optionl_gray"
+            android:textSize="@dimen/text_size_13"
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="no_payment_description" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_60dp" />
+    </LinearLayout>
+
+</FrameLayout>

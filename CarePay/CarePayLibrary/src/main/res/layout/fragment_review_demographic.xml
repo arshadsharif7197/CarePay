@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/demographicsReviewRootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:descendantFocusability="beforeDescendants"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar_demographics_review" />
+
+    <ScrollView
+        android:id="@+id/adddemoScrollview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/demographics_address_bottom_margin"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/adddemoLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="17dp"
+            android:layout_marginRight="17dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/reviewtitle"
+                style="@style/DemographicsFragmentsHeadingStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/reviewSubtitle"
+                style="@style/DemographicsFragmentsSubHeadingStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:gravity="left"
+                android:paddingStart="0dp">
+
+                <ImageView
+                    android:id="@+id/patientPicImageView"
+                    android:layout_width="@dimen/dimen_88dp"
+                    android:layout_height="@dimen/dimen_88dp"
+
+                    android:src="@drawable/icn_placeholder_user_profile" />
+
+                <Button
+                    android:id="@+id/updateProfileImageButton"
+                    android:layout_marginLeft="@dimen/dimen_20dp"
+                    style="@style/DemographicsDocsButtonStyle"
+                    android:textAlignment="center"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+            <include layout="@layout/fragment_review_demographic_personal" />
+
+            <FrameLayout
+                android:id="@+id/documentCapturer"
+                android:layout_width="match_parent"
+                android:padding="0dp"
+                android:layout_margin="0dp"
+                android:layout_height="wrap_content"/>
+
+            <include layout="@layout/fragment_review_demographic_demographics" />
+
+            <include layout="@layout/fragment_review_demographic_address" />
+
+            <FrameLayout
+                android:id="@+id/insuranceCapturer"
+                android:layout_width="match_parent"
+                android:padding="0dp"
+                android:layout_margin="0dp"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/buttonAddDemographicInfo"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@drawable/language_button_selector"
+        android:gravity="center"
+        android:textColor="@color/white" />
+</LinearLayout>

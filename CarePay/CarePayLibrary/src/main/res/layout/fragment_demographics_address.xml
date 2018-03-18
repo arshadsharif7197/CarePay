@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/demographicsAddressRootContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        style="@style/DemographicsDocsHeaderStyle"
+        android:layout_marginBottom="@dimen/demographics_docs_header_top_margin"
+        android:layout_marginTop="@dimen/dimen_8dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/addressHeading"
+            style="@style/DemographicsDocsHeaderTitleStyle" />
+
+        <TextView
+            android:id="@+id/addressSubHeading"
+            style="@style/DemographicsDocsHeaderSubtitleStyle" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/demographics_address_bottom_margin"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/demographicsAddressDetContainer"
+            style="@style/DemographicsContainerStyle"
+            android:layout_marginTop="0dp"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/demogrAddressFirstNameTextInput"
+                    style="@style/SigninSignupTextInputStyle"
+                    app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                    <EditText
+                        android:id="@+id/demogrAddressFirstNameEdit"
+                        style="@style/SigninSignupEditStyle"
+                        android:digits="@string/restrict_letters_space"
+                        android:inputType="text"
+                        android:maxLength="100"
+                        android:nextFocusForward="@+id/middleNameEditText" />
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/demogrAddressFirstNameReqHint"
+                    style="@style/SignupRequireHintStyle" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/demogrAddressMiddleNameTextInput"
+                    style="@style/SigninSignupTextInputStyle"
+                    app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                    <EditText
+                        android:id="@+id/demogrAddressMiddleNameEdit"
+                        style="@style/SigninSignupEditStyle"
+                        android:digits="@string/restrict_letters_space"
+                        android:imeOptions="actionNext"
+                        android:maxLength="100"
+                        android:nextFocusForward="@+id/demogrAddressLastNameEdit" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/demogrAddressMidddleNameReqHint"
+                    style="@style/SignupRequireHintStyle" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/demogrAddressLastNameTextInput"
+                    style="@style/SigninSignupTextInputStyle"
+                    app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                    <EditText
+                        android:id="@+id/demogrAddressLastNameEdit"
+                        style="@style/SigninSignupEditStyle"
+                        android:digits="@string/restrict_letters_space"
+                        android:imeOptions="actionNext"
+                        android:maxLength="100"
+                        android:nextFocusForward="@+id/addressEditTextId" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/demogrAddressLastNameReqHint"
+                    style="@style/SignupRequireHintStyle" />
+            </FrameLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/address1TextInputLayout"
+                style="@style/TextInputLayoutStyle"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                <EditText
+                    android:id="@+id/addressEditTextId"
+                    style="@style/SigninSignupEditStyle"
+                    android:digits="@string/restrict_address_characters"
+                    android:imeOptions="actionNext"
+                    android:maxLength="50"
+                    android:nextFocusForward="@+id/addressEditText2Id" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/address2TextInputLayout"
+                style="@style/TextInputLayoutStyle"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                <EditText
+                    android:id="@+id/addressEditText2Id"
+                    style="@style/SigninSignupEditStyle"
+                    android:digits="@string/restrict_address_characters"
+                    android:imeOptions="actionNext"
+                    android:maxLength="50"
+                    android:nextFocusForward="@+id/zipCodeId" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/zipCodeTextInputLayout"
+                style="@style/TextInputLayoutStyle"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                <EditText
+                    android:id="@+id/zipCodeId"
+                    style="@style/SigninSignupEditStyle"
+                    android:digits="0123456789-"
+                    android:imeOptions="actionNext"
+                    android:maxLength="10"
+                    android:nextFocusForward="@+id/cityId" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/cityTextInputLayout"
+                    style="@style/TextInputLayoutStyle"
+                    android:layout_weight="1"
+                    android:maxLength="30"
+                    app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                    <EditText
+                        android:id="@+id/cityId"
+                        style="@style/CityEditTextStyle"
+                        android:digits="@string/restrict_letters_space"
+                        android:labelFor="@+id/cityId"
+                        android:nextFocusRight="@+id/stateAutoCompleteTextView" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/stateTextInputLayout"
+                    style="@style/TextInputLayoutStyle"
+                    android:layout_weight="1"
+                    app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/stateAutoCompleteTextView"
+                        style="@style/EditTextStyle"
+                        android:digits="@string/restrict_letters"
+                        android:imeOptions="actionNext"
+                        android:inputType="textAutoComplete"
+                        android:maxLength="2"
+                        android:nextFocusForward="@+id/phNoEditText" />
+
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/phNoTextInputLayout"
+                style="@style/TextInputLayoutStyle"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                <EditText
+                    android:id="@+id/phNoEditText"
+                    style="@style/SigninSignupEditStyle"
+                    android:digits="1234567890-"
+                    android:imeOptions="actionDone"
+                    android:inputType="phone"
+                    android:maxLength="12" />
+
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/demographicsAddressNextButton"
+        style="@style/DemographicsNextButtonStyle"
+        android:text="@string/next_Button" />
+
+</LinearLayout>

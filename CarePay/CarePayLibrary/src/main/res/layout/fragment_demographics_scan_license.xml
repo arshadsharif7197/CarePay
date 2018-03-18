@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="beforeDescendants"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:id="@+id/scanIdRootLayout">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/demo_view_height"
+        android:layout_marginBottom="@dimen/divider_margin_bottom"
+        android:layout_marginTop="@dimen/divider_margin_top"
+        android:background="@color/light_gray"/>
+
+
+    <LinearLayout
+        style="@style/DemographicsDocsImageButtonContainerStyle">
+
+        <ImageView
+            android:id="@+id/demogrDocsFrontScanImage"
+            android:layout_width="@dimen/dimen_100dp"
+            android:layout_height="@dimen/dimen_60dp"
+            android:contentDescription="@string/scanned_id_doc"
+            android:adjustViewBounds="false"
+            android:src="@drawable/icn_placeholder_document"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/demogrDocsFrontScanButton"
+            style="@style/DemographicsDocsButtonStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="demographics_documents_picture_of_front"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/DemographicsDocsImageButtonContainerStyle"
+        android:layout_marginBottom="@dimen/demogr_details_container_top"
+        android:layout_marginTop="@dimen/demogr_details_container_top">
+
+        <ImageView
+            android:id="@+id/demogrDocsBackScanImage"
+            android:layout_width="@dimen/dimen_100dp"
+            android:layout_height="@dimen/dimen_60dp"
+            android:contentDescription="@string/scanned_id_doc"
+            android:adjustViewBounds="false"
+            android:src="@drawable/icn_placeholder_document"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/demogrDocsBackScanButton"
+            style="@style/DemographicsDocsButtonStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="demographics_documents_picture_of_back"/>
+
+    </LinearLayout>
+</LinearLayout>

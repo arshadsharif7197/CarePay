@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/activity_appointments"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/dimen_25dp"
+                android:background="@drawable/screen_background"
+                tools:context=".appointments.PatientModePracticeAppointmentActivity">
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/provider_logout"
+        android:layout_width="@dimen/nav_header_height"
+        android:layout_height="@dimen/dimen_48dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="@dimen/dimen_22dp"
+        android:layout_marginTop="@dimen/dimen_22dp"
+        android:background="@drawable/bg_blue_overlay"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_22sp"
+        app:customAssetFont="gotham_rounded_medium" />
+
+    <LinearLayout
+        android:id="@+id/provider_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <ImageView
+            android:id="@+id/provider_title_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/provider_list_title_margin"
+            android:scaleType="fitXY"
+            android:src="?practiceLogoDrawable" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/provider_title_layout"
+        android:layout_above="@+id/btnHome"
+        android:layout_marginTop="@dimen/dimen_40dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/provider_screen_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_36dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_36sp"
+                app:customAssetFont="gotham_rounded_medium" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/provider_screen_sub_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_22sp"
+                app:customAssetFont="proxima_nova_regular" />
+
+            <ProgressBar
+                android:id="@+id/appointmentProgressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-8dp"
+                android:indeterminate="true"
+                android:visibility="gone"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/provider_recycler_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal"
+                    android:scrollbars="horizontal" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/no_providers_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/no_providers_message_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/no_apt_message_title_margin_top"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_36sp"
+                app:customAssetFont="gotham_rounded_medium" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/no_providers_message_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/no_apt_message_desc_margin"
+                android:layout_marginStart="@dimen/no_apt_message_desc_margin"
+                android:layout_marginTop="@dimen/consent_top"
+                android:gravity="center"
+                android:textColor="@color/light_blue_subtitle"
+                android:textSize="@dimen/text_size_24sp"
+                app:customAssetFont="gotham_rounded_book" />
+
+            <ImageView
+                android:id="@+id/placeHolderIconTextViewId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/provider_no_list_margin"
+                android:src="@drawable/icn_empty_state_appointments_white"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+
+
+
+    <ImageView
+        android:id="@+id/btnHome"
+        style="@style/HomeButtonIcon"
+        android:layout_alignParentBottom="true" />
+</RelativeLayout>

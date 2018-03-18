@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="@dimen/dimen_88dp"
+    android:layout_height="wrap_content">
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/checkin_flow_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_3dp"
+        android:drawableTop="@drawable/progress_checkbox_selector"
+        android:drawablePadding="@dimen/dimen_8dp"
+        android:minLines="2"
+        android:textColor="@color/slateGray"
+        android:textSize="@dimen/text_size_14"
+        app:customAssetFont="proxima_nova_regular" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/checkin_flow_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/dimen_6dp"
+        android:paddingStart="@dimen/dimen_6dp"
+        android:layout_gravity="center_horizontal"
+        android:drawableTop="@drawable/single_line"
+        android:drawablePadding="@dimen/dimen_3dp"
+        android:textColor="@color/optionl_gray"
+        android:visibility="visible"
+        android:textSize="@dimen/text_size_12sp"
+        app:customAssetFont="gotham_rounded_bold"/>
+
+</LinearLayout>

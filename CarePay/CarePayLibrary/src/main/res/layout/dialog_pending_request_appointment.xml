@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/appointRequestPendingLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal">
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        app:customAssetFont="gotham_rounded_medium"
+        android:id="@+id/appointRequestPendingTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/apt_dl_margin"
+        android:textColor="@color/lightning_yellow"
+        android:textSize="@dimen/apt_dl_btn_txt_size" />
+</LinearLayout>

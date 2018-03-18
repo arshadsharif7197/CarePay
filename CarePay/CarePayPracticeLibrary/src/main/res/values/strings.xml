@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Breeze</string>
+    <string name="not_defined">Not Defined</string>
+
+    <string name="home_icon_check_in">Check-in</string>
+    <string name="unauthorized">Unauthorized</string>
+    <string name="unauthorized_practice_user">Unauthorized practice user.</string>
+    <string name="qr_code_scanner">QR Code Scanner</string>
+    <string name="no_account">There is no Clover account.</string>
+
+
+    <string name="em_dash">&#8212;</string>
+
+    <string name="entry_0">0</string>
+    <string name="entry_1">1</string>
+    <string name="entry_2">2</string>
+    <string name="entry_3">3</string>
+    <string name="entry_4">4</string>
+    <string name="entry_5">5</string>
+    <string name="entry_6">6</string>
+    <string name="entry_7">7</string>
+    <string name="entry_8">8</string>
+    <string name="entry_9">9</string>
+    <string name="entry_decimal">.</string>
+    <string name="content_description_sign_in">Sign In</string>
+    <string name="content_description_email">Email</string>
+    <string name="content_description_password">Password</string>
+    <string name="content_description_add_appointment">Add Appointment</string>
+    <string name="content_description_patient_search">Patient Search</string>
+    <string name="content_description_patient_list">Patients</string>
+    <string name="content_description_provider_list">Providers</string>
+    <string name="content_description_continue">Continue</string>
+    <string name="content_description_available_hours">Available Hours</string>
+    <string name="content_description_visit_type">Visit Type</string>
+    <string name="content_description_request_appointment">Request Appointment</string>
+    <string name="content_description_check_in_home">Check-in Home</string>
+    <string name="content_description_lock_icon">Lock Icon</string>
+    <string name="content_description_check_in">Check-In</string>
+
+</resources>

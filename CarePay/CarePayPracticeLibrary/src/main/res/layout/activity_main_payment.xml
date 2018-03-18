@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_appointments"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/screen_background"
+    android:paddingBottom="@dimen/dimen_25dp"
+    tools:context=".payments.PatientModePracticePaymentsActivity"
+    tools:ignore="MissingPrefix">
+
+    <include
+        layout="@layout/logout_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/logoImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="@dimen/dimen_34dp"
+        android:scaleType="fitXY"
+        android:src="?practiceLogoDrawable" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logoImageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dimen_72dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_36sp"
+        app:customAssetFont="gotham_rounded_medium"
+        breeze:textKey="no_payment_title" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/confirm_pin_sub_title"
+        android:textSize="@dimen/text_size_22sp"
+        app:customAssetFont="proxima_nova_regular"
+        breeze:textKey="no_payment_description" />
+
+    <ProgressBar
+        android:id="@+id/appointmentProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/subtitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-8dp"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/appointmentProgressBar">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/appointmentsRecyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:scrollbars="horizontal" />
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/emptyPaymentsImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnHome"
+        android:layout_below="@+id/appointmentProgressBar"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/icn_empty_state_payments_patient_mode" />
+
+    <ImageView
+        android:id="@+id/btnHome"
+        style="@style/HomeButtonIcon"
+        android:layout_alignParentBottom="true" />
+</RelativeLayout>

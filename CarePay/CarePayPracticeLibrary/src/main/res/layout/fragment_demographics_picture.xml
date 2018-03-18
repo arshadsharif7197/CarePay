@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    style="@style/DemographicsDocsHeaderStyle"
+    android:padding="@dimen/dimen_10dp">
+
+    <ImageView
+        android:id="@+id/DetailsProfileImage"
+        android:layout_width="@dimen/dialog_profile_pic_size"
+        android:layout_height="@dimen/dialog_profile_pic_size"
+        android:src="@drawable/icn_placeholder_user_profile_png"
+        android:contentDescription="@string/profile_picture"/>
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        android:id="@+id/changeCurrentPhotoButton"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:minHeight="0dp"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:background="@drawable/button_background"
+        android:paddingTop="@dimen/dimen_8dp"
+        android:paddingBottom="@dimen/dimen_8dp"
+        android:paddingStart="@dimen/dimen_32dp"
+        android:paddingEnd="@dimen/dimen_32dp"
+        android:textColor="@color/colorPrimary"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/selectOrTakePhotoButton"
+        android:textSize="@dimen/text_size_13"
+        breeze:textKey="demographics_take_picture_button_title"
+        app:customAssetFont="gotham_rounded_medium"/>
+
+</LinearLayout>

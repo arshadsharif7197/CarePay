@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/white" />
+            <size android:height="@dimen/custom_appointment_dialog_checkbox_normal_size"
+                  android:width="@dimen/custom_appointment_dialog_checkbox_normal_size"/>
+        </shape>
+    </item>
+    <item
+        android:width="@dimen/custom_appointment_dialog_checkbox_normal_size"
+        android:height="@dimen/custom_appointment_dialog_checkbox_normal_size"
+        android:bottom="4dp"
+        android:left="4dp"
+        android:right="4dp"
+        android:top="4dp">
+        <shape android:shape="oval">
+            <solid android:color="@color/yellowGreen" />
+            <size android:height="@dimen/custom_appointment_dialog_checkbox_normal_size"
+                android:width="@dimen/custom_appointment_dialog_checkbox_normal_size"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="oval">
+            <stroke
+                android:width="2dp"
+                android:color="@color/timberwolf" />
+        </shape>
+    </item>
+</layer-list>

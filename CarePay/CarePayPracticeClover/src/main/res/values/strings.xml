@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="clover_payment_activity">clover_payment_activity</string>
+    <string name="clover_refund_activity">clover_refund_activity</string>
+</resources>

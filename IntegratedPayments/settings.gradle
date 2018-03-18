@@ -1,0 +1,4 @@
+include ':fontviews', ':carecloudmini', ':shamrocksdk'//, ':deepstreamsdk'
+project(':shamrocksdk').projectDir = new File(settingsDir, '../../shamrock_android_sdk/shamrocksdk')
+//project(':deepstreamsdk').projectDir = new File(settingsDir, '../../deepstream.io-client-java')
+

@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Breeze</string>
+    <string name="account_name">com.google.android.gms.samples.wallet.KEY_USERNAME</string>
+
+
+    <string name="msg_auth_token_key">token</string>
+    <string name="msg_path_start">inbox</string>
+    <string name="msg_path_message">messages</string>
+    <string name="msg_path_action_delete">trash</string>
+    <string name="msg_query_page">offset</string>
+    <string name="msg_query_size">limit</string>
+    <string name="msg_field_message_text">body</string>
+    <string name="msg_field_message_subject">subject</string>
+    <string name="msg_field_participant_id">participants[][id]</string>
+    <string name="msg_field_participant_name">participants[][name]</string>
+    <string name="msg_field_participant_type">partcipants[][type]</string>
+    <string name="msg_field_linked_id">linked_data[id]</string>
+    <string name="msg_field_linked_type">linked_data[type]</string>
+    <string name="msg_field_type_value_patient">patient</string>
+    <string name="msg_field_type_value_provider">provider</string>
+    <string name="msg_query_source">source</string>
+    <string name="msg_query_source_value">desktop:patientPortal:messaging:sendMessage</string>
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="visit_type_header_title" type="id"/>
+    <item name="demographicsMainHeading" type="id"/>
+    <item name="demographicsSubHeading" type="id"/>
+    <item name="demographicsHeading" type="id"/>
+</resources>

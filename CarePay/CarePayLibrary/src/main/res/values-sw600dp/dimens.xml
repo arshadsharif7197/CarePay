@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Responsibility -->
+    <dimen name="respons_total_label_text_size">18sp</dimen>
+    <dimen name="respons_total_text_size">100dp</dimen>
+    <dimen name="respons_detail_label_text_size">20sp</dimen>
+    <dimen name="respons_detail_text_size">19sp</dimen>
+    <dimen name="respons_button_text_size">18sp</dimen>
+    <dimen name="respons_toolbar_title_text_size">25sp</dimen>
+    <dimen name="respons_detail_margin_bottom">25dp</dimen>
+    <dimen name="respons_detail_left_right_margin">130dp</dimen>
+    <dimen name="respons_button_margin_left_right">110dp</dimen>
+
+    <dimen name="visit_type_dialog_width">510dp</dimen>
+    <dimen name="dialog_width">510dp</dimen>
+
+</resources>

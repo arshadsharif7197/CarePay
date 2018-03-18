@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            app:customAssetFont="proxima_nova_regular"
+            android:id="@+id/paymentModeTitlelabel"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/payment_option_section_margin"
+            android:ellipsize="none"
+            android:gravity="center_vertical|left"
+            android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
+            android:paddingLeft="@dimen/apt_dl_margin"
+            android:text="Payments Made "
+            android:textColor="@color/lightSlateGray"
+            android:textSize="@dimen/payment_text_balance_size" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            app:customAssetFont="proxima_nova_regular"
+            android:id="@+id/paymentModeValuelabel"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/payment_option_section_margin"
+            android:layout_gravity="right"
+            android:ellipsize="none"
+            android:gravity="center_vertical|right"
+            android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
+            android:paddingRight="@dimen/apt_dl_margin"
+            android:text="1 of 4"
+            android:textColor="@color/lightSlateGray"
+            android:textSize="@dimen/payment_text_balance_size" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/apt_dl_boader_ht"
+        android:background="@color/light_gray_dialog" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            app:customAssetFont="proxima_nova_regular"
+            android:id="@+id/nextPaymentTitleLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/payment_option_section_margin"
+            android:ellipsize="none"
+            android:gravity="center_vertical|left"
+            android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
+            android:paddingLeft="@dimen/apt_dl_margin"
+            android:text="Next Payment"
+            android:textColor="@color/lightSlateGray"
+            android:textSize="@dimen/payment_text_balance_size" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            app:customAssetFont="proxima_nova_regular"
+            android:id="@+id/nextPaymentValueLabel"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/payment_option_section_margin"
+            android:layout_gravity="right"
+            android:ellipsize="none"
+            android:gravity="center_vertical|right"
+            android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
+            android:paddingRight="@dimen/apt_dl_margin"
+            android:text="September 1st"
+            android:textColor="@color/lightSlateGray"
+            android:textSize="@dimen/payment_text_balance_size" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/apt_dl_boader_ht"
+        android:background="@color/light_gray_dialog" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            app:customAssetFont="proxima_nova_regular"
+            android:id="@+id/totalPaymentTitleLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/payment_option_section_margin"
+            android:ellipsize="none"
+            android:gravity="center_vertical|left"
+            android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
+            android:paddingLeft="@dimen/apt_dl_margin"
+            android:text="Total Amount"
+            android:textColor="@color/lightSlateGray"
+            android:textSize="@dimen/payment_text_balance_size" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            app:customAssetFont="proxima_nova_regular"
+            android:id="@+id/totalPaymentValueLabel"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/payment_option_section_margin"
+            android:layout_gravity="right"
+            android:ellipsize="none"
+            android:gravity="center_vertical|right"
+            android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
+            android:paddingRight="@dimen/apt_dl_margin"
+            android:text="$567"
+            android:textColor="@color/lightSlateGray"
+            android:textSize="@dimen/payment_text_balance_size" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/apt_dl_boader_ht"
+        android:background="@color/light_gray_dialog" />
+    <Button
+        android:id="@+id/payNowButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/apt_dl_margin"
+        android:layout_marginLeft="@dimen/apt_dl_margin"
+        android:layout_marginRight="@dimen/apt_dl_margin"
+        android:layout_marginTop="@dimen/apt_dl_margin"
+        android:background="@drawable/button_green_fill_background"
+        android:text="PAY NOW"
+        android:textColor="@color/white"
+        android:textSize="@dimen/apt_dl_textview_size" />
+</LinearLayout>

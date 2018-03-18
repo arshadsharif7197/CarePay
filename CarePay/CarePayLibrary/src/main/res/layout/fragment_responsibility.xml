@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/respons_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/dimen_14dp">
+
+    <include
+        android:id="@+id/toolbar_layout"
+        layout="@layout/toolbar_responsibility" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/respons_total_label"
+                style="@style/ResponsTotalLabelStyle"
+                android:layout_marginTop="@dimen/dimen_30dp"
+                app:customAssetFont="gotham_rounded_book"
+                breeze:textKey="your_total_patient_responsibility"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/respons_total"
+                style="@style/ResponsTotalStyle"
+                android:layout_marginBottom="@dimen/dimen_30dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                app:customAssetFont="gotham_rounded_medium" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/responsibility_line_item_recycle_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/dimen_10dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:orientation="vertical">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/pay_total_amount_button"
+                style="@style/ResponsButtonStyle"
+                app:customAssetFont="gotham_rounded_medium"
+                android:clickable="false"
+                android:enabled="false"
+                breeze:textKey="payment_pay_total_amount_button" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/make_partial_payment_button"
+                style="@style/SigninNewAccountButtonStyle"
+                customAssetFont="gotham_rounded_medium"
+                android:layout_marginEnd="@dimen/dimen_17dp"
+                android:layout_marginStart="@dimen/dimen_17dp"
+                android:layout_marginTop="@dimen/dimen_12dp"
+                android:clickable="false"
+                android:enabled="false"
+                breeze:textKey="payment_partial_amount_button" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/pay_later_button"
+                style="@style/SigninNewAccountButtonStyle"
+                customAssetFont="gotham_rounded_medium"
+                android:layout_marginEnd="@dimen/dimen_17dp"
+                android:layout_marginStart="@dimen/dimen_17dp"
+                android:layout_marginTop="@dimen/dimen_12dp"
+                android:clickable="false"
+                android:enabled="false"
+                breeze:textKey="payment_responsibility_pay_later" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

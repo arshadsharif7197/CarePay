@@ -1,0 +1,194 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- Default dimens which will be use for any default styling  -->
+    <dimen name="dimen_1dp">1dp</dimen>
+    <dimen name="dimen_3dp">3dp</dimen>
+    <dimen name="dimen_5dp">5dp</dimen>
+    <dimen name="dimen_6dp">6dp</dimen>
+    <dimen name="dimen_7dp">7dp</dimen>
+    <dimen name="dimen_8dp">8dp</dimen>
+    <dimen name="dimen_10dp">10dp</dimen>
+    <dimen name="dimen_11dp">11dp</dimen>
+    <dimen name="dimen_12dp">12dp</dimen>
+    <dimen name="dimen_13dp">13dp</dimen>
+    <dimen name="dimen_14dp">14dp</dimen>
+    <dimen name="dimen_15dp">15dp</dimen>
+    <dimen name="dimen_17dp">17dp</dimen>
+    <dimen name="dimen_18dp">18dp</dimen>
+    <dimen name="dimen_20dp">20dp</dimen>
+    <dimen name="dimen_21dp">21dp</dimen>
+    <dimen name="dimen_22dp">22dp</dimen>
+    <dimen name="dimen_25dp">25dp</dimen>
+    <dimen name="dimen_26dp">26dp</dimen>
+    <dimen name="dimen_27dp">27dp</dimen>
+    <dimen name="dimen_28dp">28dp</dimen>
+    <dimen name="dimen_30dp">30dp</dimen>
+    <dimen name="dimen_34dp">34dp</dimen>
+    <dimen name="dimen_40dp">40dp</dimen>
+    <dimen name="dimen_44dp">44dp</dimen>
+    <dimen name="dimen_60dp">60dp</dimen>
+    <dimen name="dimen_65dp">65dp</dimen>
+    <dimen name="dimen_144dp">144dp</dimen>
+    <dimen name="dimen_175dp">175dp</dimen>
+    <dimen name="dimen_300dp">300dp</dimen>
+    <dimen name="dimen_450dp">450dp</dimen>
+
+    <dimen name="dimen_32dp">32dp</dimen>
+    <dimen name="dimen_36dp">36dp</dimen>
+    <dimen name="dimen_42dp">42dp</dimen>
+    <dimen name="dimen_46dp">46dp</dimen>
+    <dimen name="dimen_47dp">47dp</dimen>
+    <dimen name="dimen_50dp">50dp</dimen>
+    <dimen name="dimen_57dp">57dp</dimen>
+    <dimen name="dimen_81dp">81dp</dimen>
+    <dimen name="dimen_138dp">138dp</dimen>
+    <dimen name="dimen_230dp">230dp</dimen>
+    <dimen name="dimen_240dp">240dp</dimen>
+    <dimen name="dimen_500dp">500dp</dimen>
+    <dimen name="dimen_612dp">612dp</dimen>
+    <dimen name="dimen_684dp">684dp</dimen>
+
+    <dimen name="text_size_12sp">12sp</dimen>
+    <dimen name="text_size_14sp">14sp</dimen>
+    <dimen name="text_size_16sp">16sp</dimen>
+    <dimen name="text_size_17sp">17sp</dimen>
+    <dimen name="text_size_20sp">20sp</dimen>
+    <dimen name="text_size_21sp">21sp</dimen>
+    <dimen name="text_size_23sp">23sp</dimen>
+    <dimen name="text_size_28sp">28sp</dimen>
+    <dimen name="text_size_30sp">30sp</dimen>
+    <dimen name="text_size_40sp">40sp</dimen>
+    <dimen name="text_size_50sp">50sp</dimen>
+    <dimen name="text_size_90sp">90sp</dimen>
+
+    <dimen name="appointment_cart_provider_textsize">17sp</dimen>
+    <dimen name="appointment_cart_amount_textsize">17sp</dimen>
+    <dimen name="appointment_cart_time_textsize">16sp</dimen>
+    <dimen name="forgotpassword_textsize">14.0sp</dimen>
+
+    <!-- Custom Filter Popup -->
+    <dimen name="custom_filter_popup_header_padding">8dp</dimen>
+    <dimen name="drawable_padding">5dp</dimen>
+    <dimen name="view_padding">10dp</dimen>
+    <dimen name="view_margin">10dp</dimen>
+    <dimen name="search_edittext_padding_right">50dp</dimen>
+    <dimen name="clear_search_button_margin">-40dp</dimen>
+    <dimen name="custom_filter_text_size">18sp</dimen>
+    <dimen name="custom_filter_view_margin">5dp</dimen>
+    <dimen name="custom_filter_patient_image_size">32dp</dimen>
+
+    <!--pin confirmation dialog-->
+    <dimen name="button_height">77dp</dimen>
+    <dimen name="button_width">66dp</dimen>
+    <dimen name="key_border_width">1dp</dimen>
+    <dimen name="button_padding">2dp</dimen>
+    <dimen name="button_margin_top">30dp</dimen>
+    <dimen name="pin_header_text_size">36sp</dimen>
+    <dimen name="pin_sub_header_text_size">22sp</dimen>
+    <dimen name="pin_sub_edit_text_size">50sp</dimen>
+    <dimen name="button_pin_text_size">38sp</dimen>
+    <dimen name="button_delete_key_width">40dp</dimen>
+    <dimen name="button_delete_key_height">27dp</dimen>
+
+    <!--Change mode dialog-->
+    <dimen name="home_select_mode_button_width">176dp</dimen>
+    <dimen name="home_select_mode_button_height">219dp</dimen>
+
+    <!-- Custom Appointment details dialog -->
+    <dimen name="appointment_detail_dialog_width">675dp</dimen>
+    <dimen name="appointment_detail_dialog_height">555dp</dimen>
+    <dimen name="custom_appointment_dialog_view_margin">9dp</dimen>
+    <dimen name="custom_appointment_dialog_view_padding">10dp</dimen>
+    <dimen name="custom_appointment_dialog_view_textsize_small">14sp</dimen>
+    <dimen name="custom_appointment_dialog_checkbox_margin">10dp</dimen>
+    <dimen name="appointment_detail_dialog_checkbox_divider_height">4dp</dimen>
+    <dimen name="appointment_detail_dialog_checkbox_divider_margin">-50dp</dimen>
+    <dimen name="appointment_detail_dialog_checkbox_divider_margin_top">20dp</dimen>
+    <dimen name="custom_appointment_dialog_checkbox_textsize">15sp</dimen>
+    <dimen name="custom_appointment_dialog_button_textsize">22sp</dimen>
+
+    <dimen name="custom_appointment_dialog_background_shape_radius">7dp</dimen>
+    <dimen name="custom_appointment_dialog_checkbox_normal_size">16dp</dimen>
+
+    <!-- Home Screen -->
+
+    <dimen name="home_alert_text_padding_start">10dp</dimen>
+    <dimen name="home_alert_text_padding_end">4dp</dimen>
+
+    <dimen name="home_alert_checkin_number_wrapper_height">40dp</dimen>
+    <dimen name="home_alert_checkin_number_wrapper_width">40dp</dimen>
+
+    <dimen name="home_main_margin_top">30dp</dimen>
+    <dimen name="home_main_margin_start">30dp</dimen>
+    <dimen name="home_main_margin_end">30dp</dimen>
+
+    <dimen name="home_logo_margin_top">5dp</dimen>
+
+    <dimen name="home_alert_font_size">21sp</dimen>
+    <dimen name="home_button_font_size">26sp</dimen>
+
+    <dimen name="home_alert_margin_start">10dp</dimen>
+
+    <dimen name="home_button_width">282dp</dimen>
+    <dimen name="home_button_height">250dp</dimen>
+
+    <dimen name="home_shadow_width">800dp</dimen>
+
+    <dimen name="home_shadow_margin_top">-7dp</dimen>
+
+    <dimen name="home_settings_icon_width">30dp</dimen>
+    <dimen name="home_settings_icon_height">30dp</dimen>
+
+    <dimen name="home_spinner_width">100dp</dimen>
+    <dimen name="home_spinner_height">51dp</dimen>
+    <dimen name="home_spinner_padding_righ_left">8dp</dimen>
+    <dimen name="patient_splash_button_width">150dp</dimen>
+    <dimen name="patient_splash_button_height">51dp</dimen>
+
+    <!--Signature view dialog-->
+
+    <!-- Check-in -->
+    <dimen name="checkin_info_label_width">150dp</dimen>
+    <dimen name="checked_in_card_status_top_margin">36dp</dimen>
+
+    <!--Provider lists-->
+    <dimen name="provider_list_title_margin">34dp</dimen>
+    <dimen name="provider_no_list_margin">72dp</dimen>
+    <dimen name="provider_card_width">380dp</dimen>
+    <dimen name="provider_card_header_height">150dp</dimen>
+    <dimen name="provider_card_avatar_size">100dp</dimen>
+    <dimen name="provider_card_address_margin">110dp</dimen>
+    <dimen name="provider_card_place_margin">19dp</dimen>
+
+    <!--Appointment list-->
+    <dimen name="appointment_card_header_height">210dp</dimen>
+    <dimen name="appointment_card_date_view_height">160dp</dimen>
+    <dimen name="appointment_card_footer_height">208dp</dimen>
+    <dimen name="appointment_card_checked_in_button_margin">56dp</dimen>
+
+    <dimen name="appointment_summary_provider_image_margin">-50dp</dimen>
+
+    <!--Practice Payment-->
+    <dimen name="profile_pic_size">60dp</dimen>
+
+    <!--Practice Responsibility dialog-->
+
+    <dimen name="dimen_72dp">72dp</dimen>
+    <dimen name="payment_distibution_dialog_height">600dp</dimen>
+    <dimen name="payment_distribution_dialog_width">860dp</dimen>
+
+    <dimen name="popup_picker_width">300dp</dimen>
+    <dimen name="popup_picker_height">200dp</dimen>
+
+    <dimen name="keypad_width">600dp</dimen>
+    <dimen name="keypad_height">700dp</dimen>
+    <dimen name="calculator_entry_text">80sp</dimen>
+    <dimen name="emailFieldTopMargin">0dp</dimen>
+
+    <dimen name="demogr_details_section_top_margin">30dp</dimen>
+    <dimen name="demographics_add_padding">57dp</dimen>
+
+</resources>

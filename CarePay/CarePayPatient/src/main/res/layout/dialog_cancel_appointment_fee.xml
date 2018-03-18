@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent_apt"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/dialogCloseHeaderImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/apt_imgview_ht"
+        android:layout_gravity="start"
+        android:layout_marginBottom="@dimen/dimen_8dp"
+        android:gravity="end"
+        android:src="@drawable/icn_patient_mode_nav_close" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:breeze="http://schemas.carecloud.com/breeze"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_cardview"
+        android:orientation="vertical"
+        android:padding="@dimen/dimen_15dp">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_15dp"
+            android:gravity="center"
+            android:textColor="@color/charcoal"
+            android:textSize="26sp"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="appointment_cancellation_fee_title" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/cancellationFeeMessageTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_10dp"
+            android:gravity="center"
+            android:textColor="@color/cadet_gray"
+            android:textSize="@dimen/text_size_20"
+            app:customAssetFont="proxima_nova_regular" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/cancelAppointment"
+            style="@style/SigninNewAccountButtonStyle"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:foreground="?android:selectableItemBackground"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="appointment_cancellation_fee_button_label" />
+
+    </LinearLayout>
+</LinearLayout>

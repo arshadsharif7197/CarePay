@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_personal_information"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?practiceBackgroundColor"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/dimen_20dp"
+    android:paddingLeft="@dimen/dimen_20dp"
+    android:paddingRight="@dimen/dimen_20dp"
+    android:paddingTop="@dimen/dimen_18dp"
+    tools:context="com.carecloud.carepay.practice.library.checkin.activities.PersonalInformationActivity">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/goBackButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_blue_overlay"
+            android:drawablePadding="@dimen/dimen_10dp"
+            android:drawableStart="@drawable/icn_arrow_left"
+            android:paddingLeft="@dimen/dimen_15dp"
+            android:paddingRight="@dimen/dimen_15dp"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_22sp"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="go_back_label" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="?practiceLogoDrawable" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/homeImageView"
+        style="@style/HomeButtonIcon"
+        android:layout_alignParentBottom="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_marginTop="@dimen/dimen_36dp"
+        android:orientation="vertical">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/personalInformationTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_36sp"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="personal_info_personal_information" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/identifyYourselfTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimen_12dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_20sp"
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="personal_info_identify_yourself" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimen_46dp"
+            android:background="@drawable/bg_white_shadow"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                android:id="@+id/firstNameInputLayout"
+                style="@style/TextInputLayoutStyle"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                app:customAssetFont="proxima_nova_semi_bold"
+                app:hintTextAppearance="@style/FloatingLabelStyle"
+                breeze:textKey="personal_info_first_name">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                    android:id="@+id/firstNameEditText"
+                    style="@style/EditTextStyle"
+                    android:layout_width="@dimen/dimen_500dp"
+                    android:layout_height="wrap_content"
+                    android:digits="@string/restrict_letters_space"
+                    android:imeOptions="actionNext"
+                    android:maxLength="100"
+                    android:maxLines="1"
+                    android:textSize="@dimen/text_size_18sp"
+                    app:customAssetFont="proxima_nova_semi_bold"
+                    breeze:hintKey="personal_info_first_name" />
+
+            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                android:id="@+id/lastNameInputLayout"
+                style="@style/TextInputLayoutStyle"
+                app:customAssetFont="proxima_nova_semi_bold"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                    android:id="@+id/lastNameEditText"
+                    style="@style/EditTextStyle"
+                    android:layout_width="@dimen/dimen_500dp"
+                    android:layout_height="wrap_content"
+                    android:digits="@string/restrict_letters_space"
+                    android:imeOptions="actionNext"
+                    android:maxLength="100"
+                    android:maxLines="1"
+                    android:textSize="@dimen/text_size_18sp"
+                    app:customAssetFont="proxima_nova_semi_bold"
+                    breeze:hintKey="personal_info_last_name" />
+
+            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                android:id="@+id/phoneNumberInputLayout"
+                style="@style/TextInputLayoutStyle"
+                app:customAssetFont="proxima_nova_semi_bold"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                    android:id="@+id/phoneNumberEditText"
+                    style="@style/EditTextStyle"
+                    android:layout_width="@dimen/dimen_500dp"
+                    android:layout_height="wrap_content"
+                    android:digits="1234567890"
+                    android:imeOptions="actionDone"
+                    android:inputType="phone"
+                    android:maxLength="10"
+                    android:maxLines="1"
+                    android:textSize="@dimen/text_size_18sp"
+                    app:customAssetFont="proxima_nova_semi_bold"
+                    breeze:hintKey="personal_info_phone_number" />
+
+            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+            <RelativeLayout
+                android:layout_width="@dimen/dimen_500dp"
+                android:layout_height="@dimen/dimen_57dp">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/dateOfBirthTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:paddingLeft="@dimen/dimen_14dp"
+                    android:textColor="@color/textview_default_textcolor"
+                    android:textSize="@dimen/text_size_18sp"
+                    app:customAssetFont="proxima_nova_semi_bold"
+                    breeze:textKey="personal_info_date_of_birth" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/selectDateButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="@dimen/dimen_14dp"
+                    android:background="@color/transparent_apt"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size_17sp"
+                    app:customAssetFont="proxima_nova_semi_bold"
+                    breeze:textKey="personal_info_select" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="@dimen/dimen_500dp"
+                android:layout_height="@dimen/dimen_1dp"
+                android:background="@color/light_gray" />
+
+            <RelativeLayout
+                android:layout_width="@dimen/dimen_500dp"
+                android:layout_height="@dimen/dimen_57dp">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/genderTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:paddingStart="@dimen/dimen_14dp"
+                    android:textColor="@color/textview_default_textcolor"
+                    android:textSize="@dimen/text_size_18sp"
+                    app:customAssetFont="proxima_nova_semi_bold" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/selectGenderButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="@dimen/dimen_14dp"
+                    android:background="@color/transparent_apt"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size_17sp"
+                    app:customAssetFont="proxima_nova_semi_bold"
+                    breeze:textKey="choose_gender_label" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="@dimen/dimen_500dp"
+                android:layout_height="@dimen/dimen_1dp"
+                android:background="@color/light_gray" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/findMyAppointmentButton"
+                style="@style/BreezeButtonStyleDark"
+                android:layout_width="@dimen/dimen_500dp"
+                android:layout_height="@dimen/dimen_57dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:background="@drawable/green_rounded_button_selector"
+                android:enabled="false"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_22sp"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="personal_info_find_patient" />
+
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

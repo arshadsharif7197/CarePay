@@ -1,0 +1,113 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/add_appointment_toolbar" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/prepaymentMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimen_10dp"
+        android:background="@color/colorPrimaryDark"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_15"
+        tools:text="Required Prepayment: $49.00"
+        app:customAssetFont="proxima_nova_semi_bold"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/location_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/add_apt_available_hours_edit_range_height"
+        android:background="@color/date_range_header"
+        android:orientation="horizontal">
+
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/location_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/dimen_8dp"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            android:textColor="@color/white"
+            app:customAssetFont="proxima_nova_regular"
+            tools:text="@string/locations_label"
+            breeze:textKey="appointment_locations_label"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/available_locations_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"/>
+
+        <FrameLayout
+            android:id="@+id/appointment_available_single_location"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/available_single_location_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginEnd="@dimen/dimen_8dp"
+                android:background="@drawable/rounded_button_blue_border_selected"
+                android:ellipsize="end"
+                tools:text="Location 1"
+                app:customAssetFont="proxima_nova_regular"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:background="@color/white">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/available_hours_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/apt_available_hours_list_padding"
+            android:paddingRight="@dimen/apt_available_hours_list_padding" />
+
+        <FrameLayout
+            android:id="@+id/progressview"
+            android:layout_width="@dimen/dimen_60dp"
+            android:layout_height="@dimen/dimen_60dp"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/bg_progress_spinner" />
+
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/dimen_8dp"
+                android:indeterminate="true"
+                android:indeterminateDrawable="@drawable/progress_indeterminate_custom" />
+
+        </FrameLayout>
+
+        <include
+            android:id="@+id/no_appointment_layout"
+            layout="@layout/no_appointment_layout" />
+
+
+    </FrameLayout>
+
+</LinearLayout>

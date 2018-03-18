@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_my_health"
+            android:icon="@drawable/icn_drawer_my_health"
+            android:title="My Health" />
+
+        <item
+            android:id="@+id/nav_appointments"
+            android:icon="@drawable/icn_drawer_appointments"
+            android:title="Appointments" />
+        <item
+            android:id="@+id/nav_payments"
+            android:icon="@drawable/ic_icn_drawer_payments_default"
+            android:title="Payments" />
+        <item
+            android:id="@+id/nav_messages"
+            android:icon="@drawable/icn_messages"
+            android:title="Messages" />
+        <item
+            android:id="@+id/nav_purchase"
+            android:icon="@drawable/icn_drawer_purchase_default"
+            android:title="Shop" />
+        <item
+            android:id="@+id/nav_notification"
+            android:icon="@drawable/icn_drawer_notifications"
+            android:title="Notifications" />
+    </group>
+    <item android:title="">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_settings"
+                    android:title="Settings" />  <!--android:icon="@drawable/ic_settings_white_24dp"-->
+                <item
+                    android:id="@+id/nav_logout"
+                    android:title="Logout" />  <!--android:icon="@drawable/ic_power_settings_new_white_24dp"-->
+            </group>
+        </menu>
+    </item>
+
+</menu>

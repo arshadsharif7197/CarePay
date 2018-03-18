@@ -1,0 +1,431 @@
+<resources>
+    <string name="app_name">CarePayLibrary</string>
+    <!--<string name="api_base_url">https://breeze-entry.development.carecloud.com</string>-->
+    <string name="google_map_api_base_url">https://maps.googleapis.com</string>
+    <string name="google_map_api_key">AIzaSyDFrx3OGugrIUQzsoEJVobtQoz6f9MMim</string>
+    <string name="Menu">Menu</string>
+    <string name="home_logo">Home Logo</string>
+    <string name="respons_title">Responsibility</string>
+    <string name="respons_total_label">Your total patient responsibility</string>
+    <string name="respons_previous_balance_label">Previous balance</string>
+    <string name="respons_copay_label">Insurance CoPay</string>
+    <string name="respons_pay_label">Pay at practice</string>
+    <string name="respons_pay_now_label">Pay now</string>
+    <string name="pay_total_amount">PAY TOTAL AMOUNT</string>
+    <string name="make_partial_payment">PARTIAL PAYMENT</string>
+
+    <string name="AL">AL</string>
+    <string name="FL">FL</string>
+
+    <string name="american_indian">American Indian</string>
+    <string name="Asian">Asian</string>
+    <string name="african_american">African American</string>
+
+    <string-array name="Race">
+        <item>@string/american_indian</item>
+        <item>@string/Asian</item>
+        <item>@string/african_american</item>
+        <item>@string/decline_to_answer</item>
+    </string-array>
+
+
+    <string name="AetnaSelect">Aetna Select</string>
+    <string name="AetnaValueNetwork">Aetna Value Network HMO</string>
+    <string name="ElectChoice">Elect Choice HMO</string>
+    <string name="HMO">HMO</string>
+
+
+    <string name="Aetna">Aetna</string>
+    <string name="Blue">Blue Cross Blue Shield</string>
+    <string name="Cigna">Cigna</string>
+    <string name="GHI">GHI</string>
+    <string name="HIP">HIP</string>
+
+    <string name="English">English</string>
+    <string name="Spanish">Spanish</string>
+
+    <string name="Male">Male</string>
+    <string name="Female">Female</string>
+
+    <string-array name="Language">
+        <item>@string/English</item>
+        <item>@string/Spanish</item>
+    </string-array>
+
+    <string-array name="plans">
+        <item>@string/AetnaSelect</item>
+        <item>@string/AetnaValueNetwork</item>
+        <item>@string/ElectChoice</item>
+        <item>@string/HMO</item>
+    </string-array>
+    <string-array name="providers">
+        <item>@string/Aetna</item>
+        <item>@string/Blue</item>
+        <item>@string/Cigna</item>
+        <item>@string/GHI</item>
+        <item>@string/HIP</item>
+    </string-array>
+
+    <string name="primary">Primary</string>
+    <string name="secondary">Secondary</string>
+    <string name="tertiary">Tertiary</string>
+
+    <string-array name="cardtypes">
+        <item>@string/primary</item>
+        <item>@string/secondary</item>
+        <item>@string/tertiary</item>
+    </string-array>
+
+    <string name="hispanic">Hispanic</string>
+    <string name="white_americans">White</string>
+    <string name="other">Other</string>
+    <string name="decline_to_answer">Decline to Answer</string>
+
+    <string-array name="Ethnicity">
+        <item>@string/hispanic</item>
+        <item>@string/decline_to_answer</item>
+    </string-array>
+
+    <string-array name="Gender">
+        <item>@string/Male</item>
+        <item>@string/Female</item>
+        <item>@string/decline_to_answer</item>
+    </string-array>
+
+
+    <string-array name="UpdatesMode">
+        <item>Mobile Notifications</item>
+        <item>Email Notifications</item>
+        <item>Newsletter</item>
+        <item>Monthly coupons</item>
+        <item>Marketing Material</item>
+    </string-array>
+
+    <string name="demogr_docs_logo">Logo</string>
+    <string name="demogr_docs_logo_title">Documents, please</string>
+    <string name="demogr_docs_logo_message">The scan process is pretty straightforward</string>
+    <string name="demogr_docs_scan_insurance_front_label">SCAN FRONT</string>
+    <string name="demogr_docs_scan_insurance_backlabel">SCAN BACK</string>
+    <string name="demogrDocsNumberHint">Driver\'s License Number</string>
+    <string name="demogr_docs_license_number_label">Driver\'s License State</string>
+    <string name="demogr_insurance_switch_text">Do you have health insurance?</string>
+    <string name="demogr_insurance_provider">Provider</string>
+    <string name="demogr_insurance_plan">Plan</string>
+    <string name="demogr_insurances_card_type">Type</string>
+    <string name="demogr_insurance_number_label">Insurance Card Number</string>
+    <string name="demogr_button_label">Next</string>
+    <string name="demogr_tv_choose_label">Choose</string>
+    <string name="demogr_docs_tv_chose_company">Choose Company First</string>
+    <string name="demogr_docs_remove_card">Remove Card</string>
+
+    <!--Address Fragment-->
+
+    <string name="AddressHeadingTextView">Let\'s get you set up!</string>
+    <string name="AddressSubHeadingTextView">First, tell us your address \u0026 contact information</string>
+    <string name="PhoneNumberEditText">Phone Number</string>
+    <string name="ZipCodeEditText">Zip Code</string>
+    <string name="Address1EditText">Address Line 1</string>
+    <string name="Address2EditText">Address Line 2</string>
+    <string name="CityEditText">City</string>
+    <string name="StateEditText">State</string>
+
+    <!--<review_insuranceScreen>-->
+
+
+    <string name="driverLicense">Diver\'s License</string>
+    <string name="review_insurancecardnumber_hint">Insurance Card Number</string>
+    <string name="dobformat">MM/DD/YYYY</string>
+    <string name="demofirstNameLabel">First Name</string>
+    <string name="demomiddleNameLabel">Middle Name</string>
+    <string name="demolastNameLabel">Last Name</string>
+    <string name="demoemailLabel">Email</string>
+    <string name="demoDobLabel">Date of Birth</string>
+    <string name="demoPhoneNumberLabel">Phone Number</string>
+    <string name="demodriverlicenseLabel">Driver License</string>
+    <string name="demoAddress1Label">Address Line 1</string>
+    <string name="demoAddress2Label">Address Line 2</string>
+    <string name="demoZipcodeLabel">Zip Code</string>
+    <string name="demoCityLabel">City</string>
+    <string name="demoStateLabel">State</string>
+    <string name="demooptional">Optional</string>
+
+    <!--Details Fragment-->
+
+    <string name="detailsHeadingTextView">Some details about you</string>
+    <string name="detailsSubHeadingTextView">How about uploading your photo?</string>
+    <string name="selectOrTakePhotoButton">SELECT OR TAKE PHOTO</string>
+    <string name="changeCurrentPhotoButton">CHANGE CURRENT PHOTO</string>
+    <string name="raceLabel">Race</string>
+    <string name="ethnicityLabel">Ethnicity</string>
+    <string name="languageLabel">Preferred Language</string>
+    <string name="chooseTextView">Choose</string>
+    <string name="aDD_DEMOGRAPHIC_INFO_Button_Label">ADD DEMOGRAPHIC INFO</string>
+    <string name="nO_HAVE_HEALTH_INSURANCE_Button_Label">I DON\'T HAVE HEALTH INSURANCE</string>
+    <string name="health_Insurance_Information">Health Insurance Information</string>
+    <string name="add_Health_InsuranceInfo">Add Health Insurance Info</string>
+    <string name="review_insurance_subHeading">We didn\’t find any insurance info associated with your profile. If you have health insurance, please fill in the fields below.</string>
+    <string name="demographics_title">Demographic</string>
+    <string name="next_Button">Next</string>
+    <string name="invalid_date_of_birth_format">Invalid date</string>
+    <string name="additional_info">Additional Information</string>
+
+    <!--Signin Screen-->
+    <string name="signin_signup_email_hint">Email</string>
+    <string name="signin_signup_password_hint">Create Password</string>
+
+    <string name="password_text">Password</string>
+    <string name="create_password_text">Create Password</string>
+    <string name="submit_button">SIGN IN</string>
+    <string name="signup_button">CREATE NEW ACCOUNT</string>
+    <string name="language_textview">Change language</string>
+    <string name="forgot_password_textview">Forgot password?</string>
+
+
+    <!--<patient portal signup >-->
+    <string name="patientportal">Patient Portal</string>
+    <string name="descriptionofportal">Small text describing why the patient may consider signing up for Portal.</string>
+    <string name="signupforportal">SIGN UP PORTAL</string>
+    <string name="passfornow">I&amp;’LL PASS NOW</string>
+
+    <!--Signup Screen-->
+    <string name="caps">FIRST NAME</string>
+    <string name="firstname_text">First Name</string>
+    <string name="middlename_text">Middle Name</string>
+    <string name="lastname_text">Last Name</string>
+    <string name="repeat_password_text">Repeat Password</string>
+    <string name="account_exist_textview">Already have an account?</string>
+    <string name="signup_error_empty_first_name">First name is empty</string>
+    <string name="signup_error_empty_last_name">Last name is empty</string>
+    <string name="signin_signup_error_empty_email">Email is empty</string>
+    <string name="signin_signup_error_invalid_email">Email is invalid</string>
+    <string name="signin_signup_error_empty_password">Password is empty</string>
+    <string name="signin_signup_error_empty_repeat_password">Repeat password is empty</string>
+    <string name="signup_error_passwords_unmatched">Passwords do not match</string>
+    <string name="signup_error_passwords_invalid">Invalid password</string>
+
+    <!--MoreDetails Fragment-->
+    <string name="PlaceHolderIcon">PlaceHolder Icon</string>
+    <string name="moreDetailsHeadingTextView">You\'re all set!</string>
+    <string name="moreDetailsSubHeadingTextView">Maecenas faucibus mollis interdum. Sed posuere consectetur est at lobortis.</string>
+    <string name="GoToCarePayButton">Go To CarePay</string>
+
+
+    <string name="demoVerifyHeading">Demographic Information</string>
+    <string name="demoVerifySubHeading">We didn\'t find any demographic info associated with your profile.Please fill in the fields below.</string>
+
+    <!-- Appointments List Fragment -->
+
+    <string name="apt_day_upcoming">UPCOMING</string>
+    <string name="empty_phone_number_error_messae">Enter phone number</string>
+    <string name="incorrect_phone_number_error_messae">Enter valid phone number</string>
+    <string name="empty_zip_code_error_messae">Enter zip code</string>
+    <string name="empty_address_error_messae">Enter address</string>
+    <string name="empty_city_error_messae">Enter city</string>
+    <string name="minimum_char_in_city_error_messae">Minimum three letters</string>
+    <string name="empty_state_error_messae">Enter state</string>
+    <string name="select_state_error_messae">The state is invalid</string>
+    <string name="add_medical_info">Add More</string>
+
+    <string name="check_in_at_office">CHECK-IN \nAT OFFICE</string>
+    <string name="close">Close</string>
+    <string name="demogr_next">Next</string>
+    <string name="check_in_now">CHECK-IN \nNOW</string>
+
+    <!-- Review Screen -->
+    <string name="review_screen_healthinsurance">HEALTH INSURANCE</string>
+    <string name="review_screen_company_lable">COMPANY</string>
+    <string name="review_plan_label">PLAN</string>
+    <string name="review_screen_insurancepolicy_number_lable">INSURANCE MEMBER ID</string>
+    <string name="review_screen_agreebutton">YES, THESE ARE CORRECT</string>
+    <string name="review_screen_disagreebutton">I NEED TO UPDATE THIS INFORMATION</string>
+    <string name="review_firstname_label">FIRST NAME</string>
+    <string name="review_lastname_label">LAST NAME</string>
+    <string name="review_middlename_label">MIDDLE NAME</string>
+    <string name="review_email_label">EMAIL</string>
+    <string name="review_dateofbirth_label">DOB</string>
+    <string name="review_phone_number_label">PHONE NUMBER</string>
+    <string name="review_address_lable">ADDRESS</string>
+    <string name="review_address1_label">ADDRESS LINE 1</string>
+    <string name="review_address2_label">ADDRESS LINE 2</string>
+    <string name="review_driverlicense_label">DRIVER\'S  LICENSE</string>
+    <string name="review_prefferedlanguage_label">PREFERRED LANGUAGE</string>
+    <string name="review_gender_label">Gender</string>
+    <string name="review_city_label">CITY</string>
+    <string name="review_state_label">STATE</string>
+    <string name="review_zipcode_label">ZIPCODE</string>
+    <string name="review_country_label">COUNTRY</string>
+
+
+    <!--<Navigation Screen>-->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+
+    <!--<consent forms>-->
+    <string name="description">This is description</string>
+    <string name="consenttitle">Sign consent for medical care</string>
+    <string name="content">A keyboard typically has characters engraved or printed on the keys and each press of a
+        key typically corresponds to a single written symbol. </string>
+    <string name="Minors_information">MINOR’S INFORMATION</string>
+
+    <string name="Btn_Clr">clear</string>
+    <string name="tiltle1_3">Sign consent for medical care</string>
+    <string name="consentname">Consent for Medical Care</string>
+    <string name="consentdescrption">Please fill in this form about general cardiac symptoms you may have had in the past.</string>
+    <string name="constentcontent">I,Sarah Hughes, understand that I have a condition thar requires medical treatment. Lorem ipsum dolor sit amet. Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas sed diam eget risus varius blandit sit amet non magna.
+Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Nulla vitae elit libero, a pharetra augue. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Aenean lacinia bibendum nulla sed consectetur. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere consectetur est at lobortis.</string>
+    <string name="hipaa">Sign HIPAA Confidentiality Agreement</string>
+    <string name="yes_sig">Yes, This is my signature</string>
+    <string name="hint">Legal Representative First Name</string>
+    <string name="hint_last">Legal Representative Last Name</string>
+
+    <string name="pick_date">Pick Date</string>
+    <string name="choose_gender">Choose Gender</string>
+
+
+    <!-- Intake -->
+    <string name="intakeNextButtonLastText">Finish intake forms</string>
+    <string name="intakeNextButtonText">Next Question</string>
+
+    <string name="apt_popup_message_text">Your appointment with %1$s starts in %2$s. Want to Check-in early?</string>
+    <string name="dismiss">DISMISS</string>
+    <string name="checkin_early">CHECK-IN EARLY</string>
+    <string name="check_in_at_office_one">CHECK-IN AT OFFICE</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
+    <string name="not_applicable">N/A</string>
+    <string name="do_you_smoke">Do you smoke?</string>
+    <string name="do_you_have_diabetes">Do you have diabetes?</string>
+    <string name="vascular">VASCULAR</string>
+    <string name="claudation">Claudation</string>
+    <string name="edema">Edema</string>
+    <string name="pulmonary">PULMONARY</string>
+    <string name="snoring">Snoring</string>
+    <string name="dyspnea">Dyspnea</string>
+
+
+    <!--Add Appointment-->
+    <string name="visit_type_label">Visit Type</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="choose_provider_recent_title">RECENT</string>
+    <string name="choose_provider_all_title">ALL</string>
+    <string name="apt_available_hours_title">Available Hours</string>
+    <string name="apt_choose_provider_title">Choose Provider</string>
+    <string name="request_appointment_button_text">REQUEST APPOINTMENT</string>
+    <string name="checked_in_label">CHECKED-IN</string>
+    <string name="demogr_section_name_label">Name</string>
+    <string name="demogr_section_address_label">ADDRESS</string>
+
+    <string name="demographicsChooseLabel">Choose</string>
+    <string name="Other">Other</string>
+
+    <string name="no_apt_title">No appointments yet</string>
+    <string name="no_apt_desc">We\'ll list all your appointments here, so you can quickly check important details and even make early-check-ins in some cases.</string>
+
+    <!--add appointment calendar screen-->
+    <string name="date_range_apply_button_label">Apply</string>
+    <string name="edit_range_button_label">Range</string>
+    <string name="edit_date_range_button_label">Edit date range</string>
+    <string name="pick_a_date_label">Pick a date</string>
+    <string name="sunday_text_view_label">S</string>
+    <string name="monday_text_view_label">M</string>
+    <string name="tuesday_text_view_label">T</string>
+    <string name="wednesday_text_view_label">W</string>
+    <string name="thursday_text_view_label">T</string>
+    <string name="friday_text_view_label">F</string>
+    <string name="saturday_text_view_label">S</string>
+    <string name="date_range_from_today_to">From today to</string>
+    <string name="to">to</string>
+    <string name="locations_label">Locations</string>
+
+
+    <!--<months string date util>-->
+    <string name="January">January</string>
+    <string name="February">February</string>
+    <string name="March">March</string>
+    <string name="April">April</string>
+    <string name="June">June</string>
+    <string name="July">July</string>
+    <string name="August">August</string>
+    <string name="September">September</string>
+    <string name="October">October</string>
+    <string name="November">November</string>
+    <string name="December">December</string>
+
+    <!-- Payment flow -->
+    <string name="payment_method">Payment Method</string>
+    <string name="credit_card">Credit Card</string>
+    <string name="cash">Cash</string>
+    <string name="check">Check</string>
+    <string name="paypal">Paypal</string>
+    <string name="apple_pay">Apple Pay</string>
+    <string name="android_pay">Android Pay</string>
+    <string name="choose_payment_method">CHOOSE PAYMENT METHOD</string>
+    <string name="choose_credit_card">CHOOSE CREDIT CARD</string>
+    <string name="create_payment_plan_instead">CREATE PAYMENT PLAN INSTEAD</string>
+    <string name="pay_using_apple_pay">PAY USING APPLE PAY</string>
+    <string name="pay_using_android_pay">PAY USING ANDROID PAY</string>
+    <string name="pay_using_paypal">PAY USING PAYPAL</string>
+    <string name="scan_check">SCAN CHECK</string>
+    <string name="next">NEXT</string>
+    <string name="add_new_credit_card">ADD NEW CREDIT CARD</string>
+    <string name="profile_picture">Profile picture</string>
+    <string name="scan_code">Scan code</string>
+    <string name="checkin_scan_code_message">Scan the code below at the practice</string>
+    <string name="select_race">Select Race</string>
+    <string name="select_ethnicity">Select Ethnicity</string>
+    <string name="select_gender">Select Gender</string>
+
+    <string name="required">Required</string>
+    <string name="dob_format">MM/DD/YYYY</string>
+    <string name="demogr_details_allergies_label">Allergies you have</string>
+    <string name="hint_optional">Optional</string>
+    <string name="demogr_details_allergy_add_label">Allergy</string>
+    <string name="demogr_details_add_another_clickable">Add Another</string>
+    <string name="demogr_details_add_unlisted_allergies_clickable">Add unlisted allergies</string>
+    <string name="demogr_details_medications_you_re_taking">MEDICATIONS YOU\'RE TAKING</string>
+    <string name="demogr_details_optional">Optional</string>
+    <string name="demographics_details_medication_label">Medication</string>
+    <string name="demogr_details_add_another_med_clickable">Add Another</string>
+    <string name="demogr_details_add_unlisted_medications">Add unlisted medications</string>
+    <string name="remove">Remove</string>
+    <string name="credit_card_number">Credit Card Number</string>
+    <string name="verification_code">Verification Code</string>
+    <string name="expiration_date">Expiration Date</string>
+    <string name="save_card_on_file">Save Card on File</string>
+    <string name="new_credit_card">New Credit Card</string>
+
+    <string name="cancel_appointment_dialog">CANCEL APPOINTMENT</string>
+    <string name="demogr_docs_add_card">Have multiple insurances?</string>
+    <string name="scanned_id_doc">Scanned ID Doc</string>
+    <string name="demogr_docs_document_type">Document Type</string>
+    <string name="insurance_scan_front">Insurance scan front</string>
+    <string name="insurance_scan_back">Insurance scan back</string>
+    <string name="not_defined">Not Defined</string>
+    <string name="alert_ok">OK</string>
+    <string name="alert_title">Alert</string>
+    <string name="alert_title_server_error">Server Error</string>
+    <string name="restrict_address_characters">0123456789 abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ#.,;:\'°</string>
+    <string name="restrict_digits_letters_space">0123456789 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <string name="restrict_letters_space">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <string name="restrict_letters">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <string name="restrict_digits_slash">1234567890/</string>
+    <string name="restrict_digits_space">012345 67890</string>
+    <string name="restrict_digits">1234567890</string>
+
+    <integer name="viewfinder_border_width">4</integer>
+    <integer name="viewfinder_border_length">60</integer>
+
+    <string name="action_remove">Remove</string>
+    <string name="swipeCreditCardSeparatorText">OR</string>
+
+    <string name="payment_failed">Payment Not Successful</string>
+
+    <string name="tag_demographics_error_show_inv">demographics_error_show_inv</string>
+    <string name="tag_demographics_error_show_gone">demographics_error_show_gone</string>
+    <string name="tag_demographics_error_hide_inv">demographics_error_hide_inv</string>
+    <string name="tag_demographics_error_hide_gone">demographics_error_hide_gone</string>
+    <string name="tag_demographics_error_color">demographics_error_color</string>
+    <string name="tag_demographics_error_scroll">demographics_error_scroll</string>
+
+</resources>

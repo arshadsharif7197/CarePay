@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview
+        android:id="@+id/camera_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <Button
+        android:id="@+id/button_capture"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/camere_sutter_button_background" />
+
+    <Button
+        android:id="@+id/button_flash"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="@dimen/dimen_40dp"
+        android:layout_toStartOf="@id/button_capture"
+        android:background="@drawable/camera_flash_selector"
+        android:enabled="false" />
+
+    <Button
+        android:id="@+id/button_change_camera"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="@dimen/dimen_40dp"
+        android:layout_toEndOf="@id/button_capture"
+        android:background="@drawable/camera_switch_selector" />
+</RelativeLayout>

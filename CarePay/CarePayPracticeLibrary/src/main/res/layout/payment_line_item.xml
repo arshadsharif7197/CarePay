@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/list_apt_padding_right"
+    android:layout_marginStart="@dimen/list_apt_padding_right"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/history_item_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/dimen_14dp">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/lineItemNameLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="start"
+                android:textColor="@color/textview_default_textcolor"
+                android:textSize="@dimen/text_size_24sp"
+                tools:text="Patient Balance"
+                app:customAssetFont="gotham_rounded_book" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/lineItemNameLabelDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_marginEnd="@dimen/dimen_10dp"
+                android:layout_gravity="center_vertical"
+                android:paddingStart="@dimen/dimen_22dp"
+                android:paddingEnd="@dimen/dimen_22dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_13"
+                android:background="@drawable/round_border_button_bg"
+                tools:text="Details"
+                app:customAssetFont="gotham_rounded_medium" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/lineItemAmountLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_20dp"
+                android:textAlignment="textEnd"
+                android:textColor="@color/textview_default_textcolor"
+                android:textSize="@dimen/text_size_17"
+                tools:text="$999.99"
+                app:customAssetFont="gotham_rounded_medium" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginBottom="3dp"
+            android:background="@color/divider_color" />
+    </LinearLayout>
+</LinearLayout>

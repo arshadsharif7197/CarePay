@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+
+    <include
+        android:id="@+id/toolbar_layout"
+        layout="@layout/toolbar_responsibility" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="@dimen/dimen_33dp">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/soft_sky"
+            android:textSize="@dimen/text_size_16"
+            app:customAssetFont="gotham_rounded_book"
+            breeze:textKey="payment_chooce_method"
+            tools:text="Choose your payment method" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/prepaymentAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_15dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_60"
+            app:customAssetFont="gotham_rounded_medium"
+            tools:text="$49.00" />
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/paymentMethodFragmentProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-8dp"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@+id/list_payment_types"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:layout_weight="3"
+        android:background="@color/white"
+        android:choiceMode="singleChoice"
+        android:padding="@dimen/payment_method_parent_layout_padding"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/dimen_10dp">
+
+        <!--Android Pay-->
+        <FrameLayout
+            android:id="@+id/dynamic_wallet_button_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_10dp"
+            android:visibility="gone"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/createPaymentPlanButton"
+            style="@style/BreezeButtonStyleDark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_blue_border_selector"
+            android:textColor="@color/primary_white_enabled_selector"
+            android:layout_margin="@dimen/dimen_10dp"
+            app:customAssetFont="gotham_rounded_medium"
+            android:visibility="gone"/>
+    </LinearLayout>
+</LinearLayout>

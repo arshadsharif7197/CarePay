@@ -1,0 +1,134 @@
+#!/bin/bash
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+red=$(tput setaf 1)
+reset=$(tput sgr0)
+
+COMMIT_RANGE=$(echo $TRAVIS_COMMIT_RANGE | sed 's/\.\.\./\.\./g')
+COMMIT_MESSAGES=$(echo $(git log $COMMIT_RANGE --pretty=format:%s))
+
+DEPLOY_SCRIPT=$1
+
+shopt -s nocasematch
+#####################################################################################
+########## CHECKS TO SEE IF BUILD IS TRIGGERED FROM PULL REQUEST ####################
+##########  IF IT IS NOT IT CHECKS BRANCH TO BUILD SPECIFIC APK  ####################
+#####################################################################################
+if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "development" ]]; then
+    echo "${green}*** DELETING DEVELOPMENT APKS FROM AWS ***${reset}"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 rm s3://automation-zeus --recursive --exclude "*" --include "*development*"
+
+    echo "${green}*** BUILDING DEVELOPMENT PRACTICE APK ***${reset}"
+    ./gradlew :CarePayPracticeTablet:assembleDevelopment --profile --configure-on-demand
+
+    PRACTICE_APP=$(echo $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk/$(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk/ | grep -i '.*practice.*release.*\.apk') )
+
+    echo "${green}*** DEPLOYING DEVELOPMENT PRACTICE APK TO AWS ***${reset}"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk s3://automation-zeus/ --recursive
+
+    echo "${green}*** BUILDING DEVELOPMENT PATIENT APK ***${reset}"
+    ./gradlew :CarePayPatient:assembleDevelopment --profile --configure-on-demand
+
+    PATIENT_APP=$(echo $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/$(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/ | grep -i '.*patient.*release.*\.apk') )
+
+    echo "${green}*** DEPLOYING DEVELOPMENT PATIENT APK TO AWS ***${reset}"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk s3://automation-zeus/ --recursive
+
+elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "QA" ]]; then
+
+    echo "${green}*** DELETING QA APKS FROM AWS ***${reset}"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 rm s3://automation-zeus --recursive --exclude "*" --include "*qa*"
+
+    echo "${green}*** BUILDING QA PRACTICE APK ***${reset}"
+    ./gradlew :CarePayPracticeTablet:assembleQa --profile --configure-on-demand
+
+    echo "${green}*** DEPLOYING QA PRACTICE APK TO AWS ***${reset}"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk s3://automation-zeus/ --recursive
+
+    echo "${green}*** BUILDING QA PATIENT APK ***${reset}"
+    ./gradlew :CarePayPatient:assembleQa --profile --configure-on-demand
+
+    echo "${green}*** DEPLOYING QA PATIENT APK TO AWS ***${reset}"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk s3://automation-zeus/ --recursive
+
+elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "Staging" ]]; then
+
+    echo "${green}*** DELETING STAGING APKS FROM AWS ***${reset}"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 rm s3://automation-zeus --recursive --exclude "*" --include "*staging*"
+
+    echo "${green}*** BUILDING STAGING PRACTICE APK ***${reset}"
+    ./gradlew :CarePayPracticeTablet:assembleStaging --profile --configure-on-demand
+
+    echo "${green}*** DEPLOYING STAGING PRACTICE APKS TO AWS ***${reset}"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk s3://automation-zeus/ --recursive
+
+    echo "${green}*** BUILDING STAGING PATIENT APK ***${reset}"
+    ./gradlew :CarePayPatient:assembleStaging --profile --configure-on-demand
+
+    echo "${green}*** DEPLOYING STAGING PATIENT APKS TO AWS ***${reset}"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk s3://automation-zeus/ --recursive
+
+elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "master" ]]; then
+
+    echo "${green}*** DELETING PRODUCTION APKS FROM AWS ***${reset}"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 rm s3://automation-zeus --recursive --exclude "*" --include "*production*"
+
+    echo "${green}*** BUILDING PRODUCTION PRACTICE APK ***${reset}"
+    ./gradlew :CarePayPracticeTablet:assembleProduction --profile --configure-on-demand
+
+    echo "${green}*** DEPLOYING PRODUCTION PRACTICE APK TO AWS ***${reset}"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk s3://automation-zeus/ --recursive
+    echo "${green}*** BUILDING PRODUCTION PATIENT APK ***${reset}"
+    ./gradlew :CarePayPatient:assembleProduction --profile --configure-on-demand
+
+    echo "${green}*** DEPLOYING PRODUCTION PATIENT APK TO AWS ***${reset}"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk s3://automation-zeus/ --recursive
+fi
+
+#####################################################################################
+##########              CHECKS COMMIT MESSAGE FOR VERSION OF APP             ########
+##########  EXAMPLE "PRACTICEAPP" OR "PATIENTAPP" AND COMPILES THAT PROJECT  ########
+#####################################################################################
+if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [[ "$COMMIT_MESSAGES" =~ clover.*app ]]; then
+    echo "${yellow}*** Skipping APK Build ***${reset}"
+    echo "${green}*** Clover App Compile Check ***${reset}"
+    ./gradlew :CarePayPracticeClover:compileProductionReleaseSources --profile --configure-on-demand
+    echo "${green}*** Patient App Compile Check ***${reset}"
+    ./gradlew :CarePayPatient:compileProductionReleaseSources --profile --configure-on-demand
+    echo "${green}*** Practice App Compile Check ***${reset}"
+    ./gradlew :CarePayPracticeTablet:compileProductionReleaseSources --profile --configure-on-demand
+elif [ "$TRAVIS_PULL_REQUEST" != "false" ] && [[ "$COMMIT_MESSAGES" =~ carepay ]]; then
+    echo "${yellow}*** Skipping APK Build ***${reset}"
+    echo "${yellow}*** Skipping Compile Check ***${reset}"
+elif [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+    echo "${yellow}*** Skipping APK Build ***${reset}"
+    echo "${green}*** Practice App Compile Check ***${reset}"
+    ./gradlew :CarePayPracticeTablet:compileProductionReleaseSources --profile --configure-on-demand
+    echo "${green}*** Patient App Compile Check ***${reset}"
+    ./gradlew :CarePayPatient:compileProductionReleaseSources --profile --configure-on-demand
+fi
+
+
+########### TEST FAIRY DEPLOY ###########
+if [[ $DEPLOY_SCRIPT == "testfairy" ]]; then
+    echo "${green}*** Deploying via TestFairy ***${reset}"
+
+    if [[ $PATIENT_APP ]]; then
+        echo "${green}*** Deploy Patient App Build ***${reset}"
+        chmod +x ./$DEPLOY_SCRIPT
+        ./$DEPLOY_SCRIPT $PATIENT_APP
+    else
+        echo
+        echo "${red}*** No Patient App Build to Deploy ***${reset}"
+    fi
+
+    if [[ $PRACTICE_APP ]]; then
+        echo "${green}*** Deploy Practice App Build ***${reset}"
+        chmod +x ./$DEPLOY_SCRIPT
+        ./$DEPLOY_SCRIPT $PRACTICE_APP
+    else
+        echo
+        echo "${red}*** No Practice App Build to Deploy ***${reset}"
+    fi
+fi
+#########################################

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppThemePractice" parent="@style/AppThemeNoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="android:overScrollMode">never</item>
+        <item name="android:textViewStyle">@style/DefaultTextViewStyle</item>
+
+        <!-- Hint color and labelMeta color in FALSE state -->
+        <item name="android:textColorHint">@color/payne_gray
+        </item> <!-- hint color when no focus -->
+
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorControlNormal">@color/light_gray
+        </item> <!-- color of the underlying bar when no focus -->
+        <item name="colorControlActivated">@color/light_gray</item>
+    </style>
+
+    <style name="PracticeModeActivity" parent="AppThemePractice">
+        <item name="practiceBackgroundColor">@color/practice_mode_background</item>
+        <item name="practiceActionBarColor">@color/practice_mode_action_bar</item>
+        <item name="practiceLogoDrawable">@drawable/breeze_logo_dark</item>
+        <item name="newsBackgroundColor">@drawable/news_background_practice_color</item>
+        <item name="homeButtonSelector">@drawable/home_button_selector_top_right</item>
+    </style>
+
+    <style name="PatientModeActivity" parent="AppThemePractice">
+        <item name="practiceBackgroundColor">@drawable/screen_background</item>
+        <item name="practiceActionBarColor">@color/patient_mode_action_bar</item>
+        <item name="practiceLogoDrawable">@drawable/breeze_logo</item>
+        <item name="newsBackgroundColor">@drawable/news_background_patient_color</item>
+        <item name="homeButtonSelector">@drawable/home_button_selector</item>
+    </style>
+
+    <style name="ChangeModeDialogOptions">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/home_alert_font_size</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Theme.MyDialog" parent="@style/Theme.AppCompat.Light.Dialog">
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!-- Home Screen -->
+    <style name="HomeScreenAlertStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/home_alert_font_size</item>
+    </style>
+
+    <style name="HomeButtonTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">bottom|center_horizontal</item>
+        <item name="android:textColor">@color/home_button_text_selector</item>
+        <item name="android:textSize">@dimen/home_button_font_size</item>
+    </style>
+
+    <style name="HomeButtonIconStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">bottom|center_horizontal</item>
+    </style>
+
+    <style name="HomeSpinnerItemStyle">
+        <item name="android:textSize">@dimen/home_alert_font_size</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!-- Checkin styles -->
+
+    <style name="ProgressDialogFullscreenWithTitlebar" parent="android:Theme.Translucent.NoTitleBar.Fullscreen">
+        <item name="keepStatusBar">false</item>
+    </style>
+
+    <style name="PaymentPlanButtonStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingBottom">@dimen/dimen_14dp</item>
+        <item name="android:paddingTop">@dimen/dimen_14dp</item>
+        <item name="android:textColor">@drawable/text_color</item>
+        <item name="android:textSize">@dimen/text_size_22sp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="android:editTextColor">@color/textview_default_textcolor</item>
+        <item name="android:textColorHint">@color/textview_default_textcolor</item>
+        <item name="android:textColor">@color/textview_default_textcolor</item>
+
+    </style>
+
+    <style name="DemographicsReviewEditTextStyle" parent="SigninSignupEditStyle">
+        <item name="android:paddingStart">@dimen/dimen_5dp</item>
+        <item name="android:textSize">@dimen/text_size_24sp</item>
+        <item name="android:textColorHint">@color/pastel_blue</item>
+    </style>
+
+    <style name="DemographicsReviewLabelStyle" parent="DemographicsDocsLabelStyle">
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:textSize">@dimen/text_size_24sp</item>
+    </style>
+
+    <style name="DemographicsReviewClickableStyle" parent="DemographicsDocsClickableTextStyle">
+        <item name="android:layout_marginStart">0dp</item>
+        <item name="android:textSize">@dimen/text_size_17sp</item>
+        <item name="android:gravity">end</item>
+    </style>
+
+    <style name="DemographicsDocsButtonStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">@dimen/demographics_docs_button_text_size</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_marginStart">14dp</item>
+        <item name="android:background">@drawable/button_scan_card</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+</resources>

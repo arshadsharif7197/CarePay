@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/demographicsReviewRootLayout"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_margin="0dp"
+              android:background="@color/white"
+              android:descendantFocusability="beforeDescendants"
+              android:focusable="true"
+              android:focusableInTouchMode="true"
+              android:orientation="vertical"
+              android:padding="0dp">
+
+    <ScrollView
+        android:id="@+id/adddemoScrollview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/demographics_address_bottom_margin"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_weight="1"
+        android:padding="0dp">
+
+        <LinearLayout
+            android:id="@+id/adddemoLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:orientation="vertical"
+            android:padding="0dp">
+
+
+            <RelativeLayout
+                android:id="@+id/chknin_profile_image_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_300dp"
+                android:layout_margin="0dp"
+                android:padding="0dp">
+
+                <LinearLayout
+                    android:id="@+id/headerLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="@dimen/dimen_20dp"
+                    android:layout_marginRight="@dimen/dimen_20dp"
+                    android:alpha="0.9"
+                    android:background="@drawable/bottom_rounded_background_gray"
+                    android:gravity="left"
+                    android:orientation="horizontal"
+                    android:paddingStart="0dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/apt_popup_icon_margin"
+                        android:src="@drawable/icn_notification_basic" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                    >
+                    <TextView
+                        android:id="@+id/reviewtitle"
+                        style="@style/DemographicsFragmentsHeadingStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:gravity="left"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/reviewSubtitle"
+                        style="@style/DemographicsFragmentsSubHeadingStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="0dp"
+                        android:gravity="left"
+                        android:textColor="@color/white" />
+                    </LinearLayout>
+                </LinearLayout>
+
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/headerLayout"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/dimen_20dp"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:id="@+id/patientPicImageView"
+                        android:layout_width="@dimen/dimen_88dp"
+                        android:layout_height="@dimen/dimen_88dp"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/icn_placeholder_user_profile"/>
+
+                    <Button
+                        android:id="@+id/updateProfileImageButton"
+                        style="@style/DemographicsDocsButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:paddingLeft="@dimen/dimen_10dp"
+                        android:paddingRight="@dimen/dimen_10dp"
+                        />
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_36dp"
+                android:layout_marginRight="@dimen/dimen_36dp"
+                android:orientation="vertical">
+                <include layout="@layout/fragment_review_demographic_personal" />
+
+                <FrameLayout
+                    android:id="@+id/documentCapturer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="0dp"
+                    android:padding="0dp"/>
+
+                <include layout="@layout/fragment_review_demographic_demographics" />
+
+                <include layout="@layout/fragment_review_demographic_address" />
+
+                <FrameLayout
+                    android:id="@+id/insuranceCapturer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="0dp"
+                    android:padding="0dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimen_20dp">
+        <Button
+            android:id="@+id/buttonAddDemographicInfo"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:background="@drawable/language_button_selector"
+            android:gravity="center"
+            android:textColor="@color/white" />
+    </LinearLayout>
+</LinearLayout>

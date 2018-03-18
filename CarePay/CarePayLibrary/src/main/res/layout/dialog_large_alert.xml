@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:minWidth="@dimen/visit_type_list_height"
+    android:background="@color/transparent_apt"
+    android:layout_gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/dialogCloseImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/apt_imgview_ht"
+        android:layout_gravity="left"
+        android:layout_marginBottom="@dimen/apt_dl_margin_bottom"
+        android:gravity="left"
+        android:src="@drawable/icn_patient_mode_nav_close"
+        android:text="@string/close"
+        android:textColor="@color/white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/dialog_background"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/headerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/largealert_height"
+            android:background="@drawable/large_alert_dialog_header_bg"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/headerIconImageView"
+                android:layout_width="@dimen/payment_header_icon_size"
+                android:layout_height="@dimen/payment_header_icon_size" />
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                app:customAssetFont="proxima_nova_semi_bold"
+                android:id="@+id/largeMssageLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/payment_header_top_margin" />
+        </LinearLayout>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/actionButton"
+            style="@style/ResponsButtonStyle"
+            android:layout_margin="@dimen/payment_side_margin"
+            android:background="@drawable/button_blue_border"
+            android:textColor="@color/colorPrimary"
+            app:customAssetFont="proxima_nova_semi_bold"/>
+    </LinearLayout>
+</LinearLayout>

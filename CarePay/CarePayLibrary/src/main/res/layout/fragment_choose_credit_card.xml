@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar_layout"
+        layout="@layout/toolbar_responsibility" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/payment_method_parent_layout_padding">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list_credit_cards"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/nextButton"
+            android:choiceMode="singleChoice"
+            android:visibility="visible" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/addNewCardButton"
+            style="@style/BreezeButtonStyleDark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
+            android:background="@drawable/button_blue_border"
+            android:textColor="@color/colorPrimary"
+            android:textAllCaps="true"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="payment_add_new_credit_card_button" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/nextButton"
+            style="@style/BreezeButtonStyleDark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/addNewCardButton"
+            android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
+            android:background="@drawable/button_selector_green"
+            android:textAllCaps="true"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="demographics_pay_button_text" />
+    </RelativeLayout>
+
+</LinearLayout>

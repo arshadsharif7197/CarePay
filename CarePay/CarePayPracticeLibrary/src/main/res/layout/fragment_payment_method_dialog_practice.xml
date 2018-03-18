@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/closeViewLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/button_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/dialog_button_bg" />
+
+            <ImageView
+                android:id="@+id/cancel_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/icn_arrow_left" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="@dimen/dialog_width"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dimen_26dp"
+        android:layout_marginStart="@dimen/dimen_26dp"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/patient_mode_dialog_header_bg"
+            android:padding="@dimen/dimen_10dp">
+
+            <include
+                android:id="@+id/toolbar_layout"
+                layout="@layout/toolbar_responsibility" />
+
+        </FrameLayout>
+
+        <ProgressBar
+            android:id="@+id/paymentMethodFragmentProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-8dp"
+            android:indeterminate="true"
+            android:visibility="gone" />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_1dp"
+            android:background="@color/dark_gray"
+            android:paddingRight="2dp" />
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="@dimen/list_dialog_min_height_small"
+            android:background="@color/white"
+            android:paddingTop="@dimen/dimen_20dp">
+
+            <ListView
+                android:id="@+id/list_payment_types"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:layout_marginEnd="@dimen/dimen_20dp"
+                android:layout_marginStart="@dimen/dimen_20dp"
+                android:elevation="17dp"
+                android:padding="@dimen/payment_method_parent_layout_padding"
+                android:visibility="visible" />
+
+        </FrameLayout>
+
+
+        <!--Android Pay-->
+        <FrameLayout
+            android:id="@+id/dynamic_wallet_button_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/buttonLayout"
+            android:background="@color/white"
+            android:paddingTop="@dimen/payment_method_layout_checkbox_margin" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_1dp"
+            android:background="@color/dark_gray"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:padding="@dimen/dimen_15dp"
+            android:visibility="gone">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/createPaymentPlanButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_5dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_blue_border_selector"
+                android:textAllCaps="false"
+                android:textColor="@color/primary_color_enabled_selector"
+                android:textSize="@dimen/text_size_22"
+                android:visibility="gone"
+                app:customAssetFont="gotham_rounded_medium" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/patient_mode_dialog_body_bg"
+            android:padding="@dimen/dimen_10dp">
+
+            <FrameLayout
+                android:id="@+id/swipeCreditCardNowLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                    android:id="@+id/swipeCreditCarNowButton"
+                    style="@style/BreezeButtonStyleDark"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dimen_10dp"
+                    android:background="@drawable/emerald_rounded_button_selector"
+                    breeze:textKey="payment_clover_swipe_now_button_label"
+                    app:customAssetFont="gotham_rounded_medium" />
+
+            </FrameLayout>
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/search_content"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/dialog_button_bg" />
+
+    </LinearLayout>
+
+</LinearLayout>

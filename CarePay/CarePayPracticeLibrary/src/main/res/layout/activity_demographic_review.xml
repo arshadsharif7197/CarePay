@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:id="@+id/activity_patient_mode_checkin"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="@dimen/dimen_10dp">
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_3dp"
+            android:layout_alignEnd="@+id/progress_layout"
+            android:layout_alignStart="@+id/progress_layout"
+            android:layout_marginEnd="@dimen/dimen_44dp"
+            android:layout_marginStart="@dimen/dimen_44dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:background="@color/light_gray" />
+
+
+        <LinearLayout
+            android:id="@+id/progress_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal">
+
+            <include
+                android:id="@+id/checkin_flow_demographics"
+                layout="@layout/item_checkin_flow" />
+
+            <include
+                android:id="@+id/checkin_flow_consent"
+                layout="@layout/item_checkin_flow" />
+
+            <include
+                android:id="@+id/checkin_flow_medications"
+                layout="@layout/item_checkin_flow" />
+
+            <include
+                android:id="@+id/checkin_flow_intake"
+                layout="@layout/item_checkin_flow" />
+
+            <include
+                android:id="@+id/checkin_flow_payment"
+                layout="@layout/item_checkin_flow" />
+
+
+        </LinearLayout>
+
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/checkinHomeClickable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/bg_blue_border"
+            android:contentDescription="@string/content_description_check_in_home"
+            android:minHeight="@dimen/dimen_10dp"
+            android:padding="@dimen/dimen_10dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_16sp"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="demographics_exit" />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/root_layout"
+        style="@style/CheckinContainerStyle"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    </FrameLayout>
+
+</LinearLayout>

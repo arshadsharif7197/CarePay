@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Default dimens which will be use for any default styling  -->
+    <dimen name="dimen_1dp">1dp</dimen>
+    <dimen name="dimen_3dp">3dp</dimen>
+    <dimen name="dimen_4dp">4dp</dimen>
+    <dimen name="dimen_5dp">5dp</dimen>
+    <dimen name="dimen_8dp">8dp</dimen>
+    <dimen name="dimen_9dp">9dp</dimen>
+    <dimen name="dimen_10dp">10dp</dimen>
+    <dimen name="dimen_12dp">12dp</dimen>
+    <dimen name="dimen_13dp">13dp</dimen>
+    <dimen name="dimen_14dp">14dp</dimen>
+    <dimen name="dimen_15dp">15dp</dimen>
+    <dimen name="dimen_16dp">16dp</dimen>
+    <dimen name="dimen_17dp">17dp</dimen>
+    <dimen name="dimen_18dp">18dp</dimen>
+    <dimen name="dimen_19dp">19dp</dimen>
+    <dimen name="dimen_20dp">20dp</dimen>
+    <dimen name="dimen_21dp">21dp</dimen>
+    <dimen name="dimen_22dp">22dp</dimen>
+    <dimen name="dimen_24dp">24dp</dimen>
+    <dimen name="dimen_25dp">25dp</dimen>
+    <dimen name="dimen_26dp">26dp</dimen>
+    <dimen name="dimen_30dp">30dp</dimen>
+    <dimen name="dimen_33dp">33dp</dimen>
+    <dimen name="dimen_36dp">36dp</dimen>
+    <dimen name="dimen_40dp">40dp</dimen>
+    <dimen name="dimen_42dp">42dp</dimen>
+    <dimen name="dimen_48dp">48dp</dimen>
+    <dimen name="dimen_60dp">60dp</dimen>
+    <dimen name="dimen_70dp">70dp</dimen>
+    <dimen name="dimen_80dp">80dp</dimen>
+    <dimen name="dimen_88dp">88dp</dimen>
+    <dimen name="dimen_100dp">100dp</dimen>
+    <dimen name="dimen_110dp">110dp</dimen>
+    <dimen name="dimen_114dp">114dp</dimen>
+    <dimen name="dimen_120dp">120dp</dimen>
+    <dimen name="dimen_130dp">130dp</dimen>
+    <dimen name="dimen_138dp">138dp</dimen>
+    <dimen name="dimen_150dp">150dp</dimen>
+    <dimen name="dimen_160dp">160dp</dimen>
+    <dimen name="dimen_164dp">164dp</dimen>
+    <dimen name="dimen_200dp">200dp</dimen>
+    <dimen name="dimen_220dp">220dp</dimen>
+    <dimen name="dimen_230dp">230dp</dimen>
+    <dimen name="dimen_300dp">300dp</dimen>
+    <dimen name="dimen_500dp">500dp</dimen>
+    <dimen name="dimen_400dp">400dp</dimen>
+    <dimen name="dimen_370dp">370dp</dimen>
+    <dimen name="dimen_390dp">390dp</dimen>
+    <dimen name="dimen_minus_5dp">-5dp</dimen>
+
+    <dimen name="text_size_9sp">9sp</dimen>
+    <dimen name="text_size_11">11sp</dimen>
+    <dimen name="text_size_12sp">12sp</dimen>
+    <dimen name="text_size_13">13sp</dimen>
+    <dimen name="text_size_14">14sp</dimen>
+    <dimen name="text_size_15">15sp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
+    <dimen name="text_size_17">17sp</dimen>
+    <dimen name="text_size_18sp">18sp</dimen>
+    <dimen name="text_size_19sp">19sp</dimen>
+    <dimen name="text_size_20sp">20sp</dimen>
+    <dimen name="text_size_20">20sp</dimen>
+    <dimen name="text_size_21">21sp</dimen>
+    <dimen name="text_size_22">22sp</dimen>
+    <dimen name="text_size_22sp">22sp</dimen>
+    <dimen name="text_size_24sp">24sp</dimen>
+    <dimen name="text_size_26sp">26sp</dimen>
+    <dimen name="text_size_30">30sp</dimen>
+    <dimen name="text_size_34sp">34sp</dimen>
+    <dimen name="text_size_36sp">36sp</dimen>
+    <dimen name="text_size_38">38sp</dimen>
+    <dimen name="text_size_60">60sp</dimen>
+
+    <dimen name="textview_default_textsize">17sp</dimen>
+    <dimen name="button_textsize_medium">15sp</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="edit_padding_15">15dp</dimen>
+
+
+    <!-- Select lannguage -->
+    <dimen name="language_text_left_margin">14dp</dimen>
+    <dimen name="language_card_height">52dp</dimen>
+    <dimen name="language_radiobutton">22dp</dimen>
+    <dimen name="langugae_recycleviewpadding">17dp</dimen>
+    <dimen name="language_row_margin">15dp</dimen>
+    <dimen name="language_footer_margin_top">29dp</dimen>
+    <dimen name="language_button_leftright">17dp</dimen>
+    <dimen name="language_button_topbottom">14dp</dimen>
+    <dimen name="language_body_margintop">26dp</dimen>
+    <dimen name="language_radio_image_rightmargin">10dp</dimen>
+    <dimen name="top_bottom_scroll_padding">4dp</dimen>
+
+    <!-- sign in screen -->
+    <dimen name="error_textsize">10sp</dimen>
+    <dimen name="textview_size">15sp</dimen>
+    <dimen name="signin_layout_padding">16dp</dimen>
+
+    <!-- sign up screen -->
+    <dimen name="signup_button_textsize">13sp</dimen>
+    <dimen name="signup_textview_existing_account_size">15sp</dimen>
+    <dimen name="signup_bottom_margin">10dp</dimen>
+    <dimen name="signup_top_margin_edit_container">26dp</dimen>
+    <dimen name="signup_clickable_textview_height">55dp</dimen>
+    <dimen name="signup_details_container_height">360dp</dimen>
+    <dimen name="signup_optional_label_text_size">10.0sp</dimen>
+    <dimen name="signup_optional_label_margin_left_right">13dp</dimen>
+    <dimen name="sign_up_margin_top">17dp</dimen>
+
+    <!-- Responsibility -->
+    <dimen name="respons_total_label_text_size">21sp</dimen>
+    <dimen name="respons_total_text_size">53dp</dimen>
+    <dimen name="respons_detail_label_text_size">17sp</dimen>
+    <dimen name="respons_detail_til_label_text_size">10sp</dimen>
+    <dimen name="respons_detail_text_size">14sp</dimen>
+    <dimen name="respons_button_text_size">15sp</dimen>
+    <dimen name="respons_toolbar_title_text_size">20sp</dimen>
+    <dimen name="respons_detail_margin_bottom">15dp</dimen>
+    <dimen name="respons_detail_left_right_margin">30dp</dimen>
+    <dimen name="respons_toolbar_elevation">7dp</dimen>
+    <dimen name="respons_button_margin_left_right">17dp</dimen>
+    <dimen name="dialog_header_height">205dp</dimen>
+    <dimen name="dialog_profile_pic_size">88dp</dimen>
+    <dimen name="dialog_width">300dp</dimen>
+    <dimen name="dialog_height">672dp</dimen>
+
+    <!-- Demographics Documents -->
+    <dimen name="demographics_docs_header_top">26dp</dimen>
+    <dimen name="demographics_docs_button_text_size">13sp</dimen>
+    <dimen name="demographics_docs_header_left_right_margin">17dp</dimen>
+    <dimen name="demographics_docs_text_left_margin">14dp</dimen>
+    <dimen name="demographics_docs_text_right_margin">14dp</dimen>
+    <dimen name="demographics_docs_header_top_margin">17dp</dimen>
+    <dimen name="demographics_docs_section_margin_top">36dp</dimen>
+    <dimen name="demographics_docs_section_patient_margin_top">12dp</dimen>
+    <dimen name="demographics_docs_image_button_container_height">60dp</dimen>
+    <dimen name="demographics_docs_image_button_container_margin_top">30dp</dimen>
+    <dimen name="demographics_docs_header_title_text_size" format="float" type="dimen">21.0sp
+    </dimen>
+    <dimen name="demographics_docs_number_text_size" format="float" type="dimen">17.0sp</dimen>
+    <dimen name="demographics_docs_clickable_text_size" format="float" type="dimen">14.0sp</dimen>
+    <dimen name="demographics_docs_section_container_margin_top">25dp</dimen>
+    <dimen name="demographics_docs_thumbnail_width">100dp</dimen>
+    <dimen name="demographics_docs_thumbnail_height">60dp</dimen>
+    <dimen name="demogr_details_margin_top_detials_container">25dp</dimen>
+    <dimen name="demographics_address_bottom_margin">20dp</dimen>
+    <dimen name="demographics_allergy_padding_between_label_and_text">16dp</dimen>
+    <dimen name="demographics_docs_label_margin_top">15dp</dimen>
+
+    <!-- Demographics Address -->
+    <dimen name="divider_margin_top">8dp</dimen>
+    <dimen name="divider_margin_bottom">2dp</dimen>
+    <dimen name="demo_view_height">1dp</dimen>
+    <dimen name="demo_scorllview_margin_top">25dp</dimen>
+    <dimen name="demo_scorllview_margin_right_left">17dp</dimen>
+
+    <!-- Demographics Details -->
+    <dimen name="demogr_details_section_top_margin">10dp</dimen>
+    <dimen name="demogr_details_require_hint_left_margin">10dp</dimen>
+    <dimen name="demogr_details_add_optional_item_top">22dp</dimen>
+    <dimen name="demogr_details_container_top">15dp</dimen>
+    <dimen name="demogr_details_container_bottom">14dp</dimen>
+    <dimen name="view_allergy_margin_bottom">5dp</dimen>
+    <dimen name="demogr_details_padding_start_edit">28dp</dimen>
+    <dimen name="demogr_details_unlisted_text_size">16sp</dimen>
+    <dimen name="demographics_add_padding">0dp</dimen>
+
+    <!-- Appointments-->
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="item_layout_height">82dp</dimen>
+    <dimen name="layout_margin">10dp</dimen>
+    <dimen name="textview_textsize">14sp</dimen>
+    <dimen name="textview_margin">9dp</dimen>
+    <dimen name="imageview_profile_ht_wdh">58dp</dimen>
+    <dimen name="demographicsAddMedInfoBtnBottomMargin">6dp</dimen>
+    <dimen name="list_apt_padding_right">17dp</dimen>
+    <dimen name="apt_imgview_ht">24dp</dimen>
+    <dimen name="apt_dl_margin_bottom">5dp</dimen>
+    <dimen name="apt_dl_header_ht">110dp</dimen>
+    <dimen name="apt_dl_text_ht">37dp</dimen>
+    <dimen name="apt_dl_text_big">20sp</dimen>
+    <dimen name="apt_dl_text_date">26sp</dimen>
+    <dimen name="apt_dl_margin">20dp</dimen>
+    <dimen name="apt_dialog_appoint_dail_margin">3dp</dimen>
+    <dimen name="apt_dl_btn_check_ht">48dp</dimen>
+    <dimen name="apt_dl_appt_date_margin">16dp</dimen>
+    <dimen name="apt_dl_appt_time_margin">10dp</dimen>
+    <dimen name="apt_dl_appt_shortname_margin">-30dp</dimen>
+    <dimen name="apt_dl_textview_size">15sp</dimen>
+    <dimen name="apt_dl_image_ht_wdh">60dp</dimen>
+    <dimen name="apt_dl_image_radius">30dp</dimen>
+    <dimen name="apt_dl_image_elevation">12dp</dimen>
+    <dimen name="apt_dl_zero_ht_wdh">0dp</dimen>
+    <dimen name="apt_dl_boader_ht">2dp</dimen>
+    <dimen name="apt_dl_btn_width">133dp</dimen>
+    <dimen name="apt_dl_btn_txt_size">13sp</dimen>
+    <dimen name="apt_dl_btn_texxt_pd">4dp</dimen>
+    <dimen name="apt_dl_btn_margin">20dp</dimen>
+    <dimen name="apt_lst_view_ht">0.8px</dimen>
+    <dimen name="apt_lst_img_elevation">1dp</dimen>
+    <dimen name="apt_dl_view_margin">15dp</dimen>
+    <dimen name="apt_list_upcoming_date_txt_size">22sp</dimen>
+    <dimen name="apt_list_upcoming_month_txt_size">12sp</dimen>
+    <dimen name="apt_list_missing_txt_size">10sp</dimen>
+
+    <!--<review screen dimen>-->
+    <dimen name="review_screen_left_margin">17dp</dimen>
+    <dimen name="review_screen_right_margin">17dp</dimen>
+    <dimen name="review_textview_leftmargin">12dp</dimen>
+    <dimen name="review_texviewmargin_top">2.5dp</dimen>
+    <dimen name="review_lablemargintop">9dp</dimen>
+    <dimen name="review_section_header">36dp</dimen>
+    <dimen name="review_default_heaight">51dp</dimen>
+    <dimen name="review_center_margin_top_bottom">15dp</dimen>
+    <dimen name="review_header_lablemargin_top">27dp</dimen>
+    <dimen name="review_section_header_textsize">14sp</dimen>
+    <dimen name="review_textlable_textsize">10sp</dimen>
+    <dimen name="review_textview_textsize">17sp</dimen>
+    <dimen name="review_viewmargin_top">7.5dp</dimen>
+    <dimen name="review_subtitlemargin">43dp</dimen>
+
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
+    <dimen name="nav_image_padding">6dp</dimen>
+
+    <dimen name="marginleftright">17dp</dimen>
+    <dimen name="margintop">20dp</dimen>
+    <dimen name="consent_top">20dp</dimen>
+    <dimen name="sig_pad">208dp</dimen>
+    <dimen name="sig_txt">12sp</dimen>
+    <dimen name="btn_hght">68dp</dimen>
+    <dimen name="btn_width">31dp</dimen>
+    <dimen name="sigtxt_hgt">60dp</dimen>
+    <dimen name="rounded">8dp</dimen>
+
+
+    <!-- consent_forms -->
+    <dimen name="consent_layout_left_right_margin">15dp</dimen>
+    <dimen name="consent_spinner_left_margin">70dp</dimen>
+    <dimen name="consent_gender_left_margin">50dp</dimen>
+    <dimen name="consent_minor_textsize">17sp</dimen>
+    <dimen name="consent_minor_info_textsize">14sp</dimen>
+    <dimen name="consent_Contentview_textSize">18sp</dimen>
+    <dimen name="consent_view_margin_top_bottom">10dp</dimen>
+    <dimen name="date_textview_top_bottom">42dp</dimen>
+    <dimen name="consentform_relativeLayout_margin">3dp</dimen>
+    <dimen name="consentform_realtivelayout_textpaddingtop">18dp</dimen>
+    <dimen name="consentform_textinput_margintop">5dp</dimen>
+
+
+    <!-- InTake -->
+    <dimen name="intakeDotPadding">8dp</dimen>
+    <dimen name="intakeDottedProgressHeight">30dp</dimen>
+    <dimen name="intakeDotWidth">4dp</dimen>
+    <dimen name="intakeDotHeight">4dp</dimen>
+    <dimen name="intakeNextButtonContainerHeight">74dp</dimen>
+    <dimen name="intakeTitleTopMargin">42dp</dimen>
+    <dimen name="intakeQuestionStartEndMargin">15dp</dimen>
+    <dimen name="intakeTitleTextSize" format="float" type="dimen">21.0sp</dimen>
+    <dimen name="intakeCaptionTextSize">13sp</dimen>
+    <dimen name="intakeCaptionLeftRightMargin">40dp</dimen>
+
+    <dimen name="intake_medical_history_form_2_padding">17dp</dimen>
+    <dimen name="intake_radio_caption_margin">16dp</dimen>
+    <dimen name="intake_radio_margin">15dp</dimen>
+    <dimen name="intake_radio_caption_text_size">17sp</dimen>
+    <dimen name="intake_radio_option_text_size">14sp</dimen>
+
+    <!--Available hours-->
+    <dimen name="apt_available_hours_list_header_text">15sp</dimen>
+    <dimen name="apt_available_hours_list_row_text">17sp</dimen>
+    <dimen name="apt_available_locations_list_row_text">15sp</dimen>
+
+    <dimen name="apt_available_hours_list_header_padding_left">13dp</dimen>
+    <dimen name="apt_available_hours_list_header_padding_bottom">15dp</dimen>
+    <dimen name="apt_available_hours_list_row_padding">15dp</dimen>
+    <dimen name="apt_available_hours_list_padding">16dp</dimen>
+    <dimen name="apt_available_hours_list_header_padding_top">26dp</dimen>
+    <dimen name="apt_available_hours_date_picker_padding">18dp</dimen>
+
+    <dimen name="apt_popup_parent_padding">14dp</dimen>
+    <dimen name="apt_popup_icon_margin">8dp</dimen>
+    <dimen name="apt_popup_message_margin">10dp</dimen>
+    <dimen name="apt_popup_message_text">18sp</dimen>
+    <dimen name="apt_popup_message_text_line_spacing">2sp</dimen>
+    <dimen name="apt_popup_button_text">13sp</dimen>
+    <dimen name="apt_popup_button_margin">6dp</dimen>
+    <dimen name="apt_popup_optional">10sp</dimen>
+
+    <!-- Cognito -->
+    <dimen name="activity_intra_group_separation">10dp</dimen>
+    <dimen name="activity_inter_group_separation">30dp</dimen>
+    <dimen name="activity_button_height">45dp</dimen>
+    <dimen name="activity_button_border">1dp</dimen>
+    <dimen name="activity_button_radius">2dp</dimen>
+    <dimen name="activity_button_text_size">20dp</dimen>
+    <dimen name="activity_text_height">40dp</dimen>
+    <dimen name="activity_text_border">1dp</dimen>
+    <dimen name="activity_text_radius">1dp</dimen>
+    <dimen name="activity_text_size_small">15dp</dimen>
+    <dimen name="activity_text_padding">10dp</dimen>
+    <dimen name="activity_separator_small">10dp</dimen>
+    <dimen name="action_bar_height">50dp</dimen>
+    <dimen name="action_bar_text">20dp</dimen>
+    <dimen name="activity_separation_large">150dp</dimen>
+
+    <!--Add Appointment-->
+    <dimen name="visit_type_dialog_width">510dp</dimen>
+    <dimen name="visit_type_list_height">360dp</dimen>
+    <dimen name="visit_type_dialog_padding">11dp</dimen>
+    <dimen name="visit_type_label_font">20sp</dimen>
+    <dimen name="visit_type_vertical_margin">9dp</dimen>
+    <dimen name="visit_type_horizontal_margin">13dp</dimen>
+    <dimen name="visit_type_button_font">14sp</dimen>
+
+    <dimen name="choose_provider_list_margin_top">8dp</dimen>
+    <dimen name="choose_provider_title_margin_top">26dp</dimen>
+    <dimen name="choose_provider_title_margin_start">17dp</dimen>
+    <dimen name="checked_in_label_font">14sp</dimen>
+    <dimen name="qr_code_header_text">22sp</dimen>
+    <dimen name="qr_code_header_text_padding">62dp</dimen>
+    <dimen name="apt_skicky_header_height">35dp</dimen>
+    <dimen name="optional_text_edit">-20dp</dimen>
+
+    <dimen name="checkin_main_panel_start_padding">30dp</dimen>
+    <dimen name="checkbox_padding_left_right">3dp</dimen>
+    <dimen name="checkbox_padding_top_bottom">3dp</dimen>
+    <dimen name="checkin_logo_height">46dp</dimen>
+    <dimen name="checkin_separator_width">116dp</dimen>
+
+    <dimen name="no_apt_place_holder_icon_margin_top">72dp</dimen>
+    <dimen name="no_apt_message_title_margin_top">23dp</dimen>
+    <dimen name="no_apt_message_title_margin_left">69dp</dimen>
+    <dimen name="no_apt_message_title_margin_right">68dp</dimen>
+    <dimen name="no_apt_message_desc_margin_top">5dp</dimen>
+    <dimen name="no_apt_message_desc_margin">32dp</dimen>
+
+    <!--add appointment calendar screen-->
+    <dimen name="add_apt_available_hours_edit_range_height">54dp</dimen>
+    <dimen name="add_apt_apply_date_range_height">52dp</dimen>
+    <dimen name="add_apt_calendar_selected_range_stroke">4dp</dimen>
+    <dimen name="add_apt_calendar_today_date_stroke">3dp</dimen>
+    <dimen name="add_apt_calendar_day_title_padding_top">10dp</dimen>
+    <dimen name="add_apt_calendar_day_title_padding_left">22dp</dimen>
+    <dimen name="add_apt_calendar_day_title_padding_left_pract">10dp</dimen>
+    <dimen name="add_apt_calendar_day_title_padding_right">10dp</dimen>
+    <dimen name="add_apt_calendar_day_title_padding_bottom">20dp</dimen>
+    <dimen name="add_apt_calendar_day_title_text_size">15sp</dimen>
+
+    <!-- Payment -->
+    <dimen name="payment_method_parent_layout_padding">17dp</dimen>
+    <dimen name="payment_method_layout_label_text_size">17sp</dimen>
+    <dimen name="payment_method_layout_label_drawable_padding">8dp</dimen>
+    <dimen name="payment_method_layout_label_margin_top">26dp</dimen>
+    <dimen name="payment_method_layout_checkbox_margin">13dp</dimen>
+    <dimen name="hint_floating_size">10dp</dimen>
+
+    <dimen name="input_text_layout_end_margin">14dp</dimen>
+    <dimen name="input_text_layout_start_margin">14dp</dimen>
+    <dimen name="payment_pick_date_label_text_size">14sp</dimen>
+
+
+    <!--Payment dialogs-->
+    <dimen name="payment_header_height">156dp</dimen>
+    <dimen name="payment_header_margin">17dp</dimen>
+    <dimen name="payment_header_top_margin">16dp</dimen>
+    <dimen name="payment_header_amount_size">60sp</dimen>
+    <dimen name="payment_side_margin">19dp</dimen>
+    <dimen name="payment_button_margin_top">20dp</dimen>
+    <dimen name="largealert_height">176dp</dimen>
+    <dimen name="payment_header_icon_size">77dp</dimen>
+    <dimen name="payment_amount_size">38sp</dimen>
+    <dimen name="payment_text_balance_size">17sp</dimen>
+    <dimen name="provider_margin_top">9dp</dimen>
+    <dimen name="addess_payment_margin_top">14dp</dimen>
+    <dimen name="payment_header_amount_month_size">20dp</dimen>
+    <dimen name="payment_option_section_margin">50dp</dimen>
+    <dimen name="payment_receipt_layout_margin">24dp</dimen>
+    <dimen name="payment_receipt_header_size">11sp</dimen>
+    <dimen name="payment_receipt_type_size">14sp</dimen>
+    <dimen name="payment_receipt_provider_size">20sp</dimen>
+    <dimen name="payment_receipt_margin">20dp</dimen>
+    <dimen name="payment_receipt_margin_top">12dp</dimen>
+    <dimen name="payment_receipt_margin_layout_top">48dp</dimen>
+    <dimen name="payment_receipt_margin_bottom">23dp</dimen>
+
+    <!--Cancel Appointment-->
+    <dimen name="cancel_appointment_button_padding">16dp</dimen>
+    <dimen name="cancel_reasons_dialog_height">490dp</dimen>
+    <dimen name="cancel_margin_top">26dp</dimen>
+    <dimen name="cancel_text_size">22sp</dimen>
+    <dimen name="cancel_radio_button_height">50dp</dimen>
+    <dimen name="cancel_radio_text_size">19sp</dimen>
+    <dimen name="cancel_edittext_size">16sp</dimen>
+    <dimen name="cancel_button_height">48dp</dimen>
+    <dimen name="demogr_onboard_allset_icon_margin_top">60dp</dimen>
+    <dimen name="demogr_onboard_button_margin_top">43dp</dimen>
+
+    <!--Payment Plan-->
+    <dimen name="payment_plan_month_day_width">55dp</dimen>
+    <dimen name="payment_plan_credit_card_font">16sp</dimen>
+    <dimen name="payment_plan_credit_card_button_font">14sp</dimen>
+
+    <!--Payment Receipt-->
+    <dimen name="payment_receipt_dialog_width">326dp</dimen>
+    <dimen name="payment_receipt_dialog_height">388dp</dimen>
+    <dimen name="payment_receipt_label_padding">14.5dp</dimen>
+
+    <!--Payment Details-->
+    <dimen name="payment_details_dialog_header_height">139dp</dimen>
+    <dimen name="payment_details_dialog_total_paid_view_height">110dp</dimen>
+    <dimen name="payment_details_dialog_icon_size">58dp</dimen>
+
+    <!--Android Pay-->
+    <dimen name="padding_tiny">2dp</dimen>
+    <dimen name="padding_small">5dp</dimen>
+    <dimen name="padding_large">10dp</dimen>
+    <dimen name="padding_xlarge">16dp</dimen>
+    <dimen name="margin_large">10dp</dimen>
+    <dimen name="margin_xlarge">30dp</dimen>
+    <dimen name="buy_button_width">300dp</dimen>
+    <dimen name="buy_button_height">40dp</dimen>
+    <dimen name="element_space">15dp</dimen>
+    <dimen name="button_confirm_height">58dp</dimen>
+
+    <dimen name="button_height">77dp</dimen>
+    <dimen name="button_width">66dp</dimen>
+    <dimen name="key_border_width">1dp</dimen>
+    <dimen name="button_padding">2dp</dimen>
+    <dimen name="button_margin_top">30dp</dimen>
+    <dimen name="pin_header_text_size">36sp</dimen>
+    <dimen name="pin_sub_header_text_size">22sp</dimen>
+    <dimen name="pin_sub_edit_text_size">50sp</dimen>
+    <dimen name="button_pin_text_size">38sp</dimen>
+    <dimen name="button_delete_key_width">40dp</dimen>
+    <dimen name="button_delete_key_height">27dp</dimen>
+    <dimen name="keypad_width">600dp</dimen>
+    <dimen name="keypad_height">700dp</dimen>
+
+    <dimen name="home_logo_width">174dp</dimen>
+    <dimen name="checkinNavBarOpenOffset">80dp</dimen>
+    <dimen name="signin_title_textsize">36sp</dimen>
+
+    <dimen name="list_dialog_min_height">400dp</dimen>
+    <dimen name="list_dialog_min_height_small">200dp</dimen>
+    <dimen name="checkin_complete_divider_width">350dp</dimen>
+    <dimen name="completeCheckInItemTextSize">22sp</dimen>
+    <dimen name="completeCheckInItemValueTextSize">16sp</dimen>
+    <dimen name="completeCheckInItemMargin">10dp</dimen>
+    <dimen name="dimen_50dp">50dp</dimen>
+    <dimen name="confirmationNumberTextSize">11sp</dimen>
+    <dimen name="icon_check_size">130dp</dimen>
+    <dimen name="confirmationPracticeNameMargin">20dp</dimen>
+    <dimen name="dimen_35dp">35dp</dimen>
+    <dimen name="dimen_38dp">38dp</dimen>
+
+</resources>

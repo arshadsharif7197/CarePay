@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/time_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimen_15dp"
+        android:textSize="@dimen/text_size_12sp"
+        android:textColor="@color/lightSlateGray"
+        tools:text="Yesterday, 10:17 AM"
+        app:customAssetFont="proxima_nova_semi_bold"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/dimen_5dp"
+        android:paddingBottom="@dimen/dimen_5dp"
+        android:paddingStart="@dimen/dimen_40dp"
+        android:paddingEnd="@dimen/dimen_5dp">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/time_stamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_5dp"
+            android:textSize="@dimen/text_size_12sp"
+            android:textColor="@color/lightSlateGray"
+            android:layout_gravity="end"
+            tools:text="10:17 AM"
+            app:customAssetFont="proxima_nova_regular"/>
+
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/message_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/message_sent_background"
+            android:padding="@dimen/dimen_10dp"
+            android:gravity="start"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_16"
+            tools:text="Hey. I'm sorry ... I was in the shower. I have 20 minutes to be at the shooting of the film Suicide Squad"
+            app:customAssetFont="proxima_nova_regular"/>
+
+    </LinearLayout>
+
+</LinearLayout>

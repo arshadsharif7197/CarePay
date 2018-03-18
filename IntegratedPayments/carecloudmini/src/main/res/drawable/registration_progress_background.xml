@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@android:id/background">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/progress_background" />
+            <corners android:radius="@dimen/dp_100" />
+            <size android:height="@dimen/dp_15" android:width="@dimen/dp_100"/>
+        </shape>
+    </item>
+
+    <item android:id="@android:id/progress">
+        <!--<clip>-->
+            <!--<shape android:shape="rectangle">-->
+                <!--<solid android:color="@color/progress_filled" />-->
+                <!--<corners android:radius="@dimen/dp_100" />-->
+            <!--</shape>-->
+        <!--</clip>-->
+        <scale android:scaleWidth="100%"
+               android:drawable="@drawable/registration_progress_indicator"/>
+    </item>
+</layer-list>

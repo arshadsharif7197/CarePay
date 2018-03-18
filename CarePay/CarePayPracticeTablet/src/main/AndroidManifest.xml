@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.carecloud.carepay.practice.tablet">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="clover.permission.ACTION_PAY" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="clover.permission.ACTION_SECURE_PAY" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <supports-screens android:smallScreens="false"
+                      android:normalScreens="false"
+                      android:largeScreens="true"
+                      android:xlargeScreens="true"
+                      android:anyDensity="true"
+                      android:requiresSmallestWidthDp="600"/>
+
+    <application
+        android:name="com.carecloud.carepay.practice.tablet.CarePayPracticeApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppThemePractice"
+        tools:replace="android:theme, android:icon">
+        <activity
+            android:name=".PracticeTabletSplashActivity"
+            android:theme="@style/Theme.AppCompat.Translucent"
+            android:screenOrientation="sensorLandscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.carecloud.carepay.restart" />
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.signin.SigninActivity"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity"
+            android:screenOrientation="sensorLandscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.checkin.PracticeModeCheckInActivity"
+            android:parentActivityName="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity"
+            android:screenOrientation="sensorLandscape">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity" />
+        </activity>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.appointments.PracticeModePracticeAppointmentsActivity"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInActivity"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.checkin.PatientModeCheckInCheckOutActivity"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.appointments.PatientModePracticeAppointmentActivity"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.checkin.activities.PersonalInformationActivity"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.payments.PaymentsActivity"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckoutActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.CompleteCheckActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepaylibray.qrcodescanner.ScannerActivity"
+            android:screenOrientation="sensorLandscape"/>
+    </application>
+
+</manifest>

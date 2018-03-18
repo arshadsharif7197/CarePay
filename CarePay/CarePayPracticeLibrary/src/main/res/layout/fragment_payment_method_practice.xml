@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dimen_26dp"
+        android:paddingTop="@dimen/dimen_26dp">
+
+        <include
+            android:id="@+id/toolbar_layout"
+            layout="@layout/toolbar_no_title" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/paymentMethodTitleLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="28sp"
+            app:customAssetFont="gotham_rounded_medium" />
+
+    </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/paymentMethodFragmentProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-8dp"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:background="@color/dark_gray"
+        android:paddingRight="2dp" />
+
+    <LinearLayout
+        android:id="@+id/swipeCreditCardNowLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="50dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/swipeCreditCarNowButton"
+            style="@style/BreezeButtonStyleDark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dimen_100dp"
+            android:layout_marginStart="@dimen/dimen_100dp"
+            android:background="@drawable/emerald_rounded_button_selector"
+            android:enabled="false"
+            app:customAssetFont="gotham_rounded_medium" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimen_48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingEnd="@dimen/dimen_114dp"
+            android:paddingStart="@dimen/dimen_114dp">
+
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dimen_1dp"
+                android:layout_weight="0.25"
+                android:background="@color/dark_gray"
+                android:paddingRight="80dp" />
+
+            <TextView
+                android:id="@+id/swipeCardSeparatorLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_5dp"
+                android:gravity="center"
+                android:text="@string/swipeCreditCardSeparatorText"
+                android:textColor="@color/optionl_gray"
+                android:textSize="@dimen/dimen_18dp"
+                android:textStyle="bold"
+                breeze:textKey="payment_clover_swipe_now_separator_text" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dimen_1dp"
+                android:layout_weight="0.25"
+                android:background="@color/dark_gray"
+                android:paddingLeft="80dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <ListView
+        android:id="@+id/list_payment_types"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:layout_marginEnd="@dimen/dimen_100dp"
+        android:layout_marginStart="@dimen/dimen_100dp"
+        android:layout_weight="3"
+        android:elevation="17dp"
+        android:padding="@dimen/payment_method_parent_layout_padding"
+        android:visibility="visible" />
+
+
+    <ScrollView
+        android:id="@+id/scrollview_choices"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/dimen_36dp"
+        android:layout_weight="3"
+        android:fillViewport="true"
+        android:scrollbars="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/consenrform1_mainContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_60dp"
+            android:layout_marginRight="@dimen/dimen_60dp"
+            android:elevation="17dp"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <RelativeLayout
+                android:id="@+id/buttonLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.17"
+                android:padding="@dimen/payment_method_parent_layout_padding">
+
+                <RadioGroup
+                    android:id="@+id/paymentMethodsRadioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_20dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!--Android Pay-->
+    <FrameLayout
+        android:id="@+id/dynamic_wallet_button_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/buttonLayout"
+        android:layout_margin="@dimen/dimen_1dp"
+        android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:background="@color/dark_gray"
+        android:paddingRight="2dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:orientation="horizontal"
+        android:padding="@dimen/dimen_15dp">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/paymentChoiceButton"
+            style="@style/PaymentMethodButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_5dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_yellow_overlay"
+            android:visibility="gone"
+            app:customAssetFont="gotham_rounded_medium" />
+
+    </LinearLayout>
+
+</LinearLayout>

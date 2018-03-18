@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:id="@+id/signUpLl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar_signup" />
+
+    <ProgressBar
+        android:id="@+id/signupProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-8dp"
+        android:indeterminate="true" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:fillViewport="false">
+
+        <LinearLayout
+            style="@style/DemographicsDocsHeaderStyle"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/emailTextInputLayout"
+                style="@style/SigninSignupTextInputStyle"
+                app:customAssetFont="proxima_nova_semi_bold"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                    android:id="@+id/emailEditText"
+                    style="@style/SigninSignupEditStyle"
+                    android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress"
+                    android:nextFocusForward="@+id/passwordEditText"
+                    app:customAssetFont="proxima_nova_semi_bold" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/createPasswordTextInputLayout"
+                style="@style/SigninSignupTextInputStyle"
+                app:customAssetFont="proxima_nova_semi_bold"
+                app:hintTextAppearance="@style/FloatingLabelStyle"
+                app:passwordToggleEnabled="false">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                    android:id="@+id/createPasswordEditText"
+                    style="@style/SigninSignupEditStyle"
+                    android:layout_gravity="center_vertical"
+                    android:inputType="textPassword"
+                    android:nextFocusForward="@+id/repeatPasswordEditText"
+                    app:customAssetFont="proxima_nova_semi_bold" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/repeatPasswordTextInputLayout"
+                style="@style/SigninSignupTextInputStyle"
+                app:customAssetFont="proxima_nova_semi_bold"
+                app:hintTextAppearance="@style/FloatingLabelStyle"
+                app:passwordToggleEnabled="false">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                    android:id="@+id/repeatPasswordEditText"
+                    style="@style/SigninSignupEditStyle"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    app:customAssetFont="proxima_nova_semi_bold" />
+            </android.support.design.widget.TextInputLayout>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/singupPasswordFormatHint"
+                style="@style/SignupInstructionsStyle"
+                android:layout_width="match_parent"
+                app:customAssetFont="proxima_nova_regular"
+                breeze:textKey="password_hint_text" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        style="@style/DemographicsDocsHeaderStyle"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/submitSignupButton"
+            style="@style/DemographicsNextButtonStyle"
+            android:background="@drawable/button_selector"
+            breeze:textKey="signup_button"
+            app:customAssetFont="gotham_rounded_medium" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/signupAlreadyHaveAccountTextView"
+            style="@style/SigninSignupClickableTextView"
+            android:layout_gravity="bottom"
+            breeze:textKey="already_have_account_link"
+            android:textColor="@color/button_bright_cerulean"
+            app:customAssetFont="proxima_nova_semi_bold" />
+    </LinearLayout>
+
+</LinearLayout>

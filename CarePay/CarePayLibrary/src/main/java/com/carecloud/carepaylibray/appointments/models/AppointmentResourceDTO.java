@@ -1,0 +1,307 @@
+
+package com.carecloud.carepaylibray.appointments.models;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+/**
+ * Model for appointment resources.
+ */
+public class AppointmentResourceDTO {
+
+    @SerializedName("appointment_confirmation")
+    @Expose
+    private String appointmentConfirmation;
+    @SerializedName("business_entity_id")
+    @Expose
+    private String businessEntityId;
+    @SerializedName("code")
+    @Expose
+    private Object code;
+    @SerializedName("created_at")
+    @Expose
+    private String createdAt;
+    @SerializedName("created_by")
+    @Expose
+    private Integer createdBy;
+    @SerializedName("description")
+    @Expose
+    private Object description;
+    @SerializedName("id")
+    @Expose
+    private Integer id;
+    @SerializedName("is_for_requests")
+    @Expose
+    private Boolean isForRequests;
+    @SerializedName("name")
+    @Expose
+    private String name;
+    @SerializedName("sort_code")
+    @Expose
+    private Integer sortCode;
+    @SerializedName("status")
+    @Expose
+    private String status;
+    @SerializedName("updated_at")
+    @Expose
+    private String updatedAt;
+    @SerializedName("updated_by")
+    @Expose
+    private Integer updatedBy;
+    @SerializedName("default_provider")
+    @Expose
+    private ProvidersDefaultDTO defaultProvider = new ProvidersDefaultDTO();
+
+    /**
+     * 
+     * @return
+     *     The appointmentConfirmation
+     */
+    public String getAppointmentConfirmation() {
+        return appointmentConfirmation;
+    }
+
+    /**
+     * 
+     * @param appointmentConfirmation
+     *     The appointment_confirmation
+     */
+    public void setAppointmentConfirmation(String appointmentConfirmation) {
+        this.appointmentConfirmation = appointmentConfirmation;
+    }
+
+    /**
+     * 
+     * @return
+     *     The businessEntityId
+     */
+    public String getBusinessEntityId() {
+        return businessEntityId;
+    }
+
+    /**
+     * 
+     * @param businessEntityId
+     *     The business_entity_id
+     */
+    public void setBusinessEntityId(String businessEntityId) {
+        this.businessEntityId = businessEntityId;
+    }
+
+    /**
+     * 
+     * @return
+     *     The code
+     */
+    public Object getCode() {
+        return code;
+    }
+
+    /**
+     * 
+     * @param code
+     *     The code
+     */
+    public void setCode(Object code) {
+        this.code = code;
+    }
+
+    /**
+     * 
+     * @return
+     *     The createdAt
+     */
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    /**
+     * 
+     * @param createdAt
+     *     The created_at
+     */
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    /**
+     * 
+     * @return
+     *     The createdBy
+     */
+    public Integer getCreatedBy() {
+        return createdBy;
+    }
+
+    /**
+     * 
+     * @param createdBy
+     *     The created_by
+     */
+    public void setCreatedBy(Integer createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    /**
+     * 
+     * @return
+     *     The description
+     */
+    public Object getDescription() {
+        return description;
+    }
+
+    /**
+     * 
+     * @param description
+     *     The description
+     */
+    public void setDescription(Object description) {
+        this.description = description;
+    }
+
+    /**
+     * 
+     * @return
+     *     The id
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+     * 
+     * @param id
+     *     The id
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * 
+     * @return
+     *     The isForRequests
+     */
+    public Boolean getIsForRequests() {
+        return isForRequests;
+    }
+
+    /**
+     * 
+     * @param isForRequests
+     *     The is_for_requests
+     */
+    public void setIsForRequests(Boolean isForRequests) {
+        this.isForRequests = isForRequests;
+    }
+
+    /**
+     * 
+     * @return
+     *     The name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * 
+     * @param name
+     *     The name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * 
+     * @return
+     *     The sortCode
+     */
+    public Integer getSortCode() {
+        return sortCode;
+    }
+
+    /**
+     * 
+     * @param sortCode
+     *     The sort_code
+     */
+    public void setSortCode(Integer sortCode) {
+        this.sortCode = sortCode;
+    }
+
+    /**
+     * 
+     * @return
+     *     The status
+     */
+    public String getStatus() {
+        return status;
+    }
+
+    /**
+     * 
+     * @param status
+     *     The status
+     */
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    /**
+     * 
+     * @return
+     *     The updatedAt
+     */
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    /**
+     * 
+     * @param updatedAt
+     *     The updated_at
+     */
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    /**
+     * 
+     * @return
+     *     The updatedBy
+     */
+    public Integer getUpdatedBy() {
+        return updatedBy;
+    }
+
+    /**
+     * 
+     * @param updatedBy
+     *     The updated_by
+     */
+    public void setUpdatedBy(Integer updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    /**
+     *
+     * @return
+     *     The defaultProvider
+     */
+    public ProvidersDefaultDTO getDefaultProvider() {
+        return defaultProvider;
+    }
+
+    /**
+     *
+     * @param defaultProvider
+     *     The default_provider
+     */
+    public void setDefaultProvider(ProvidersDefaultDTO defaultProvider) {
+        this.defaultProvider = defaultProvider;
+    }
+
+}

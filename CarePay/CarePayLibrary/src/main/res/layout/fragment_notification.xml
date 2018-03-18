@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/notifications_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:id="@+id/no_notification_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/no_apt_placeholder_icon"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/icn_empty_state_notifications"/>
+
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/no_notification_message_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/no_apt_message_title_margin_top"
+            android:gravity="center"
+            android:textColor="@color/textview_default_textcolor"
+            android:textSize="21sp"
+            breeze:textKey="no_notifications_message_title"
+            app:customAssetFont="gotham_rounded_medium" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/no_notificaton_message_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/no_apt_message_desc_margin"
+            android:layout_marginStart="@dimen/no_apt_message_desc_margin"
+            android:layout_marginTop="@dimen/no_apt_message_desc_margin_top"
+            android:gravity="center"
+            android:textColor="@color/optionl_gray"
+            android:textSize="13sp"
+            breeze:textKey="no_notifications_message_text"
+            app:customAssetFont="proxima_nova_regular" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_60dp"/>
+    </LinearLayout>
+</FrameLayout>

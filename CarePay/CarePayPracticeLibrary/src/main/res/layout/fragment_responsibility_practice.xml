@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/respons_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:foregroundGravity="center_vertical"
+        android:paddingTop="@dimen/dimen_10dp">
+
+        <include
+            android:id="@+id/toolbar_layout"
+            layout="@layout/toolbar_no_title" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/respons_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_30sp"
+            app:customAssetFont="gotham_rounded_medium" />
+
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/respons_total_label"
+                style="@style/ResponsTotalLabelStyle"
+                android:layout_marginTop="@dimen/dimen_40dp"
+                android:textColor="@color/glitter"
+                app:customAssetFont="gotham_rounded_light" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/respons_total"
+                style="@style/ResponsTotalStyle"
+                android:layout_marginBottom="@dimen/dimen_40dp"
+                android:textColor="@color/white"
+                app:customAssetFont="gotham_rounded_medium" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".15" />
+
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/dimen_30dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/responsibility_line_item_recycle_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </FrameLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".15" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_1dp"
+            android:background="@color/light_gray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/dimen_10dp">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/make_partial_payment_button"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dimen_48dp"
+                android:layout_weight="1"
+                android:background="@drawable/round_border_button_bg"
+                android:textAllCaps="false"
+                android:textColor="@color/primary_color_enabled_selector"
+                android:textSize="@dimen/text_size_18sp"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="payment_partial_amount_button"
+                tools:ignore="ButtonStyle" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/pay_total_amount_button"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dimen_48dp"
+                android:layout_marginStart="@dimen/dimen_18dp"
+                android:layout_weight="1"
+                android:background="@drawable/green_rounded_button_selector"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_18sp"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="payment_pay_total_amount_button"
+                tools:ignore="ButtonStyle" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/balance_history_toolbar_a"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/colorPrimary"
+    app:popupTheme="@style/AppTheme.PopupOverlay">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/balance_history_toolbar_title_a"
+            style="@style/ResponsibilityToolbarTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_weight="0.7"
+            app:customAssetFont="gotham_rounded_medium"
+            android:gravity="start" />
+
+    </LinearLayout>
+
+</android.support.v7.widget.Toolbar>

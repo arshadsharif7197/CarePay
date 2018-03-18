@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar_patientportal" />
+
+    <!--<Header Part>-->
+    <LinearLayout
+        android:id="@+id/headerContainerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="45dp"
+            android:paddingEnd="45dp"
+            android:textSize="20.0sp"
+            android:textColor="@color/cadet_gray"
+            android:layout_marginTop="29dp"
+            android:textAlignment="center"
+            android:text="@string/descriptionofportal"
+            android:id="@+id/textView" />
+
+    </LinearLayout>
+
+
+        <Button
+            android:id="@+id/signupportal_button"
+            style="@style/SigninSignupButtonStyle"
+            android:layout_marginStart="@dimen/marginleftright"
+            android:layout_marginEnd="@dimen/marginleftright"
+            android:text="@string/signupforportal"/>
+
+        <Button
+            android:layout_width="match_parent"
+            style="@style/SigninNewAccountButtonStyle"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="@dimen/marginleftright"
+            android:layout_marginStart="@dimen/marginleftright"
+            android:layout_marginEnd="@dimen/marginleftright"
+            android:text="@string/passfornow"
+            android:id="@+id/passfornow_button" />
+
+</LinearLayout>
+
+
+
+
+
+

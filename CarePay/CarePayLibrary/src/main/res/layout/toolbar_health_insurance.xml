@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.Toolbar
+    android:id="@+id/healthinsurance_review_toolbar"
+    style="@style/CustomToolbarStyle"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:id="@+id/healthinsurance_review_toolbar_title"
+        style="@style/ResponsibilityToolbarTextStyle"
+        android:text="Health Insurance"/>
+
+</android.support.v7.widget.Toolbar>

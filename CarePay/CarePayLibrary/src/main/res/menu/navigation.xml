@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--Changed for SHMRK-1715-->
+    <!--<item-->
+        <!--android:id="@+id/action_settings"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:title="@string/action_settings"-->
+        <!--app:showAsAction="never" />-->
+
+    <!--&lt;!&ndash; temporary, for QA; please do not remove &ndash;&gt;-->
+    <!--<item-->
+        <!--android:id="@+id/action_launch_demogr_review"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:title="Review Demographics"-->
+        <!--app:showAsAction="never" />-->
+
+</menu>

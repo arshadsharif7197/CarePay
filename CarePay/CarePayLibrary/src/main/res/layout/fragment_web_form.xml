@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar_title_only" />
+
+    <com.marcok.stepprogressbar.StepProgressBar
+        android:id="@+id/progress_indicator"
+        style="@style/InTakeDottedProgressBarStyle"
+        android:layout_marginTop="10dp"
+        app:activeDotColor="@color/colorPrimary"
+        app:activeDotIcon="@drawable/circle_indicator_blue"
+        app:activeDotIndex="-1"
+        app:dotSize="10dp"
+        app:inactiveDotColor="@color/colorPrimary"
+        app:inactiveDotIcon="@drawable/circle_indicator_gray"
+        app:numberDots="5"
+        app:spacing="12dp" />
+
+    <ProgressBar
+        android:id="@+id/progressBarConsent"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:indeterminate="true" />
+
+
+    <WebView
+        android:id="@+id/activity_main_webview_consent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        android:id="@+id/consentButtonNext"
+        style="@style/InTakeNextButtonStyle"
+        android:enabled="true"
+        breeze:textKey="demographics_review_next_button" />
+
+</LinearLayout>

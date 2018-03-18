@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootDialogQRtLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent_apt"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/cancelImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/apt_imgview_ht"
+            android:layout_gravity="start"
+            android:layout_marginBottom="@dimen/apt_dl_margin_bottom"
+            android:contentDescription="@string/scan_code"
+            android:gravity="start"
+            android:src="@drawable/icn_patient_mode_nav_close"
+            android:text="@string/close"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/white"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/apt_dl_margin"
+        android:paddingLeft="@dimen/apt_dl_margin"
+        android:paddingRight="@dimen/apt_dl_margin">
+
+        <ProgressBar
+            android:id="@+id/qrCodeProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_minus_5dp"
+            android:indeterminate="true" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/scanQRCodeTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/qr_code_header_text_padding"
+            android:layout_marginRight="@dimen/qr_code_header_text_padding"
+            android:layout_marginTop="@dimen/dimen_26dp"
+            android:textColor="@color/payne_gray"
+            android:textSize="@dimen/qr_code_header_text"
+            app:customAssetFont="proxima_nova_regular" />
+
+        <ImageView
+            android:id="@+id/qrCodeImageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginBottom="@dimen/apt_dl_margin"
+            android:layout_marginTop="@dimen/apt_dl_margin"
+            android:contentDescription="@string/scan_code" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/DemographicsDocsHeaderStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/dimen_20dp"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/DetailsProfileImage"
+        android:layout_width="@dimen/dimen_60dp"
+        android:layout_height="@dimen/dimen_60dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/profile_picture"
+        android:src="@drawable/icn_placeholder_user_profile_png" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        android:id="@+id/changeCurrentPhotoButton"
+        style="@style/DemographicsAddRemoveInsuranceStyle"
+        android:layout_width="0dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/button_blue_border"
+        android:layout_margin="@dimen/dimen_10dp"
+        android:layout_weight="1"
+        android:foreground="?android:selectableItemBackground"
+        android:text="@string/selectOrTakePhotoButton"
+        app:customAssetFont="proxima_nova_regular" />
+
+</LinearLayout>

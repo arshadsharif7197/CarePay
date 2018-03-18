@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?practiceBackgroundColor"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
+
+    <RelativeLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:paddingEnd="@dimen/home_main_margin_end"
+        android:paddingStart="@dimen/home_main_margin_start">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/goBackButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:background="@drawable/bg_blue_overlay"
+            android:drawablePadding="@dimen/dimen_10dp"
+            android:drawableStart="@drawable/icn_arrow_left"
+            android:paddingLeft="@dimen/dimen_15dp"
+            android:paddingRight="@dimen/dimen_15dp"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_22sp"
+            android:visibility="gone"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="go_back_label" />
+
+        <Spinner
+            android:id="@+id/signinLangSpinner"
+            android:layout_width="@dimen/home_spinner_width"
+            android:layout_height="@dimen/home_spinner_height"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:background="@drawable/bg_blue_overlay"
+            android:paddingEnd="@dimen/home_spinner_padding_righ_left"
+            android:paddingStart="@dimen/home_spinner_padding_righ_left"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:src="?practiceLogoDrawable" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/headerLayout"
+        android:layout_marginTop="@dimen/dimen_60dp"
+        android:paddingBottom="@dimen/dimen_20dp"
+        android:paddingTop="@dimen/dimen_20dp">
+
+        <RelativeLayout
+            android:id="@+id/mainLayout"
+            android:layout_width="500dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/layout_shadow"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="20dp"
+            android:paddingEnd="20dp"
+            android:paddingStart="20dp"
+            android:paddingTop="20dp">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                android:id="@+id/signInEmailTextInputLayout"
+                style="@style/TextInputLayoutStyle"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="@dimen/emailFieldTopMargin"
+                app:customAssetFont="proxima_nova_semi_bold"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                    android:id="@+id/signinEmailpracticeEditText"
+                    style="@style/EditTextStyle"
+                    android:contentDescription="@string/content_description_email"
+                    android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress"
+                    app:customAssetFont="proxima_nova_semi_bold"
+                    breeze:hintKey="email_label" />
+
+            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+            <FrameLayout
+                android:id="@+id/passwordContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/signInEmailTextInputLayout">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                    android:id="@+id/passwordTextInputLayout"
+                    style="@style/TextInputLayoutStyle"
+                    app:customAssetFont="proxima_nova_semi_bold"
+                    app:hintTextAppearance="@style/FloatingLabelStyle"
+                    app:passwordToggleEnabled="false">
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                        android:id="@+id/passwordpracticeEditText"
+                        style="@style/EditTextStyle"
+                        android:contentDescription="@string/content_description_password"
+                        android:imeOptions="actionDone"
+                        android:inputType="textPassword"
+                        android:paddingEnd="@dimen/dimen_30dp"
+                        app:customAssetFont="proxima_nova_semi_bold"
+                        breeze:hintKey="password_label" />
+
+                </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+                <ImageView
+                    android:id="@+id/show_password_button"
+                    android:layout_width="@dimen/dimen_25dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end|center_vertical"
+                    android:src="@drawable/icn_show_password" />
+
+            </FrameLayout>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/signinButton"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_48dp"
+                android:layout_below="@id/passwordContainer"
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="@dimen/dimen_30dp"
+                android:background="@drawable/button_sign_in_selector"
+                android:contentDescription="@string/content_description_sign_in"
+                android:enabled="false"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_22sp"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="signin_button" />
+
+        </RelativeLayout>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/signinTitleTextview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/mainLayout"
+            android:layout_marginBottom="@dimen/dimen_40dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/signin_title_textsize"
+            android:visibility="gone"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="welcome_signin_text" />
+
+        <ImageView
+            android:id="@+id/shadowImageView"
+            android:layout_width="400dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mainLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-48dp"
+            android:src="@drawable/home_shadow" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingEnd="@dimen/home_main_margin_end"
+        android:paddingStart="@dimen/home_main_margin_start">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/forgot_passwordTextview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/forgotpassword_textsize"
+            android:visibility="gone"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="forgot_password" />
+
+        <ImageView
+            android:id="@+id/signInHome"
+            style="@style/HomeButtonIcon"
+            android:layout_alignParentStart="true"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/version_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:padding="@dimen/dimen_10dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_24sp"
+        app:customAssetFont="gotham_rounded_book" />
+
+</RelativeLayout>

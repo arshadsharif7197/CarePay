@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/intakeToolbar"
+    style="@style/CustomToolbarStyle">
+
+    <TextView
+        android:id="@+id/intakeToolbarTitle"
+        style="@style/CustomToolbarTextStyle"/>
+
+</android.support.v7.widget.Toolbar>

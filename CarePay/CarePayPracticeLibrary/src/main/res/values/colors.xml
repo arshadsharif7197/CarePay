@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="page_indicator">#4D5BC5D0</color>
+    <color name="transparent_70">#80ffffff</color>
+    <color name="colorAccent">#acacac</color>
+
+    <color name="find_patient_bg">#CC142C2E</color>
+    <color name="amaranth">#ffe63248</color>
+    <color name="brick_red">#d14c4c</color>
+    <color name="yellowGreen">#5BD063</color>
+    <color name="checkin_item_border">#80C8E9</color>
+    <color name="manatee">#9ba4a9</color>
+
+    <!-- Custom Filter Popup -->
+    <color name="popup_list_text_color">#5a717c</color>
+    <color name="custom_filter_list_divider_background">#d0d0d0</color>
+
+    <!-- Custom Appointment Detail Dialog -->
+    <color name="rose_madder">#E22B41</color>
+    <color name="timberwolf">#ffd8d8d8</color>
+
+    <!-- Home Screen -->
+    <color name="home_button_pressed_shadow_margin">#d1d6d9</color>
+
+    <!--Payments-->
+    <color name="filter_on">#34590C</color>
+    <color name="popup_background">#37474f</color>
+
+    <!--PracticeMode - PatientMode-->
+    <color name="practice_mode_background">#37474F</color>
+    <color name="practice_mode_action_bar">@color/dark_blue</color>
+    <color name="patient_mode_action_bar">@color/colorPrimaryDark</color>
+    <color name="practice_mode_counter_background">@color/dark_blue</color>
+    <color name="practice_mode_counter_text">@color/soft_sky</color>
+</resources>

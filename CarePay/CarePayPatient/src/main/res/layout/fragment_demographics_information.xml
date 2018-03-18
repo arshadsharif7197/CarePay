@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/demographicsReviewRootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:descendantFocusability="beforeDescendants"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+
+    <include layout="@layout/toolbar_demographics_settings" />
+
+    <ScrollView
+        android:id="@+id/adddemoScrollview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/adddemoLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/dimen_20dp"
+            android:paddingEnd="17dp"
+            android:paddingStart="17dp">
+
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/reviewdemogrPersonalInfoLabel"
+                style="@style/reviewDemographicBlue."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_12dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:textAllCaps="true"
+                app:customAssetFont="proxima_nova_semi_bold"
+                breeze:textKey="demographics_personal_info_label"
+                tools:text="Personal Info" />
+
+            <include layout="@layout/fragment_demographic_personal_section" />
+
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/demographicsSectionLabel"
+                style="@style/reviewDemographicBlue."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_12dp"
+                android:layout_marginTop="@dimen/dimen_36dp"
+                android:textAllCaps="true"
+                app:customAssetFont="proxima_nova_semi_bold"
+                breeze:textKey="demographics_demographics_label"
+                tools:text="Demographics" />
+
+
+            <include layout="@layout/fragment_base_demographics" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
+                    android:orientation="horizontal">
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        style="@style/DemographicsDocsLabelStyle"
+                        android:layout_width="wrap_content"
+                        app:customAssetFont="proxima_nova_regular"
+                        breeze:textKey="demographics_additional"
+                        tools:text="Additional Demographics" />
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/add_additional_info"
+                        style="@style/DemographicsDocsClickableTextStyle"
+                        android:layout_alignParentEnd="true"
+                        android:padding="@dimen/dimen_5dp"
+                        app:customAssetFont="proxima_nova_regular"
+                        breeze:textKey="demographics_add_info_button"
+                        tools:text="Add Info" />
+
+                </RelativeLayout>
+
+                <View
+                    style="@style/Consent_Form_View_Style"
+                    android:layout_width="match_parent" />
+
+            </LinearLayout>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/demographicsAddressSectionLabel"
+                style="@style/reviewDemographicBlue."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_12dp"
+                android:layout_marginTop="@dimen/dimen_36dp"
+                android:textAllCaps="true"
+                app:customAssetFont="proxima_nova_semi_bold"
+                breeze:textKey="demographics_address_label"
+                tools:text="Address" />
+
+            <include layout="@layout/fragment_review_demographic_address" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        android:id="@+id/buttonAddDemographicInfo"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@drawable/button_selector_always_click"
+        android:gravity="center"
+        android:textColor="@color/white"
+        breeze:textKey="profile_save_button_label"
+        tools:text="Save Changes" />
+</LinearLayout>

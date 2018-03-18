@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/charcoal"
+    android:orientation="vertical"
+    android:padding="@dimen/apt_popup_parent_padding">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/popup_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/apt_popup_icon_margin"
+            android:src="@drawable/icn_notification_basic" />
+
+        <TextView
+            android:id="@+id/popup_message_tv"
+            style="@style/AppointmentPopupMessageText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/apt_popup_message_margin" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/popup_dismiss_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="@dimen/apt_popup_button_margin"
+            android:background="@drawable/button_payne_gray_background"
+            style="@style/AppointmentPopupButton" />
+
+        <Button
+            android:id="@+id/popup_checkin_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="@dimen/apt_popup_button_margin"
+            android:background="@drawable/button_yellow_green_background"
+            style="@style/AppointmentPopupButton" />
+    </LinearLayout>
+</LinearLayout>
