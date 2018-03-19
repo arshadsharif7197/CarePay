@@ -57,7 +57,9 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         practiceSelectionModel = (PracticeSelectionDTO) callback.getDto();
-        practiceList = practiceSelectionModel.getPayload().getUserPracticesList();
+        if(practiceSelectionModel != null) {
+            practiceList = practiceSelectionModel.getPayload().getUserPracticesList();
+        }
     }
 
     @Override

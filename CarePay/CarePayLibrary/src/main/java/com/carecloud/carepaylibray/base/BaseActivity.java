@@ -157,8 +157,13 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     @Override
     public void hideProgressDialog() {
         if (null != progressDialog && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-            progressDialog = null;
+            //adding try catch here to prevent case where dialog is not attached to window manager
+            try {
+                progressDialog.dismiss();
+                progressDialog = null;
+            }catch (IllegalArgumentException iax){
+                iax.printStackTrace();
+            }
         }
     }
 

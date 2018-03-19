@@ -23,14 +23,14 @@ public class SharedPreferenceLabelProvider implements LabelProvider {
         return sharedPreferences;
     }
 
-    private SharedPreferences.Editor getEditor(){
-        if(editor == null){
+    private SharedPreferences.Editor getEditor() {
+        if (editor == null) {
             editor = getSharedPreferences().edit();
         }
         return editor;
     }
 
-    private void resetEditor(){
+    private void resetEditor() {
         editor = null;
     }
 
@@ -77,5 +77,10 @@ public class SharedPreferenceLabelProvider implements LabelProvider {
         SharedPreferences.Editor editor = getEditor();
         editor.apply();
         resetEditor();
+    }
+
+    @Override
+    public void clearLabels() {
+        getEditor().clear().apply();
     }
 }

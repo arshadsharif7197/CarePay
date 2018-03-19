@@ -6,8 +6,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,10 +17,12 @@ import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.customdialogs.BaseDialogFragment;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsSettingsRegularPaymentsDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
@@ -28,7 +31,6 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPo
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -37,13 +39,7 @@ import java.util.List;
 
 public class ResponsibilityFragmentDialog extends BaseDialogFragment
         implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
-    protected static final String KEY_LEFT_BUTTON = "leftLabel";
-    protected static final String KEY_RIGHT_BUTTON = "rightLabel";
-    protected static final String KEY_EMPTY_MESSAGE = "messageLabel";
 
-    private String leftLabel;
-    private String rightLabel;
-    private String emptyMessage;
     private PaymentsModel paymentsModel;
     private PatientBalanceDTO patientBalance;
     private PayResponsibilityCallback callback;
@@ -51,27 +47,6 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
     private PaymentConfirmationInterface payInfoCallback;
     private double owedAmount = 0;
     private ResponsibilityHeaderModel headerModel;
-    private boolean showLeftButtonAlways;
-
-    @Override
-    protected String getCancelString() {
-        return null;
-    }
-
-    @Override
-    protected int getCancelImageResource() {
-        return com.carecloud.carepaylibrary.R.drawable.icn_close;
-    }
-
-    @Override
-    protected int getContentLayout() {
-        return R.layout.fragment_dialog_payment_responsibility;
-    }
-
-    @Override
-    protected boolean getCancelable() {
-        return false;
-    }
 
     @Override
     public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
@@ -81,46 +56,21 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
 
     /**
      * @param paymentsModel the payment model
-     * @param leftLabel     the label of the left bottom button
-     * @param rightLabel    the label of the right bottom button
      * @return new instance of a ResponsibilityFragmentDialog
      */
     public static ResponsibilityFragmentDialog newInstance(PaymentsModel paymentsModel,
-                                                           String leftLabel,
-                                                           String rightLabel,
-                                                           String emptyMessage,
-                                                           ResponsibilityHeaderModel headerModel) {
+                                                           ResponsibilityHeaderModel headerModel,
+                                                           PatientBalanceDTO selectedBalance) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, headerModel);
-        args.putString(KEY_LEFT_BUTTON, leftLabel);
-        args.putString(KEY_RIGHT_BUTTON, rightLabel);
-        args.putString(KEY_EMPTY_MESSAGE, emptyMessage);
+        DtoHelper.bundleDto(args, selectedBalance);
 
         ResponsibilityFragmentDialog dialog = new ResponsibilityFragmentDialog();
         dialog.setArguments(args);
 
         return dialog;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Bundle arguments = getArguments();
-        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
-        headerModel = DtoHelper.getConvertedDTO(ResponsibilityHeaderModel.class, arguments);
-        patientBalance = paymentsModel.getPaymentPayload().getPatientBalances().get(0);
-        leftLabel = arguments.getString(KEY_LEFT_BUTTON);
-        rightLabel = arguments.getString(KEY_RIGHT_BUTTON);
-        emptyMessage = arguments.getString(KEY_EMPTY_MESSAGE);
-        handleException();
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        onInitialization(view);
     }
 
     @Override
@@ -141,16 +91,34 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        callback = null;
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+        headerModel = DtoHelper.getConvertedDTO(ResponsibilityHeaderModel.class, args);
+        patientBalance = DtoHelper.getConvertedDTO(PatientBalanceDTO.class, args);
     }
 
-    @SuppressWarnings("AccessStaticViaInstance")
-    private void handleException() {
-        Thread thread = Thread.currentThread();
-        thread.setDefaultUncaughtExceptionHandler(new SystemUtil());
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
+        return inflater.inflate(R.layout.fragment_dialog_payment_responsibility, container, false);
     }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        onInitialization(view);
+        View closeView = view.findViewById(R.id.closeViewLayout);
+        if(closeView != null) {
+            closeView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
+                }
+            });
+        }
+    }
+
 
     private void onInitialization(View view) {
         initializeHeader(view);
@@ -159,7 +127,10 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
     }
 
     private void initializeHeader(View view) {
-        ((TextView) view.findViewById(R.id.patient_full_name)).setText(headerModel.getHeaderFullTitle());
+        TextView titleView = (TextView) view.findViewById(R.id.patient_full_name);
+        titleView.setText(headerModel.getHeaderFullTitle());
+        TextView subtitleView = (TextView) view.findViewById(R.id.patient_provider_name);
+        subtitleView.setText(headerModel.getHeaderSubtitle());
         ImageView profilePhoto = (ImageView) view.findViewById(R.id.patient_profile_photo);
         final TextView shortName = (TextView) view.findViewById(R.id.patient_profile_short_name);
         shortName.setText(headerModel.getHeaderShortTitle());
@@ -191,8 +162,6 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
 
             profilePhoto.setVisibility(View.VISIBLE);
         }
-        TextView patientProviderNameTextView = (TextView) view.findViewById(R.id.patient_provider_name);
-        patientProviderNameTextView.setText(headerModel.getHeaderSubtitle());
     }
 
     private void initializeBody(View view) {
@@ -206,7 +175,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
             } else {
                 noBalancePlaceholder.setVisibility(View.VISIBLE);
                 TextView message = (TextView) view.findViewById(R.id.no_payment_message);
-                message.setText(emptyMessage);
+                message.setText(null);
             }
         }
 
@@ -240,49 +209,61 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
     private void initializeOwedAmountTextView(View view) {
         String text = Label.getLabel("responsibility_balance_title") + ": " +
                 StringUtil.getFormattedBalanceAmount(owedAmount);
-        ((TextView) view.findViewById(R.id.payment_responsibility_balance)).setText(text);
+        TextView balance = (TextView) view.findViewById(R.id.payment_responsibility_balance);
+        balance.setText(text);
     }
 
     private void initializeFooter(View view) {
-        Button leftButton = (Button) view.findViewById(R.id.payment_plan_button);
-
-        if (null == leftLabel) {
-            leftButton.setVisibility(View.GONE);
-        } else {
-            leftButton.setText(leftLabel);
-            leftButton.setVisibility(isPartialPayAvailable(owedAmount) || showLeftButtonAlways
+        View leftButton = view.findViewById(R.id.payment_plan_button);
+        if(leftButton != null){
+            leftButton.setVisibility(isPaymentPlanAvailable(owedAmount)
                     ? View.VISIBLE : View.GONE);
             leftButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (null != callback) {
-                        callback.onLeftActionTapped(paymentsModel, owedAmount);
-                    }
+                    callback.onLeftActionTapped(paymentsModel, owedAmount);
                     dismiss();
                 }
             });
         }
 
-        Button rightButton = (Button) view.findViewById(R.id.payment_pay_button);
-        rightButton.setText(rightLabel);
-        rightButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (null != callback) {
+        leftButton.setVisibility(View.GONE);//TODO remove this when ready to release PP
+
+        View middleButton = view.findViewById(R.id.partial_pay_button);
+        if(middleButton != null) {
+            middleButton.setVisibility(isPartialPayAvailable(owedAmount)
+                    ? View.VISIBLE : View.GONE);
+            middleButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callback.onMiddleActionTapped(paymentsModel, owedAmount);
+                    dismiss();
+                }
+            });
+        }
+
+        View rightButton = view.findViewById(R.id.payment_pay_button);
+        if(rightButton != null) {
+            rightButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
                     createPaymentModel(owedAmount);
                     callback.onRightActionTapped(paymentsModel, owedAmount);
+                    dismiss();
                 }
+            });
+        }
 
-                dismiss();
-            }
-        });
+
     }
 
     public interface PayResponsibilityCallback {
 
-        void onLeftActionTapped(PaymentsModel paymentsModel, double owedAmount);
+        void onLeftActionTapped(PaymentsModel paymentsModel, double amount);
 
         void onRightActionTapped(PaymentsModel paymentsModel, double amount);
+
+        void onMiddleActionTapped(PaymentsModel paymentsModel, double amount);
 
         void onDetailItemClick(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem);
     }
@@ -379,7 +360,16 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
         return false;
     }
 
-    public void setShowLeftButtonAlways(boolean showLeftButtonAlways) {
-        this.showLeftButtonAlways = showLeftButtonAlways;
+    protected boolean isPaymentPlanAvailable(double balance){
+        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = paymentsModel.getPaymentPayload()
+                .getPaymentSettings().get(0).getPayload().getPaymentPlans();
+        if(paymentPlanSettings.isPaymentPlansEnabled()){
+            for(PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()){
+                if(balance > rule.getMinBalanceRequired().getValue()){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

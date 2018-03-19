@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.List;
@@ -35,6 +36,8 @@ public class PaymentItemsListAdapter extends RecyclerView.Adapter<PaymentItemsLi
         BalanceItemDTO paymentDetailsItem = detailsList.get(position);
         holder.paymentDetailLabel.setText(paymentDetailsItem.getDescription());
         holder.paymentDetailAmount.setText(StringUtil.getFormattedBalanceAmount(paymentDetailsItem.getAmount()));
+        holder.paymentEffectiveDate.setText(DateUtil.getInstance()
+                .setDateRaw(paymentDetailsItem.getEffectiveDate()).getDateAsMonthDayYear());
     }
 
     @Override
@@ -46,12 +49,14 @@ public class PaymentItemsListAdapter extends RecyclerView.Adapter<PaymentItemsLi
 
         private CarePayTextView paymentDetailLabel;
         private CarePayTextView paymentDetailAmount;
+        private CarePayTextView paymentEffectiveDate;
 
         PaymentDetailsListViewHolder(View itemView) {
             super(itemView);
 
             paymentDetailLabel = (CarePayTextView) itemView.findViewById(R.id.payment_details_label);
             paymentDetailAmount = (CarePayTextView) itemView.findViewById(R.id.payment_details_value);
+            paymentEffectiveDate = (CarePayTextView) itemView.findViewById(R.id.paymentEffectiveDate);
         }
     }
 }

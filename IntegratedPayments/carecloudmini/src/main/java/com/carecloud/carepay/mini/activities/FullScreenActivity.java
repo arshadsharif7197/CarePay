@@ -1,5 +1,7 @@
 package com.carecloud.carepay.mini.activities;
 
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -20,6 +22,13 @@ public abstract class FullScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle icicle){
         super.onCreate(icicle);
+        if(isScreenLarge()) {
+            // width > height, better to use Landscape
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+
         setSystemUiFullscreen();
     }
 
@@ -78,4 +87,12 @@ public abstract class FullScreenActivity extends AppCompatActivity {
             customerMode = true;
         }
     }
+
+    private boolean isScreenLarge() {
+        final int screenSize = getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK;
+        return screenSize == Configuration.SCREENLAYOUT_SIZE_LARGE
+                || screenSize == Configuration.SCREENLAYOUT_SIZE_XLARGE;
+    }
+
 }

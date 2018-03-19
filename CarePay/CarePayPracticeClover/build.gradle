@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'newrelic'
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "26.0.3"
 
     defaultConfig {
         applicationId "com.carecloud.carepay.practice.clover"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 55
-        versionName "1.2.3"
+        versionCode 61
+        versionName "1.2.6"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -17,6 +17,16 @@ android {
     dexOptions {
         maxProcessCount 4
         javaMaxHeapSize "12g"
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
     }
     buildTypes {
         release {
@@ -26,10 +36,11 @@ android {
         }
         debug {
             debuggable true
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions "clover"
     productFlavors {
         development {
             applicationId "com.carecloud.carepay.practice.clover"

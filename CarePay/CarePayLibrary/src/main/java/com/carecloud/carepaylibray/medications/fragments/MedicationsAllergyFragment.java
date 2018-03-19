@@ -280,14 +280,16 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
         mediaScannerPresenter = new MediaScannerPresenter(getContext(), this,
                 CarePayCameraPreview.CameraType.SCAN_DOC);
         mediaScannerPresenter.setCaptureView(medicationPhoto);
-        documentScannerAdapter = new DocumentScannerAdapter(getContext(), view, mediaScannerPresenter, getApplicationMode().getApplicationType(), false);
+        documentScannerAdapter = new DocumentScannerAdapter(getContext(), view,
+                mediaScannerPresenter, getApplicationMode().getApplicationType(), false);
 
         String url = medicationsAllergiesDTO.getPayload().getMedicationsImage().getPayload().getUrl();
         if (StringUtil.isNullOrEmpty(url)) {
             emptyPhotoLayout.setVisibility(View.VISIBLE);
         } else {
             emptyPhotoLayout.setVisibility(View.GONE);
-            documentScannerAdapter.setImageView(url, medicationPhoto, false, 0, 0, R.drawable.icn_placeholder_document, this);
+            documentScannerAdapter.setImageView(url, medicationPhoto, false, 0, 0,
+                    R.drawable.icn_placeholder_document, this);
         }
 
     }
@@ -322,7 +324,6 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
             medicationChooseButton.setText(Label.getLabel("demographics_choose"));
         } else {
             medicationRecycler.setVisibility(View.VISIBLE);
-//            medicationRecycler.getLayoutManager().setMeasuredDimension(View.MeasureSpec.AT_MOST, View.MeasureSpec.AT_MOST);
             assertNoMedications.setChecked(false);
             assertNoMedications.setEnabled(false);
             assertNoMedications.setVisibility(View.GONE);
@@ -341,7 +342,6 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
             allergyChooseButton.setText(Label.getLabel("demographics_choose"));
         } else {
             allergyRecycler.setVisibility(View.VISIBLE);
-//            allergyRecycler.getLayoutManager().setMeasuredDimension(View.MeasureSpec.AT_MOST, View.MeasureSpec.AT_MOST);
             assertNoAllergies.setChecked(false);
             assertNoAllergies.setEnabled(false);
             assertNoAllergies.setVisibility(View.GONE);

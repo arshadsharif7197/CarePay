@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:orientation="horizontal">
@@ -76,6 +78,49 @@
             android:dividerHeight="1dp"
             android:elevation="17dp"
             android:scrollbars="none" />
+
+        <RelativeLayout
+            android:id="@+id/emptyStateScreen"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/visit_type_list_height"
+            android:visibility="gone">
+
+            <View
+                android:id="@+id/placeHolder"
+                android:layout_width="@dimen/dimen_1dp"
+                android:layout_height="@dimen/dimen_1dp"
+                android:layout_centerInParent="true" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/placeHolder"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:gravity="center"
+                android:paddingEnd="@dimen/dimen_20dp"
+                android:paddingStart="@dimen/dimen_20dp"
+                android:textColor="@color/cadet_gray"
+                android:textSize="@dimen/text_size_15"
+                app:customAssetFont="proxima_nova_regular"
+                breeze:textKey="appointment.visitType.message.label.emptyScreenSubTitle"
+                tools:text="Your practice currently has no visit type available at the moment" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/subtitle"
+                android:gravity="center"
+                android:padding="@dimen/dimen_10dp"
+                android:textColor="@color/charcoal"
+                android:textSize="@dimen/text_size_23sp"
+                app:customAssetFont="gotham_rounded_book"
+                breeze:textKey="appointment.visitType.message.label.emptyScreenTitle"
+                tools:text="No visit type available" />
+
+        </RelativeLayout>
     </LinearLayout>
 
     <FrameLayout
