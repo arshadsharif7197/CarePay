@@ -78,6 +78,21 @@
                 tools:text="$1,840.09" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/paymentPlanParametersTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:padding="@dimen/dimen_10dp"
+                android:paddingTop="@dimen/dimen_10dp"
+                android:textColor="@color/light_gray"
+                android:textSize="@dimen/text_size_13"
+                android:visibility="gone"
+                app:customAssetFont="proxima_nova_regular"
+                tools:text="This balance must be paid over a maximum of 6 months and requires a downpayment of $20." />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/payment_plan_add_existing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

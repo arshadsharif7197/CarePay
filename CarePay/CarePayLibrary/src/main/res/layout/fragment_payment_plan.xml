@@ -58,7 +58,7 @@
                     tools:text="$10,008.00" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                    android:id="@+id/payment_plan_parameters"
+                    android:id="@+id/paymentPlanParametersTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/dimen_10dp"

@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -25,6 +26,12 @@ public class PatientModePaymentPlanEditFragment extends PaymentPlanEditFragment 
         PatientModePaymentPlanEditFragment fragment = new PatientModePaymentPlanEditFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
+        getPaymentPlanSettings(ApplicationPreferences.getInstance().getPracticeId());
     }
 
     @Override

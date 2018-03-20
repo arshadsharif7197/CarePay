@@ -160,11 +160,12 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         TextView total = (TextView) view.findViewById(R.id.payment_plan_total);
         total.setText(currencyFormatter.format(paymentPlanAmount));
 
-        TextView parameters = (TextView) view.findViewById(R.id.payment_plan_parameters);
+        TextView parameters = (TextView) view.findViewById(R.id.paymentPlanParametersTextView);
         if (parameters != null) {
             parameters.setText(String.format(Locale.US, Label.getLabel("payment_plan_parameters"),
                     paymentPlanBalanceRules.getMaxDuration().getValue(),
                     currencyFormatter.format(paymentPlanBalanceRules.getMinPaymentRequired().getValue())));
+            parameters.setVisibility(View.VISIBLE);
         }
     }
 

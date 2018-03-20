@@ -27,6 +27,11 @@ public class PatientModePaymentPlanFragment extends PaymentPlanFragment {
         return fragment;
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle icicle) {
+        super.onViewCreated(view, icicle);
+        view.findViewById(R.id.payment_plan_parameters).setVisibility(View.VISIBLE);
+    }
 
     @Override
     protected void setupToolBar(View view) {
