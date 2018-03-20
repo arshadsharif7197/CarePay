@@ -358,6 +358,23 @@ public class PaymentsPayloadDTO implements Serializable {
         return false;
     }
 
+    /**
+     * get only active plans
+     * @param practiceId - optional, if provided will first filter plans by practice
+     * @return active plans
+     */
+    public List<PaymentPlanDTO> getActivePlans(String practiceId){
+        List<PaymentPlanDTO> baseList = practiceId != null ?
+                getFilteredPlans(practiceId) : getPatientPaymentPlans();
+        List<PaymentPlanDTO> outputList = new ArrayList<>();
+        for (PaymentPlanDTO paymentPlanDTO : baseList){
+            if(paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanStatus()
+                    .equals(PaymentPlanDetailsDTO.STATUS_PROCESSING)){
+                outputList.add(paymentPlanDTO);
+            }
+        }
+        return outputList;
+    }
 
     /**
      * get filtered list of plans for a single practice

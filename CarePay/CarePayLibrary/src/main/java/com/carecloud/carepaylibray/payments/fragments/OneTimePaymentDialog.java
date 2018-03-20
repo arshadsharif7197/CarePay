@@ -11,9 +11,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanLineItem;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -59,23 +57,24 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
 
     @Override
     protected double getMinimumPayment(String practiceId){
-        double planTotal = paymentPlanDTO.getPayload().getAmount();
-        PaymentSettingsBalanceRangeRule selectedRule = new PaymentSettingsBalanceRangeRule();
-        if(practiceId != null) {
-            for (PaymentsPayloadSettingsDTO payloadSettingsDTO : paymentsDTO.getPaymentPayload().getPaymentSettings()) {
-                if (practiceId.equals(payloadSettingsDTO.getMetadata().getPracticeId())) {
-                    for(PaymentSettingsBalanceRangeRule rule : payloadSettingsDTO.getPayload().getPaymentPlans().getBalanceRangeRules()){
-                        double minAmount = rule.getMinBalance().getValue();
-                        double maxAmount = rule.getMaxBalance().getValue();
-                        if(planTotal >= minAmount && planTotal <= maxAmount &&
-                                minAmount > selectedRule.getMinBalance().getValue()){
-                            selectedRule = rule;
-                        }
-                    }
-                }
-            }
-        }
-        return selectedRule.getMinPaymentRequired().getValue();
+//        double planTotal = paymentPlanDTO.getPayload().getAmount();
+//        PaymentSettingsBalanceRangeRule selectedRule = new PaymentSettingsBalanceRangeRule();
+//        if(practiceId != null) {
+//            for (PaymentsPayloadSettingsDTO payloadSettingsDTO : paymentsDTO.getPaymentPayload().getPaymentSettings()) {
+//                if (practiceId.equals(payloadSettingsDTO.getMetadata().getPracticeId())) {
+//                    for(PaymentSettingsBalanceRangeRule rule : payloadSettingsDTO.getPayload().getPaymentPlans().getBalanceRangeRules()){
+//                        double minAmount = rule.getMinBalance().getValue();
+//                        double maxAmount = rule.getMaxBalance().getValue();
+//                        if(planTotal >= minAmount && planTotal <= maxAmount &&
+//                                minAmount > selectedRule.getMinBalance().getValue()){
+//                            selectedRule = rule;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        return selectedRule.getMinPaymentRequired().getValue();
+        return 0D;
     }
 
     @Override

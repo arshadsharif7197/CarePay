@@ -8,9 +8,7 @@ import android.view.View;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -66,18 +64,19 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
 
     @Override
     protected double getMinimumPayment(){
-        double planTotal = paymentPlanDTO.getPayload().getAmount();
-        PaymentSettingsBalanceRangeRule selectedRule = new PaymentSettingsBalanceRangeRule();
-        PaymentsPayloadSettingsDTO payloadSettingsDTO = paymentsModel.getPaymentPayload().getPaymentSettings().get(0);
-        for(PaymentSettingsBalanceRangeRule rule : payloadSettingsDTO.getPayload().getPaymentPlans().getBalanceRangeRules()){
-            double minAmount = rule.getMinBalance().getValue();
-            double maxAmount = rule.getMaxBalance().getValue();
-            if(planTotal >= minAmount && planTotal <= maxAmount &&
-                    minAmount > selectedRule.getMinBalance().getValue()){
-                selectedRule = rule;
-            }
-        }
-        return selectedRule.getMinPaymentRequired().getValue();
+//        double planTotal = paymentPlanDTO.getPayload().getAmount();
+//        PaymentSettingsBalanceRangeRule selectedRule = new PaymentSettingsBalanceRangeRule();
+//        PaymentsPayloadSettingsDTO payloadSettingsDTO = paymentsModel.getPaymentPayload().getPaymentSettings().get(0);
+//        for(PaymentSettingsBalanceRangeRule rule : payloadSettingsDTO.getPayload().getPaymentPlans().getBalanceRangeRules()){
+//            double minAmount = rule.getMinBalance().getValue();
+//            double maxAmount = rule.getMaxBalance().getValue();
+//            if(planTotal >= minAmount && planTotal <= maxAmount &&
+//                    minAmount > selectedRule.getMinBalance().getValue()){
+//                selectedRule = rule;
+//            }
+//        }
+//        return selectedRule.getMinPaymentRequired().getValue();
+        return 0D;
     }
 
     protected double calculateFullAmount() {
