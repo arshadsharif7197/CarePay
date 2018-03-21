@@ -64,10 +64,10 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     protected double paymentPlanAmount;
 
     protected Button createPlanButton;
-    protected EditText planName;
-    protected EditText paymentDate;
-    protected EditText numberPayments;
-    protected EditText monthlyPayment;
+    protected EditText planNameEditText;
+    protected EditText paymentDateEditText;
+    protected EditText numberPaymentsEditText;
+    protected EditText monthlyPaymentEditText;
     private TextView lastPaymentMessage;
 
     protected List<DemographicsOption> dateOptions;
@@ -75,8 +75,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     protected double monthlyPaymentAmount;
     protected int monthlyPaymentCount;
 
-    private boolean isCalculatingAmount = false;
-    private boolean isCalclatingTime = false;
+    protected boolean isCalculatingAmount = false;
+    protected boolean isCalclatingTime = false;
 
     /**
      * @param paymentsModel   the payment model
@@ -172,34 +172,34 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     }
 
     protected void setupFields(View view) {
-        planName = (EditText) view.findViewById(R.id.paymentPlanName);
+        planNameEditText = (EditText) view.findViewById(R.id.paymentPlanName);
         TextInputLayout planNameInputLayout = (TextInputLayout) view.findViewById(R.id.paymentPlanNameInputLayout);
-        planName.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(planNameInputLayout, null));
+        planNameEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(planNameInputLayout, null));
         View planNameOptional = view.findViewById(R.id.paymentPlanNameOptional);
         planNameOptional.setVisibility(View.VISIBLE);
-        planName.addTextChangedListener(getOptionalViewTextWatcher(planNameOptional));
+        planNameEditText.addTextChangedListener(getOptionalViewTextWatcher(planNameOptional));
 
-        paymentDate = (EditText) view.findViewById(R.id.paymentDrawDay);
+        paymentDateEditText = (EditText) view.findViewById(R.id.paymentDrawDay);
         TextInputLayout drawDayInputLayout = (TextInputLayout) view.findViewById(R.id.paymentDrawDayInputLayout);
-        paymentDate.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(drawDayInputLayout, null));
-        paymentDate.setText(paymentDateOption.getLabel());
-        paymentDate.getOnFocusChangeListener().onFocusChange(paymentDate, true);
-        paymentDate.setOnClickListener(new View.OnClickListener() {
+        paymentDateEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(drawDayInputLayout, null));
+        paymentDateEditText.setText(paymentDateOption.getLabel());
+        paymentDateEditText.getOnFocusChangeListener().onFocusChange(paymentDateEditText, true);
+        paymentDateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showChooseDialog(getContext(), dateOptions, Label.getLabel("payment_day_of_the_month"), new ValueInputCallback() {
                     @Override
                     public void onValueInput(String input) {
-                        paymentDate.setText(input);
+                        paymentDateEditText.setText(input);
                     }
                 });
             }
         });
 
-        numberPayments = (EditText) view.findViewById(R.id.paymentMonthCount);
+        numberPaymentsEditText = (EditText) view.findViewById(R.id.paymentMonthCount);
         TextInputLayout numberPaymentsInputLayout = (TextInputLayout) view.findViewById(R.id.paymentMonthCountInputLayout);
-        numberPayments.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(numberPaymentsInputLayout, null));
-        numberPayments.addTextChangedListener(getRequiredTextWatcher(numberPaymentsInputLayout, new ValueInputCallback() {
+        numberPaymentsEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(numberPaymentsInputLayout, null));
+        numberPaymentsEditText.addTextChangedListener(getRequiredTextWatcher(numberPaymentsInputLayout, new ValueInputCallback() {
             @Override
             public void onValueInput(String input) {
                 if (isCalclatingTime) {
@@ -210,10 +210,10 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
                 try {
                     monthlyPaymentCount = Integer.parseInt(input);
                     monthlyPaymentAmount = calculateMonthlyPayment(monthlyPaymentCount);
-                    if (monthlyPayment.getOnFocusChangeListener() != null) {
-                        monthlyPayment.getOnFocusChangeListener().onFocusChange(monthlyPayment, true);
+                    if (monthlyPaymentEditText.getOnFocusChangeListener() != null) {
+                        monthlyPaymentEditText.getOnFocusChangeListener().onFocusChange(monthlyPaymentEditText, true);
                     }
-                    monthlyPayment.setText(currencyFormatter.format(monthlyPaymentAmount));
+                    monthlyPaymentEditText.setText(currencyFormatter.format(monthlyPaymentAmount));
                     setLastPaymentMessage(monthlyPaymentAmount);
                 } catch (NumberFormatException nfe) {
                     nfe.printStackTrace();
@@ -221,10 +221,10 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
             }
         }));
 
-        monthlyPayment = (EditText) view.findViewById(R.id.paymentAmount);
+        monthlyPaymentEditText = (EditText) view.findViewById(R.id.paymentAmount);
         TextInputLayout paymentAmountInputLayout = (TextInputLayout) view.findViewById(R.id.paymentAmountInputLayout);
-        monthlyPayment.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(paymentAmountInputLayout, currencyFocusChangeListener));
-        monthlyPayment.addTextChangedListener(getRequiredTextWatcher(paymentAmountInputLayout, new ValueInputCallback() {
+        monthlyPaymentEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(paymentAmountInputLayout, currencyFocusChangeListener));
+        monthlyPaymentEditText.addTextChangedListener(getRequiredTextWatcher(paymentAmountInputLayout, new ValueInputCallback() {
             @Override
             public void onValueInput(String input) {
                 if (isCalculatingAmount) {
@@ -236,10 +236,10 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
                     monthlyPaymentAmount = Double.parseDouble(input);
                     monthlyPaymentAmount = Math.round(monthlyPaymentAmount * 100) / 100D;//make sure we don't consider eztra decimals here.. these will get formatted out
                     monthlyPaymentCount = calculatePaymentCount(monthlyPaymentAmount);
-                    if (numberPayments.getOnFocusChangeListener() != null) {
-                        numberPayments.getOnFocusChangeListener().onFocusChange(numberPayments, true);
+                    if (numberPaymentsEditText.getOnFocusChangeListener() != null) {
+                        numberPaymentsEditText.getOnFocusChangeListener().onFocusChange(numberPaymentsEditText, true);
                     }
-                    numberPayments.setText(String.valueOf(monthlyPaymentCount));
+                    numberPaymentsEditText.setText(String.valueOf(monthlyPaymentCount));
                     setLastPaymentMessage(monthlyPaymentAmount);
                 } catch (NumberFormatException nfe) {
                     nfe.printStackTrace();
@@ -385,26 +385,19 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         }
 
         if (monthlyPaymentCount < 2) {
-            if (isUserInteraction) {
-                setError(R.id.paymentMonthCountInputLayout,
-                        String.format(Label.getLabel("payment_plan_min_months_error"),
-                                String.valueOf(2)));
-            }
+            setError(R.id.paymentMonthCountInputLayout,
+                    String.format(Label.getLabel("payment_plan_min_months_error"),
+                            String.valueOf(2)));
+            return false;
+        } else if (monthlyPaymentCount > paymentPlanBalanceRules.getMaxDuration().getValue()) {
+            setError(R.id.paymentMonthCountInputLayout,
+                    String.format(Label.getLabel("payment_plan_max_months_error"),
+                            String.valueOf(paymentPlanBalanceRules.getMaxDuration().getValue())));
             return false;
         } else {
             clearError(R.id.paymentMonthCountInputLayout);
         }
 
-        if (monthlyPaymentCount > paymentPlanBalanceRules.getMaxDuration().getValue()) {
-            if (isUserInteraction) {
-                setError(R.id.paymentMonthCountInputLayout,
-                        String.format(Label.getLabel("payment_plan_max_months_error"),
-                                String.valueOf(paymentPlanBalanceRules.getMaxDuration().getValue())));
-            }
-            return false;
-        } else {
-            clearError(R.id.paymentMonthCountInputLayout);
-        }
 
         if (monthlyPaymentAmount < paymentPlanBalanceRules.getMinPaymentRequired().getValue()) {
             if (isUserInteraction) {
@@ -441,7 +434,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
             PaymentPlanPostModel postModel = new PaymentPlanPostModel();
             postModel.setMetadata(selectedBalance.getMetadata());
             postModel.setAmount(paymentPlanAmount);
-            postModel.setDescription(planName.getText().toString());
+            postModel.setDescription(planNameEditText.getText().toString());
             postModel.setLineItems(getPaymentPlanLineItems());
 
             PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
@@ -495,8 +488,10 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     private void setError(int id, String error) {
         if (getView() != null) {
             TextInputLayout inputLayout = (TextInputLayout) getView().findViewById(id);
-            inputLayout.setErrorEnabled(true);
-            inputLayout.setError(error);
+            if (!inputLayout.isErrorEnabled()) {
+                inputLayout.setErrorEnabled(true);
+                inputLayout.setError(error);
+            }
         }
     }
 

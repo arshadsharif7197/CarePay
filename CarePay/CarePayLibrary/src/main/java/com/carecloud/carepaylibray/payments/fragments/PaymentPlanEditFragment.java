@@ -3,7 +3,6 @@ package com.carecloud.carepaylibray.payments.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -79,17 +78,17 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment {
     }
 
     private void setUpUI(final View view) {
-        planName.setText(paymentPlanDTO.getPayload().getDescription());
-        planName.getOnFocusChangeListener().onFocusChange(planName, true);
+        planNameEditText.setText(paymentPlanDTO.getPayload().getDescription());
+        planNameEditText.getOnFocusChangeListener().onFocusChange(planNameEditText, true);
 
-        paymentDate.setText(StringUtil.getOrdinal(getApplicationPreferences().getUserLanguage(),
+        paymentDateEditText.setText(StringUtil.getOrdinal(getApplicationPreferences().getUserLanguage(),
                 paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfMonth()));
 
-        numberPayments.setText(String.valueOf(paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments()));
-        numberPayments.getOnFocusChangeListener().onFocusChange(numberPayments, true);
+        numberPaymentsEditText.setText(String.valueOf(paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments()));
+        numberPaymentsEditText.getOnFocusChangeListener().onFocusChange(numberPaymentsEditText, true);
 
-        monthlyPayment.setText(currencyFormatter.format(paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount()));
-        ((Button) createPlanButton).setText(Label.getLabel("save_button_label"));
+        monthlyPaymentEditText.setText(currencyFormatter.format(paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount()));
+        createPlanButton.setText(Label.getLabel("save_button_label"));
         createPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,6 +107,8 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment {
             addExistingPlan.setVisibility(View.GONE);
         }
         setUpPaymentMethodLabel(view);
+        isCalclatingTime = false;
+        isCalculatingAmount = false;
     }
 
     private void setUpPaymentMethodLabel(View view) {
@@ -138,7 +139,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment {
         postModel.setExecution(paymentPlanDTO.getPayload().getExecution());
         postModel.setLineItems(paymentPlanDTO.getPayload().getLineItems());
         postModel.setPapiPaymentMethod(paymentPlanDTO.getPayload().getPaymentMethod());
-        postModel.setDescription(planName.getText().toString());
+        postModel.setDescription(planNameEditText.getText().toString());
 
         PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
         paymentPlanModel.setAmount(monthlyPaymentAmount);
