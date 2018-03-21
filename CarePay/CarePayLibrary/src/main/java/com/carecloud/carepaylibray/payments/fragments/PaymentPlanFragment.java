@@ -12,10 +12,12 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -42,13 +44,13 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
-
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
 
 public class PaymentPlanFragment extends BasePaymentDialogFragment implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
 
@@ -61,7 +63,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     protected NumberFormat currencyFormatter;
     protected double paymentPlanAmount;
 
-    protected TextView createPlanButton;
+    protected Button createPlanButton;
     protected EditText planName;
     protected EditText paymentDate;
     protected EditText numberPayments;
@@ -99,7 +101,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
             } else {
                 callback = (PaymentPlanInterface) context;
             }
-        } catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement PaymentPlanInterface");
         }
     }
@@ -200,7 +202,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         numberPayments.addTextChangedListener(getRequiredTextWatcher(numberPaymentsInputLayout, new ValueInputCallback() {
             @Override
             public void onValueInput(String input) {
-                if(isCalclatingTime){
+                if (isCalclatingTime) {
                     isCalclatingTime = false;
                     return;
                 }
@@ -225,7 +227,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         monthlyPayment.addTextChangedListener(getRequiredTextWatcher(paymentAmountInputLayout, new ValueInputCallback() {
             @Override
             public void onValueInput(String input) {
-                if(isCalculatingAmount){
+                if (isCalculatingAmount) {
                     isCalculatingAmount = false;
                     return;
                 }
@@ -266,12 +268,24 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
                 }
             });
         }
-        createPlanButton = (TextView) view.findViewById(R.id.create_payment_plan_button);
+        createPlanButton = (Button) view.findViewById(R.id.create_payment_plan_button);
         createPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createPaymentPlan();
+                createPaymentPlan(true);
                 SystemUtil.hideSoftKeyboard(getContext(), view);
+            }
+        });
+        createPlanButton.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View buttonView, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN && !buttonView.isSelected()) {
+                    createPaymentPlan(true);
+                    SystemUtil.hideSoftKeyboard(getContext(), buttonView);
+                    return true;
+                }
+                return false;
             }
         });
 
@@ -288,7 +302,9 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     }
 
     private void enableCreatePlanButton() {
-        createPlanButton.setEnabled(validateFields(false));
+        boolean isEnabled = validateFields(false);
+        createPlanButton.setSelected(isEnabled);
+        createPlanButton.setClickable(isEnabled);
     }
 
     protected double calculateTotalAmount(PendingBalanceDTO selectedBalance) {
@@ -416,12 +432,12 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         return true;
     }
 
-    protected void addBalanceToExisting(){
+    protected void addBalanceToExisting() {
         callback.onAddBalanceToExitingPlan(paymentsModel, selectedBalance);
     }
 
-    protected void createPaymentPlan() {
-        if (validateFields(false)) {
+    protected void createPaymentPlan(boolean userInteraction) {
+        if (validateFields(userInteraction)) {
             PaymentPlanPostModel postModel = new PaymentPlanPostModel();
             postModel.setMetadata(selectedBalance.getMetadata());
             postModel.setAmount(paymentPlanAmount);
@@ -575,7 +591,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     private View.OnFocusChangeListener currencyFocusChangeListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View view, boolean hasFocus) {
-            if(isCalculatingAmount || isCalclatingTime){
+            if (isCalculatingAmount || isCalclatingTime) {
                 return;
             }
             TextView textView = (TextView) view;

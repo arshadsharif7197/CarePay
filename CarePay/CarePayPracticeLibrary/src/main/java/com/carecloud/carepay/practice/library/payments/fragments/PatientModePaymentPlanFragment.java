@@ -56,8 +56,8 @@ public class PatientModePaymentPlanFragment extends PaymentPlanFragment {
     }
 
     @Override
-    protected void createPaymentPlan(){
-        super.createPaymentPlan();
+    protected void createPaymentPlan(boolean userInteraction){
+        super.createPaymentPlan(userInteraction);
         if(validateFields(false)){
             dismiss();
         }
