@@ -92,7 +92,7 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
 
 
     @Override
-    protected void createPaymentPlan() {
+    protected void createPaymentPlan(boolean userInteraction) {
         if (validateFields(false)) {
             PaymentPlanPostModel postModel = new PaymentPlanPostModel();
             postModel.setMetadata(selectedBalance.getMetadata());
