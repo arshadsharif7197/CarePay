@@ -377,22 +377,33 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         }
         if (paymentDay < 1 || paymentDay > 30) {
             if (isUserInteraction) {
-                setError(R.id.paymentDrawDayInputLayout, Label.getLabel("validation_required_field"));
+                setError(R.id.paymentDrawDayInputLayout, Label.getLabel("validation_required_field")
+                        , isUserInteraction);
             }
             return false;
         } else {
             clearError(R.id.paymentDrawDayInputLayout);
         }
 
-        if (monthlyPaymentCount < 2) {
+        if (StringUtil.isNullOrEmpty(numberPaymentsEditText.getText().toString())) {
+            if (isUserInteraction) {
+                setError(R.id.paymentMonthCountInputLayout, Label.getLabel("validation_required_field")
+                        , isUserInteraction);
+                return false;
+            } else {
+                clearError(R.id.paymentMonthCountInputLayout);
+            }
+        } else if (monthlyPaymentCount < 2) {
             setError(R.id.paymentMonthCountInputLayout,
                     String.format(Label.getLabel("payment_plan_min_months_error"),
-                            String.valueOf(2)));
+                            String.valueOf(2))
+                    , isUserInteraction);
             return false;
         } else if (monthlyPaymentCount > paymentPlanBalanceRules.getMaxDuration().getValue()) {
             setError(R.id.paymentMonthCountInputLayout,
                     String.format(Label.getLabel("payment_plan_max_months_error"),
-                            String.valueOf(paymentPlanBalanceRules.getMaxDuration().getValue())));
+                            String.valueOf(paymentPlanBalanceRules.getMaxDuration().getValue()))
+                    , isUserInteraction);
             return false;
         } else {
             clearError(R.id.paymentMonthCountInputLayout);
@@ -403,7 +414,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
             if (isUserInteraction) {
                 setError(R.id.paymentAmountInputLayout,
                         String.format(Label.getLabel("payment_plan_min_amount_error"),
-                                currencyFormatter.format(paymentPlanBalanceRules.getMinPaymentRequired().getValue())));
+                                currencyFormatter.format(paymentPlanBalanceRules.getMinPaymentRequired().getValue()))
+                        , isUserInteraction);
             }
             return false;
         } else {
@@ -414,7 +426,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
             if (isUserInteraction) {
                 setError(R.id.paymentAmountInputLayout,
                         String.format(Label.getLabel("payment_plan_max_amount_error"),
-                                currencyFormatter.format(paymentPlanBalanceRules.getMaxBalance().getValue())));
+                                currencyFormatter.format(paymentPlanBalanceRules.getMaxBalance().getValue()))
+                        , isUserInteraction);
             }
             return false;
         } else {
@@ -485,22 +498,36 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         return lineItems;
     }
 
-    private void setError(int id, String error) {
+    private void setError(int id, String error, boolean requestFocus) {
         if (getView() != null) {
             TextInputLayout inputLayout = (TextInputLayout) getView().findViewById(id);
-            if (!inputLayout.isErrorEnabled()) {
-                inputLayout.setErrorEnabled(true);
-                inputLayout.setError(error);
-            }
+            setError(inputLayout, error, requestFocus);
+        }
+    }
+
+    private void setError(TextInputLayout inputLayout, String errorMessage, boolean requestFocus) {
+        View view = getView().findFocus();
+        int viewId = inputLayout.getEditText().getId();
+        if (view != null) {
+            viewId = view.getId();
+        }
+
+        if (!inputLayout.isErrorEnabled() && (viewId == inputLayout.getEditText().getId()) || requestFocus) {
+            inputLayout.setErrorEnabled(true);
+            inputLayout.setError(errorMessage);
         }
     }
 
     private void clearError(int id) {
         if (getView() != null) {
             TextInputLayout inputLayout = (TextInputLayout) getView().findViewById(id);
-            inputLayout.setError(null);
-            inputLayout.setErrorEnabled(false);
+            clearError(inputLayout);
         }
+    }
+
+    private void clearError(TextInputLayout inputLayout) {
+        inputLayout.setError(null);
+        inputLayout.setErrorEnabled(false);
     }
 
     private boolean hasExistingPlans() {
@@ -571,11 +598,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
             public void afterTextChanged(Editable editable) {
                 String input = editable.toString();
                 if (StringUtil.isNullOrEmpty(input)) {
-                    inputLayout.setErrorEnabled(true);
-                    inputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
+                    setError(inputLayout, Label.getLabel("demographics_required_validation_msg"), false);
                 } else {
-                    inputLayout.setError(null);
-                    inputLayout.setErrorEnabled(false);
                     valueInputCallback.onValueInput(input);
                     enableCreatePlanButton();
                 }
