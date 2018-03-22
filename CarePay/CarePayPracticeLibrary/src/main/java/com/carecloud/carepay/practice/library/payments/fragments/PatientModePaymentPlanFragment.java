@@ -28,12 +28,6 @@ public class PatientModePaymentPlanFragment extends PaymentPlanFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
-        super.onViewCreated(view, icicle);
-        view.findViewById(R.id.payment_plan_parameters).setVisibility(View.VISIBLE);
-    }
-
-    @Override
     protected void setupToolBar(View view) {
         View closeButton = view.findViewById(R.id.closeViewLayout);
         closeButton.setOnClickListener(new View.OnClickListener() {
@@ -58,7 +52,7 @@ public class PatientModePaymentPlanFragment extends PaymentPlanFragment {
     @Override
     protected void createPaymentPlan(boolean userInteraction){
         super.createPaymentPlan(userInteraction);
-        if(validateFields(false)){
+        if(validateFields(true)){
             dismiss();
         }
     }
