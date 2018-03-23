@@ -44,13 +44,13 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
+
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
 
 public class PaymentPlanFragment extends BasePaymentDialogFragment implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
 
@@ -532,7 +532,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
 
     private boolean hasExistingPlans() {
         String practiceId = selectedBalance.getMetadata().getPracticeId();
-        for (PaymentPlanDTO paymentPlanDTO : paymentsModel.getPaymentPayload().getPatientPaymentPlans()) {
+        for (PaymentPlanDTO paymentPlanDTO : paymentsModel.getPaymentPayload().getActivePlans(practiceId)) {
             if (paymentPlanDTO.getMetadata().getPracticeId() != null &&
                     paymentPlanDTO.getMetadata().getPracticeId().equals(practiceId)) {
                 return true;

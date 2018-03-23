@@ -1062,11 +1062,12 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance) {
-        if (paymentsModel.getPaymentPayload().getFilteredPlans(selectedBalance.getMetadata().getPracticeId()).size() == 1) {
+        String practiceId = selectedBalance.getMetadata().getPracticeId();
+        if(paymentsModel.getPaymentPayload().getActivePlans(practiceId).size() == 1){
             onSelectedPlanToAdd(paymentsModel,
                     selectedBalance,
-                    paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0));
-        } else {
+                    paymentsModel.getPaymentPayload().getActivePlans(practiceId).get(0));
+        }else{
             PracticeActivePlansFragment fragment = PracticeActivePlansFragment.newInstance(paymentsModel, selectedBalance);
             displayDialogFragment(fragment, false);
         }
@@ -1085,7 +1086,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     }
 
     private boolean mustAddToExisting(PaymentsModel paymentsModel) {
-        if (paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()) {
+        if(paymentsModel.getPaymentPayload().getActivePlans(getApplicationMode().getUserPracticeDTO().getPracticeId()).isEmpty()){
             return false;
         }
         PaymentsSettingsPaymentPlansDTO paymentPlanSettings = paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getPaymentPlans();

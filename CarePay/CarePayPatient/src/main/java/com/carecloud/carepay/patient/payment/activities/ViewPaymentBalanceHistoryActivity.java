@@ -122,8 +122,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     private boolean hasPaymentPlans() {
-        if (!paymentsDTO.getPaymentPayload().getPatientPaymentPlans().isEmpty()) {
-            for (PaymentPlanDTO paymentPlanDTO : paymentsDTO.getPaymentPayload().getPatientPaymentPlans()) {
+        if (!paymentsDTO.getPaymentPayload().getActivePlans(null).isEmpty()) {
+            for (PaymentPlanDTO paymentPlanDTO : paymentsDTO.getPaymentPayload().getActivePlans(null)) {
                 if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanStatus().equals(PaymentPlanDetailsDTO.STATUS_PROCESSING)) {
                     return true;
                 }
@@ -544,11 +544,12 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance) {
-        if (paymentsModel.getPaymentPayload().getFilteredPlans(selectedBalance.getMetadata().getPracticeId()).size() == 1) {
+        String practiceId = selectedBalance.getMetadata().getPracticeId();
+        if(paymentsModel.getPaymentPayload().getActivePlans(practiceId).size() == 1){
             onSelectedPlanToAdd(paymentsModel,
                     selectedBalance,
-                    paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0));
-        } else {
+                    paymentsModel.getPaymentPayload().getActivePlans(practiceId).get(0));
+        }else{
             ActivePlansFragment fragment = ActivePlansFragment.newInstance(paymentsModel, selectedBalance);
             replaceFragment(fragment, true);
         }

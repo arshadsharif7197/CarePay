@@ -53,6 +53,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentListItem;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
@@ -125,7 +126,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
                 iterator.remove();//remove all 0 balances to prevent them from showing in the list
             }
         }
-        if (!paymentResultModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()) {
+        if (!paymentResultModel.getPaymentPayload().getActivePlans(getApplicationMode().getUserPracticeDTO().getPracticeId()).isEmpty()) {
             hasNoPayments = false;
         }
         return hasNoPayments;
@@ -148,7 +149,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
     private List<PaymentListItem> getBalances(PaymentsModel paymentsModel) {
         List<PaymentListItem> output = new ArrayList<>();
         output.addAll(paymentsModel.getPaymentPayload().getPatientBalances());
-        output.addAll(paymentsModel.getPaymentPayload().getPatientPaymentPlans());
+        output.addAll(paymentsModel.getPaymentPayload().getActivePlans(getApplicationMode().getUserPracticeDTO().getPracticeId()));
         return output;
     }
 
@@ -533,10 +534,11 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
 
     @Override
     public void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance) {
-        if (paymentsModel.getPaymentPayload().getFilteredPlans(selectedBalance.getMetadata().getPracticeId()).size() == 1) {
+        String practiceId = selectedBalance.getMetadata().getPracticeId();
+        if (paymentsModel.getPaymentPayload().getActivePlans(practiceId).size() == 1) {
             onSelectedPlanToAdd(paymentsModel,
                     selectedBalance,
-                    paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0));
+                    paymentsModel.getPaymentPayload().getActivePlans(practiceId).get(0));
         } else {
             PracticeActivePlansFragment fragment = PracticeActivePlansFragment.newInstance(paymentsModel, selectedBalance);
             displayDialogFragment(fragment, false);
@@ -556,10 +558,11 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
     }
 
     private boolean mustAddToExisting(PaymentsModel paymentsModel) {
-        if (paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()) {
+        PaymentsPayloadSettingsDTO settingsDTO = paymentsModel.getPaymentPayload().getPaymentSettings().get(0);
+        if (paymentsModel.getPaymentPayload().getActivePlans(settingsDTO.getMetadata().getPracticeId()).isEmpty()) {
             return false;
         }
-        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getPaymentPlans();
+        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = settingsDTO.getPayload().getPaymentPlans();
         return !paymentPlanSettings.isCanHaveMultiple() && paymentPlanSettings.isAddBalanceToExisting();
     }
 

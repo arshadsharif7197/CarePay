@@ -69,6 +69,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
@@ -882,11 +883,12 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance) {
-        if (paymentsModel.getPaymentPayload().getFilteredPlans(selectedBalance.getMetadata().getPracticeId()).size() == 1) {
+        String practiceId = selectedBalance.getMetadata().getPracticeId();
+        if(paymentsModel.getPaymentPayload().getActivePlans(practiceId).size() == 1){
             onSelectedPlanToAdd(paymentsModel,
                     selectedBalance,
-                    paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0));
-        } else {
+                    paymentsModel.getPaymentPayload().getActivePlans(practiceId).get(0));
+        }else{
             PracticeActivePlansFragment fragment = PracticeActivePlansFragment.newInstance(paymentsModel, selectedBalance);
             displayDialogFragment(fragment, false);
         }
@@ -905,10 +907,11 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     private boolean mustAddToExisting(PaymentsModel paymentsModel) {
-        if (paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()) {
+        PaymentsPayloadSettingsDTO settingsDTO = paymentsModel.getPaymentPayload().getPaymentSettings().get(0);
+        if(paymentsModel.getPaymentPayload().getActivePlans(settingsDTO.getMetadata().getPracticeId()).isEmpty()){
             return false;
         }
-        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getPaymentPlans();
+        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = settingsDTO.getPayload().getPaymentPlans();
         return !paymentPlanSettings.isCanHaveMultiple() && paymentPlanSettings.isAddBalanceToExisting();
     }
 

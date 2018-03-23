@@ -116,13 +116,13 @@ public class PatientPendingPaymentFragment extends BaseFragment implements Payme
             }
         }
         //add payment plans
-        if(!paymentModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()) {
+        if(!paymentModel.getPaymentPayload().getActivePlans(null).isEmpty()) {
             Map<String, UserPracticeDTO> practiceMap = new HashMap<>();
             for(UserPracticeDTO userPracticeDTO : paymentModel.getPaymentPayload().getUserPractices()){
                 practiceMap.put(userPracticeDTO.getPracticeId(), userPracticeDTO);
             }
 
-            for (PaymentPlanDTO paymentPlanDTO : paymentModel.getPaymentPayload().getPatientPaymentPlans()) {
+            for (PaymentPlanDTO paymentPlanDTO : paymentModel.getPaymentPayload().getActivePlans(null)) {
                 if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanStatus().equals(PaymentPlanDetailsDTO.STATUS_PROCESSING)) {
                     paymentPlanDTO.getMetadata().setPracticeName(practiceMap.get(paymentPlanDTO.getMetadata().getPracticeId()).getPracticeName());
                     list.add(paymentPlanDTO);
@@ -149,8 +149,8 @@ public class PatientPendingPaymentFragment extends BaseFragment implements Payme
     }
 
     private boolean hasPaymentPlans(){
-        if(!paymentsDTO.getPaymentPayload().getPatientPaymentPlans().isEmpty()){
-            for(PaymentPlanDTO paymentPlanDTO : paymentsDTO.getPaymentPayload().getPatientPaymentPlans()){
+        if(!paymentsDTO.getPaymentPayload().getActivePlans(null).isEmpty()){
+            for(PaymentPlanDTO paymentPlanDTO : paymentsDTO.getPaymentPayload().getActivePlans(null)){
                 if(paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanStatus().equals(PaymentPlanDetailsDTO.STATUS_PROCESSING)){
                     return true;
                 }
