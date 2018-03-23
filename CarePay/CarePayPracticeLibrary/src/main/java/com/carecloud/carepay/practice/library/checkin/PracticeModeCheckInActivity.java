@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -69,6 +70,7 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
@@ -657,8 +659,11 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     }
 
     @Override
-    public void onCreditCardSelected(PaymentCreditCardsPayloadDTO papiPaymentMethod) {
-
+    public void onCreditCardSelected(PaymentCreditCardsPayloadDTO creditCard) {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(PatientModePaymentPlanEditFragment.class.getName());
+        if (fragment != null && fragment instanceof PatientModePaymentPlanEditFragment) {
+            ((PaymentPlanEditFragment) fragment).replacePaymentMethod(creditCard);
+        }
     }
 
     @Override
@@ -1075,7 +1080,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel) {
-
+        displayDialogFragment(PracticePaymentPlanPaymentMethodFragment
+                .newInstance(paymentsModel, new PaymentPlanDTO(), true), false);
     }
 
     private boolean mustAddToExisting(PaymentsModel paymentsModel) {

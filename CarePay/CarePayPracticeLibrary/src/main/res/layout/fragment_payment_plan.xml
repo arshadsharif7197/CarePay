@@ -138,7 +138,7 @@
                         android:layout_marginBottom="@dimen/dimen_15dp"
                         android:layout_marginTop="@dimen/dimen_15dp"
                         android:textColor="@color/charcoal"
-                        android:textSize="@dimen/text_size_21sp"
+                        android:textSize="@dimen/text_size_20sp"
                         app:customAssetFont="gotham_rounded_medium"
                         breeze:hintKey="payment_method_title"
                         tools:text="Payment Method" />
@@ -153,7 +153,7 @@
                         android:layout_marginEnd="@dimen/dimen_12dp"
                         android:layout_marginTop="@dimen/dimen_15dp"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/text_size_21sp"
+                        android:textSize="@dimen/text_size_20sp"
                         app:customAssetFont="gotham_rounded_medium"
                         tools:text="MASTERCARD ***2345" />
 

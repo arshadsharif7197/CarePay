@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
@@ -60,6 +61,7 @@ import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
@@ -527,8 +529,11 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void onCreditCardSelected(PaymentCreditCardsPayloadDTO papiPaymentMethod) {
-
+    public void onCreditCardSelected(PaymentCreditCardsPayloadDTO creditCard) {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(PatientModePaymentPlanEditFragment.class.getName());
+        if (fragment != null && fragment instanceof PatientModePaymentPlanEditFragment) {
+            ((PaymentPlanEditFragment) fragment).replacePaymentMethod(creditCard);
+        }
     }
 
     @Override
@@ -584,7 +589,6 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         Bundle args = new Bundle();
         Gson gson = new Gson();
         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(simpleChargeItems));
-
         AddPaymentItemFragment fragment = new AddPaymentItemFragment();
         fragment.setCallback(callback);
         if (simpleChargeItems != null && !simpleChargeItems.isEmpty()) {
@@ -896,7 +900,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel) {
-
+        displayDialogFragment(PracticePaymentPlanPaymentMethodFragment
+                .newInstance(paymentsModel, new PaymentPlanDTO(), true), false);
     }
 
     private boolean mustAddToExisting(PaymentsModel paymentsModel) {

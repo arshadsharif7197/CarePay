@@ -81,7 +81,9 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
             @Override
             public void onClick(View v) {
                 dismiss();
-                callback.onStartPaymentPlan(paymentsModel, paymentPlanPostModel);
+                if (paymentPlanPostModel != null) {
+                    callback.onStartPaymentPlan(paymentsModel, paymentPlanPostModel);
+                }
             }
         });
 

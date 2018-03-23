@@ -74,11 +74,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
-        if (callback.getDto() instanceof PaymentsModel) {
-            paymentsModel = (PaymentsModel) callback.getDto();
-        } else {
-            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
-        }
+        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
         paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
         paymentPlanAmount = paymentPlanDTO.getPayload().getAmount();
         dateOptions = generateDateOptions();
@@ -234,6 +230,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
             @Override
             public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
+                SystemUtil.showErrorToast(getContext(), exceptionMessage);
 
             }
         }, new Gson().toJson(postModel), queryMap);
@@ -264,6 +261,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         String number = creditCard.getCompleteNumber();
 
         try {
+            showProgressDialog();
             MerchantServiceMetadataDTO merchantServiceDTO = null;
             for (MerchantServicesDTO merchantService : paymentsModel.getPaymentPayload().getMerchantServices()) {
                 if (merchantService.getName().toLowerCase().contains("payeezy")) {
@@ -292,6 +290,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
                     number, expiryDate, cvv);
             System.out.println("first authorize call end");
         } catch (Exception e) {
+            hideDialog();
             System.out.println(e.getMessage());
         }
         System.out.println("authorize call end");
@@ -334,6 +333,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
 
     @Override
     public void onAuthorizeCreditCardFailed() {
+        showProgressDialog();
         SystemUtil.showErrorToast(getContext(), "Choose a different payment method");
     }
 
@@ -354,7 +354,9 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             PaymentsModel paymentsDto = new Gson().fromJson(workflowDTO.toString(), PaymentsModel.class);
-            paymentsModel.getPaymentPayload().setPatientCreditCards(paymentsDto.getPaymentPayload().getPatientCreditCards());
+            if (callback.getDto() instanceof PaymentsModel) {
+                ((PaymentsModel) callback.getDto()).getPaymentPayload().setPatientCreditCards(paymentsDto.getPaymentPayload().getPatientCreditCards());
+            }
             updatePaymentPlan();
             MixPanelUtil.logEvent(getString(R.string.event_updated_credit_cards));
         }
