@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -10,30 +11,42 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.payments.models.MerchantServiceMetadataDTO;
+import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentCardData;
+import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.payments.utils.CreditCardUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.PayeezyRequestTask;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
+import com.payeezy.sdk.payeezytokenised.TransactionDataProvider;
 
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author pjohnson on 9/02/18.
  */
 
-public class PaymentPlanEditFragment extends PaymentPlanFragment {
-
+public class PaymentPlanEditFragment extends PaymentPlanFragment
+        implements PayeezyRequestTask.AuthorizeCreditCardCallback,
+        BaseAddCreditCardFragment.IAuthoriseCreditCardResponse {
 
     protected PaymentPlanDTO paymentPlanDTO;
+    private PaymentCreditCardsPayloadDTO creditCard;
 
     /**
      * @param paymentsModel  the payment model
@@ -61,7 +74,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
-        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+        paymentsModel = (PaymentsModel) callback.getDto();
         paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
         paymentPlanAmount = paymentPlanDTO.getPayload().getAmount();
         dateOptions = generateDateOptions();
@@ -94,7 +107,11 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment {
             public void onClick(View v) {
                 if (validateFields(true)) {
                     SystemUtil.hideSoftKeyboard(getContext(), view);
-                    updatePaymentPlan();
+                    if (creditCard.getCreditCardsId() == null) {
+                        authorizeCreditCard();
+                    } else {
+                        updatePaymentPlan();
+                    }
                 }
             }
         });
@@ -112,25 +129,44 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment {
     }
 
     private void setUpPaymentMethodLabel(View view) {
-        PaymentsPatientsCreditCardsPayloadListDTO creditCard = null;
+        PaymentCreditCardsPayloadDTO creditCard = null;
         for (PaymentsPatientsCreditCardsPayloadListDTO creditCardModel :
                 paymentsModel.getPaymentPayload().getPatientCreditCards()) {
             if (paymentPlanDTO.getPayload().getPaymentMethod().getPapiPaymentID()
                     .equals(creditCardModel.getPayload().getCreditCardsId())) {
-                creditCard = creditCardModel;
+                creditCard = creditCardModel.getPayload();
                 break;
             }
         }
         if (creditCard != null) {
-
-            view.findViewById(R.id.paymentMethodContainer).setVisibility(View.VISIBLE);
-            TextView paymentMethod = (TextView) view.findViewById(R.id.creditCardNumberTextView);
-            String paymentMethodMessage = CreditCardUtil.getCreditCardType(creditCard.getPayload().getToken());
-            if (paymentMethodMessage == null) {
-                paymentMethodMessage = creditCard.getPayload().getCardType().toUpperCase();
-            }
-            paymentMethod.setText(paymentMethodMessage + " ***" + creditCard.getPayload().getCardNumber());
+            View paymentMethodContainer = view.findViewById(R.id.paymentMethodContainer);
+            paymentMethodContainer.setVisibility(View.VISIBLE);
+            TextView paymentMethodTextView = (TextView) view.findViewById(R.id.creditCardNumberTextView);
+            setCreditCardInfo(creditCard, paymentMethodTextView);
+            paymentMethodContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callback.onEditPaymentPlanPaymentMethod(paymentsModel);
+                }
+            });
         }
+    }
+
+    private void setCreditCardInfo(PaymentCreditCardsPayloadDTO creditCard,
+                                   TextView paymentMethodTextView) {
+
+        String paymentMethodMessage = creditCard.getToken() != null ? CreditCardUtil.getCreditCardType(creditCard.getToken()) : null;
+        if (paymentMethodMessage == null) {
+            paymentMethodMessage = creditCard.getCardType();
+        }
+        paymentMethodTextView.setText(String.format("%s *** %s", paymentMethodMessage, creditCard.getCardNumber()));
+
+    }
+
+    public void replacePaymentMethod(PaymentCreditCardsPayloadDTO creditCard) {
+        TextView paymentMethodTextView = (TextView) getView().findViewById(R.id.creditCardNumberTextView);
+        setCreditCardInfo(creditCard, paymentMethodTextView);
+        this.creditCard = creditCard;
     }
 
     private void updatePaymentPlan() {
@@ -138,8 +174,21 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment {
         postModel.setAmount(paymentPlanAmount);
         postModel.setExecution(paymentPlanDTO.getPayload().getExecution());
         postModel.setLineItems(paymentPlanDTO.getPayload().getLineItems());
-        postModel.setPapiPaymentMethod(paymentPlanDTO.getPayload().getPaymentMethod());
         postModel.setDescription(planNameEditText.getText().toString());
+
+        if (creditCard != null) {
+            PapiPaymentMethod papiPaymentMethod = new PapiPaymentMethod();
+            if (creditCard.getCreditCardsId() == null) {
+                papiPaymentMethod.setPaymentMethodType(PapiPaymentMethod.PAYMENT_METHOD_NEW_CARD);
+                papiPaymentMethod.setCardData(getCreditCardModel(creditCard));
+            } else {
+                papiPaymentMethod.setPaymentMethodType(PapiPaymentMethod.PAYMENT_METHOD_CARD);
+                papiPaymentMethod.setPapiPaymentID(creditCard.getCreditCardsId());
+            }
+            postModel.setPapiPaymentMethod(papiPaymentMethod);
+        } else {
+            postModel.setPapiPaymentMethod(paymentPlanDTO.getPayload().getPaymentMethod());
+        }
 
         PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
         paymentPlanModel.setAmount(monthlyPaymentAmount);
@@ -186,4 +235,131 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment {
         }, new Gson().toJson(postModel), queryMap);
     }
 
+    protected IntegratedPaymentCardData getCreditCardModel(PaymentCreditCardsPayloadDTO creditCardsPayloadDTO) {
+        IntegratedPaymentCardData creditCardModel = new IntegratedPaymentCardData();
+        creditCardModel.setCardType(creditCardsPayloadDTO.getCardType());
+        creditCardModel.setCardNumber(creditCardsPayloadDTO.getCardNumber());
+        creditCardModel.setExpiryDate(creditCardsPayloadDTO.getExpireDt().replaceAll("/", ""));
+        creditCardModel.setNameOnCard(creditCardsPayloadDTO.getNameOnCard());
+        creditCardModel.setToken(creditCardsPayloadDTO.getToken());
+        creditCardModel.setSaveCard(creditCardsPayloadDTO.isSaveCardOnFile());
+        creditCardModel.setDefault(creditCardsPayloadDTO.isDefaultCardChecked());
+
+        @IntegratedPaymentCardData.TokenizationService String tokenizationService = creditCardsPayloadDTO.getTokenizationService().toString();
+        creditCardModel.setTokenizationService(tokenizationService);
+
+        return creditCardModel;
+    }
+
+    private void authorizeCreditCard() {
+        String currency = "USD";
+        String cvv = creditCard.getCvv();
+        String expiryDate = creditCard.getExpireDt();
+        String name = creditCard.getNameOnCard();
+        String cardType = creditCard.getCardType();
+        String number = creditCard.getCompleteNumber();
+
+        try {
+            MerchantServiceMetadataDTO merchantServiceDTO = null;
+            for (MerchantServicesDTO merchantService : paymentsModel.getPaymentPayload().getMerchantServices()) {
+                if (merchantService.getName().toLowerCase().contains("payeezy")) {
+                    merchantServiceDTO = merchantService.getMetadata();
+                    break;
+                }
+            }
+
+            String tokenUrl = merchantServiceDTO.getBaseUrl() + merchantServiceDTO.getUrlPath();
+            if (!tokenUrl.endsWith("?")) {
+                tokenUrl += "?";
+            }
+
+            TransactionDataProvider.tokenUrl = tokenUrl;
+            TransactionDataProvider.appIdCert = merchantServiceDTO.getApiKey();
+            TransactionDataProvider.secureIdCert = merchantServiceDTO.getApiSecret();
+            TransactionDataProvider.tokenCert = merchantServiceDTO.getMasterMerchantToken();
+            TransactionDataProvider.trTokenInt = merchantServiceDTO.getMasterTaToken();
+            TransactionDataProvider.jsSecurityKey = merchantServiceDTO.getMasterJsSecurityKey();
+            TransactionDataProvider.taToken = merchantServiceDTO.getMasterTaToken();
+
+            String tokenType = merchantServiceDTO.getTokenType();
+            String tokenAuth = merchantServiceDTO.getTokenizationAuth();
+            PayeezyRequestTask requestTask = new PayeezyRequestTask(getContext(), this);
+            requestTask.execute("gettokenvisa", tokenAuth, "", currency, tokenType, cardType, name,
+                    number, expiryDate, cvv);
+            System.out.println("first authorize call end");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("authorize call end");
+    }
+
+    @Override
+    public void onAuthorizeCreditCard(String resString) {
+        String valueString = "value";
+        if (resString != null && resString.contains(valueString)) {
+
+            String group1 = "(\\\"value\\\":\")";
+            String group2 = "(\\d+)";
+            String regex = group1 + group2;
+            String tokenValue = null;
+            Matcher matcher = Pattern.compile(regex).matcher(resString);
+            if (matcher.find()) {
+                tokenValue = matcher.group().replaceAll(group1, "");
+            }
+
+            if (tokenValue != null && tokenValue.matches(group2)) {
+                creditCard.setToken(tokenValue);
+                onAuthorizeCreditCardSuccess();
+            } else {
+                onAuthorizeCreditCardFailed();
+            }
+
+        } else {
+            onAuthorizeCreditCardFailed();
+        }
+    }
+
+    @Override
+    public void onAuthorizeCreditCardSuccess() {
+        if (creditCard.isSaveCardOnFile()) {
+            addNewCreditCardCall();
+        } else {
+            updatePaymentPlan();
+        }
+    }
+
+    @Override
+    public void onAuthorizeCreditCardFailed() {
+        SystemUtil.showErrorToast(getContext(), "Choose a different payment method");
+    }
+
+    private void addNewCreditCardCall() {
+        Gson gson = new Gson();
+        TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getAddCreditCard();
+        String body = gson.toJson(creditCard);
+        getWorkflowServiceHelper().execute(transitionDTO, addNewCreditCardCallback, body, getWorkflowServiceHelper().getPreferredLanguageHeader());
+    }
+
+    private WorkflowServiceCallback addNewCreditCardCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            PaymentsModel paymentsDto = new Gson().fromJson(workflowDTO.toString(), PaymentsModel.class);
+            paymentsModel.getPaymentPayload().setPatientCreditCards(paymentsDto.getPaymentPayload().getPatientCreditCards());
+            updatePaymentPlan();
+            MixPanelUtil.logEvent(getString(R.string.event_updated_credit_cards));
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            SystemUtil.showErrorToast(getContext(), exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 }

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAddCreditCardFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
@@ -14,7 +13,6 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.google.gson.Gson;
 
 /**
  * Created by lmenendez on 2/2/18
@@ -25,34 +23,28 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
     private PaymentPlanInterface callback;
 
     /**
-     * @param paymentsModel payment model
+     * @param paymentsModel        payment model
      * @param paymentPlanPostModel payment plan post model
      * @return new instance
      */
-    public static PracticePaymentPlanAddCreditCardFragment newInstance(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel){
+    public static PracticePaymentPlanAddCreditCardFragment newInstance(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
         Bundle args = new Bundle();
-        Gson gson = new Gson();
-        String paymentsDTOString = gson.toJson(paymentsModel);
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
+        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanPostModel);
-
         PracticePaymentPlanAddCreditCardFragment fragment = new PracticePaymentPlanAddCreditCardFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     /**
-     * @param paymentsModel payment model
+     * @param paymentsModel  payment model
      * @param paymentPlanDTO payment plan details
      * @return new instance
      */
-    public static PracticePaymentPlanAddCreditCardFragment newInstance(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO){
+    public static PracticePaymentPlanAddCreditCardFragment newInstance(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
         Bundle args = new Bundle();
-        Gson gson = new Gson();
-        String paymentsDTOString = gson.toJson(paymentsModel);
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
+        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanDTO);
-
         PracticePaymentPlanAddCreditCardFragment fragment = new PracticePaymentPlanAddCreditCardFragment();
         fragment.setArguments(args);
         return fragment;
@@ -76,7 +68,7 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
 
         View closeButton = view.findViewById(R.id.closeViewLayout);

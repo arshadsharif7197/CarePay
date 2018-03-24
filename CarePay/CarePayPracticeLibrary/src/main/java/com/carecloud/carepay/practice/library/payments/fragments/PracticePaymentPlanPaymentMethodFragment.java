@@ -100,10 +100,10 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
                 break;
             case CarePayConstants.TYPE_CREDIT_CARD:
                 if(paymentPlanPostModel != null) {
-                    callback.onSelectPaymentPlanMethod(paymentMethod, paymentsModel, paymentPlanPostModel);
+                    callback.onSelectPaymentPlanMethod(paymentMethod, paymentsModel, paymentPlanPostModel, onlySelectMode);
                 }
                 if(paymentPlanDTO != null){
-                    callback.onSelectPaymentPlanMethod(paymentMethod, paymentsModel, paymentPlanDTO);
+                    callback.onSelectPaymentPlanMethod(paymentMethod, paymentsModel, paymentPlanDTO, onlySelectMode);
                 }
                 logPaymentMethodSelection(getString(R.string.payment_credit_card));
                 dismiss();

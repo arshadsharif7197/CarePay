@@ -123,10 +123,10 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
         @Override
         public void onClick(View view) {
             if(paymentPlanPostModel != null) {
-                callback.onAddPaymentPlanCard(paymentsModel, paymentPlanPostModel);
+                callback.onAddPaymentPlanCard(paymentsModel, paymentPlanPostModel, onlySelectMode);
             }
             if(paymentPlanDTO != null) {
-                callback.onAddPaymentPlanCard(paymentsModel, paymentPlanDTO);
+                callback.onAddPaymentPlanCard(paymentsModel, paymentPlanDTO, onlySelectMode);
             }
 
             dismiss();

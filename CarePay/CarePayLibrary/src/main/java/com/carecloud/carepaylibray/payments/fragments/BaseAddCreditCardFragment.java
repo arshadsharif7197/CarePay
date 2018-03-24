@@ -38,6 +38,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.TokenizationService
 import com.carecloud.carepaylibray.payments.utils.CreditCardUtil;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.PayeezyRequestTask;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -52,7 +53,8 @@ import java.util.regex.Pattern;
 /**
  * A simple {@link Fragment} subclass.
  */
-public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragment implements PayeezyRequestTask.AuthorizeCreditCardCallback, SimpleDatePickerDialog.OnDateSetListener {
+public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragment
+        implements PayeezyRequestTask.AuthorizeCreditCardCallback, SimpleDatePickerDialog.OnDateSetListener {
 
     public interface IAuthoriseCreditCardResponse {
         void onAuthorizeCreditCardSuccess();
@@ -100,6 +102,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
 
     protected PaymentConfirmationInterface callback;
     protected PaymentsModel paymentsModel;
+    protected boolean onlySelectMode;
 
 
     @Override
@@ -109,14 +112,14 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         Gson gson = new Gson();
         String payloadString;
         if (arguments != null) {
-            if (arguments.containsKey(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE)) {
-                payloadString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
-                PaymentsModel paymentsModel = gson.fromJson(payloadString, PaymentsModel.class);
+            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
+            if (paymentsModel != null) {
                 merchantServicesList = paymentsModel.getPaymentPayload().getMerchantServices();
             }
             if (arguments.containsKey(CarePayConstants.PAYMENT_AMOUNT_BUNDLE)) {
                 amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
             }
+            onlySelectMode = arguments.getBoolean(CarePayConstants.ONLY_SELECT_MODE);
         }
         if (addressPayloadDTO == null) {
             payloadString = getApplicationPreferences().readStringFromSharedPref(CarePayConstants
@@ -385,9 +388,13 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         public void onClick(View view) {
             nextButton.setEnabled(false);
             setDTOs();
-            authorizeCreditCard();
+            authorizeOrSelectCreditCard();
         }
     };
+
+    protected void authorizeOrSelectCreditCard() {
+        authorizeCreditCard();
+    }
 
     private void setDTOs() {
         creditCardsPayloadDTO = new PaymentCreditCardsPayloadDTO();
@@ -409,7 +416,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         creditCardsPayloadDTO.setTokenizationService(TokenizationService.payeezy);
     }
 
-    private void authorizeCreditCard() {
+    protected void authorizeCreditCard() {
         String currency = "USD";
         String cvv = creditCardsPayloadDTO.getCvv();
         String expiryDate = creditCardsPayloadDTO.getExpireDt();

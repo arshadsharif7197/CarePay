@@ -30,23 +30,24 @@ public class PaymentMethodAdapter extends BaseAdapter {
 
     /**
      * Constructor
-     * @param context context for adapter
+     *
+     * @param context            context for adapter
      * @param paymentMethodsList list of payment methods
-     * @param paymentTypeMap map of payment types for icons
+     * @param paymentTypeMap     map of payment types for icons
      */
-    public PaymentMethodAdapter(Context context, List<PaymentsMethodsDTO> paymentMethodsList, HashMap<String, Integer> paymentTypeMap){
+    public PaymentMethodAdapter(Context context, List<PaymentsMethodsDTO> paymentMethodsList, HashMap<String, Integer> paymentTypeMap) {
         this.context = context;
         this.paymentMethodsList = paymentMethodsList;
         this.paymentTypeMap = paymentTypeMap;
     }
 
-    public void setSelectedItem(int position){
+    public void setSelectedItem(int position) {
         this.selectedItem = position;
     }
 
     @Override
     public int getCount() {
-        return paymentMethodsList!=null?paymentMethodsList.size():0;
+        return paymentMethodsList != null ? paymentMethodsList.size() : 0;
     }
 
     @Override
@@ -61,7 +62,7 @@ public class PaymentMethodAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if(convertView == null){
+        if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(context);
             convertView = inflater.inflate(R.layout.item_payment_method, parent, false);
         }
@@ -71,20 +72,20 @@ public class PaymentMethodAdapter extends BaseAdapter {
 
         ImageView paymentMethodImage = (ImageView) convertView.findViewById(R.id.payment_method_image);
         Integer drawable = paymentTypeMap.get(paymentMethodsList.get(position).getType());
-        if(drawable == null){
+        if (drawable == null) {
             drawable = paymentTypeMap.get(CarePayConstants.TYPE_CREDIT_CARD);
         }
         paymentMethodImage.setImageResource(drawable);
 
         ImageView paymentMethodCheck = (ImageView) convertView.findViewById(R.id.payment_method_check);
 
-        if(selectedItem == position){
+        if (selectedItem == position) {
             paymentMethodText.setSelected(true);
             paymentMethodImage.setSelected(true);
             paymentMethodCheck.setSelected(true);
 
             paymentMethodText.setFontAttribute(CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD);
-        }else{
+        } else {
             paymentMethodText.setSelected(false);
             paymentMethodImage.setSelected(false);
             paymentMethodCheck.setSelected(false);

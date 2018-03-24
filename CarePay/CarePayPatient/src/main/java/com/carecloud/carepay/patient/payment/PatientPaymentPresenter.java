@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -60,7 +61,7 @@ public class PatientPaymentPresenter extends PaymentPresenter implements Patient
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
-        viewHandler.navigateToFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount), true);
+        viewHandler.navigateToFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount, false), true);
 
         MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment));
     }
@@ -82,14 +83,13 @@ public class PatientPaymentPresenter extends PaymentPresenter implements Patient
 
     @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
-        Gson gson = new Gson();
-        Bundle args = new Bundle();
-        String paymentsDTOString = gson.toJson(paymentsModel);
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
-        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-        Fragment fragment = new AddNewCreditCardFragment();
-        fragment.setArguments(args);
+        Fragment fragment = AddNewCreditCardFragment.newInstance(paymentsModel, amount);
         viewHandler.navigateToFragment(fragment, true);
+    }
+
+    @Override
+    public void onCreditCardSelected(PaymentCreditCardsPayloadDTO papiPaymentMethod) {
+        //Works only when chooseCreditCardFragment is used in selectMode
     }
 
     @Override
@@ -157,7 +157,6 @@ public class PatientPaymentPresenter extends PaymentPresenter implements Patient
         } else {
             Bundle args = new Bundle();
             args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
-
             PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
             confirmationFragment.setArguments(args);
             viewHandler.displayDialogFragment(confirmationFragment, false);
