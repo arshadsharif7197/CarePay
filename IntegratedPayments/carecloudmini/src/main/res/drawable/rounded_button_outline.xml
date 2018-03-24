@@ -6,6 +6,6 @@
     <stroke android:color="@color/lightBlue" android:width="@dimen/dp_1" />
     <solid android:color="@android:color/transparent" />
     <!--<padding android:top="@dimen/button_padding_vertical" android:bottom="@dimen/button_padding_vertical"/>-->
-    <corners android:radius="@dimen/dp_100" />
+    <corners android:radius="@dimen/button_radius" />
 
 </shape>
