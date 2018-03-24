@@ -39,7 +39,8 @@ public class PaymentPlanPaymentMethodFragment extends PaymentMethodFragment {
      * @param paymentPlanPostModel post model for payment plan to execute
      * @return an instance of PaymentPlanPaymentMethodFragment
      */
-    public static PaymentPlanPaymentMethodFragment newInstance(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
+    public static PaymentPlanPaymentMethodFragment newInstance(PaymentsModel paymentsModel,
+                                                               PaymentPlanPostModel paymentPlanPostModel) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanPostModel);

@@ -53,7 +53,9 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
      * @param onlySelectMode
      * @return new instance
      */
-    public static PaymentPlanAddCreditCardFragment newInstance(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO, boolean onlySelectMode) {
+    public static PaymentPlanAddCreditCardFragment newInstance(PaymentsModel paymentsModel,
+                                                               PaymentPlanDTO paymentPlanDTO,
+                                                               boolean onlySelectMode) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanDTO);

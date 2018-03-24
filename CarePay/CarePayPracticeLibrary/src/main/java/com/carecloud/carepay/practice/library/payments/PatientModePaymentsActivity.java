@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -39,12 +40,15 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentListItem;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
@@ -111,17 +115,17 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
     private boolean hasNoPayments() {
         boolean hasNoPayments = true;
         Iterator<PatientBalanceDTO> iterator = paymentResultModel.getPaymentPayload().getPatientBalances().iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             PatientBalanceDTO patientBalanceDTO = iterator.next();
             if (Double.parseDouble(patientBalanceDTO.getPendingRepsonsibility()) > 0) {
-                if(hasNoPayments) {
+                if (hasNoPayments) {
                     hasNoPayments = false;
                 }
-            }else{
+            } else {
                 iterator.remove();//remove all 0 balances to prevent them from showing in the list
             }
         }
-        if (!paymentResultModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()){
+        if (!paymentResultModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()) {
             hasNoPayments = false;
         }
         return hasNoPayments;
@@ -213,7 +217,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
                 .getActivePlans(selectedPendingBalance.getMetadata().getPracticeId()));
         if(mustAddToExisting(paymentsModel)){
             onAddBalanceToExitingPlan(paymentsModel, selectedPendingBalance);
-        }else {
+        } else {
             PatientModePaymentPlanFragment fragment = PatientModePaymentPlanFragment.newInstance(paymentsModel, selectedPendingBalance);
             displayDialogFragment(fragment, false);
         }
@@ -249,8 +253,11 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onCreditCardSelected(PaymentCreditCardsPayloadDTO papiPaymentMethod) {
-
+    public void onCreditCardSelected(PaymentCreditCardsPayloadDTO creditCard) {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(PatientModePaymentPlanEditFragment.class.getName());
+        if (fragment != null && fragment instanceof PatientModePaymentPlanEditFragment) {
+            ((PaymentPlanEditFragment) fragment).replacePaymentMethod(creditCard);
+        }
     }
 
     @Override
@@ -315,14 +322,14 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
     private Map<String, String> createQueryMap() {
         Map<String, String> queryMap = new HashMap<>();
 
-        if(!paymentResultModel.getPaymentPayload().getPatientBalances().isEmpty() &&
+        if (!paymentResultModel.getPaymentPayload().getPatientBalances().isEmpty() &&
                 !paymentResultModel.getPaymentPayload().getPatientBalances().get(0).getBalances().isEmpty()) {
             PendingBalanceDTO patientBalanceDTO = paymentResultModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
 
             queryMap.put("patient_id", patientBalanceDTO.getMetadata().getPatientId());
             queryMap.put("practice_mgmt", patientBalanceDTO.getMetadata().getPracticeMgmt());
             queryMap.put("practice_id", patientBalanceDTO.getMetadata().getPracticeId());
-        }else if(!paymentResultModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()){
+        } else if (!paymentResultModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()) {
             PaymentPlanDTO paymentPlanDTO = paymentResultModel.getPaymentPayload().getPatientPaymentPlans().get(0);
             queryMap.put("patient_id", paymentPlanDTO.getMetadata().getPatientId());
             queryMap.put("practice_mgmt", paymentPlanDTO.getMetadata().getPracticeMgmt());
@@ -403,7 +410,8 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
 
     @Override
     public void onStartPaymentPlan(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
-        PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment.newInstance(paymentsModel, paymentPlanPostModel);
+        PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
+                .newInstance(paymentsModel, paymentPlanPostModel);
         displayDialogFragment(fragment, false);
     }
 
@@ -423,8 +431,11 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onAddPaymentPlanCard(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel, boolean onlySelectMode) {
-        PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment.newInstance(paymentsModel, paymentPlanPostModel);
+    public void onAddPaymentPlanCard(PaymentsModel paymentsModel,
+                                     PaymentPlanPostModel paymentPlanPostModel,
+                                     boolean onlySelectMode) {
+        PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
+                .newInstance(paymentsModel, paymentPlanPostModel);
         displayDialogFragment(fragment, false);
     }
 
@@ -452,14 +463,20 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
 
     @Override
     public void onStartOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
-        PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment.newInstance(paymentsModel, paymentPlanDTO);
+        PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
+                .newInstance(paymentsModel, paymentPlanDTO, false);
         displayDialogFragment(fragment, false);
     }
 
     @Override
-    public void onSelectPaymentPlanMethod(PaymentsMethodsDTO selectedPaymentMethod, PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO, boolean onlySelectMode) {
-        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            PracticePaymentPlanChooseCreditCardFragment fragment = PracticePaymentPlanChooseCreditCardFragment.newInstance(paymentsModel, selectedPaymentMethod.getLabel(), paymentPlanDTO);
+    public void onSelectPaymentPlanMethod(PaymentsMethodsDTO selectedPaymentMethod,
+                                          PaymentsModel paymentsModel,
+                                          PaymentPlanDTO paymentPlanDTO,
+                                          boolean onlySelectMode) {
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
+                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            PracticePaymentPlanChooseCreditCardFragment fragment = PracticePaymentPlanChooseCreditCardFragment
+                    .newInstance(paymentsModel, selectedPaymentMethod.getLabel(), paymentPlanDTO, onlySelectMode);
             displayDialogFragment(fragment, false);
         } else {
             onAddPaymentPlanCard(paymentsModel, paymentPlanDTO, onlySelectMode);
@@ -467,8 +484,11 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onAddPaymentPlanCard(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO, boolean onlySelectMode) {
-        PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment.newInstance(paymentsModel, paymentPlanDTO);
+    public void onAddPaymentPlanCard(PaymentsModel paymentsModel,
+                                     PaymentPlanDTO paymentPlanDTO,
+                                     boolean onlySelectMode) {
+        PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
+                .newInstance(paymentsModel, paymentPlanDTO, onlySelectMode);
         displayDialogFragment(fragment, false);
     }
 
@@ -513,11 +533,11 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
 
     @Override
     public void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance) {
-        if(paymentsModel.getPaymentPayload().getFilteredPlans(selectedBalance.getMetadata().getPracticeId()).size() == 1){
+        if (paymentsModel.getPaymentPayload().getFilteredPlans(selectedBalance.getMetadata().getPracticeId()).size() == 1) {
             onSelectedPlanToAdd(paymentsModel,
                     selectedBalance,
                     paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0));
-        }else{
+        } else {
             PracticeActivePlansFragment fragment = PracticeActivePlansFragment.newInstance(paymentsModel, selectedBalance);
             displayDialogFragment(fragment, false);
         }
@@ -531,11 +551,12 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
 
     @Override
     public void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel) {
-
+        displayDialogFragment(PracticePaymentPlanPaymentMethodFragment
+                .newInstance(paymentsModel, new PaymentPlanDTO(), true), false);
     }
 
-    private boolean mustAddToExisting(PaymentsModel paymentsModel){
-        if(paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()){
+    private boolean mustAddToExisting(PaymentsModel paymentsModel) {
+        if (paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()) {
             return false;
         }
         PaymentsSettingsPaymentPlansDTO paymentPlanSettings = paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getPaymentPlans();
@@ -574,4 +595,9 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
         }
     }
 
+
+    @Override
+    public DTO getDto() {
+        return paymentResultModel;
+    }
 }

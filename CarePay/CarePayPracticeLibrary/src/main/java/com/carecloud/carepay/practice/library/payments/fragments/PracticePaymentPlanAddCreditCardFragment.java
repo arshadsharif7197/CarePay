@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAddCreditCardFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
@@ -27,7 +28,8 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
      * @param paymentPlanPostModel payment plan post model
      * @return new instance
      */
-    public static PracticePaymentPlanAddCreditCardFragment newInstance(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
+    public static PracticePaymentPlanAddCreditCardFragment newInstance(PaymentsModel paymentsModel,
+                                                                       PaymentPlanPostModel paymentPlanPostModel) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanPostModel);
@@ -41,10 +43,13 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
      * @param paymentPlanDTO payment plan details
      * @return new instance
      */
-    public static PracticePaymentPlanAddCreditCardFragment newInstance(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+    public static PracticePaymentPlanAddCreditCardFragment newInstance(PaymentsModel paymentsModel,
+                                                                       PaymentPlanDTO paymentPlanDTO,
+                                                                       boolean onlySelectMode) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanDTO);
+        args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
         PracticePaymentPlanAddCreditCardFragment fragment = new PracticePaymentPlanAddCreditCardFragment();
         fragment.setArguments(args);
         return fragment;
@@ -86,6 +91,19 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
     protected void makePaymentCall() {
         super.makePaymentCall();
         dismiss();
+    }
+
+    @Override
+    protected void authorizeOrSelectCreditCard() {
+        if (onlySelectMode) {
+            creditCardsPayloadDTO.setCompleteNumber(creditCardNoEditText.getText().toString().replace(" ", "").trim());
+            creditCardsPayloadDTO.setDefault(setAsDefaultCheckBox.isChecked());
+            creditCardsPayloadDTO.setSaveCardOnFile(saveCardOnFileCheckBox.isChecked());
+            dismiss();
+            callback.onCreditCardSelected(creditCardsPayloadDTO);
+        } else {
+            authorizeCreditCard();
+        }
     }
 
 

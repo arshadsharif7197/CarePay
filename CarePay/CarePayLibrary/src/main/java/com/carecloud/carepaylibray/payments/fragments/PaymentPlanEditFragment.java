@@ -74,7 +74,11 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
-        paymentsModel = (PaymentsModel) callback.getDto();
+        if (callback.getDto() instanceof PaymentsModel) {
+            paymentsModel = (PaymentsModel) callback.getDto();
+        } else {
+            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+        }
         paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
         paymentPlanAmount = paymentPlanDTO.getPayload().getAmount();
         dateOptions = generateDateOptions();
