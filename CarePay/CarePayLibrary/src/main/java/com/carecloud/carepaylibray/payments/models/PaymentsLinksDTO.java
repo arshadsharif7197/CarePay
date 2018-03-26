@@ -43,6 +43,9 @@ public class PaymentsLinksDTO {
     @SerializedName(value = "language_metadata", alternate = "language")
     @Expose
     private TransitionDTO language = new TransitionDTO();
+    @SerializedName("patient_statements")
+    @Expose
+    private TransitionDTO patientStatements = new TransitionDTO();
 
     /**
      * @return The paymentsSelfRefresh
@@ -186,5 +189,13 @@ public class PaymentsLinksDTO {
 
     public void setLanguage(TransitionDTO language) {
         this.language = language;
+    }
+
+    public TransitionDTO getPatientStatements() {
+        return patientStatements;
+    }
+
+    public void setPatientStatements(TransitionDTO patientStatements) {
+        this.patientStatements = patientStatements;
     }
 }

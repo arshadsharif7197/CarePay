@@ -41,6 +41,12 @@ public class PaymentCreditCardsPayloadDTO {
     @Expose
     private TokenizationService tokenizationService;
 
+    private transient boolean saveCardOnFile;
+
+    private transient boolean defaultCardChecked;
+
+    private transient String completeNumber;
+
     /**
      * @return The cardType
      */
@@ -167,5 +173,29 @@ public class PaymentCreditCardsPayloadDTO {
 
     public void setTokenizationService(TokenizationService tokenizationService) {
         this.tokenizationService = tokenizationService;
+    }
+
+    public boolean isSaveCardOnFile() {
+        return saveCardOnFile;
+    }
+
+    public void setSaveCardOnFile(boolean saveCardOnFile) {
+        this.saveCardOnFile = saveCardOnFile;
+    }
+
+    public boolean isDefaultCardChecked() {
+        return defaultCardChecked;
+    }
+
+    public void setDefaultCardChecked(boolean defaultCardChecked) {
+        this.defaultCardChecked = defaultCardChecked;
+    }
+
+    public void setCompleteNumber(String completeNumber) {
+        this.completeNumber = completeNumber;
+    }
+
+    public String getCompleteNumber() {
+        return completeNumber;
     }
 }

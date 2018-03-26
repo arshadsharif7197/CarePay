@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'newrelic'
 
 android {
     compileSdkVersion 25
@@ -27,6 +28,8 @@ android {
             buildConfigField 'String', 'API_BASE_URL', '"https://payments.development.carecloud.com/"'
             buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream.development.carecloud.com:443"'
             buildConfigField 'String', 'ENVIRONMENT', '"Development"'
+
+            buildConfigField 'String', 'NEW_RELIC_ID', '"AAd42346a8ad752df162926e940501caaac45776d0"'
         }
         qa {
             applicationId "com.carecloud.carepay.mini"
@@ -34,6 +37,8 @@ android {
             buildConfigField 'String', 'API_BASE_URL', '"https://payments.qa.carecloud.com/"'
             buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream.qa.carecloud.com:443"'
             buildConfigField 'String', 'ENVIRONMENT', '"QA"'
+
+            buildConfigField 'String', 'NEW_RELIC_ID', '"AAd42346a8ad752df162926e940501caaac45776d0"'
         }
         staging{
             applicationId "com.carecloud.carepay.mini"
@@ -41,6 +46,8 @@ android {
             buildConfigField 'String', 'API_BASE_URL', '"https://payments-staging.carecloud.com/"'
             buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream-staging.carecloud.com:443"'
             buildConfigField 'String', 'ENVIRONMENT', '"Staging"'
+
+            buildConfigField 'String', 'NEW_RELIC_ID', '"AAd42346a8ad752df162926e940501caaac45776d0"'
         }
         production{
             applicationId "com.carecloud.carepay.mini"
@@ -48,6 +55,8 @@ android {
             buildConfigField 'String', 'API_BASE_URL', '"https://payments.carecloud.com/"'
             buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream.carecloud.com:443"'
             buildConfigField 'String', 'ENVIRONMENT', '""'
+
+            buildConfigField 'String', 'NEW_RELIC_ID', '"AA12527e863b828f6ba40ac70e80f743c34fac0f82"'
         }
         production_support{
             applicationId "com.carecloud.carepay.mini"
@@ -55,6 +64,8 @@ android {
             buildConfigField 'String', 'API_BASE_URL', '"https://payments.carecloud.com/"'
             buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream.carecloud.com:443"'
             buildConfigField 'String', 'ENVIRONMENT', '"Support"'
+
+            buildConfigField 'String', 'NEW_RELIC_ID', '"AAd42346a8ad752df162926e940501caaac45776d0"'
         }
     }
 }
@@ -64,6 +75,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile 'com.newrelic.agent.android:android-agent:5.+'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support:recyclerview-v7:25.3.1'

@@ -82,7 +82,8 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
     }
 
     private void setSwipeCardNowVisibility(View view) {
-        final boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
+        final boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE) ||
+                HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_2_DEVICE);
         final boolean isPracticeMode = getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE;
         Button swipeCreditCarNowButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
         View swipeCreditCardNowLayout = view.findViewById(R.id.swipeCreditCardNowLayout);

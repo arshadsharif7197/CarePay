@@ -22,6 +22,7 @@ import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterf
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsSettingsRegularPaymentsDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -47,6 +48,8 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
     private PaymentConfirmationInterface payInfoCallback;
     private double owedAmount = 0;
     private ResponsibilityHeaderModel headerModel;
+
+    private boolean mustAddToExisting = false;
 
     @Override
     public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
@@ -214,20 +217,21 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
     }
 
     private void initializeFooter(View view) {
-        View leftButton = view.findViewById(R.id.payment_plan_button);
+        TextView leftButton = (TextView) view.findViewById(R.id.payment_plan_button);
         if(leftButton != null){
             leftButton.setVisibility(isPaymentPlanAvailable(owedAmount)
                     ? View.VISIBLE : View.GONE);
             leftButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    callback.onLeftActionTapped(paymentsModel, owedAmount);
+                    callback.onLeftActionTapped(paymentsModel, owedAmount);//todo need to handle case where must add to existing
                     dismiss();
                 }
             });
+            if(mustAddToExisting){
+                leftButton.setText(Label.getLabel("payment_plan_add_existing"));
+            }
         }
-
-        leftButton.setVisibility(View.GONE);//TODO remove this when ready to release PP
 
         View middleButton = view.findViewById(R.id.partial_pay_button);
         if(middleButton != null) {
@@ -361,12 +365,22 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
     }
 
     protected boolean isPaymentPlanAvailable(double balance){
-        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = paymentsModel.getPaymentPayload()
-                .getPaymentSettings().get(0).getPayload().getPaymentPlans();
+        PaymentsPayloadSettingsDTO settingsDTO = paymentsModel.getPaymentPayload()
+                .getPaymentSettings().get(0);
+        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = settingsDTO.getPayload().getPaymentPlans();
         if(paymentPlanSettings.isPaymentPlansEnabled()){
             for(PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()){
-                if(balance > rule.getMinBalanceRequired().getValue()){
-                    return true;
+                if (balance >= rule.getMinBalance().getValue() &&
+                        balance <= rule.getMaxBalance().getValue()) {
+                    if(paymentsModel.getPaymentPayload().getActivePlans(settingsDTO.getMetadata().getPracticeId()).isEmpty()){
+                        return true;
+                    }else if(paymentPlanSettings.isCanHaveMultiple()){//need to check if multiple plans is enabled
+                        return true;
+                    }else if(paymentPlanSettings.isAddBalanceToExisting()){//check if balance can be added to existing
+                        mustAddToExisting = true;
+                        return true;
+                    }
+                    return false;
                 }
             }
         }

@@ -69,23 +69,57 @@
 
         </FrameLayout>
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
-            android:id="@+id/reviewdemogrPhoneNumberTextInput"
-            style="@style/SigninSignupTextInputStyle"
-            app:customAssetFont="proxima_nova_semi_bold"
-            app:hintTextAppearance="@style/FloatingLabelStyle">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
-                android:id="@+id/reviewgrdemoPhoneNumberEdit"
-                style="@style/DemographicsReviewEditTextStyle"
-                android:digits="0123456789-"
-                android:imeOptions="actionDone"
-                android:inputType="phone"
-                android:maxLength="12"
-                app:customAssetFont="gotham_rounded_book"
-                breeze:hintKey="demographics_phone_number"
-                tools:hint="Phone Number" />
-        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                android:id="@+id/reviewdemogrPhoneNumberTextInput"
+                style="@style/SigninSignupTextInputStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                app:customAssetFont="proxima_nova_semi_bold"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                    android:id="@+id/reviewgrdemoPhoneNumberEdit"
+                    style="@style/DemographicsReviewEditTextStyle"
+                    android:digits="0123456789-"
+                    android:imeOptions="actionDone"
+                    android:inputType="phone"
+                    android:maxLength="12"
+                    app:customAssetFont="gotham_rounded_book"
+                    breeze:hintKey="demographics_phone_number"
+                    tools:hint="Phone Number" />
+            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+<!--
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                android:id="@+id/phoneTypeInputLayout"
+                style="@style/SigninSignupTextInputStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                app:customAssetFont="proxima_nova_semi_bold"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                    android:id="@+id/phoneTypeEditText"
+                    style="@style/DemographicsReviewEditTextStyle"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:drawableEnd="@drawable/icon_drop_down"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:imeOptions="actionNext"
+                    app:customAssetFont="gotham_rounded_book"
+                    app:hintTextAppearance="@style/FloatingLabelStyle"
+                    breeze:hintKey="phone_type_label"
+                    tools:hint="Phone Type" />
+
+            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+-->
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

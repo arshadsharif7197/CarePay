@@ -78,7 +78,7 @@ public class LocationsFragment extends RegistrationFragment implements Locations
     }
 
     private void selectLocation(){
-        if(selectedLocationId == null){
+        if(StringUtil.isNullOrEmpty(selectedLocationId)){
             CustomErrorToast.showWithMessage(getContext(), getString(R.string.error_select_location));
             return;
         }

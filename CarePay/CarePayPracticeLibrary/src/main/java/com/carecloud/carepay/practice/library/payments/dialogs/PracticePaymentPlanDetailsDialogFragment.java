@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.payments.dialogs;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,8 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 
 public class PracticePaymentPlanDetailsDialogFragment extends PaymentPlanDetailsDialogFragment {
 
+    private DialogInterface.OnDismissListener dismissListener;
+
     /**
      * @param paymentsModel      the payment model
      * @param paymentPlanDTO     the Payment Plan Dto
@@ -36,17 +39,18 @@ public class PracticePaymentPlanDetailsDialogFragment extends PaymentPlanDetails
         return dialog;
     }
 
-
     @Override
     protected void onInitialization(View view) {
         super.onInitialization(view);
         //handle cancel button
-
         View closeButton = view.findViewById(R.id.closeViewLayout);
         if(closeButton != null){
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View view) {
+                    if(dismissListener != null){
+                        dismissListener.onDismiss(getDialog());
+                    }
                     dismiss();
                 }
             });
@@ -76,7 +80,18 @@ public class PracticePaymentPlanDetailsDialogFragment extends PaymentPlanDetails
 
     @Override
     protected int getCancelImageResource() {
+        if(dismissListener != null){
+            return R.drawable.icn_arrow_left;
+        }
         return R.drawable.icn_close;
+    }
+
+    /**
+     * Set dismiss listener
+     * @param dismissListener dismiss listener
+     */
+    public void setDismissListener(DialogInterface.OnDismissListener dismissListener){
+        this.dismissListener = dismissListener;
     }
 
 }
