@@ -2,9 +2,10 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.EditText;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -138,33 +139,36 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
                 break;
             }
         }
+        View paymentMethodContainer = view.findViewById(R.id.paymentMethodContainer);
+        paymentMethodContainer.setVisibility(View.VISIBLE);
+        TextInputLayout paymentMethodInputLayout = (TextInputLayout) view.findViewById(R.id.paymentMethodInputLayout);
+        EditText paymentMethodEditText = (EditText) view.findViewById(R.id.creditCardNumberTextView);
+        paymentMethodEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(paymentMethodInputLayout, null));
         if (creditCard != null) {
-            View paymentMethodContainer = view.findViewById(R.id.paymentMethodContainer);
-            paymentMethodContainer.setVisibility(View.VISIBLE);
-            TextView paymentMethodTextView = (TextView) view.findViewById(R.id.creditCardNumberTextView);
-            setCreditCardInfo(creditCard, paymentMethodTextView);
-            paymentMethodContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    callback.onEditPaymentPlanPaymentMethod(paymentsModel);
-                }
-            });
+            setCreditCardInfo(creditCard, paymentMethodEditText);
         }
+        paymentMethodEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.onEditPaymentPlanPaymentMethod(paymentsModel);
+            }
+        });
     }
 
     private void setCreditCardInfo(PaymentCreditCardsPayloadDTO creditCard,
-                                   TextView paymentMethodTextView) {
+                                   EditText paymentMethodEditText) {
 
         String paymentMethodMessage = creditCard.getToken() != null ? CreditCardUtil.getCreditCardType(creditCard.getToken()) : null;
         if (paymentMethodMessage == null) {
             paymentMethodMessage = creditCard.getCardType();
         }
-        paymentMethodTextView.setText(String.format("%s *** %s", paymentMethodMessage, creditCard.getCardNumber()));
+        paymentMethodEditText.setText(String.format("%s *** %s", paymentMethodMessage, creditCard.getCardNumber()));
+        paymentMethodEditText.getOnFocusChangeListener().onFocusChange(paymentMethodEditText, true);
 
     }
 
     public void replacePaymentMethod(PaymentCreditCardsPayloadDTO creditCard) {
-        TextView paymentMethodTextView = (TextView) getView().findViewById(R.id.creditCardNumberTextView);
+        EditText paymentMethodTextView = (EditText) getView().findViewById(R.id.creditCardNumberTextView);
         setCreditCardInfo(creditCard, paymentMethodTextView);
         this.creditCard = creditCard;
     }
@@ -205,7 +209,6 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         postModel.setPaymentPlanModel(paymentPlanModel);
         TransitionDTO updatePaymentTransition = paymentsModel.getPaymentsMetadata()
                 .getPaymentsTransitions().getUpdatePaymentPlan();
-
 
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("practice_mgmt", paymentPlanDTO.getMetadata().getPracticeMgmt());

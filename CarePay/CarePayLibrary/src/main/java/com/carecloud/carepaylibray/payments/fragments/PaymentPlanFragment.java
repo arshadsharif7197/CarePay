@@ -44,13 +44,13 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
-
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
 
 public class PaymentPlanFragment extends BasePaymentDialogFragment implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
 
@@ -398,19 +398,28 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
                     String.format(Label.getLabel("payment_plan_min_months_error"),
                             String.valueOf(2))
                     , isUserInteraction);
+            clearError(R.id.paymentAmountInputLayout);
             return false;
         } else if (monthlyPaymentCount > paymentPlanBalanceRules.getMaxDuration().getValue()) {
             setError(R.id.paymentMonthCountInputLayout,
                     String.format(Label.getLabel("payment_plan_max_months_error"),
                             String.valueOf(paymentPlanBalanceRules.getMaxDuration().getValue()))
                     , isUserInteraction);
+            clearError(R.id.paymentAmountInputLayout);
             return false;
         } else {
             clearError(R.id.paymentMonthCountInputLayout);
         }
 
-
-        if (monthlyPaymentAmount < paymentPlanBalanceRules.getMinPaymentRequired().getValue()) {
+        if (StringUtil.isNullOrEmpty(monthlyPaymentEditText.getText().toString())) {
+            if (isUserInteraction) {
+                setError(R.id.paymentAmountInputLayout, Label.getLabel("validation_required_field")
+                        , isUserInteraction);
+                return false;
+            } else {
+                clearError(R.id.paymentAmountInputLayout);
+            }
+        } else if (monthlyPaymentAmount < paymentPlanBalanceRules.getMinPaymentRequired().getValue()) {
             if (isUserInteraction) {
                 setError(R.id.paymentAmountInputLayout,
                         String.format(Label.getLabel("payment_plan_min_amount_error"),

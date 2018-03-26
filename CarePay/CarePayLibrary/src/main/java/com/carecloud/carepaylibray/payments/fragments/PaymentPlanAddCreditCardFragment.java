@@ -94,7 +94,7 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
         super.onViewCreated(view, icicle);
         saveCardOnFileCheckBox.setChecked(true);
         saveCardOnFileCheckBox.setEnabled(false);
-        if (paymentPlanPostModel != null) {
+        if (paymentPlanPostModel != null || onlySelectMode) {
             nextButton.setText(Label.getLabel("payment_plan_continue"));
         }
     }
