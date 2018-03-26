@@ -45,9 +45,12 @@ import com.carecloud.shamrocksdk.payment.models.defs.StateDef;
 import com.carecloud.shamrocksdk.utils.AuthorizationUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.newrelic.agent.android.NewRelic;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
@@ -488,6 +491,8 @@ public class WelcomeActivity extends FullScreenActivity {
 
         @Override
         public void onPaymentCompleteWithError(String paymentRequestId, JsonElement paymentPayload, String errorMessage) {
+            logNewRelicPaymentError(errorMessage, paymentPayload.toString());
+
             Gson gson = new Gson();
             QueueUnprocessedPaymentRecord unprocessedPaymentRecord = new QueueUnprocessedPaymentRecord();
             unprocessedPaymentRecord.setPaymentRequestId(paymentRequestId);
@@ -519,7 +524,9 @@ public class WelcomeActivity extends FullScreenActivity {
 
         @Override
         public void onPaymentFailed(String paymentRequestId, String message) {
-            Log.d(TAG, "Payment failed for: "+paymentRequestId);
+            String printMessage = "Payment failed for: "+paymentRequestId;
+            logNewRelicPaymentError(message, printMessage);
+            Log.d(TAG, printMessage);
             Log.d(TAG, message);
             showErrorToast(message);
             releasePaymentRequest(paymentRequestId);
@@ -649,6 +656,7 @@ public class WelcomeActivity extends FullScreenActivity {
 
             @Override
             public void onFailure(String errorMessage) {
+                logNewRelicPaymentError(errorMessage, requestObject.toString());
                 if(shouldRetry(errorMessage)) {
                     CustomErrorToast.showWithMessage(WelcomeActivity.this, errorMessage);
                     updateMessage(String.format(getString(R.string.welcome_retrying), paymentAttempt + 1));
@@ -774,4 +782,19 @@ public class WelcomeActivity extends FullScreenActivity {
             scheduleDeviceRefresh();
         }
     };
+
+    private void logNewRelicPaymentError(String errorMessage, Object payload){
+        Map<String, Object> eventMap = new HashMap<>();
+        eventMap.put("Error Message", errorMessage);
+        eventMap.put("Request Payload", payload);
+        eventMap.put("DeepStream ID", connectedDevice.getPaymentRequestId());
+        eventMap.put("Is Refunding", connectedDevice.isRefunding());
+        eventMap.put("Device ID", connectedDevice.getDeviceId());
+        eventMap.put("Device Name", connectedDevice.getName());
+
+        String eventType = connectedDevice.isRefunding() ? "RefundRequestFail" : "PaymentRequestFail";
+
+        NewRelic.recordCustomEvent(eventType, eventMap);
+
+    }
 }
