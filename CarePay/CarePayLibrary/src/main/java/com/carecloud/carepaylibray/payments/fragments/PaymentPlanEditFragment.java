@@ -108,7 +108,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
             public void onClick(View v) {
                 if (validateFields(true)) {
                     SystemUtil.hideSoftKeyboard(getContext(), view);
-                    if (creditCard.getCreditCardsId() == null) {
+                    if (creditCard!=null && creditCard.getCreditCardsId() == null) {
                         authorizeCreditCard();
                     } else {
                         updatePaymentPlan();
