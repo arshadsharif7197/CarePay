@@ -54,6 +54,10 @@ public class TransitionsDTO {
     @Expose
     private TransitionDTO updateForms = new TransitionDTO();
 
+    @SerializedName("update_pending_forms")
+    @Expose
+    private TransitionDTO updatePendingForms = new TransitionDTO();
+
     @SerializedName("practice_mode")
     @Expose
     private TransitionDTO practiceMode = new TransitionDTO();
@@ -227,5 +231,13 @@ public class TransitionsDTO {
 
     public void setAddCreditCard(TransitionDTO addCreditCard) {
         this.addCreditCard = addCreditCard;
+    }
+
+    public TransitionDTO getUpdatePendingForms() {
+        return updatePendingForms;
+    }
+
+    public void setUpdatePendingForms(TransitionDTO updatePendingForms) {
+        this.updatePendingForms = updatePendingForms;
     }
 }
