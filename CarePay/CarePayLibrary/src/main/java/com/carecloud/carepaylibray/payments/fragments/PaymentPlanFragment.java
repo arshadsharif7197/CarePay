@@ -27,6 +27,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
@@ -180,8 +181,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         planNameEditText.addTextChangedListener(getOptionalViewTextWatcher(planNameOptional));
 
         paymentDateEditText = (EditText) view.findViewById(R.id.paymentDrawDay);
-        TextInputLayout drawDayInputLayout = (TextInputLayout) view.findViewById(R.id.paymentDrawDayInputLayout);
-        paymentDateEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(drawDayInputLayout, null));
+        TextInputLayout paymentDayInputLayout = (TextInputLayout) view.findViewById(R.id.paymentDrawDayInputLayout);
+        paymentDateEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(paymentDayInputLayout, null));
         paymentDateEditText.setText(paymentDateOption.getLabel());
         paymentDateEditText.getOnFocusChangeListener().onFocusChange(paymentDateEditText, true);
         paymentDateEditText.setOnClickListener(new View.OnClickListener() {
@@ -197,8 +198,10 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         });
 
         numberPaymentsEditText = (EditText) view.findViewById(R.id.paymentMonthCount);
-        TextInputLayout numberPaymentsInputLayout = (TextInputLayout) view.findViewById(R.id.paymentMonthCountInputLayout);
-        numberPaymentsEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(numberPaymentsInputLayout, null));
+        CarePayTextInputLayout numberPaymentsInputLayout = (CarePayTextInputLayout) view.findViewById(R.id.paymentMonthCountInputLayout);
+        numberPaymentsInputLayout.setRequestFocusWhenError(false);
+        numberPaymentsEditText.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(numberPaymentsInputLayout, null));
         numberPaymentsEditText.addTextChangedListener(getRequiredTextWatcher(numberPaymentsInputLayout, new ValueInputCallback() {
             @Override
             public void onValueInput(String input) {
@@ -222,8 +225,10 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         }));
 
         monthlyPaymentEditText = (EditText) view.findViewById(R.id.paymentAmount);
-        TextInputLayout paymentAmountInputLayout = (TextInputLayout) view.findViewById(R.id.paymentAmountInputLayout);
-        monthlyPaymentEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(paymentAmountInputLayout, currencyFocusChangeListener));
+        CarePayTextInputLayout paymentAmountInputLayout = (CarePayTextInputLayout) view.findViewById(R.id.paymentAmountInputLayout);
+        paymentAmountInputLayout.setRequestFocusWhenError(false);
+        monthlyPaymentEditText.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(paymentAmountInputLayout, currencyFocusChangeListener));
         monthlyPaymentEditText.addTextChangedListener(getRequiredTextWatcher(paymentAmountInputLayout, new ValueInputCallback() {
             @Override
             public void onValueInput(String input) {
@@ -246,7 +251,6 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
                 }
             }
         }));
-
 
         lastPaymentMessage = (TextView) view.findViewById(R.id.lastPaymentMessage);
         lastPaymentMessage.setVisibility(View.INVISIBLE);
@@ -515,16 +519,12 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     }
 
     private void setError(TextInputLayout inputLayout, String errorMessage, boolean requestFocus) {
-        View view = getView().findFocus();
-        int viewId = inputLayout.getEditText().getId();
-        if (view != null) {
-            viewId = view.getId();
+        inputLayout.setErrorEnabled(true);
+        inputLayout.setError(errorMessage);
+        if (requestFocus) {
+            inputLayout.requestFocus();
         }
 
-        if (!inputLayout.isErrorEnabled() && (viewId == inputLayout.getEditText().getId()) || requestFocus) {
-            inputLayout.setErrorEnabled(true);
-            inputLayout.setError(errorMessage);
-        }
     }
 
     private void clearError(int id) {
@@ -622,19 +622,20 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
             if (isCalculatingAmount || isCalclatingTime) {
                 return;
             }
-            TextView textView = (TextView) view;
+            EditText editText = (EditText) view;
             isCalculatingAmount = true;
-            if (!StringUtil.isNullOrEmpty(textView.getText().toString())) {
+            if (!StringUtil.isNullOrEmpty(editText.getText().toString())) {
                 if (hasFocus) {
                     try {
-                        Number number = currencyFormatter.parse(textView.getText().toString());
-                        textView.setText(String.valueOf(number.doubleValue()));
+                        Number number = currencyFormatter.parse(editText.getText().toString());
+
+                        editText.setText(String.valueOf(number.doubleValue()));
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
                 } else {
                     try {
-                        textView.setText(currencyFormatter.format(Double.parseDouble(textView.getText().toString())));
+                        editText.setText(currencyFormatter.format(Double.parseDouble(editText.getText().toString())));
                     } catch (NumberFormatException nfe) {
                         nfe.printStackTrace();
                     }
