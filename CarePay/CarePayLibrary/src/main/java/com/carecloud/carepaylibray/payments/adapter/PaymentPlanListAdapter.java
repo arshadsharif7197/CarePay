@@ -62,8 +62,7 @@ public class PaymentPlanListAdapter extends RecyclerView.Adapter<PaymentPlanList
                 paymentPlanItem.getPayload().getPaymentPlanDetails().getFrequencyString();
         holder.planDetail.setText(planDetails);
 
-        holder.planProgress.setMax(paymentPlanItem.getPayload().getPaymentPlanDetails().getInstallments());
-        holder.planProgress.setProgress(paymentPlanItem.getPayload().getPaymentPlanDetails().getFilteredHistory().size());
+        holder.planProgress.setProgress(paymentPlanItem.getPayload().getPaymentPlanProgress());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

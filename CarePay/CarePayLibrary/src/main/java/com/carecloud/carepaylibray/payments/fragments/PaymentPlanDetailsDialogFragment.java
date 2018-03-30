@@ -107,8 +107,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         balance.setText(currencyFormatter.format(totalAmount - amountPaid));
 
         ProgressBar planProgress = (ProgressBar) view.findViewById(R.id.paymentPlanProgress);
-        planProgress.setMax(installmentTotal);
-        planProgress.setProgress(paymentCount);
+        planProgress.setProgress(planPayload.getPaymentPlanProgress());
 
         ImageView dialogCloseHeader = (ImageView) view.findViewById(R.id.dialog_close_header);
         if (dialogCloseHeader != null) {
