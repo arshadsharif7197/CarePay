@@ -198,7 +198,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                     Label.getLabel("tomorrow_label"),
                     Label.getLabel("this_month_label"),
                     Label.getLabel("next_days_label"),
-                    false).toUpperCase(Locale.getDefault());
+                    true).toUpperCase(Locale.getDefault());
             setTextViewById(R.id.practice_payment_in_office_label, practiceCountLabel);
         }
     }

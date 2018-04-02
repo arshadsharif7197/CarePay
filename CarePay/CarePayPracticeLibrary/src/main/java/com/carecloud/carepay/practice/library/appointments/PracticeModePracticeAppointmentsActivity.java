@@ -123,7 +123,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                     Label.getLabel("tomorrow_label"),
                     Label.getLabel("this_month_label"),
                     Label.getLabel("next_days_label"),
-                    false).toUpperCase(Locale.getDefault());
+                    true).toUpperCase(Locale.getDefault());
             setTextViewById(R.id.practice_patient_count_label, practiceCountLabel);
         }
     }
@@ -661,12 +661,12 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                 fragment.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        if(!isVisible()){
+                        if (!isVisible()) {
                             return;
                         }
-                        if(appointmentDTO != null){
+                        if (appointmentDTO != null) {
                             showPracticeAppointmentDialog(appointmentDTO);
-                        }else if (paymentsModel != null){
+                        } else if (paymentsModel != null) {
                             showResponsibilityFragment(paymentsModel);
                         }
                     }
