@@ -122,8 +122,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                     Label.getLabel("today_label"),
                     Label.getLabel("tomorrow_label"),
                     Label.getLabel("this_month_label"),
-                    Label.getLabel("next_days_label")
-            ).toUpperCase(Locale.getDefault());
+                    Label.getLabel("next_days_label"),
+                    false).toUpperCase(Locale.getDefault());
             setTextViewById(R.id.practice_patient_count_label, practiceCountLabel);
         }
     }
