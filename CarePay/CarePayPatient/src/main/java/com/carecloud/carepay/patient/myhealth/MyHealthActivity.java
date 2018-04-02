@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.myhealth;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.PermissionChecker;
+import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
@@ -27,9 +29,11 @@ import com.carecloud.carepay.patient.myhealth.fragments.MyHealthMainFragment;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.PdfUtil;
 
@@ -161,17 +165,33 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
 
     @SuppressLint("NewApi")
     @Override
-    public void onLabClicked(LabDto lab) {
-        selectedLab = lab;
-        MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewLabResult));
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PermissionChecker.PERMISSION_GRANTED && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    MY_PERMISSIONS_LAB_REQUEST_WRITE_EXTERNAL_STORAGE);
-
-        } else {
-            prepareLabPdf(lab);
-        }
+    public void onLabClicked(final LabDto lab) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(String.format(Label
+                        .getLabel("myHealth.labs.button.dialogMessage.downloadMessage"), lab.getName(),
+                DateUtil.getInstance().setDateRaw(lab.getCreatedAt()).getDateAsDayMonthDayOrdinal()))
+                .setPositiveButton(Label.getLabel("my_health_confirm_download_button_label"),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                selectedLab = lab;
+                                MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewLabResult));
+                                if (ContextCompat.checkSelfPermission(MyHealthActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                        != PermissionChecker.PERMISSION_GRANTED
+                                        && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+                                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                            MY_PERMISSIONS_LAB_REQUEST_WRITE_EXTERNAL_STORAGE);
+                                } else {
+                                    prepareLabPdf(lab);
+                                }
+                            }
+                        })
+                .setNegativeButton(Label.getLabel("my_health_cancel"),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+        builder.create().show();
     }
 
     @Override
