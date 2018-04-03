@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
@@ -17,7 +16,7 @@ import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPaylo
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DateUtil;
-import com.google.gson.Gson;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import static com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod.PAYMENT_METHOD_ACCOUNT;
 import static com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod.PAYMENT_METHOD_CARD;
@@ -37,7 +36,17 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
     private WorkflowDTO workflowDTO;
     private IntegratedPatientPaymentPayload patientPaymentPayload;
 
-    NumberFormat currencyFormatter;
+    private NumberFormat currencyFormatter;
+
+
+    public static PaymentConfirmationFragment newInstance(WorkflowDTO workflowDTO){
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, workflowDTO);
+
+        PaymentConfirmationFragment fragment = new PaymentConfirmationFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
 
     @Override
@@ -69,10 +78,8 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
 
         Bundle args = getArguments();
         if (args != null) {
-            Gson gson = new Gson();
-            String paymentPayload = args.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
-            workflowDTO = gson.fromJson(paymentPayload, WorkflowDTO.class);
-            paymentsModel = gson.fromJson(paymentPayload, PaymentsModel.class);
+            workflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class, args);
+            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             patientPaymentPayload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
         }
         currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
