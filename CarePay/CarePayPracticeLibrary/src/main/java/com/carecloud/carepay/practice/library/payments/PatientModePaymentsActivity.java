@@ -42,6 +42,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
@@ -238,11 +239,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
             builder.replace(last, builder.length(), "");
             showErrorNotification(builder.toString());
         } else {
-            Bundle args = new Bundle();
-            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
-
-            PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
-            confirmationFragment.setArguments(args);
+            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment.newInstance(workflowDTO);
             displayDialogFragment(confirmationFragment, false);
         }
     }
@@ -448,12 +445,8 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
 
     @Override
     public void onSubmitPaymentPlan(WorkflowDTO workflowDTO) {
-        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        List<PaymentPlanDTO> paymentPlanList = this.paymentResultModel.getPaymentPayload().getPatientPaymentPlans();
-        paymentPlanList.addAll(paymentsModel.getPaymentPayload().getPatientPaymentPlans());
-        this.paymentResultModel.getPaymentPayload().setPatientBalances(paymentsModel.getPaymentPayload().getPatientBalances());
-
-        completePaymentProcess(workflowDTO);
+        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO);
+        displayDialogFragment(confirmationFragment, false);
     }
 
     @Override
@@ -509,20 +502,8 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
 
     @Override
     public void onPaymentPlanEdited(WorkflowDTO workflowDTO) {
-        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        if (!paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()) {
-            PaymentPlanDTO modifiedPaymentPlan = paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0);
-            for (int i = 0; i < paymentResultModel.getPaymentPayload().getPatientPaymentPlans().size(); i++) {
-                PaymentPlanDTO paymentPlan = paymentResultModel.getPaymentPayload().getPatientPaymentPlans().get(i);
-                if (modifiedPaymentPlan.getMetadata().getPaymentPlanId()
-                        .equals(paymentPlan.getMetadata().getPaymentPlanId())) {
-                    paymentResultModel.getPaymentPayload().getPatientPaymentPlans().remove(paymentPlan);
-                    paymentResultModel.getPaymentPayload().getPatientPaymentPlans().add(i, modifiedPaymentPlan);
-                    paymentBalancesAdapter.setData(getBalances(paymentResultModel));
-                    break;
-                }
-            }
-        }
+        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO);
+        displayDialogFragment(confirmationFragment, false);
     }
 
     @Override
@@ -602,5 +583,30 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
     @Override
     public DTO getDto() {
         return paymentResultModel;
+    }
+
+    @Override
+    public void completePaymentPlanProcess(WorkflowDTO workflowDTO) {
+        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+        List<PaymentPlanDTO> paymentPlanList = this.paymentResultModel.getPaymentPayload().getPatientPaymentPlans();
+        this.paymentResultModel.getPaymentPayload().setPatientBalances(paymentsModel.getPaymentPayload().getPatientBalances());
+
+
+        if (!paymentPlanList.isEmpty()) {
+            PaymentPlanDTO modifiedPaymentPlan = paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0);
+            for (PaymentPlanDTO paymentPlan : paymentPlanList) {
+                if (modifiedPaymentPlan.getMetadata().getPaymentPlanId()
+                        .equals(paymentPlan.getMetadata().getPaymentPlanId())) {
+                    paymentPlanList.remove(paymentPlan);
+                    paymentPlanList.add(modifiedPaymentPlan);
+                    completePaymentProcess(workflowDTO);
+                    return;
+                }
+            }
+        }
+
+        //payment plan not found for modification
+        paymentPlanList.addAll(paymentsModel.getPaymentPayload().getPatientPaymentPlans());
+        completePaymentProcess(workflowDTO);
     }
 }
