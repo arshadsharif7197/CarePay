@@ -310,10 +310,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
                 showErrorNotification(builder.toString());
             } else {
                 getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                Bundle args = new Bundle();
-                args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
-                PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
-                confirmationFragment.setArguments(args);
+                PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment.newInstance(workflowDTO);
                 displayDialogFragment(confirmationFragment, false);
             }
         }

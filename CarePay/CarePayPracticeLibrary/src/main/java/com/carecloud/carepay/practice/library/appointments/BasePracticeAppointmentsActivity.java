@@ -15,7 +15,6 @@ import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodPrepaymentFragment;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -409,11 +408,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
             builder.replace(last, builder.length(), "");
             showErrorNotification(builder.toString());
         } else {
-            Bundle args = new Bundle();
-            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
-
-            PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
-            confirmationFragment.setArguments(args);
+            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment.newInstance(workflowDTO);
             displayDialogFragment(confirmationFragment, false);
         }
     }

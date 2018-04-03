@@ -19,7 +19,6 @@ import com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFrag
 import com.carecloud.carepay.patient.payment.fragments.PaymentDisabledAlertDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -36,6 +35,7 @@ import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAddCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanChooseCreditCardFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
@@ -283,10 +283,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
             showErrorNotification(builder.toString());
         } else {
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            Bundle args = new Bundle();
-            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
-            PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
-            confirmationFragment.setArguments(args);
+            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment.newInstance(workflowDTO);
             displayDialogFragment(confirmationFragment, false);
         }
 
@@ -458,15 +455,12 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void onSubmitPaymentPlan(WorkflowDTO workflowDTO) {
-        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        List<PaymentPlanDTO> paymentPlanList = this.paymentsDTO.getPaymentPayload().getPatientPaymentPlans();
-        paymentPlanList.addAll(paymentsModel.getPaymentPayload().getPatientPaymentPlans());
-
         for (int i = 0; i < getSupportFragmentManager().getBackStackEntryCount(); i++) {
             getSupportFragmentManager().popBackStack();
         }
 
-        completePaymentProcess(workflowDTO);
+        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO);
+        displayDialogFragment(confirmationFragment, false);
     }
 
     @Override
@@ -522,19 +516,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void onPaymentPlanEdited(WorkflowDTO workflowDTO) {
-        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        if (!paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()) {
-            PaymentPlanDTO modifiedPaymentPlan = paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0);
-            for (PaymentPlanDTO paymentPlan : paymentsDTO.getPaymentPayload().getPatientPaymentPlans()) {
-                if (modifiedPaymentPlan.getMetadata().getPaymentPlanId()
-                        .equals(paymentPlan.getMetadata().getPaymentPlanId())) {
-                    paymentsDTO.getPaymentPayload().getPatientPaymentPlans().remove(paymentPlan);
-                    paymentsDTO.getPaymentPayload().getPatientPaymentPlans().add(modifiedPaymentPlan);
-                    break;
-                }
-            }
-        }
-        initFragments();
+        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO);
+        displayDialogFragment(confirmationFragment, false);
     }
 
     @Override
@@ -624,5 +607,28 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
 
+    @Override
+    public void completePaymentPlanProcess(WorkflowDTO workflowDTO) {
+        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+        List<PaymentPlanDTO> paymentPlanList = this.paymentsDTO.getPaymentPayload().getPatientPaymentPlans();
 
+
+        if (!paymentPlanList.isEmpty()) {
+            PaymentPlanDTO modifiedPaymentPlan = paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0);
+            for (PaymentPlanDTO paymentPlan : paymentPlanList) {
+                if (modifiedPaymentPlan.getMetadata().getPaymentPlanId()
+                        .equals(paymentPlan.getMetadata().getPaymentPlanId())) {
+                    paymentPlanList.remove(paymentPlan);
+                    paymentPlanList.add(modifiedPaymentPlan);
+                    completePaymentProcess(workflowDTO);
+                    return;
+                }
+            }
+        }
+
+        //payment plan not found for modification
+        paymentPlanList.addAll(paymentsModel.getPaymentPayload().getPatientPaymentPlans());
+        completePaymentProcess(workflowDTO);
+
+    }
 }

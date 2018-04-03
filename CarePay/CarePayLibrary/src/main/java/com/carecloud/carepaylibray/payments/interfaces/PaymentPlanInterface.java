@@ -2,7 +2,6 @@ package com.carecloud.carepaylibray.payments.interfaces;
 
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.interfaces.DTOInterface;
-import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -14,7 +13,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostMode
  * Created by lmenendez on 1/23/18
  */
 
-public interface PaymentPlanInterface extends PaymentMethodInterface,
+public interface PaymentPlanInterface extends PaymentMethodInterface, PaymentPlanCompletedInterface,
         OneTimePaymentInterface, ChooseCreditCardInterface, DTOInterface {
 
     void onStartPaymentPlan(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel);

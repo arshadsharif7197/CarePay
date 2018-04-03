@@ -70,6 +70,7 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
@@ -643,11 +644,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
             new CustomMessageToast(this, builder.toString(), CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
             onDismissPaymentMethodDialog(paymentsModel);
         } else {
-            Bundle args = new Bundle();
-            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
-
-            PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
-            confirmationFragment.setArguments(args);
+            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment.newInstance(workflowDTO);
             displayDialogFragment(confirmationFragment, false);
         }
     }
@@ -1032,7 +1029,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void onSubmitPaymentPlan(WorkflowDTO workflowDTO) {
-        //TODO what should we show in this case because we don't have PP represented at the top level payload
+        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO);
+        displayDialogFragment(confirmationFragment, false);
     }
 
     @Override
@@ -1050,7 +1048,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void onPaymentPlanEdited(WorkflowDTO workflowDTO) {
-        //todo what happens in this case??
+        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO);
+        displayDialogFragment(confirmationFragment, false);
     }
 
     @Override
@@ -1128,5 +1127,10 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     @Override
     public DTO getDto() {
         return checkInDTO;
+    }
+
+    @Override
+    public void completePaymentPlanProcess(WorkflowDTO workflowDTO) {
+        //TODO what should we show in this case because we don't have PP represented at the top level payload
     }
 }

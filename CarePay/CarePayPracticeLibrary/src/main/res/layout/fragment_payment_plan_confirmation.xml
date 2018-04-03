@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
+
+    <LinearLayout
+        android:layout_width="@dimen/dialog_width"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/practice_mode_dialog_header_bg"
+            android:paddingTop="@dimen/dimen_10dp"
+            android:paddingStart="@dimen/dimen_10dp"
+            android:paddingEnd="@dimen/dimen_10dp"
+            android:paddingBottom="@dimen/dimen_20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/payment_confirm_number_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_12sp"
+                    android:textColor="@color/pastel_blue"
+                    breeze:textKey="payment_confirm_number"
+                    app:customAssetFont="proxima_nova_regular"/>
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/payment_confirm_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:textSize="@dimen/text_size_12sp"
+                    android:textColor="@color/pastel_blue"
+                    app:customAssetFont="proxima_nova_regular"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/payment_confirm_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_12sp"
+                    android:textColor="@color/pastel_blue"
+                    app:customAssetFont="proxima_nova_regular"/>
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="@dimen/dimen_130dp"
+                android:layout_height="@dimen/dimen_130dp"
+                android:adjustViewBounds="true"
+                android:padding="@dimen/dimen_30dp"
+                android:src="@drawable/icn_payment_confirm_check"
+                android:scaleType="fitCenter"
+                android:layout_gravity="center_horizontal"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/payment_confirm_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/dimen_20dp"
+                android:textSize="@dimen/text_size_24sp"
+                android:textColor="@color/light_blue_subtitle"
+                app:customAssetFont="proxima_nova_regular"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:padding="@dimen/dimen_20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/payment_confirm_amount_label"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingTop="@dimen/dimen_20dp"
+                    android:paddingBottom="@dimen/dimen_20dp"
+                    android:textSize="@dimen/text_size_17"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="start"
+                    android:textColor="@color/textview_default_textcolor"
+                    breeze:textKey="payment_plan_total_amount"
+                    app:customAssetFont="proxima_nova_regular"/>
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/payment_confirm_amount_value"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingTop="@dimen/dimen_20dp"
+                    android:paddingBottom="@dimen/dimen_20dp"
+                    android:textSize="@dimen/text_size_14"
+                    android:gravity="end"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/textview_default_textcolor"
+                    app:customAssetFont="proxima_nova_semi_bold"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_1dp"
+                android:background="@color/light_gray"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/payment_confirm_installments_label"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingTop="@dimen/dimen_20dp"
+                    android:paddingBottom="@dimen/dimen_20dp"
+                    android:textSize="@dimen/text_size_17"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="start"
+                    android:textColor="@color/textview_default_textcolor"
+                    breeze:textKey="payment_plan_installments"
+                    app:customAssetFont="proxima_nova_regular"/>
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/payment_confirm_installments_value"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingTop="@dimen/dimen_20dp"
+                    android:paddingBottom="@dimen/dimen_20dp"
+                    android:textSize="@dimen/text_size_14"
+                    android:gravity="end"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/textview_default_textcolor"
+                    app:customAssetFont="proxima_nova_semi_bold"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_1dp"
+                android:background="@color/light_gray"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/payment_confirm_payment_label"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingTop="@dimen/dimen_20dp"
+                    android:paddingBottom="@dimen/dimen_20dp"
+                    android:textSize="@dimen/text_size_17"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="start"
+                    android:textColor="@color/textview_default_textcolor"
+                    breeze:textKey="payment_plan_payment_amount"
+                    app:customAssetFont="proxima_nova_regular"/>
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/payment_confirm_payment_value"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingTop="@dimen/dimen_20dp"
+                    android:paddingBottom="@dimen/dimen_20dp"
+                    android:textSize="@dimen/text_size_14"
+                    android:gravity="end"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/textview_default_textcolor"
+                    app:customAssetFont="proxima_nova_semi_bold"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_1dp"
+                android:background="@color/light_gray"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/payment_confirm_due_label"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingTop="@dimen/dimen_20dp"
+                    android:paddingBottom="@dimen/dimen_20dp"
+                    android:textSize="@dimen/text_size_17"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="start"
+                    android:textColor="@color/textview_default_textcolor"
+                    breeze:textKey="payment_plan_due_date"
+                    app:customAssetFont="proxima_nova_regular"/>
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/payment_confirm_due_value"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingTop="@dimen/dimen_20dp"
+                    android:paddingBottom="@dimen/dimen_20dp"
+                    android:textSize="@dimen/text_size_14"
+                    android:gravity="end"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/textview_default_textcolor"
+                    app:customAssetFont="proxima_nova_semi_bold"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_1dp"
+                android:background="@color/light_gray"/>
+
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dimen_10dp"
+            android:background="@drawable/patient_mode_dialog_body_bg">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/button_ok"
+                style="@style/BreezeButtonStyleDark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_10dp"
+                android:background="@drawable/green_rounded_button_selector"
+                breeze:textKey="payment_ok"
+                app:customAssetFont="gotham_rounded_medium" />
+
+
+        </FrameLayout>
+
+    </LinearLayout>
+</FrameLayout>
