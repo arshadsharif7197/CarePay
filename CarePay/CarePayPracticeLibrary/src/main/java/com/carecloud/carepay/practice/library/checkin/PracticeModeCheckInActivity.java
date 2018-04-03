@@ -38,7 +38,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PatientModePaym
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionEntryFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentHistoryFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticeActivePlansFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticeValidPlansFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeOneTimePaymentFragment;
@@ -1068,7 +1068,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                     selectedBalance,
                     paymentsModel.getPaymentPayload().getActivePlans(practiceId).get(0));
         }else{
-            PracticeActivePlansFragment fragment = PracticeActivePlansFragment.newInstance(paymentsModel, selectedBalance);
+            PracticeValidPlansFragment fragment = PracticeValidPlansFragment.newInstance(paymentsModel, selectedBalance);
             displayDialogFragment(fragment, false);
         }
     }

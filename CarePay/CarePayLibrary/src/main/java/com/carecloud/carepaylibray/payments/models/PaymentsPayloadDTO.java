@@ -359,17 +359,46 @@ public class PaymentsPayloadDTO implements Serializable {
     }
 
     /**
-     * get only active plans
+     * get only valid plans
+     *
      * @param practiceId - optional, if provided will first filter plans by practice
      * @return active plans
      */
-    public List<PaymentPlanDTO> getActivePlans(String practiceId){
+    public List<PaymentPlanDTO> getValidPlans(String practiceId, double amountToAdd) {
+        List<PaymentPlanDTO> baseList = practiceId != null ?
+                getActivePlans(practiceId) : getPatientPaymentPlans();
+        List<PaymentPlanDTO> outputList = new ArrayList<>();
+        for (PaymentsPayloadSettingsDTO settingsDTO : getPaymentSettings()) {
+            if ((practiceId != null) && practiceId.equals(settingsDTO.getMetadata().getPracticeId())
+                    && settingsDTO.getPayload().getPaymentPlans().isAddBalanceToExisting()) {
+                for (PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getPayload().getPaymentPlans().getBalanceRangeRules()) {
+                    double minAmount = balanceRangeRule.getMinBalance().getValue();
+                    double maxAmount = balanceRangeRule.getMaxBalance().getValue();
+                    for (PaymentPlanDTO paymentPlanDTO : baseList) {
+                        if (paymentPlanDTO.getPayload().getAmount() + amountToAdd >= minAmount
+                                && paymentPlanDTO.getPayload().getAmount() + amountToAdd <= maxAmount) {
+                            outputList.add(paymentPlanDTO);
+                        }
+                    }
+                }
+            }
+        }
+        return outputList;
+    }
+
+    /**
+     * get only active plans
+     *
+     * @param practiceId - optional, if provided will first filter plans by practice
+     * @return active plans
+     */
+    public List<PaymentPlanDTO> getActivePlans(String practiceId) {
         List<PaymentPlanDTO> baseList = practiceId != null ?
                 getFilteredPlans(practiceId) : getPatientPaymentPlans();
         List<PaymentPlanDTO> outputList = new ArrayList<>();
-        for (PaymentPlanDTO paymentPlanDTO : baseList){
-            if(paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanStatus()
-                    .equals(PaymentPlanDetailsDTO.STATUS_PROCESSING)){
+        for (PaymentPlanDTO paymentPlanDTO : baseList) {
+            if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanStatus()
+                    .equals(PaymentPlanDetailsDTO.STATUS_PROCESSING)) {
                 outputList.add(paymentPlanDTO);
             }
         }

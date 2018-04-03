@@ -22,7 +22,7 @@ import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFra
 import com.carecloud.carepay.practice.library.payments.fragments.PatientModeAddExistingPaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientModePaymentPlanEditFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientModePaymentPlanFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticeActivePlansFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticeValidPlansFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeOneTimePaymentFragment;
@@ -535,12 +535,14 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
     @Override
     public void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance) {
         String practiceId = selectedBalance.getMetadata().getPracticeId();
-        if (paymentsModel.getPaymentPayload().getActivePlans(practiceId).size() == 1) {
+        if(paymentsModel.getPaymentPayload().getValidPlans(practiceId,
+                selectedBalance.getPayload().get(0).getAmount()).size() == 1){
             onSelectedPlanToAdd(paymentsModel,
                     selectedBalance,
-                    paymentsModel.getPaymentPayload().getActivePlans(practiceId).get(0));
+                    paymentsModel.getPaymentPayload().getValidPlans(practiceId,
+                            selectedBalance.getPayload().get(0).getAmount()).get(0));
         } else {
-            PracticeActivePlansFragment fragment = PracticeActivePlansFragment.newInstance(paymentsModel, selectedBalance);
+            PracticeValidPlansFragment fragment = PracticeValidPlansFragment.newInstance(paymentsModel, selectedBalance);
             displayDialogFragment(fragment, false);
         }
     }

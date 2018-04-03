@@ -28,44 +28,44 @@ import java.util.List;
  * Created by lmenendez on 2/12/18
  */
 
-public class ActivePlansFragment extends BaseDialogFragment implements PaymentPlanListAdapter.OnPaymentPlanSelectedListener {
+public class ValidPlansFragment extends BaseDialogFragment implements PaymentPlanListAdapter.OnPaymentPlanSelectedListener {
 
     protected PaymentPlanInterface callback;
     protected PaymentsModel paymentsModel;
     protected PendingBalanceDTO selectedBalance;
 
 
-    public static ActivePlansFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance){
+    public static ValidPlansFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
 
-        ActivePlansFragment fragment = new ActivePlansFragment();
+        ValidPlansFragment fragment = new ValidPlansFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
-        try{
-            if(context instanceof PaymentViewHandler){
+        try {
+            if (context instanceof PaymentViewHandler) {
                 callback = (PaymentPlanInterface) ((PaymentViewHandler) context).getPaymentPresenter();
-            }else {
+            } else {
                 callback = (PaymentPlanInterface) context;
             }
-        }catch(ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement PaymentPlanInterface");
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_active_plans, container, false);
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
         paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
@@ -73,12 +73,12 @@ public class ActivePlansFragment extends BaseDialogFragment implements PaymentPl
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         setupToolBar(view);
         setAdapter(view);
     }
 
-    protected void setupToolBar(View view){
+    protected void setupToolBar(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -93,19 +93,19 @@ public class ActivePlansFragment extends BaseDialogFragment implements PaymentPl
 
     }
 
-    protected void setAdapter(View view){
+    protected void setAdapter(View view) {
         RecyclerView plansRecycler = (RecyclerView) view.findViewById(R.id.plans_recycler);
         plansRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-
         PaymentPlanListAdapter adapter = new PaymentPlanListAdapter(
                 getActivity(), getPaymentPlansList(), this, paymentsModel);
         plansRecycler.setAdapter(adapter);
 
     }
 
-    protected List<PaymentPlanDTO> getPaymentPlansList(){
+    protected List<PaymentPlanDTO> getPaymentPlansList() {
         String practiceId = selectedBalance.getMetadata().getPracticeId();
-        return paymentsModel.getPaymentPayload().getFilteredPlans(practiceId);
+        return paymentsModel.getPaymentPayload().getValidPlans(practiceId,
+                selectedBalance.getPayload().get(0).getAmount());
     }
 
 

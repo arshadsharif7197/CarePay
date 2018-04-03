@@ -22,11 +22,12 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
 
 /**
  * Created by lmenendez on 2/12/18
@@ -36,7 +37,7 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
 
     private PaymentPlanDTO existingPlan;
 
-    public static AddExistingPaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO existingPlan){
+    public static AddExistingPaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO existingPlan) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
@@ -49,7 +50,7 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
 
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         Bundle args = getArguments();
         existingPlan = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
         super.onCreate(icicle);
@@ -57,11 +58,11 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
 
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         View addToExisting = view.findViewById(R.id.payment_plan_add_existing);
         addToExisting.setVisibility(View.GONE);
-        if(numberPaymentsEditText.getOnFocusChangeListener() != null){
+        if (numberPaymentsEditText.getOnFocusChangeListener() != null) {
             numberPaymentsEditText.getOnFocusChangeListener().onFocusChange(numberPaymentsEditText, true);
         }
         numberPaymentsEditText.setText(String.valueOf(getRemainingPayments()));
@@ -72,12 +73,12 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
 
 
     @Override
-    protected double calculateTotalAmount(PendingBalanceDTO selectedBalance){
+    protected double calculateTotalAmount(PendingBalanceDTO selectedBalance) {
         double totalAmount = SystemUtil.safeSubtract(existingPlan.getPayload().getAmount(),
                 existingPlan.getPayload().getAmountPaid());
-        if(selectedBalance != null) {
+        if (selectedBalance != null) {
             for (PendingBalancePayloadDTO balancePayloadDTO : selectedBalance.getPayload()) {
-                if(StringUtil.isNullOrEmpty(balancePayloadDTO.getType()) || balancePayloadDTO.getType().equals(PATIENT_BALANCE)) {//prevent responsibility types from being added
+                if (StringUtil.isNullOrEmpty(balancePayloadDTO.getType()) || balancePayloadDTO.getType().equals(PATIENT_BALANCE)) {//prevent responsibility types from being added
                     totalAmount += balancePayloadDTO.getAmount();
                 }
             }
@@ -85,8 +86,8 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
         return totalAmount;
     }
 
-    private int getRemainingPayments(){
-        return existingPlan.getPayload().getPaymentPlanDetails().getInstallments()-
+    private int getRemainingPayments() {
+        return existingPlan.getPayload().getPaymentPlanDetails().getInstallments() -
                 existingPlan.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
     }
 
@@ -113,7 +114,7 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
 
             try {
                 paymentPlanModel.setDayOfMonth(Integer.parseInt(paymentDateOption.getName()));
-            }catch (NumberFormatException nfe){
+            } catch (NumberFormatException nfe) {
                 nfe.printStackTrace();
             }
 
@@ -123,19 +124,20 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
         }
     }
 
-    private double getAdditionalAmount(){
+    private double getAdditionalAmount() {
         double remainingBalance = SystemUtil.safeSubtract(existingPlan.getPayload().getAmount(),
                 existingPlan.getPayload().getAmountPaid());
         return SystemUtil.safeSubtract(paymentPlanAmount, remainingBalance);
     }
 
-    protected List<PaymentPlanLineItem> getPaymentPlanLineItems(){
+    protected List<PaymentPlanLineItem> getPaymentPlanLineItems() {
         double amountHolder = getAdditionalAmount();
-        List<PaymentPlanLineItem> lineItems = existingPlan.getPayload().getLineItems();
-        for(PendingBalancePayloadDTO pendingBalance : selectedBalance.getPayload()){
-            if(StringUtil.isNullOrEmpty(pendingBalance.getType()) || pendingBalance.getType().equals(PATIENT_BALANCE)){//ignore responsibility types
-                for(BalanceItemDTO balanceItem : pendingBalance.getDetails()){
-                    if(amountHolder <= 0){
+        List<PaymentPlanLineItem> lineItems = new ArrayList<>();
+        lineItems.addAll(existingPlan.getPayload().getLineItems());
+        for (PendingBalancePayloadDTO pendingBalance : selectedBalance.getPayload()) {
+            if (StringUtil.isNullOrEmpty(pendingBalance.getType()) || pendingBalance.getType().equals(PATIENT_BALANCE)) {//ignore responsibility types
+                for (BalanceItemDTO balanceItem : pendingBalance.getDetails()) {
+                    if (amountHolder <= 0) {
                         break;
                     }
 
@@ -144,10 +146,10 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
                     lineItem.setType(IntegratedPaymentLineItem.TYPE_APPLICATION);
                     lineItem.setTypeId(balanceItem.getId().toString());
 
-                    if(amountHolder >= balanceItem.getAmount()){
+                    if (amountHolder >= balanceItem.getAmount()) {
                         lineItem.setAmount(balanceItem.getAmount());
                         amountHolder -= balanceItem.getAmount();
-                    }else{
+                    } else {
                         lineItem.setAmount(amountHolder);
                         amountHolder = 0;
                     }
@@ -159,7 +161,7 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
         return lineItems;
     }
 
-    private void submitPaymentPlanUpdate(PaymentPlanPostModel paymentPlanPostModel){
+    private void submitPaymentPlanUpdate(PaymentPlanPostModel paymentPlanPostModel) {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("practice_mgmt", paymentPlanPostModel.getMetadata().getPracticeMgmt());
         queryMap.put("practice_id", paymentPlanPostModel.getMetadata().getPracticeId());
@@ -192,7 +194,7 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
         }
     };
 
-    protected void onPlanEdited(WorkflowDTO workflowDTO){
+    protected void onPlanEdited(WorkflowDTO workflowDTO) {
         callback.onPaymentPlanEdited(workflowDTO);
     }
 

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentHistoryCallback;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.payments.fragments.ActivePlansFragment;
+import com.carecloud.carepaylibray.payments.fragments.ValidPlansFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -21,7 +21,7 @@ import java.util.List;
  * Created by lmenendez on 2/15/18
  */
 
-public class PracticePaymentPlanListFragment extends ActivePlansFragment {
+public class PracticePaymentPlanListFragment extends ValidPlansFragment {
     private static final String KEY_PRACTICE_ID = "practice_id";
 
     private String practiceId;

@@ -27,7 +27,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.interfaces.DTO;
-import com.carecloud.carepaylibray.payments.fragments.ActivePlansFragment;
 import com.carecloud.carepaylibray.payments.fragments.AddExistingPaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
@@ -40,6 +39,7 @@ import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFr
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanTermsFragment;
+import com.carecloud.carepaylibray.payments.fragments.ValidPlansFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
@@ -259,7 +259,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public void onPaymentPlanAction(PaymentsModel paymentsModel) {
         reduceBalanceItems(selectedBalancesItem, paymentsModel.getPaymentPayload()
                 .getActivePlans(selectedUserPractice.getPracticeId()));
-        if(mustAddToExisting(paymentsModel)){
+        if (mustAddToExisting(paymentsModel)) {
             onAddBalanceToExitingPlan(paymentsModel, selectedBalancesItem);
         } else {
             PaymentPlanFragment fragment = PaymentPlanFragment.newInstance(paymentsModel, selectedBalancesItem);
@@ -545,12 +545,14 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance) {
         String practiceId = selectedBalance.getMetadata().getPracticeId();
-        if(paymentsModel.getPaymentPayload().getActivePlans(practiceId).size() == 1){
+        if (paymentsModel.getPaymentPayload().getValidPlans(practiceId,
+                selectedBalance.getPayload().get(0).getAmount()).size() == 1) {
             onSelectedPlanToAdd(paymentsModel,
                     selectedBalance,
-                    paymentsModel.getPaymentPayload().getActivePlans(practiceId).get(0));
-        }else{
-            ActivePlansFragment fragment = ActivePlansFragment.newInstance(paymentsModel, selectedBalance);
+                    paymentsModel.getPaymentPayload().getValidPlans(practiceId,
+                            selectedBalance.getPayload().get(0).getAmount()).get(0));
+        } else {
+            ValidPlansFragment fragment = ValidPlansFragment.newInstance(paymentsModel, selectedBalance);
             replaceFragment(fragment, true);
         }
     }
@@ -591,11 +593,11 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         return false;
     }
 
-    private void reduceBalanceItems(PendingBalanceDTO selectedBalance, List<PaymentPlanDTO> currentPaymentPlans){
+    private void reduceBalanceItems(PendingBalanceDTO selectedBalance, List<PaymentPlanDTO> currentPaymentPlans) {
         Map<String, PaymentPlanLineItem> paymentPlanItems = new HashMap<>();
-        for(PaymentPlanDTO paymentPlanDTO : currentPaymentPlans){
-            for(PaymentPlanLineItem lineItem : paymentPlanDTO.getPayload().getLineItems()){
-                if(paymentPlanItems.containsKey(lineItem.getTypeId())){//we may have the line item split on more than one plan potentially
+        for (PaymentPlanDTO paymentPlanDTO : currentPaymentPlans) {
+            for (PaymentPlanLineItem lineItem : paymentPlanDTO.getPayload().getLineItems()) {
+                if (paymentPlanItems.containsKey(lineItem.getTypeId())) {//we may have the line item split on more than one plan potentially
                     PaymentPlanLineItem oldItem = paymentPlanItems.get(lineItem.getTypeId());
                     lineItem.setAmount(SystemUtil.safeAdd(oldItem.getAmount(), lineItem.getAmount()));//sum both items
                 }
@@ -604,25 +606,24 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         }
 
         List<BalanceItemDTO> reducedBalances;
-        for(PendingBalancePayloadDTO pendingBalancePayloadDTO : selectedBalance.getPayload()){
+        for (PendingBalancePayloadDTO pendingBalancePayloadDTO : selectedBalance.getPayload()) {
             reducedBalances = new ArrayList<>();
-            for(BalanceItemDTO balanceItemDTO : pendingBalancePayloadDTO.getDetails()){
-                if(paymentPlanItems.containsKey(balanceItemDTO.getId().toString())){
+            for (BalanceItemDTO balanceItemDTO : pendingBalancePayloadDTO.getDetails()) {
+                if (paymentPlanItems.containsKey(balanceItemDTO.getId().toString())) {
                     PaymentPlanLineItem paymentPlanLineItem = paymentPlanItems.get(balanceItemDTO.getId().toString());
-                    if(paymentPlanLineItem.getAmount() < balanceItemDTO.getAmount()){//reduce the balance item by the payment plan item amount
+                    if (paymentPlanLineItem.getAmount() < balanceItemDTO.getAmount()) {//reduce the balance item by the payment plan item amount
                         double originalBalanceItemAmount = balanceItemDTO.getAmount();
                         double paymentPlanItemAmount = paymentPlanLineItem.getAmount();
                         balanceItemDTO.setAmount(SystemUtil.safeSubtract(originalBalanceItemAmount, paymentPlanItemAmount));
                         reducedBalances.add(balanceItemDTO);
                     }//else the entire balance item will be dropped
-                }else{
+                } else {
                     reducedBalances.add(balanceItemDTO); //since this item was not already on PP we need to keep it
                 }
             }
             pendingBalancePayloadDTO.setDetails(reducedBalances);
         }
     }
-
 
 
 }
