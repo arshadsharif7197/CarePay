@@ -144,9 +144,9 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
                     lineItem.setType(IntegratedPaymentLineItem.TYPE_APPLICATION);
                     lineItem.setTypeId(balanceItem.getId().toString());
 
-                    if(amountHolder >= balanceItem.getAmount()){
-                        lineItem.setAmount(balanceItem.getAmount());
-                        amountHolder -= balanceItem.getAmount();
+                    if(amountHolder >= balanceItem.getBalance()){
+                        lineItem.setAmount(balanceItem.getBalance());
+                        amountHolder -= balanceItem.getBalance();
                     }else{
                         lineItem.setAmount(amountHolder);
                         amountHolder = 0;

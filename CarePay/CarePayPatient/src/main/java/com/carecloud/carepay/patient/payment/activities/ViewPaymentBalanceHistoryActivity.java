@@ -257,12 +257,12 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void onPaymentPlanAction(PaymentsModel paymentsModel) {
-        reduceBalanceItems(selectedBalancesItem, paymentsModel.getPaymentPayload()
+        PendingBalanceDTO reducedBalancesItem = reduceBalanceItems(selectedBalancesItem, paymentsModel.getPaymentPayload()
                 .getActivePlans(selectedUserPractice.getPracticeId()));
         if(mustAddToExisting(paymentsModel)){
-            onAddBalanceToExitingPlan(paymentsModel, selectedBalancesItem);
+            onAddBalanceToExitingPlan(paymentsModel, reducedBalancesItem);
         } else {
-            PaymentPlanFragment fragment = PaymentPlanFragment.newInstance(paymentsModel, selectedBalancesItem);
+            PaymentPlanFragment fragment = PaymentPlanFragment.newInstance(paymentsModel, reducedBalancesItem);
             replaceFragment(fragment, true);
         }
         displayToolbar(false, null);
@@ -591,36 +591,41 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         return false;
     }
 
-    private void reduceBalanceItems(PendingBalanceDTO selectedBalance, List<PaymentPlanDTO> currentPaymentPlans){
-        Map<String, PaymentPlanLineItem> paymentPlanItems = new HashMap<>();
+    private PendingBalanceDTO reduceBalanceItems(PendingBalanceDTO selectedBalance, List<PaymentPlanDTO> currentPaymentPlans){
+        Map<String, Double> paymentPlanItems = new HashMap<>();
         for(PaymentPlanDTO paymentPlanDTO : currentPaymentPlans){
             for(PaymentPlanLineItem lineItem : paymentPlanDTO.getPayload().getLineItems()){
+                Double amount = lineItem.getAmount();
                 if(paymentPlanItems.containsKey(lineItem.getTypeId())){//we may have the line item split on more than one plan potentially
-                    PaymentPlanLineItem oldItem = paymentPlanItems.get(lineItem.getTypeId());
-                    lineItem.setAmount(SystemUtil.safeAdd(oldItem.getAmount(), lineItem.getAmount()));//sum both items
+                    amount = SystemUtil.safeAdd(paymentPlanItems.get(lineItem.getTypeId()), lineItem.getAmount());//sum both items
                 }
-                paymentPlanItems.put(lineItem.getTypeId(), lineItem);
+                paymentPlanItems.put(lineItem.getTypeId(), amount);
             }
         }
 
+        String balanceHolder = DtoHelper.getStringDTO(selectedBalance);
+        PendingBalanceDTO copyPendingBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, balanceHolder);
+
         List<BalanceItemDTO> reducedBalances;
-        for(PendingBalancePayloadDTO pendingBalancePayloadDTO : selectedBalance.getPayload()){
+        for(PendingBalancePayloadDTO pendingBalancePayloadDTO : copyPendingBalance.getPayload()){
             reducedBalances = new ArrayList<>();
             for(BalanceItemDTO balanceItemDTO : pendingBalancePayloadDTO.getDetails()){
                 if(paymentPlanItems.containsKey(balanceItemDTO.getId().toString())){
-                    PaymentPlanLineItem paymentPlanLineItem = paymentPlanItems.get(balanceItemDTO.getId().toString());
-                    if(paymentPlanLineItem.getAmount() < balanceItemDTO.getAmount()){//reduce the balance item by the payment plan item amount
-                        double originalBalanceItemAmount = balanceItemDTO.getAmount();
-                        double paymentPlanItemAmount = paymentPlanLineItem.getAmount();
-                        balanceItemDTO.setAmount(SystemUtil.safeSubtract(originalBalanceItemAmount, paymentPlanItemAmount));
+                    Double paymentPlanLineItemAmount = paymentPlanItems.get(balanceItemDTO.getId().toString());
+                    if(paymentPlanLineItemAmount < balanceItemDTO.getBalance()){//reduce the balance item by the payment plan item amount
+                        double originalBalanceItemBalance = balanceItemDTO.getBalance();
+                        balanceItemDTO.setBalance(SystemUtil.safeSubtract(originalBalanceItemBalance, paymentPlanLineItemAmount));
                         reducedBalances.add(balanceItemDTO);
                     }//else the entire balance item will be dropped
                 }else{
                     reducedBalances.add(balanceItemDTO); //since this item was not already on PP we need to keep it
                 }
             }
-            pendingBalancePayloadDTO.setDetails(reducedBalances);
+            pendingBalancePayloadDTO.setAmount(SystemUtil.safeSubtract(
+                    pendingBalancePayloadDTO.getAmount(),
+                    pendingBalancePayloadDTO.getPaymentPlansAmount()));
         }
+        return copyPendingBalance;
     }
 
 
