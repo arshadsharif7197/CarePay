@@ -946,6 +946,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                     reducedBalances.add(balanceItemDTO); //since this item was not already on PP we need to keep it
                 }
             }
+            pendingBalancePayloadDTO.setDetails(reducedBalances);
             pendingBalancePayloadDTO.setAmount(SystemUtil.safeSubtract(
                     pendingBalancePayloadDTO.getAmount(),
                     pendingBalancePayloadDTO.getPaymentPlansAmount()));
