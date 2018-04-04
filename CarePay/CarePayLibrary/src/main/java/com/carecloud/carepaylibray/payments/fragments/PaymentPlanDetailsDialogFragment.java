@@ -146,9 +146,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
             if (settings.getMetadata().getPracticeId().equals(practiceId)) {
                 for (PaymentSettingsBalanceRangeRule rules : settings.getPayload().getPaymentPlans().getBalanceRangeRules()) {
                     if (rules.getMaxBalance().getValue() >= paymentPlanDTO.getPayload().getAmount()
-                            && rules.getMinBalance().getValue() <= paymentPlanDTO.getPayload().getAmount()
-                            && rules.getMaxDuration().getValue() >= paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments()
-                            && rules.getMinPaymentRequired().getValue() <= paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount()) {
+                            && rules.getMinBalance().getValue() <= paymentPlanDTO.getPayload().getAmount()) {
                         return View.VISIBLE;
                     }
                 }
