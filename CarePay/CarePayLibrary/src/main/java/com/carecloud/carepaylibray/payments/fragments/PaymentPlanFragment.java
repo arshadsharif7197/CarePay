@@ -45,13 +45,13 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
+
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
 
 public class PaymentPlanFragment extends BasePaymentDialogFragment implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
 
@@ -498,9 +498,9 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
                     lineItem.setType(IntegratedPaymentLineItem.TYPE_APPLICATION);
                     lineItem.setTypeId(balanceItem.getId().toString());
 
-                    if (amountHolder >= balanceItem.getAmount()) {
-                        lineItem.setAmount(balanceItem.getAmount());
-                        amountHolder -= balanceItem.getAmount();
+                    if (amountHolder >= balanceItem.getBalance()) {
+                        lineItem.setAmount(balanceItem.getBalance());
+                        amountHolder -= balanceItem.getBalance();
                     } else {
                         lineItem.setAmount(amountHolder);
                         amountHolder = 0;

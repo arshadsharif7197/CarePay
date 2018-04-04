@@ -910,14 +910,14 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     private PendingBalanceDTO reduceBalanceItems(PendingBalanceDTO selectedBalance, List<PaymentPlanDTO> currentPaymentPlans){
-        Map<String, PaymentPlanLineItem> paymentPlanItems = new HashMap<>();
+        Map<String, Double> paymentPlanItems = new HashMap<>();
         for(PaymentPlanDTO paymentPlanDTO : currentPaymentPlans){
             for(PaymentPlanLineItem lineItem : paymentPlanDTO.getPayload().getLineItems()){
+                Double amount = lineItem.getAmount();
                 if(paymentPlanItems.containsKey(lineItem.getTypeId())){//we may have the line item split on more than one plan potentially
-                    PaymentPlanLineItem oldItem = paymentPlanItems.get(lineItem.getTypeId());
-                    lineItem.setAmount(SystemUtil.safeAdd(oldItem.getAmount(), lineItem.getAmount()));//sum both items
+                    amount = SystemUtil.safeAdd(paymentPlanItems.get(lineItem.getTypeId()), lineItem.getAmount());//sum both items
                 }
-                paymentPlanItems.put(lineItem.getTypeId(), lineItem);
+                paymentPlanItems.put(lineItem.getTypeId(), amount);
             }
         }
 
@@ -930,11 +930,10 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             reducedBalances = new ArrayList<>();
             for(BalanceItemDTO balanceItemDTO : pendingBalancePayloadDTO.getDetails()){
                 if(paymentPlanItems.containsKey(balanceItemDTO.getId().toString())){
-                    PaymentPlanLineItem paymentPlanLineItem = paymentPlanItems.get(balanceItemDTO.getId().toString());
-                    if(paymentPlanLineItem.getAmount() < balanceItemDTO.getAmount()){//reduce the balance item by the payment plan item amount
-                        double originalBalanceItemAmount = balanceItemDTO.getAmount();
-                        double paymentPlanItemAmount = paymentPlanLineItem.getAmount();
-                        balanceItemDTO.setAmount(SystemUtil.safeSubtract(originalBalanceItemAmount, paymentPlanItemAmount));
+                    Double paymentPlanLineItemAmount = paymentPlanItems.get(balanceItemDTO.getId().toString());
+                    if(paymentPlanLineItemAmount < balanceItemDTO.getBalance()){//reduce the balance item by the payment plan item amount
+                        double originalBalanceItemBalance = balanceItemDTO.getBalance();
+                        balanceItemDTO.setBalance(SystemUtil.safeSubtract(originalBalanceItemBalance, paymentPlanLineItemAmount));
                         reducedBalances.add(balanceItemDTO);
                     }//else the entire balance item will be dropped
                 }else{
