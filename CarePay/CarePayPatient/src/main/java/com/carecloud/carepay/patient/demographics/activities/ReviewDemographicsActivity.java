@@ -54,11 +54,11 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         Bundle icicle = savedInstanceState;
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             String tag = savedInstanceState.getString(DemographicsPresenter.CURRENT_ICICLE_FRAGMENT);
-            if(tag != null){
+            if (tag != null) {
                 Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
-                if(fragment instanceof IcicleInterface){
+                if (fragment instanceof IcicleInterface) {
                     icicle = ((IcicleInterface) fragment).popData();
                     icicle.putAll(savedInstanceState);
                 }
@@ -77,11 +77,11 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         Bundle icicle = savedInstanceState;
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             String tag = savedInstanceState.getString(DemographicsPresenter.CURRENT_ICICLE_FRAGMENT);
-            if(tag != null){
+            if (tag != null) {
                 Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
-                if(fragment instanceof IcicleInterface){
+                if (fragment instanceof IcicleInterface) {
                     icicle = ((IcicleInterface) fragment).popData();
                     icicle.putAll(savedInstanceState);
                 }
@@ -133,7 +133,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     public void onSaveInstanceState(Bundle icicle) {
         super.onSaveInstanceState(icicle);
         Fragment fragment = demographicsPresenter.getCurrentFragment();
-        if(fragment != null &&  fragment instanceof IcicleInterface){
+        if (fragment != null && fragment instanceof IcicleInterface) {
             ((IcicleInterface) fragment).pushData((Bundle) icicle.clone());
         }
         icicle.clear();
@@ -180,7 +180,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
     public void updateCheckInFlow(String key, int totalPages, int currentPage) {
         TextView textView = (TextView) findViewById(R.id.toolbar_title);
-        if(textView != null) {
+        if (textView != null) {
             textView.setText(String.format(Label.getLabel(key), currentPage, totalPages));
         }
     }
@@ -279,32 +279,32 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
         Fragment currentFragment = demographicsPresenter.getCurrentFragment();
         String currentStep = null;
-        if(currentFragment instanceof PersonalInfoFragment){
+        if (currentFragment instanceof PersonalInfoFragment) {
             currentStep = getString(R.string.step_personal_info);
-        }else if (currentFragment instanceof AddressFragment){
+        } else if (currentFragment instanceof AddressFragment) {
             currentStep = getString(R.string.step_address);
-        }else if (currentFragment instanceof DemographicsFragment){
+        } else if (currentFragment instanceof DemographicsFragment) {
             currentStep = getString(R.string.step_demographics);
-        }else if (currentFragment instanceof IdentificationFragment){
+        } else if (currentFragment instanceof IdentificationFragment) {
             currentStep = getString(R.string.step_identity);
-        }else if (currentFragment instanceof HealthInsuranceFragment ||
-                currentFragment instanceof InsuranceEditDialog){
+        } else if (currentFragment instanceof HealthInsuranceFragment ||
+                currentFragment instanceof InsuranceEditDialog) {
             currentStep = getString(R.string.step_health_insurance);
-        }else if (currentFragment instanceof FormsFragment){
+        } else if (currentFragment instanceof FormsFragment) {
             currentStep = getString(R.string.step_consent_forms);
-        }else if (currentFragment instanceof MedicationsAllergyFragment){
+        } else if (currentFragment instanceof MedicationsAllergyFragment) {
             currentStep = getString(R.string.step_medications);
-        }else if (currentFragment instanceof IntakeFormsFragment){
+        } else if (currentFragment instanceof IntakeFormsFragment) {
             currentStep = getString(R.string.step_intake);
         }
-        if(currentStep != null){
+        if (currentStep != null) {
             MixPanelUtil.logEvent(getString(R.string.event_checkin_cancelled), getString(R.string.param_last_completed_step), currentStep);
         }
     }
 
-    private void checkinCompleted(){
+    private void checkinCompleted() {
         //Log Check-in Completed
-        if(getAppointment() != null) {
+        if (getAppointment() != null) {
             String[] params = {getString(R.string.param_practice_id),
                     getString(R.string.param_appointment_id),
                     getString(R.string.param_appointment_type),

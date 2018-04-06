@@ -44,6 +44,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
     private static TransitionDTO transitionBalance;
     private static TransitionDTO transitionProfile;
     private static TransitionDTO transitionAppointments;
+    private static TransitionDTO transitionForms;
     private static TransitionDTO transitionLogout;
     private static TransitionDTO transitionNotifications;
     private static TransitionDTO transitionMyHealth;
@@ -146,6 +147,11 @@ public abstract class MenuPatientActivity extends BasePatientActivity
                 displayMessagesScreen();
                 transition = null;
                 callback = null;
+                break;
+            case R.id.nav_forms:
+                callback = appointmentsWorkflowCallback;
+                transition = transitionForms;
+                queryMap.put("practice_mgmt","carecloud");
                 break;
             case R.id.nav_appointments:
                 callback = appointmentsWorkflowCallback;
@@ -369,6 +375,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         MenuPatientActivity.transitionAppointments = transitionAppointments;
     }
 
+    public static void setTransitionForms(TransitionDTO transitionForms) {
+        MenuPatientActivity.transitionForms = transitionForms;
+    }
+
     public static void setTransitionMyHealth(TransitionDTO transitionMyHealth) {
         MenuPatientActivity.transitionMyHealth = transitionMyHealth;
     }
@@ -387,6 +397,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity
 
     public static TransitionDTO getTransitionAppointments() {
         return transitionAppointments;
+    }
+
+    public static TransitionDTO getTransitionForms() {
+        return transitionForms;
     }
 
     public static TransitionDTO getTransitionNotifications() {
