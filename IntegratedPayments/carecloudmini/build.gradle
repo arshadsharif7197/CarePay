@@ -49,6 +49,15 @@ android {
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AAd42346a8ad752df162926e940501caaac45776d0"'
         }
+        demo{
+            applicationId "com.carecloud.carepay.mini"
+            buildConfigField 'String', 'X_API_KEY', '"6N2E6zF3kZatorkHdxIY94SUccVP09s17NiqCZcU"'
+            buildConfigField 'String', 'API_BASE_URL', '"https://payments.careclouddemo.com/"'
+            buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream.careclouddemo.com:443"'
+            buildConfigField 'String', 'ENVIRONMENT', '"Demo"'
+
+            buildConfigField 'String', 'NEW_RELIC_ID', '"AAd42346a8ad752df162926e940501caaac45776d0"'
+        }
         production{
             applicationId "com.carecloud.carepay.mini"
             buildConfigField 'String', 'X_API_KEY', '"m4I4rb4DW5469Jzn1Glev3kKl6RvWT6o8guq2NA9"'
