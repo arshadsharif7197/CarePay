@@ -20,6 +20,7 @@ public class OptionDTO {
     @SerializedName("default")
     @Expose
     private Boolean isDefault;
+    private transient boolean selected;
 
     public String getName() {
         return name;
@@ -51,5 +52,13 @@ public class OptionDTO {
 
     public void setDefault(Boolean aDefault) {
         isDefault = aDefault;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

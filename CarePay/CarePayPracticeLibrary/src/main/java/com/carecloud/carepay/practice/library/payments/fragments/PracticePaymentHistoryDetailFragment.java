@@ -128,7 +128,9 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
             }
         });
 
-        refundButton.setEnabled(totalPaid > 0 && !historyItem.getPayload().getState().equals(PaymentHistoryItemPayload.STATE_ERRORED));
+        refundButton.setEnabled(totalPaid > 0 &&
+                !historyItem.getPayload().getState().equals(PaymentHistoryItemPayload.STATE_ERRORED) &&
+                paymentsModel.getPaymentPayload().getUserAuthModel().getUserAuthPermissions().canMakeRefund);
 
         double refundedAmount = historyItem.getPayload().getTotalRefunded();
         if(refundedAmount > 0D){

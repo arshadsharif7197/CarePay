@@ -180,7 +180,7 @@
             android:layout_marginEnd="@dimen/dimen_5dp"
             android:layout_marginStart="@dimen/dimen_5dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_red_overlay"
+            android:background="@drawable/button_rounded_red"
             android:padding="@dimen/dimen_5dp"
             android:textAllCaps="false"
             android:textColor="@color/white"

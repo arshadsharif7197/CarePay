@@ -2,20 +2,30 @@ apply plugin: 'com.android.application'
 apply plugin: 'newrelic'
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "26.0.3"
 
     defaultConfig {
         applicationId "com.carecloud.carepay.patient"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 62
-        versionName "1.1.5"
+        versionCode 64
+        versionName "1.1.6"
         multiDexEnabled true
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
     dexOptions {
         maxProcessCount 4
         javaMaxHeapSize "12g"
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
     }
     buildTypes {
         release {
@@ -25,10 +35,11 @@ android {
         }
         debug {
             debuggable true
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions "patient"
     productFlavors {
         development {
             applicationId "com.carecloud.carepay.patient"
@@ -38,6 +49,7 @@ android {
             buildConfigField 'String', 'WEBCLIENT_URL', '"WSS://STAR-CLUSTER.DEVELOPMENT.CARECLOUD.COM"'
             buildConfigField 'String', 'MESSAGING_BASE_URL', '"https://messaging.development.carecloud.com"'
             buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze.development.carecloud.com"'
+            buildConfigField 'String', 'RETAIL_REDIRECT_URL', '"https://breeze.development.carecloud.com/payment"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AA11d2bb94e604c1b3a506dcda65bd7dfa9995d110"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"458b4517bf5c86c62df069f82fc49aa3"'
@@ -53,6 +65,7 @@ android {
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
             buildConfigField 'String', 'MESSAGING_BASE_URL', '"https://messaging.qa.carecloud.com"'
             buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze.development.carecloud.com"'
+            buildConfigField 'String', 'RETAIL_REDIRECT_URL', '"https://breeze.qa.carecloud.com/payment"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AAb24320f2a02bf87d9faf0d7aff73bbeca08d264f"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"458b4517bf5c86c62df069f82fc49aa3"'
@@ -68,6 +81,7 @@ android {
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
             buildConfigField 'String', 'MESSAGING_BASE_URL', '"https://messaging-staging.carecloud.com"'
             buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze.development.carecloud.com"'
+            buildConfigField 'String', 'RETAIL_REDIRECT_URL', '"https://breeze-staging.carecloud.com/payment"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AAb24320f2a02bf87d9faf0d7aff73bbeca08d264f"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"458b4517bf5c86c62df069f82fc49aa3"'
@@ -83,6 +97,7 @@ android {
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
             buildConfigField 'String', 'MESSAGING_BASE_URL', '"https://messaging.carecloud.com"'
             buildConfigField 'String', 'FORMS_BASE_URL', '"https://web.gobreeze.com"'
+            buildConfigField 'String', 'RETAIL_REDIRECT_URL', '"https://web.gobreeze.com/payment"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AA2faf2a0d9f02e9595012ede7e6a30ddda5e1b250"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"38fc517bbd790b9d00044891934205a4"'

@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Rahul on 11/30/16.
+ * Created by Rahul on 11/30/16
  */
 
-public class PatientBalanceDTO implements Serializable {
+public class PatientBalanceDTO extends PaymentListItem implements Serializable {
     @SerializedName("demographics")
     @Expose
     private DemographicPayloadInfoDTO demographics = new DemographicPayloadInfoDTO();

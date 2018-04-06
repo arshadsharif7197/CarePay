@@ -19,9 +19,9 @@ import java.util.List;
  */
 public class CarePayLayoutInflaterFactory implements LayoutInflater.Factory2 {
 
-    public static final String PABLO_SCHEMA = "http://schemas.carecloud.com/breeze";
-    public static final String PABLO_ATTR_TEXT_KEY = "textKey";
-    public static final String PABLO_ATTR_HINT_KEY = "hintKey";
+    public static final String BREEZE_SCHEMA = "http://schemas.carecloud.com/breeze";
+    public static final String BREEZE_ATTR_TEXT_KEY = "textKey";
+    public static final String BREEZE_ATTR_HINT_KEY = "hintKey";
     private static final List<String> FILTER_TYPES = Arrays.asList(new String[]{
             "ViewStub", "View"
     });
@@ -58,11 +58,11 @@ public class CarePayLayoutInflaterFactory implements LayoutInflater.Factory2 {
     private static void applyAttributes(View view, Context context, AttributeSet attrs) {
         if ((view != null) && (view instanceof TextView)) {
             // Text
-            String textKey = attrs.getAttributeValue(PABLO_SCHEMA, PABLO_ATTR_TEXT_KEY);
+            String textKey = attrs.getAttributeValue(BREEZE_SCHEMA, BREEZE_ATTR_TEXT_KEY);
             if (textKey != null) {
                 ((TextView) view).setText(Label.getLabel(textKey));
             }
-            String hintKey = attrs.getAttributeValue(PABLO_SCHEMA, PABLO_ATTR_HINT_KEY);
+            String hintKey = attrs.getAttributeValue(BREEZE_SCHEMA, BREEZE_ATTR_HINT_KEY);
             if(hintKey != null){
                 ((TextView) view).setHint(Label.getLabel(hintKey));
             }
@@ -109,13 +109,13 @@ public class CarePayLayoutInflaterFactory implements LayoutInflater.Factory2 {
             constructor.setAccessible(true);
             view = constructor.newInstance(args);
         } catch (NoSuchMethodException e) {
-            Log.w("Pablo", String.format("%s: no suitable constructor for %s", attrs.getPositionDescription(), qualifiedName));
+            Log.w("Breeze", String.format("%s: no suitable constructor for %s", attrs.getPositionDescription(), qualifiedName));
         } catch (ClassCastException e) {
-            Log.w("Pablo", String.format("%s: class %s is not a view", attrs.getPositionDescription(), qualifiedName));
+            Log.w("Breeze", String.format("%s: class %s is not a view", attrs.getPositionDescription(), qualifiedName));
         } catch (ClassNotFoundException e) {
-            Log.w("Pablo", String.format("%s: class %s not found", attrs.getPositionDescription(), qualifiedName));
+            Log.w("Breeze", String.format("%s: class %s not found", attrs.getPositionDescription(), qualifiedName));
         } catch (Exception e) {
-            Log.w("Pablo", String.format("%s: general exception = %s", attrs.getPositionDescription(), qualifiedName));
+            Log.w("Breeze", String.format("%s: general exception = %s", attrs.getPositionDescription(), qualifiedName));
         }
         return view;
     }

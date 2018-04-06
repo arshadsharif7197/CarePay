@@ -11,7 +11,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -25,21 +27,33 @@ public class DateUtil {
 
     public static final String TAG = "DateUtil";
 
-    private static final String FORMAT_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
-    private static final String FORMAT_ISO_8601 = "yyyy-MM-dd'T'HH:mm:ss";
-    private static final String FORMAT_YYYY_DASH_MM_DASH_DD = "yyyy-MM-dd";
-    private static final String FORMAT_MM_DASH_DD_DASH_YYYY = "MM-dd-yyyy";
-    private static final String FORMAT_MM_SLASH_DD_SLASH_YYYY = "MM/dd/yyyy";
+    private static final String FORMAT_TIMEZONE_EN = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
+    private static final String FORMAT_TIMEZONE_ES = "dd-MM-yyyy'T'HH:mm:ssZZZZZ";
+    private static final String FORMAT_ISO_8601_EN = "yyyy-MM-dd'T'HH:mm:ss";
+    private static final String FORMAT_ISO_8601_ES = "dd-MM-yyyy'T'HH:mm:ss";
+    private static final String FORMAT_YYYY_DASH_MM_DASH_DD_EN = "yyyy-MM-dd";
+    private static final String FORMAT_YYYY_DASH_MM_DASH_DD_ES = "yyyy-MM-dd";
+    private static final String FORMAT_MM_DASH_DD_DASH_YYYY_EN = "MM-dd-yyyy";
+    private static final String FORMAT_MM_DASH_DD_DASH_YYYY_ES = "dd-MM-yyyy";
+    private static final String FORMAT_MM_SLASH_DD_SLASH_YYYY_EN = "MM/dd/yyyy";
+    private static final String FORMAT_MM_SLASH_DD_SLASH_YYYY_ES = "dd/MM/yyyy";
+
     private static final String FORMAT_HOURS_AM_PM = "h:mm a";
-    private static final String FORMAT_MONTH_DAY_TIME12 = "MMM dd, h:mm a";
+    private static final String FORMAT_MONTH_DAY_TIME12_EN = "MMM dd, h:mm a";
+    private static final String FORMAT_MONTH_DAY_TIME12_ES = "dd MMM h:mm a";
     private static final String FORMAT_FULL_DATE_TIME12 = "MMM dd, yyyy, h:mm a";
     private static final int IS_A_FUTURE_DATE = 100;
     private static final int IS_A_TOO_OLD_DATE = -100;
     private static final int IS_A_BAD_FORMAT_DATE = -1;
     private static final int IS_A_CORRECT_DATE = 0;
+    private static final String FORMAT_ES_DATE_MONTH_LIT = "%s de %s";
+    private static final String FORMAT_ES_DATE_MONTH_LIT_YEAR = "%s de %s de %s";
+    private static final String FORMAT_ES_DAY_LIT_DATE_MONTH_LIT = "%s %d de %s";
+
 
     private static DateUtil instance;
-    private String[] formats;
+    //    private String[] mapFormats;
+    private static Map<String, String[]> mapFormats = new HashMap<>();
     private Date date;
     private int day;
     private int month; // Attention! 0-indexed month
@@ -62,35 +76,81 @@ public class DateUtil {
             instance = new DateUtil();
             // by default set the date to current date
             instance.setDate(Calendar.getInstance(Locale.getDefault()).getTime());
-
-            instance.formats = new String[]{
-                    FORMAT_TIMEZONE,
-                    FORMAT_ISO_8601,
-                    FORMAT_YYYY_DASH_MM_DASH_DD,
-                    FORMAT_MM_DASH_DD_DASH_YYYY,
-                    FORMAT_MM_SLASH_DD_SLASH_YYYY
-            };
+            String language = ApplicationPreferences.getInstance().getUserLanguage();
+            if (!mapFormats.containsKey(language)) {
+                loadFormats(language);
+            }
+//            instance.mapFormats = new String[]{
+//                    FORMAT_TIMEZONE_EN,
+//                    FORMAT_ISO_8601_EN,
+//                    FORMAT_YYYY_DASH_MM_DASH_DD_EN,
+//                    FORMAT_MM_DASH_DD_DASH_YYYY_EN,
+//                    FORMAT_MM_SLASH_DD_SLASH_YYYY_EN
+//            };
         }
         return instance;
     }
 
+    private static void loadFormats(String language) {
+        switch (language) {
+            case "es":
+
+                String[] formatEs = new String[]{
+                        FORMAT_TIMEZONE_ES,
+                        FORMAT_ISO_8601_ES,
+                        FORMAT_YYYY_DASH_MM_DASH_DD_ES,
+                        FORMAT_MM_DASH_DD_DASH_YYYY_ES,
+                        FORMAT_MM_SLASH_DD_SLASH_YYYY_ES
+                };
+                mapFormats.put(language, formatEs);
+                break;
+            case "en":
+                String[] formatEn = new String[]{
+                        FORMAT_TIMEZONE_EN,
+                        FORMAT_ISO_8601_EN,
+                        FORMAT_YYYY_DASH_MM_DASH_DD_EN,
+                        FORMAT_MM_DASH_DD_DASH_YYYY_EN,
+                        FORMAT_MM_SLASH_DD_SLASH_YYYY_EN
+                };
+                mapFormats.put(language, formatEn);
+                break;
+            default:
+
+        }
+    }
+
+    public DateUtil setDateRaw(String dateString) {
+        return setDateRaw(dateString, false);
+    }
+
     /**
      * Set the a date to be formatted;
-     * The expected format any of the following formats
+     * The expected format any of the following mapFormats
      * yyyy-MM-dd'T'HH:mm:ssZ
      * yyyy-MM-dd
      * MM-dd-yyyy
      * MM/dd/yyyy
      *
-     * @param dateString The date as string
+     * @param dateString      The date as string
+     * @param useUserLanguage boolean indicating if the date should be parsed according to the user language
      * @return The current DateUtil object
      */
-    public DateUtil setDateRaw(String dateString) {
+    public DateUtil setDateRaw(String dateString, boolean useUserLanguage) {
         if (dateString == null) {
             Log.e(TAG, "Date string is NULL");
             return this.setToCurrent();
         }
         dateString = hackDate(dateString);
+        if (!mapFormats.containsKey("en")) {
+            loadFormats("en");
+        }
+        String[] formats = mapFormats.get("en");
+        if (useUserLanguage) {
+            if (!mapFormats.containsKey(getUserLanguage())) {
+                loadFormats(getUserLanguage());
+            }
+            formats = mapFormats.get(ApplicationPreferences.getInstance().getUserLanguage());
+        }
         for (String format : formats) {
             try {
                 SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.getDefault());
@@ -104,7 +164,7 @@ public class DateUtil {
             }
         }
 
-        Log.e(TAG, "Date string was not formatted in known formats");
+        Log.e(TAG, "Date string was not formatted in known mapFormats");
 
         return this;
     }
@@ -145,8 +205,7 @@ public class DateUtil {
                     dayLiteral, monthLiteral, day, getOrdinalSuffix(day));
         } else {
             //"%s %d de %s"
-            return String.format(Locale.getDefault(), Label.getLabel("date_day_month_day_ordinal_format"),
-                    dayLiteral, day, monthLiteral);
+            return String.format(Locale.getDefault(), FORMAT_ES_DAY_LIT_DATE_MONTH_LIT, dayLiteral, day, monthLiteral);
         }
     }
 
@@ -162,8 +221,7 @@ public class DateUtil {
                     this.isToday() ? today : dayLiteral, monthLiteralAbbr, day, getOrdinalSuffix(day));
         } else {
             //"%s %d de %s"
-            return String.format(Locale.getDefault(), Label.getLabel("date_day_month_day_ordinal_format"),
-                    dayLiteral, day, monthLiteral);
+            return String.format(Locale.getDefault(), FORMAT_ES_DAY_LIT_DATE_MONTH_LIT, dayLiteral, day, monthLiteral);
         }
     }
 
@@ -188,10 +246,28 @@ public class DateUtil {
             return String.format(Locale.getDefault(), Label.getLabel("date_month_literal_day_ordinal_year_format"),//"%s %s%s, %d"
                     monthLiteral, day, ordinal, year);
         } else {
-            return String.format(Locale.getDefault(), Label.getLabel("date_month_literal_day_ordinal_year_format"),//"%s de %s de %s."
-                    day, monthLiteral, year);
+            //"%s de %s de %s"
+            return String.format(Locale.getDefault(), FORMAT_ES_DATE_MONTH_LIT_YEAR, day, monthLiteral, year);
         }
     }
+
+    /**
+     * Format current date as MMM, Day(ordinal) YYYY (eg Oct 3rd, 2016)
+     *
+     * @return The formatted date as string
+     */
+    public String getDateAsMonthAbbrDayOrdinalYear() {
+        String ordinal = instance.getOrdinalSuffix(day); // fetch the ordinal
+        if (getUserLanguage().equals("en")) {
+            return String.format(Locale.getDefault(), Label.getLabel("date_month_literal_day_ordinal_year_format"),//"%s %s%s, %d"
+                    monthLiteralAbbr, day, ordinal, year);
+        } else {
+            //"%s de %s de %s"
+            return String.format(Locale.getDefault(), FORMAT_ES_DATE_MONTH_LIT_YEAR,
+                    day, monthLiteralAbbr, year);
+        }
+    }
+
 
     /**
      * Format current date as Month, Day(ordinal) (eg October 3rd)
@@ -206,8 +282,7 @@ public class DateUtil {
                     monthLiteralAbbr, day, ordinal);
         } else {
             //"%s de %s"
-            return String.format(Locale.getDefault(), Label.getLabel("date_month_literal_day_ordinal_format"),//"%s de %s"
-                    day, monthLiteralAbbr);
+            return String.format(Locale.getDefault(), FORMAT_ES_DATE_MONTH_LIT, day, monthLiteralAbbr);
         }
     }
 
@@ -226,7 +301,7 @@ public class DateUtil {
      * @return The formatted date as string
      */
     public String toStringWithFormatMmDashDdDashYyyy() {
-        return toStringWithFormat(FORMAT_MM_DASH_DD_DASH_YYYY);
+        return toStringWithFormat(FORMAT_MM_DASH_DD_DASH_YYYY_EN);
     }
 
     /**
@@ -235,7 +310,7 @@ public class DateUtil {
      * @return The formatted date as string
      */
     public String toStringWithFormatYyyyDashMmDashDd() {
-        return toStringWithFormat(FORMAT_YYYY_DASH_MM_DASH_DD);
+        return toStringWithFormat(FORMAT_YYYY_DASH_MM_DASH_DD_EN);
     }
 
     /**
@@ -244,7 +319,20 @@ public class DateUtil {
      * @return The formatted date as string
      */
     public String toStringWithFormatMmSlashDdSlashYyyy() {
-        return toStringWithFormat(FORMAT_MM_SLASH_DD_SLASH_YYYY);
+        if (getUserLanguage().equals("en")) {
+            return toStringWithFormat(FORMAT_MM_SLASH_DD_SLASH_YYYY_EN);
+        } else {
+            return toStringWithFormat(FORMAT_MM_SLASH_DD_SLASH_YYYY_ES);
+        }
+    }
+
+    /**
+     * Format date as MM/dd/yyyy
+     *
+     * @return The formatted date as string
+     */
+    public String toStringWithFormatDdSlashMmSlashYyyy() {
+        return toStringWithFormat(FORMAT_MM_SLASH_DD_SLASH_YYYY_ES);
     }
 
     /**
@@ -253,7 +341,7 @@ public class DateUtil {
      * @return The string
      */
     public String toStringWithFormatIso8601() {
-        return toStringWithFormat(FORMAT_ISO_8601);
+        return toStringWithFormat(FORMAT_ISO_8601_EN);
     }
 
     /**
@@ -834,7 +922,11 @@ public class DateUtil {
      * @return The dat in the new format as a string
      */
     public static int validateDateOfBirth(String dateString) {
+        String language = ApplicationPreferences.getInstance().getUserLanguage();
         String formatString = "MM/dd/yyyy";
+        if (language.equals("es")) {
+            formatString = "dd/MM/yyyy";
+        }
         try {
             SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.getDefault());
             format.setLenient(false);
@@ -905,8 +997,7 @@ public class DateUtil {
                     dayLiteral, monthLiteralAbbr, day, getOrdinalSuffix(day));
         } else {
             //"%s %d de %s"
-            return String.format(Locale.getDefault(), Label.getLabel("date_day_month_day_ordinal_format"),
-                    dayLiteral, day, monthLiteral);
+            return String.format(Locale.getDefault(), FORMAT_ES_DAY_LIT_DATE_MONTH_LIT, dayLiteral, day, monthLiteral);
         }
     }
 
@@ -1119,27 +1210,27 @@ public class DateUtil {
                 if (daysElapsed == 1) {
                     return Label.getLabel("label_yesterday");
                 }
-                return daysElapsed + Label.getLabel("label_days_ago");
+                return String.format(Label.getLabel("label_days_ago"), daysElapsed);//"%s days ago"
             } else if (daysElapsed < 28) {
                 int weeksElapsed = daysElapsed / 7;
                 if (weeksElapsed == 1) {
                     return Label.getLabel("label_last_week");
                 } else {
-                    return weeksElapsed + Label.getLabel("label_weeks_ago");
+                    return String.format(Label.getLabel("label_weeks_ago"), weeksElapsed);//"%s weeks ago"
                 }
             } else if (isSameYear(getDate(), compareDate)) {
                 int monthsElapsed = getMonthsElapsed(getDate(), compareDate);
                 if (monthsElapsed == 1) {
                     return Label.getLabel("label_last_month");
                 } else {
-                    return monthsElapsed + Label.getLabel("label_months_ago");
+                    return String.format(Label.getLabel("label_months_ago"), monthsElapsed);//"%s months ago"
                 }
             } else {
                 int yearsElapsed = getYearsElapsed(getDate(), compareDate);
                 if (yearsElapsed == 1) {
                     return Label.getLabel("label_last_year");
                 } else {
-                    return yearsElapsed + Label.getLabel("label_years_ago");
+                    return String.format(Label.getLabel("label_years_ago"), yearsElapsed);//"%s years ago"
                 }
             }
         }
@@ -1169,10 +1260,22 @@ public class DateUtil {
     }
 
     public String getDateAsMonthDayTime() {
-        return toStringWithFormat(FORMAT_MONTH_DAY_TIME12);
+        if (getUserLanguage().equals("en")) {
+            return toStringWithFormat(FORMAT_MONTH_DAY_TIME12_EN);
+        } else {
+            return toStringWithFormat(FORMAT_MONTH_DAY_TIME12_ES);
+        }
     }
 
     private String hackDate(String dateString) {
         return dateString.replaceAll("\\.\\d\\d\\dZ", "-00:00");
+    }
+
+    public String getDateAsMonthDayYear() {
+        if (getUserLanguage().equals("en")) {
+            return toStringWithFormatMmSlashDdSlashYyyy();
+        } else {
+            return toStringWithFormatDdSlashMmSlashYyyy();
+        }
     }
 }

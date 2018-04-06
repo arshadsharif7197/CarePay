@@ -9,7 +9,7 @@
     android:background="@color/transparent_apt"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -18,6 +18,7 @@
             android:id="@+id/dialogAppointDismiss"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/apt_imgview_ht"
+            android:layout_alignParentStart="true"
             android:layout_gravity="start"
             android:layout_marginBottom="@dimen/apt_dl_margin_bottom"
             android:gravity="start"
@@ -26,8 +27,10 @@
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/dialogCancelAppointTextView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
             android:gravity="end"
             android:textColor="@color/colorPrimary"
@@ -36,7 +39,7 @@
             app:customAssetFont="proxima_nova_semi_bold"
             breeze:textKey="appointments_cancel_heading"
             tools:text="Cancel Appointment" />
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

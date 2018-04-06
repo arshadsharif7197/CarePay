@@ -20,7 +20,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/appointment_card_header_height">
+            android:layout_height="@dimen/appointment_card_header_height"
+            android:layout_marginTop="-2dp">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/paymentAmountTextView"
@@ -40,6 +41,7 @@
                 android:layout_height="@dimen/provider_card_avatar_size"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
+                android:textSize="@dimen/text_size_38"
                 android:background="@drawable/round_list_tv" />
 
             <ImageView

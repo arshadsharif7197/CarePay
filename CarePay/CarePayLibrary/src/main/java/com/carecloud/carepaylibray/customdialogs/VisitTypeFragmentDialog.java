@@ -39,7 +39,7 @@ public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment
     /**
      * Creates a VisitTypeFragmentDialog fragment
      *
-     * @param appointmentResourcesDTO                   The appointment Resource DTO
+     * @param appointmentResourcesDTO The appointment Resource DTO
      * @param appointmentsResultModel The appointment resource model
      */
     public static VisitTypeFragmentDialog newInstance(AppointmentResourcesDTO appointmentResourcesDTO,
@@ -137,11 +137,19 @@ public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment
             title.setGravity(Gravity.CENTER_HORIZONTAL);
         }
 
-        // Load and display list
         RecyclerView visitTypeListView = (RecyclerView) view.findViewById(R.id.visitTypeList);
-        visitTypeListView.setLayoutManager(new LinearLayoutManager(getContext()));
-        visitTypeListView.setAdapter(new VisitTypeListAdapter(view.getContext(), visitTypeList,
-                appointmentSettings.getPrePayments(), this));
+        if (visitTypeList.size() > 0) {
+            // Load and display list
+            visitTypeListView.setLayoutManager(new LinearLayoutManager(getContext()));
+            visitTypeListView.setAdapter(new VisitTypeListAdapter(view.getContext(), visitTypeList,
+                    appointmentSettings.getPrePayments(), this));
+        } else if (view.findViewById(R.id.emptyStateScreen) != null) {
+            visitTypeListView.setVisibility(View.GONE);
+            view.findViewById(R.id.emptyStateScreen).setVisibility(View.VISIBLE);
+            if (view.findViewById(R.id.visit_type_header_title) != null) {
+                view.findViewById(R.id.visit_type_header_title).setVisibility(View.GONE);
+            }
+        }
     }
 
     private void sortVisitTypeListByName() {

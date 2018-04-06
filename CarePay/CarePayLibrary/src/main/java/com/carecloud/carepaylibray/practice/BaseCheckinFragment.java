@@ -12,7 +12,10 @@ import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.IcicleInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,6 +57,16 @@ public abstract class BaseCheckinFragment extends BaseFragment implements Icicle
                 callback.navigateToWorkflow(workflowDTO);
             }
         } catch (Exception e) {
+            if ("patient_home".equals(workflowDTO.getState())) {
+                Gson gson = new Gson();
+                JsonObject appointmentJson = workflowDTO.getPayload().getAsJsonObject("appointments");
+                AppointmentDTO appointment = gson.fromJson(appointmentJson, AppointmentDTO.class);
+                List<AppointmentDTO> list = new ArrayList<>();
+                list.add(appointment);
+                workflowDTO.getPayload().remove("appointments");
+                workflowDTO.getPayload().add("appointments", gson.toJsonTree(list));
+                callback.displayCheckInSuccess(workflowDTO);
+            }
             Log.e("WorkflowUpdate", e.getMessage());
         }
     }

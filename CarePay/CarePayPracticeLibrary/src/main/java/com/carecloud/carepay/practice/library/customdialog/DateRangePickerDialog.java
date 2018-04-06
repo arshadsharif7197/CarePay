@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepaylibray.customdialogs.BaseDialogFragment;
+import com.carecloud.carepay.practice.library.base.BasePracticeDialogFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.squareup.timessquare.CalendarPickerView;
 
@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-public class DateRangePickerDialog extends BaseDialogFragment {
+public class DateRangePickerDialog extends BasePracticeDialogFragment {
 
     private CalendarPickerView calendarPickerView;
     private Button applyDateRangeButton;

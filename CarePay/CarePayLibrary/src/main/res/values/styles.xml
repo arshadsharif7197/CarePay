@@ -930,19 +930,23 @@
         <item name="android:windowFullscreen">false</item>
     </style>
 
+    <style name="Base_Dialog_FullScreen" parent="Theme.AppCompat.Light.Dialog.MinWidth">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
     <style name="notificationPopUpTopToBottomAnimation">
-        <item name="@android:windowEnterAnimation">@anim/enter_from_top</item>
-        <item name="@android:windowExitAnimation">@anim/exit_to_top</item>
+        <item name="android:windowEnterAnimation">@anim/enter_from_top</item>
+        <item name="android:windowExitAnimation">@anim/exit_to_top</item>
     </style>
 
     <style name="notificationPopUpLeftToRightAnimation">
-        <item name="@android:windowEnterAnimation">@anim/enter_from_left</item>
-        <item name="@android:windowExitAnimation">@anim/exit_to_right</item>
+        <item name="android:windowEnterAnimation">@anim/enter_from_left</item>
+        <item name="android:windowExitAnimation">@anim/exit_to_right</item>
     </style>
 
     <style name="notificationPopUpRightToLeftAnimation">
-        <item name="@android:windowEnterAnimation">@anim/enter_from_right</item>
-        <item name="@android:windowExitAnimation">@anim/exit_to_left</item>
+        <item name="android:windowEnterAnimation">@anim/enter_from_right</item>
+        <item name="android:windowExitAnimation">@anim/exit_to_left</item>
     </style>
 
 

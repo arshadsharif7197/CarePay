@@ -9,7 +9,7 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
-import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
 import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -106,12 +107,22 @@ public class PatientPaymentPresenter extends PaymentPresenter implements Patient
 
     @Override
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
+        String practiceId = null;
+        toplevel:
+        for(PatientBalanceDTO patientBalanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()){
+            for(PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()){
+                if(patientId != null && patientId.equals(pendingBalanceDTO.getMetadata().getPatientId())){
+                    practiceId = pendingBalanceDTO.getMetadata().getPracticeId();
+                    break toplevel;
+                }
+            }
+        }
         for (UserPracticeDTO userPracticeDTO : paymentsModel.getPaymentPayload().getUserPractices()) {
-            if (userPracticeDTO.getPatientId() != null && userPracticeDTO.getPatientId().equals(patientId)) {
+            if (userPracticeDTO.getPracticeId() != null && userPracticeDTO.getPracticeId().equals(practiceId)) {
                 return userPracticeDTO;
             }
         }
-        return null;
+        return new UserPracticeDTO();
     }
 
     @Nullable
