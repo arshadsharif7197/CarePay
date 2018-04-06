@@ -9,11 +9,11 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAddCreditCardFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.google.gson.Gson;
 
 /**
  * Created by lmenendez on 2/2/18
@@ -23,17 +23,38 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
 
     private PaymentPlanInterface callback;
 
-    public static PracticePaymentPlanAddCreditCardFragment newInstance(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel){
+    /**
+     * @param paymentsModel        payment model
+     * @param paymentPlanPostModel payment plan post model
+     * @return new instance
+     */
+    public static PracticePaymentPlanAddCreditCardFragment newInstance(PaymentsModel paymentsModel,
+                                                                       PaymentPlanPostModel paymentPlanPostModel) {
         Bundle args = new Bundle();
-        Gson gson = new Gson();
-        String paymentsDTOString = gson.toJson(paymentsModel);
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
+        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanPostModel);
-
         PracticePaymentPlanAddCreditCardFragment fragment = new PracticePaymentPlanAddCreditCardFragment();
         fragment.setArguments(args);
         return fragment;
     }
+
+    /**
+     * @param paymentsModel  payment model
+     * @param paymentPlanDTO payment plan details
+     * @return new instance
+     */
+    public static PracticePaymentPlanAddCreditCardFragment newInstance(PaymentsModel paymentsModel,
+                                                                       PaymentPlanDTO paymentPlanDTO,
+                                                                       boolean onlySelectMode) {
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, paymentsModel);
+        DtoHelper.bundleDto(args, paymentPlanDTO);
+        args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
+        PracticePaymentPlanAddCreditCardFragment fragment = new PracticePaymentPlanAddCreditCardFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 
     @Override
     protected void attachCallback(Context context) {
@@ -52,7 +73,7 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
 
         View closeButton = view.findViewById(R.id.closeViewLayout);
@@ -60,7 +81,9 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
             @Override
             public void onClick(View v) {
                 dismiss();
-                callback.onStartPaymentPlan(paymentsModel, paymentPlanPostModel);
+                if (paymentPlanPostModel != null) {
+                    callback.onStartPaymentPlan(paymentsModel, paymentPlanPostModel);
+                }
             }
         });
 
@@ -70,6 +93,19 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
     protected void makePaymentCall() {
         super.makePaymentCall();
         dismiss();
+    }
+
+    @Override
+    protected void authorizeOrSelectCreditCard() {
+        if (onlySelectMode) {
+            creditCardsPayloadDTO.setCompleteNumber(creditCardNoEditText.getText().toString().replace(" ", "").trim());
+            creditCardsPayloadDTO.setDefault(setAsDefaultCheckBox.isChecked());
+            creditCardsPayloadDTO.setSaveCardOnFile(saveCardOnFileCheckBox.isChecked());
+            dismiss();
+            callback.onCreditCardSelected(creditCardsPayloadDTO);
+        } else {
+            authorizeCreditCard();
+        }
     }
 
 

@@ -43,10 +43,9 @@ public class PracticeChooseProviderDialog extends BaseDialogFragment
     private String titleLabel;
 
     /**
-     *
      * @param appointmentsResultModel the model
-     * @param titleLabel the title label
-     * @param continueButtonLabel the button label
+     * @param titleLabel              the title label
+     * @param continueButtonLabel     the button label
      * @return a new instance of PracticeChooseProviderDialog
      */
     public static PracticeChooseProviderDialog newInstance(AppointmentsResultModel appointmentsResultModel,
@@ -124,8 +123,13 @@ public class PracticeChooseProviderDialog extends BaseDialogFragment
                 LinearLayoutManager.VERTICAL, false);
         searchRecycler = (RecyclerView) view.findViewById(R.id.search_recycler);
         searchRecycler.setLayoutManager(layoutManager);
-
-        setAdapter(providerList);
+        if (!providerList.isEmpty()) {
+            setAdapter(providerList);
+            view.findViewById(R.id.emptyStateScreen).setVisibility(View.GONE);
+        } else {
+            view.findViewById(R.id.mainContainer).setVisibility(View.GONE);
+            view.findViewById(R.id.emptyStateScreen).setVisibility(View.VISIBLE);
+        }
     }
 
     private void setAdapter(List<AppointmentResourcesDTO> practiceList) {

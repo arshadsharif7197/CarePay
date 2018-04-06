@@ -46,20 +46,24 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dimen_100dp"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_toEndOf="@id/userImage"
+                    android:minHeight="@dimen/dimen_100dp"
                     android:orientation="vertical">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/userNameTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:ellipsize="marquee"
+                        android:gravity="start"
+                        android:maxLines="2"
                         android:textColor="@color/white"
                         android:textSize="28sp"
                         app:customAssetFont="proxima_nova_extra_bold"
-                        tools:text="John Eland" />
+                        tools:text="RICK SANCHEZ DEL AGUILA" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/appointmentHourTextView"
@@ -178,9 +182,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dimen_20dp"
                     android:layout_marginTop="@dimen/dimen_20dp"
+                    android:textAllCaps="true"
                     android:textColor="@color/textview_default_textcolor"
                     android:textSize="@dimen/text_size_18sp"
-                    android:textAllCaps="true"
                     app:customAssetFont="proxima_nova_extra_bold"
                     breeze:textKey="payment_details_label"
                     tools:text="Payment Details" />

@@ -19,6 +19,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.payments.adapter.CreditCardsListAdapter;
@@ -61,7 +62,8 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     protected String titleLabel;
     protected ChooseCreditCardInterface callback;
 
-    private List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = new ArrayList<>();
+    protected List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = new ArrayList<>();
+    protected boolean onlySelectMode;
 
 
     /**
@@ -114,6 +116,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
             titleLabel = arguments.getString(CarePayConstants.PAYMENT_METHOD_BUNDLE);
             paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
             amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
+            onlySelectMode = arguments.getBoolean(CarePayConstants.ONLY_SELECT_MODE);
 
             if (paymentsModel != null) {
                 creditCardList = paymentsModel.getPaymentPayload().getPatientCreditCards();
@@ -172,6 +175,9 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         nextButton = (Button) view.findViewById(R.id.nextButton);
         nextButton.setOnClickListener(nextButtonListener);
         nextButton.setEnabled(false);
+        if (onlySelectMode) {
+            nextButton.setText(Label.getLabel("common.button.continue"));
+        }
 
         Button addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
@@ -187,11 +193,15 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         @Override
         public void onClick(View view) {
             if (selectedCreditCard > -1) {
-                IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
-                if (postModel != null && postModel.getAmount() > 0) {
-                    processPayment(postModel);
+                if (onlySelectMode) {
+                    callback.onCreditCardSelected(creditCardList.get(selectedCreditCard).getPayload());
                 } else {
-                    processPayment();
+                    IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
+                    if (postModel != null && postModel.getAmount() > 0) {
+                        processPayment(postModel);
+                    } else {
+                        processPayment();
+                    }
                 }
             }
         }
@@ -266,7 +276,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
             queries.put("patient_id", metadata.getPatientId());
         }
 
-        if(!StringUtil.isNullOrEmpty(paymentsModel.getPaymentPayload().getPaymentPostModel().getOrderId())){
+        if (!StringUtil.isNullOrEmpty(paymentsModel.getPaymentPayload().getPaymentPostModel().getOrderId())) {
             IntegratedPaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
             queries.put("store_id", paymentPostModel.getStoreId());
             queries.put("transaction_id", paymentPostModel.getOrderId());
@@ -276,13 +286,13 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
             queries.put("appointment_id", callback.getAppointmentId());
         }
 
-        if(queries.get("patient_id") == null) {
+        if (queries.get("patient_id") == null) {
             queries.remove("patient_id");
             if (callback.getAppointment() != null) {
                 queries.put("patient_id", callback.getAppointment().getMetadata().getPatientId());
-            }else{
-                for(PatientBalanceDTO patientBalanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()){
-                    if(patientBalanceDTO.getBalances().get(0).getMetadata().getPracticeId().equals(queries.get("practice_id"))){
+            } else {
+                for (PatientBalanceDTO patientBalanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()) {
+                    if (patientBalanceDTO.getBalances().get(0).getMetadata().getPracticeId().equals(queries.get("practice_id"))) {
                         queries.put("patient_id", patientBalanceDTO.getBalances().get(0).getMetadata().getPatientId());
                     }
                 }
@@ -327,7 +337,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     }
 
 
-    private WorkflowServiceCallback makePaymentCallback = new WorkflowServiceCallback() {
+    protected WorkflowServiceCallback makePaymentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();

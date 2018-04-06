@@ -57,6 +57,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
 
     private EditText dateOfBirthEditText;
     private EditText phoneNumberEditText;
+    private EditText phoneNumberTypeEditText;
     private EditText addressEditText;
     private EditText address2EditText;
     private EditText zipCode;
@@ -66,6 +67,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
 
     private DemographicsSettingsFragmentListener callback;
 
+    private DemographicsOption selectedPhoneType = new DemographicsOption();
     private DemographicsOption selectedGender = new DemographicsOption();
     private DemographicsOption selectedRace = new DemographicsOption();
     private DemographicsOption selectedSecondaryRace = new DemographicsOption();
@@ -176,6 +178,19 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         }
         phoneNumberEditText.addTextChangedListener(phoneInputFormatter);
         phoneNumberEditText.setOnClickListener(selectEndOnClick);
+
+/*
+        TextInputLayout phoneTypeInputLayout = (TextInputLayout) view.findViewById(R.id.phoneTypeInputLayout);
+        phoneNumberTypeEditText = (EditText) view.findViewById(R.id.phoneTypeEditText);
+        phoneNumberTypeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(phoneTypeInputLayout, null));
+        selectedPhoneType.setLabel(demographicPayload.getAddress().getPhoneNumberType());
+        selectedPhoneType.setName(demographicPayload.getAddress().getPhoneNumberType());
+        phoneNumberTypeEditText.setOnClickListener(getEditTextClickListener(dataModel
+                        .getDemographic().getAddress().getProperties().getPhoneType().getOptions(),
+                phoneTypeInputLayout, phoneNumberTypeEditText, null,
+                selectedPhoneType, Label.getLabel("phone_type_label")));
+        phoneNumberTypeEditText.setText(demographicPayload.getAddress().getPhoneNumberType());
+*/
     }
 
     private void setUpBaseDemographicFields(View view, DemographicPayloadDTO demographicPayload,
@@ -317,19 +332,27 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
             unsetFieldError(dateBirthLayout);
         }
 
-        String phoneValue = ((EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit)).getText().toString();
+        String phoneValue = phoneNumberEditText.getText().toString().trim();
         if (validateField(view, dataModel.getDemographic().getAddress().getProperties()
                         .getPhone().isRequired(), phoneValue,
                 R.id.reviewdemogrPhoneNumberTextInput, isUserInteraction)) return false;
 
         TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
-        EditText phoneNumber = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
         if (phoneLayout.getVisibility() == View.VISIBLE &&
-                !StringUtil.isNullOrEmpty(phoneNumber.getText().toString().trim()) &&
-                !ValidationHelper.isValidString(phoneNumber.getText().toString().trim(), ValidationHelper.PHONE_NUMBER_PATTERN)) {
+                !StringUtil.isNullOrEmpty(phoneValue) &&
+                !ValidationHelper.isValidString(phoneValue, ValidationHelper.PHONE_NUMBER_PATTERN)) {
             setFieldError(phoneLayout, Label.getLabel("demographics_phone_number_validation_msg"), isUserInteraction);
             return false;
+        } else {
+            unsetFieldError(phoneLayout);
         }
+
+/*
+        if (validateField(view, dataModel.getDemographic().getAddress().getProperties()
+                        .getPhoneType().isRequired(), selectedPhoneType.getName(),
+                R.id.phoneTypeInputLayout, isUserInteraction))
+            return false;
+*/
 
         if (validateField(view, dataModel.getDemographic().getPersonalDetails().getProperties()
                         .getGender().isRequired(), selectedGender.getName(),
@@ -475,6 +498,11 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         if (!StringUtil.isNullOrEmpty(phoneNumberString)) {
             // 'de-format' before saving to model
             addressModel.setPhone(StringUtil.revertToRawFormat(phoneNumberString));
+        }
+        String phoneType = phoneNumberTypeEditText.getText().toString().trim();
+        if (!StringUtil.isNullOrEmpty(phoneType)) {
+            // 'de-format' before saving to model
+            addressModel.setPhoneNumberType(phoneType);
         }
 
         String addressString = addressEditText.getText().toString().trim();
