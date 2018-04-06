@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.consentforms;
+package com.carecloud.carepay.patient.consentforms.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormsProviderInterface;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.consentforms.models.payload.FormDTO;
@@ -27,6 +28,7 @@ public class ConsentFormsRecyclerAdapter extends RecyclerView.Adapter<ConsentFor
 
     private final List<FormDTO> practiceFormsList;
     private final Map<String, UserPracticeDTO> practicesInformationMap;
+    private ConsentFormsProviderInterface callback;
 
     public ConsentFormsRecyclerAdapter(List<FormDTO> practiceFormsList,
                                        Map<String, UserPracticeDTO> practicesInformation) {
@@ -41,9 +43,9 @@ public class ConsentFormsRecyclerAdapter extends RecyclerView.Adapter<ConsentFor
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        FormDTO practiceForm = practiceFormsList.get(position);
-        UserPracticeDTO practice = practicesInformationMap.get(practiceForm.getMetadata().getPracticeId());
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+        final FormDTO provider = practiceFormsList.get(position);
+        UserPracticeDTO practice = practicesInformationMap.get(provider.getMetadata().getPracticeId());
         holder.providerNameTextView.setText(practice.getPracticeName());
         holder.providerAddressTextView.setText(practice.getAddressDTO().getFullAddress());
         holder.providerShortNameTextView.setText(StringUtil.getShortName(practice.getPracticeName()));
@@ -65,11 +67,11 @@ public class ConsentFormsRecyclerAdapter extends RecyclerView.Adapter<ConsentFor
                         holder.providerShortNameTextView.setVisibility(View.VISIBLE);
                     }
                 });
-        if (practiceForm.getPendingForms().size() == 0) {
+        if (provider.getPendingForms().size() == 0) {
             holder.formStatusTextView.setText(Label.getLabel("consentForms.providersList.item.label.formsFilledStatus"));
             holder.formStatusTextView.setTextColor(holder.formStatusTextView.getContext()
                     .getResources().getColor(R.color.cadet_gray));
-        } else if (practiceForm.getPendingForms().size() == 1) {
+        } else if (provider.getPendingForms().size() == 1) {
             holder.formStatusTextView.setText(Label.getLabel("consentForms.providersList.item.label.pendingFormCount"));
             holder.formStatusTextView.setTextColor(holder.formStatusTextView.getContext()
                     .getResources().getColor(R.color.lightning_yellow));
@@ -82,9 +84,13 @@ public class ConsentFormsRecyclerAdapter extends RecyclerView.Adapter<ConsentFor
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                callback.onProviderSelected(provider, position);
             }
         });
+    }
+
+    public void setCallback(ConsentFormsProviderInterface callback) {
+        this.callback = callback;
     }
 
     @Override

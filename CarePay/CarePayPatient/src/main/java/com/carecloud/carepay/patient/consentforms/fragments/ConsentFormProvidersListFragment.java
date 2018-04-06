@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.consentforms;
+package com.carecloud.carepay.patient.consentforms.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,10 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.consentforms.adapters.ConsentFormsRecyclerAdapter;
+import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormInterface;
+import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormsProviderInterface;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
-import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
+import com.carecloud.carepaylibray.consentforms.models.payload.FormDTO;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,21 +26,21 @@ import java.util.Map;
  * @author pjohnson on 8/03/18.
  */
 
-public class ConsentFormsListFragment extends BaseFragment {
+public class ConsentFormProvidersListFragment extends BaseFragment implements ConsentFormsProviderInterface {
 
 
-    private FragmentActivityInterface callback;
+    private ConsentFormInterface callback;
     private ConsentFormDTO consentFormDto;
 
-    public static ConsentFormsListFragment newInstance() {
-        return new ConsentFormsListFragment();
+    public static ConsentFormProvidersListFragment newInstance() {
+        return new ConsentFormProvidersListFragment();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof FragmentActivityInterface) {
-            callback = (FragmentActivityInterface) context;
+        if (context instanceof ConsentFormInterface) {
+            callback = (ConsentFormInterface) context;
         }
     }
 
@@ -66,7 +69,10 @@ public class ConsentFormsListFragment extends BaseFragment {
                 .getPracticesInformation());
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.consentFormsRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(new ConsentFormsRecyclerAdapter(consentFormDto.getPayload().getForms(), practicesInformation));
+        ConsentFormsRecyclerAdapter adapter = new ConsentFormsRecyclerAdapter(consentFormDto.getPayload().getForms(),
+                practicesInformation);
+        adapter.setCallback(this);
+        recyclerView.setAdapter(adapter);
     }
 
     private Map<String, UserPracticeDTO> getPracticesInformation(List<UserPracticeDTO> practicesInformation) {
@@ -75,5 +81,10 @@ public class ConsentFormsListFragment extends BaseFragment {
             practicesMap.put(practice.getPracticeId(), practice);
         }
         return practicesMap;
+    }
+
+    @Override
+    public void onProviderSelected(FormDTO practiceForm, int position) {
+        callback.onProviderSelected(practiceForm, position);
     }
 }

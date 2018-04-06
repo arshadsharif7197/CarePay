@@ -6,11 +6,15 @@ import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormProviderFormsFragment;
+import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormProvidersListFragment;
+import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormInterface;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
+import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
+import com.carecloud.carepaylibray.consentforms.models.payload.FormDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
-import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 
-public class ConsentFormsActivity extends MenuPatientActivity implements FragmentActivityInterface {
+public class ConsentFormsActivity extends MenuPatientActivity implements ConsentFormInterface {
 
     private ConsentFormDTO consentFormsDTO;
 
@@ -19,7 +23,7 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Fragmen
         super.onCreate(savedInstanceState);
         consentFormsDTO = getConvertedDTO(ConsentFormDTO.class);
         if (savedInstanceState == null) {
-            replaceFragment(ConsentFormsListFragment.newInstance(), false);
+            replaceFragment(ConsentFormProvidersListFragment.newInstance(), false);
         }
     }
 
@@ -46,5 +50,15 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Fragmen
     @Override
     public void addFragment(Fragment fragment, boolean addToBackStack) {
         addFragment(R.id.container_main, fragment, addToBackStack);
+    }
+
+    @Override
+    public void onProviderSelected(FormDTO practiceForm, int position) {
+        addFragment(ConsentFormProviderFormsFragment.newInstance(position), true);
+    }
+
+    @Override
+    public void onPendingFormSelected(PracticeForm form, boolean isChecked) {
+
     }
 }
