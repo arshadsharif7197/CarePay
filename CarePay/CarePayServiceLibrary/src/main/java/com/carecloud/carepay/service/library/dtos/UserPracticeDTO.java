@@ -49,6 +49,9 @@ public class UserPracticeDTO {
     @SerializedName("clover")
     @Expose
     private boolean cloverEnabled = false;
+    @SerializedName("isRetailEnabled")
+    @Expose
+    private boolean isRetailEnabled = false;
 
     /**
      * @return The prefix
@@ -176,5 +179,13 @@ public class UserPracticeDTO {
 
     public void setCloverEnabled(boolean cloverEnabled) {
         this.cloverEnabled = cloverEnabled;
+    }
+
+    public boolean isRetailEnabled() {
+        return isRetailEnabled;
+    }
+
+    public void setRetailEnabled(boolean retailEnabled) {
+        isRetailEnabled = retailEnabled;
     }
 }

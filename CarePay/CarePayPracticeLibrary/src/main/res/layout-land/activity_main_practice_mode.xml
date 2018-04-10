@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?practiceBackgroundColor"
@@ -184,7 +185,7 @@
                 style="@style/HomeButtonIconStyle"
                 android:layout_above="@id/homeCheckinLabel"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/dimen_30dp"
+                android:layout_marginBottom="@dimen/dimen_20dp"
                 android:contentDescription="@string/home_icon_check_in"
                 android:src="@drawable/icn_check_in_selector" />
         </RelativeLayout>
@@ -211,7 +212,7 @@
                 style="@style/HomeButtonIconStyle"
                 android:layout_above="@id/homePaymentsLabel"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/dimen_30dp"
+                android:layout_marginBottom="@dimen/dimen_20dp"
                 android:contentDescription="Payments"
                 android:src="@drawable/icn_payments_selector" />
         </RelativeLayout>
@@ -237,7 +238,7 @@
                 style="@style/HomeButtonIconStyle"
                 android:layout_above="@id/homeAppointmentsLabel"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/dimen_30dp"
+                android:layout_marginBottom="@dimen/dimen_20dp"
                 android:contentDescription="Appointments"
                 android:src="@drawable/icn_appointements_selector" />
         </RelativeLayout>
@@ -266,7 +267,7 @@
                 style="@style/HomeButtonIconStyle"
                 android:layout_above="@id/homeCheckoutLabel"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/dimen_30dp"
+                android:layout_marginBottom="@dimen/dimen_20dp"
                 android:contentDescription="Check-Out"
                 android:src="@drawable/icn_checkout_selector" />
         </RelativeLayout>

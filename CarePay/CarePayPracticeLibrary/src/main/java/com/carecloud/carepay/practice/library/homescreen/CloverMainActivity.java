@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.homescreen;
 
+import android.animation.ObjectAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -230,9 +232,15 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             if (checkinLabelTextView != null) {
                 checkinLabelTextView.setText(Label.getLabel("checkin_button_patient_mode"));
             }
-            boolean showShop = true;
+            JsonObject payloadAsJsonObject = homeScreenDTO.getPayload();
+            Gson gson = new Gson();
+            PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO
+                    = gson.fromJson(payloadAsJsonObject, PracticeHomeScreenPayloadDTO.class);
+            boolean showShop = practiceHomeScreenPayloadDTO.getUserPractices().get(0).isRetailEnabled();
             if (showShop) {
-                findViewById(R.id.homeShopClickable).setVisibility(View.VISIBLE);
+                View shopContainer = findViewById(R.id.homeShopClickable);
+                shopContainer.setVisibility(View.VISIBLE);
+                shopContainer.setOnClickListener(this);
                 findViewById(R.id.separator).setVisibility(View.VISIBLE);
 
                 ImageView checkinImageView = (ImageView) findViewById(R.id.homeCheckinImageView);
@@ -376,6 +384,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             navigateToCheckIn();
         } else if (viewId == R.id.homePaymentsClickable) {
             navigateToPayments();
+        } else if (viewId == R.id.homeShopClickable) {
+            navigateToShop();
         } else if (viewId == R.id.homeAppointmentsClickable) {
             navigateToAppointments();
         } else if (viewId == R.id.homeCheckoutClickable) {
@@ -437,6 +447,10 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
         Gson gson = new Gson();
         TransitionDTO transitionDTO;
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+        queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
+
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
             PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
             transitionDTO = transitionsDTO.getShop();
@@ -446,7 +460,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         }
 
         getWorkflowServiceHelper().interrupt();
-        getWorkflowServiceHelper().execute(transitionDTO, commonTransitionCallback);
+        getWorkflowServiceHelper().execute(transitionDTO, commonTransitionCallback, queryMap);
     }
 
     private void checkOut() {
@@ -686,6 +700,14 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                             officeNews, officeNewsClickedListener);
                     newsList.setAdapter(adapter);
                 }
+            } else {
+                DisplayMetrics metrics = getResources().getDisplayMetrics();
+                int mid = findViewById(R.id.parent).getHeight() - metrics.heightPixels;
+
+                ObjectAnimator positionAnimation = ObjectAnimator.ofFloat(findViewById(R.id.layoutContainer), "translationY", mid);
+                ObjectAnimator positionAnimation2 = ObjectAnimator.ofFloat(findViewById(R.id.shadow), "translationY", mid);
+                positionAnimation.start();
+                positionAnimation2.start();
             }
         }
 
