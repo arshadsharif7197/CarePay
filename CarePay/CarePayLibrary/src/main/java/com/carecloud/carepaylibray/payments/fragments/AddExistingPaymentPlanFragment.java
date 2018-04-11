@@ -22,12 +22,12 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
+import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
 
 /**
  * Created by lmenendez on 2/12/18
@@ -195,7 +195,7 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
     };
 
     protected void onPlanEdited(WorkflowDTO workflowDTO) {
-        callback.onPaymentPlanEdited(workflowDTO);
+        callback.onPaymentPlanAddedExisting(workflowDTO);
     }
 
 }
