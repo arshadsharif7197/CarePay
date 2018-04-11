@@ -179,6 +179,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         phoneNumberEditText.addTextChangedListener(phoneInputFormatter);
         phoneNumberEditText.setOnClickListener(selectEndOnClick);
 
+/*
         TextInputLayout phoneTypeInputLayout = (TextInputLayout) view.findViewById(R.id.phoneTypeInputLayout);
         phoneNumberTypeEditText = (EditText) view.findViewById(R.id.phoneTypeEditText);
         phoneNumberTypeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(phoneTypeInputLayout, null));
@@ -189,6 +190,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
                 phoneTypeInputLayout, phoneNumberTypeEditText, null,
                 selectedPhoneType, Label.getLabel("phone_type_label")));
         phoneNumberTypeEditText.setText(demographicPayload.getAddress().getPhoneNumberType());
+*/
     }
 
     private void setUpBaseDemographicFields(View view, DemographicPayloadDTO demographicPayload,
@@ -345,10 +347,12 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
             unsetFieldError(phoneLayout);
         }
 
+/*
         if (validateField(view, dataModel.getDemographic().getAddress().getProperties()
                         .getPhoneType().isRequired(), selectedPhoneType.getName(),
                 R.id.phoneTypeInputLayout, isUserInteraction))
             return false;
+*/
 
         if (validateField(view, dataModel.getDemographic().getPersonalDetails().getProperties()
                         .getGender().isRequired(), selectedGender.getName(),

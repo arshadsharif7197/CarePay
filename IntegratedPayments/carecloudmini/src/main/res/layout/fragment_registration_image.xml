@@ -97,7 +97,7 @@
                         android:src="@drawable/selected_badge"
                         android:layout_alignStart="@id/practice_initials"
                         android:contentDescription="@string/content_selected_icon"
-                        android:visibility="visible"/>
+                        android:visibility="gone"/>
 
                 </RelativeLayout>
 

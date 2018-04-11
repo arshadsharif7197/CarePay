@@ -72,8 +72,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:orientation="horizontal">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                 android:id="@+id/reviewdemogrPhoneNumberTextInput"
@@ -101,7 +100,8 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 app:customAssetFont="proxima_nova_semi_bold"
-                app:hintTextAppearance="@style/FloatingLabelStyle">
+                app:hintTextAppearance="@style/FloatingLabelStyle"
+                android:visibility="gone">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                     android:id="@+id/phoneTypeEditText"
