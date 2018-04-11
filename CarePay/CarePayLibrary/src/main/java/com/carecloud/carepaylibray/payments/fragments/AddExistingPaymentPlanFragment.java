@@ -61,11 +61,11 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
         super.onViewCreated(view, icicle);
         View addToExisting = view.findViewById(R.id.payment_plan_add_existing);
         addToExisting.setVisibility(View.GONE);
-        if(numberPayments.getOnFocusChangeListener() != null){
-            numberPayments.getOnFocusChangeListener().onFocusChange(numberPayments, true);
+        if(numberPaymentsEditText.getOnFocusChangeListener() != null){
+            numberPaymentsEditText.getOnFocusChangeListener().onFocusChange(numberPaymentsEditText, true);
         }
-        numberPayments.setText(String.valueOf(getRemainingPayments()));
-        planName.setText(existingPlan.getPayload().getDescription());
+        numberPaymentsEditText.setText(String.valueOf(getRemainingPayments()));
+        planNameEditText.setText(existingPlan.getPayload().getDescription());
 
         createPlanButton.setText(Label.getLabel("demographics_save_changes_button"));
     }
@@ -92,13 +92,13 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
 
 
     @Override
-    protected void createPaymentPlan() {
+    protected void createPaymentPlan(boolean userInteraction) {
         if (validateFields(false)) {
             PaymentPlanPostModel postModel = new PaymentPlanPostModel();
             postModel.setMetadata(selectedBalance.getMetadata());
             postModel.setAmount(SystemUtil.safeAdd(existingPlan.getPayload().getAmount(),
                     getAdditionalAmount()));
-            postModel.setDescription(planName.getText().toString());
+            postModel.setDescription(planNameEditText.getText().toString());
             postModel.setLineItems(getPaymentPlanLineItems());
 
             PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
@@ -144,9 +144,9 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
                     lineItem.setType(IntegratedPaymentLineItem.TYPE_APPLICATION);
                     lineItem.setTypeId(balanceItem.getId().toString());
 
-                    if(amountHolder >= balanceItem.getAmount()){
-                        lineItem.setAmount(balanceItem.getAmount());
-                        amountHolder -= balanceItem.getAmount();
+                    if(amountHolder >= balanceItem.getBalance()){
+                        lineItem.setAmount(balanceItem.getBalance());
+                        amountHolder -= balanceItem.getBalance();
                     }else{
                         lineItem.setAmount(amountHolder);
                         amountHolder = 0;

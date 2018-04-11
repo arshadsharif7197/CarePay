@@ -1,6 +1,8 @@
 package com.carecloud.carepaylibray.payments.interfaces;
 
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.interfaces.DTOInterface;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -12,15 +14,16 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostMode
  * Created by lmenendez on 1/23/18
  */
 
-public interface PaymentPlanInterface extends PaymentMethodInterface, OneTimePaymentInterface {
+public interface PaymentPlanInterface extends PaymentMethodInterface,
+        OneTimePaymentInterface, ChooseCreditCardInterface, DTOInterface {
 
     void onStartPaymentPlan(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel);
 
     void onDismissPaymentPlan(PaymentsModel paymentsModel);
 
-    void onSelectPaymentPlanMethod(PaymentsMethodsDTO selectedPaymentMethod, PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel);
+    void onSelectPaymentPlanMethod(PaymentsMethodsDTO selectedPaymentMethod, PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel, boolean onlySelectMode);
 
-    void onAddPaymentPlanCard(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel);
+    void onAddPaymentPlanCard(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel, boolean onlySelectMode);
 
     void onDisplayPaymentPlanTerms(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel);
 
@@ -37,4 +40,6 @@ public interface PaymentPlanInterface extends PaymentMethodInterface, OneTimePay
     void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance);
 
     void onSelectedPlanToAdd(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO selectedPlan);
+
+    void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel);
 }

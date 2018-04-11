@@ -5,7 +5,6 @@ package com.carecloud.carepay.service.library;
  */
 public class CarePayConstants {
 
-
     private CarePayConstants() {
     }
 
@@ -70,6 +69,8 @@ public class CarePayConstants {
 
     public static final String PRACTICE_SELECTION_BUNDLE = "practice_selection_bundle";
     public static final String PAYMENT_AMOUNT_BUNDLE = "total_amount_pay";
+    public static final String IS_PAYMENT_PLAN = "isPaymentPlan";
+    public static final String ONLY_SELECT_MODE = "selectMode";
     public static final String PAYMENT_METHOD_BUNDLE = "payment_method";
     public static final String PAYMENT_PAYLOAD_BUNDLE = "payment_payload_bundle";
     public static final String APPOINTMENT_INFO_BUNDLE = "appointment_info_bundle";

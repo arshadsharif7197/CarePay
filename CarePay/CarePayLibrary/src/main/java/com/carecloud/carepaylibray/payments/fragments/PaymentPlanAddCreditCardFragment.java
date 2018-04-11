@@ -32,34 +32,34 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
     protected PaymentPlanDTO paymentPlanDTO;
 
     /**
-     * @param paymentsModel payment model
+     * @param paymentsModel        payment model
      * @param paymentPlanPostModel payment plan post model
+     * @param onlySelectMode
      * @return new instance
      */
-    public static PaymentPlanAddCreditCardFragment newInstance(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel){
+    public static PaymentPlanAddCreditCardFragment newInstance(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel, boolean onlySelectMode) {
         Bundle args = new Bundle();
-        Gson gson = new Gson();
-        String paymentsDTOString = gson.toJson(paymentsModel);
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
+        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanPostModel);
-
+        args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
         PaymentPlanAddCreditCardFragment fragment = new PaymentPlanAddCreditCardFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     /**
-     * @param paymentsModel payment model
+     * @param paymentsModel  payment model
      * @param paymentPlanDTO payment plan details
+     * @param onlySelectMode
      * @return new instance
      */
-    public static PaymentPlanAddCreditCardFragment newInstance(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO){
+    public static PaymentPlanAddCreditCardFragment newInstance(PaymentsModel paymentsModel,
+                                                               PaymentPlanDTO paymentPlanDTO,
+                                                               boolean onlySelectMode) {
         Bundle args = new Bundle();
-        Gson gson = new Gson();
-        String paymentsDTOString = gson.toJson(paymentsModel);
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
+        DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanDTO);
-
+        args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
         PaymentPlanAddCreditCardFragment fragment = new PaymentPlanAddCreditCardFragment();
         fragment.setArguments(args);
         return fragment;
@@ -82,7 +82,7 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
         paymentPlanPostModel = DtoHelper.getConvertedDTO(PaymentPlanPostModel.class, args);
@@ -90,27 +90,29 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
-        if(paymentPlanPostModel != null) {
+        saveCardOnFileCheckBox.setChecked(true);
+        saveCardOnFileCheckBox.setEnabled(false);
+        if (paymentPlanPostModel != null || onlySelectMode) {
             nextButton.setText(Label.getLabel("payment_plan_continue"));
         }
     }
 
     @Override
     protected void makePaymentCall() {
-        PapiPaymentMethod papiPaymentMethod =  new PapiPaymentMethod();
+        PapiPaymentMethod papiPaymentMethod = new PapiPaymentMethod();
         papiPaymentMethod.setPaymentMethodType(PapiPaymentMethod.PAYMENT_METHOD_NEW_CARD);
         papiPaymentMethod.setCardData(getCreditCardModel());
 
-        if(paymentPlanPostModel != null) {
+        if (paymentPlanPostModel != null) {
             paymentPlanPostModel.setPapiPaymentMethod(papiPaymentMethod);
             paymentPlanPostModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
 
             callback.onDisplayPaymentPlanTerms(paymentsModel, paymentPlanPostModel);
         }
 
-        if(paymentPlanDTO != null){
+        if (paymentPlanDTO != null) {
             IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
             postModel.setPapiPaymentMethod(papiPaymentMethod);
             postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
@@ -119,7 +121,7 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
         }
     }
 
-    private void makePlanPayment(){
+    private void makePlanPayment() {
         Map<String, String> queries = new HashMap<>();
         queries.put("practice_mgmt", paymentPlanDTO.getMetadata().getPracticeMgmt());
         queries.put("practice_id", paymentPlanDTO.getMetadata().getPracticeId());
@@ -133,8 +135,19 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
         String paymentModelJson = gson.toJson(paymentsModel.getPaymentPayload().getPaymentPostModel());
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePlanPayment();
         getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, paymentModelJson, queries, header);
-
-
     }
+
+    @Override
+    protected void authorizeOrSelectCreditCard() {
+        if (onlySelectMode) {
+            creditCardsPayloadDTO.setCompleteNumber(creditCardNoEditText.getText().toString().replace(" ", "").trim());
+            creditCardsPayloadDTO.setDefault(setAsDefaultCheckBox.isChecked());
+            creditCardsPayloadDTO.setSaveCardOnFile(saveCardOnFileCheckBox.isChecked());
+            callback.onCreditCardSelected(creditCardsPayloadDTO);
+        } else {
+            authorizeCreditCard();
+        }
+    }
+
 
 }

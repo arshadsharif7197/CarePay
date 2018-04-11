@@ -30,8 +30,9 @@
             android:layout_alignParentBottom="true"
             android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
             android:background="@drawable/button_blue_border"
-            android:textColor="@color/colorPrimary"
+            android:foreground="?selectableItemBackground"
             android:textAllCaps="true"
+            android:textColor="@color/colorPrimary"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="payment_add_new_credit_card_button" />
 

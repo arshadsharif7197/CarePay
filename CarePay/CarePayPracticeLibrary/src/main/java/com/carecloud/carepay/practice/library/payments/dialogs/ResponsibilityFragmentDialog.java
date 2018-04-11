@@ -22,6 +22,7 @@ import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterf
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsSettingsRegularPaymentsDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -364,13 +365,14 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
     }
 
     protected boolean isPaymentPlanAvailable(double balance){
-        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = paymentsModel.getPaymentPayload()
-                .getPaymentSettings().get(0).getPayload().getPaymentPlans();
+        PaymentsPayloadSettingsDTO settingsDTO = paymentsModel.getPaymentPayload()
+                .getPaymentSettings().get(0);
+        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = settingsDTO.getPayload().getPaymentPlans();
         if(paymentPlanSettings.isPaymentPlansEnabled()){
             for(PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()){
                 if (balance >= rule.getMinBalance().getValue() &&
                         balance <= rule.getMaxBalance().getValue()) {
-                    if(paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()){
+                    if(paymentsModel.getPaymentPayload().getActivePlans(settingsDTO.getMetadata().getPracticeId()).isEmpty()){
                         return true;
                     }else if(paymentPlanSettings.isCanHaveMultiple()){//need to check if multiple plans is enabled
                         return true;

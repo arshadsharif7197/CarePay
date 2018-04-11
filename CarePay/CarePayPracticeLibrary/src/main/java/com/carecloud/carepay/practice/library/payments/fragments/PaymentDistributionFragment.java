@@ -33,6 +33,7 @@ import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
@@ -259,7 +260,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         });
 
         View historyButton = view.findViewById(R.id.button_history);
-        historyButton.setVisibility(paymentsModel.getPaymentPayload().getTransactionHistory().getPaymentHistoryList().isEmpty() ? View.INVISIBLE : View.VISIBLE);
+        boolean hasHistory = !paymentsModel.getPaymentPayload().getTransactionHistory().getPaymentHistoryList().isEmpty();
+        boolean hasPlans = !paymentsModel.getPaymentPayload().getFilteredPlans(getApplicationMode().getUserPracticeDTO().getPracticeId()).isEmpty();
+        historyButton.setVisibility(hasHistory || hasPlans ? View.VISIBLE : View.INVISIBLE);
         historyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -828,13 +831,14 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     }
 
     private boolean isPaymentPlanAvailable(double balance) {
-        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = paymentsModel.getPaymentPayload()
-                .getPaymentSettings().get(0).getPayload().getPaymentPlans();
+        PaymentsPayloadSettingsDTO settingsDTO = paymentsModel.getPaymentPayload()
+                .getPaymentSettings().get(0);
+        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = settingsDTO.getPayload().getPaymentPlans();
         if (paymentPlanSettings.isPaymentPlansEnabled()) {
             for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
                 if (balance >= rule.getMinBalance().getValue() &&
                         balance <= rule.getMaxBalance().getValue()) {
-                    if (paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()) {
+                    if (paymentsModel.getPaymentPayload().getFilteredPlans(settingsDTO.getMetadata().getPracticeId()).isEmpty()) {
                         return true;
                     } else if (paymentPlanSettings.isCanHaveMultiple()) {//need to check if multiple plans is enabled
                         return true;

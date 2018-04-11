@@ -222,7 +222,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                         for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
                             if (balance >= rule.getMinBalance().getValue() &&
                                     balance <= rule.getMaxBalance().getValue()) {
-                                if(paymentReceiptModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()){
+                                if(paymentReceiptModel.getPaymentPayload().getActivePlans(practiceId).isEmpty()){
                                     return true;
                                 }else if(paymentPlanSettings.isCanHaveMultiple()){//need to check if multiple plans is enabled
                                     return true;
