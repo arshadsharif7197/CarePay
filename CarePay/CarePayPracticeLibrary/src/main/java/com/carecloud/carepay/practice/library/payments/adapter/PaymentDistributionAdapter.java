@@ -30,6 +30,7 @@ import java.util.Locale;
  */
 
 public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDistributionAdapter.BalanceViewHolder> {
+
     private Context context;
     private List<BalanceItemDTO> balanceItems = new ArrayList<>();
     private PaymentDistributionCallback callback;
@@ -38,11 +39,13 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
 
     /**
      * Constructor
-     * @param context Context
-     * @param balanceItems List of Balance Items
-     * @param callback callback
+     *
+     * @param context             Context
+     * @param balanceItems        List of Balance Items
+     * @param callback            callback
      */
-    public PaymentDistributionAdapter(Context context, List<BalanceItemDTO> balanceItems, PaymentDistributionCallback callback, PaymentRowType rowType){
+    public PaymentDistributionAdapter(Context context, List<BalanceItemDTO> balanceItems,
+                                      PaymentDistributionCallback callback, PaymentRowType rowType) {
         this.context = context;
         this.balanceItems = balanceItems;
         this.callback = callback;
@@ -54,9 +57,9 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
     public BalanceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view;
-        if(rowType == PaymentRowType.NEW_CHARGE){
+        if (rowType == PaymentRowType.NEW_CHARGE) {
             view = inflater.inflate(R.layout.item_payment_distribution_charge, parent, false);
-        }else {
+        } else {
             view = inflater.inflate(R.layout.item_payment_distribution_balance, parent, false);
         }
 
@@ -69,34 +72,45 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
 
         final BalanceItemDTO balanceItem = balanceItems.get(position);
         holder.getDescription().setText(StringUtil.getLabelForView(balanceItem.getDescription()));
+        if (balanceItem.getAmountInPaymentPlan() > 0.0) {
+//            String paymentPlanInfo = Label.getLabel("payment.distributionScreen.item.label.amountInPaymentPlan");
+            String paymentPlanInfo = "%s is on a payment plan";
+            if (balanceItem.isInMoreThanOnePaymentPlan()) {
+//                paymentPlanInfo = Label.getLabel("payment.distributionScreen.item.label.amountInPaymentPlans");
+                paymentPlanInfo = "%s is on a payment plans";
+            }
+            holder.getPaymentPlanInfo().setText(String.format(paymentPlanInfo,
+                    currencyFormat.format(balanceItem.getAmountInPaymentPlan())));
+            holder.getPaymentPlanInfo().setVisibility(View.VISIBLE);
+        }
 
         String providerName = balanceItem.getProvider().getName();
-        if(providerName == null){
+        if (providerName == null) {
             holder.getProviderName().setText(Label.getLabel("payment_choose_provider"));
             holder.getProviderName().setTextColor(context.getResources().getColor(R.color.slateGray));
-            if(balanceItem.getProvider().hasError()){
+            if (balanceItem.getProvider().hasError()) {
                 holder.getProviderName().setError(Label.getLabel("payment_choose_provider"));
             }
-        }else {
+        } else {
             holder.getProviderName().setText(StringUtil.getLabelForView(providerName));
             holder.getProviderName().setTextColor(context.getResources().getColor(R.color.colorPrimary));
             holder.getProviderName().setError(null);
         }
 
         String providerInitials = StringUtil.getShortName(balanceItem.getProvider().getName());
-        if(providerName == null){
+        if (providerName == null) {
             providerInitials = "+";
         }
         holder.getProviderInitials().setText(providerInitials);
 
         String locationName = balanceItem.getLocation().getName();
-        if(locationName == null){
+        if (locationName == null) {
             holder.getLocationName().setText(Label.getLabel("payment_choose_location"));
             holder.getLocationName().setTextColor(context.getResources().getColor(R.color.slateGray));
-            if(balanceItem.getLocation().hasError()){
+            if (balanceItem.getLocation().hasError()) {
                 holder.getLocationName().setError(Label.getLabel("payment_choose_location"));
             }
-        }else {
+        } else {
             holder.getLocationName().setText(StringUtil.getLabelForView(locationName));
             holder.getLocationName().setTextColor(context.getResources().getColor(R.color.colorPrimary));
             holder.getLocationName().setError(null);
@@ -104,12 +118,11 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
 
         double amount = balanceItem.getBalance();
         EditText amountTextView = holder.getAmount();
-        if(amount==0D) {
+        if (amount == 0D) {
             amountTextView.setText(context.getString(R.string.em_dash));
-        }else{
+        } else {
             amountTextView.setText(currencyFormat.format(amount));
         }
-
 
 
         int size = context.getResources().getDimensionPixelSize(R.dimen.payment_details_dialog_icon_size);
@@ -146,9 +159,9 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
                 SystemUtil.hideSoftKeyboard(context, textView);
                 double amount = 0D;
-                try{
+                try {
                     amount = Double.parseDouble(textView.getText().toString());
-                }catch (NumberFormatException nfe){
+                } catch (NumberFormatException nfe) {
                     nfe.printStackTrace();
                 }
                 callback.editAmount(amount, balanceItem);
@@ -158,7 +171,7 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
 
         amountTextView.setSelectAllOnFocus(true);
 
-        if(holder.getClearButton()!=null) {
+        if (holder.getClearButton() != null) {
             holder.getClearButton().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -168,7 +181,7 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
             });
         }
 
-        if(holder.getRemoveButton()!=null) {
+        if (holder.getRemoveButton() != null) {
             holder.getRemoveButton().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -225,7 +238,7 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
         this.balanceItems = balanceItems;
     }
 
-    private void resetSwipedLayoutView(BalanceViewHolder holder){
+    private void resetSwipedLayoutView(BalanceViewHolder holder) {
         View rowLayout = holder.getRowLayout();
         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) rowLayout.getLayoutParams();
         layoutParams.leftMargin = 0;
@@ -233,9 +246,10 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
 
     }
 
-    public class BalanceViewHolder extends SwipeViewHolder{
+    public class BalanceViewHolder extends SwipeViewHolder {
 
         private TextView description;
+        private TextView paymentPlanInfo;
         private TextView providerName;
         private TextView providerInitials;
         private TextView locationName;
@@ -250,6 +264,7 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
         BalanceViewHolder(View itemView) {
             super(itemView);
             description = (TextView) itemView.findViewById(R.id.payment_detail_description);
+            paymentPlanInfo = (TextView) itemView.findViewById(R.id.payment_plan_info);
             providerName = (TextView) itemView.findViewById(R.id.provider_name);
             providerInitials = (TextView) itemView.findViewById(R.id.provider_short_name);
             locationName = (TextView) itemView.findViewById(R.id.location_name);
@@ -268,6 +283,10 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
 
         public TextView getProviderName() {
             return providerName;
+        }
+
+        public TextView getPaymentPlanInfo() {
+            return paymentPlanInfo;
         }
 
         public TextView getProviderInitials() {
@@ -312,10 +331,11 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
 
         /**
          * Calculate swipe width based on present action button width
+         *
          * @return width for swipe offset
          */
         public int getSwipeWidth() {
-            if(removeButton!=null){
+            if (removeButton != null) {
                 return removeButton.getMeasuredWidth();
             }
             return clearButton.getMeasuredWidth();
@@ -333,7 +353,7 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
     }
 
 
-    public interface PaymentDistributionCallback{
+    public interface PaymentDistributionCallback {
         void pickProvider(View view, BalanceItemDTO balanceItem);
 
         void pickLocation(View view, BalanceItemDTO balanceItem);
@@ -345,7 +365,7 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
         void removeCharge(BalanceItemDTO chargeItem);
     }
 
-    public enum PaymentRowType{
+    public enum PaymentRowType {
         BALANCE, NEW_CHARGE;
     }
 
