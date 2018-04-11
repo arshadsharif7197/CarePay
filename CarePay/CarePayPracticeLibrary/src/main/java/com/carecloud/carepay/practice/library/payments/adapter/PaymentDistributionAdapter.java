@@ -40,9 +40,9 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
     /**
      * Constructor
      *
-     * @param context             Context
-     * @param balanceItems        List of Balance Items
-     * @param callback            callback
+     * @param context      Context
+     * @param balanceItems List of Balance Items
+     * @param callback     callback
      */
     public PaymentDistributionAdapter(Context context, List<BalanceItemDTO> balanceItems,
                                       PaymentDistributionCallback callback, PaymentRowType rowType) {
@@ -73,11 +73,9 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
         final BalanceItemDTO balanceItem = balanceItems.get(position);
         holder.getDescription().setText(StringUtil.getLabelForView(balanceItem.getDescription()));
         if (balanceItem.getAmountInPaymentPlan() > 0.0) {
-//            String paymentPlanInfo = Label.getLabel("payment.distributionScreen.item.label.amountInPaymentPlan");
-            String paymentPlanInfo = "%s is on a payment plan";
+            String paymentPlanInfo = Label.getLabel("payment.distributionScreen.item.label.amountInPaymentPlan");
             if (balanceItem.isInMoreThanOnePaymentPlan()) {
-//                paymentPlanInfo = Label.getLabel("payment.distributionScreen.item.label.amountInPaymentPlans");
-                paymentPlanInfo = "%s is on a payment plans";
+                paymentPlanInfo = Label.getLabel("payment.distributionScreen.item.label.amountInPaymentPlans");
             }
             holder.getPaymentPlanInfo().setText(String.format(paymentPlanInfo,
                     currencyFormat.format(balanceItem.getAmountInPaymentPlan())));
