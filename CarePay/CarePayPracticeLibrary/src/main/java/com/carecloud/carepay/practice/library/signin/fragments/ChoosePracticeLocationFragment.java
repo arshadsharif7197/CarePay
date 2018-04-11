@@ -14,11 +14,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.signin.adapters.PracticeSearchAdapter;
+import com.carecloud.carepay.practice.library.signin.adapters.PracticeLocationSearchAdapter;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionUserPractice;
 import com.carecloud.carepay.practice.library.signin.interfaces.SelectPracticeCallback;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -28,14 +31,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by lmenendez on 3/9/17.
+ * Created by pjohnson on 02/21/18.
  */
+public class ChoosePracticeLocationFragment extends BaseDialogFragment
+        implements PracticeLocationSearchAdapter.SelectPracticeLocationAdapterCallback {
 
-public class PracticeSearchFragment extends BaseDialogFragment implements PracticeSearchAdapter.SelectPracticeAdapterCallback {
-
-    private PracticeSelectionDTO practiceSelectionModel;
-    private List<PracticeSelectionUserPractice> practiceList = new ArrayList<>();
-    private PracticeSelectionUserPractice selectedPractice;
+    private List<LocationDTO> locationsList = new ArrayList<>();
+    private LocationDTO selectedLocation;
 
 
     private RecyclerView searchRecycler;
@@ -43,13 +45,15 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
     private SearchView searchView;
 
     private SelectPracticeCallback callback;
+    private PracticeSelectionUserPractice selectedPractice;
+    private WorkflowDTO workflowDTO;
 
-    public static PracticeSearchFragment newInstance(PracticeSelectionUserPractice selectedPractice) {
+    public static ChoosePracticeLocationFragment newInstance(PracticeSelectionUserPractice selectedPractice, WorkflowDTO workflowDTO) {
         Bundle args = new Bundle();
-        if (selectedPractice != null) {
-            DtoHelper.bundleDto(args, selectedPractice);
-        }
-        PracticeSearchFragment fragment = new PracticeSearchFragment();
+        DtoHelper.bundleDto(args, selectedPractice);
+        DtoHelper.bundleDto(args, workflowDTO);
+
+        ChoosePracticeLocationFragment fragment = new ChoosePracticeLocationFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -67,15 +71,18 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        practiceSelectionModel = (PracticeSelectionDTO) callback.getDto();
-        if (practiceSelectionModel != null) {
-            practiceList = practiceSelectionModel.getPayload().getUserPracticesList();
+        workflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class, getArguments());
+        selectedPractice = DtoHelper.getConvertedDTO(PracticeSelectionUserPractice.class, getArguments());
+        if(selectedPractice == null && workflowDTO != null){
+            PracticeSelectionDTO practiceSelectionDTO = DtoHelper.getConvertedDTO(PracticeSelectionDTO.class, workflowDTO);
+            selectedPractice = practiceSelectionDTO.getPayload().getUserPracticesList().get(0);
         }
+        locationsList = selectedPractice.getLocations();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
-        return inflater.inflate(R.layout.fragment_practice_search, container, false);
+        return inflater.inflate(R.layout.fragment_choose_practice_location, container, false);
     }
 
     @Override
@@ -88,8 +95,7 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
                 layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
                 title.setLayoutParams(layoutParams);
                 title.setGravity(Gravity.CENTER_HORIZONTAL);
-
-                title.setText(Label.getLabel("practice_list_select_a_business"));
+                title.setText(Label.getLabel("signIn.selectLocation.header.label.screenTitle"));
             }
         }
 
@@ -101,8 +107,8 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.onSelectPracticeCanceled();
                 dismiss();
+                callback.onSelectPracticeLocationCanceled(selectedPractice);
             }
         });
 
@@ -119,24 +125,39 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
         searchRecycler = (RecyclerView) view.findViewById(R.id.search_recycler);
         searchRecycler.setLayoutManager(layoutManager);
 
-        setAdapter(practiceList);
+        setAdapter(locationsList);
+        if (locationsList.size() > 5) {
+            view.findViewById(R.id.search_edit_frame).setVisibility(View.VISIBLE);
+        }
     }
 
-    private void setAdapter(List<PracticeSelectionUserPractice> practiceList) {
-        PracticeSearchAdapter practiceSearchAdapter;
+    private void setAdapter(List<LocationDTO> locationList) {
+        PracticeLocationSearchAdapter practiceLocationSearchAdapter;
         if (searchRecycler.getAdapter() == null) {
-            practiceSearchAdapter = new PracticeSearchAdapter(getContext(), practiceList, this);
-            selectedPractice = DtoHelper.getConvertedDTO(PracticeSelectionUserPractice.class, getArguments());
-            if (selectedPractice != null) {
-                practiceSearchAdapter.setSelectedPractice(selectedPractice);
+            practiceLocationSearchAdapter = new PracticeLocationSearchAdapter(locationList, this);
+            selectedLocation = getPreviousSelectedLocation(ApplicationPreferences
+                    .getInstance().getPracticeLocationId());
+            if (selectedLocation != null) {
+                practiceLocationSearchAdapter.setSelectedLocation(selectedLocation);
                 continueButton.setEnabled(true);
             }
-            searchRecycler.setAdapter(practiceSearchAdapter);
+            searchRecycler.setAdapter(practiceLocationSearchAdapter);
         } else {
-            practiceSearchAdapter = (PracticeSearchAdapter) searchRecycler.getAdapter();
-            practiceSearchAdapter.setPracticeList(practiceList);
-            practiceSearchAdapter.notifyDataSetChanged();
+            practiceLocationSearchAdapter = (PracticeLocationSearchAdapter) searchRecycler.getAdapter();
+            practiceLocationSearchAdapter.setLocationList(locationList);
+            practiceLocationSearchAdapter.notifyDataSetChanged();
         }
+    }
+
+    private LocationDTO getPreviousSelectedLocation(Integer practiceLocationId) {
+        if (practiceLocationId != null) {
+            for (LocationDTO locationDTO : locationsList) {
+                if (locationDTO.getId().equals(practiceLocationId)) {
+                    return locationDTO;
+                }
+            }
+        }
+        return null;
     }
 
 
@@ -150,7 +171,7 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
 
         @Override
         public boolean onQueryTextChange(String newText) {
-            clearSelectedPractice();
+            clearSelectedLocationPractice();
             findPractice(newText);
             continueButton.setEnabled(false);
             return true;
@@ -160,35 +181,38 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
     private View.OnClickListener continueClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (selectedPractice != null) {
-                callback.onSelectPractice(selectedPractice);
+            if (selectedLocation != null) {
                 dismiss();
+                if(workflowDTO != null){
+                    callback.onSelectPracticeLocation(workflowDTO, selectedPractice, selectedLocation);
+                }else {
+                    callback.onSelectPracticeLocation(selectedPractice, selectedLocation);
+                }
             }
         }
     };
 
-    @Override
-    public void onSelectPractice(PracticeSelectionUserPractice practice) {
-        searchView.clearFocus();
-        SystemUtil.hideSoftKeyboard(getActivity());
-        selectedPractice = practice;
-        continueButton.setEnabled(true);
-    }
-
     private void findPractice(String search) {
-        List<PracticeSelectionUserPractice> searchList = new ArrayList<>();
-        for (PracticeSelectionUserPractice practice : practiceList) {
-            if (practice.getPracticeName().toLowerCase().contains(search.toLowerCase())) {
-                searchList.add(practice);
+        List<LocationDTO> searchList = new ArrayList<>();
+        for (LocationDTO location : locationsList) {
+            if (location.getName().toLowerCase().contains(search.toLowerCase())) {
+                searchList.add(location);
             }
         }
         setAdapter(searchList);
     }
 
-    private void clearSelectedPractice() {
-        selectedPractice = null;
-        PracticeSearchAdapter searchAdapter = (PracticeSearchAdapter) searchRecycler.getAdapter();
-        searchAdapter.setSelectedPractice(selectedPractice);
+    private void clearSelectedLocationPractice() {
+        selectedLocation = null;
+        PracticeLocationSearchAdapter searchAdapter = (PracticeLocationSearchAdapter) searchRecycler.getAdapter();
+        searchAdapter.setSelectedLocation(selectedLocation);
     }
 
+    @Override
+    public void onSelectPracticeLocation(LocationDTO location) {
+        searchView.clearFocus();
+        SystemUtil.hideSoftKeyboard(getActivity());
+        selectedLocation = location;
+        continueButton.setEnabled(true);
+    }
 }
