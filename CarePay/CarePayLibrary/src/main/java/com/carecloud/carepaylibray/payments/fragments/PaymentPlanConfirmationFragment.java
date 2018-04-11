@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.IntDef;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,8 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -27,6 +30,15 @@ import java.util.Locale;
  */
 
 public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
+    public static final int MODE_CREATE = 0x111;
+    public static final int MODE_EDIT = 0x112;
+    public static final int MODE_ADD = 0x113;
+
+    @IntDef({MODE_CREATE, MODE_EDIT, MODE_ADD})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface ConfirmationMode {}
+
+    private static final String KEY_MODE = "mode";
 
     private PaymentPlanCompletedInterface callback;
     private PaymentsModel paymentsModel;
@@ -34,10 +46,12 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
     private PaymentPlanPayloadDTO paymentPlanPayloadDTO;
     private PaymentPlanMetadataDTO paymentPlanMetadataDTO;
     private NumberFormat currencyFormatter;
+    private @ConfirmationMode int mode;
 
-    public static PaymentPlanConfirmationFragment newInstance(WorkflowDTO workflowDTO){
+    public static PaymentPlanConfirmationFragment newInstance(WorkflowDTO workflowDTO, @ConfirmationMode int mode){
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, workflowDTO);
+        args.putInt(KEY_MODE, mode);
 
         PaymentPlanConfirmationFragment fragment = new PaymentPlanConfirmationFragment();
         fragment.setArguments(args);
@@ -60,6 +74,7 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
 
         Bundle args = getArguments();
         if (args != null) {
+            mode = args.getInt(KEY_MODE, MODE_CREATE);
             workflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class, args);
             paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             PaymentPlanDTO paymentPlanDTO = paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0);//should only be one when plan is just created
@@ -112,7 +127,7 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
                 paymentPlanPayloadDTO.getPaymentPlanDetails().getDayOfMonth()));
 
         TextView title = (TextView) view.findViewById(R.id.payment_confirm_message);
-        title.setText(Label.getLabel("payment_plan_success_create"));
+        title.setText(getMessageLabel());
 
         TextView confirmation = (TextView) view.findViewById(R.id.payment_confirm_value);
         confirmation.setText(paymentPlanMetadataDTO.getIndex().getConfirmation());
@@ -126,6 +141,18 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
             callback.completePaymentPlanProcess(workflowDTO);
         }
     };
+
+    private String getMessageLabel(){
+        switch (mode){
+            case MODE_ADD:
+                return Label.getLabel("payment_plan_success_add");
+            case MODE_EDIT:
+                return Label.getLabel("payment_plan_success_edit");
+            case MODE_CREATE:
+            default:
+                return Label.getLabel("payment_plan_success_create");
+        }
+    }
 
 
 }

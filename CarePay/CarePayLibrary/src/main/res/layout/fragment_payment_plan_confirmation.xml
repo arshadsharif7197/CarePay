@@ -70,6 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_margin="@dimen/confirmationPracticeNameMargin"
+            android:gravity="center_horizontal"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_24sp"
             app:customAssetFont="proxima_nova_regular"/>

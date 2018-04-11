@@ -76,6 +76,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="@dimen/dimen_20dp"
+                android:gravity="center_horizontal"
                 android:textSize="@dimen/text_size_24sp"
                 android:textColor="@color/light_blue_subtitle"
                 app:customAssetFont="proxima_nova_regular"/>
