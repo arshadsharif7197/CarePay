@@ -326,19 +326,23 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     }
 
     private void getPaymentPlansInformation() {
-        for (BalanceItemDTO balanceItem : paymentsModel.getPaymentPayload().getPatientBalances()
-                .get(0).getBalances().get(0).getPayload().get(0).getDetails()) {
-            String balanceItemId = String.valueOf(balanceItem.getId());
-            balanceItem.setAmountInPaymentPlan(0.0);
-            for (PaymentPlanDTO paymentPlan : paymentsModel.getPaymentPayload().getPatientPaymentPlans()) {
-                for (PaymentPlanLineItem lineItem : paymentPlan.getPayload().getLineItems()) {
-                    if (balanceItemId.equals(lineItem.getTypeId())) {
-                        if (balanceItem.getAmountInPaymentPlan() > 0.0) {
-                            balanceItem.setInMoreThanOnePaymentPlan(true);
+        if (paymentsModel.getPaymentPayload().getPatientBalances().size() > 0
+                && paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().size() > 0
+                && paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload().size() > 0) {
+            for (BalanceItemDTO balanceItem : paymentsModel.getPaymentPayload().getPatientBalances()
+                    .get(0).getBalances().get(0).getPayload().get(0).getDetails()) {
+                String balanceItemId = String.valueOf(balanceItem.getId());
+                balanceItem.setAmountInPaymentPlan(0.0);
+                for (PaymentPlanDTO paymentPlan : paymentsModel.getPaymentPayload().getPatientPaymentPlans()) {
+                    for (PaymentPlanLineItem lineItem : paymentPlan.getPayload().getLineItems()) {
+                        if (balanceItemId.equals(lineItem.getTypeId())) {
+                            if (balanceItem.getAmountInPaymentPlan() > 0.0) {
+                                balanceItem.setInMoreThanOnePaymentPlan(true);
+                            }
+                            balanceItem.setAmountInPaymentPlan(SystemUtil.safeSubtract(
+                                    SystemUtil.safeAdd(balanceItem.getAmountInPaymentPlan(), lineItem.getAmount()),
+                                    lineItem.getAmountPaid()));
                         }
-                        balanceItem.setAmountInPaymentPlan(SystemUtil.safeSubtract(
-                                SystemUtil.safeAdd(balanceItem.getAmountInPaymentPlan(), lineItem.getAmount()),
-                                lineItem.getAmountPaid()));
                     }
                 }
             }

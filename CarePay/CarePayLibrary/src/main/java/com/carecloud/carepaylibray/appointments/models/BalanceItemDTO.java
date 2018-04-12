@@ -66,7 +66,7 @@ public class BalanceItemDTO {
     @Expose(serialize = false)
     private double maxAmount;
 
-    private transient Double amountInPaymentPlan;
+    private transient Double amountInPaymentPlan = 0.0;
     private transient boolean isInMoreThanOnePaymentPlan;
 
     public Long getId() {
