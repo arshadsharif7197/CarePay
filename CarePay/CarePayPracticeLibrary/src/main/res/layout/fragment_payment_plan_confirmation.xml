@@ -44,7 +44,8 @@
                     android:layout_marginStart="@dimen/dimen_10dp"
                     android:textSize="@dimen/text_size_12sp"
                     android:textColor="@color/pastel_blue"
-                    app:customAssetFont="proxima_nova_regular"/>
+                    app:customAssetFont="proxima_nova_regular"
+                    android:visibility="gone"/>
 
                 <View
                     android:layout_width="0dp"

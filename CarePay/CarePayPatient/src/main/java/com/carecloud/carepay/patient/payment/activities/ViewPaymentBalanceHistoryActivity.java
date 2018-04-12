@@ -459,7 +459,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
             getSupportFragmentManager().popBackStack();
         }
 
-        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO, PaymentPlanConfirmationFragment.MODE_CREATE);
+        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+        String practiceId = paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0).getMetadata().getPracticeId();
+        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO, getUserPracticeById(practiceId), PaymentPlanConfirmationFragment.MODE_CREATE);
         displayDialogFragment(confirmationFragment, false);
     }
 
@@ -516,13 +518,19 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void onPaymentPlanEdited(WorkflowDTO workflowDTO) {
-        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO, PaymentPlanConfirmationFragment.MODE_EDIT);
+        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+        String practiceId = paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0).getMetadata().getPracticeId();
+
+        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO, getUserPracticeById(practiceId), PaymentPlanConfirmationFragment.MODE_EDIT);
         displayDialogFragment(confirmationFragment, false);
     }
 
     @Override
     public void onPaymentPlanAddedExisting(WorkflowDTO workflowDTO) {
-        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO, PaymentPlanConfirmationFragment.MODE_ADD);
+        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+        String practiceId = paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0).getMetadata().getPracticeId();
+
+        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO, getUserPracticeById(practiceId), PaymentPlanConfirmationFragment.MODE_ADD);
         displayDialogFragment(confirmationFragment, false);
     }
 

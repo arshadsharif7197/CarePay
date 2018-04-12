@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
@@ -117,7 +118,8 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
         date.setText(dateUtil.getDateAsMonthLiteralDayOrdinalYear());
 
         TextView practice = (TextView) view.findViewById(R.id.payment_confirm_practice_name);
-        practice.setText(paymentsModel.getPaymentPayload().getUserPractices().get(0).getPracticeName());
+        String practiceName = getPracticeName(patientPaymentPayload.getMetadata().getBusinessEntityId());
+        practice.setText(practiceName);
 
         //todo display possible errors
 
@@ -147,4 +149,14 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
                 return Label.getLabel("payment_method_creditcard");
         }
     }
+
+    private String getPracticeName(String practiceId){
+        for(UserPracticeDTO userPracticeDTO : paymentsModel.getPaymentPayload().getUserPractices()){
+            if(userPracticeDTO.getPracticeId().equals(practiceId)){
+                return userPracticeDTO.getPracticeName();
+            }
+        }
+        return null;
+    }
+
 }

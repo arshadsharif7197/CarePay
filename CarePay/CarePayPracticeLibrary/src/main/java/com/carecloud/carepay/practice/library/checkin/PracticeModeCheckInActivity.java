@@ -38,7 +38,6 @@ import com.carecloud.carepay.practice.library.payments.fragments.PatientModePaym
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionEntryFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentHistoryFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticeValidPlansFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeOneTimePaymentFragment;
@@ -46,9 +45,11 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticePayment
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanAddCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanChooseCreditCardFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanConfirmationFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanListFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanPaymentMethodFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanTermsFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticeValidPlansFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.RefundDetailFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.RefundProcessFragment;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentNavigationCallback;
@@ -1029,7 +1030,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void onSubmitPaymentPlan(WorkflowDTO workflowDTO) {
-        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO, PaymentPlanConfirmationFragment.MODE_CREATE);
+        PracticePaymentPlanConfirmationFragment confirmationFragment = PracticePaymentPlanConfirmationFragment.newInstance(workflowDTO, getApplicationMode().getUserPracticeDTO(), PaymentPlanConfirmationFragment.MODE_CREATE);
         displayDialogFragment(confirmationFragment, false);
     }
 
@@ -1048,13 +1049,13 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void onPaymentPlanEdited(WorkflowDTO workflowDTO) {
-        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO, PaymentPlanConfirmationFragment.MODE_EDIT);
+        PracticePaymentPlanConfirmationFragment confirmationFragment = PracticePaymentPlanConfirmationFragment.newInstance(workflowDTO, getApplicationMode().getUserPracticeDTO(), PaymentPlanConfirmationFragment.MODE_EDIT);
         displayDialogFragment(confirmationFragment, false);
     }
 
     @Override
     public void onPaymentPlanAddedExisting(WorkflowDTO workflowDTO) {
-        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO, PaymentPlanConfirmationFragment.MODE_ADD);
+        PracticePaymentPlanConfirmationFragment confirmationFragment = PracticePaymentPlanConfirmationFragment.newInstance(workflowDTO, getApplicationMode().getUserPracticeDTO(), PaymentPlanConfirmationFragment.MODE_ADD);
         displayDialogFragment(confirmationFragment, false);
     }
 

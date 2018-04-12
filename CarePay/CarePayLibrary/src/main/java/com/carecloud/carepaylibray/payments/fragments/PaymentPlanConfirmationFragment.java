@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
@@ -38,19 +39,20 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
     @Retention(RetentionPolicy.SOURCE)
     public @interface ConfirmationMode {}
 
-    private static final String KEY_MODE = "mode";
+    protected static final String KEY_MODE = "mode";
 
     private PaymentPlanCompletedInterface callback;
-    private PaymentsModel paymentsModel;
     private WorkflowDTO workflowDTO;
     private PaymentPlanPayloadDTO paymentPlanPayloadDTO;
     private PaymentPlanMetadataDTO paymentPlanMetadataDTO;
     private NumberFormat currencyFormatter;
-    private @ConfirmationMode int mode;
+    protected  @ConfirmationMode int mode;
+    private UserPracticeDTO userPracticeDTO;
 
-    public static PaymentPlanConfirmationFragment newInstance(WorkflowDTO workflowDTO, @ConfirmationMode int mode){
+    public static PaymentPlanConfirmationFragment newInstance(WorkflowDTO workflowDTO, UserPracticeDTO userPracticeDTO, @ConfirmationMode int mode){
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, workflowDTO);
+        DtoHelper.bundleDto(args, userPracticeDTO);
         args.putInt(KEY_MODE, mode);
 
         PaymentPlanConfirmationFragment fragment = new PaymentPlanConfirmationFragment();
@@ -76,10 +78,12 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
         if (args != null) {
             mode = args.getInt(KEY_MODE, MODE_CREATE);
             workflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class, args);
-            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             PaymentPlanDTO paymentPlanDTO = paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0);//should only be one when plan is just created
             paymentPlanPayloadDTO = paymentPlanDTO.getPayload();
             paymentPlanMetadataDTO = paymentPlanDTO.getMetadata();
+            userPracticeDTO = DtoHelper.getConvertedDTO(UserPracticeDTO.class, args);
+
         }
         currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
     }
@@ -132,6 +136,12 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
         TextView confirmation = (TextView) view.findViewById(R.id.payment_confirm_value);
         confirmation.setText(paymentPlanMetadataDTO.getIndex().getConfirmation());
 
+        TextView practiceNameTextView = (TextView) view.findViewById(R.id.payment_confirm_practice_name);
+        if(practiceNameTextView != null){
+            String practiceName = userPracticeDTO.getPracticeName();
+            practiceNameTextView.setText(practiceName);
+        }
+
     }
 
     private View.OnClickListener dismissPopupListener = new View.OnClickListener() {
@@ -142,15 +152,15 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
         }
     };
 
-    private String getMessageLabel(){
+    protected String getMessageLabel(){
         switch (mode){
             case MODE_ADD:
-                return Label.getLabel("payment_plan_success_add");
+                return Label.getLabel("payment_plan_success_add_short");
             case MODE_EDIT:
-                return Label.getLabel("payment_plan_success_edit");
+                return Label.getLabel("payment_plan_success_edit_short");
             case MODE_CREATE:
             default:
-                return Label.getLabel("payment_plan_success_create");
+                return Label.getLabel("payment_plan_success_create_short");
         }
     }
 

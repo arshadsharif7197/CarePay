@@ -65,7 +65,7 @@
             android:src="@drawable/icn_payment_confirm_check"/>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/payment_confirm_message"
+            android:id="@+id/payment_confirm_practice_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -81,7 +81,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:visibility="gone">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/payment_confirm_number_label"
@@ -115,6 +116,47 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/dimen_10dp"
+            android:paddingEnd="@dimen/dimen_10dp">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/payment_confirm_type_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/dimen_10dp"
+                android:paddingBottom="@dimen/dimen_10dp"
+                android:textSize="@dimen/text_size_17"
+                android:layout_gravity="center_vertical"
+                android:gravity="start"
+                android:textColor="@color/textview_default_textcolor"
+                breeze:textKey="payment_confirm_type"
+                app:customAssetFont="proxima_nova_regular"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/payment_confirm_message"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingTop="@dimen/dimen_10dp"
+                android:paddingBottom="@dimen/dimen_10dp"
+                android:textSize="@dimen/text_size_14"
+                android:gravity="end"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/textview_default_textcolor"
+                app:customAssetFont="proxima_nova_semi_bold"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_1dp"
+            android:background="@color/light_gray"/>
+
 
         <LinearLayout
             android:layout_width="match_parent"
