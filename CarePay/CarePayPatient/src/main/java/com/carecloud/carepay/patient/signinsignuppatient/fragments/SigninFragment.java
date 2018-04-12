@@ -587,7 +587,7 @@ public class SigninFragment extends BaseFragment {
                             .build());
             mKeyPairGenerator.generateKeyPair();
         } catch (InvalidAlgorithmParameterException e) {
-            throw new RuntimeException(e);
+            Log.e("Breeze",e.getLocalizedMessage());
         }
     }
 
