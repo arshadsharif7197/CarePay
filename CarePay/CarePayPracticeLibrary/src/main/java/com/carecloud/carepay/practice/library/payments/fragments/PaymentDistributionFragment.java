@@ -31,6 +31,7 @@ import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.models.UserAuthPermissions;
 import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
@@ -41,6 +42,7 @@ import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
 import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanLineItem;
 import com.carecloud.carepaylibray.utils.BounceHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -55,8 +57,10 @@ import java.util.Locale;
  * Created by lmenendez on 3/14/17
  */
 
-public class PaymentDistributionFragment extends BaseDialogFragment implements PaymentDistributionAdapter.PaymentDistributionCallback, PopupPickerAdapter.PopupPickCallback,
-        AddPaymentItemFragment.AddItemCallback, PaymentDistributionEntryFragment.PaymentDistributionAmountCallback, BounceHelper.BounceHelperListener {
+public class PaymentDistributionFragment extends BaseDialogFragment
+        implements PaymentDistributionAdapter.PaymentDistributionCallback, PopupPickerAdapter.PopupPickCallback,
+        AddPaymentItemFragment.AddItemCallback, PaymentDistributionEntryFragment.PaymentDistributionAmountCallback,
+        BounceHelper.BounceHelperListener {
 
     private TextView balance;
     private TextView paymentTotal;
@@ -144,7 +148,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
         scrollView = (NestedScrollView) view.findViewById(R.id.nested_scroller);
 
-        RecyclerView.LayoutManager balanceLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager balanceLayoutManager = new LinearLayoutManager(getContext());
         balanceDetailsRecycler = (RecyclerView) view.findViewById(R.id.balances_recycler);
         balanceDetailsRecycler.setLayoutManager(balanceLayoutManager);
         balanceDetailsRecycler.addOnScrollListener(scrollListener);
@@ -155,7 +159,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
 
         newChargesLayout = view.findViewById(R.id.new_charges_layout);
-        RecyclerView.LayoutManager chargesLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager chargesLayoutManager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL, false);
         newChargesRecycler = (RecyclerView) view.findViewById(R.id.new_charges_recycler);
         newChargesRecycler.setLayoutManager(chargesLayoutManager);
         newChargesRecycler.addOnScrollListener(scrollListener);
@@ -218,7 +223,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         View.OnClickListener addItem = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.lookupChargeItem(paymentsModel.getPaymentPayload().getSimpleChargeItems(), PaymentDistributionFragment.this);
+                callback.lookupChargeItem(paymentsModel.getPaymentPayload().getSimpleChargeItems(),
+                        PaymentDistributionFragment.this);
                 hideDialog();
             }
         };
@@ -254,14 +260,17 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         paymentTotal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.showAmountEntry(PaymentDistributionFragment.this, null, null);
+                callback.showAmountEntry(PaymentDistributionFragment.this,
+                        null, null);
                 hideDialog();
             }
         });
 
         View historyButton = view.findViewById(R.id.button_history);
-        boolean hasHistory = !paymentsModel.getPaymentPayload().getTransactionHistory().getPaymentHistoryList().isEmpty();
-        boolean hasPlans = !paymentsModel.getPaymentPayload().getFilteredPlans(getApplicationMode().getUserPracticeDTO().getPracticeId()).isEmpty();
+        boolean hasHistory = !paymentsModel.getPaymentPayload()
+                .getTransactionHistory().getPaymentHistoryList().isEmpty();
+        boolean hasPlans = !paymentsModel.getPaymentPayload()
+                .getFilteredPlans(getApplicationMode().getUserPracticeDTO().getPracticeId()).isEmpty();
         historyButton.setVisibility(hasHistory || hasPlans ? View.VISIBLE : View.INVISIBLE);
         historyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -290,7 +299,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             }
 
             if (patientBalanceDTO != null) {
-                String patientNameString = patientBalanceDTO.getDemographics().getPayload().getPersonalDetails().getFullName();
+                String patientNameString = patientBalanceDTO.getDemographics().getPayload()
+                        .getPersonalDetails().getFullName();
 
                 patientNameString = StringUtil.capitalize(patientNameString);
                 setupToolbar(view, StringUtil.getLabelForView(patientNameString));
@@ -311,12 +321,34 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             }
 
             setMaxAmounts();
+            getPaymentPlansInformation();
+        }
+    }
+
+    private void getPaymentPlansInformation() {
+        for (BalanceItemDTO balanceItem : paymentsModel.getPaymentPayload().getPatientBalances()
+                .get(0).getBalances().get(0).getPayload().get(0).getDetails()) {
+            String balanceItemId = String.valueOf(balanceItem.getId());
+            balanceItem.setAmountInPaymentPlan(0.0);
+            for (PaymentPlanDTO paymentPlan : paymentsModel.getPaymentPayload().getPatientPaymentPlans()) {
+                for (PaymentPlanLineItem lineItem : paymentPlan.getPayload().getLineItems()) {
+                    if (balanceItemId.equals(lineItem.getTypeId())) {
+                        if (balanceItem.getAmountInPaymentPlan() > 0.0) {
+                            balanceItem.setInMoreThanOnePaymentPlan(true);
+                        }
+                        balanceItem.setAmountInPaymentPlan(SystemUtil.safeSubtract(
+                                SystemUtil.safeAdd(balanceItem.getAmountInPaymentPlan(), lineItem.getAmount()),
+                                lineItem.getAmountPaid()));
+                    }
+                }
+            }
         }
     }
 
     private void setAdapter() {
         if (balanceDetailsRecycler.getAdapter() == null) {
-            PaymentDistributionAdapter adapter = new PaymentDistributionAdapter(getContext(), balanceItems, this, PaymentDistributionAdapter.PaymentRowType.BALANCE);
+            PaymentDistributionAdapter adapter = new PaymentDistributionAdapter(getContext(), balanceItems,
+                    this, PaymentDistributionAdapter.PaymentRowType.BALANCE);
             balanceDetailsRecycler.setAdapter(adapter);
         } else {
             PaymentDistributionAdapter adapter = (PaymentDistributionAdapter) balanceDetailsRecycler.getAdapter();
@@ -325,7 +357,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         }
 
         if (newChargesRecycler.getAdapter() == null) {
-            PaymentDistributionAdapter adapter = new PaymentDistributionAdapter(getContext(), chargeItems, this, PaymentDistributionAdapter.PaymentRowType.NEW_CHARGE);
+            PaymentDistributionAdapter adapter = new PaymentDistributionAdapter(getContext(), chargeItems,
+                    this, PaymentDistributionAdapter.PaymentRowType.NEW_CHARGE);
             newChargesRecycler.setAdapter(adapter);
         } else {
             PaymentDistributionAdapter adapter = (PaymentDistributionAdapter) newChargesRecycler.getAdapter();
@@ -428,7 +461,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
                 paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().isEmpty()) {
             return;
         }
-        String patientID = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPatientId();
+        String patientID = paymentsModel.getPaymentPayload().getPatientBalances().get(0)
+                .getBalances().get(0).getMetadata().getPatientId();
         String locationID = null;
         String providerID = null;
         for (LocationIndexDTO locationIndex : paymentsModel.getPaymentPayload().getLocationIndex()) {
@@ -471,7 +505,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         }
     }
 
-    private void modifyLineItem(BalanceItemDTO balanceItem, ProviderDTO updateProvider, LocationDTO updateLocation, Double updateAmount) {
+    private void modifyLineItem(BalanceItemDTO balanceItem, ProviderDTO updateProvider,
+                                LocationDTO updateLocation, Double updateAmount) {
         if (updateAmount != null) {
             double difference;
             double currentAmount = balanceItem.getBalance();
@@ -814,7 +849,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
             double paymentAmount = balanceItem.getBalance();
             if (paymentAmount > balanceItem.getMaxAmount()) {
-                overPaymentAmount = round(overPaymentAmount + round(paymentAmount - balanceItem.getMaxAmount()));
+                overPaymentAmount = round(overPaymentAmount
+                        + round(paymentAmount - balanceItem.getMaxAmount()));
                 paymentAmount = balanceItem.getMaxAmount();
             }
             lineItem.setAmount(paymentAmount);
@@ -838,7 +874,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
                 if (balance >= rule.getMinBalance().getValue() &&
                         balance <= rule.getMaxBalance().getValue()) {
-                    if (paymentsModel.getPaymentPayload().getFilteredPlans(settingsDTO.getMetadata().getPracticeId()).isEmpty()) {
+                    if (paymentsModel.getPaymentPayload()
+                            .getFilteredPlans(settingsDTO.getMetadata().getPracticeId()).isEmpty()) {
                         return true;
                     } else if (paymentPlanSettings.isCanHaveMultiple()) {//need to check if multiple plans is enabled
                         return true;
