@@ -230,6 +230,10 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
             TextView totalPaidTextView = (TextView) view.findViewById(R.id.totalPaidTextView);
             totalPaidTextView.setText(currencyFormatter.format(patientPaymentPayload.getTotalPaid()));
 
+            if (appointmentNavigationType == Defs.NAVIGATE_CHECKOUT ) {
+                TextView successMessage = (TextView) view.findViewById(R.id.successMessage);
+                successMessage.setText(Label.getLabel("confirm_appointment_checkout"));
+            }
             //todo display possible errors
 
         } else if (isAdHocForms) {

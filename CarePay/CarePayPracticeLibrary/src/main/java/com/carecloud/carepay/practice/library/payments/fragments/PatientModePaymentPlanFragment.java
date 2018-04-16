@@ -27,7 +27,6 @@ public class PatientModePaymentPlanFragment extends PaymentPlanFragment {
         return fragment;
     }
 
-
     @Override
     protected void setupToolBar(View view) {
         View closeButton = view.findViewById(R.id.closeViewLayout);
@@ -38,7 +37,6 @@ public class PatientModePaymentPlanFragment extends PaymentPlanFragment {
                 callback.onDismissPaymentPlan(paymentsModel);
             }
         });
-
     }
 
     @Override
@@ -52,11 +50,18 @@ public class PatientModePaymentPlanFragment extends PaymentPlanFragment {
     }
 
     @Override
-    protected void createPaymentPlan(){
-        super.createPaymentPlan();
-        if(validateFields(false)){
+    protected void createPaymentPlan(boolean userInteraction){
+        super.createPaymentPlan(userInteraction);
+        if(validateFields(true)){
             dismiss();
         }
     }
+
+    @Override
+    protected void addBalanceToExisting(){
+        super.addBalanceToExisting();
+        dismiss();
+    }
+
 
 }

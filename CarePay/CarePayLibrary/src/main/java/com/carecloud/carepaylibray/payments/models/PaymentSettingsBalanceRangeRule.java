@@ -19,48 +19,29 @@ public class PaymentSettingsBalanceRangeRule {
     @StringDef({INTERVAL_MONTHS})
     public @interface IntervalRange {}
 
-    @SerializedName("min_amount")
+    @SerializedName("min_balance")
     @Expose
-    private AmountRule minAmount = new AmountRule();
+    private AmountRule minBalance = new AmountRule();
 
-    @SerializedName("max_amount")
+    @SerializedName("max_balance")
     @Expose
-    private AmountRule maxAmount = new AmountRule();
-
-    @SerializedName("min_duration")
-    @Expose
-    private TimeRule minDuration = new TimeRule();
+    private AmountRule maxBalance = new AmountRule();
 
     @SerializedName("max_duration")
     @Expose
     private TimeRule maxDuration = new TimeRule();
 
-    @SerializedName("minimum_balance_required")
+    @SerializedName("minimum_payment_required")
     @Expose
-    private AmountRule minBalanceRequired = new AmountRule();
+    private AmountRule minPaymentRequired = new AmountRule();
 
-    public AmountRule getMinAmount() {
-        return minAmount;
+
+    public AmountRule getMaxBalance() {
+        return maxBalance;
     }
 
-    public void setMinAmount(AmountRule minAmount) {
-        this.minAmount = minAmount;
-    }
-
-    public AmountRule getMaxAmount() {
-        return maxAmount;
-    }
-
-    public void setMaxAmount(AmountRule maxAmount) {
-        this.maxAmount = maxAmount;
-    }
-
-    public TimeRule getMinDuration() {
-        return minDuration;
-    }
-
-    public void setMinDuration(TimeRule minDuration) {
-        this.minDuration = minDuration;
+    public void setMaxBalance(AmountRule maxBalance) {
+        this.maxBalance = maxBalance;
     }
 
     public TimeRule getMaxDuration() {
@@ -71,12 +52,20 @@ public class PaymentSettingsBalanceRangeRule {
         this.maxDuration = maxDuration;
     }
 
-    public AmountRule getMinBalanceRequired() {
-        return minBalanceRequired;
+    public AmountRule getMinBalance() {
+        return minBalance;
     }
 
-    public void setMinBalanceRequired(AmountRule minBalanceRequired) {
-        this.minBalanceRequired = minBalanceRequired;
+    public void setMinBalance(AmountRule minBalance) {
+        this.minBalance = minBalance;
+    }
+
+    public AmountRule getMinPaymentRequired() {
+        return minPaymentRequired;
+    }
+
+    public void setMinPaymentRequired(AmountRule minPaymentRequired) {
+        this.minPaymentRequired = minPaymentRequired;
     }
 
 

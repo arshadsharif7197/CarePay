@@ -40,13 +40,17 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     /**
      * @param paymentsModel the payments DTO
      * @param amount        the amount
+     * @param onlySelectMode indicates only selection mode
      * @return an instance of PatientPaymentMethodFragment
      */
-    public static PatientPaymentMethodFragment newInstance(PaymentsModel paymentsModel, double amount) {
+    public static PatientPaymentMethodFragment newInstance(PaymentsModel paymentsModel,
+                                                           double amount,
+                                                           boolean onlySelectMode) {
         PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+        args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,7 +61,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         try {
             if (context instanceof PaymentViewHandler) {
                 callback = (PatientPaymentMethodInterface) ((PaymentViewHandler) context).getPaymentPresenter();
-            }else if (context instanceof AppointmentViewHandler){
+            } else if (context instanceof AppointmentViewHandler) {
                 callback = (PatientPaymentMethodInterface) ((AppointmentViewHandler) context).getAppointmentPresenter();
             } else {
                 callback = (PatientPaymentMethodInterface) context;
@@ -89,7 +93,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     @Override
     public void onStop() {
         super.onStop();
-        if(androidPayAdapter != null) {
+        if (androidPayAdapter != null) {
             androidPayAdapter.disconnectClient();
         }
 
@@ -106,7 +110,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
             case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
-                        if(data != null) {
+                        if (data != null) {
                             MaskedWallet maskedWallet = data.getParcelableExtra(WalletConstants.EXTRA_MASKED_WALLET);
                             callback.createWalletFragment(maskedWallet, amountToMakePayment);
                         }

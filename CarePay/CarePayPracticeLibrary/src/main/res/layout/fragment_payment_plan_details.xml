@@ -347,8 +347,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dimen_5dp"
+            android:layout_marginStart="@dimen/dimen_5dp"
             android:layout_weight="1"
             android:background="@drawable/blue_border_rounded_button_selector"
+            android:visibility="gone"
             breeze:textKey="payment_plan_schedule_payment_short"
             tools:text="Schedule"
             app:customAssetFont="gotham_rounded_medium"/>
@@ -359,6 +361,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_5dp"
+            android:layout_marginEnd="@dimen/dimen_5dp"
             android:layout_weight="1"
             android:background="@drawable/green_rounded_button_selector"
             android:paddingBottom="@dimen/dimen_14dp"

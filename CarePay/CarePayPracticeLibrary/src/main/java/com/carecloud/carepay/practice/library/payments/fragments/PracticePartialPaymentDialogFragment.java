@@ -30,9 +30,10 @@ import java.util.Locale;
  */
 
 public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDialogFragment {
+    public static final String KEY_FULL_AMOUNT = "fullAmount";
 
-    private PaymentsModel paymentsModel;
-    private double fullAmount;
+    protected PaymentsModel paymentsModel;
+    protected double fullAmount;
     private PaymentNavigationCallback callback;
     private TextView pendingAmountTextView;
     private double minimumPayment;
@@ -45,7 +46,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
     public static PracticePartialPaymentDialogFragment newInstance(PaymentsModel paymentResultModel, double owedAmount) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentResultModel);
-        args.putDouble("fullAmount", owedAmount);
+        args.putDouble(KEY_FULL_AMOUNT, owedAmount);
         PracticePartialPaymentDialogFragment fragment = new PracticePartialPaymentDialogFragment();
         fragment.setArguments(args);
         return fragment;
@@ -66,7 +67,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
-        fullAmount = arguments.getDouble("fullAmount");
+        fullAmount = arguments.getDouble(KEY_FULL_AMOUNT);
     }
 
     @Override
@@ -107,10 +108,14 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
                 toast.show();
                 return;
             }
-            createPaymentModel(amount);
-            callback.onPayButtonClicked(amount, paymentsModel);
-            dismiss();
+            onPaymentClick(amount);
         }
+    }
+
+    protected void onPaymentClick(double amount){
+        createPaymentModel(amount);
+        callback.onPayButtonClicked(amount, paymentsModel);
+        dismiss();
     }
 
     private void updatePendingAmountText(double amount) {
@@ -195,7 +200,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
         return responsibilityTypes;
     }
 
-    private double getMinimumPayment(){
+    protected double getMinimumPayment(){
         return paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments().getMinimumPartialPaymentAmount();
     }
 

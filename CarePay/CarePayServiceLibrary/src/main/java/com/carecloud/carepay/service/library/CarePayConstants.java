@@ -5,7 +5,6 @@ package com.carecloud.carepay.service.library;
  */
 public class CarePayConstants {
 
-
     private CarePayConstants() {
     }
 
@@ -15,6 +14,15 @@ public class CarePayConstants {
 
     // Generic Constants
     public static final int HOME_PRESSED = 999;
+
+    //DeviceType
+    public static final String CLOVER_DEVICE = "Clover";
+    public static final String CLOVER_2_DEVICE = "Clover 2";
+    public static final String ANDROID_DEVICE = "Android";
+
+    //Platform
+    public static final String PLATFORM_ANDROID = "android";
+
 
     //Appointments Constants
     public static final String PENDING = "P";
@@ -61,6 +69,8 @@ public class CarePayConstants {
 
     public static final String PRACTICE_SELECTION_BUNDLE = "practice_selection_bundle";
     public static final String PAYMENT_AMOUNT_BUNDLE = "total_amount_pay";
+    public static final String IS_PAYMENT_PLAN = "isPaymentPlan";
+    public static final String ONLY_SELECT_MODE = "selectMode";
     public static final String PAYMENT_METHOD_BUNDLE = "payment_method";
     public static final String PAYMENT_PAYLOAD_BUNDLE = "payment_payload_bundle";
     public static final String APPOINTMENT_INFO_BUNDLE = "appointment_info_bundle";
@@ -112,7 +122,6 @@ public class CarePayConstants {
     public static final String MEDICATION_ALLERGIES_SEARCH_MODE_EXTRA = "medication_allergies_search_mode_extra";
 
     //Clover Constants
-    public static final String CLOVER_DEVICE = "Clover";
     public static final String CLOVER_PAYMENT_INTENT = "com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity";
     public static final String CLOVER_REFUND_INTENT = "com.carecloud.carepay.practice.clover.payments.CloverRefundActivity";
     public static final int CLOVER_PAYMENT_INTENT_REQUEST_CODE = 0x37;

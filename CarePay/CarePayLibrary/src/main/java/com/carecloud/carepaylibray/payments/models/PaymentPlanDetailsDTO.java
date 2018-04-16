@@ -74,4 +74,18 @@ public class PaymentPlanDetailsDTO extends PaymentPlanModel {
         this.paymentPlanHistoryList = paymentPlanHistoryList;
     }
 
+    /**
+     * Get all payment plan history items that are not one time payments
+     * @return filtered list
+     */
+    public List<PaymentPlanHistory> getFilteredHistory(){
+        List<PaymentPlanHistory> filteredHistory = new ArrayList<>();
+        for(PaymentPlanHistory paymentPlanHistory : getPaymentPlanHistoryList()){
+            if(!paymentPlanHistory.isOneTimePayment()){
+                filteredHistory.add(paymentPlanHistory);
+            }
+        }
+        return filteredHistory;
+    }
+
 }

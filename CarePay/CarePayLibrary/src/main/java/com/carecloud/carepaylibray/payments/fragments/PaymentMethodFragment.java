@@ -50,6 +50,7 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
     protected HashMap<String, Integer> paymentTypeMap;
 
     protected PaymentMethodInterface callback;
+    protected boolean onlySelectMode;
 
     public abstract View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle);//make sure all implementations create a proper view
 
@@ -59,7 +60,7 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
         try {
             if (context instanceof PaymentViewHandler) {
                 callback = ((PaymentViewHandler) context).getPaymentPresenter();
-            }else if (context instanceof AppointmentViewHandler){
+            } else if (context instanceof AppointmentViewHandler) {
                 callback = (PaymentMethodInterface) ((AppointmentViewHandler) context).getAppointmentPresenter();
             } else {
                 callback = (PaymentMethodInterface) context;
@@ -76,8 +77,8 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
         if (bundle != null) {
             amountToMakePayment = bundle.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
             paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, bundle);
+            onlySelectMode = bundle.getBoolean(CarePayConstants.ONLY_SELECT_MODE);
             if (!paymentsModel.getPaymentPayload().getPaymentSettings().isEmpty()) {
-
                 paymentMethodsList = getPaymentMethodList();
             }
             paymentList = paymentsModel.getPaymentPayload().getPatientBalances();
@@ -191,16 +192,16 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
 
     protected List<PaymentsMethodsDTO> getPaymentMethodList() {
         UserPracticeDTO userPracticeDTO = callback.getPracticeInfo(paymentsModel);
-        for(PaymentsPayloadSettingsDTO paymentSetting : paymentsModel.getPaymentPayload().getPaymentSettings()){
-            if(paymentSetting.getMetadata().getPracticeId().equals(userPracticeDTO.getPracticeId()) &&
-                    paymentSetting.getMetadata().getPracticeMgmt().equals(userPracticeDTO.getPracticeMgmt())){
+        for (PaymentsPayloadSettingsDTO paymentSetting : paymentsModel.getPaymentPayload().getPaymentSettings()) {
+            if (paymentSetting.getMetadata().getPracticeId().equals(userPracticeDTO.getPracticeId()) &&
+                    paymentSetting.getMetadata().getPracticeMgmt().equals(userPracticeDTO.getPracticeMgmt())) {
                 return paymentSetting.getPayload().getRegularPayments().getPaymentMethods();
             }
         }
         return paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments().getPaymentMethods();
     }
 
-    protected void logPaymentMethodSelection(String type){
+    protected void logPaymentMethodSelection(String type) {
         MixPanelUtil.logEvent(getString(R.string.event_payment_method_selected), getString(R.string.param_payment_type), type);
     }
 

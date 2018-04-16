@@ -1,7 +1,13 @@
 package com.carecloud.carepay.patient.payment.dialogs;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,18 +18,27 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.adapters.PaymentItemsListAdapter;
 import com.carecloud.carepaylibray.customdialogs.BasePaymentDetailsFragmentDialog;
+import com.carecloud.carepaylibray.payments.models.PatientStatementDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.StatementDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.PdfUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
+
+import java.util.List;
 
 public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDialog {
 
+    private static final int MY_PERMISSIONS_STATEMENT_WRITE_EXTERNAL_STORAGE = 100;
     private PendingBalanceDTO selectedBalance;
+
+    private boolean mustAddToExisting = false;
+    private PatientStatementDTO finalStatement;
 
     /**
      * @param paymentsModel      the payment model
@@ -81,7 +96,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
             }
         });
 
-        View paymentPlanButton = view.findViewById(R.id.createPaymentPlanButton);
+        TextView paymentPlanButton = (TextView) view.findViewById(R.id.createPaymentPlanButton);
         paymentPlanButton.setVisibility(isPaymentPlanAvailable(selectedBalance.getMetadata().getPracticeId(), paymentPayload.getAmount())
                 ? View.VISIBLE : View.GONE);
         paymentPlanButton.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +106,9 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                 callback.onPaymentPlanAction(paymentReceiptModel);
             }
         });
-        paymentPlanButton.setVisibility(View.GONE);//TODO remove this when ready to release PP
+        if(mustAddToExisting) {
+            paymentPlanButton.setText(Label.getLabel("payment_plan_add_existing"));
+        }
 
         boolean canMakePayments = false;
         if (paymentReceiptModel != null) {
@@ -131,6 +148,43 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
             view.findViewById(R.id.paymentButtonsContainer).setVisibility(View.VISIBLE);
             view.findViewById(R.id.planButtonsContainer).setVisibility(View.VISIBLE);
         }
+
+        List<PatientStatementDTO> patientStatementList = paymentReceiptModel.getPaymentPayload().getPatientStatements();
+        PatientStatementDTO statement = null;
+        for (PatientStatementDTO patientStatementDTO : patientStatementList) {
+            if (patientStatementDTO.getMetadata().getPracticeId()
+                    .equals(selectedBalance.getMetadata().getPracticeId())) {
+                statement = patientStatementDTO;
+                break;
+            }
+        }
+        if (statement != null && !statement.getStatements().isEmpty()) {
+            View statementButton = view.findViewById(R.id.statement_button);
+            statementButton.setVisibility(View.VISIBLE);
+            finalStatement = statement;
+            statementButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            != PermissionChecker.PERMISSION_GRANTED && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                MY_PERMISSIONS_STATEMENT_WRITE_EXTERNAL_STORAGE);
+                    }else{
+                        downloadStatementPdf();
+                    }
+
+                }
+            });
+        }
+    }
+
+    private void downloadStatementPdf() {
+        StatementDTO statementDTO = finalStatement.getStatements().get(0);
+        String url = String.format("%s?%s=%s", paymentReceiptModel.getPaymentsMetadata()
+                        .getPaymentsLinks().getPatientStatements().getUrl(), "statement_id",
+                String.valueOf(statementDTO.getId()));
+        String fileName = String.format("%s %s", "Statement - ", selectedBalance.getMetadata().getPracticeName());
+        PdfUtil.downloadPdf(getContext(), url, fileName, ".pdf", statementDTO.getStatementDate());
     }
 
     @Override
@@ -152,7 +206,6 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                         double minPayment = payloadSettingsDTO.getPayload().getRegularPayments().getMinimumPartialPaymentAmount();
                         return total >= minBalance && total >= minPayment;
                     }
-
                     return false;
                 }
             }
@@ -160,22 +213,42 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         return true;
     }
 
-    protected boolean isPaymentPlanAvailable(String practiceId, double balance){
-        if(practiceId != null) {
-            for(PaymentsPayloadSettingsDTO payloadSettingsDTO : paymentReceiptModel.getPaymentPayload().getPaymentSettings()) {
+    protected boolean isPaymentPlanAvailable(String practiceId, double balance) {
+        if (practiceId != null) {
+            for (PaymentsPayloadSettingsDTO payloadSettingsDTO : paymentReceiptModel.getPaymentPayload().getPaymentSettings()) {
                 if (practiceId.equals(payloadSettingsDTO.getMetadata().getPracticeId())) {
                     PaymentsSettingsPaymentPlansDTO paymentPlanSettings = payloadSettingsDTO.getPayload().getPaymentPlans();
                     if (paymentPlanSettings.isPaymentPlansEnabled()) {
                         for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
-                            if (balance > rule.getMinBalanceRequired().getValue()) {
-                                return true;
+                            if (balance >= rule.getMinBalance().getValue() &&
+                                    balance <= rule.getMaxBalance().getValue()) {
+                                if(paymentReceiptModel.getPaymentPayload().getActivePlans(practiceId).isEmpty()){
+                                    return true;
+                                }else if(paymentPlanSettings.isCanHaveMultiple()){//need to check if multiple plans is enabled
+                                    return true;
+                                }else if(paymentPlanSettings.isAddBalanceToExisting()){//check if balance can be added to existing
+                                    mustAddToExisting = true;
+                                    return true;
+                                }
+                                return false;
                             }
                         }
+
                     }
                 }
             }
         }
         return false;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_PERMISSIONS_STATEMENT_WRITE_EXTERNAL_STORAGE
+                && (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+            downloadStatementPdf();
+        }
     }
 
 }

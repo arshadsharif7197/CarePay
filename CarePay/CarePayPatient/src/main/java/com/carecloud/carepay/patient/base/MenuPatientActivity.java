@@ -125,6 +125,11 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         return toggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle icicle) {
+        super.onSaveInstanceState(icicle);
+        icicle.clear();
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

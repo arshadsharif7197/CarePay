@@ -17,6 +17,7 @@ import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymen
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.models.NextPagingDTO;
 import com.carecloud.carepaylibray.base.models.Paging;
@@ -124,6 +125,28 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
             public void onClick(View view) {
                 dismiss();
                 callback.onDismissPaymentHistory();
+            }
+        });
+
+        String plansLabel = Label.getLabel("payment_plan_heading");
+        final String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
+        final int plans = paymentsModel.getPaymentPayload().getActivePlans(practiceId).size();
+        if(plans > 1){
+            plansLabel = String.format(Label.getLabel("payment_plan_count"), plans);
+        }
+        TextView viewPlans = (TextView) view.findViewById(R.id.viewPaymentPlans);
+        viewPlans.setVisibility(plans > 0 ? View.VISIBLE : View.GONE);
+        viewPlans.setText(plansLabel);
+        viewPlans.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(plans > 1) {
+                    callback.displayPaymentPlansList(paymentsModel);
+                }else{
+                    callback.onPaymentPlanSelected(paymentsModel,
+                            paymentsModel.getPaymentPayload().getActivePlans(practiceId).get(0));
+                }
+                dismiss();
             }
         });
 

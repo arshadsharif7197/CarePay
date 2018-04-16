@@ -26,4 +26,7 @@ public class UserAuthPermissions {
     @SerializedName("add_charges")
     public boolean canAddCharges = false;
 
+    @SerializedName("create_payment_plan")
+    public boolean canCreatePaymentPlan = false;
+
 }

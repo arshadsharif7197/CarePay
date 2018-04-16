@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.payments.interfaces;
 
+import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 
 /**
@@ -14,4 +15,7 @@ public interface ChooseCreditCardInterface extends PaymentConfirmationInterface 
      * @param amount amount to pay
      */
     void showAddCard(double amount, PaymentsModel paymentsModel);
+
+
+    void onCreditCardSelected(PaymentCreditCardsPayloadDTO papiPaymentMethod);
 }

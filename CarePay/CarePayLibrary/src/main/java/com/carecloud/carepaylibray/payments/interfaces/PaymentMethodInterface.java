@@ -19,7 +19,6 @@ public interface PaymentMethodInterface {
 
     /**
      * Callback to proceed to select card view once payment method is selected
-     *
      * @param selectedPaymentMethod Selected Payment Method
      * @param amount                amount to pay
      */
