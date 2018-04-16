@@ -59,7 +59,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     protected PendingBalanceDTO selectedBalance;
     protected PaymentPlanInterface callback;
 
-    private PaymentSettingsBalanceRangeRule paymentPlanBalanceRules = new PaymentSettingsBalanceRangeRule();
+    protected PaymentSettingsBalanceRangeRule paymentPlanBalanceRules = new PaymentSettingsBalanceRangeRule();
 
     protected NumberFormat currencyFormatter;
     protected double paymentPlanAmount;
