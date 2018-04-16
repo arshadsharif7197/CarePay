@@ -27,6 +27,7 @@ import com.carecloud.carepay.patient.myhealth.fragments.MedicationDetailFragment
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthListFragment;
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthMainFragment;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -69,8 +70,10 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
         setTransitionMyHealth(myHealthDto.getMetadata().getLinks().getMyHealth());
         setTransitionRetail(myHealthDto.getMetadata().getLinks().getRetail());
 
-        getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants
+        ApplicationPreferences.getInstance().writeObjectToSharedPreference(CarePayConstants
                 .DEMOGRAPHICS_ADDRESS_BUNDLE, myHealthDto.getPayload().getDemographicDTO().getAddress());
+
+        ApplicationPreferences.getInstance().setPracticesWithBreezeEnabled(myHealthDto.getPayload().getPracticeInformation());
 
         String userImageUrl = myHealthDto.getPayload().getDemographicDTO()
                 .getPersonalDetails().getProfilePhoto();

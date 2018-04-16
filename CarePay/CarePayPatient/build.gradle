@@ -8,8 +8,8 @@ android {
         applicationId "com.carecloud.carepay.patient"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 64
-        versionName "1.1.6"
+        versionCode 68
+        versionName "1.1.8"
         multiDexEnabled true
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
@@ -88,6 +88,22 @@ android {
 
             buildConfigField 'boolean', 'useUnifiedAuth', 'true'
             buildConfigField 'String', 'ENVIRONMENT', '"Staging"'
+        }
+        demo {
+            applicationId "com.carecloud.carepay.patient"
+            buildConfigField 'String', 'API_BASE_URL', '"https://breeze-entry.careclouddemo.com"'
+            buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.careclouddemo.com/workflow/shamrock/patient_app/language_selection/start"'
+            buildConfigField 'String', 'X_API_KEY', '"Z6WciAK2WiauCKTdc5daYbteUrnwFio83zPfb39a"'
+            buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
+            buildConfigField 'String', 'MESSAGING_BASE_URL', '"https://messaging.careclouddemo.com"'
+            buildConfigField 'String', 'FORMS_BASE_URL', '"https://web.gobreeze.com"'
+            buildConfigField 'String', 'RETAIL_REDIRECT_URL', '"https://web.gobreeze.com/payment"'
+
+            buildConfigField 'String', 'NEW_RELIC_ID', '"AAb24320f2a02bf87d9faf0d7aff73bbeca08d264f"'
+            buildConfigField 'String', 'MIX_PANEL_TOKEN', '"458b4517bf5c86c62df069f82fc49aa3"'
+
+            buildConfigField 'boolean', 'useUnifiedAuth', 'true'
+            buildConfigField 'String', 'ENVIRONMENT', '"Demo"'
         }
         production {
             applicationId "com.carecloud.carepay.patient"

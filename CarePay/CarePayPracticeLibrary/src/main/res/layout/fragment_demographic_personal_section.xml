@@ -94,14 +94,14 @@
                     tools:hint="Phone Number" />
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
-<!--
             <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                 android:id="@+id/phoneTypeInputLayout"
                 style="@style/SigninSignupTextInputStyle"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 app:customAssetFont="proxima_nova_semi_bold"
-                app:hintTextAppearance="@style/FloatingLabelStyle">
+                app:hintTextAppearance="@style/FloatingLabelStyle"
+                android:visibility="gone">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                     android:id="@+id/phoneTypeEditText"
@@ -118,7 +118,6 @@
                     tools:hint="Phone Type" />
 
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
--->
         </LinearLayout>
 
     </LinearLayout>
