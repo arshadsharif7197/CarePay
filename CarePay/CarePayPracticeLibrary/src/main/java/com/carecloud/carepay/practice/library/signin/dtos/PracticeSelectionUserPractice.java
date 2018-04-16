@@ -1,7 +1,11 @@
 package com.carecloud.carepay.practice.library.signin.dtos;
 
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lmenendez on 3/9/17.
@@ -24,6 +28,9 @@ public class PracticeSelectionUserPractice {
     @SerializedName("practice_photo")
     @Expose
     private String practicePhoto;
+    @SerializedName("locations")
+    @Expose
+    private List<LocationDTO> locations = new ArrayList<>();
 
     public String getUserId() {
         return userId;
@@ -65,4 +72,11 @@ public class PracticeSelectionUserPractice {
         this.practicePhoto = practicePhoto;
     }
 
+    public List<LocationDTO> getLocations() {
+        return locations;
+    }
+
+    public void setLocations(List<LocationDTO> locations) {
+        this.locations = locations;
+    }
 }

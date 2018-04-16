@@ -62,7 +62,6 @@
                 tools:hint="Phone Number" />
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
-<!--
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/phoneTypeInputLayout"
             style="@style/SigninSignupTextInputStyle"
@@ -71,7 +70,8 @@
             android:tag="@string/tag_demographics_error_color"
             android:textColorHint="@color/demographics_color_error"
             app:customAssetFont="proxima_nova_semi_bold"
-            app:hintTextAppearance="@style/FloatingLabelStyle">
+            app:hintTextAppearance="@style/FloatingLabelStyle"
+            android:visibility="gone">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/phoneTypeEditText"
@@ -88,7 +88,6 @@
                 tools:hint="Phone Type" />
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
--->
     </LinearLayout>
 
 </LinearLayout>
