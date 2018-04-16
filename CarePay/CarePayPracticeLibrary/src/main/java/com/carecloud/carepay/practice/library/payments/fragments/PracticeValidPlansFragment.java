@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.payments.fragments.ActivePlansFragment;
+import com.carecloud.carepaylibray.payments.fragments.ValidPlansFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -17,14 +17,14 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
  * Created by lmenendez on 2/13/18
  */
 
-public class PracticeActivePlansFragment extends ActivePlansFragment {
+public class PracticeValidPlansFragment extends ValidPlansFragment {
 
-    public static PracticeActivePlansFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance){
+    public static PracticeValidPlansFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance){
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
 
-        PracticeActivePlansFragment fragment = new PracticeActivePlansFragment();
+        PracticeValidPlansFragment fragment = new PracticeValidPlansFragment();
         fragment.setArguments(args);
         return fragment;
     }
