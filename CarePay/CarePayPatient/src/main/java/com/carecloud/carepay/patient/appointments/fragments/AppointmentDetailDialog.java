@@ -51,6 +51,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private View header;
     private View cancelAppointment;
     private TextView appointmentDateTextView;
+    private TextView appointmentVisitTypeTextView;
     private TextView appointmentTimeTextView;
     private TextView providerInitials;
     private ImageView providerPhoto;
@@ -147,6 +148,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         header = view.findViewById(R.id.dialogHeaderLayout);
         appointmentDateTextView = (TextView) view.findViewById(R.id.appointDateTextView);
         appointmentTimeTextView = (TextView) view.findViewById(R.id.appointTimeTextView);
+        appointmentVisitTypeTextView = (TextView) view.findViewById(R.id.appointmentVisitTypeTextView);
 
         providerInitials = (TextView) view.findViewById(R.id.appointShortnameTextView);
         providerPhoto = (ImageView) view.findViewById(R.id.appointUserPicImageView);
@@ -174,10 +176,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         if (appointmentDTO != null) {
             DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime());
             appointmentDateTextView.setText(dateUtil.getDateAsDayShortMonthDayOrdinal());
-            StringBuffer appointmentTimeAndTypeBuffer = new StringBuffer(dateUtil.getTime12Hour());
-            appointmentTimeAndTypeBuffer.append(" • ");
-            appointmentTimeAndTypeBuffer.append(appointmentDTO.getPayload().getVisitType().getDescription());
-            appointmentTimeTextView.setText(appointmentTimeAndTypeBuffer.toString());
+            appointmentTimeTextView.setText(dateUtil.getTime12Hour());
+            appointmentVisitTypeTextView.setText(appointmentDTO.getPayload().getVisitType().getDescription());
 
             final ProviderDTO provider = appointmentDTO.getPayload().getProvider();
             providerInitials.setText(StringUtil.getShortName(provider.getName()));
