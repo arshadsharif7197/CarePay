@@ -259,9 +259,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     private void setupButtons(View view) {
         if (selectedBalance != null) {
             View addToExisting = view.findViewById(R.id.payment_plan_add_existing);
-            if (hasExistingPlans() && canAddToExisting()
-                    && !paymentsModel.getPaymentPayload().getValidPlans(selectedBalance.getMetadata().getPracticeId(),
-                    selectedBalance.getPayload().get(0).getAmount()).isEmpty()) {
+            if (enableAddToExisting()) {
                 addToExisting.setVisibility(View.VISIBLE);
             } else {
                 addToExisting.setVisibility(View.GONE);
@@ -513,14 +511,14 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         return lineItems;
     }
 
-    private void setError(int id, String error, boolean requestFocus) {
+    protected void setError(int id, String error, boolean requestFocus) {
         if (getView() != null) {
             TextInputLayout inputLayout = (TextInputLayout) getView().findViewById(id);
             setError(inputLayout, error, requestFocus);
         }
     }
 
-    private void setError(TextInputLayout inputLayout, String errorMessage, boolean requestFocus) {
+    protected void setError(TextInputLayout inputLayout, String errorMessage, boolean requestFocus) {
         inputLayout.setErrorEnabled(true);
         inputLayout.setError(errorMessage);
         if (requestFocus) {
@@ -529,14 +527,14 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
 
     }
 
-    private void clearError(int id) {
+    protected void clearError(int id) {
         if (getView() != null) {
             TextInputLayout inputLayout = (TextInputLayout) getView().findViewById(id);
             clearError(inputLayout);
         }
     }
 
-    private void clearError(TextInputLayout inputLayout) {
+    protected void clearError(TextInputLayout inputLayout) {
         inputLayout.setError(null);
         inputLayout.setErrorEnabled(false);
     }
@@ -561,6 +559,12 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
             }
         }
         return false;
+    }
+
+    protected boolean enableAddToExisting(){
+        return hasExistingPlans() && canAddToExisting()
+                && !paymentsModel.getPaymentPayload().getValidPlans(selectedBalance.getMetadata().getPracticeId(),
+                selectedBalance.getPayload().get(0).getAmount()).isEmpty();
     }
 
     @Override
