@@ -32,10 +32,7 @@ import com.carecloud.carepaylibray.base.models.UserAuthPermissions;
 import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
@@ -103,8 +100,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
     private boolean hasPaymentError = false;
     private UserAuthPermissions authPermissions;
-
-    private boolean mustAddToExisting = false;
 
     @Override
     public void onAttach(Context context) {
@@ -188,12 +183,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             }
         });
 
-        paymentPlanButton.setVisibility(isPaymentPlanAvailable(paymentAmount)
-                ? View.VISIBLE : View.GONE);
         paymentPlanButton.setEnabled(userHasPermissionsToCreatePaymentPlan());
-        if (mustAddToExisting) {
-            paymentPlanButton.setText(Label.getLabel("payment_plan_add_existing"));
-        }
     }
 
     private boolean userHasPermissionsToCreatePaymentPlan() {
@@ -868,30 +858,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
     private static double round(double amount) {
         return (double) Math.round(amount * 100) / 100;
-    }
-
-    private boolean isPaymentPlanAvailable(double balance) {
-        PaymentsPayloadSettingsDTO settingsDTO = paymentsModel.getPaymentPayload()
-                .getPaymentSettings().get(0);
-        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = settingsDTO.getPayload().getPaymentPlans();
-        if (paymentPlanSettings.isPaymentPlansEnabled()) {
-            for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
-                if (balance >= rule.getMinBalance().getValue() &&
-                        balance <= rule.getMaxBalance().getValue()) {
-                    if (paymentsModel.getPaymentPayload()
-                            .getFilteredPlans(settingsDTO.getMetadata().getPracticeId()).isEmpty()) {
-                        return true;
-                    } else if (paymentPlanSettings.isCanHaveMultiple()) {//need to check if multiple plans is enabled
-                        return true;
-                    } else if (paymentPlanSettings.isAddBalanceToExisting()) {//check if balance can be added to existing
-                        mustAddToExisting = true;
-                        return true;
-                    }
-                    return false;
-                }
-            }
-        }
-        return false;
     }
 
 }
