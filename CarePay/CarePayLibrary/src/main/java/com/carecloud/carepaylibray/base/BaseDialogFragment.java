@@ -27,6 +27,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
 
     private Dialog dialog;
     private boolean isPracticeAppPatientMode;
+    private boolean isPracticeAppPracticeMode;
 
     private DialogInterface.OnDismissListener onDismissListener;
     private DialogInterface.OnCancelListener onCancelListener;
@@ -34,8 +35,9 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        isPracticeAppPatientMode = ((ISession) getActivity()).getApplicationMode().getApplicationType()
-                == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
+        ApplicationMode.ApplicationType applicationType = ((ISession) getActivity()).getApplicationMode().getApplicationType();
+        isPracticeAppPatientMode = applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
+        isPracticeAppPracticeMode = applicationType == ApplicationMode.ApplicationType.PRACTICE;
         setNewRelicInteraction(getClass().getName());
     }
 
@@ -146,7 +148,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     }
 
     protected void hideKeyboardOnViewTouch(View view) {
-        if (isPracticeAppPatientMode && view != null) {
+        if ((isPracticeAppPatientMode || isPracticeAppPracticeMode) && view != null) {
             view.setSoundEffectsEnabled(false);
             view.setFocusable(true);
             view.setFocusableInTouchMode(true);
