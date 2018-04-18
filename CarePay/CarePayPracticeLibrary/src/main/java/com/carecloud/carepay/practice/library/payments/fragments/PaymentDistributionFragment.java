@@ -183,7 +183,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             }
         });
 
-        paymentPlanButton.setEnabled(userHasPermissionsToCreatePaymentPlan());
+        paymentPlanButton.setEnabled(userHasPermissionsToCreatePaymentPlan() && hasBalanceForPaymentPlan());
     }
 
     private boolean userHasPermissionsToCreatePaymentPlan() {
@@ -316,9 +316,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     }
 
     private void getPaymentPlansInformation() {
-        if (paymentsModel.getPaymentPayload().getPatientBalances().size() > 0
-                && paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().size() > 0
-                && paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload().size() > 0) {
+        if (hasBalance()) {
             for (BalanceItemDTO balanceItem : paymentsModel.getPaymentPayload().getPatientBalances()
                     .get(0).getBalances().get(0).getPayload().get(0).getDetails()) {
                 String balanceItemId = String.valueOf(balanceItem.getId());
@@ -337,6 +335,21 @@ public class PaymentDistributionFragment extends BaseDialogFragment
                 }
             }
         }
+    }
+
+    private boolean hasBalanceForPaymentPlan(){
+        if(hasBalance()) {
+            double remainingUnapplied = unappliedCredit;
+            for(BalanceItemDTO balanceItem : paymentsModel.getPaymentPayload().getPatientBalances()
+                    .get(0).getBalances().get(0).getPayload().get(0).getDetails()) {
+                double amountNotInPlan = SystemUtil.safeSubtract(balanceItem.getBalance(), balanceItem.getAmountInPaymentPlan());
+                remainingUnapplied = SystemUtil.safeSubtract(remainingUnapplied, amountNotInPlan);
+                if(remainingUnapplied < 0D){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void setAdapter() {
@@ -860,4 +873,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         return (double) Math.round(amount * 100) / 100;
     }
 
+    private boolean hasBalance(){
+        return paymentsModel.getPaymentPayload().getPatientBalances().size() > 0
+                && paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().size() > 0
+                && paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload().size() > 0;
+    }
 }
