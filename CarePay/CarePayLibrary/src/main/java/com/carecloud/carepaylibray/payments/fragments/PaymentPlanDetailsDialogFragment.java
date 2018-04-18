@@ -36,6 +36,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
     private PaymentPlanInterface callback;
+    protected View payButton;
 
     /**
      * @param paymentsModel  the payment model
@@ -119,7 +120,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
             });
         }
 
-        View payButton = view.findViewById(R.id.payment_details_pay_now_button);
+        payButton = view.findViewById(R.id.payment_details_pay_now_button);
         payButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
