@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -28,7 +30,8 @@ public class PracticePaymentPlanDetailsDialogFragment extends PaymentPlanDetails
      * @param paymentPlanDTO the Payment Plan Dto
      * @return new instance of a PaymentPlanDetailsDialogFragment
      */
-    public static PracticePaymentPlanDetailsDialogFragment newInstance(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+    public static PracticePaymentPlanDetailsDialogFragment newInstance(PaymentsModel paymentsModel,
+                                                                       PaymentPlanDTO paymentPlanDTO) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
@@ -81,8 +84,11 @@ public class PracticePaymentPlanDetailsDialogFragment extends PaymentPlanDetails
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        payButton.setEnabled(paymentReceiptModel.getPaymentPayload().getUserAuthModel()
-                .getUserAuthPermissions().canMakePayment);
+        if (((BasePracticeActivity) getActivity()).getApplicationMode().getApplicationType()
+                == ApplicationMode.ApplicationType.PRACTICE) {
+            payButton.setEnabled(paymentReceiptModel.getPaymentPayload().getUserAuthModel()
+                    .getUserAuthPermissions().canMakePayment);
+        }
     }
 
     @Override
