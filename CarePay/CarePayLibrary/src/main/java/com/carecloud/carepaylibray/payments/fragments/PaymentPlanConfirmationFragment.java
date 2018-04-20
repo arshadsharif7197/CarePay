@@ -19,6 +19,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentPlanPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.lang.annotation.Retention;
@@ -142,6 +143,7 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
             practiceNameTextView.setText(practiceName);
         }
 
+        logPaymentPlanEvent();
     }
 
     private View.OnClickListener dismissPopupListener = new View.OnClickListener() {
@@ -161,6 +163,34 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
             case MODE_CREATE:
             default:
                 return Label.getLabel("payment_plan_success_create_short");
+        }
+    }
+
+    private void logPaymentPlanEvent(){
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_payment_plan_id),
+                getString(R.string.param_payment_plan_amount),
+                getString(R.string.param_payment_plan_frequency),
+                getString(R.string.param_payment_plan_payment),
+                getString(R.string.param_payment_plan_day),
+                getString(R.string.param_payment_plan_installments)};
+        Object[] values = {
+                paymentPlanMetadataDTO.getPracticeId(),
+                paymentPlanMetadataDTO.getPaymentPlanId(),
+                paymentPlanPayloadDTO.getAmount(),
+                paymentPlanPayloadDTO.getPaymentPlanDetails().getFrequencyString(),
+                paymentPlanPayloadDTO.getPaymentPlanDetails().getAmount(),
+                StringUtil.getOrdinal("en", paymentPlanPayloadDTO.getPaymentPlanDetails().getDayOfMonth()),
+                paymentPlanPayloadDTO.getPaymentPlanDetails().getInstallments()};
+
+        switch (mode){
+            case MODE_EDIT:
+                MixPanelUtil.logEvent(getString(R.string.event_paymentplan_edited), params, values);
+                break;
+            case MODE_ADD:
+            case MODE_CREATE:
+            default:
+                MixPanelUtil.logEvent(getString(R.string.event_paymentplan_submitted), params, values);
         }
     }
 
