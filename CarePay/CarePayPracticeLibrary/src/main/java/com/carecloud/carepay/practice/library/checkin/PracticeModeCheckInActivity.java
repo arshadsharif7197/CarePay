@@ -90,6 +90,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostMode
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -611,6 +612,15 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                 .getActivePlans(selectedPendingBalance.getMetadata().getPracticeId()));
         PracticeModePaymentPlanFragment fragment = PracticeModePaymentPlanFragment.newInstance(paymentsModel, selectedPendingBalance);
         displayDialogFragment(fragment, false);
+
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_balance_amount),
+                getString(R.string.param_is_add_existing)};
+        Object[] values = {selectedPendingBalance.getMetadata().getPracticeId(),
+                selectedPendingBalance.getPayload().get(0).getAmount(),
+                false};
+
+        MixPanelUtil.logEvent(getString(R.string.event_paymentplan_started), params, values);
     }
 
     @Override
@@ -965,6 +975,15 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
                 .newInstance(paymentsModel, paymentPlanDTO, false);
         displayDialogFragment(fragment, false);
+
+        String[] params = {getString(com.carecloud.carepaylibrary.R.string.param_practice_id),
+                getString(com.carecloud.carepaylibrary.R.string.param_payment_plan_id),
+                getString(com.carecloud.carepaylibrary.R.string.param_payment_plan_amount)};
+        Object[] values = {
+                paymentPlanDTO.getMetadata().getPracticeId(),
+                paymentPlanDTO.getMetadata().getPaymentPlanId(),
+                paymentPlanDTO.getPayload().getAmount()};
+        MixPanelUtil.logEvent(getString(R.string.event_paymentplan_onetime_payment), params, values);
     }
 
     @Override

@@ -47,6 +47,10 @@
     <string name="event_myHealth_viewMedicalRecord">View Medical Record</string>
     <string name="event_messages_openCarecloudLink">Open CareCloud Link</string>
     <string name="event_signin_loginSuccess">Successful Login</string>
+    <string name="event_paymentplan_started">Payment Plan Started</string>
+    <string name="event_paymentplan_submitted">Payment Plan Submitted</string>
+    <string name="event_paymentplan_edited">Payment Plan Edited</string>
+    <string name="event_paymentplan_onetime_payment">One-Time Payment Started</string>
 
 
     <!--Parameters-->
@@ -72,6 +76,14 @@
     <string name="param_allergy_name">Allergy Name</string>
     <string name="param_link_type">Link Type</string>
     <string name="param_login_type">Login Type</string>
+    <string name="param_balance_amount">Balance Amount</string>
+    <string name="param_is_add_existing">Is Add Existing</string>
+    <string name="param_payment_plan_id">Payment Plan Id</string>
+    <string name="param_payment_plan_amount">Plan Amount</string>
+    <string name="param_payment_plan_frequency">Frequency</string>
+    <string name="param_payment_plan_payment">Payment Amount</string>
+    <string name="param_payment_plan_day">Payment Day</string>
+    <string name="param_payment_plan_installments">Installment Count</string>
 
 
     <!--Incremental Properties-->

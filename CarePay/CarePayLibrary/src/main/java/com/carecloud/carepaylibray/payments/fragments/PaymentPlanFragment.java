@@ -42,6 +42,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -453,6 +454,16 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
 
     protected void addBalanceToExisting() {
         callback.onAddBalanceToExitingPlan(paymentsModel, selectedBalance);
+
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_balance_amount),
+                getString(R.string.param_is_add_existing)};
+        Object[] values = {selectedBalance.getMetadata().getPracticeId(),
+                paymentPlanAmount,
+                true};
+
+        MixPanelUtil.logEvent(getString(R.string.event_paymentplan_started), params, values);
+
     }
 
     protected void createPaymentPlan(boolean userInteraction) {
