@@ -28,6 +28,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.google.android.gms.wallet.MaskedWallet;
 
 /**
@@ -75,6 +76,14 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
         if (!hideToolbar) {
             displayToolbar(true);
         }
+    }
+
+    @Override
+    public void onStop(){
+        if(retailModel != null && !retailModel.getPayload().getRetailPracticeList().isEmpty()){
+            MixPanelUtil.logEvent(getString(R.string.event_retail_ended));
+        }
+        super.onStop();
     }
 
     @Override

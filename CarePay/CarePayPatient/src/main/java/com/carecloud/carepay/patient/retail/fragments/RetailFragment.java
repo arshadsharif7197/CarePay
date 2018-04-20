@@ -28,6 +28,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -141,6 +142,11 @@ public class RetailFragment extends BaseFragment {
     private void loadRetailHome(){
         Uri storeUrl = Uri.parse(HttpConstants.getFormsUrl()+BASE_URL);
         shoppingWebView.loadUrl(storeUrl.toString());
+
+        String[] params = {getString(R.string.param_practice_id), getString(R.string.param_store_id)};
+        Object[] values = {retailPractice.getPracticeId(), retailPractice.getStore().getStoreId()};
+
+        MixPanelUtil.logEvent(getString(R.string.event_retail_started), params, values);
     }
 
     /**
@@ -189,6 +195,14 @@ public class RetailFragment extends BaseFragment {
 
             callback.getPaymentModel().getPaymentPayload().setPaymentPostModel(postModel);
             callback.onPayButtonClicked(amount, callback.getPaymentModel());
+
+            String[] params = {getString(R.string.param_practice_id),
+                    getString(R.string.param_store_id),
+                    getString(R.string.param_order_id),
+                    getString(R.string.param_order_amount)};
+            Object[] values = {retailPractice.getPracticeId(), storeId, orderId, amount};
+
+            MixPanelUtil.logEvent(getString(R.string.event_retail_checkout), params, values);
 
         }catch (NumberFormatException nfe){
             nfe.printStackTrace();
