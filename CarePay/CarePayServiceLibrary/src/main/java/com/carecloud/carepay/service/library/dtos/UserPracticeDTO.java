@@ -49,7 +49,7 @@ public class UserPracticeDTO {
     @SerializedName("clover")
     @Expose
     private boolean cloverEnabled = false;
-    @SerializedName("isRetailEnabled")
+    @SerializedName("is_retail_enabled")
     @Expose
     private boolean isRetailEnabled = false;
 
