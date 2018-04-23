@@ -149,7 +149,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
     private void checkIfHasDuplicateInsuranceType(Map<String, Integer> insurancesTypeMap) {
         insuranceTypeRepeated = true;
-        insuranceTypeRepeatedErrorMessage = "You have %d insurances set as %s. We need you to choose which insurance should be %s.";
+        insuranceTypeRepeatedErrorMessage = Label.getLabel("insurance.insuranceList.alert.message.duplicatedInsuranceAlert");
         String insuranceType = "";
         if (insurancesTypeMap.containsKey("Primary") && insurancesTypeMap.get("Primary") > 1) {
             showAlert = true;
