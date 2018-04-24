@@ -265,6 +265,11 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     @Override
+    public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
+        //NOT Yet
+    }
+
+    @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod,
                                       double amount, PaymentsModel paymentsModel) {
         if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null &&

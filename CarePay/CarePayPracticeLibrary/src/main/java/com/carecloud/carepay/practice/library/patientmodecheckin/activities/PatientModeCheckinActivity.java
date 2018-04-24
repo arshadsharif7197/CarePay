@@ -25,7 +25,6 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewC
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePartialPaymentDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
@@ -421,6 +420,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void onPaymentPlanAction(PaymentsModel paymentsModel) {
+        //todo whenever payment plans are ready
+    }
+
+    @Override
+    public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
         //todo whenever payment plans are ready
     }
 

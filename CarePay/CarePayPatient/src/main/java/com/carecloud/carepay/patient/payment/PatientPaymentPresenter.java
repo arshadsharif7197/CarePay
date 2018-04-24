@@ -139,6 +139,11 @@ public class PatientPaymentPresenter extends PaymentPresenter implements Patient
     }
 
     @Override
+    public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
+        //todo whenever payment plans are ready for checkin
+    }
+
+    @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();

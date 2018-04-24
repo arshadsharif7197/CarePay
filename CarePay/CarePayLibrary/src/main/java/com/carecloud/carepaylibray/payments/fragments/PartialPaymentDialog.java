@@ -250,7 +250,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         onPendingAmountValidation(amountEditText, payPartialButton, partialPaymentTotalAmountTitle);
     }
 
-    private void onPendingAmountValidation(String amountEditText, Button payPartialButton, TextView partialPaymentTotalAmountTitle) {
+    protected void onPendingAmountValidation(String amountEditText, Button payPartialButton, TextView partialPaymentTotalAmountTitle) {
         if (amountEditText != null && amountEditText.length() > 0) {
             if (amountEditText.length() == 1 && amountEditText.equalsIgnoreCase(".")) {
                 amountEditText = "0.";

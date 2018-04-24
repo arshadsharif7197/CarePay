@@ -33,6 +33,7 @@ import com.carecloud.carepaylibray.payments.fragments.OneTimePaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAddCreditCardFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAmountDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFragment;
@@ -46,6 +47,7 @@ import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -259,12 +261,17 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public void onPaymentPlanAction(PaymentsModel paymentsModel) {
         PendingBalanceDTO reducedBalancesItem = reduceBalanceItems(selectedBalancesItem, paymentsModel.getPaymentPayload()
                 .getActivePlans(selectedUserPractice.getPracticeId()));
+        new PaymentPlanAmountDialog(getContext(), paymentsModel, reducedBalancesItem, this).show();
+    }
+
+    @Override
+    public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
         boolean addExisting = false;
-        if(mustAddToExisting(paymentsModel)){
-            onAddBalanceToExitingPlan(paymentsModel, reducedBalancesItem);
+        if(mustAddToExisting(paymentsModel, amount)){
+            onAddBalanceToExitingPlan(paymentsModel, selectedBalance, amount);
             addExisting = true;
         } else {
-            PaymentPlanFragment fragment = PaymentPlanFragment.newInstance(paymentsModel, reducedBalancesItem);
+            PaymentPlanFragment fragment = PaymentPlanFragment.newInstance(paymentsModel, selectedBalance, amount);
             replaceFragment(fragment, true);
         }
         displayToolbar(false, null);
@@ -272,11 +279,12 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         String[] params = {getString(R.string.param_practice_id),
                 getString(R.string.param_balance_amount),
                 getString(R.string.param_is_add_existing)};
-        Object[] values = {reducedBalancesItem.getMetadata().getPracticeId(),
-                reducedBalancesItem.getPayload().get(0).getAmount(),
+        Object[] values = {selectedBalance.getMetadata().getPracticeId(),
+                selectedBalance.getPayload().get(0).getAmount(),
                 addExisting};
 
         MixPanelUtil.logEvent(getString(R.string.event_paymentplan_started), params, values);
+
     }
 
     @Override
@@ -561,23 +569,24 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance) {
+    public void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
         String practiceId = selectedBalance.getMetadata().getPracticeId();
         if (paymentsModel.getPaymentPayload().getValidPlans(practiceId,
                 selectedBalance.getPayload().get(0).getAmount()).size() == 1) {
             onSelectedPlanToAdd(paymentsModel,
                     selectedBalance,
                     paymentsModel.getPaymentPayload().getValidPlans(practiceId,
-                            selectedBalance.getPayload().get(0).getAmount()).get(0));
+                            selectedBalance.getPayload().get(0).getAmount()).get(0),
+                    amount);
         } else {
-            ValidPlansFragment fragment = ValidPlansFragment.newInstance(paymentsModel, selectedBalance);
+            ValidPlansFragment fragment = ValidPlansFragment.newInstance(paymentsModel, selectedBalance, amount);
             replaceFragment(fragment, true);
         }
     }
 
     @Override
-    public void onSelectedPlanToAdd(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO selectedPlan) {
-        AddExistingPaymentPlanFragment fragment = AddExistingPaymentPlanFragment.newInstance(paymentsModel, selectedBalance, selectedPlan);
+    public void onSelectedPlanToAdd(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO selectedPlan, double amount) {
+        AddExistingPaymentPlanFragment fragment = AddExistingPaymentPlanFragment.newInstance(paymentsModel, selectedBalance, selectedPlan, amount);
         replaceFragment(fragment, true);
     }
 
@@ -597,15 +606,15 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                 .newInstance(paymentsModel, new PaymentPlanDTO(), true), true);
     }
 
-    private boolean mustAddToExisting(PaymentsModel paymentsModel) {
-        if (paymentsModel.getPaymentPayload().getFilteredPlans(selectedBalancesItem.getMetadata().getPracticeId()).isEmpty()) {
-            return false;
-        }
+    private boolean mustAddToExisting(PaymentsModel paymentsModel, double amount) {
         String practiceId = selectedBalancesItem.getMetadata().getPracticeId();
         for (PaymentsPayloadSettingsDTO settingsDTO : paymentsModel.getPaymentPayload().getPaymentSettings()) {
             if (practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())) {
                 PaymentsSettingsPaymentPlansDTO paymentPlanSettings = settingsDTO.getPayload().getPaymentPlans();
-                return !paymentPlanSettings.isCanHaveMultiple() && paymentPlanSettings.isAddBalanceToExisting();
+                return (!hasApplicableRule(paymentPlanSettings, amount) ||
+                        !paymentPlanSettings.isCanHaveMultiple()) &&
+                        !paymentsModel.getPaymentPayload().getValidPlans(practiceId, amount).isEmpty() &&
+                        paymentPlanSettings.isAddBalanceToExisting();
             }
         }
         return false;
@@ -645,6 +654,18 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         }
         return copyPendingBalance;
     }
+
+    private boolean hasApplicableRule(PaymentsSettingsPaymentPlansDTO paymentPlanSettings, double amount) {
+        for (PaymentSettingsBalanceRangeRule balanceRangeRule : paymentPlanSettings.getBalanceRangeRules()) {
+            double minAmount = balanceRangeRule.getMinBalance().getValue();
+            double maxAmount = balanceRangeRule.getMaxBalance().getValue();
+            if (amount >= minAmount && amount <= maxAmount) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     @Override
     public void completePaymentPlanProcess(WorkflowDTO workflowDTO) {

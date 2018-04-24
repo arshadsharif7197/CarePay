@@ -38,9 +38,9 @@ public interface PaymentPlanInterface extends PaymentMethodInterface, PaymentPla
 
     void onDismissEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
 
-    void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance);
+    void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount);
 
-    void onSelectedPlanToAdd(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO selectedPlan);
+    void onSelectedPlanToAdd(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO selectedPlan, double amount);
 
     void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel);
 }

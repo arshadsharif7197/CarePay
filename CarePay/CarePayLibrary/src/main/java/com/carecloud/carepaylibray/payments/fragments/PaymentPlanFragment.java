@@ -55,6 +55,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class PaymentPlanFragment extends BasePaymentDialogFragment implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
+    protected static final String KEY_PLAN_AMOUNT = "plan_amount";
 
     protected PaymentsModel paymentsModel;
     protected PendingBalanceDTO selectedBalance;
@@ -85,10 +86,11 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
      * @param selectedBalance the selected balance
      * @return an empty PaymentPlanFragment instance for creating a new payment plan
      */
-    public static PaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance) {
+    public static PaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double paymentPlanAmount) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
+        args.putDouble(KEY_PLAN_AMOUNT, paymentPlanAmount);
 
         PaymentPlanFragment fragment = new PaymentPlanFragment();
         fragment.setArguments(args);
@@ -114,7 +116,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         Bundle args = getArguments();
         paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
         selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
-        paymentPlanAmount = calculateTotalAmount(selectedBalance);
+        paymentPlanAmount = calculateTotalAmount(args.getDouble(KEY_PLAN_AMOUNT));//calculateTotalAmount(selectedBalance);
         dateOptions = generateDateOptions();
         paymentDateOption = dateOptions.get(0);
         if (selectedBalance != null) {
@@ -312,16 +314,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         createPlanButton.setClickable(isEnabled);
     }
 
-    protected double calculateTotalAmount(PendingBalanceDTO selectedBalance) {
-        double totalAmount = 0;
-        if (selectedBalance != null) {
-            for (PendingBalancePayloadDTO balancePayloadDTO : selectedBalance.getPayload()) {
-                if (StringUtil.isNullOrEmpty(balancePayloadDTO.getType()) || balancePayloadDTO.getType().equals(PATIENT_BALANCE)) {//prevent responsibility types from being added
-                    totalAmount += balancePayloadDTO.getAmount();
-                }
-            }
-        }
-        return totalAmount;
+    protected double calculateTotalAmount(double amount) {
+        return amount;
     }
 
     private double calculateMonthlyPayment(int numberPayments) {
@@ -453,7 +447,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     }
 
     protected void addBalanceToExisting() {
-        callback.onAddBalanceToExitingPlan(paymentsModel, selectedBalance);
+        callback.onAddBalanceToExitingPlan(paymentsModel, selectedBalance, paymentPlanAmount);
 
         String[] params = {getString(R.string.param_practice_id),
                 getString(R.string.param_balance_amount),

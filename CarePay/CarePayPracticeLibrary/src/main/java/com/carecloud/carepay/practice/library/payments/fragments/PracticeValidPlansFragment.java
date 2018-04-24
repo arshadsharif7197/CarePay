@@ -19,10 +19,11 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 
 public class PracticeValidPlansFragment extends ValidPlansFragment {
 
-    public static PracticeValidPlansFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance){
+    public static PracticeValidPlansFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount){
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
+        args.putDouble(KEY_PLAN_AMOUNT, amount);
 
         PracticeValidPlansFragment fragment = new PracticeValidPlansFragment();
         fragment.setArguments(args);

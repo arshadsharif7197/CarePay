@@ -29,16 +29,19 @@ import java.util.List;
  */
 
 public class ValidPlansFragment extends BaseDialogFragment implements PaymentPlanListAdapter.OnPaymentPlanSelectedListener {
+    protected static final String KEY_PLAN_AMOUNT = "plan_amount";
 
     protected PaymentPlanInterface callback;
     protected PaymentsModel paymentsModel;
     protected PendingBalanceDTO selectedBalance;
+    private double paymentPlanAmount;
 
 
-    public static ValidPlansFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance) {
+    public static ValidPlansFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
+        args.putDouble(KEY_PLAN_AMOUNT, amount);
 
         ValidPlansFragment fragment = new ValidPlansFragment();
         fragment.setArguments(args);
@@ -70,6 +73,7 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
         Bundle args = getArguments();
         paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
         selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
+        paymentPlanAmount = args.getDouble(KEY_PLAN_AMOUNT);
     }
 
     @Override
@@ -111,6 +115,6 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
 
     @Override
     public void onPaymentPlanItemSelected(PaymentPlanDTO paymentPlan) {
-        callback.onSelectedPlanToAdd(paymentsModel, selectedBalance, paymentPlan);
+        callback.onSelectedPlanToAdd(paymentsModel, selectedBalance, paymentPlan, paymentPlanAmount);
     }
 }

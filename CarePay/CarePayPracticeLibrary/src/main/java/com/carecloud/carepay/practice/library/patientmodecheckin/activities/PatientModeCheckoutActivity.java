@@ -311,6 +311,11 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     @Override
+    public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
+        //todo whenever payment plans are ready
+    }
+
+    @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount,
                                       PaymentsModel paymentsModel) {
 

@@ -761,6 +761,11 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     @Override
+    public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
+
+    }
+
+    @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
 
     }

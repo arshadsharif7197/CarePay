@@ -44,6 +44,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticeOneTime
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentHistoryDetailFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanAddCreditCardFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanAmountFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanConfirmationFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanListFragment;
@@ -610,14 +611,20 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                 .getPatientBalances().get(0).getBalances().get(0);
         selectedPendingBalance = reduceBalanceItems(selectedPendingBalance, paymentsModel.getPaymentPayload()
                 .getActivePlans(selectedPendingBalance.getMetadata().getPracticeId()));
-        PracticeModePaymentPlanFragment fragment = PracticeModePaymentPlanFragment.newInstance(paymentsModel, selectedPendingBalance);
+        PracticePaymentPlanAmountFragment fragment = PracticePaymentPlanAmountFragment.newInstance(paymentsModel, selectedPendingBalance);
+        displayDialogFragment(fragment, false);
+    }
+
+    @Override
+    public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
+        PracticeModePaymentPlanFragment fragment = PracticeModePaymentPlanFragment.newInstance(paymentsModel, selectedBalance, amount);
         displayDialogFragment(fragment, false);
 
         String[] params = {getString(R.string.param_practice_id),
                 getString(R.string.param_balance_amount),
                 getString(R.string.param_is_add_existing)};
-        Object[] values = {selectedPendingBalance.getMetadata().getPracticeId(),
-                selectedPendingBalance.getPayload().get(0).getAmount(),
+        Object[] values = {selectedBalance.getMetadata().getPracticeId(),
+                selectedBalance.getPayload().get(0).getAmount(),
                 false};
 
         MixPanelUtil.logEvent(getString(R.string.event_paymentplan_started), params, values);
@@ -1081,21 +1088,22 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     }
 
     @Override
-    public void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance) {
+    public void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
         String practiceId = selectedBalance.getMetadata().getPracticeId();
         if(paymentsModel.getPaymentPayload().getActivePlans(practiceId).size() == 1){
             onSelectedPlanToAdd(paymentsModel,
                     selectedBalance,
-                    paymentsModel.getPaymentPayload().getActivePlans(practiceId).get(0));
+                    paymentsModel.getPaymentPayload().getActivePlans(practiceId).get(0),
+                    amount);
         }else{
-            PracticeValidPlansFragment fragment = PracticeValidPlansFragment.newInstance(paymentsModel, selectedBalance);
+            PracticeValidPlansFragment fragment = PracticeValidPlansFragment.newInstance(paymentsModel, selectedBalance, amount);
             displayDialogFragment(fragment, false);
         }
     }
 
     @Override
-    public void onSelectedPlanToAdd(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO selectedPlan) {
-        PracticeModeAddExistingPaymentPlanFragment fragment = PracticeModeAddExistingPaymentPlanFragment.newInstance(paymentsModel, selectedBalance, selectedPlan);
+    public void onSelectedPlanToAdd(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO selectedPlan, double amount) {
+        PracticeModeAddExistingPaymentPlanFragment fragment = PracticeModeAddExistingPaymentPlanFragment.newInstance(paymentsModel, selectedBalance, selectedPlan, amount);
         displayDialogFragment(fragment, false);
     }
 
