@@ -11,13 +11,13 @@ import android.view.ViewGroup;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.retail.adapters.RetailStoreListAdapter;
 import com.carecloud.carepay.patient.retail.interfaces.RetailInterface;
-import com.carecloud.carepay.patient.retail.models.RetailModel;
-import com.carecloud.carepay.patient.retail.models.RetailPracticeDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.retail.RetailModel;
+import com.carecloud.carepaylibray.retail.RetailPracticeDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.util.ArrayList;
@@ -68,7 +68,7 @@ public class RetailListFragment extends BaseFragment implements RetailStoreListA
         Bundle args = getArguments();
         retailModel = DtoHelper.getConvertedDTO(RetailModel.class, args);
         if(retailModel != null) {
-            retailPracticesList = retailModel.getPayload().getUserPractices();
+            retailPracticesList = retailModel.getPayload().getPracticeInformation();
         }
     }
 
