@@ -73,6 +73,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     private boolean noPrimaryInsuranceFound = false;
     private boolean insuranceTypeRepeated = false;
     private String insuranceTypeRepeatedErrorMessage;
+    private View nextButton;
 
 
     public static SettingsDocumentsFragment newInstance() {
@@ -110,7 +111,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
         callback.setToolbar(toolbar);
 
-        View nextButton = findViewById(R.id.buttonAddDemographicInfo);
+        nextButton = findViewById(R.id.buttonAddDemographicInfo);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -202,7 +203,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
             noPrimaryInsuranceFound = true;
             showAlert = true;
         } else {
-            checkIfHasDuplicateInsuranceType(insurancesTypeMap);
+            nextButton.setEnabled(!checkIfHasDuplicateInsuranceType(insurancesTypeMap));
         }
 
 
@@ -211,7 +212,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         return insuranceList;
     }
 
-    private void checkIfHasDuplicateInsuranceType(Map<String, Integer> insurancesTypeMap) {
+    private boolean checkIfHasDuplicateInsuranceType(Map<String, Integer> insurancesTypeMap) {
         insuranceTypeRepeated = true;
         insuranceTypeRepeatedErrorMessage = Label.getLabel("insurance.insuranceList.alert.message.duplicatedInsuranceAlert");
         String insuranceType = "";
@@ -238,6 +239,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         } else {
             insuranceTypeRepeated = false;
         }
+        return insuranceTypeRepeated;
     }
 
     private void showAlert() {

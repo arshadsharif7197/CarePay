@@ -139,6 +139,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
                 showAlert = true;
             } else {
                 checkIfHasDuplicateInsuranceType(insurancesTypeMap);
+                checkIfEnableButton(getView());
             }
         }
 
@@ -147,7 +148,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         return insuranceList;
     }
 
-    private void checkIfHasDuplicateInsuranceType(Map<String, Integer> insurancesTypeMap) {
+    private boolean checkIfHasDuplicateInsuranceType(Map<String, Integer> insurancesTypeMap) {
         insuranceTypeRepeated = true;
         insuranceTypeRepeatedErrorMessage = Label.getLabel("insurance.insuranceList.alert.message.duplicatedInsuranceAlert");
         String insuranceType = "";
@@ -174,6 +175,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         } else {
             insuranceTypeRepeated = false;
         }
+        return insuranceTypeRepeated;
     }
 
     private void initializeViews() {
@@ -185,7 +187,6 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
                     showAlert();
                     showAlert = false;
                     noPrimaryInsuranceFound = false;
-                    insuranceTypeRepeated = false;
                 }
             } else {
                 getFragmentManager().popBackStack(HealthInsuranceFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE); //remove the health insurance fragment from the stack
@@ -240,6 +241,9 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
     @Override
     protected boolean passConstraints(View view) {
+        if (insuranceTypeRepeated) {
+            return false;
+        }
         return true;
     }
 
