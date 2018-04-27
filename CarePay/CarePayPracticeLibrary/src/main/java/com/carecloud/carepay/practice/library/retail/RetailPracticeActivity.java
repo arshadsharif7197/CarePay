@@ -55,10 +55,7 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
         retailModel = getConvertedDTO(RetailModel.class);
         paymentsModel = getConvertedDTO(PaymentsModel.class);
         setContentView(R.layout.activity_retail);
-        TextView retailMessageTextView = (TextView) findViewById(R.id.retailMessageTextView);
-        retailMessageTextView.setText(String
-                .format(Label.getLabel("retail.patientModeRetail.leftPanel.message.title"),
-                        retailModel.getPayload().getPracticeInformation().get(0).getPracticeName()));
+        setLeftPanelTexts();
 
         View logout = findViewById(R.id.logoutTextview);
         logout.setOnClickListener(homeClick);
@@ -75,6 +72,16 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
                             .newInstance(retailPractice, userPracticeDTO, false),
                     false);
         }
+    }
+
+    private void setLeftPanelTexts() {
+        TextView retailMessageTextView = (TextView) findViewById(R.id.retailMessageTextView);
+        retailMessageTextView.setText(String
+                .format(Label.getLabel("retail.patientModeRetail.leftPanel.message.title"),
+                        retailModel.getPayload().getPracticeInformation().get(0).getPracticeName()));
+        TextView retailSubMessageTextView = (TextView) findViewById(R.id.retailSubMessageTextView);
+        retailSubMessageTextView.setText(Label.getLabel("retail.patientModeRetail.leftPanel.message.subtitle"));
+
     }
 
     private View.OnClickListener homeClick = new View.OnClickListener() {
@@ -135,8 +142,7 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
                 changeLanguage(languageTransition, language.getCode().toLowerCase(), headers, new BasePracticeActivity.SimpleCallback() {
                     @Override
                     public void callback() {
-                        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
-                        getSupportFragmentManager().popBackStackImmediate();
+                        setLeftPanelTexts();
                         languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
                     }
                 });

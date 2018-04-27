@@ -195,6 +195,9 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
         RetailModel retailModel = DtoHelper.getConvertedDTO(RetailModel.class, workflowDTO);
         getSupportFragmentManager().popBackStackImmediate();
         getSupportFragmentManager().popBackStackImmediate();
+        if (!(getSupportFragmentManager().findFragmentById(R.id.container_main) instanceof RetailFragment)) {
+            getSupportFragmentManager().popBackStackImmediate();
+        }
         RetailFragment retailFragment = (RetailFragment) getSupportFragmentManager().findFragmentByTag(RetailFragment.class.getName());
         if (retailFragment != null) {
             retailFragment.loadPaymentRedirectUrl(retailModel.getPayload().getReturnUrl(), false);
