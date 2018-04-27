@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.myhealth.dtos;
 
 import com.carecloud.carepay.patient.patientsplash.dtos.OptionsDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.google.gson.annotations.Expose;
@@ -29,6 +30,9 @@ public class MyHealthPayloadDto {
     @SerializedName("practice_patient_ids")
     @Expose
     private List<PracticePatientIdsDTO> practicePatientIds = new ArrayList<>();
+    @SerializedName("practice_information")
+    @Expose
+    private List<UserPracticeDTO> practiceInformation = new ArrayList<>();
 
     public List<OptionsDTO> getLanguages() {
         return languages;
@@ -68,5 +72,13 @@ public class MyHealthPayloadDto {
 
     public void setEducationMaterial(EducationMaterial educationMaterial) {
         this.educationMaterial = educationMaterial;
+    }
+
+    public List<UserPracticeDTO> getPracticeInformation() {
+        return practiceInformation;
+    }
+
+    public void setPracticeInformation(List<UserPracticeDTO> practiceInformation) {
+        this.practiceInformation = practiceInformation;
     }
 }

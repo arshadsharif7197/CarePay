@@ -29,6 +29,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by lmenendez on 5/2/17
@@ -37,6 +39,7 @@ import java.util.List;
 public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentListAdapter.ViewHolder> {
     private static final int VIEW_TYPE_HEADER = 1;
     private static final int VIEW_TYPE_APPOINTMENT = 2;
+    private final Map<String, Set<String>> enabledPracticeLocations;
 
     public interface SelectAppointmentCallback {
         void onItemTapped(AppointmentDTO appointmentDTO);
@@ -61,11 +64,15 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
      * @param appointmentItems initial appt list
      * @param callback         select appt callback
      */
-    public AppointmentListAdapter(Context context, List<AppointmentDTO> appointmentItems, SelectAppointmentCallback callback, List<UserPracticeDTO> userPracticeDTOs) {
+    public AppointmentListAdapter(Context context, List<AppointmentDTO> appointmentItems,
+                                  SelectAppointmentCallback callback,
+                                  List<UserPracticeDTO> userPracticeDTOs,
+                                  Map<String, Set<String>> enabledPracticeLocations) {
         this.context = context;
         this.appointmentItems = appointmentItems;
         this.callback = callback;
         this.userPracticeDTOs = userPracticeDTOs;
+        this.enabledPracticeLocations = enabledPracticeLocations;
 
         sortAppointments();
     }
@@ -93,6 +100,7 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+        AppointmentDTO appointmentDTO = sortedAppointments.get(position);
         AppointmentsPayloadDTO appointmentsPayload = sortedAppointments.get(position).getPayload();
 
         //Header
@@ -115,11 +123,12 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentsPayload.getStartTime());
         AppointmentDisplayStyle style = appointmentsPayload.getDisplayStyle();
 
-        boolean isBreezePractice = isBreezePractice(callback.getPracticeId(appointmentsPayload.getId()));
+        boolean isBreezePractice = isBreezePractice(appointmentDTO.getMetadata().getPracticeId());
+        Set<String> enabledLocations = enabledPracticeLocations.get(appointmentDTO.getMetadata().getPracticeId());
 
         switch (style) {
             case CHECKED_IN: {
-                if(isBreezePractice) {
+                if (shouldShowCheckOutButton(appointmentDTO, enabledLocations, isBreezePractice)) {
                     holder.checkOutButton.setVisibility(View.VISIBLE);
                     holder.checkOutButton.setClickable(true);
                 }
@@ -281,6 +290,21 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
         notifyDataSetChanged();
     }
 
+    private boolean shouldShowCheckOutButton(AppointmentDTO appointmentDTO,
+                                             Set<String> enabledLocations,
+                                             boolean isBreezePractice) {
+        boolean isTheLocationWithBreezeEnabled = enabledLocations == null;
+        if (enabledLocations != null) {
+            for (String locationId : enabledLocations) {
+                if (locationId.equals(appointmentDTO.getPayload().getLocation().getGuid())) {
+                    isTheLocationWithBreezeEnabled = true;
+                    break;
+                }
+            }
+        }
+        return isBreezePractice && isTheLocationWithBreezeEnabled;
+    }
+
     private void sortAppointments() {
         Collections.sort(appointmentItems, new Comparator<AppointmentDTO>() {
             @Override
@@ -376,12 +400,12 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
         holder.itemView.setOnClickListener(null);//need to remove this for header just in case
     }
 
-    private boolean isBreezePractice(String practiceId){
-        if(practiceId == null){
+    private boolean isBreezePractice(String practiceId) {
+        if (practiceId == null) {
             return false;
         }
-        for(UserPracticeDTO userPracticeDTO : userPracticeDTOs){
-            if(userPracticeDTO.getPracticeId() != null && userPracticeDTO.getPracticeId().equals(practiceId)){
+        for (UserPracticeDTO userPracticeDTO : userPracticeDTOs) {
+            if (userPracticeDTO.getPracticeId() != null && userPracticeDTO.getPracticeId().equals(practiceId)) {
                 return userPracticeDTO.isBreezePractice();
             }
         }
