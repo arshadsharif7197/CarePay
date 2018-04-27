@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <RadioButton
+    <com.carecloud.carepaylibray.customcomponents.CarePayRadioButton
         android:id="@+id/languageNameRadioButton"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/language_card_height"
@@ -18,7 +19,8 @@
         android:paddingEnd="@dimen/language_radio_image_rightmargin"
         android:paddingStart="@dimen/language_text_left_margin"
         android:textColor="@color/slateGray"
-        android:textSize="@dimen/textview_default_textsize" />
+        android:textSize="@dimen/textview_default_textsize"
+        app:customAssetFont="proxima_nova_regular" />
 
     <View
         android:layout_width="match_parent"

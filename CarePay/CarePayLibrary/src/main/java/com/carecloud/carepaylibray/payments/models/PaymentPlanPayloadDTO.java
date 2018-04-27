@@ -100,4 +100,13 @@ public class PaymentPlanPayloadDTO {
     public void setAmountPaid(double amountPaid) {
         this.amountPaid = amountPaid;
     }
+
+    /**
+     * calculate the percentage progress of the payment plan
+     * @return percent progress 0-100
+     */
+    public int getPaymentPlanProgress(){
+        return (int) (getAmountPaid()/getAmount() *100);
+    }
+
 }
