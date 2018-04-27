@@ -94,7 +94,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             }
         }
     };
-    private Button nextButton;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -188,7 +187,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     }
 
     protected void initNextButton(final View view) {
-        nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
+        Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
         nextButton.setVisibility(View.VISIBLE);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
