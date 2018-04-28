@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,6 +54,8 @@ public class RetailFragment extends BaseFragment {
     protected SwipeRefreshLayout refreshLayout;
     protected Toolbar toolbar;
     protected boolean showToolbar = true;
+
+    private boolean launchedPayments = false;
 
     public static RetailFragment newInstance(RetailModel retailModel, RetailPracticeDTO retailPractice,
                                              UserPracticeDTO userPracticeDTO,
@@ -136,12 +137,13 @@ public class RetailFragment extends BaseFragment {
 
             if (returnUrl != null) {
                 reloadSSO(returnUrl, false);
-            } else if (lastUrl != null) {
-                reloadSSO(lastUrl, true);
-            } else {
+            } else if (lastUrl != null && !launchedPayments) {
+                reloadSSO(lastUrl, false);
+            } else if (!launchedPayments) {
                 loadRetailHome();
             }
             initToolbar(view);
+            launchedPayments = false;
         }
     }
 
@@ -152,25 +154,27 @@ public class RetailFragment extends BaseFragment {
         shoppingWebView.saveState(callback.getWebViewBundle());
     }
 
-    private void reloadSSO(String followUpUrl, boolean loadHome) {
+    private void reloadSSO(String followUpUrl, boolean skipUrlLoading) {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("practice_id", userPracticeDTO.getPracticeId());
         queryMap.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
         queryMap.put("store_only", "true");
 
         TransitionDTO transitionDTO = retailModel.getMetadata().getLinks().getRetail();
-        getWorkflowServiceHelper().execute(transitionDTO, getRefreshSsoCallback(followUpUrl, loadHome), queryMap);
+        getWorkflowServiceHelper().execute(transitionDTO, getRefreshSsoCallback(followUpUrl, skipUrlLoading), queryMap);
     }
 
     private void loadRetailHome() {
         Uri storeUrl = Uri.parse(HttpConstants.getFormsUrl() + BASE_URL);
+        shoppingWebView.clearCache(true);
+        shoppingWebView.clearHistory();
         shoppingWebView.loadUrl(storeUrl.toString());
     }
 
     private void initToolbar(View view) {
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+//        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -216,8 +220,7 @@ public class RetailFragment extends BaseFragment {
                     return true;
                 }
             }
-            webView.loadUrl(url);
-            return true;
+            return false;
         }
 
         @Override
@@ -236,9 +239,14 @@ public class RetailFragment extends BaseFragment {
                 Log.d("Retail WebView", lastUrl);
             } else {
                 launchPayments = false;
+                launchedPayments = true;//track if payments was launched for the webview reload
             }
             if (loadedReturnUrl) {
                 webView.clearHistory();
+                if(url.contains("#!/~/orderConfirmation")){//shopping session complete here
+                    loadedReturnUrl = false;//to allow continue shopping after a payment was made
+                    launchUrl = null;//reset launch url at this point
+                }
             }
             if (url.equals(returnUrl)) {
                 Log.d("Retail WebView", returnUrl);
@@ -260,6 +268,9 @@ public class RetailFragment extends BaseFragment {
             postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
             postModel.setOrderId(orderId);
             postModel.setStoreId(storeId);
+
+            //this will give us a fresh sso in case they click back on payments
+            reloadSSO(null, true);
 
             callback.getPaymentModel().getPaymentPayload().setPaymentPostModel(postModel);
             callback.onPayButtonClicked(amount, callback.getPaymentModel());
@@ -291,7 +302,7 @@ public class RetailFragment extends BaseFragment {
         return false;
     }
 
-    private WorkflowServiceCallback getRefreshSsoCallback(final String followUpUrl, final boolean loadHome) {
+    private WorkflowServiceCallback getRefreshSsoCallback(final String followUpUrl, final boolean skipUrlLoading) {
         return new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
@@ -303,7 +314,9 @@ public class RetailFragment extends BaseFragment {
                 refreshLayout.setRefreshing(false);
                 RetailModel retailModel = DtoHelper.getConvertedDTO(RetailModel.class, workflowDTO);
                 retailPractice = retailModel.getPayload().getRetailPracticeList().get(0);
-                shoppingWebView.loadUrl(followUpUrl);
+                if(!skipUrlLoading){
+                    shoppingWebView.loadUrl(followUpUrl);
+                }
             }
 
             @Override

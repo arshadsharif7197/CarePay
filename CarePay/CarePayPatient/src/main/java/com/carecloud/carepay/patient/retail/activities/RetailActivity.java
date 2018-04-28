@@ -51,6 +51,8 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
 
     private Bundle webViewBundle = new Bundle();
 
+    private boolean hasMultipleStores = false;
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -62,6 +64,7 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
             selectedPractice = retailModel.getPayload().getRetailPracticeList().get(0);
             displayRetailStore(retailModel, selectedPractice, lookupUserPractice(selectedPractice), false);
         } else {
+            hasMultipleStores = true;
             fragment = RetailListFragment.newInstance(retailModel);
             replaceFragment(fragment, false);
         }
@@ -193,10 +196,13 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         RetailModel retailModel = DtoHelper.getConvertedDTO(RetailModel.class, workflowDTO);
-        getSupportFragmentManager().popBackStackImmediate();
-        getSupportFragmentManager().popBackStackImmediate();
-        if (!(getSupportFragmentManager().findFragmentById(R.id.container_main) instanceof RetailFragment)) {
-            getSupportFragmentManager().popBackStackImmediate();
+        if (hasMultipleStores) {
+            getSupportFragmentManager().popBackStack(RetailFragment.class.getName(), 0);
+        } else {
+            while(getSupportFragmentManager().getBackStackEntryCount() > 1){
+                getSupportFragmentManager().popBackStackImmediate();//these need to go immediately
+            }
+            getSupportFragmentManager().popBackStack();//last one needs to go after we load the redirect
         }
         RetailFragment retailFragment = (RetailFragment) getSupportFragmentManager().findFragmentByTag(RetailFragment.class.getName());
         if (retailFragment != null) {

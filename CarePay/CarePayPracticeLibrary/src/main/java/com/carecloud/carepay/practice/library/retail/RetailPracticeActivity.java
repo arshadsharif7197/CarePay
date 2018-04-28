@@ -68,9 +68,7 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
             retailPractice = retailModel.getPayload().getRetailPracticeList().get(0);
             userPracticeDTO = retailModel.getPayload().getPracticeInformation().get(0);
             userPracticeDTO.setPatientId(retailPractice.getPatientId());
-            replaceFragment(RetailFragment
-                            .newInstance(retailPractice, userPracticeDTO, false),
-                    false);
+            displayRetailStore(retailModel, retailPractice, userPracticeDTO);
         }
     }
 
@@ -166,12 +164,13 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
     @Override
     public void displayRetailStore(RetailModel retailModel, RetailPracticeDTO retailPractice,
                                    UserPracticeDTO practiceDTO) {
-
+        RetailFragment fragment = RetailFragment.newInstance(retailPractice, userPracticeDTO, false);
+        replaceFragment(fragment, false);
     }
 
     @Override
     public void displayToolbar(boolean visibility) {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(!visibility);
+        //no toolbar to show/hide in practice app
     }
 
     @Override
@@ -199,7 +198,6 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         RetailModel retailModel = DtoHelper.getConvertedDTO(RetailModel.class, workflowDTO);
-        getSupportFragmentManager().popBackStack(RetailFragment.class.getName(), 0);
         RetailFragment retailFragment = (RetailFragment) getSupportFragmentManager()
                 .findFragmentByTag(RetailFragment.class.getName());
         if (retailFragment != null) {
@@ -211,6 +209,10 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
             retailFragment.loadPaymentRedirectUrl(retailModel.getPayload().getReturnUrl(), false);
             replaceFragment(retailFragment, true);
         }
+
+        //need to reset fullscreen after dismissing payment dialogs
+        setSystemUiVisibility();
+        setNavigationBarVisibility();
     }
 
     @Override
@@ -268,6 +270,8 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
 
     @Override
     public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
-
+        //when dismissing the payment method dialog the nav bar was showing up
+        setSystemUiVisibility();
+        setNavigationBarVisibility();
     }
 }
