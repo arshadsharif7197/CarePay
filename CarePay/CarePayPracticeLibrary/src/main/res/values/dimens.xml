@@ -164,8 +164,8 @@
     <dimen name="provider_card_place_margin">19dp</dimen>
 
     <!--Appointment list-->
-    <dimen name="appointment_card_header_height">210dp</dimen>
-    <dimen name="appointment_card_date_view_height">160dp</dimen>
+    <dimen name="appointment_card_header_height">220dp</dimen>
+    <dimen name="appointment_card_date_view_height">170dp</dimen>
     <dimen name="appointment_card_footer_height">208dp</dimen>
     <dimen name="appointment_card_checked_in_button_margin">56dp</dimen>
 
