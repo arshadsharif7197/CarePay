@@ -37,11 +37,14 @@ import com.carecloud.carepaylibray.media.MediaScannerPresenter;
 import com.carecloud.carepaylibray.media.MediaViewInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
@@ -68,6 +71,9 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
 
     private boolean showAlert = false;
     private boolean noPrimaryInsuranceFound = false;
+    private boolean insuranceTypeRepeated = false;
+    private String insuranceTypeRepeatedErrorMessage;
+    private View nextButton;
 
 
     public static SettingsDocumentsFragment newInstance() {
@@ -105,7 +111,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
         callback.setToolbar(toolbar);
 
-        View nextButton = findViewById(R.id.buttonAddDemographicInfo);
+        nextButton = findViewById(R.id.buttonAddDemographicInfo);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -140,6 +146,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
             showAlert();
             showAlert = false;
             noPrimaryInsuranceFound = false;
+            insuranceTypeRepeated = false;
         }
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -170,6 +177,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     private List<DemographicInsurancePayloadDTO> getInsurances(DemographicDTO demographicDTO) {
         boolean hasOnePhoto = false;
         boolean isThereAnyPrimaryInsurance = false;
+        Map<String, Integer> insurancesTypeMap = new HashMap<>();
         List<DemographicInsurancePayloadDTO> insuranceList = new ArrayList<>();
         for (DemographicInsurancePayloadDTO insurance : demographicDTO.getPayload().getDemographics().getPayload().getInsurances()) {
             if (!insurance.isDeleted()) {
@@ -182,12 +190,20 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
                 } else if (!hasOnePhoto) {
                     hasOnePhoto = true;
                 }
+                String insuranceType = StringUtil.captialize(insurance.getInsuranceType()).trim();
+                if (insurancesTypeMap.containsKey(insuranceType)) {
+                    insurancesTypeMap.put(insuranceType, insurancesTypeMap.get(insuranceType) + 1);
+                } else {
+                    insurancesTypeMap.put(insuranceType, 1);
+                }
             }
         }
         if (!demographicDTO.getPayload().getDemographics().getPayload().getInsurances().isEmpty()
                 && !isThereAnyPrimaryInsurance) {
             noPrimaryInsuranceFound = true;
             showAlert = true;
+        } else {
+            nextButton.setEnabled(!checkIfHasDuplicateInsuranceType(insurancesTypeMap));
         }
 
 
@@ -196,13 +212,46 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         return insuranceList;
     }
 
+    private boolean checkIfHasDuplicateInsuranceType(Map<String, Integer> insurancesTypeMap) {
+        insuranceTypeRepeated = true;
+        insuranceTypeRepeatedErrorMessage = Label.getLabel("insurance.insuranceList.alert.message.duplicatedInsuranceAlert");
+        String insuranceType = "";
+        if (insurancesTypeMap.containsKey("Primary") && insurancesTypeMap.get("Primary") > 1) {
+            showAlert = true;
+            insuranceType = "Primary";
+            insuranceTypeRepeatedErrorMessage = String.format(insuranceTypeRepeatedErrorMessage,
+                    insurancesTypeMap.get(insuranceType), insuranceType, insuranceType);
+        } else if (insurancesTypeMap.containsKey("Secondary") && insurancesTypeMap.get("Secondary") > 1) {
+            showAlert = true;
+            insuranceType = "Secondary";
+            insuranceTypeRepeatedErrorMessage = String.format(insuranceTypeRepeatedErrorMessage,
+                    insurancesTypeMap.get(insuranceType), insuranceType, insuranceType);
+        } else if (insurancesTypeMap.containsKey("Tertiary") && insurancesTypeMap.get("Tertiary") > 1) {
+            showAlert = true;
+            insuranceType = "Tertiary";
+            insuranceTypeRepeatedErrorMessage = String.format(insuranceTypeRepeatedErrorMessage,
+                    insurancesTypeMap.get(insuranceType), insuranceType, insuranceType);
+        } else if (insurancesTypeMap.containsKey("Quaternary") && insurancesTypeMap.get("Quaternary") > 1) {
+            showAlert = true;
+            insuranceType = "Quaternary";
+            insuranceTypeRepeatedErrorMessage = String.format(insuranceTypeRepeatedErrorMessage,
+                    insurancesTypeMap.get(insuranceType), insuranceType, insuranceType);
+        } else {
+            insuranceTypeRepeated = false;
+        }
+        return insuranceTypeRepeated;
+    }
+
     private void showAlert() {
         String alertMessage = Label.getLabel("demographics_insurance_no_photo_alert");
+        int notificationType = CustomMessageToast.NOTIFICATION_TYPE_WARNING;
         if (noPrimaryInsuranceFound) {
             alertMessage = Label.getLabel("demographics_insurance_no_primary_alert");
+        } else if (insuranceTypeRepeated) {
+            alertMessage = insuranceTypeRepeatedErrorMessage;
+            notificationType = CustomMessageToast.NOTIFICATION_TYPE_ERROR;
         }
-        new CustomMessageToast(getActivity(), alertMessage,
-                CustomMessageToast.NOTIFICATION_TYPE_WARNING).show();
+        new CustomMessageToast(getActivity(), alertMessage, notificationType).show();
 
     }
 
