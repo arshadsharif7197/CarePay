@@ -198,7 +198,7 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
 
     @Override
     public void onCreditCardSelected(PaymentCreditCardsPayloadDTO papiPaymentMethod) {
-
+        
     }
 
     @Override
