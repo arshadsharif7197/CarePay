@@ -72,7 +72,6 @@
                 android:gravity="center"
                 android:paddingEnd="@dimen/dimen_5dp"
                 android:paddingStart="@dimen/dimen_5dp"
-                android:text="Total"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_90sp"
                 app:customAssetFont="gotham_rounded_medium"
@@ -80,7 +79,7 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/paymentPlanParametersTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/headerPlanTotal"
                 android:gravity="center"
@@ -278,6 +277,7 @@
                                     style="@style/DemographicsReviewEditTextStyle"
                                     android:imeOptions="actionNext"
                                     android:inputType="number"
+                                    android:textColor="@color/primary_color_enabled_selector"
                                     app:customAssetFont="proxima_nova_regular"
                                     app:hintTextAppearance="@style/FloatingLabelStyle"
                                     breeze:hintKey="payment_number_of_months"
@@ -310,6 +310,7 @@
                                 style="@style/DemographicsReviewEditTextStyle"
                                 android:imeOptions="actionNext"
                                 android:inputType="numberDecimal"
+                                android:textColor="@color/primary_color_enabled_selector"
                                 app:customAssetFont="proxima_nova_regular"
                                 app:hintTextAppearance="@style/FloatingLabelStyle"
                                 breeze:hintKey="payment_monthly_payment"

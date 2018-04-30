@@ -224,12 +224,12 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
             leftButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    callback.onLeftActionTapped(paymentsModel, owedAmount);//todo need to handle case where must add to existing
+                    callback.onLeftActionTapped(paymentsModel, owedAmount);
                     dismiss();
                 }
             });
             if (mustAddToExisting) {
-                leftButton.setText(Label.getLabel("payment_plan_add_existing"));
+                leftButton.setText(Label.getLabel("payment_plan_add_existing_short"));
             }
         }
 
