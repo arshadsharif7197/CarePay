@@ -192,5 +192,6 @@
     <dimen name="demographics_add_padding">57dp</dimen>
     <dimen name="dimen_140dp">140dp</dimen>
     <dimen name="dimen_180dp">180dp</dimen>
+    <dimen name="patient_home_button_height">200dp</dimen>
 
 </resources>

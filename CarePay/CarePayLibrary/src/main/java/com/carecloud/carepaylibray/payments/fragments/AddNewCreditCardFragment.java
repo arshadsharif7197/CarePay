@@ -142,7 +142,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
             hideProgressDialog();
             nextButton.setEnabled(true);
             Log.d("makePaymentCallback", "=========================>\nworkflowDTO=" + workflowDTO.toString());
-            callback.showPaymentConfirmation(workflowDTO);
+
             if (getDialog() != null) {
                 dismiss();
             }
@@ -152,6 +152,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
             MixPanelUtil.logEvent(getString(R.string.event_payment_complete), params, values);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payments_completed), 1);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.total_payments_amount), amountToMakePayment);
+            callback.showPaymentConfirmation(workflowDTO);
         }
 
         @Override
@@ -159,7 +160,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
             hideProgressDialog();
             nextButton.setEnabled(true);
             SystemUtil.showErrorToast(getContext(), exceptionMessage);
-            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+            Log.e("Server Error", exceptionMessage);
 
             String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
             Object[] values = {amountToMakePayment, getString(R.string.payment_new_card)};

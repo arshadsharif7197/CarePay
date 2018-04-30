@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.retail.models;
+package com.carecloud.carepaylibray.retail;
 
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.google.gson.annotations.SerializedName;
