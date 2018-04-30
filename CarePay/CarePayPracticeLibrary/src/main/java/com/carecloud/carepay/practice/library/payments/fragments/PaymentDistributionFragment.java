@@ -32,10 +32,7 @@ import com.carecloud.carepaylibray.base.models.UserAuthPermissions;
 import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
@@ -103,8 +100,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
     private boolean hasPaymentError = false;
     private UserAuthPermissions authPermissions;
-
-    private boolean mustAddToExisting = false;
 
     @Override
     public void onAttach(Context context) {
@@ -188,12 +183,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             }
         });
 
-        paymentPlanButton.setVisibility(isPaymentPlanAvailable(paymentAmount)
-                ? View.VISIBLE : View.GONE);
-        paymentPlanButton.setEnabled(userHasPermissionsToCreatePaymentPlan());
-        if (mustAddToExisting) {
-            paymentPlanButton.setText(Label.getLabel("payment_plan_add_existing"));
-        }
+        paymentPlanButton.setEnabled(userHasPermissionsToCreatePaymentPlan() && hasBalanceForPaymentPlan());
     }
 
     private boolean userHasPermissionsToCreatePaymentPlan() {
@@ -326,9 +316,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     }
 
     private void getPaymentPlansInformation() {
-        if (paymentsModel.getPaymentPayload().getPatientBalances().size() > 0
-                && paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().size() > 0
-                && paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload().size() > 0) {
+        if (hasBalance()) {
             for (BalanceItemDTO balanceItem : paymentsModel.getPaymentPayload().getPatientBalances()
                     .get(0).getBalances().get(0).getPayload().get(0).getDetails()) {
                 String balanceItemId = String.valueOf(balanceItem.getId());
@@ -347,6 +335,21 @@ public class PaymentDistributionFragment extends BaseDialogFragment
                 }
             }
         }
+    }
+
+    private boolean hasBalanceForPaymentPlan(){
+        if(hasBalance()) {
+            double remainingUnapplied = unappliedCredit;
+            for(BalanceItemDTO balanceItem : paymentsModel.getPaymentPayload().getPatientBalances()
+                    .get(0).getBalances().get(0).getPayload().get(0).getDetails()) {
+                double amountNotInPlan = SystemUtil.safeSubtract(balanceItem.getBalance(), balanceItem.getAmountInPaymentPlan());
+                remainingUnapplied = SystemUtil.safeSubtract(remainingUnapplied, amountNotInPlan);
+                if(remainingUnapplied < 0D){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void setAdapter() {
@@ -870,28 +873,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         return (double) Math.round(amount * 100) / 100;
     }
 
-    private boolean isPaymentPlanAvailable(double balance) {
-        PaymentsPayloadSettingsDTO settingsDTO = paymentsModel.getPaymentPayload()
-                .getPaymentSettings().get(0);
-        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = settingsDTO.getPayload().getPaymentPlans();
-        if (paymentPlanSettings.isPaymentPlansEnabled()) {
-            for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
-                if (balance >= rule.getMinBalance().getValue() &&
-                        balance <= rule.getMaxBalance().getValue()) {
-                    if (paymentsModel.getPaymentPayload()
-                            .getFilteredPlans(settingsDTO.getMetadata().getPracticeId()).isEmpty()) {
-                        return true;
-                    } else if (paymentPlanSettings.isCanHaveMultiple()) {//need to check if multiple plans is enabled
-                        return true;
-                    } else if (paymentPlanSettings.isAddBalanceToExisting()) {//check if balance can be added to existing
-                        mustAddToExisting = true;
-                        return true;
-                    }
-                    return false;
-                }
-            }
-        }
-        return false;
+    private boolean hasBalance(){
+        return paymentsModel.getPaymentPayload().getPatientBalances().size() > 0
+                && paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().size() > 0
+                && paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload().size() > 0;
     }
-
 }

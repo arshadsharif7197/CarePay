@@ -29,6 +29,7 @@ import com.carecloud.carepaylibray.retail.RetailModel;
 import com.carecloud.carepaylibray.retail.RetailPracticeDTO;
 import com.carecloud.carepaylibray.retail.interfaces.RetailInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -169,12 +170,16 @@ public class RetailFragment extends BaseFragment {
         shoppingWebView.clearCache(true);
         shoppingWebView.clearHistory();
         shoppingWebView.loadUrl(storeUrl.toString());
+
+        String[] params = {getString(R.string.param_practice_id), getString(R.string.param_store_id)};
+        Object[] values = {retailPractice.getPracticeId(), retailPractice.getStore().getStoreId()};
+
+        MixPanelUtil.logEvent(getString(R.string.event_retail_started), params, values);
     }
 
     private void initToolbar(View view) {
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-//        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

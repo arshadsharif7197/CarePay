@@ -181,7 +181,7 @@
     <dimen name="list_apt_padding_right">17dp</dimen>
     <dimen name="apt_imgview_ht">24dp</dimen>
     <dimen name="apt_dl_margin_bottom">5dp</dimen>
-    <dimen name="apt_dl_header_ht">110dp</dimen>
+    <dimen name="apt_dl_header_ht">140dp</dimen>
     <dimen name="apt_dl_text_ht">37dp</dimen>
     <dimen name="apt_dl_text_big">20sp</dimen>
     <dimen name="apt_dl_text_date">26sp</dimen>
