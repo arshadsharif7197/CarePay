@@ -280,6 +280,13 @@ public class RetailFragment extends BaseFragment {
             callback.getPaymentModel().getPaymentPayload().setPaymentPostModel(postModel);
             callback.onPayButtonClicked(amount, callback.getPaymentModel());
 
+            String[] params = {getString(R.string.param_practice_id),
+                    getString(R.string.param_store_id),
+                    getString(R.string.param_order_id),
+                    getString(R.string.param_order_amount)};
+            Object[] values = {retailPractice.getPracticeId(), storeId, orderId, amount};
+
+            MixPanelUtil.logEvent(getString(R.string.event_retail_checkout), params, values);
         } catch (NumberFormatException nfe) {
             nfe.printStackTrace();
             showErrorNotification("Payment Amount Error");
