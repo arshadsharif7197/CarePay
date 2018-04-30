@@ -499,12 +499,14 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
             // 'de-format' before saving to model
             addressModel.setPhone(StringUtil.revertToRawFormat(phoneNumberString));
         }
+/*
         String phoneType = phoneNumberTypeEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(phoneType)) {
             // 'de-format' before saving to model
             addressModel.setPhoneNumberType(phoneType);
         }
 
+*/
         String addressString = addressEditText.getText().toString().trim();
         if (!StringUtil.isNullOrEmpty(addressString)) {
             addressModel.setAddress1(addressString);

@@ -3,14 +3,14 @@ package com.carecloud.carepaylibray.customcomponents;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_GOTHAM_ROUNDED_BOLD;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_GOTHAM_ROUNDED_BOOK;
-import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_GOTHAM_ROUNDED_LIGHT;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_GOTHAM_ROUNDED_MEDIUM;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_PROXIMA_NOVA_EXTRA_BOLD;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_PROXIMA_NOVA_LIGHT;
@@ -18,20 +18,17 @@ import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_PR
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_PROXIMA_NOVA_SEMI_BOLD;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.GOTHAM_ROUNDED_BOLD;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.GOTHAM_ROUNDED_BOOK;
-import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.GOTHAM_ROUNDED_LIGHT;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.GOTHAM_ROUNDED_MEDIUM;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.PROXIMA_NOVA_EXTRA_BOLD;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.PROXIMA_NOVA_LIGHT;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.PROXIMA_NOVA_REGULAR;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD;
 
-
 /**
- * Created by Jahirul Bhuiyan on 10/13/2016.
- * This is a custom textview component that allow t set custom font from assets
+ * Created by arpit_jain1 on 10/27/2016.
  */
+public class CarePayRadioButton extends AppCompatRadioButton {
 
-public class CarePayTextView extends android.support.v7.widget.AppCompatTextView {
     Context context;
     int fontAttribute;
 
@@ -40,7 +37,7 @@ public class CarePayTextView extends android.support.v7.widget.AppCompatTextView
      *
      * @param context sender context
      */
-    public CarePayTextView(Context context) {
+    public CarePayRadioButton(Context context) {
         super(context);
         this.context = context;
         init(null);
@@ -53,10 +50,11 @@ public class CarePayTextView extends android.support.v7.widget.AppCompatTextView
      * @param context sender context
      * @param attrs   styleable attributes
      */
-    public CarePayTextView(Context context, AttributeSet attrs) {
+    public CarePayRadioButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
         init(attrs);
+
 
     }
 
@@ -70,17 +68,18 @@ public class CarePayTextView extends android.support.v7.widget.AppCompatTextView
      * @param defStyleAttr styleable default attributes
      */
 
-    public CarePayTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CarePayRadioButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
         init(attrs);
+
 
     }
 
     /**
      * get applied font
      *
-     * @return
+     * @return font attribute
      */
     public int getFontAttribute() {
         return fontAttribute;
@@ -114,7 +113,6 @@ public class CarePayTextView extends android.support.v7.widget.AppCompatTextView
         } catch (Exception exception) {
             fontAttribute = PROXIMA_NOVA_REGULAR;
         }
-
         setFont();
     }
 
@@ -131,10 +129,6 @@ public class CarePayTextView extends android.support.v7.widget.AppCompatTextView
             }
             case GOTHAM_ROUNDED_MEDIUM: {
                 assetFontName = FONT_GOTHAM_ROUNDED_MEDIUM;
-                break;
-            }
-            case GOTHAM_ROUNDED_LIGHT: {
-                assetFontName = FONT_GOTHAM_ROUNDED_LIGHT;
                 break;
             }
             case PROXIMA_NOVA_EXTRA_BOLD: {
@@ -156,5 +150,4 @@ public class CarePayTextView extends android.support.v7.widget.AppCompatTextView
         Typeface tf = Typeface.createFromAsset(getContext().getAssets(), assetFontName);
         this.setTypeface(tf);
     }
-
 }

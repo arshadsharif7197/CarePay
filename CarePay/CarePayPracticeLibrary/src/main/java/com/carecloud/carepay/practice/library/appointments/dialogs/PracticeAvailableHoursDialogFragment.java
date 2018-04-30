@@ -27,12 +27,13 @@ public class PracticeAvailableHoursDialogFragment extends BaseAvailableHoursFrag
 
     /**
      * Create Instance with Data
+     *
      * @param appointmentsResultModel appointment Model
-     * @param appointmentDTO Appointment DTO
+     * @param appointmentDTO          Appointment DTO
      * @return new PracticeAvailableHoursDialogFragment
      */
     public static PracticeAvailableHoursDialogFragment newInstance(AppointmentsResultModel appointmentsResultModel,
-                                                     AppointmentDTO appointmentDTO) {
+                                                                   AppointmentDTO appointmentDTO) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, appointmentsResultModel);
         DtoHelper.bundleDto(args, appointmentDTO);
@@ -43,16 +44,17 @@ public class PracticeAvailableHoursDialogFragment extends BaseAvailableHoursFrag
 
     /**
      * Create Instance with Data
+     *
      * @param appointmentsResultModel appointmenr Model
-     * @param appointmentResource appointment resource
-     * @param startDate appt start date
-     * @param endDate appt end date
-     * @param visitTypeDTO visit type
+     * @param appointmentResource     appointment resource
+     * @param startDate               appt start date
+     * @param endDate                 appt end date
+     * @param visitTypeDTO            visit type
      * @return new PracticeAvailableHoursDialogFragment
      */
     public static PracticeAvailableHoursDialogFragment newInstance(AppointmentsResultModel appointmentsResultModel,
-                                                     AppointmentResourcesItemDTO appointmentResource, Date startDate, Date endDate,
-                                                     VisitTypeDTO visitTypeDTO) {
+                                                                   AppointmentResourcesItemDTO appointmentResource, Date startDate, Date endDate,
+                                                                   VisitTypeDTO visitTypeDTO) {
         Bundle args = new Bundle();
         args.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
         args.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
@@ -65,7 +67,7 @@ public class PracticeAvailableHoursDialogFragment extends BaseAvailableHoursFrag
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
 
         //setup close button
@@ -95,16 +97,16 @@ public class PracticeAvailableHoursDialogFragment extends BaseAvailableHoursFrag
     }
 
     @Override
-    protected void onAdapterRefresh(int count){
-        if(count < 1){
+    protected void onAdapterRefresh(int count) {
+        if (count < 1) {
             editRangeButton.setText(Label.getLabel("change_date_range_label"));
-        }else{
+        } else {
             editRangeButton.setText(Label.getLabel("appoitment_edit_date_range_button"));
         }
     }
 
     @Override
-    protected void selectDateRange(){
+    protected void selectDateRange() {
         super.selectDateRange();
         dismiss();
     }
@@ -113,6 +115,11 @@ public class PracticeAvailableHoursDialogFragment extends BaseAvailableHoursFrag
     public void onSelectAppointmentTimeSlot(AppointmentsSlotsDTO appointmentsSlotsDTO) {
         super.onSelectAppointmentTimeSlot(appointmentsSlotsDTO);
         dismiss();
+    }
+
+    @Override
+    protected void updateDateRange() {
+        updateDateRange(true);
     }
 
 }

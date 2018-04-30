@@ -22,7 +22,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -587,7 +586,7 @@ public class SigninFragment extends BaseFragment {
                             .build());
             mKeyPairGenerator.generateKeyPair();
         } catch (InvalidAlgorithmParameterException e) {
-            Log.e("Breeze",e.getLocalizedMessage());
+            Log.e("Breeze", e.getLocalizedMessage());
         }
     }
 

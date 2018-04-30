@@ -10,6 +10,8 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.myhealth.dtos.LabDto;
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthMainFragment;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthDataInterface;
+import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.utils.DateUtil;
 
 import java.util.List;
 
@@ -47,7 +49,9 @@ public class LabsRecyclerViewAdapter extends RecyclerView.Adapter<LabsRecyclerVi
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final LabDto lab = labs.get(position);
         holder.labNameTextView.setText(lab.getName());
-        holder.dateTextView.setText(String.format("Performed on %s", lab.getCreatedAt()));
+        holder.dateTextView
+                .setText(String.format(Label.getLabel("myHealth.labs.label.itemDate.performedPlaceHolder"),
+                        DateUtil.getInstance().setDateRaw(lab.getCreatedAt()).getDateAsDayMonthDayOrdinal()));
         holder.row.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

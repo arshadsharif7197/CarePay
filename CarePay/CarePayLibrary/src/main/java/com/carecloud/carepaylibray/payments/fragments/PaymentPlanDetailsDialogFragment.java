@@ -16,7 +16,9 @@ import com.carecloud.carepaylibray.customdialogs.BasePaymentDetailsFragmentDialo
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanPayloadDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
@@ -107,8 +109,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         balance.setText(currencyFormatter.format(totalAmount - amountPaid));
 
         ProgressBar planProgress = (ProgressBar) view.findViewById(R.id.paymentPlanProgress);
-        planProgress.setMax(installmentTotal);
-        planProgress.setProgress(paymentCount);
+        planProgress.setProgress(planPayload.getPaymentPlanProgress());
 
         ImageView dialogCloseHeader = (ImageView) view.findViewById(R.id.dialog_close_header);
         if (dialogCloseHeader != null) {
@@ -129,14 +130,29 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
             }
         });
 
-        View editButton = view.findViewById(R.id.editPlanButton);
-        editButton.setOnClickListener(new View.OnClickListener() {
+        View editPlanButton = view.findViewById(R.id.editPlanButton);
+        editPlanButton.setVisibility(getEditPlanButtonVisibility(paymentPlanDTO.getMetadata().getPracticeId()));
+        editPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callback.onEditPaymentPlan(paymentsModel, paymentPlanDTO);
                 dismiss();
             }
         });
+    }
+
+    private int getEditPlanButtonVisibility(String practiceId) {
+        for (PaymentsPayloadSettingsDTO settings : paymentsModel.getPaymentPayload().getPaymentSettings()) {
+            if (settings.getMetadata().getPracticeId().equals(practiceId)) {
+                for (PaymentSettingsBalanceRangeRule rules : settings.getPayload().getPaymentPlans().getBalanceRangeRules()) {
+                    if (rules.getMaxBalance().getValue() >= paymentPlanDTO.getPayload().getAmount()
+                            && rules.getMinBalance().getValue() <= paymentPlanDTO.getPayload().getAmount()) {
+                        return View.VISIBLE;
+                    }
+                }
+            }
+        }
+        return View.GONE;
     }
 
     @Override

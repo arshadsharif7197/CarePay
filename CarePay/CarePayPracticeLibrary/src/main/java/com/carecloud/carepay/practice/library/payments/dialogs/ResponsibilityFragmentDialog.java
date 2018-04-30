@@ -112,7 +112,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
         super.onViewCreated(view, savedInstanceState);
         onInitialization(view);
         View closeView = view.findViewById(R.id.closeViewLayout);
-        if(closeView != null) {
+        if (closeView != null) {
             closeView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -218,7 +218,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
 
     private void initializeFooter(View view) {
         TextView leftButton = (TextView) view.findViewById(R.id.payment_plan_button);
-        if(leftButton != null){
+        if (leftButton != null) {
             leftButton.setVisibility(isPaymentPlanAvailable(owedAmount)
                     ? View.VISIBLE : View.GONE);
             leftButton.setOnClickListener(new View.OnClickListener() {
@@ -228,13 +228,13 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
                     dismiss();
                 }
             });
-            if(mustAddToExisting){
+            if (mustAddToExisting) {
                 leftButton.setText(Label.getLabel("payment_plan_add_existing"));
             }
         }
 
         View middleButton = view.findViewById(R.id.partial_pay_button);
-        if(middleButton != null) {
+        if (middleButton != null) {
             middleButton.setVisibility(isPartialPayAvailable(owedAmount)
                     ? View.VISIBLE : View.GONE);
             middleButton.setOnClickListener(new View.OnClickListener() {
@@ -247,7 +247,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
         }
 
         View rightButton = view.findViewById(R.id.payment_pay_button);
-        if(rightButton != null) {
+        if (rightButton != null) {
             rightButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -364,19 +364,19 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
         return false;
     }
 
-    protected boolean isPaymentPlanAvailable(double balance){
+    protected boolean isPaymentPlanAvailable(double balance) {
         PaymentsPayloadSettingsDTO settingsDTO = paymentsModel.getPaymentPayload()
                 .getPaymentSettings().get(0);
         PaymentsSettingsPaymentPlansDTO paymentPlanSettings = settingsDTO.getPayload().getPaymentPlans();
-        if(paymentPlanSettings.isPaymentPlansEnabled()){
-            for(PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()){
+        if (paymentPlanSettings.isPaymentPlansEnabled()) {
+            for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
                 if (balance >= rule.getMinBalance().getValue() &&
                         balance <= rule.getMaxBalance().getValue()) {
-                    if(paymentsModel.getPaymentPayload().getActivePlans(settingsDTO.getMetadata().getPracticeId()).isEmpty()){
+                    if (paymentsModel.getPaymentPayload().getActivePlans(settingsDTO.getMetadata().getPracticeId()).isEmpty()) {
                         return true;
-                    }else if(paymentPlanSettings.isCanHaveMultiple()){//need to check if multiple plans is enabled
+                    } else if (paymentPlanSettings.isCanHaveMultiple()) {//need to check if multiple plans is enabled
                         return true;
-                    }else if(paymentPlanSettings.isAddBalanceToExisting()){//check if balance can be added to existing
+                    } else if (paymentPlanSettings.isAddBalanceToExisting()) {//check if balance can be added to existing
                         mustAddToExisting = true;
                         return true;
                     }

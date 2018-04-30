@@ -51,7 +51,9 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
     public static ChoosePracticeLocationFragment newInstance(PracticeSelectionUserPractice selectedPractice, WorkflowDTO workflowDTO) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, selectedPractice);
-        DtoHelper.bundleDto(args, workflowDTO);
+        if (workflowDTO != null) {
+            DtoHelper.bundleDto(args, workflowDTO);
+        }
 
         ChoosePracticeLocationFragment fragment = new ChoosePracticeLocationFragment();
         fragment.setArguments(args);
@@ -73,7 +75,7 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
         super.onCreate(icicle);
         workflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class, getArguments());
         selectedPractice = DtoHelper.getConvertedDTO(PracticeSelectionUserPractice.class, getArguments());
-        if(selectedPractice == null && workflowDTO != null){
+        if (selectedPractice == null && workflowDTO != null) {
             PracticeSelectionDTO practiceSelectionDTO = DtoHelper.getConvertedDTO(PracticeSelectionDTO.class, workflowDTO);
             selectedPractice = practiceSelectionDTO.getPayload().getUserPracticesList().get(0);
         }
@@ -183,9 +185,9 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
         public void onClick(View view) {
             if (selectedLocation != null) {
                 dismiss();
-                if(workflowDTO != null){
+                if (workflowDTO != null) {
                     callback.onSelectPracticeLocation(workflowDTO, selectedPractice, selectedLocation);
-                }else {
+                } else {
                     callback.onSelectPracticeLocation(selectedPractice, selectedLocation);
                 }
             }
