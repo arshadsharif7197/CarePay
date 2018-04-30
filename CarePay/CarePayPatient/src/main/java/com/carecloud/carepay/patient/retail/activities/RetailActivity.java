@@ -23,6 +23,7 @@ import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
+import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.retail.RetailModel;
@@ -30,7 +31,6 @@ import com.carecloud.carepaylibray.retail.RetailPracticeDTO;
 import com.carecloud.carepaylibray.retail.fragments.RetailFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.android.gms.wallet.MaskedWallet;
-import com.google.gson.Gson;
 
 /**
  * Created by lmenendez on 2/8/17
@@ -160,7 +160,7 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
-        replaceFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount), true);
+        replaceFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount, false), true);
         displayToolbar(false);
     }
 
@@ -251,14 +251,13 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
 
     @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
-        Gson gson = new Gson();
-        Bundle args = new Bundle();
-        String paymentsDTOString = gson.toJson(paymentsModel);
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
-        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-        Fragment fragment = new AddNewCreditCardFragment();
-        fragment.setArguments(args);
+        Fragment fragment = AddNewCreditCardFragment.newInstance(paymentsModel, amount);
         replaceFragment(fragment, true);
+    }
+
+    @Override
+    public void onCreditCardSelected(PaymentCreditCardsPayloadDTO papiPaymentMethod) {
+        //Works only when chooseCreditCardFragment is used in selectMode
     }
 
     @Override

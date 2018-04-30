@@ -132,7 +132,7 @@ public class MyHealthListFragment extends BaseFragment {
                         allergies, allergies.size());
                 allergiesAdapter.setCallback(callback);
                 recyclerView.setAdapter(allergiesAdapter);
-                fab.setVisibility(View.VISIBLE);
+                fab.setVisibility(View.GONE);
                 fab.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -148,7 +148,7 @@ public class MyHealthListFragment extends BaseFragment {
                         medications, medications.size());
                 medicationsAdapter.setCallback(callback);
                 recyclerView.setAdapter(medicationsAdapter);
-                fab.setVisibility(View.VISIBLE);
+                fab.setVisibility(View.GONE);
                 fab.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

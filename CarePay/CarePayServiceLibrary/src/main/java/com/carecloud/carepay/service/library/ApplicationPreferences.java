@@ -5,10 +5,14 @@ import android.content.SharedPreferences;
 import com.carecloud.carepay.service.library.base.IApplicationSession;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.Defs;
+import com.carecloud.carepay.service.library.dtos.AvailableLocationDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
 import com.google.gson.Gson;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -23,6 +27,8 @@ public class ApplicationPreferences {
     private static final String PREFERENCE_PRACTICE_ID = "practice_id";
     private static final String PREFERENCE_PREFIX = "prefix";
     private static final String PREFERENCE_USER_ID = "user_id";
+    private static final String PREFERENCE_USERNAME = "username";
+    private static final String PREFERENCE_PASSWORD = "password";
     private static final String PREFERENCE_PATIENT_PHOTO_URL = "patient_photo_url";
     private static final String PREFERENCE_IS_TUTORIAL_SHOWN = "is_tutorial_shown";
     private static final String PREFERENCE_APPOINTMENT_NAVIGATION_OPTION = "appointment_navigation_option";
@@ -30,9 +36,12 @@ public class ApplicationPreferences {
     public static final String PREFERENCE_FILTERED_LOCATIONS = "filteredLocations";
     public static final String PATIENT_USER_LANGUAGE = "practiceUserLanguage";
     public static final String PRACTICE_USER_LANGUAGE = "user_selected_language";
+    private static final String PREFERENCE_LOCATION_ID = "locationId";
+    private static final String PREFERENCE_LOCATION = "locations";
 
     private String patientId;
     private String practiceId;
+    private Integer practiceLocationId;
     private String prefix;
     private String userId;
     private String userLanguage;
@@ -45,6 +54,7 @@ public class ApplicationPreferences {
     private String userName;
 
     private static ApplicationPreferences instance;
+    private String userPassword;
 
 
     public static ApplicationPreferences getInstance() {
@@ -148,6 +158,22 @@ public class ApplicationPreferences {
         }
 
         return readStringFromSharedPref(PREFERENCE_PRACTICE_ID);
+    }
+
+    /**
+     * @return practiceId
+     */
+    public Integer getPracticeLocationId() {
+        if (practiceLocationId != null) {
+            return practiceLocationId;
+        }
+
+        return readIntFromSharedPref(PREFERENCE_LOCATION_ID);
+    }
+
+    public void setPracticeLocationId(Integer practiceLocationId) {
+        this.practiceLocationId = practiceLocationId;
+        writeIntegerToSharedPref(PREFERENCE_LOCATION_ID, practiceLocationId);
     }
 
     /**
@@ -307,15 +333,62 @@ public class ApplicationPreferences {
         return readStringSetFromSharedPref(practiceId + userId + PREFERENCE_FILTERED_PROVIDERS);
     }
 
+    public void setSelectedProvidersId(String practiceId, String userId, Set<String> filteredDoctorsIds) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putStringSet(practiceId + userId + ApplicationPreferences.PREFERENCE_FILTERED_PROVIDERS,
+                filteredDoctorsIds).apply();
+    }
+
     public Set<String> getSelectedLocationsIds(String practiceId, String userId) {
         return readStringSetFromSharedPref(practiceId + userId + PREFERENCE_FILTERED_LOCATIONS);
     }
 
+    public void setSelectedLocationsId(String practiceId, String userId, Set<String> filteredLocationsIds) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putStringSet(practiceId + userId + ApplicationPreferences.PREFERENCE_FILTERED_LOCATIONS,
+                filteredLocationsIds).apply();
+    }
+
     public String getUserName() {
+        if (userName == null) {
+            userName = readStringFromSharedPref(PREFERENCE_USERNAME);
+        }
         return userName;
     }
 
     public void setUserName(String userName) {
+        writeStringToSharedPref(PREFERENCE_USERNAME, userName);
         this.userName = userName;
+    }
+
+    public Set<String> getPracticesWithBreezeEnabled(String practiceId) {
+        return getSharedPreferences().getStringSet(PREFERENCE_LOCATION + practiceId, null);
+    }
+
+    public void setPracticesWithBreezeEnabled(List<UserPracticeDTO> practiceInformation) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        for (UserPracticeDTO practice : practiceInformation) {
+            List<AvailableLocationDTO> locations = practice.getLocations();
+            if (locations != null) {
+                Set<String> locationsSet = new HashSet<>();
+                for (AvailableLocationDTO location : locations) {
+                    locationsSet.add(location.getGuid());
+                }
+                editor.putStringSet(PREFERENCE_LOCATION + practice.getPracticeId(), locationsSet);
+            }
+        }
+        editor.apply();
+    }
+
+    public String getUserPassword() {
+        if (userPassword == null) {
+            userPassword = readStringFromSharedPref(PREFERENCE_PASSWORD);
+        }
+        return userPassword;
+    }
+
+    public void setUserPassword(String userPassword) {
+        writeStringToSharedPref(PREFERENCE_PASSWORD, userPassword);
+        this.userPassword = userPassword;
     }
 }

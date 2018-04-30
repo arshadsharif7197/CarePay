@@ -32,9 +32,11 @@ import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.PROXIMA
 public class CarePayTextInputLayout extends TextInputLayout {
     private Context context;
     private int fontAttribute;
+    private boolean requestFocusWhenError = true;
 
     /**
      * Constructor
+     *
      * @param context context
      */
     public CarePayTextInputLayout(Context context) {
@@ -46,8 +48,9 @@ public class CarePayTextInputLayout extends TextInputLayout {
 
     /**
      * Constructor
+     *
      * @param context context
-     * @param attrs attributes
+     * @param attrs   attributes
      */
     public CarePayTextInputLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -58,8 +61,9 @@ public class CarePayTextInputLayout extends TextInputLayout {
 
     /**
      * Constructor
-     * @param context context
-     * @param attrs attibutes
+     *
+     * @param context      context
+     * @param attrs        attibutes
      * @param defStyleAttr style
      */
     public CarePayTextInputLayout(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -105,7 +109,7 @@ public class CarePayTextInputLayout extends TextInputLayout {
         setFont();
     }
 
-    private void setFont(){
+    private void setFont() {
         String assetFontName = "";
         switch (fontAttribute) {
             case GOTHAM_ROUNDED_BOLD: {
@@ -145,11 +149,14 @@ public class CarePayTextInputLayout extends TextInputLayout {
     }
 
     @Override
-    public void setError(CharSequence errorMessage){
+    public void setError(CharSequence errorMessage) {
         super.setError(errorMessage);
-        if(errorMessage != null) {
+        if (errorMessage != null && requestFocusWhenError) {
             requestFocus();
         }
     }
 
+    public void setRequestFocusWhenError(boolean requestFocusWhenError) {
+        this.requestFocusWhenError = requestFocusWhenError;
+    }
 }

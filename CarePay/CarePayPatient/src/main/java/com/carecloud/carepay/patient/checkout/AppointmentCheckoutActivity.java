@@ -52,6 +52,7 @@ import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
+import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -241,7 +242,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
-        replaceFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount), true);
+        replaceFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount, false), true);
 
         MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment));
     }
@@ -278,16 +279,13 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
-        Gson gson = new Gson();
-        Bundle args = new Bundle();
-        String paymentsDTOString = gson.toJson(paymentsModel);
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
-        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-        AddNewCreditCardFragment fragment = new AddNewCreditCardFragment();
-
-
-        fragment.setArguments(args);
+        Fragment fragment = AddNewCreditCardFragment.newInstance(paymentsModel, amount);
         replaceFragment(fragment, true);
+    }
+
+    @Override
+    public void onCreditCardSelected(PaymentCreditCardsPayloadDTO papiPaymentMethod) {
+        //Works only when chooseCreditCardFragment is used in selectMode
     }
 
     @Override
@@ -312,11 +310,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
                 showErrorNotification(builder.toString());
             } else {
                 getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                Bundle args = new Bundle();
-                args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
-
-                PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
-                confirmationFragment.setArguments(args);
+                PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment.newInstance(workflowDTO);
                 displayDialogFragment(confirmationFragment, false);
             }
         }

@@ -37,6 +37,8 @@ public class DateUtil {
     private static final String FORMAT_MM_DASH_DD_DASH_YYYY_ES = "dd-MM-yyyy";
     private static final String FORMAT_MM_SLASH_DD_SLASH_YYYY_EN = "MM/dd/yyyy";
     private static final String FORMAT_MM_SLASH_DD_SLASH_YYYY_ES = "dd/MM/yyyy";
+    private static final String FORMAT_MM_SLASH_DD_EN = "MM/dd";
+    private static final String FORMAT_MM_SLASH_DD_ES = "dd/MM";
 
     private static final String FORMAT_HOURS_AM_PM = "h:mm a";
     private static final String FORMAT_MONTH_DAY_TIME12_EN = "MMM dd, h:mm a";
@@ -1004,16 +1006,18 @@ public class DateUtil {
     /**
      * Convinience method for formatting a date range using contextual output
      *
-     * @param startDate start of date range
-     * @param endDate   end of date range
-     * @param today     String to represent today output
-     * @param tomorrow  String to represent tomorrow output
-     * @param thisMonth String to represent this month as output
-     * @param nextDays  Formatted String to represent upcoming day count
+     * @param startDate    start of date range
+     * @param endDate      end of date range
+     * @param today        String to represent today output
+     * @param tomorrow     String to represent tomorrow output
+     * @param thisMonth    String to represent this month as output
+     * @param nextDays     Formatted String to represent upcoming day count
+     * @param includeYears
      * @return Contextually formatted Date range
      */
     public static String getFormattedDate(Date startDate, Date endDate, String today,
-                                          String tomorrow, String thisMonth, String nextDays) {
+                                          String tomorrow, String thisMonth, String nextDays,
+                                          boolean includeYears) {
         Calendar startCal = Calendar.getInstance();
         Calendar endCal = Calendar.getInstance();
 
@@ -1039,8 +1043,8 @@ public class DateUtil {
             return String.format(nextDays, elapsedDays);
         }
 
-        String toText = getFormattedShortDate(endDate, today, tomorrow);
-        fromText = getFormattedShortDate(startDate, today, tomorrow);
+        String toText = getFormattedShortDate(endDate, today, tomorrow, includeYears);
+        fromText = getFormattedShortDate(startDate, today, tomorrow, includeYears);
 
         //return from - to format
         return String.format("%s - %s", fromText, toText);
@@ -1074,12 +1078,13 @@ public class DateUtil {
     /**
      * Convinience method for formatting a date range using contextual output that returns a short date
      *
-     * @param date     date to format
-     * @param today    String to represent today output
-     * @param tomorrow String to represent tomorrow output
+     * @param date         date to format
+     * @param today        String to represent today output
+     * @param tomorrow     String to represent tomorrow output
+     * @param includeYears
      * @return Contextually formatted Date range in short format mm/dd/yyyy
      */
-    public static String getFormattedShortDate(Date date, String today, String tomorrow) {
+    public static String getFormattedShortDate(Date date, String today, String tomorrow, boolean includeYears) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
 
@@ -1094,7 +1099,11 @@ public class DateUtil {
         }
 
         //Just return this date in readable format
-        return getInstance().setDate(date).toStringWithFormatMmSlashDdSlashYyyy();
+        if (includeYears) {
+            return getInstance().setDate(date).toStringWithFormatMmSlashDdSlashYyyy();
+        } else {
+            return getInstance().setDate(date).toStringWithFormatMmSlashDd();
+        }
     }
 
     /**
@@ -1276,6 +1285,14 @@ public class DateUtil {
             return toStringWithFormatMmSlashDdSlashYyyy();
         } else {
             return toStringWithFormatDdSlashMmSlashYyyy();
+        }
+    }
+
+    public String toStringWithFormatMmSlashDd() {
+        if (getUserLanguage().equals("en")) {
+            return toStringWithFormat(FORMAT_MM_SLASH_DD_EN);
+        } else {
+            return toStringWithFormat(FORMAT_MM_SLASH_DD_ES);
         }
     }
 }

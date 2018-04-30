@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.checkin.dtos;
 
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -7,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by Jahirul Bhuiyan on 10/27/2016.
  */
 
-public class CheckInDTO {
+public class CheckInDTO  implements DTO{
     @SerializedName("metadata")
     @Expose
     private CheckInMetadataDTO metadata = new CheckInMetadataDTO();

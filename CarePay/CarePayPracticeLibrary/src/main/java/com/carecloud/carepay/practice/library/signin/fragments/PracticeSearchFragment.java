@@ -20,6 +20,7 @@ import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionUserP
 import com.carecloud.carepay.practice.library.signin.interfaces.SelectPracticeCallback;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ViewUtils;
 
@@ -43,13 +44,23 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
 
     private SelectPracticeCallback callback;
 
+    public static PracticeSearchFragment newInstance(PracticeSelectionUserPractice selectedPractice) {
+        Bundle args = new Bundle();
+        if (selectedPractice != null) {
+            DtoHelper.bundleDto(args, selectedPractice);
+        }
+        PracticeSearchFragment fragment = new PracticeSearchFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
             callback = (SelectPracticeCallback) context;
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached Context must implement SelectPracticeAdapterCallback");
+            throw new ClassCastException("Attached Context must implement SelectPracticeLocationAdapterCallback");
         }
     }
 
@@ -57,7 +68,7 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         practiceSelectionModel = (PracticeSelectionDTO) callback.getDto();
-        if(practiceSelectionModel != null) {
+        if (practiceSelectionModel != null) {
             practiceList = practiceSelectionModel.getPayload().getUserPracticesList();
         }
     }
@@ -115,6 +126,11 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
         PracticeSearchAdapter practiceSearchAdapter;
         if (searchRecycler.getAdapter() == null) {
             practiceSearchAdapter = new PracticeSearchAdapter(getContext(), practiceList, this);
+            selectedPractice = DtoHelper.getConvertedDTO(PracticeSelectionUserPractice.class, getArguments());
+            if (selectedPractice != null) {
+                practiceSearchAdapter.setSelectedPractice(selectedPractice);
+                continueButton.setEnabled(true);
+            }
             searchRecycler.setAdapter(practiceSearchAdapter);
         } else {
             practiceSearchAdapter = (PracticeSearchAdapter) searchRecycler.getAdapter();
@@ -145,7 +161,7 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
         @Override
         public void onClick(View view) {
             if (selectedPractice != null) {
-                callback.onSelectPractice(practiceSelectionModel, selectedPractice);
+                callback.onSelectPractice(selectedPractice);
                 dismiss();
             }
         }

@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.adapters.AppointmentListAdapter;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -30,7 +31,10 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.google.gson.Gson;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class AppointmentsListFragment extends BaseAppointmentFragment implements AppointmentListAdapter.SelectAppointmentCallback {
 
@@ -156,7 +160,17 @@ public class AppointmentsListFragment extends BaseAppointmentFragment implements
 
     private void setAdapter() {
         if (appointmentRecyclerView.getAdapter() == null) {
-            AppointmentListAdapter adapter = new AppointmentListAdapter(getContext(), appointmentsItems, this, appointmentsResultModel.getPayload().getUserPractices());
+            Map<String, Set<String>> enabledPracticeLocations = new HashMap<>();
+            for (AppointmentDTO appointmentDTO : appointmentsItems) {
+                String practiceId = appointmentDTO.getMetadata().getPracticeId();
+                if (!enabledPracticeLocations.containsKey(practiceId)) {
+                    enabledPracticeLocations.put(practiceId,
+                            ApplicationPreferences.getInstance().getPracticesWithBreezeEnabled(practiceId));
+                }
+            }
+
+            AppointmentListAdapter adapter = new AppointmentListAdapter(getContext(), appointmentsItems,
+                    this, appointmentsResultModel.getPayload().getUserPractices(), enabledPracticeLocations);
             appointmentRecyclerView.setAdapter(adapter);
         } else {
             AppointmentListAdapter adapter = (AppointmentListAdapter) appointmentRecyclerView.getAdapter();
@@ -236,8 +250,8 @@ public class AppointmentsListFragment extends BaseAppointmentFragment implements
 
     @Override
     public String getPracticeId(String appointmentId) {
-        for(AppointmentDTO appointmentDTO : appointmentsItems){
-            if(appointmentDTO.getPayload().getId().equals(appointmentId)){
+        for (AppointmentDTO appointmentDTO : appointmentsItems) {
+            if (appointmentDTO.getPayload().getId().equals(appointmentId)) {
                 return appointmentDTO.getMetadata().getPracticeId();
             }
         }
