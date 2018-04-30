@@ -23,6 +23,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
+import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.retail.RetailModel;
@@ -193,6 +194,11 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
         PracticeAddNewCreditCardFragment fragment = new PracticeAddNewCreditCardFragment();
         fragment.setArguments(args);
         displayDialogFragment(fragment, true);
+    }
+
+    @Override
+    public void onCreditCardSelected(PaymentCreditCardsPayloadDTO papiPaymentMethod) {
+
     }
 
     @Override
