@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -37,12 +39,10 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:layout_marginEnd="@dimen/dimen_26dp"
         android:layout_marginStart="@dimen/dimen_26dp"
         android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/apt_dl_margin">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -70,7 +70,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="@dimen/dimen_15dp"
+                android:layout_marginStart="@dimen/dimen_15dp"
+                android:layout_marginEnd="@dimen/dimen_15dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -347,26 +348,29 @@
             </LinearLayout>
         </LinearLayout>
 
-        <FrameLayout
+        <LinearLayout
             android:id="@+id/bottom_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/patient_mode_dialog_body_bg"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/enter_amount_button"
-                style="@style/BreezeButtonStyleDark"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_margin="@dimen/dimen_20dp"
-                android:background="@drawable/bg_yellow_overlay"
+                android:layout_height="@dimen/dimen_48dp"
+                android:layout_marginStart="@dimen/dimen_20dp"
+                android:layout_marginEnd="@dimen/dimen_20dp"
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:background="@drawable/button_sign_in_selector"
+                android:textAllCaps="false"
                 android:textColor="@color/white"
+                android:textSize="@dimen/text_size_22sp"
                 app:customAssetFont="gotham_rounded_medium"
+                tools:text="Pay"
                 breeze:textKey="payment_partial_label" />
 
-        </FrameLayout>
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout

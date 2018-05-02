@@ -22,6 +22,7 @@ import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
+import java.text.NumberFormat;
 import java.util.List;
 
 /**
@@ -80,6 +81,10 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
     public void onViewCreated(View view, Bundle icicle) {
         setupToolBar(view);
         setAdapter(view);
+        TextView amount = (TextView) view.findViewById(R.id.payment_plan_amount);
+        if(amount != null) {
+            amount.setText(NumberFormat.getCurrencyInstance().format(paymentPlanAmount));
+        }
     }
 
     protected void setupToolBar(View view) {

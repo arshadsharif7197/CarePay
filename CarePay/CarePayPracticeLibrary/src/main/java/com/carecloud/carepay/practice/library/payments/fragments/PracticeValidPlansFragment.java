@@ -1,12 +1,9 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.payments.fragments.ValidPlansFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -32,11 +29,6 @@ public class PracticeValidPlansFragment extends ValidPlansFragment {
 
     @Override
     protected void setupToolBar(View view){
-        Toolbar toolbar = (Toolbar) view.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
-        toolbar.setTitle("");
-        TextView title = (TextView) toolbar.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_title);
-        title.setText(Label.getLabel("payment_plan_active_plan"));
-
         View closeButton = view.findViewById(R.id.closeViewLayout);
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
