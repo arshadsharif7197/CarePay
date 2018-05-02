@@ -3,16 +3,20 @@ package com.carecloud.carepay.patient.consentforms.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.consentforms.adapters.ProviderConsentFormsAdapter;
 import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormsFormsInterface;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.adhoc.SelectedAdHocForms;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
@@ -63,7 +67,9 @@ public class ConsentFormProviderFormsFragment extends BaseFragment implements Co
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_consent_forms_provider, container, false);
     }
 
@@ -75,11 +81,26 @@ public class ConsentFormProviderFormsFragment extends BaseFragment implements Co
         FormDTO providerForms = consentFormDto.getPayload().getForms()
                 .get(getArguments().getInt("selectedProviderIndex"));
         setModifiedDates(providerForms.getPracticeForms(), providerForms.getPatientFormsFilled());
-        RecyclerView providerConsentFormsRecyclerView = (RecyclerView) view.findViewById(R.id.providerConsentFormsRecyclerView);
+        RecyclerView providerConsentFormsRecyclerView = (RecyclerView) view
+                .findViewById(R.id.providerConsentFormsRecyclerView);
         providerConsentFormsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         ProviderConsentFormsAdapter adapter = new ProviderConsentFormsAdapter(providerForms.getPracticeForms());
         adapter.setCallback(this);
         providerConsentFormsRecyclerView.setAdapter(adapter);
+        setUpToolbar(view, providerForms);
+    }
+
+    protected void setUpToolbar(View view, FormDTO providerForms) {
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        String practiceName = "";
+        for (UserPracticeDTO practiceInformation : consentFormDto.getPayload().getPracticesInformation()) {
+            if (providerForms.getMetadata().getPracticeId().equals(practiceInformation.getPracticeId())) {
+                practiceName = practiceInformation.getPracticeName();
+            }
+        }
+        ((TextView) toolbar.findViewById(R.id.toolbar_title)).setText(practiceName);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+        callback.setToolbar(toolbar);
     }
 
 
@@ -91,6 +112,7 @@ public class ConsentFormProviderFormsFragment extends BaseFragment implements Co
                         .get("uuid").toString().replace("\"", ""))) {
                     practiceForm.setLastModifiedDate(consentFormUserResponseDTO.getMetadata()
                             .get("updated_dt").toString());
+                    practiceForm.getPayload().getAsJsonObject("fields").addProperty("readonly", true);
                 }
             }
         }
@@ -106,6 +128,12 @@ public class ConsentFormProviderFormsFragment extends BaseFragment implements Co
                     .remove(form.getPayload().get("uuid").getAsString());
         }
         signSelectedFormsButton.setEnabled(!selectedForms.getForms().isEmpty());
+    }
+
+    @Override
+    public void onFilledFormSelected(PracticeForm form) {
+        callback.addFragment(FilledFormFragment
+                .newInstance(form, getArguments().getInt("selectedProviderIndex")), true);
     }
 
 

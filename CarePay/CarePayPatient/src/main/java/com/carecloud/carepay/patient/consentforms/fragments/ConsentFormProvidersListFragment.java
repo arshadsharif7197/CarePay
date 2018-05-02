@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.consentforms.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -74,6 +75,8 @@ public class ConsentFormProvidersListFragment extends BaseFragment implements Co
         adapter.setCallback(this);
         recyclerView.setAdapter(adapter);
     }
+
+
 
     private Map<String, UserPracticeDTO> getPracticesInformation(List<UserPracticeDTO> practicesInformation) {
         Map<String, UserPracticeDTO> practicesMap = new HashMap<>();

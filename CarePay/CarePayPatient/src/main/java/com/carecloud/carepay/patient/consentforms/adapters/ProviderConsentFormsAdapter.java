@@ -49,6 +49,12 @@ public class ProviderConsentFormsAdapter extends RecyclerView.Adapter<ProviderCo
             holder.formCheckBox.setVisibility(View.GONE);
             holder.formDateTextView.setText(String.format(Label.getLabel("adhoc_form_date_placeholder"),
                     DateUtil.getInstance().setDateRaw(form.getLastModifiedDate()).toStringWithFormatMmSlashDdSlashYyyy()));
+            holder.container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callback.onFilledFormSelected(form);
+                }
+            });
         }
         holder.formCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

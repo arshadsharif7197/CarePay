@@ -4,8 +4,11 @@
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical">
+    android:background="@color/white">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_title_only" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/signSelectedFormsButton"
@@ -22,6 +25,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/signSelectedFormsButton"
-        android:layout_alignParentTop="true" />
+        android:layout_below="@id/toolbar" />
 
 </RelativeLayout>

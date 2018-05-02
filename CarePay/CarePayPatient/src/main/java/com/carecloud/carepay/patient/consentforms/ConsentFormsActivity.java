@@ -37,6 +37,16 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
         }
     }
 
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (getSupportFragmentManager().getBackStackEntryCount() < 1) {
+            displayToolbar(true, null);
+        }
+    }
+
     @Override
     public DTO getDto() {
         return consentFormsDTO == null ? consentFormsDTO = getConvertedDTO(ConsentFormDTO.class) : consentFormsDTO;
@@ -59,6 +69,11 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
 
     @Override
     public void onPendingFormSelected(PracticeForm form, boolean isChecked) {
+
+    }
+
+    @Override
+    public void onFilledFormSelected(PracticeForm form) {
 
     }
 }

@@ -72,11 +72,15 @@ public class ConsentFormsRecyclerAdapter extends RecyclerView.Adapter<ConsentFor
             holder.formStatusTextView.setTextColor(holder.formStatusTextView.getContext()
                     .getResources().getColor(R.color.cadet_gray));
         } else if (provider.getPendingForms().size() == 1) {
-            holder.formStatusTextView.setText(Label.getLabel("consentForms.providersList.item.label.pendingFormCount"));
+            holder.formStatusTextView.setText(String.format(Label
+                            .getLabel("consentForms.providersList.item.label.pendingFormCount"),
+                    provider.getPendingForms().size()));
             holder.formStatusTextView.setTextColor(holder.formStatusTextView.getContext()
                     .getResources().getColor(R.color.lightning_yellow));
         } else {
-            holder.formStatusTextView.setText(Label.getLabel("consentForms.providersList.item.label.pendingFormsCount"));
+            holder.formStatusTextView.setText(String.format(Label
+                            .getLabel("consentForms.providersList.item.label.pendingFormsCount"),
+                    provider.getPendingForms().size()));
             holder.formStatusTextView.setTextColor(holder.formStatusTextView.getContext()
                     .getResources().getColor(R.color.lightning_yellow));
         }
