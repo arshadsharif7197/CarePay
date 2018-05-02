@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dimen_15dp"
+            android:paddingTop="@dimen/dimen_15dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_30"
+            app:customAssetFont="gotham_rounded_medium"
+            tools:text="Title" />
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar_title_only" />
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/demo_view_height"
+        android:background="@color/light_gray"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <WebView
+            android:id="@+id/shoppingWebView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/dimen_20dp"
+            android:layout_marginStart="@dimen/dimen_20dp" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</LinearLayout>

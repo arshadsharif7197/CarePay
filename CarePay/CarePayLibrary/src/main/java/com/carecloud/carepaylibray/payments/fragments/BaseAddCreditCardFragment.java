@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -453,6 +454,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
                     number, expiryDate, cvv);
             System.out.println("first authorize call end");
         } catch (Exception e) {
+            Log.e("BreezeError", e.getLocalizedMessage());
             System.out.println(e.getMessage());
         }
         System.out.println("authorize call end");

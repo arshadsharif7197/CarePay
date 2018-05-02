@@ -81,8 +81,8 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
 
     @Override
     protected void handlePaymentButton(PaymentsMethodsDTO paymentMethod, double amount) {
-        super.handlePaymentButton(paymentMethod, amount);
         dismiss();
+        super.handlePaymentButton(paymentMethod, amount);
     }
 
     @Override
