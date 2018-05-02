@@ -54,7 +54,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private PaymentsModel paymentsDTO;
     private double minimumPayment;
     private PendingBalanceDTO selectedBalance;
-    private NumberFormat currencyFormat;
+    protected NumberFormat currencyFormat;
 
 
     private boolean amountChangeFlag = true;

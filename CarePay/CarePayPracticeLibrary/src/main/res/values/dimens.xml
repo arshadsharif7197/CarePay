@@ -193,4 +193,7 @@
     <dimen name="dimen_140dp">140dp</dimen>
     <dimen name="dimen_180dp">180dp</dimen>
 
+    <dimen name="dialog_amount_width">420dp</dimen>
+    <dimen name="dialog_amount_height">600dp</dimen>
+
 </resources>

@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -59,6 +60,13 @@ public class PaymentPlanAmountDialog extends PartialPaymentDialog {
         payButton.setText(Label.getLabel("payment_create_payment_plan"));
         TextView header = (TextView) findViewById(R.id.partialPaymentHeader);
         header.setText(Label.getLabel("payment_plan_partial_amount_header"));
+        if(minimumPaymentAmount > 0D) {
+            String minimumAmount = Label.getLabel("payment_partial_minimum_amount") +
+                    currencyFormat.format(minimumPaymentAmount);
+            TextView footer = (TextView) findViewById(R.id.partialPaymentHeaderBottom);
+            footer.setText(minimumAmount);
+            footer.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

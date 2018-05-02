@@ -76,6 +76,13 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
         header.setText(Label.getLabel("payment_plan_partial_amount_header"));
         applyButton.setEnabled(false);
         applyButton.setText(Label.getLabel("payment_create_payment_plan"));
+        if(minimumPaymentAmount > 0D) {
+            String minimumAmount = Label.getLabel("payment_partial_minimum_amount") +
+                    currencyFormat.format(minimumPaymentAmount);
+            TextView footer = (TextView) findViewById(R.id.partialPaymentHeaderBottom);
+            footer.setText(minimumAmount);
+            footer.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
