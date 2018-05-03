@@ -370,18 +370,24 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
         PaymentsSettingsPaymentPlansDTO paymentPlanSettings = settingsDTO.getPayload().getPaymentPlans();
         if (paymentPlanSettings.isPaymentPlansEnabled()) {
             for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
-                if (balance >= rule.getMinBalance().getValue() &&
-                        balance <= rule.getMaxBalance().getValue()) {
-                    if (paymentsModel.getPaymentPayload().getActivePlans(settingsDTO.getMetadata().getPracticeId()).isEmpty()) {
+                if (balance >= rule.getMinBalance().getValue() && balance <= rule.getMaxBalance().getValue()) {
+                    //found a valid rule that covers this balance
+                    if(paymentsModel.getPaymentPayload().getActivePlans(settingsDTO.getMetadata().getPracticeId()).isEmpty()){
+                        //don't already have an existing plan so this is the first plan
                         return true;
-                    } else if (paymentPlanSettings.isCanHaveMultiple()) {//need to check if multiple plans is enabled
-                        return true;
-                    } else if (paymentPlanSettings.isAddBalanceToExisting()) {//check if balance can be added to existing
-                        mustAddToExisting = true;
+                    }else if(paymentPlanSettings.isCanHaveMultiple()){
+                        // already have a plan so need to see if I can create a new one
                         return true;
                     }
-                    return false;
+                    break;//don't need to continue going through these rules
                 }
+            }
+
+            //check if balance can be added to existing
+            if(paymentPlanSettings.isAddBalanceToExisting() && !
+                    paymentsModel.getPaymentPayload().getValidPlans(settingsDTO.getMetadata().getPracticeId(), balance).isEmpty()) {
+                mustAddToExisting = true;
+                return true;
             }
         }
         return false;

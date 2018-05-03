@@ -113,8 +113,7 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
 
     protected List<PaymentPlanDTO> getPaymentPlansList() {
         String practiceId = selectedBalance.getMetadata().getPracticeId();
-        return paymentsModel.getPaymentPayload().getValidPlans(practiceId,
-                selectedBalance.getPayload().get(0).getAmount());
+        return paymentsModel.getPaymentPayload().getValidPlans(practiceId, paymentPlanAmount);
     }
 
 

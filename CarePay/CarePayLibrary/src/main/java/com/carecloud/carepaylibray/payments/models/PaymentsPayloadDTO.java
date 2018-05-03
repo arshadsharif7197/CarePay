@@ -10,6 +10,7 @@ import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItemPay
 import com.carecloud.carepaylibray.payments.models.history.PaymentsTransactionHistory;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -375,8 +376,9 @@ public class PaymentsPayloadDTO implements Serializable {
                     double minAmount = balanceRangeRule.getMinBalance().getValue();
                     double maxAmount = balanceRangeRule.getMaxBalance().getValue();
                     for (PaymentPlanDTO paymentPlanDTO : baseList) {
-                        if (paymentPlanDTO.getPayload().getAmount() + amountToAdd >= minAmount
-                                && paymentPlanDTO.getPayload().getAmount() + amountToAdd <= maxAmount) {
+                        double pendingAmount = SystemUtil.safeSubtract(paymentPlanDTO.getPayload().getAmount(), paymentPlanDTO.getPayload().getAmountPaid());
+                        double sumAmount = SystemUtil.safeAdd(pendingAmount, amountToAdd);
+                        if (sumAmount >= minAmount && sumAmount <= maxAmount) {
                             outputList.add(paymentPlanDTO);
                         }
                     }
