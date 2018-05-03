@@ -368,28 +368,31 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
         PaymentsPayloadSettingsDTO settingsDTO = paymentsModel.getPaymentPayload()
                 .getPaymentSettings().get(0);
         PaymentsSettingsPaymentPlansDTO paymentPlanSettings = settingsDTO.getPayload().getPaymentPlans();
-        if (paymentPlanSettings.isPaymentPlansEnabled()) {
-            for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
-                if (balance >= rule.getMinBalance().getValue() && balance <= rule.getMaxBalance().getValue()) {
-                    //found a valid rule that covers this balance
-                    if(paymentsModel.getPaymentPayload().getActivePlans(settingsDTO.getMetadata().getPracticeId()).isEmpty()){
-                        //don't already have an existing plan so this is the first plan
-                        return true;
-                    }else if(paymentPlanSettings.isCanHaveMultiple()){
-                        // already have a plan so need to see if I can create a new one
-                        return true;
-                    }
-                    break;//don't need to continue going through these rules
-                }
-            }
+        if(!paymentPlanSettings.isPaymentPlansEnabled()){
+            return false;
+        }
 
-            //check if balance can be added to existing
-            if(paymentPlanSettings.isAddBalanceToExisting() && !
-                    paymentsModel.getPaymentPayload().getValidPlans(settingsDTO.getMetadata().getPracticeId(), balance).isEmpty()) {
-                mustAddToExisting = true;
-                return true;
+        for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
+            if (balance >= rule.getMinBalance().getValue() && balance <= rule.getMaxBalance().getValue()) {
+                //found a valid rule that covers this balance
+                if(paymentsModel.getPaymentPayload().getActivePlans(settingsDTO.getMetadata().getPracticeId()).isEmpty()){
+                    //don't already have an existing plan so this is the first plan
+                    return true;
+                }else if(paymentPlanSettings.isCanHaveMultiple()){
+                    // already have a plan so need to see if I can create a new one
+                    return true;
+                }
+                break;//don't need to continue going through these rules
             }
         }
+
+        //check if balance can be added to existing
+        if(paymentPlanSettings.isAddBalanceToExisting() && !
+                paymentsModel.getPaymentPayload().getValidPlans(settingsDTO.getMetadata().getPracticeId(), balance).isEmpty()) {
+            mustAddToExisting = true;
+            return true;
+        }
+
         return false;
     }
 }
