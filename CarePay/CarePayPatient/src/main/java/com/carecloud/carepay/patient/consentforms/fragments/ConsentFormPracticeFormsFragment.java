@@ -14,33 +14,36 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.consentforms.adapters.ProviderConsentFormsAdapter;
+import com.carecloud.carepay.patient.consentforms.adapters.PracticeConsentPracticeFormsAdapter;
+import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormPracticeFormInterface;
 import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormsFormsInterface;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
-import com.carecloud.carepaylibray.adhoc.SelectedAdHocForms;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.consentforms.models.payload.FormDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
-import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author pjohnson on 6/04/18.
  */
-public class ConsentFormProviderFormsFragment extends BaseFragment implements ConsentFormsFormsInterface {
+public class ConsentFormPracticeFormsFragment extends BaseFragment implements ConsentFormsFormsInterface {
 
-    private FragmentActivityInterface callback;
+    private ConsentFormPracticeFormInterface callback;
     private ConsentFormDTO consentFormDto;
-    private SelectedAdHocForms selectedForms;
+    private List<PracticeForm> selectedForms;
     private Button signSelectedFormsButton;
+    private int selectedPracticeIndex;
 
-    public static ConsentFormProviderFormsFragment newInstance(int selectedProviderIndex) {
+    public static ConsentFormPracticeFormsFragment newInstance(int selectedProviderIndex) {
         Bundle args = new Bundle();
-        args.putInt("selectedProviderIndex", selectedProviderIndex);
-        ConsentFormProviderFormsFragment fragment = new ConsentFormProviderFormsFragment();
+        args.putInt("selectedPracticeIndex", selectedProviderIndex);
+        ConsentFormPracticeFormsFragment fragment = new ConsentFormPracticeFormsFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -48,8 +51,8 @@ public class ConsentFormProviderFormsFragment extends BaseFragment implements Co
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof FragmentActivityInterface) {
-            callback = (FragmentActivityInterface) context;
+        if (context instanceof ConsentFormPracticeFormInterface) {
+            callback = (ConsentFormPracticeFormInterface) context;
         }
     }
 
@@ -63,6 +66,7 @@ public class ConsentFormProviderFormsFragment extends BaseFragment implements Co
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         consentFormDto = (ConsentFormDTO) callback.getDto();
+        selectedPracticeIndex = getArguments().getInt("selectedPracticeIndex");
     }
 
     @Nullable
@@ -76,25 +80,31 @@ public class ConsentFormProviderFormsFragment extends BaseFragment implements Co
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        selectedForms = new SelectedAdHocForms();
+        selectedForms = new ArrayList<>();
         signSelectedFormsButton = (Button) view.findViewById(R.id.signSelectedFormsButton);
-        FormDTO providerForms = consentFormDto.getPayload().getForms()
-                .get(getArguments().getInt("selectedProviderIndex"));
-        setModifiedDates(providerForms.getPracticeForms(), providerForms.getPatientFormsFilled());
-        RecyclerView providerConsentFormsRecyclerView = (RecyclerView) view
+        signSelectedFormsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.showForms(selectedForms, selectedPracticeIndex, true);
+            }
+        });
+        FormDTO practiceForms = consentFormDto.getPayload().getForms().get(selectedPracticeIndex);
+        setModifiedDates(practiceForms.getPracticeForms(), practiceForms.getPatientFormsFilled());
+        RecyclerView practiceConsentFormsRecyclerView = (RecyclerView) view
                 .findViewById(R.id.providerConsentFormsRecyclerView);
-        providerConsentFormsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        ProviderConsentFormsAdapter adapter = new ProviderConsentFormsAdapter(providerForms.getPracticeForms());
+        practiceConsentFormsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        PracticeConsentPracticeFormsAdapter adapter = new PracticeConsentPracticeFormsAdapter(practiceForms.getPracticeForms(),
+                practiceForms.getPendingForms());
         adapter.setCallback(this);
-        providerConsentFormsRecyclerView.setAdapter(adapter);
-        setUpToolbar(view, providerForms);
+        practiceConsentFormsRecyclerView.setAdapter(adapter);
+        setUpToolbar(view, practiceForms);
     }
 
-    protected void setUpToolbar(View view, FormDTO providerForms) {
+    protected void setUpToolbar(View view, FormDTO practiceForms) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         String practiceName = "";
         for (UserPracticeDTO practiceInformation : consentFormDto.getPayload().getPracticesInformation()) {
-            if (providerForms.getMetadata().getPracticeId().equals(practiceInformation.getPracticeId())) {
+            if (practiceForms.getMetadata().getPracticeId().equals(practiceInformation.getPracticeId())) {
                 practiceName = practiceInformation.getPracticeName();
             }
         }
@@ -109,11 +119,11 @@ public class ConsentFormProviderFormsFragment extends BaseFragment implements Co
         for (PracticeForm practiceForm : allPracticeForms) {
             for (ConsentFormUserResponseDTO consentFormUserResponseDTO : patientFormsFilled) {
                 if (consentFormUserResponseDTO.getFormId().equals(practiceForm.getPayload()
-                        .get("uuid").toString().replace("\"", ""))) {
+                        .get("uuid").getAsString())) {
                     practiceForm.setLastModifiedDate(consentFormUserResponseDTO.getMetadata()
                             .get("updated_dt").toString());
-                    practiceForm.getPayload().getAsJsonObject("fields").addProperty("readonly", true);
                 }
+                practiceForm.setSelected(false);
             }
         }
     }
@@ -121,19 +131,22 @@ public class ConsentFormProviderFormsFragment extends BaseFragment implements Co
     @Override
     public void onPendingFormSelected(PracticeForm form, boolean selected) {
         if (selected) {
-            selectedForms.getForms()
-                    .add(form.getPayload().get("uuid").getAsString());
+            selectedForms.add(form);
         } else {
-            selectedForms.getForms()
-                    .remove(form.getPayload().get("uuid").getAsString());
+            selectedForms.remove(form);
         }
-        signSelectedFormsButton.setEnabled(!selectedForms.getForms().isEmpty());
+        signSelectedFormsButton.setEnabled(!selectedForms.isEmpty());
     }
 
     @Override
     public void onFilledFormSelected(PracticeForm form) {
-        callback.addFragment(FilledFormFragment
-                .newInstance(form, getArguments().getInt("selectedProviderIndex")), true);
+        List<PracticeForm> localSelectedForm = new ArrayList<>();
+        PracticeForm localPracticeForm = new PracticeForm();
+        Gson gson = new Gson();
+        localPracticeForm.setPayload(gson.fromJson(gson.toJson(form.getPayload()), JsonObject.class));
+        localPracticeForm.getPayload().getAsJsonObject("fields").addProperty("readonly", true);
+        localSelectedForm.add(localPracticeForm);
+        callback.showForms(localSelectedForm, selectedPracticeIndex, false);
     }
 
 

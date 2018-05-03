@@ -8,7 +8,6 @@ import java.util.List;
 /**
  * @author pjohnson on 3/05/18.
  */
-public interface ConsentFormInterface extends FragmentActivityInterface {
-
-    List<PracticeForm> getAllFormsToShow();
+public interface ConsentFormPracticeFormInterface extends FragmentActivityInterface {
+    void showForms(List<PracticeForm> selectedForms, int selectedProviderIndex, boolean showSignButton);
 }

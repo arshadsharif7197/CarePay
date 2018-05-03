@@ -3,7 +3,6 @@ package com.carecloud.carepay.patient.consentforms.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.consentforms.adapters.ConsentFormsRecyclerAdapter;
-import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormInterface;
+import com.carecloud.carepay.patient.consentforms.adapters.PracticeConsentFormsAdapter;
+import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormActivityInterface;
 import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormsProviderInterface;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
@@ -30,7 +29,7 @@ import java.util.Map;
 public class ConsentFormProvidersListFragment extends BaseFragment implements ConsentFormsProviderInterface {
 
 
-    private ConsentFormInterface callback;
+    private ConsentFormActivityInterface callback;
     private ConsentFormDTO consentFormDto;
 
     public static ConsentFormProvidersListFragment newInstance() {
@@ -40,8 +39,8 @@ public class ConsentFormProvidersListFragment extends BaseFragment implements Co
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof ConsentFormInterface) {
-            callback = (ConsentFormInterface) context;
+        if (context instanceof ConsentFormActivityInterface) {
+            callback = (ConsentFormActivityInterface) context;
         }
     }
 
@@ -70,7 +69,7 @@ public class ConsentFormProvidersListFragment extends BaseFragment implements Co
                 .getPracticesInformation());
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.consentFormsRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        ConsentFormsRecyclerAdapter adapter = new ConsentFormsRecyclerAdapter(consentFormDto.getPayload().getForms(),
+        PracticeConsentFormsAdapter adapter = new PracticeConsentFormsAdapter(consentFormDto.getPayload().getForms(),
                 practicesInformation);
         adapter.setCallback(this);
         recyclerView.setAdapter(adapter);

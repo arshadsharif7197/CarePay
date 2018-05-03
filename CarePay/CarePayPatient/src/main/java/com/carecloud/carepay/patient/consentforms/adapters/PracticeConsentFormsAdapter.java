@@ -24,13 +24,13 @@ import java.util.Map;
  * @author pjohnson on 8/03/18.
  */
 
-public class ConsentFormsRecyclerAdapter extends RecyclerView.Adapter<ConsentFormsRecyclerAdapter.ViewHolder> {
+public class PracticeConsentFormsAdapter extends RecyclerView.Adapter<PracticeConsentFormsAdapter.ViewHolder> {
 
     private final List<FormDTO> practiceFormsList;
     private final Map<String, UserPracticeDTO> practicesInformationMap;
     private ConsentFormsProviderInterface callback;
 
-    public ConsentFormsRecyclerAdapter(List<FormDTO> practiceFormsList,
+    public PracticeConsentFormsAdapter(List<FormDTO> practiceFormsList,
                                        Map<String, UserPracticeDTO> practicesInformation) {
         this.practiceFormsList = practiceFormsList;
         practicesInformationMap = practicesInformation;
@@ -44,43 +44,43 @@ public class ConsentFormsRecyclerAdapter extends RecyclerView.Adapter<ConsentFor
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final FormDTO provider = practiceFormsList.get(position);
-        UserPracticeDTO practice = practicesInformationMap.get(provider.getMetadata().getPracticeId());
-        holder.providerNameTextView.setText(practice.getPracticeName());
-        holder.providerAddressTextView.setText(practice.getAddressDTO().getFullAddress());
-        holder.providerShortNameTextView.setText(StringUtil.getShortName(practice.getPracticeName()));
-        Picasso.with(holder.providerImageView.getContext())
+        final FormDTO formDto = practiceFormsList.get(position);
+        UserPracticeDTO practice = practicesInformationMap.get(formDto.getMetadata().getPracticeId());
+        holder.practiceNameTextView.setText(practice.getPracticeName());
+        holder.practiceAddressTextView.setText(practice.getAddressDTO().getFullAddress());
+        holder.practiceShortNameTextView.setText(StringUtil.getShortName(practice.getPracticeName()));
+        Picasso.with(holder.practiceImageView.getContext())
                 .load(practice.getPracticePhoto())
                 .resize(60, 60)
                 .centerCrop()
                 .transform(new CircleImageTransform())
-                .into(holder.providerImageView, new Callback() {
+                .into(holder.practiceImageView, new Callback() {
                     @Override
                     public void onSuccess() {
-                        holder.providerImageView.setVisibility(View.VISIBLE);
-                        holder.providerShortNameTextView.setVisibility(View.INVISIBLE);
+                        holder.practiceImageView.setVisibility(View.VISIBLE);
+                        holder.practiceShortNameTextView.setVisibility(View.INVISIBLE);
                     }
 
                     @Override
                     public void onError() {
-                        holder.providerImageView.setVisibility(View.INVISIBLE);
-                        holder.providerShortNameTextView.setVisibility(View.VISIBLE);
+                        holder.practiceImageView.setVisibility(View.INVISIBLE);
+                        holder.practiceShortNameTextView.setVisibility(View.VISIBLE);
                     }
                 });
-        if (provider.getPendingForms().size() == 0) {
+        if (formDto.getPendingForms().size() == 0) {
             holder.formStatusTextView.setText(Label.getLabel("consentForms.providersList.item.label.formsFilledStatus"));
             holder.formStatusTextView.setTextColor(holder.formStatusTextView.getContext()
                     .getResources().getColor(R.color.cadet_gray));
-        } else if (provider.getPendingForms().size() == 1) {
+        } else if (formDto.getPendingForms().size() == 1) {
             holder.formStatusTextView.setText(String.format(Label
                             .getLabel("consentForms.providersList.item.label.pendingFormCount"),
-                    provider.getPendingForms().size()));
+                    formDto.getPendingForms().size()));
             holder.formStatusTextView.setTextColor(holder.formStatusTextView.getContext()
                     .getResources().getColor(R.color.lightning_yellow));
         } else {
             holder.formStatusTextView.setText(String.format(Label
                             .getLabel("consentForms.providersList.item.label.pendingFormsCount"),
-                    provider.getPendingForms().size()));
+                    formDto.getPendingForms().size()));
             holder.formStatusTextView.setTextColor(holder.formStatusTextView.getContext()
                     .getResources().getColor(R.color.lightning_yellow));
         }
@@ -88,7 +88,7 @@ public class ConsentFormsRecyclerAdapter extends RecyclerView.Adapter<ConsentFor
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onProviderSelected(provider, position);
+                callback.onProviderSelected(formDto, position);
             }
         });
     }
@@ -105,19 +105,19 @@ public class ConsentFormsRecyclerAdapter extends RecyclerView.Adapter<ConsentFor
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView formStatusTextView;
-        TextView providerNameTextView;
-        TextView providerAddressTextView;
-        TextView providerShortNameTextView;
-        ImageView providerImageView;
+        TextView practiceNameTextView;
+        TextView practiceAddressTextView;
+        TextView practiceShortNameTextView;
+        ImageView practiceImageView;
         View container;
 
         public ViewHolder(View itemView) {
             super(itemView);
             formStatusTextView = (TextView) itemView.findViewById(R.id.formStatusTextView);
-            providerNameTextView = (TextView) itemView.findViewById(R.id.providerNameTextView);
-            providerAddressTextView = (TextView) itemView.findViewById(R.id.providerAddressTextView);
-            providerShortNameTextView = (TextView) itemView.findViewById(R.id.providerShortNameTextView);
-            providerImageView = (ImageView) itemView.findViewById(R.id.providerImageView);
+            practiceNameTextView = (TextView) itemView.findViewById(R.id.providerNameTextView);
+            practiceAddressTextView = (TextView) itemView.findViewById(R.id.providerAddressTextView);
+            practiceShortNameTextView = (TextView) itemView.findViewById(R.id.providerShortNameTextView);
+            practiceImageView = (ImageView) itemView.findViewById(R.id.providerImageView);
             container = itemView.findViewById(R.id.container);
         }
     }

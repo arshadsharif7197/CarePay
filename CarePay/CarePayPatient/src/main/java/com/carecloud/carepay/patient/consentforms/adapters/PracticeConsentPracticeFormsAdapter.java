@@ -21,13 +21,15 @@ import java.util.List;
 /**
  * @author pjohnson on 6/04/18.
  */
-public class ProviderConsentFormsAdapter extends RecyclerView.Adapter<ProviderConsentFormsAdapter.ViewHolder> {
+public class PracticeConsentPracticeFormsAdapter extends RecyclerView.Adapter<PracticeConsentPracticeFormsAdapter.ViewHolder> {
 
     private final List<PracticeForm> forms;
+    private final List<String> pendingForms;
     private ConsentFormsFormsInterface callback;
 
-    public ProviderConsentFormsAdapter(List<PracticeForm> forms) {
+    public PracticeConsentPracticeFormsAdapter(List<PracticeForm> forms, List<String> pendingForms) {
         this.forms = forms;
+        this.pendingForms = pendingForms;
     }
 
     @Override
@@ -39,15 +41,12 @@ public class ProviderConsentFormsAdapter extends RecyclerView.Adapter<ProviderCo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final PracticeForm form = forms.get(position);
+        holder.container.setOnClickListener(null);
         holder.formNameTextView.setText(form.getPayload().get("title").getAsString());
-        if (form.getLastModifiedDate() == null) {
-            holder.formCheckBox.setVisibility(View.VISIBLE);
-            holder.formDateTextView.setText(Label.getLabel("consentForms.providersFormList.item.status.pendingStatus"));
-            holder.formDateTextView.setTextColor(holder.formDateTextView.getContext().getResources()
-                    .getColor(R.color.lightning_yellow));
-        } else {
+        StringBuilder sb = new StringBuilder();
+        if (form.getLastModifiedDate() != null) {
             holder.formCheckBox.setVisibility(View.GONE);
-            holder.formDateTextView.setText(String.format(Label.getLabel("adhoc_form_date_placeholder"),
+            sb.append(String.format(Label.getLabel("adhoc_form_date_placeholder"),
                     DateUtil.getInstance().setDateRaw(form.getLastModifiedDate()).toStringWithFormatMmSlashDdSlashYyyy()));
             holder.container.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -56,11 +55,25 @@ public class ProviderConsentFormsAdapter extends RecyclerView.Adapter<ProviderCo
                 }
             });
         }
+
+        if (pendingForms.contains(form.getPayload().get("uuid").getAsString())) {
+            holder.formCheckBox.setVisibility(View.VISIBLE);
+            holder.formDateTextView.setTextColor(holder.formDateTextView.getContext().getResources()
+                    .getColor(R.color.lightning_yellow));
+            if (sb.length() > 0) {
+                sb.insert(0, " - ");
+            }
+            sb.insert(0, Label.getLabel("consentForms.providersFormList.item.status.pendingStatus"));
+        }
+        holder.formDateTextView.setText(sb.toString());
+        holder.formCheckBox.setOnCheckedChangeListener(null);
+        holder.formCheckBox.setChecked(form.isSelected());
         holder.formCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                form.setSelected(!form.isSelected());
                 callback.onPendingFormSelected(form, isChecked);
-                if (holder.formCheckBox.isChecked()) {
+                if (form.isSelected()) {
                     holder.formNameTextView.setTextColor(holder.formNameTextView.getContext()
                             .getResources().getColor(R.color.colorPrimary));
                     holder.formNameTextView.setFontAttribute(CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD);

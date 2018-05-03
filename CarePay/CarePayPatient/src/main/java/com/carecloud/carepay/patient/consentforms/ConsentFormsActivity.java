@@ -6,17 +6,21 @@ import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
-import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormProviderFormsFragment;
+import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormPracticeFormsFragment;
 import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormProvidersListFragment;
-import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormInterface;
+import com.carecloud.carepay.patient.consentforms.fragments.FilledFormFragment;
+import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormActivityInterface;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.consentforms.models.payload.FormDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
 
-public class ConsentFormsActivity extends MenuPatientActivity implements ConsentFormInterface {
+import java.util.List;
+
+public class ConsentFormsActivity extends MenuPatientActivity implements ConsentFormActivityInterface {
 
     private ConsentFormDTO consentFormsDTO;
+    private List<PracticeForm> selectedForms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +40,6 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
             displayToolbar(true, menuItem.getTitle().toString());
         }
     }
-
 
 
     @Override
@@ -64,16 +67,18 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
 
     @Override
     public void onProviderSelected(FormDTO practiceForm, int position) {
-        addFragment(ConsentFormProviderFormsFragment.newInstance(position), true);
+        addFragment(ConsentFormPracticeFormsFragment.newInstance(position), true);
     }
 
     @Override
-    public void onPendingFormSelected(PracticeForm form, boolean isChecked) {
-
+    public void showForms(List<PracticeForm> selectedForms, int selectedProviderIndex, boolean showSignButton) {
+        this.selectedForms = selectedForms;
+        addFragment(FilledFormFragment
+                .newInstance(selectedProviderIndex, showSignButton), true);
     }
 
     @Override
-    public void onFilledFormSelected(PracticeForm form) {
-
+    public List<PracticeForm> getAllFormsToShow() {
+        return selectedForms;
     }
 }

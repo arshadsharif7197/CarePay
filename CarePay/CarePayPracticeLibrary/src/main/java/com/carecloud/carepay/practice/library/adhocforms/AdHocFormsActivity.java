@@ -60,7 +60,7 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
             for (String uuid : selectedAdHocForms.getForms()) {
                 for (PracticeForm practiceForm : adhocFormsModel.getMetadata().getDataModels()
                         .getPracticeForms()) {
-                    if (uuid.equals(practiceForm.getPayload().get("uuid").toString().replace("\"", ""))) {
+                    if (uuid.equals(practiceForm.getPayload().get("uuid").getAsString())) {
                         forms.add(practiceForm);
                         break;
                     }
