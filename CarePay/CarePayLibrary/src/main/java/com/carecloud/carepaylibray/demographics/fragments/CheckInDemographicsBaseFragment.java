@@ -34,6 +34,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
@@ -74,12 +75,15 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            DemographicDTO demographicDTO = new Gson().fromJson(workflowDTO.toString(), DemographicDTO.class);
-
             if (checkinFlowCallback.getCurrentStep() >= checkinFlowCallback.getTotalSteps()) {
-                checkinFlowCallback.setCurrentStep(checkinFlowCallback.getCurrentStep() + 1);
-                checkinFlowCallback.navigateToWorkflow(workflowDTO);
+                if(NavigationStateConstants.PATIENT_HOME.equals(workflowDTO.getState())){
+                    onUpdate(checkinFlowCallback, workflowDTO);
+                }else {
+                    checkinFlowCallback.setCurrentStep(checkinFlowCallback.getCurrentStep() + 1);
+                    checkinFlowCallback.navigateToWorkflow(workflowDTO);
+                }
             } else {
+                DemographicDTO demographicDTO = new Gson().fromJson(workflowDTO.toString(), DemographicDTO.class);
                 checkinFlowCallback.applyChangesAndNavTo(demographicDTO, checkinFlowCallback.getCurrentStep() + 1);
             }
 
