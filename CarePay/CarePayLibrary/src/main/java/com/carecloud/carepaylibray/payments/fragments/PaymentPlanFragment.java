@@ -29,7 +29,7 @@ import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -59,7 +59,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
 
     protected PaymentsModel paymentsModel;
     protected PendingBalanceDTO selectedBalance;
-    protected PaymentPlanInterface callback;
+    protected PaymentPlanCreateInterface callback;
 
     protected PaymentSettingsBalanceRangeRule paymentPlanBalanceRules = new PaymentSettingsBalanceRangeRule();
 
@@ -101,9 +101,9 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     protected void attachCallback(Context context) {
         try {
             if (context instanceof PaymentViewHandler) {
-                callback = (PaymentPlanInterface) ((PaymentViewHandler) context).getPaymentPresenter();
+                callback = (PaymentPlanCreateInterface) ((PaymentViewHandler) context).getPaymentPresenter();
             } else {
-                callback = (PaymentPlanInterface) context;
+                callback = (PaymentPlanCreateInterface) context;
             }
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement PaymentPlanInterface");

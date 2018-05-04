@@ -15,6 +15,7 @@ import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
+import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
@@ -56,6 +57,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -262,6 +264,13 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     @Override
     public void onPaymentPlanAction(PaymentsModel paymentsModel) {
         //NOT Yet
+    }
+
+    @Override
+    public void displayBalanceDetails(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem, PendingBalanceDTO selectedBalance) {
+        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
+                .newInstance(paymentsModel, paymentLineItem, selectedBalance, false);
+        displayDialogFragment(dialog, false);
     }
 
     @Override

@@ -624,7 +624,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         Map<String, Double> paymentPlanItems = new HashMap<>();
         for(PaymentPlanDTO paymentPlanDTO : currentPaymentPlans){
             for(PaymentPlanLineItem lineItem : paymentPlanDTO.getPayload().getLineItems()){
-                Double amount = lineItem.getAmount();
+                Double amount = SystemUtil.safeSubtract(lineItem.getAmount(), lineItem.getAmountPaid());
                 if(paymentPlanItems.containsKey(lineItem.getTypeId())){//we may have the line item split on more than one plan potentially
                     amount = SystemUtil.safeAdd(paymentPlanItems.get(lineItem.getTypeId()), lineItem.getAmount());//sum both items
                 }
@@ -647,7 +647,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                         reducedBalances.add(balanceItemDTO);
                     }//else the entire balance item will be dropped
                 } else {
-                    reducedBalances.add(balanceItemDTO); //since this item was not already on PP we need to keep it
+                    reducedBalances.add(balanceItemDTO); //since this item was not already on PP we need to leave it
                 }
             }
             pendingBalancePayloadDTO.setDetails(reducedBalances);

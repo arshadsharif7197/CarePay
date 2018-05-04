@@ -1117,7 +1117,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         Map<String, Double> paymentPlanItems = new HashMap<>();
         for(PaymentPlanDTO paymentPlanDTO : currentPaymentPlans){
             for(PaymentPlanLineItem lineItem : paymentPlanDTO.getPayload().getLineItems()){
-                Double amount = lineItem.getAmount();
+                Double amount = SystemUtil.safeSubtract(lineItem.getAmount(), lineItem.getAmountPaid());
                 if(paymentPlanItems.containsKey(lineItem.getTypeId())){//we may have the line item split on more than one plan potentially
                     amount = SystemUtil.safeAdd(paymentPlanItems.get(lineItem.getTypeId()), lineItem.getAmount());//sum both items
                 }

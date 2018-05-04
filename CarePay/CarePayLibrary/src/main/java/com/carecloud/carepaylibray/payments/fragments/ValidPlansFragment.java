@@ -15,7 +15,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.adapter.PaymentPlanListAdapter;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -32,7 +32,7 @@ import java.util.List;
 public class ValidPlansFragment extends BaseDialogFragment implements PaymentPlanListAdapter.OnPaymentPlanSelectedListener {
     protected static final String KEY_PLAN_AMOUNT = "plan_amount";
 
-    protected PaymentPlanInterface callback;
+    protected PaymentPlanCreateInterface callback;
     protected PaymentsModel paymentsModel;
     protected PendingBalanceDTO selectedBalance;
     private double paymentPlanAmount;
@@ -54,9 +54,9 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
         super.onAttach(context);
         try {
             if (context instanceof PaymentViewHandler) {
-                callback = (PaymentPlanInterface) ((PaymentViewHandler) context).getPaymentPresenter();
+                callback = (PaymentPlanCreateInterface) ((PaymentViewHandler) context).getPaymentPresenter();
             } else {
-                callback = (PaymentPlanInterface) context;
+                callback = (PaymentPlanCreateInterface) context;
             }
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement PaymentPlanInterface");

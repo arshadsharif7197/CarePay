@@ -21,6 +21,7 @@ import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckOutFragment;
+import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
@@ -65,6 +66,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
@@ -308,6 +310,13 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     @Override
     public void onPaymentPlanAction(PaymentsModel paymentsModel) {
         //todo whenever payment plans are ready
+    }
+
+    @Override
+    public void displayBalanceDetails(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem, PendingBalanceDTO selectedBalance) {
+        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
+                .newInstance(paymentsModel, paymentLineItem, false);
+        displayDialogFragment(dialog, false);
     }
 
     @Override

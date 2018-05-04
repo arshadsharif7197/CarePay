@@ -99,6 +99,8 @@ public class PaymentsPayloadDTO implements Serializable {
     private UserAuthModel userAuthModel = new UserAuthModel();
     @SerializedName("patient_statements")
     private List<PatientStatementDTO> patientStatements = new ArrayList<>();
+    @SerializedName("payment_plan_created")
+    private boolean paymentPlanCreated = false;
 
 
     public List<PatientModel> getPatients() {
@@ -430,5 +432,13 @@ public class PaymentsPayloadDTO implements Serializable {
 
     public void setPaymentPlanUpdate(PaymentPlanDTO paymentPlanUpdate) {
         this.paymentPlanUpdate = paymentPlanUpdate;
+    }
+
+    public boolean isPaymentPlanCreated() {
+        return paymentPlanCreated;
+    }
+
+    public void setPaymentPlanCreated(boolean paymentPlanCreated) {
+        this.paymentPlanCreated = paymentPlanCreated;
     }
 }
