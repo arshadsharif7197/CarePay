@@ -363,6 +363,11 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             } else if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType
                     .PRACTICE_PATIENT_MODE) {
                 transition = signinDTO.getMetadata().getTransitions().getAction();
+                if (!signInResponse.getPayload().getSignIn().isPayload()
+                        || StringUtil.isNullOrEmpty(signInResponse.getPayload().getSignIn().getMetadata().getPatientId())) {
+                    showErrorToast(signInResponse.getPayload().getSignIn().getMetadata().getMessage());
+                    return;
+                }
             }
             managePracticeOrAuthenticate(signInResponse, transition, refreshTransition);
         }
@@ -557,11 +562,11 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
 
             if (practiceList.size() == 1) {
                 PracticeSelectionUserPractice selectedPractice = practiceList.get(0);
-                if(selectedPractice.getLocations().size() < 2) {
+                if (selectedPractice.getLocations().size() < 2) {
                     navigateToWorkFlow(workflowDTO);
                     setSignInButtonClickable(true);
                     identifyPracticeUser(selectedPractice.getUserId());
-                }else{
+                } else {
                     ApplicationPreferences.getInstance().setPracticeId(selectedPractice.getPracticeId());
                     ChoosePracticeLocationFragment fragment = ChoosePracticeLocationFragment.newInstance(selectedPractice, workflowDTO);
                     fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
