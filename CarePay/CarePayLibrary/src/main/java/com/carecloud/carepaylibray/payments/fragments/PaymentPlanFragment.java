@@ -503,7 +503,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
 
                     if (amountHolder >= balanceItem.getBalance()) {
                         lineItem.setAmount(balanceItem.getBalance());
-                        amountHolder -= balanceItem.getBalance();
+                        amountHolder = SystemUtil.safeSubtract(amountHolder, balanceItem.getBalance());
                     } else {
                         lineItem.setAmount(amountHolder);
                         amountHolder = 0;

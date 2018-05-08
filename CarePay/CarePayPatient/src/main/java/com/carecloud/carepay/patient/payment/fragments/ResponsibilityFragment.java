@@ -18,10 +18,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
-import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -33,7 +30,6 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
 
     private PendingBalanceDTO selectedBalance;
     private PaymentFragmentActivityInterface toolbarCallback;
-    private boolean mustAddToExisting = false;
 
     /**
      * @param paymentsDTO              the payments DTO
@@ -214,41 +210,6 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
     @Override
     public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
         actionCallback.displayBalanceDetails(paymentDTO, paymentLineItem, selectedBalance);
-    }
-
-    protected boolean isPaymentPlanAvailable(String practiceId, double balance) {
-        if (practiceId != null) {
-            for (PaymentsPayloadSettingsDTO payloadSettingsDTO : paymentDTO.getPaymentPayload().getPaymentSettings()) {
-                if (practiceId.equals(payloadSettingsDTO.getMetadata().getPracticeId())) {
-                    PaymentsSettingsPaymentPlansDTO paymentPlanSettings = payloadSettingsDTO.getPayload().getPaymentPlans();
-                    if(!paymentPlanSettings.isPaymentPlansEnabled()){
-                        return false;
-                    }
-
-                    for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
-                        if (balance >= rule.getMinBalance().getValue() && balance <= rule.getMaxBalance().getValue()) {
-                            //found a valid rule that covers this balance
-                            if(paymentDTO.getPaymentPayload().getActivePlans(practiceId).isEmpty()){
-                                //don't already have an existing plan so this is the first plan
-                                return true;
-                            }else if(paymentPlanSettings.isCanHaveMultiple()){
-                                // already have a plan so need to see if I can create a new one
-                                return true;
-                            }
-                            break;//don't need to continue going through these rules
-                        }
-                    }
-
-                    //check if balance can be added to existing
-                    if(paymentPlanSettings.isAddBalanceToExisting() && !
-                            paymentDTO.getPaymentPayload().getValidPlans(practiceId, balance).isEmpty()) {
-                        mustAddToExisting = true;
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
     }
 
 
