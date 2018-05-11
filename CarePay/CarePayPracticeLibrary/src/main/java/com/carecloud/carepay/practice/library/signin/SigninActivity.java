@@ -366,6 +366,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
                 if (!signInResponse.getPayload().getSignIn().isPayload()
                         || StringUtil.isNullOrEmpty(signInResponse.getPayload().getSignIn().getMetadata().getPatientId())) {
                     showErrorToast(signInResponse.getPayload().getSignIn().getMetadata().getMessage());
+                    setSignInButtonClickable(true);
                     return;
                 }
             }
