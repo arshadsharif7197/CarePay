@@ -236,7 +236,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             Gson gson = new Gson();
             PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO
                     = gson.fromJson(payloadAsJsonObject, PracticeHomeScreenPayloadDTO.class);
-            boolean showShop = practiceHomeScreenPayloadDTO.getUserPractices().get(0).isRetailEnabled();
+            boolean showShop = false;//todo reeanable this when ready
+            // boolean showShop = practiceHomeScreenPayloadDTO.getUserPractices().get(0).isRetailEnabled();
             if (showShop) {
                 View shopContainer = findViewById(R.id.homeShopClickable);
                 shopContainer.setVisibility(View.VISIBLE);
