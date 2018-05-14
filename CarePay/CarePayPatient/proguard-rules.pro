@@ -15,7 +15,7 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
--dontobfuscate
+#-dontobfuscate
 -keepclassmembers class * extends java.lang.Enum {
     <fields>;
     public static **[] values();
