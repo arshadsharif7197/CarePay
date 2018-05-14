@@ -36,7 +36,7 @@ public class PatientModePaymentPlanEditFragment extends PaymentPlanEditFragment 
 
     @Override
     protected void setupToolBar(View view) {
-        View closeButton = view.findViewById(com.carecloud.carepaylibrary.R.id.closeViewLayout);
+        View closeButton = view.findViewById(R.id.closeViewLayout);
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

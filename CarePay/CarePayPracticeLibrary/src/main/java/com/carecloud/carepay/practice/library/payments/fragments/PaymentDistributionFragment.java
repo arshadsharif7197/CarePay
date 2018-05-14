@@ -59,9 +59,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         AddPaymentItemFragment.AddItemCallback, PaymentDistributionEntryFragment.PaymentDistributionAmountCallback,
         BounceHelper.BounceHelperListener {
 
-    private TextView balance;
-    private TextView paymentTotal;
-    private TextView unapplied;
+    private TextView balanceTextView;
+    private TextView paymentTotalTextView;
+    private TextView unAppliedTextView;
     private View unappliedLayout;
 
     private NestedScrollView scrollView;
@@ -136,8 +136,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
         setupButtons(view);
 
-        balance = (TextView) view.findViewById(R.id.balance_value);
-        unapplied = (TextView) view.findViewById(R.id.unapplied_value);
+        balanceTextView = (TextView) view.findViewById(R.id.balance_value);
+        unAppliedTextView = (TextView) view.findViewById(R.id.unapplied_value);
 
         unappliedLayout = view.findViewById(R.id.unapplied_layout);
 
@@ -246,8 +246,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             }
         });
 
-        paymentTotal = (TextView) view.findViewById(R.id.payment_value);
-        paymentTotal.setOnClickListener(new View.OnClickListener() {
+        paymentTotalTextView = (TextView) view.findViewById(R.id.payment_value);
+        paymentTotalTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 callback.showAmountEntry(PaymentDistributionFragment.this,
@@ -280,7 +280,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             balanceAmount = calculateTotalBalance();
             paymentAmount = balanceAmount;
 
-            setCurrency(balance, balanceAmount);
+            setCurrency(balanceTextView, balanceAmount);
             updatePaymentAmount();
 
             PatientBalanceDTO patientBalanceDTO = null;
@@ -305,7 +305,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             if (unappliedCredit > 0D) {
                 originalUnapplied = unappliedCredit;
                 unappliedLayout.setVisibility(View.VISIBLE);
-                setCurrency(unapplied, unappliedCredit);
+                setCurrency(unAppliedTextView, unappliedCredit);
             } else {
                 unappliedLayout.setVisibility(View.GONE);
             }
@@ -375,14 +375,14 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
         if (balanceItems.isEmpty() && chargeItems.isEmpty()) {
             emptyBalanceLayout.setVisibility(View.VISIBLE);
-            paymentTotal.setClickable(false);
+            paymentTotalTextView.setClickable(false);
         } else {
             if (balanceItems.isEmpty()) {
                 balanceDetailsRecycler.setVisibility(View.GONE);
-                paymentTotal.setClickable(false);
+                paymentTotalTextView.setClickable(false);
             } else {
                 balanceDetailsRecycler.setVisibility(View.VISIBLE);
-                paymentTotal.setClickable(true);
+                paymentTotalTextView.setClickable(true);
             }
             emptyBalanceLayout.setVisibility(View.GONE);
         }
@@ -560,17 +560,17 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
     private void updatePaymentAmount() {
         if (paymentAmount >= balanceAmount) {
-            paymentTotal.setBackgroundResource(R.drawable.bg_green_border_trans);
-            paymentTotal.setTextColor(ContextCompat.getColor(getContext(), R.color.emerald));
+            paymentTotalTextView.setBackgroundResource(R.drawable.bg_green_border_trans);
+            paymentTotalTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.emerald));
         } else {
-            paymentTotal.setBackgroundResource(R.drawable.bg_orange_border_trans);
-            paymentTotal.setTextColor(ContextCompat.getColor(getContext(), R.color.lightning_yellow));
+            paymentTotalTextView.setBackgroundResource(R.drawable.bg_orange_border_trans);
+            paymentTotalTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.lightning_yellow));
         }
 
         double totalAmount = round(paymentAmount + chargesAmount);
         payButton.setEnabled(totalAmount > 0 && authPermissions.canMakePayment);
 
-        setCurrency(paymentTotal, totalAmount);
+        setCurrency(paymentTotalTextView, totalAmount);
     }
 
     private void setCurrency(TextView textView, double amount) {

@@ -144,7 +144,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
             addExistingPlan.setVisibility(View.GONE);
         }
         setUpPaymentMethodLabel(view);
-        isCalclatingTime = false;
+        isCalculatingTime = false;
         isCalculatingAmount = false;
         if(!canEditPaymentPlan){
             TextView parameters = (TextView) view.findViewById(R.id.paymentPlanParametersTextView);
@@ -231,9 +231,13 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         }
 
         postModel.setPaymentPlanModel(paymentPlanModel);
+
+        callEditPaymentPlanService(postModel);
+    }
+
+    private void callEditPaymentPlanService(PaymentPlanPostModel postModel) {
         TransitionDTO updatePaymentTransition = paymentsModel.getPaymentsMetadata()
                 .getPaymentsTransitions().getUpdatePaymentPlan();
-
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("practice_mgmt", paymentPlanDTO.getMetadata().getPracticeMgmt());
         queryMap.put("practice_id", paymentPlanDTO.getMetadata().getPracticeId());
