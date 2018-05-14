@@ -155,7 +155,8 @@ public class NotificationFragment extends BaseFragment
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.notifications_menu, menu);
         menu.findItem(R.id.deleteAllNotifications)
-                .setTitle(Label.getLabel("notification.notificationList.button.label.deleteAllTitle"));
+                .setTitle(Label.getLabel("notification.notificationList.button.label.deleteAllTitle")
+                        .replace("?", ""));
     }
 
     @Override
