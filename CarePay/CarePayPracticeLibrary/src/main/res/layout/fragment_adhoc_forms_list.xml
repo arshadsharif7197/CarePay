@@ -132,7 +132,7 @@
             android:layout_below="@id/header"
             android:background="@drawable/patient_mode_dialog_body_bg"
             android:clickable="true"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/noFormsTitleTextView"

@@ -16,8 +16,10 @@ import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormsProvide
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
+import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.consentforms.models.payload.FormDTO;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,16 +67,37 @@ public class ConsentFormProvidersListFragment extends BaseFragment implements Co
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Map<String, UserPracticeDTO> practicesInformation = getPracticesInformation(consentFormDto.getPayload()
-                .getPracticesInformation());
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.consentFormsRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        PracticeConsentFormsAdapter adapter = new PracticeConsentFormsAdapter(consentFormDto.getPayload().getForms(),
-                practicesInformation);
-        adapter.setCallback(this);
-        recyclerView.setAdapter(adapter);
+        setUpList(view);
     }
 
+    protected void setUpList(View view) {
+        List<FormDTO> practiceList = filterList(consentFormDto.getPayload().getForms());
+        consentFormDto.getPayload().setForms(practiceList);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.consentFormsRecyclerView);
+        if (practiceList.size() < 0) {
+            Map<String, UserPracticeDTO> practicesInformation = getPracticesInformation(consentFormDto.getPayload()
+                    .getPracticesInformation());
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            PracticeConsentFormsAdapter adapter = new PracticeConsentFormsAdapter(practiceList,
+                    practicesInformation);
+            adapter.setCallback(this);
+            recyclerView.setAdapter(adapter);
+        } else {
+            view.findViewById(R.id.emptyStateScreen).setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        }
+    }
+
+    private List<FormDTO> filterList(List<FormDTO> forms) {
+        List<FormDTO> filteredList = new ArrayList<>();
+        for (FormDTO practice : forms) {
+            practice.setPracticeForms(new ArrayList<PracticeForm>());
+            if (practice.getPracticeForms().size() > 0) {
+                filteredList.add(practice);
+            }
+        }
+        return filteredList;
+    }
 
 
     private Map<String, UserPracticeDTO> getPracticesInformation(List<UserPracticeDTO> practicesInformation) {
