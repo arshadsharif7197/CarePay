@@ -247,7 +247,8 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
             queries.put("patient_id", metadata.getPatientId());
         }
 
-        if (!StringUtil.isNullOrEmpty(paymentsModel.getPaymentPayload().getPaymentPostModel().getOrderId())) {
+        if (paymentsModel.getPaymentPayload().getPaymentPostModel() != null &&
+                !StringUtil.isNullOrEmpty(paymentsModel.getPaymentPayload().getPaymentPostModel().getOrderId())) {
             IntegratedPaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
             queries.put("store_id", paymentPostModel.getStoreId());
             queries.put("transaction_id", paymentPostModel.getOrderId());
