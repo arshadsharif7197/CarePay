@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,9 +13,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -173,6 +171,23 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
             payTotalAmountButton.setVisibility(View.GONE);
             makePartialPaymentButton.setVisibility(View.GONE);
         }
+
+        boolean paymentPlanEnabled = !paymentDTO.getPaymentPayload().isPaymentPlanCreated() &&
+                isPaymentPlanAvailable(selectedBalance.getMetadata().getPracticeId(), total);
+        TextView paymentPlanButton = (TextView) view.findViewById(com.carecloud.carepay.patient.R.id.create_payment_plan_button);
+        paymentPlanButton.setVisibility(paymentPlanEnabled ? View.VISIBLE : View.GONE);
+        paymentPlanButton.setEnabled(paymentPlanEnabled);
+        paymentPlanButton.setClickable(paymentPlanEnabled);
+        paymentPlanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actionCallback.onPaymentPlanAction(paymentDTO);
+            }
+        });
+        if(mustAddToExisting) {
+            paymentPlanButton.setText(Label.getLabel("payment_plan_add_existing"));
+        }
+
     }
 
     @Override
@@ -194,17 +209,8 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
 
     @Override
     public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
-        String tag = PaymentDetailsFragmentDialog.class.getName();
-        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-        Fragment prev = getChildFragmentManager().findFragmentByTag(tag);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-
-        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-                .newInstance(paymentDTO, paymentLineItem, selectedBalance, false);
-        dialog.show(ft, tag);
+        actionCallback.displayBalanceDetails(paymentDTO, paymentLineItem, selectedBalance);
     }
+
 
 }

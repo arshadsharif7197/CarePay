@@ -18,11 +18,12 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class PracticeModeAddExistingPaymentPlanFragment extends PatientModeAddExistingPaymentPlanFragment {
 
-    public static PracticeModeAddExistingPaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO existingPlan){
+    public static PracticeModeAddExistingPaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO existingPlan, double amount){
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
         DtoHelper.bundleDto(args, existingPlan);
+        args.putDouble(KEY_PLAN_AMOUNT, amount);
 
         PracticeModeAddExistingPaymentPlanFragment fragment = new PracticeModeAddExistingPaymentPlanFragment();
         fragment.setArguments(args);

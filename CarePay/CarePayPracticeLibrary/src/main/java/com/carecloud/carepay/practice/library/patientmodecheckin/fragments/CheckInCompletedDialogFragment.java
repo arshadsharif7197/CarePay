@@ -23,13 +23,21 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
+import static com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment.MODE_ADD;
+import static com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment.MODE_CREATE;
+import static com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment.MODE_EDIT;
 
 import java.text.NumberFormat;
 import java.util.Date;
@@ -43,12 +51,18 @@ import java.util.Locale;
 public class CheckInCompletedDialogFragment extends BaseDialogFragment {
 
     private boolean hasPayment;
+    private boolean hasPaymentPlan;
     private boolean isAdHocForms;
+    private  @PaymentPlanConfirmationFragment.ConfirmationMode int confirmationMode;
+
     private AppointmentDTO selectedAppointment;
     private String userImageUrl;
     private CheckCompleteInterface callback;
     private IntegratedPatientPaymentPayload patientPaymentPayload;
+    private PaymentPlanDTO paymentPlanDTO;
     private List<String> filledForms;
+
+    private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
     private
     @Defs.AppointmentNavigationTypeDef
@@ -72,15 +86,13 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
 
     /**
      * @param appointmentDTO the appointment balances
-     * @param hasPayment     boolean indicating if there has been a payment in the process
-     * @param isAdHocForms   indicates if its in the adhoc flow
+     * @param extras     extra flags
      * @return an instance of CheckInCompletedDialogFragment
      */
     public static CheckInCompletedDialogFragment newInstance(AppointmentDTO appointmentDTO,
-                                                             boolean hasPayment, boolean isAdHocForms) {
+                                                             Bundle extras) {
         Bundle args = new Bundle();
-        args.putBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, hasPayment);
-        args.putBoolean(CarePayConstants.ADHOC_FORMS, isAdHocForms);
+        args.putAll(extras);
         if (appointmentDTO != null) {
             DtoHelper.bundleDto(args, appointmentDTO);
         }
@@ -92,8 +104,12 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        hasPayment = getArguments().getBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, false);
-        isAdHocForms = getArguments().getBoolean(CarePayConstants.ADHOC_FORMS, false);
+        Bundle args = getArguments();
+        if(args != null){
+            hasPayment = getArguments().getBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, false);
+            isAdHocForms = getArguments().getBoolean(CarePayConstants.ADHOC_FORMS, false);
+            confirmationMode = args.getInt(CarePayConstants.EXTRA_CONFIRMATION_MODE, -1);
+        }
         appointmentNavigationType = getApplicationPreferences().getAppointmentNavigationOption();
         initPayloads(icicle);
     }
@@ -106,9 +122,15 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
                 selectedAppointment = DtoHelper.getConvertedDTO(AppointmentDTO.class, icicle);
             }
             if (hasPayment) {
-                patientPaymentPayload = ((PaymentsModel) dto).getPaymentPayload().getPatientPayments().getPayload();
-                userImageUrl = ((PaymentsModel) dto).getPaymentPayload().getPatientBalances().get(0)
-                        .getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
+                PaymentsModel paymentsModel = (PaymentsModel) dto;
+                hasPaymentPlan = confirmationMode > -1;
+                if(hasPaymentPlan){
+                    paymentPlanDTO = paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0);
+                }else {
+                    patientPaymentPayload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
+                    userImageUrl = ((PaymentsModel) dto).getPaymentPayload().getPatientBalances().get(0)
+                            .getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
+                }
             } else if (isAdHocForms) {
 //                selectedAppointment = ((AppointmentsResultModel) dto).getPayload().getAppointments().get(0);
                 filledForms = ((AppointmentsResultModel) dto).getPayload().getFilledForms();
@@ -152,7 +174,8 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
             return;
         }
 
-        view.findViewById(R.id.paymentInformation).setVisibility(hasPayment ? View.VISIBLE : View.GONE);
+        view.findViewById(R.id.paymentInformation).setVisibility(hasPayment && !hasPaymentPlan ? View.VISIBLE : View.GONE);
+        view.findViewById(R.id.paymentPlanInformation).setVisibility(hasPaymentPlan ? View.VISIBLE : View.GONE);
 
         final ImageView userImage = (ImageView) view.findViewById(R.id.userImage);
         Picasso.with(getContext()).load(userImageUrl)
@@ -217,7 +240,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
 
 
         TextView paymentTypeTextView = (TextView) view.findViewById(R.id.paymentTypeTextView);
-        if (hasPayment) {
+        if (hasPayment && !hasPaymentPlan) {
             paymentTypeTextView.setText(Label.getLabel("payment_type_one_time"));
 
             TextView paymentMethodTextView = (TextView) view.findViewById(R.id.paymentMethodTextView);
@@ -226,15 +249,34 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
             TextView confirmationNumberTextView = (TextView) view.findViewById(R.id.confirmationNumberTextView);
             confirmationNumberTextView.setText(patientPaymentPayload.getConfirmation());
 
-            NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
             TextView totalPaidTextView = (TextView) view.findViewById(R.id.totalPaidTextView);
             totalPaidTextView.setText(currencyFormatter.format(patientPaymentPayload.getTotalPaid()));
 
-            if (appointmentNavigationType == Defs.NAVIGATE_CHECKOUT ) {
+            if (appointmentNavigationType == Defs.NAVIGATE_CHECKOUT) {
                 TextView successMessage = (TextView) view.findViewById(R.id.successMessage);
                 successMessage.setText(Label.getLabel("confirm_appointment_checkout"));
             }
             //todo display possible errors
+
+        } else if(hasPaymentPlan) {
+            PaymentPlanPayloadDTO paymentPlanPayloadDTO = paymentPlanDTO.getPayload();
+
+            paymentTypeTextView.setText(getMessageLabel());
+
+            TextView totalAmount = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.payment_confirm_amount_value);
+            totalAmount.setText(currencyFormatter.format(paymentPlanPayloadDTO.getAmount()));
+
+            TextView installments = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.payment_confirm_installments_value);
+            installments.setText(String.valueOf(paymentPlanPayloadDTO.getPaymentPlanDetails().getInstallments()));
+
+            String paymentAmountString = currencyFormatter.format(paymentPlanPayloadDTO.getPaymentPlanDetails().getAmount()) +
+                    paymentPlanPayloadDTO.getPaymentPlanDetails().getFrequencyString();
+            TextView paymentAmount = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.payment_confirm_payment_value);
+            paymentAmount.setText(paymentAmountString);
+
+            TextView dueDate = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.payment_confirm_due_value);
+            dueDate.setText(StringUtil.getOrdinal(getApplicationPreferences().getUserLanguage(),
+                    paymentPlanPayloadDTO.getPaymentPlanDetails().getDayOfMonth()));
 
         } else if (isAdHocForms) {
             setUpForAdHocForms(view);
@@ -265,4 +307,17 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
         AdHocRecyclerViewNameAdapter adapter = new AdHocRecyclerViewNameAdapter(filledForms);
         signedFormsRecyclerView.setAdapter(adapter);
     }
+
+    private String getMessageLabel(){
+        switch (confirmationMode){
+            case MODE_ADD:
+                return Label.getLabel("payment_plan_success_add_short");
+            case MODE_EDIT:
+                return Label.getLabel("payment_plan_success_edit_short");
+            case MODE_CREATE:
+            default:
+                return Label.getLabel("payment_plan_success_create_short");
+        }
+    }
+
 }
