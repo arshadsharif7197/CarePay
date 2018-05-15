@@ -16,9 +16,7 @@ import com.carecloud.carepaylibray.customdialogs.BasePaymentDetailsFragmentDialo
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanPayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
@@ -38,6 +36,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
     private PaymentPlanInterface callback;
+    protected View payButton;
 
     /**
      * @param paymentsModel  the payment model
@@ -121,7 +120,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
             });
         }
 
-        View payButton = view.findViewById(R.id.payment_details_pay_now_button);
+        payButton = view.findViewById(R.id.payment_details_pay_now_button);
         payButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -131,7 +130,6 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         });
 
         View editPlanButton = view.findViewById(R.id.editPlanButton);
-        editPlanButton.setVisibility(getEditPlanButtonVisibility(paymentPlanDTO.getMetadata().getPracticeId()));
         editPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,20 +137,6 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
                 dismiss();
             }
         });
-    }
-
-    private int getEditPlanButtonVisibility(String practiceId) {
-        for (PaymentsPayloadSettingsDTO settings : paymentsModel.getPaymentPayload().getPaymentSettings()) {
-            if (settings.getMetadata().getPracticeId().equals(practiceId)) {
-                for (PaymentSettingsBalanceRangeRule rules : settings.getPayload().getPaymentPlans().getBalanceRangeRules()) {
-                    if (rules.getMaxBalance().getValue() >= paymentPlanDTO.getPayload().getAmount()
-                            && rules.getMinBalance().getValue() <= paymentPlanDTO.getPayload().getAmount()) {
-                        return View.VISIBLE;
-                    }
-                }
-            }
-        }
-        return View.GONE;
     }
 
     @Override

@@ -375,10 +375,10 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     private View.OnClickListener addNewCardButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            callback.showAddCard(amountToMakePayment, paymentsModel);
             if (getDialog() != null) {
                 dismiss();
             }
+            callback.showAddCard(amountToMakePayment, paymentsModel);
         }
     };
 
