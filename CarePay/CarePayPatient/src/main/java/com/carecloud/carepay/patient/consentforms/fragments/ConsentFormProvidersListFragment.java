@@ -74,7 +74,7 @@ public class ConsentFormProvidersListFragment extends BaseFragment implements Co
         List<FormDTO> practiceList = filterList(consentFormDto.getPayload().getForms());
         consentFormDto.getPayload().setForms(practiceList);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.consentFormsRecyclerView);
-        if (practiceList.size() < 0) {
+        if (practiceList.size() > 0) {
             Map<String, UserPracticeDTO> practicesInformation = getPracticesInformation(consentFormDto.getPayload()
                     .getPracticesInformation());
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -91,7 +91,6 @@ public class ConsentFormProvidersListFragment extends BaseFragment implements Co
     private List<FormDTO> filterList(List<FormDTO> forms) {
         List<FormDTO> filteredList = new ArrayList<>();
         for (FormDTO practice : forms) {
-            practice.setPracticeForms(new ArrayList<PracticeForm>());
             if (practice.getPracticeForms().size() > 0) {
                 filteredList.add(practice);
             }
