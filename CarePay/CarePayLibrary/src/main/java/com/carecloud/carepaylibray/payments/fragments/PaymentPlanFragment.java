@@ -160,8 +160,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     }
 
     protected void setupHeader(View view) {
-        TextView total = (TextView) view.findViewById(R.id.payment_plan_total);
-        total.setText(currencyFormatter.format(paymentPlanAmount));
+        TextView totalTextView = (TextView) view.findViewById(R.id.payment_plan_total);
+        totalTextView.setText(currencyFormatter.format(paymentPlanAmount));
 
         TextView parameters = (TextView) view.findViewById(R.id.paymentPlanParametersTextView);
         if (parameters != null) {
@@ -259,7 +259,9 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     private void setupButtons(View view) {
         if (selectedBalance != null) {
             View addToExisting = view.findViewById(R.id.payment_plan_add_existing);
-            if (hasExistingPlans() && canAddToExisting()) {
+            if (hasExistingPlans() && canAddToExisting()
+                    && !paymentsModel.getPaymentPayload().getValidPlans(selectedBalance.getMetadata().getPracticeId(),
+                    selectedBalance.getPayload().get(0).getAmount()).isEmpty()) {
                 addToExisting.setVisibility(View.VISIBLE);
             } else {
                 addToExisting.setVisibility(View.GONE);

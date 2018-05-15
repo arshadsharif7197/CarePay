@@ -35,6 +35,9 @@ public class PaymentPlanMetadataDTO {
     @SerializedName("payment_plan_id")
     @Expose
     private String paymentPlanId;
+    @SerializedName("index")
+    @Expose
+    private Index index = new Index();
 
     public String getUserId() {
         return userId;
@@ -106,5 +109,27 @@ public class PaymentPlanMetadataDTO {
 
     public void setPracticeName(String practiceName) {
         this.practiceName = practiceName;
+    }
+
+    public Index getIndex() {
+        return index;
+    }
+
+    public void setIndex(Index index) {
+        this.index = index;
+    }
+
+    public static class Index {
+        @SerializedName("confirmation")
+        @Expose
+        private String confirmation;
+
+        public String getConfirmation() {
+            return confirmation;
+        }
+
+        public void setConfirmation(String confirmation) {
+            this.confirmation = confirmation;
+        }
     }
 }
