@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -57,6 +59,11 @@ public class PracticePaymentPlanListFragment extends ValidPlansFragment {
         if(args != null){
             practiceId = args.getString(KEY_PRACTICE_ID);
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
+        return inflater.inflate(R.layout.fragment_payment_plans_list, container, false);
     }
 
     @Override
