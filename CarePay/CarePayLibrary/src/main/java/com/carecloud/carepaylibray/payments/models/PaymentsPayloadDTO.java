@@ -525,4 +525,81 @@ public class PaymentsPayloadDTO implements Serializable {
         return false;
     }
 
+    /**
+     * Calculate the minimum amount that can be placed on a plan
+     * @param practiceId practice id for the plan
+     * @return minimum amount that can be placed on a new plan or added to an existing plan
+     */
+    public double getMinimumAllowablePlanAmount(String practiceId) {
+        for (PaymentsPayloadSettingsDTO settingsDTO : getPaymentSettings()) {
+            if (practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())) {
+                double minPaymentPlanAmount = Double.MAX_VALUE;
+                for(PaymentSettingsBalanceRangeRule rangeRule : settingsDTO.getPayload().getPaymentPlans().getBalanceRangeRules()){
+                    double minBalance = rangeRule.getMinBalance().getValue();
+                    if(minBalance < minPaymentPlanAmount){
+                        minPaymentPlanAmount = minBalance;
+                    }
+                }
+
+                //checkif minimum amount can be added to an existing
+                List<PaymentPlanDTO> activePlans = getActivePlans(practiceId);
+                if(!activePlans.isEmpty()) {
+                    if (getValidPlans(practiceId, 0.01).isEmpty()) {
+                        double maxPlanAmount = 0D;
+                        for(PaymentPlanDTO paymentPlan : activePlans){
+                            double pendingAmount = paymentPlan.getPayload().getAmount();
+                            if(pendingAmount > maxPlanAmount){
+                                maxPlanAmount = pendingAmount;
+                            }
+                        }
+                        return SystemUtil.safeSubtract(minPaymentPlanAmount, maxPlanAmount);
+                    } else {
+                        return 0D;
+                    }
+                } else {
+                    return minPaymentPlanAmount;
+                }
+            }
+        }
+        return Double.MAX_VALUE;
+    }
+
+    /**
+     * Calculate the maximum amount that can be placed on a payment plan
+     * @param practiceId practice id for the plan
+     * @return maximum amount that can be placed on a new plan or added to an existing plan if a new one cannot be created
+     */
+    public double getMaximumAllowablePlanAmount(String practiceId){
+        for (PaymentsPayloadSettingsDTO settingsDTO : getPaymentSettings()) {
+            if (practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())) {
+                double maxPaymentPlanAmount = 0D;
+                for(PaymentSettingsBalanceRangeRule rangeRule : settingsDTO.getPayload().getPaymentPlans().getBalanceRangeRules()){
+                    double maxBalance = rangeRule.getMaxBalance().getValue();
+                    if(maxBalance > maxPaymentPlanAmount){
+                        maxPaymentPlanAmount = maxBalance;
+                    }
+                }
+
+                //checkif max amount can be added to a new plan
+                List<PaymentPlanDTO> activePlans = getActivePlans(practiceId);
+                if (activePlans.isEmpty() || settingsDTO.getPayload().getPaymentPlans().isCanHaveMultiple()) {
+                    return maxPaymentPlanAmount;
+                } else if (settingsDTO.getPayload().getPaymentPlans().isAddBalanceToExisting()) {
+                    double minPlanAmount = Double.MAX_VALUE;
+                    for(PaymentPlanDTO paymentPlan : activePlans){
+                        double pendingAmount = paymentPlan.getPayload().getAmount();
+                        if(pendingAmount < minPlanAmount){
+                            minPlanAmount = pendingAmount;
+                        }
+                    }
+                    if(minPlanAmount > maxPaymentPlanAmount){
+                        return 0D;
+                    }
+                    return SystemUtil.safeSubtract(maxPaymentPlanAmount, minPlanAmount);
+                }
+
+            }
+        }
+        return 0D;
+    }
 }

@@ -504,15 +504,17 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
                     lineItem.setType(IntegratedPaymentLineItem.TYPE_APPLICATION);
                     lineItem.setTypeId(balanceItem.getId().toString());
 
-                    if (amountHolder >= balanceItem.getBalance()) {
-                        lineItem.setAmount(balanceItem.getBalance());
-                        amountHolder = SystemUtil.safeSubtract(amountHolder, balanceItem.getBalance());
-                    } else {
-                        lineItem.setAmount(amountHolder);
-                        amountHolder = 0;
-                    }
+                    if(balanceItem.getBalance() > 0){
+                        if (amountHolder >= balanceItem.getBalance()) {
+                            lineItem.setAmount(balanceItem.getBalance());
+                            amountHolder = SystemUtil.safeSubtract(amountHolder, balanceItem.getBalance());
+                        } else {
+                            lineItem.setAmount(amountHolder);
+                            amountHolder = 0;
+                        }
 
-                    lineItems.add(lineItem);
+                        lineItems.add(lineItem);
+                    }
                 }
             }
         }

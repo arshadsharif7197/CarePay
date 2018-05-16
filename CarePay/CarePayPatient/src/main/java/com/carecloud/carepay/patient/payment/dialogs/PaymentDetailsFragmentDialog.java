@@ -222,8 +222,10 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                         return false;
                     }
 
+                    double maxAllowablePayment = paymentReceiptModel.getPaymentPayload().getMaximumAllowablePlanAmount(practiceId);
                     for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
-                        if (balance >= rule.getMinBalance().getValue() && balance <= rule.getMaxBalance().getValue()) {
+                        if (maxAllowablePayment >= rule.getMinBalance().getValue() &&
+                                maxAllowablePayment <= rule.getMaxBalance().getValue()) {
                             //found a valid rule that covers this balance
                             if(paymentReceiptModel.getPaymentPayload().getActivePlans(practiceId).isEmpty()){
                                 //don't already have an existing plan so this is the first plan
@@ -237,8 +239,9 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                     }
 
                     //check if balance can be added to existing
-                    if(paymentPlanSettings.isAddBalanceToExisting() && !
-                            paymentReceiptModel.getPaymentPayload().getValidPlans(practiceId, balance).isEmpty()) {
+                    double minAllowablePayment = paymentReceiptModel.getPaymentPayload().getMinimumAllowablePlanAmount(practiceId);
+                    if(paymentPlanSettings.isAddBalanceToExisting() &&
+                            !paymentReceiptModel.getPaymentPayload().getValidPlans(practiceId, minAllowablePayment).isEmpty()) {
                         mustAddToExisting = true;
                         return true;
                     }
