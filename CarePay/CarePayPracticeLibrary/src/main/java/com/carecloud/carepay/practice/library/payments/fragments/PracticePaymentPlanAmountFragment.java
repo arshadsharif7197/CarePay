@@ -8,7 +8,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentDetailInterface;
-import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
@@ -17,8 +16,6 @@ import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-
-import java.util.List;
 
 public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDialogFragment {
 
@@ -32,6 +29,7 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
     private boolean hasExistingPlans;
 
     private double minimumPaymentAmount = 0D;
+    private double maximumPaymentAmount = 0D;
 
     /**
      * @param paymentsModel     the payment model
@@ -76,10 +74,21 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
         header.setText(Label.getLabel("payment_plan_partial_amount_header"));
         applyButton.setEnabled(false);
         applyButton.setText(Label.getLabel("payment_create_payment_plan"));
-        if(minimumPaymentAmount > 0D) {
+        TextView footer = (TextView) findViewById(R.id.partialPaymentHeaderBottom);
+        if(minimumPaymentAmount > 0D && maximumPaymentAmount < fullAmount){
+            String amountBetween  = String.format(Label.getLabel("payment_partial_amount_between"),
+                    currencyFormat.format(minimumPaymentAmount),
+                    currencyFormat.format(maximumPaymentAmount));
+            footer.setText(amountBetween);
+            footer.setVisibility(View.VISIBLE);
+        }else if(minimumPaymentAmount > 0D) {
             String minimumAmount = Label.getLabel("payment_partial_minimum_amount") +
                     currencyFormat.format(minimumPaymentAmount);
-            TextView footer = (TextView) findViewById(R.id.partialPaymentHeaderBottom);
+            footer.setText(minimumAmount);
+            footer.setVisibility(View.VISIBLE);
+        }else if(maximumPaymentAmount < fullAmount){
+            String minimumAmount = Label.getLabel("payment_partial_maximum_amount") +
+                    currencyFormat.format(maximumPaymentAmount);
             footer.setText(minimumAmount);
             footer.setVisibility(View.VISIBLE);
         }
@@ -153,35 +162,11 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
             if (practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())) {
                 canAddToExisting = settingsDTO.getPayload().getPaymentPlans().isAddBalanceToExisting();
                 canCreateMultiple = settingsDTO.getPayload().getPaymentPlans().isCanHaveMultiple();
-
-                double minPayment = Double.MAX_VALUE;
-                for(PaymentSettingsBalanceRangeRule rangeRule : settingsDTO.getPayload().getPaymentPlans().getBalanceRangeRules()){
-                    double minBalance = rangeRule.getMinBalance().getValue();
-                    if(minBalance < minPayment){
-                        minPayment = minBalance;
-                    }
-                }
-
-                //checkif minimum amount can be added to an existing
-                List<PaymentPlanDTO> activePlans = paymentsModel.getPaymentPayload().getActivePlans(practiceId);
-                if(!activePlans.isEmpty()) {
-                    if (paymentsModel.getPaymentPayload().getValidPlans(practiceId, 0.01).isEmpty()) {
-                        double maxPlanAmount = 0D;
-                        for(PaymentPlanDTO paymentPlan : activePlans){
-                            double pendingAmount = paymentPlan.getPayload().getAmount();
-                            if(pendingAmount > maxPlanAmount){
-                                maxPlanAmount = pendingAmount;
-                            }
-                        }
-                        minimumPaymentAmount = SystemUtil.safeSubtract(minPayment, maxPlanAmount);
-                    }
-                }else{
-                    minimumPaymentAmount = minPayment;
-                }
-
             }
         }
 
+        minimumPaymentAmount = paymentsModel.getPaymentPayload().getMinimumAllowablePlanAmount(practiceId);
+        maximumPaymentAmount = paymentsModel.getPaymentPayload().getMaximumAllowablePlanAmount(practiceId);
         hasExistingPlans = !paymentsModel.getPaymentPayload().getActivePlans(practiceId).isEmpty();
     }
 
