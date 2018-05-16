@@ -492,7 +492,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         double amountHolder = paymentPlanAmount;
         List<PaymentPlanLineItem> lineItems = new ArrayList<>();
         for (PendingBalancePayloadDTO pendingBalance : selectedBalance.getPayload()) {
-            if (StringUtil.isNullOrEmpty(pendingBalance.getType()) || pendingBalance.getType().equals(PATIENT_BALANCE)) {//ignore responsibility types
+            if (StringUtil.isNullOrEmpty(pendingBalance.getType())
+                    || pendingBalance.getType().equals(PATIENT_BALANCE)) {//ignore responsibility types
                 for (BalanceItemDTO balanceItem : pendingBalance.getDetails()) {
                     if (amountHolder <= 0) {
                         break;

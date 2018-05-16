@@ -225,7 +225,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         paymentPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.onPaymentPlanAction(paymentsModel);
+                callback.showPaymentPlanDashboard(paymentsModel);
                 hideDialog();
             }
         });

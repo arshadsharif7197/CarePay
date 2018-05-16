@@ -780,6 +780,11 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     }
 
     @Override
+    public void showPaymentPlanDashboard(PaymentsModel paymentsModel) {
+
+    }
+
+    @Override
     protected void processExternalPayment(PaymentExecution execution, Intent data) {
         switch (execution) {
             case clover: {

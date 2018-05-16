@@ -640,6 +640,11 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
+    public void showPaymentPlanDashboard(PaymentsModel paymentsModel) {
+
+    }
+
+    @Override
     public void onDetailCancelClicked(PaymentsModel paymentsModel) {
         startPaymentProcess(paymentsModel);
     }
