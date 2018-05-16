@@ -46,13 +46,13 @@ import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
-
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
 
 public class PaymentPlanFragment extends BasePaymentDialogFragment implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
     protected static final String KEY_PLAN_AMOUNT = "plan_amount";
@@ -501,15 +501,17 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
                     lineItem.setType(IntegratedPaymentLineItem.TYPE_APPLICATION);
                     lineItem.setTypeId(balanceItem.getId().toString());
 
-                    if (amountHolder >= balanceItem.getBalance()) {
-                        lineItem.setAmount(balanceItem.getBalance());
-                        amountHolder = SystemUtil.safeSubtract(amountHolder, balanceItem.getBalance());
-                    } else {
-                        lineItem.setAmount(amountHolder);
-                        amountHolder = 0;
-                    }
+                    if(balanceItem.getBalance() > 0){
+                        if (amountHolder >= balanceItem.getBalance()) {
+                            lineItem.setAmount(balanceItem.getBalance());
+                            amountHolder = SystemUtil.safeSubtract(amountHolder, balanceItem.getBalance());
+                        } else {
+                            lineItem.setAmount(amountHolder);
+                            amountHolder = 0;
+                        }
 
-                    lineItems.add(lineItem);
+                        lineItems.add(lineItem);
+                    }
                 }
             }
         }
@@ -566,7 +568,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         return false;
     }
 
-    protected boolean enableAddToExisting(){
+    protected boolean enableAddToExisting() {
         return hasExistingPlans() && canAddToExisting()
                 && !paymentsModel.getPaymentPayload().getValidPlans(selectedBalance.getMetadata().getPracticeId(),
                 selectedBalance.getPayload().get(0).getAmount()).isEmpty();
