@@ -1086,16 +1086,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
-        String practiceId = selectedBalance.getMetadata().getPracticeId();
-        if(paymentsModel.getPaymentPayload().getActivePlans(practiceId).size() == 1){
-            onSelectedPlanToAdd(paymentsModel,
-                    selectedBalance,
-                    paymentsModel.getPaymentPayload().getActivePlans(practiceId).get(0),
-                    amount);
-        }else{
-            PracticeValidPlansFragment fragment = PracticeValidPlansFragment.newInstance(paymentsModel, selectedBalance, amount);
-            displayDialogFragment(fragment, false);
-        }
+        PracticeValidPlansFragment fragment = PracticeValidPlansFragment.newInstance(paymentsModel, selectedBalance, amount);
+        displayDialogFragment(fragment, false);
     }
 
     @Override
