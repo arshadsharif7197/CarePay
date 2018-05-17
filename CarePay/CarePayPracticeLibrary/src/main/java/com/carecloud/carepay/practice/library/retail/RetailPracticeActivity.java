@@ -195,11 +195,6 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
     }
 
     @Override
-    public void onCreditCardSelected(PaymentCreditCardsPayloadDTO papiPaymentMethod) {
-
-    }
-
-    @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         RetailModel retailModel = DtoHelper.getConvertedDTO(RetailModel.class, workflowDTO);
         RetailFragment retailFragment = (RetailFragment) getSupportFragmentManager()
