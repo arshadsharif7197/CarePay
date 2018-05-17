@@ -106,6 +106,7 @@ android {
             buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream-staging.carecloud.com:443"'
             buildConfigField 'String', 'PAYMENTS_BASE_URL', '"https://payments-staging.carecloud.com/"'
             buildConfigField 'String', 'PAYMENTS_API_KEY', '"Wvshvhv5RI5VUrqNTIvU784p7Bq8iEcjauySfh8O"'
+            buildConfigField 'String', 'RETAIL_REDIRECT_URL', '"https://web.gobreeze.com/payment"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AA8bbfbf57d80019455e6c05822d9d5038a718b924"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"0191c29a6357d500973052dcfb314c55"'

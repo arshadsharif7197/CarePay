@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.dtos.payload;
 
+import com.carecloud.carepay.service.library.unifiedauth.UnifiedCognitoInfo;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.CheckinSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
@@ -27,10 +28,12 @@ public class DemographicPayloadResponseDTO extends DemographicsSettingsPayloadDT
     @SerializedName("checkin_settings")
     @Expose
     private CheckinSettingsDTO checkinSettings = new CheckinSettingsDTO();
-
     @Expose
     @SerializedName("physicians")
     private List<PhysicianDto> physicians = new ArrayList<>();
+    @Expose
+    @SerializedName("cognito")
+    private UnifiedCognitoInfo cognito = new UnifiedCognitoInfo();
 
     public DemographicPayloadInfoDTO getDemographics() {
         return demographics;
@@ -76,5 +79,13 @@ public class DemographicPayloadResponseDTO extends DemographicsSettingsPayloadDT
 
     public void setPhysicians(List<PhysicianDto> physicians) {
         this.physicians = physicians;
+    }
+
+    public UnifiedCognitoInfo getCognito() {
+        return cognito;
+    }
+
+    public void setCognito(UnifiedCognitoInfo cognito) {
+        this.cognito = cognito;
     }
 }
