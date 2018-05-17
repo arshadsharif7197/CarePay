@@ -73,12 +73,8 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         holder.setStatus(payload, dateUtil.isToday());
         holder.setCheckInButton(position);
         holder.appointmentVisitTypeTextView.setText(payload.getVisitType().getDescription());
-        if (!StringUtil.isNullOrEmpty(payload.getVisitType().getDescription())){
-            holder.appointmentVisitTypeTextView.setText(payload.getVisitType().getDescription());
-        }else{
-            holder.appointmentVisitTypeTextView.setText(StringUtil.
-                    capitalize(payload.getVisitType().getName()));
-        }
+        holder.appointmentVisitTypeTextView.setText(StringUtil.
+                capitalize(payload.getVisitType().getName()));
     }
 
     public void setList(List<AppointmentDTO> appointmentsArrayList) {
