@@ -177,12 +177,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
             DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime());
             appointmentDateTextView.setText(dateUtil.getDateAsDayShortMonthDayOrdinal());
             appointmentTimeTextView.setText(dateUtil.getTime12Hour());
-            if (!StringUtil.isNullOrEmpty(appointmentDTO.getPayload().getVisitType().getDescription())){
-                appointmentVisitTypeTextView.setText(appointmentDTO.getPayload().getVisitType().getDescription());
-            }else{
-                appointmentVisitTypeTextView.setText(StringUtil.
-                        capitalize(appointmentDTO.getPayload().getVisitType().getName()));
-            }
+            appointmentVisitTypeTextView.setText(StringUtil.
+                    capitalize(appointmentDTO.getPayload().getVisitType().getName()));
 
             final ProviderDTO provider = appointmentDTO.getPayload().getProvider();
             providerInitials.setText(StringUtil.getShortName(provider.getName()));
