@@ -16,7 +16,7 @@ shopt -s nocasematch
 #####################################################################################
 if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "development" ]]; then
     echo "${green}*** DELETING DEVELOPMENT APKS FROM AWS ***${reset}"
-    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 rm s3://automation-zeus --recursive --exclude "*" --include "*development*"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 rm s3://automation-zeus --recursive --exclude "*" --include "*development*.apk"
 
     echo "${green}*** BUILDING DEVELOPMENT PRACTICE APK ***${reset}"
     ./gradlew :CarePayPracticeTablet:assembleDevelopment --profile --configure-on-demand
@@ -43,7 +43,7 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "development"
 elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "QA" ]]; then
 
     echo "${green}*** DELETING QA APKS FROM AWS ***${reset}"
-    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 rm s3://automation-zeus --recursive --exclude "*" --include "*qa*"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 rm s3://automation-zeus --recursive --exclude "*" --include "*qa*.apk"
 
     echo "${green}*** BUILDING QA PRACTICE APK ***${reset}"
     ./gradlew :CarePayPracticeTablet:assembleQa --profile --configure-on-demand
@@ -66,7 +66,7 @@ elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "QA" ]]; th
 elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "Staging" ]]; then
 
     echo "${green}*** DELETING STAGING APKS FROM AWS ***${reset}"
-    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 rm s3://automation-zeus --recursive --exclude "*" --include "*staging*"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 rm s3://automation-zeus --recursive --exclude "*" --include "*staging*.apk"
 
     echo "${green}*** BUILDING STAGING PRACTICE APK ***${reset}"
     ./gradlew :CarePayPracticeTablet:assembleStaging --profile --configure-on-demand
@@ -89,7 +89,7 @@ elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "Staging" ]
 elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "master" ]]; then
 
     echo "${green}*** DELETING PRODUCTION APKS FROM AWS ***${reset}"
-    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 rm s3://automation-zeus --recursive --exclude "*" --include "*production*"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 rm s3://automation-zeus --recursive --exclude "*" --include "*production*.apk"
 
     echo "${green}*** BUILDING PRODUCTION PRACTICE APK ***${reset}"
     ./gradlew :CarePayPracticeTablet:assembleProduction --profile --configure-on-demand
