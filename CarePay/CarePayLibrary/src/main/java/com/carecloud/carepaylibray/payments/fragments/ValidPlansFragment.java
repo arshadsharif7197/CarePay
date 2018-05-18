@@ -59,7 +59,7 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
                 callback = (PaymentPlanCreateInterface) context;
             }
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached context must implement PaymentPlanInterface");
+            throw new ClassCastException("Attached context must implement PaymentPlanEditInterface");
         }
     }
 

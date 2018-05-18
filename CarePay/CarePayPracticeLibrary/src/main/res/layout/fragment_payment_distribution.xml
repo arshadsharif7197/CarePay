@@ -397,8 +397,6 @@
 
             </LinearLayout>
 
-
-
         </FrameLayout>
 
     </LinearLayout>
@@ -416,7 +414,5 @@
             android:src="@drawable/dialog_button_bg" />
 
     </FrameLayout>
-
-
 
 </LinearLayout>

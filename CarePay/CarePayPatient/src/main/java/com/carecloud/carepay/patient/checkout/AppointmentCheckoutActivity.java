@@ -326,7 +326,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     @Override
-    public void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
+    public void onAddBalanceToExistingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
         ValidPlansFragment fragment = ValidPlansFragment.newInstance(paymentsModel, selectedBalance, amount);
         replaceFragment(fragment, true);
     }
@@ -355,7 +355,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
         boolean addExisting = false;
         if(paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)){
-            onAddBalanceToExitingPlan(paymentsModel, selectedBalance, amount);
+            onAddBalanceToExistingPlan(paymentsModel, selectedBalance, amount);
             addExisting = true;
         } else {
             PaymentPlanFragment fragment = PaymentPlanFragment.newInstance(paymentsModel, selectedBalance, amount);

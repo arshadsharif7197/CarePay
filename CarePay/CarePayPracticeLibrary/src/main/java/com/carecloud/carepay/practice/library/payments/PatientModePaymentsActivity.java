@@ -47,7 +47,7 @@ import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFra
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
@@ -74,7 +74,7 @@ import java.util.Map;
  */
 public class PatientModePaymentsActivity extends BasePracticeActivity implements PaymentBalancesAdapter.PaymentRecyclerViewCallback,
         PaymentNavigationCallback, ResponsibilityFragmentDialog.PayResponsibilityCallback,
-        PaymentMethodDialogInterface, PaymentPlanInterface {
+        PaymentMethodDialogInterface, PaymentPlanEditInterface {
 
     private PaymentsModel paymentResultModel;
     private PatientBalanceDTO selectedBalance;
@@ -221,7 +221,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
     public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
         boolean addExisting = false;
         if(paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)){
-            onAddBalanceToExitingPlan(paymentsModel, selectedBalance, amount);
+            onAddBalanceToExistingPlan(paymentsModel, selectedBalance, amount);
             addExisting = true;
         } else {
             PatientModePaymentPlanFragment fragment = PatientModePaymentPlanFragment.newInstance(paymentsModel, selectedBalance, amount);
@@ -543,7 +543,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
+    public void onAddBalanceToExistingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
         PracticeValidPlansFragment fragment = PracticeValidPlansFragment.newInstance(paymentsModel, selectedBalance, amount);
         displayDialogFragment(fragment, false);
     }

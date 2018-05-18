@@ -106,7 +106,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
                 callback = (PaymentPlanCreateInterface) context;
             }
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached context must implement PaymentPlanInterface");
+            throw new ClassCastException("Attached context must implement PaymentPlanEditInterface");
         }
     }
 
@@ -451,7 +451,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     }
 
     protected void addBalanceToExisting() {
-        callback.onAddBalanceToExitingPlan(paymentsModel, selectedBalance, paymentPlanAmount);
+        callback.onAddBalanceToExistingPlan(paymentsModel, selectedBalance, paymentPlanAmount);
         String[] params = {getString(R.string.param_practice_id),
                 getString(R.string.param_balance_amount),
                 getString(R.string.param_is_add_existing)};

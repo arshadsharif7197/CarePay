@@ -36,6 +36,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PatientModePaym
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionEntryFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentHistoryFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PaymentPlanDashboardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeModeAddExistingPaymentPlanFragment;
@@ -73,7 +74,7 @@ import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
@@ -102,7 +103,7 @@ import java.util.Set;
 
 public class PracticeModeCheckInActivity extends BasePracticeActivity
         implements FilterDialog.FilterDialogListener, PracticePaymentNavigationCallback,
-        AppointmentDetailDialog.AppointmentDialogCallback, PaymentPlanInterface,
+        AppointmentDetailDialog.AppointmentDialogCallback, PaymentPlanEditInterface,
         CheckedInAppointmentAdapter.CheckinItemCallback, ShamrockPaymentsCallback {
 
 
@@ -781,7 +782,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void showPaymentPlanDashboard(PaymentsModel paymentsModel) {
-
+        PaymentPlanDashboardFragment fragment = PaymentPlanDashboardFragment.newInstance(paymentsModel);
+        displayDialogFragment(fragment, false);
     }
 
     @Override
@@ -1119,7 +1121,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     }
 
     @Override
-    public void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
+    public void onAddBalanceToExistingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
         PracticeValidPlansFragment fragment = PracticeValidPlansFragment.newInstance(paymentsModel, selectedBalance, amount);
         displayDialogFragment(fragment, false);
 

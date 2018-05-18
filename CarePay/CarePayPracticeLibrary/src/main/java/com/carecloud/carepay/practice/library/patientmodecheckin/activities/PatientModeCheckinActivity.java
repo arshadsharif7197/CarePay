@@ -502,7 +502,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
+    public void onAddBalanceToExistingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
         PracticeValidPlansFragment fragment = PracticeValidPlansFragment.newInstance(paymentsModel, selectedBalance, amount);
         displayDialogFragment(fragment, false);
     }
@@ -539,7 +539,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
         boolean addExisting = false;
         if(paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)){
-            onAddBalanceToExitingPlan(paymentsModel, selectedBalance, amount);
+            onAddBalanceToExistingPlan(paymentsModel, selectedBalance, amount);
             addExisting = true;
         } else {
             PatientModePaymentPlanFullFragment fragment = PatientModePaymentPlanFullFragment.newInstance(paymentsModel, selectedBalance, amount);
