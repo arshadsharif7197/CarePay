@@ -134,6 +134,9 @@ public class AdHocFormsListFragment extends BaseDialogFragment
                             jsonObject.toString(), queryMap);
                 }
             });
+
+            //TODO: delete this line when pending forms are ready (SHMRK-5240)
+            sendFormButton.setVisibility(View.GONE);
         } else {
             view.findViewById(R.id.noFormsContainer).setVisibility(View.VISIBLE);
         }
