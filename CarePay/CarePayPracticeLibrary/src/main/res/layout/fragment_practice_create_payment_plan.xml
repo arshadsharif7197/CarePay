@@ -249,6 +249,39 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+                <LinearLayout
+                    android:id="@+id/existingChargesLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:orientation="vertical">
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/existingChargesLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dimen_10dp"
+                        android:layout_marginStart="@dimen/dimen_15dp"
+                        android:layout_marginTop="@dimen/dimen_25dp"
+                        android:textAllCaps="true"
+                        android:textColor="@color/textview_default_textcolor"
+                        android:textSize="@dimen/text_size_18sp"
+                        app:customAssetFont="proxima_nova_extra_bold"
+                        breeze:textKey="payment.addBalanceToPaymentPlan.section.title.existingCharges"
+                        tools:text="Existing Charges" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_1dp"
+                        android:background="@color/light_gray" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/existingChargesRecycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/settingsLabel"
                     android:layout_width="wrap_content"

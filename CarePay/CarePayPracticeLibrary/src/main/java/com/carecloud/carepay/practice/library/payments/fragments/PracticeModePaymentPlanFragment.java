@@ -61,11 +61,12 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         PaymentPlanItemAdapter.PaymentPlanItemInterface, PayeezyRequestTask.AuthorizeCreditCardCallback,
         BaseAddCreditCardFragment.IAuthoriseCreditCardResponse {
 
-    private PaymentCreditCardsPayloadDTO selectedCreditCard;
-    private List<BalanceItemDTO> balanceItems = new ArrayList<>();
-    private TextView paymentValueTextView;
+    protected PaymentCreditCardsPayloadDTO selectedCreditCard;
+    protected List<BalanceItemDTO> balanceItems = new ArrayList<>();
+    protected TextView paymentValueTextView;
     private PaymentPlanItemAdapter adapter;
-    private double totalBalance;
+    protected double totalBalance;
+    protected double minAmount = 0.1;
     private CreditCardsListAdapter creditCardsListAdapter;
 
     public static PracticeModePaymentPlanFragment newInstance(PaymentsModel paymentsModel,
@@ -80,6 +81,12 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
     }
 
     @Override
+    public void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
+        paymentPlanAmount = 0.00;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_practice_create_payment_plan, container, false);
     }
@@ -88,13 +95,14 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
     public void onViewCreated(View view, Bundle icicle) {
         setupToolbar(view, Label.getLabel("payment.createPaymentPlanPostModel.title.label.title"));
         setUpAmounts(view);
-        setUpItems(view);
+        balanceItems = filterItems();
+        setUpItems(view, balanceItems);
         setupFields(view);
         setupButtons(view);
         setUpCreditCards(view);
     }
 
-    private void setupToolbar(View view, String titleString) {
+    protected void setupToolbar(View view, String titleString) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.payment_toolbar);
         if (toolbar != null) {
             TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
@@ -109,13 +117,31 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
                 callback.onDismissPaymentPlan(paymentsModel);
             }
         });
-
     }
 
-    private void setUpItems(View view) {
+    protected void setUpAmounts(View view) {
+        double unAppliedCredit = selectedBalance.getPayload().get(0).getUnappliedCredit() * -1;
+        TextView unAppliedValueTextView = (TextView) view.findViewById(R.id.unAppliedValueTextView);
+        unAppliedValueTextView.setText(currencyFormatter.format(unAppliedCredit));
+        if (unAppliedCredit < 0.01) {
+            unAppliedValueTextView.setVisibility(View.GONE);
+            view.findViewById(R.id.unAppliedColon).setVisibility(View.GONE);
+            view.findViewById(R.id.unAppliedLabel).setVisibility(View.GONE);
+            view.findViewById(R.id.balanceLabelSeparator).setVisibility(View.GONE);
+        }
+
+        TextView balanceValueTextView = (TextView) view.findViewById(R.id.balanceValueTextView);
+        totalBalance = getTotalBalance(selectedBalance);
+        balanceValueTextView.setText(currencyFormatter.format(totalBalance));
+
+        paymentValueTextView = (TextView) view.findViewById(R.id.paymentValueTextView);
+        paymentValueTextView.setText(currencyFormatter.format(paymentPlanAmount));
+    }
+
+    protected void setUpItems(View view, List<BalanceItemDTO> items) {
         RecyclerView itemsRecycler = (RecyclerView) view.findViewById(R.id.itemRecycler);
         itemsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new PaymentPlanItemAdapter(balanceItems);
+        adapter = new PaymentPlanItemAdapter(items);
         adapter.setCallback(this);
         itemsRecycler.setAdapter(adapter);
     }
@@ -131,7 +157,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
                     if (selectedCreditCard != null && selectedCreditCard.getCreditCardsId() == null) {
                         authorizeCreditCard();
                     } else {
-                        createPaymentPlanPostModel(true);
+                        mainButtonAction();
                     }
                 }
             }
@@ -145,25 +171,8 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         });
     }
 
-    private void setUpAmounts(View view) {
-        double unAppliedCredit = selectedBalance.getPayload().get(0).getUnappliedCredit() * -1;
-        TextView unAppliedValueTextView = (TextView) view.findViewById(R.id.unAppliedValueTextView);
-        unAppliedValueTextView.setText(currencyFormatter.format(unAppliedCredit));
-        if (unAppliedCredit < 0.01) {
-            unAppliedValueTextView.setVisibility(View.GONE);
-            view.findViewById(R.id.unAppliedColon).setVisibility(View.GONE);
-            view.findViewById(R.id.unAppliedLabel).setVisibility(View.GONE);
-            view.findViewById(R.id.balanceLabelSeparator).setVisibility(View.GONE);
-        }
-
-        TextView balanceValueTextView = (TextView) view.findViewById(R.id.balanceValueTextView);
-        totalBalance = getTotalBalance(selectedBalance);
-        balanceItems = filterItems(balanceItems);
-        balanceValueTextView.setText(currencyFormatter.format(totalBalance));
-
-        paymentValueTextView = (TextView) view.findViewById(R.id.paymentValueTextView);
-        paymentPlanAmount = 0.00;
-        paymentValueTextView.setText(currencyFormatter.format(paymentPlanAmount));
+    protected void mainButtonAction() {
+        createPaymentPlanPostModel(true);
     }
 
     private double getTotalBalance(PendingBalanceDTO selectedBalance) {
@@ -171,8 +180,8 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
                 selectedBalance.getPayload().get(0).getPaymentPlansAmount());
     }
 
-    private List<BalanceItemDTO> filterItems(List<BalanceItemDTO> balanceItems) {
-        getLineItems();
+    protected List<BalanceItemDTO> filterItems() {
+        balanceItems = getLineItems();
         List<BalanceItemDTO> filteredList = new ArrayList<>();
         for (BalanceItemDTO balanceItem : balanceItems) {
             String balanceItemId = String.valueOf(balanceItem.getId());
@@ -196,10 +205,9 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         return filteredList;
     }
 
-    private double getLineItems() {
-        double total = 0D;
+    protected List<BalanceItemDTO> getLineItems() {
+        List<BalanceItemDTO> balanceItems = new ArrayList<>();
         for (PendingBalancePayloadDTO pendingBalancePayload : selectedBalance.getPayload()) {
-            total = round(total + pendingBalancePayload.getAmount());
             switch (pendingBalancePayload.getType()) {
                 case PendingBalancePayloadDTO.CO_PAY_TYPE:
                 case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
@@ -218,11 +226,10 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
                 }
             }
         }
-
-        return total;
+        return balanceItems;
     }
 
-    private void setUpCreditCards(View view) {
+    protected void setUpCreditCards(View view) {
         RecyclerView creditCardsRecyclerView = (RecyclerView) view.findViewById(R.id.creditCardRecycler);
         creditCardsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = paymentsModel
@@ -256,7 +263,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
     protected boolean validateFields(boolean isUserInteraction) {
         int paymentDay = 0;
 
-        if (paymentPlanAmount <= 0.1) {
+        if (paymentPlanAmount <= minAmount) {
             return false;
         }
 
@@ -329,7 +336,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
             double amountSelected = SystemUtil.safeSubtract(item.getBalance(),
                     item.getAmountInPaymentPlan());
             if (SystemUtil.safeAdd(amountSelected, paymentPlanAmount) > totalBalance) {
-                showSelectAmountFragment(item);
+                showSelectAmountFragment(item, totalBalance);
                 return false;
             }
             item.setAmountSelected(amountSelected);
@@ -346,7 +353,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
 
     @Override
     public void onAddToPlanClicked(BalanceItemDTO item) {
-        showSelectAmountFragment(item);
+        showSelectAmountFragment(item, totalBalance);
     }
 
     @Override
@@ -365,11 +372,12 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         return paymentPlanItems;
     }
 
-    private void showSelectAmountFragment(final BalanceItemDTO itemDTO) {
+    protected void showSelectAmountFragment(final BalanceItemDTO itemDTO, double total) {
         SelectAmountFragment fragment = SelectAmountFragment
-                .newInstance(Math.min(itemDTO.getBalance(),
-                        SystemUtil.safeSubtract(totalBalance,
-                                SystemUtil.safeSubtract(paymentPlanAmount, itemDTO.getAmountSelected()))));
+                .newInstance(Math
+                        .min(SystemUtil.safeSubtract(itemDTO.getBalance(), itemDTO.getAmountInPaymentPlan()),
+                                SystemUtil.safeSubtract(total,
+                                        SystemUtil.safeSubtract(paymentPlanAmount, itemDTO.getAmountSelected()))));
         String tag = fragment.getClass().getName();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         Fragment prev = getFragmentManager().findFragmentByTag(tag);
@@ -447,7 +455,8 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         creditCardModel.setSaveCard(creditCardsPayloadDTO.isSaveCardOnFile());
         creditCardModel.setDefault(creditCardsPayloadDTO.isDefaultCardChecked());
 
-        @IntegratedPaymentCardData.TokenizationService String tokenizationService = creditCardsPayloadDTO.getTokenizationService().toString();
+        @IntegratedPaymentCardData.TokenizationService String tokenizationService = creditCardsPayloadDTO
+                .getTokenizationService().toString();
         creditCardModel.setTokenizationService(tokenizationService);
 
         return creditCardModel;
@@ -528,7 +537,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         if (selectedCreditCard.isSaveCardOnFile()) {
             addNewCreditCardCall();
         } else {
-            createPaymentPlanPostModel(true);
+            mainButtonAction();
         }
     }
 
@@ -540,9 +549,11 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
 
     private void addNewCreditCardCall() {
         Gson gson = new Gson();
-        TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getAddCreditCard();
+        TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata()
+                .getPaymentsTransitions().getAddCreditCard();
         String body = gson.toJson(selectedCreditCard);
-        getWorkflowServiceHelper().execute(transitionDTO, addNewCreditCardCallback, body, getWorkflowServiceHelper().getPreferredLanguageHeader());
+        getWorkflowServiceHelper().execute(transitionDTO, addNewCreditCardCallback, body,
+                getWorkflowServiceHelper().getPreferredLanguageHeader());
     }
 
     private WorkflowServiceCallback addNewCreditCardCallback = new WorkflowServiceCallback() {
@@ -554,7 +565,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            createPaymentPlanPostModel(true);
+            mainButtonAction();
             MixPanelUtil.logEvent(getString(R.string.event_updated_credit_cards));
         }
 

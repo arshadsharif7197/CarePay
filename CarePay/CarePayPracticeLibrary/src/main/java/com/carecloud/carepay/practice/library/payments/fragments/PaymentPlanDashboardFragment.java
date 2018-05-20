@@ -75,7 +75,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
                         StringUtil.capitalize(paymentsModel.getPaymentPayload().getPatientBalances()
                                 .get(0).getDemographics().getPayload().getPersonalDetails().getFirstName()),
                         StringUtil.capitalize(paymentsModel.getPaymentPayload().getPatientBalances()
-                                .get(0).getDemographics().getPayload().getPersonalDetails().getFirstName()))));
+                                .get(0).getDemographics().getPayload().getPersonalDetails().getLastName()))));
         setCurrentPaymentPlans(view);
         setCompletedPaymentPlans(view);
         setUpButtons(view);

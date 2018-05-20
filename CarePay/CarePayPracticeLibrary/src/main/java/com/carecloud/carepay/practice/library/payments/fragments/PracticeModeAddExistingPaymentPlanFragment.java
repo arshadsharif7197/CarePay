@@ -15,7 +15,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 /**
  * Created by lmenendez on 4/17/18
  */
-
+@Deprecated
 public class PracticeModeAddExistingPaymentPlanFragment extends PatientModeAddExistingPaymentPlanFragment {
 
     public static PracticeModeAddExistingPaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO existingPlan, double amount){

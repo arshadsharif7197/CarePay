@@ -1129,8 +1129,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void onSelectedPlanToAdd(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO selectedPlan, double amount) {
-        PracticeModeAddExistingPaymentPlanFragment fragment = PracticeModeAddExistingPaymentPlanFragment.newInstance(paymentsModel, selectedBalance, selectedPlan, amount);
-        displayDialogFragment(fragment, false);
+        //Not used anymore
     }
 
     @Override

@@ -33,6 +33,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PaymentPlanDash
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeModeAddExistingPaymentPlanFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticeModeAddToExistingPaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeModePaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeOneTimePaymentFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentHistoryDetailFragment;
@@ -644,7 +645,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     @Override
     public void showPaymentPlanDashboard(PaymentsModel paymentsModel) {
         PaymentPlanDashboardFragment fragment = PaymentPlanDashboardFragment.newInstance(paymentsModel);
-        displayDialogFragment(fragment, false);
+        displayDialogFragment(fragment, true);
     }
 
     @Override
@@ -922,13 +923,18 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void onPaymentPlanEdited(WorkflowDTO workflowDTO) {
-        PracticePaymentPlanConfirmationFragment confirmationFragment = PracticePaymentPlanConfirmationFragment.newInstance(workflowDTO, getApplicationMode().getUserPracticeDTO(), PaymentPlanConfirmationFragment.MODE_EDIT);
+        PracticePaymentPlanConfirmationFragment confirmationFragment = PracticePaymentPlanConfirmationFragment
+                .newInstance(workflowDTO, getApplicationMode().getUserPracticeDTO(), PaymentPlanConfirmationFragment.MODE_EDIT);
         displayDialogFragment(confirmationFragment, false);
     }
 
     @Override
     public void onPaymentPlanAddedExisting(WorkflowDTO workflowDTO) {
-        PracticePaymentPlanConfirmationFragment confirmationFragment = PracticePaymentPlanConfirmationFragment.newInstance(workflowDTO, getApplicationMode().getUserPracticeDTO(), PaymentPlanConfirmationFragment.MODE_ADD);
+        getSupportFragmentManager().popBackStackImmediate(PaymentDistributionFragment.class.getName(),
+                FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        PracticePaymentPlanConfirmationFragment confirmationFragment = PracticePaymentPlanConfirmationFragment
+                .newInstance(workflowDTO, getApplicationMode().getUserPracticeDTO(),
+                        PaymentPlanConfirmationFragment.MODE_ADD);
         displayDialogFragment(confirmationFragment, false);
     }
 
@@ -947,8 +953,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void onSelectedPlanToAdd(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO selectedPlan, double amount) {
-        PracticeModeAddExistingPaymentPlanFragment fragment = PracticeModeAddExistingPaymentPlanFragment.newInstance(paymentsModel, selectedBalance, selectedPlan, amount);
-        displayDialogFragment(fragment, false);
+        //Not used anymore
     }
 
     @Override
@@ -970,7 +975,9 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void onAddBalanceToExistingPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlan) {
-
+        PracticeModeAddToExistingPaymentPlanFragment fragment = PracticeModeAddToExistingPaymentPlanFragment
+                .newInstance(paymentsModel, paymentPlan);
+        displayDialogFragment(fragment, false);
     }
 
     @Override
