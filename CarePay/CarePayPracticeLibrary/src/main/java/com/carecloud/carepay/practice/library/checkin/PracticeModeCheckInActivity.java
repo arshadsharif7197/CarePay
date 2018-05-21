@@ -39,7 +39,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PaymentHistoryF
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentPlanDashboardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticeModeAddExistingPaymentPlanFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticeModeAddToExistingPaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeModePaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeOneTimePaymentFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentHistoryDetailFragment;
@@ -53,6 +53,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticePayment
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeValidPlansFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.RefundDetailFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.RefundProcessFragment;
+import com.carecloud.carepay.practice.library.payments.interfaces.PaymentPlanDashboardInterface;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentNavigationCallback;
 import com.carecloud.carepay.practice.library.payments.interfaces.ShamrockPaymentsCallback;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
@@ -104,7 +105,8 @@ import java.util.Set;
 public class PracticeModeCheckInActivity extends BasePracticeActivity
         implements FilterDialog.FilterDialogListener, PracticePaymentNavigationCallback,
         AppointmentDetailDialog.AppointmentDialogCallback, PaymentPlanEditInterface,
-        CheckedInAppointmentAdapter.CheckinItemCallback, ShamrockPaymentsCallback {
+        CheckedInAppointmentAdapter.CheckinItemCallback, ShamrockPaymentsCallback,
+        PaymentPlanDashboardInterface {
 
 
     private RecyclerView checkingInRecyclerView;
@@ -783,7 +785,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     @Override
     public void showPaymentPlanDashboard(PaymentsModel paymentsModel) {
         PaymentPlanDashboardFragment fragment = PaymentPlanDashboardFragment.newInstance(paymentsModel);
-        displayDialogFragment(fragment, false);
+        displayDialogFragment(fragment, true);
     }
 
     @Override
@@ -1084,6 +1086,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void onSubmitPaymentPlan(WorkflowDTO workflowDTO) {
+        getSupportFragmentManager().popBackStackImmediate(PaymentDistributionFragment.class.getName(),
+                FragmentManager.POP_BACK_STACK_INCLUSIVE);
         PracticePaymentPlanConfirmationFragment confirmationFragment = PracticePaymentPlanConfirmationFragment.newInstance(workflowDTO, getApplicationMode().getUserPracticeDTO(), PaymentPlanConfirmationFragment.MODE_CREATE);
         displayDialogFragment(confirmationFragment, false);
     }
@@ -1109,6 +1113,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void onPaymentPlanAddedExisting(WorkflowDTO workflowDTO) {
+        getSupportFragmentManager().popBackStackImmediate(PaymentDistributionFragment.class.getName(),
+                FragmentManager.POP_BACK_STACK_INCLUSIVE);
         PracticePaymentPlanConfirmationFragment confirmationFragment = PracticePaymentPlanConfirmationFragment.newInstance(workflowDTO, getApplicationMode().getUserPracticeDTO(), PaymentPlanConfirmationFragment.MODE_ADD);
         displayDialogFragment(confirmationFragment, false);
     }
@@ -1146,5 +1152,25 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     @Override
     public void completePaymentPlanProcess(WorkflowDTO workflowDTO) {
         //TODO what should we show in this case because we don't have PP represented at the top level payload
+    }
+
+    @Override
+    public void onAddBalanceToExistingPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlan) {
+        PracticeModeAddToExistingPaymentPlanFragment fragment = PracticeModeAddToExistingPaymentPlanFragment
+                .newInstance(paymentsModel, paymentPlan);
+        displayDialogFragment(fragment, false);
+    }
+
+    @Override
+    public void showPaymentPlanDetail(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlan) {
+        PracticePaymentPlanDetailsDialogFragment fragment = PracticePaymentPlanDetailsDialogFragment
+                .newInstance(paymentsModel, paymentPlan);
+        fragment.setDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+
+            }
+        });
+        displayDialogFragment(fragment, false);
     }
 }
