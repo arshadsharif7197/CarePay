@@ -87,12 +87,13 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
      * Shows Confirmation after Appointment Created
      */
     public void showAppointmentConfirmation() {
-
         if (isVisible()) {
             ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
+            boolean autoScheduleAppointments = getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests();
+
             SystemUtil.showSuccessToast(getContext(),
-                    Label.getLabel(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
-                            "appointment_request_success_message_HTML" : "appointment_schedule_success_message_HTML"));
+                    Label.getLabel(applicationType == ApplicationMode.ApplicationType.PRACTICE || autoScheduleAppointments ?
+                            "appointment_schedule_success_message_HTML" : "appointment_request_success_message_HTML"));
         }
 
         onAppointmentRequestSuccess();
@@ -312,7 +313,8 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     protected abstract LinksDTO getLinks();
 
-    private AppointmentsSettingDTO getAppointmentsSettings() {
+    @Override
+    public AppointmentsSettingDTO getAppointmentsSettings() {
         List<AppointmentsSettingDTO> appointmentsSettingDTOList = appointmentsResultModel
                 .getPayload().getAppointmentsSettings();
         if (!appointmentsSettingDTOList.isEmpty()) {
