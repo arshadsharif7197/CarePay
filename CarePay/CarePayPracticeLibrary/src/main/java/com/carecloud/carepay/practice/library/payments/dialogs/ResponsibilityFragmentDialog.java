@@ -372,10 +372,13 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
             return false;
         }
 
+        String practiceId = settingsDTO.getMetadata().getPracticeId();
+        double maxAllowablePayment = paymentsModel.getPaymentPayload().getMaximumAllowablePlanAmount(practiceId);
         for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
-            if (balance >= rule.getMinBalance().getValue() && balance <= rule.getMaxBalance().getValue()) {
+            if (maxAllowablePayment >= rule.getMinBalance().getValue() &&
+                    maxAllowablePayment <= rule.getMaxBalance().getValue()) {
                 //found a valid rule that covers this balance
-                if(paymentsModel.getPaymentPayload().getActivePlans(settingsDTO.getMetadata().getPracticeId()).isEmpty()){
+                if(paymentsModel.getPaymentPayload().getActivePlans(practiceId).isEmpty()){
                     //don't already have an existing plan so this is the first plan
                     return true;
                 }else if(paymentPlanSettings.isCanHaveMultiple()){
@@ -387,8 +390,9 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
         }
 
         //check if balance can be added to existing
-        if(paymentPlanSettings.isAddBalanceToExisting() && !
-                paymentsModel.getPaymentPayload().getValidPlans(settingsDTO.getMetadata().getPracticeId(), balance).isEmpty()) {
+        double minAllowablePayment = paymentsModel.getPaymentPayload().getMinimumAllowablePlanAmount(practiceId);
+        if(paymentPlanSettings.isAddBalanceToExisting() &&
+                !paymentsModel.getPaymentPayload().getValidPlans(practiceId, minAllowablePayment).isEmpty()) {
             mustAddToExisting = true;
             return true;
         }

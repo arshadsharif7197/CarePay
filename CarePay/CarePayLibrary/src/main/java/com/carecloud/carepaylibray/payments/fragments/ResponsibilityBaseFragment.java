@@ -234,8 +234,10 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
                         return false;
                     }
 
+                    double maxAllowablePayment = paymentDTO.getPaymentPayload().getMaximumAllowablePlanAmount(practiceId);
                     for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
-                        if (balance >= rule.getMinBalance().getValue() && balance <= rule.getMaxBalance().getValue()) {
+                        if (maxAllowablePayment >= rule.getMinBalance().getValue() &&
+                                maxAllowablePayment <= rule.getMaxBalance().getValue()) {
                             //found a valid rule that covers this balance
                             if(paymentDTO.getPaymentPayload().getActivePlans(practiceId).isEmpty()){
                                 //don't already have an existing plan so this is the first plan
@@ -249,8 +251,9 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
                     }
 
                     //check if balance can be added to existing
-                    if(paymentPlanSettings.isAddBalanceToExisting() && !
-                            paymentDTO.getPaymentPayload().getValidPlans(practiceId, balance).isEmpty()) {
+                    double minAllowablePayment = paymentDTO.getPaymentPayload().getMinimumAllowablePlanAmount(practiceId);
+                    if(paymentPlanSettings.isAddBalanceToExisting() &&
+                            !paymentDTO.getPaymentPayload().getValidPlans(practiceId, minAllowablePayment).isEmpty()) {
                         mustAddToExisting = true;
                         return true;
                     }
