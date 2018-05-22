@@ -210,10 +210,16 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onPaymentPlanAction(PaymentsModel paymentsModel) {
+    public void onPaymentPlanAction(final PaymentsModel paymentsModel) {
         PendingBalanceDTO selectedPendingBalance = selectedBalance.getBalances().get(0);
         selectedPendingBalance = paymentsModel.getPaymentPayload().reduceBalanceItems(selectedPendingBalance, false);
         PracticePaymentPlanAmountFragment fragment = PracticePaymentPlanAmountFragment.newInstance(paymentsModel, selectedPendingBalance);
+        fragment.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                startPaymentProcess(paymentsModel);
+            }
+        });
         displayDialogFragment(fragment, false);
     }
 

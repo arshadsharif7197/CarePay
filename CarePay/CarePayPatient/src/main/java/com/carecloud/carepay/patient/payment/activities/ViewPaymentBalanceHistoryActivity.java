@@ -1,5 +1,7 @@
 package com.carecloud.carepay.patient.payment.activities;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -249,9 +251,16 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void onPaymentPlanAction(PaymentsModel paymentsModel) {
+    public void onPaymentPlanAction(final PaymentsModel paymentsModel) {
         PendingBalanceDTO reducedBalancesItem = paymentsModel.getPaymentPayload().reduceBalanceItems(selectedBalancesItem, false);
-        new PaymentPlanAmountDialog(getContext(), paymentsModel, reducedBalancesItem, this).show();
+        Dialog dialog = new PaymentPlanAmountDialog(getContext(), paymentsModel, reducedBalancesItem, this);
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                startPaymentProcess(paymentsModel);
+            }
+        });
+        dialog.show();
     }
 
     @Override
