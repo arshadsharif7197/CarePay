@@ -409,6 +409,9 @@ public class WelcomeActivity extends FullScreenActivity {
                 switch (connectedDevice.getState()){
                     case DeviceDef.STATE_READY: //Device is ready to process payments
                         if(paymentRequestId == null ) {
+                            if(!connectedDevice.getState().equals(device.getState())) {
+                                updateConnectedDevice();
+                            }
                             updateMessage(getString(R.string.welcome_waiting));
                             return;
                         }
