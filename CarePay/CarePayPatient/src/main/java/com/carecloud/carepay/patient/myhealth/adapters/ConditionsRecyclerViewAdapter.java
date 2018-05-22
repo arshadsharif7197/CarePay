@@ -15,7 +15,6 @@ import java.util.List;
 /**
  * @author pjohnson on 18/07/17.
  */
-
 public class ConditionsRecyclerViewAdapter extends RecyclerView.Adapter<ConditionsRecyclerViewAdapter.ViewHolder> {
 
     private final List<AssertionDto> assertions;

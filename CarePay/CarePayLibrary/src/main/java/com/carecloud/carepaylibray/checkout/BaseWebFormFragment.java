@@ -31,12 +31,15 @@ import android.widget.Toast;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.utils.KeyboardWatcher;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.WebViewKeyboardAdjuster;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.marcok.stepprogressbar.StepProgressBar;
+
+import java.util.List;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
@@ -50,6 +53,7 @@ public abstract class BaseWebFormFragment extends BaseFragment {
     private WebView webView;
     private ProgressBar progressBar;
     protected Button nextButton;
+    protected List<ConsentFormUserResponseDTO> filledForms;
     private TextView header;
     private StepProgressBar progressIndicator;
 
@@ -164,8 +168,9 @@ public abstract class BaseWebFormFragment extends BaseFragment {
 
     /**
      * call Interface to load next consent forms
+     * @param filledForms
      */
-    protected abstract void displayNextForm();
+    protected abstract void displayNextForm(List<ConsentFormUserResponseDTO> filledForms);
 
     protected abstract String getBaseUrl();
 
@@ -229,7 +234,7 @@ public abstract class BaseWebFormFragment extends BaseFragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    displayNextForm();
+                    displayNextForm(filledForms);
                     nextButton.setEnabled(true);
                 }
             });
@@ -316,7 +321,7 @@ public abstract class BaseWebFormFragment extends BaseFragment {
         nextButton.setEnabled(false);
         if (displayedFormsIndex < totalForms - 1) {
             ++displayedFormsIndex;
-            displayNextForm();
+            displayNextForm(filledForms);
 
         } else {
             submitAllForms();
