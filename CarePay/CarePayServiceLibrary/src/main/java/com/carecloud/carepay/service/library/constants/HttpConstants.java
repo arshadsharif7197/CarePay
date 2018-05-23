@@ -37,7 +37,7 @@ public class HttpConstants {
 
     private static String paymentsApiKey;
 
-    private static String retailPaymentsRedirectUrl;
+    private static String retailUrl;
 
 
     private static DeviceIdentifierDTO deviceInformation;
@@ -151,11 +151,11 @@ public class HttpConstants {
         HttpConstants.paymentsApiKey = paymentsApiKey;
     }
 
-    public static String getRetailPaymentsRedirectUrl() {
-        return retailPaymentsRedirectUrl;
+    public static String getRetailUrl() {
+        return retailUrl;
     }
 
-    public static void setRetailPaymentsRedirectUrl(String retailPaymentsRedirectUrl) {
-        HttpConstants.retailPaymentsRedirectUrl = retailPaymentsRedirectUrl;
+    public static void setRetailUrl(String retailUrl) {
+        HttpConstants.retailUrl = retailUrl;
     }
 }
