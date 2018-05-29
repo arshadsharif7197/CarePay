@@ -442,6 +442,8 @@ public class WelcomeActivity extends FullScreenActivity {
                             Log.d(TAG, "Cannot process this request device is in use");
                             //this is an error because device should be processing a transaction already
                             showErrorToast(getString(R.string.error_device_in_use));
+                        } else if(paymentRequestId!=null && !connectedDevice.getState().equals(device.getState())) {
+                            updateConnectedDevice();
                         }else if(!connectedDevice.isProcessing()){
                             //start processing payment
                             Log.d(TAG, "start processing payment request");
