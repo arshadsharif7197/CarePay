@@ -139,7 +139,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':CarePayPracticeLibrary')
-    compile 'com.newrelic.agent.android:android-agent:5.12.3'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':CarePayPracticeLibrary')
+    implementation 'com.newrelic.agent.android:android-agent:5.12.3'
 }
