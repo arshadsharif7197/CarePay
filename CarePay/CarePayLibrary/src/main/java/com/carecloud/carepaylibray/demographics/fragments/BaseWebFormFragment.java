@@ -46,8 +46,6 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.marcok.stepprogressbar.StepProgressBar;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +57,7 @@ import java.util.List;
 
 public abstract class BaseWebFormFragment extends BaseCheckinFragment {
 
+    private static final String LOG_TAG = "BaseWebFormFragment";
     private WebView webView;
     private ProgressBar progressBar;
     private Button nextButton;

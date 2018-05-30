@@ -42,8 +42,6 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-
 
 import static android.app.Activity.RESULT_OK;
 
@@ -80,7 +78,7 @@ public class SignupFragment extends BaseFragment {
                 // auto-confirmed; sign-in
                 getAppAuthorizationHelper().signIn(userName, passwordText.getText().toString(), cognitoActionCallback);
             } else {
-                Log.v(LOG_TAG, "signUpConfirmationState == false");
+                Log.v(TAG, "signUpConfirmationState == false");
                 // User is not confirmed
                 confirmSignUp(cognitoUserCodeDeliveryDetails); // not Confirmed; launch confirm activity
             }

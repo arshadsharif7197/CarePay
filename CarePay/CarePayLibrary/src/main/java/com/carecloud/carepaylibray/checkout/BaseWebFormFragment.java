@@ -41,8 +41,6 @@ import com.marcok.stepprogressbar.StepProgressBar;
 
 import java.util.List;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-
 
 /**
  * Edited by lmenendez on 3/5/2017.
@@ -50,6 +48,7 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
 
 public abstract class BaseWebFormFragment extends BaseFragment {
 
+    private static final String LOG_TAG = "BaseWebFormFragment";
     private WebView webView;
     private ProgressBar progressBar;
     protected Button nextButton;
