@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
@@ -116,8 +117,10 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         progressBar.setVisibility(View.VISIBLE);
         initWebView();
 
-        WebViewKeyboardAdjuster adjuster = new WebViewKeyboardAdjuster(view, (int) getResources().getDimension(R.dimen.checkinNavBarOpenOffset));
-        new KeyboardWatcher(getActivity().findViewById(android.R.id.content), false, adjuster);
+        if (!getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PATIENT)) {
+            WebViewKeyboardAdjuster adjuster = new WebViewKeyboardAdjuster(view, (int) getResources().getDimension(R.dimen.checkinNavBarOpenOffset));
+            new KeyboardWatcher(getActivity().findViewById(android.R.id.content), false, adjuster);
+        }
     }
 
     @Override
@@ -415,7 +418,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
             public void onFailure(String exceptionMessage) {
                 nextButton.setEnabled(true);
                 hideProgressDialog();
-                if(isAdded()) {
+                if (isAdded()) {
                     showErrorNotification(exceptionMessage);
                     Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
                 }

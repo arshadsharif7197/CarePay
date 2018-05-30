@@ -28,6 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
@@ -94,8 +95,10 @@ public abstract class BaseWebFormFragment extends BaseFragment {
         progressBar.setVisibility(View.VISIBLE);
         initWebView();
 
-        WebViewKeyboardAdjuster adjuster = new WebViewKeyboardAdjuster(view, (int) getResources().getDimension(R.dimen.checkinNavBarOpenOffset));
-        new KeyboardWatcher(getActivity().findViewById(android.R.id.content), false, adjuster);
+        if (!getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PATIENT)) {
+            WebViewKeyboardAdjuster adjuster = new WebViewKeyboardAdjuster(view, (int) getResources().getDimension(R.dimen.checkinNavBarOpenOffset));
+            new KeyboardWatcher(getActivity().findViewById(android.R.id.content), false, adjuster);
+        }
     }
 
     protected void setHeader(String text) {
@@ -167,6 +170,7 @@ public abstract class BaseWebFormFragment extends BaseFragment {
 
     /**
      * call Interface to load next consent forms
+     *
      * @param filledForms
      */
     protected abstract void displayNextForm(List<ConsentFormUserResponseDTO> filledForms);
@@ -186,7 +190,7 @@ public abstract class BaseWebFormFragment extends BaseFragment {
     protected void loadFormUrl(String formString, String function) {
         showProgressDialog();
         webView.loadUrl("javascript:window." + function + "('" + formString + "')");
-        if(displayedFormsIndex > -1 && progressIndicator.getNumDots() > displayedFormsIndex) {
+        if (displayedFormsIndex > -1 && progressIndicator.getNumDots() > displayedFormsIndex) {
             progressIndicator.setCurrentProgressDot(displayedFormsIndex);
         }
         if (getDisplayedFormsIndex() == getTotalForms() - 1) {
