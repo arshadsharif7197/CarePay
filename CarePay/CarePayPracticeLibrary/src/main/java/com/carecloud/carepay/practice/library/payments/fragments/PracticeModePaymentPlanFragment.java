@@ -93,7 +93,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
-        setupToolbar(view, Label.getLabel("payment.createPaymentPlanPostModel.title.label.title"));
+        setupToolbar(view, Label.getLabel("payment.createPaymentPlan.title.label.title"));
         setUpAmounts(view);
         balanceItems = filterItems();
         setUpItems(view, balanceItems);

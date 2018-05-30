@@ -70,7 +70,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/dimen_15dp"
-            android:background="@drawable/bg_green_overlay"
+            android:background="@drawable/bg_yellow_overlay"
             android:gravity="center"
             android:paddingEnd="@dimen/dimen_15dp"
             android:paddingStart="@dimen/dimen_15dp"

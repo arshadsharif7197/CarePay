@@ -182,13 +182,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment
                 clearLastSwipeView();
             }
         });
-
-        paymentPlanButton.setEnabled(userHasPermissionsToCreatePaymentPlan() && hasBalanceForPaymentPlan());
-    }
-
-    private boolean userHasPermissionsToCreatePaymentPlan() {
-        return paymentsModel.getPaymentPayload()
-                .getUserAuthModel().getUserAuthPermissions().canCreatePaymentPlan;
     }
 
     private void setupToolbar(View view, String titleString) {
@@ -335,21 +328,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment
                 }
             }
         }
-    }
-
-    private boolean hasBalanceForPaymentPlan(){
-        if(hasBalance()) {
-            double remainingUnapplied = unappliedCredit;
-            for(BalanceItemDTO balanceItem : paymentsModel.getPaymentPayload().getPatientBalances()
-                    .get(0).getBalances().get(0).getPayload().get(0).getDetails()) {
-                double amountNotInPlan = SystemUtil.safeSubtract(balanceItem.getBalance(), balanceItem.getAmountInPaymentPlan());
-                remainingUnapplied = SystemUtil.safeSubtract(remainingUnapplied, amountNotInPlan);
-                if(remainingUnapplied < 0D){
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     private void setAdapter() {

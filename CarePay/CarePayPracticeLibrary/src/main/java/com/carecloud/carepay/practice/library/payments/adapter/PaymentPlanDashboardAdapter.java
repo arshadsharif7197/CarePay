@@ -29,12 +29,14 @@ public class PaymentPlanDashboardAdapter extends RecyclerView.Adapter<PaymentPla
     private final List<PaymentPlanDTO> paymentPlans;
     private final boolean completed;
     private final NumberFormat currencyFormat;
+    private final boolean hasBalanceForPaymentPlan;
     private PaymentPlanDashboardItemInterface callback;
 
-    public PaymentPlanDashboardAdapter(List<PaymentPlanDTO> paymentPlans, boolean completed) {
+    public PaymentPlanDashboardAdapter(List<PaymentPlanDTO> paymentPlans, boolean completed, boolean hasBalanceForPaymentPlan) {
         this.paymentPlans = paymentPlans;
         this.completed = completed;
         this.currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+        this.hasBalanceForPaymentPlan = hasBalanceForPaymentPlan;
     }
 
     @Override
@@ -80,7 +82,7 @@ public class PaymentPlanDashboardAdapter extends RecyclerView.Adapter<PaymentPla
                 callback.onDetailClicked(paymentPlan);
             }
         });
-
+        holder.addBalanceButton.setEnabled(hasBalanceForPaymentPlan);
         holder.addBalanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

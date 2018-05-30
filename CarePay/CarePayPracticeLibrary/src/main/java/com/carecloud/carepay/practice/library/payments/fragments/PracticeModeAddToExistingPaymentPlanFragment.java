@@ -95,7 +95,7 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
     @Override
     protected void setupButtons(View view) {
         super.setupButtons(view);
-        createPlanButton.setText(Label.getLabel(""));
+        createPlanButton.setText(Label.getLabel("payment.paymentPlanDashboard.item.button.addBalance"));
     }
 
     @Override

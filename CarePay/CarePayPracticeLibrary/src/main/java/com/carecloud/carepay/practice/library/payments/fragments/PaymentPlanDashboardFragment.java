@@ -19,8 +19,10 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
     public static final String PAYMENT_PLAN_COMPLETED = "completed";
     public static final String PAYMENT_PLAN_UNCOMPLETED = "processing";
     private PaymentPlanDashboardInterface callback;
+    private boolean hasBalanceForPaymentPlan;
 
     public static PaymentPlanDashboardFragment newInstance(PaymentsModel paymentsModel) {
         Bundle args = new Bundle();
@@ -76,6 +79,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
                                 .get(0).getDemographics().getPayload().getPersonalDetails().getFirstName()),
                         StringUtil.capitalize(paymentsModel.getPaymentPayload().getPatientBalances()
                                 .get(0).getDemographics().getPayload().getPersonalDetails().getLastName()))));
+        hasBalanceForPaymentPlan = hasBalanceForPaymentPlan();
         setCurrentPaymentPlans(view);
         setCompletedPaymentPlans(view);
         setUpButtons(view);
@@ -104,7 +108,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
         currentPaymentPlansRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         PaymentPlanDashboardAdapter adapter = new PaymentPlanDashboardAdapter(
                 getPaymentPlansFiltered(paymentsModel.getPaymentPayload().getPatientPaymentPlans(),
-                        false), false);
+                        false), false, hasBalanceForPaymentPlan);
         adapter.setCallback(this);
         currentPaymentPlansRecycler.setAdapter(adapter);
     }
@@ -114,7 +118,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
         completedPaymentPlansRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         PaymentPlanDashboardAdapter adapter = new PaymentPlanDashboardAdapter(
                 getPaymentPlansFiltered(paymentsModel.getPaymentPayload().getPatientPaymentPlans(),
-                        true), true);
+                        true), true, false);
         adapter.setCallback(this);
         completedPaymentPlansRecycler.setAdapter(adapter);
     }
@@ -142,6 +146,29 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
                 callback.onPaymentPlanAction(paymentsModel);
             }
         });
+        createPaymentPlanButton.setEnabled(userHasPermissionsToCreatePaymentPlan() && hasBalanceForPaymentPlan);
+    }
+
+    private boolean hasBalanceForPaymentPlan() {
+        if (hasBalance()) {
+            PendingBalancePayloadDTO balance = paymentsModel.getPaymentPayload().getPatientBalances()
+                    .get(0).getBalances().get(0).getPayload().get(0);
+            double remainingUnapplied = balance.getUnappliedCredit() * -1;
+            double total = SystemUtil.safeAdd(remainingUnapplied, balance.getAmount());
+            return SystemUtil.safeSubtract(total, balance.getPaymentPlansAmount()) > 0.0;
+        }
+        return false;
+    }
+
+    private boolean hasBalance() {
+        return paymentsModel.getPaymentPayload().getPatientBalances().size() > 0
+                && paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().size() > 0
+                && paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload().size() > 0;
+    }
+
+    private boolean userHasPermissionsToCreatePaymentPlan() {
+        return paymentsModel.getPaymentPayload()
+                .getUserAuthModel().getUserAuthPermissions().canCreatePaymentPlan;
     }
 
     @Override
