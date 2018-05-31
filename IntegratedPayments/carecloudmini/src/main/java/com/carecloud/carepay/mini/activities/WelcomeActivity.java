@@ -431,17 +431,22 @@ public class WelcomeActivity extends FullScreenActivity {
 
                         break;
                     case DeviceDef.STATE_IN_USE:
-                        if(connectedDevice.getPaymentRequestId() == null){
+                        if(connectedDevice.getPaymentRequestId() != null && !connectedDevice.getState().equals(device.getState()) ) {
+                            updateConnectedDevice();
+                        }
+                        else if(connectedDevice.getPaymentRequestId() == null){
                             Log.d(TAG, "Error state, device is in use but no request id, reset device state");
                             //this device should not be in use without a payment request
                             connectedDevice.setState(DeviceDef.STATE_READY);
                             updateConnectedDevice();
                             return;
                         }
+
                         if(paymentRequestId!=null && !connectedDevice.getPaymentRequestId().equals(paymentRequestId)){
                             Log.d(TAG, "Cannot process this request device is in use");
                             //this is an error because device should be processing a transaction already
                             showErrorToast(getString(R.string.error_device_in_use));
+
                         }else if(!connectedDevice.isProcessing()){
                             //start processing payment
                             Log.d(TAG, "start processing payment request");
