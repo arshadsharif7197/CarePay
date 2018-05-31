@@ -346,8 +346,9 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     @Override
     public void onPaymentPlanAddedExisting(WorkflowDTO workflowDTO) {
-        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO, getPracticeInfo(paymentsModel), PaymentPlanConfirmationFragment.MODE_ADD);
+        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment
+                .newInstance(workflowDTO, getPracticeInfo(paymentsModel),
+                        PaymentPlanConfirmationFragment.MODE_ADD);
         displayDialogFragment(confirmationFragment, false);
     }
 

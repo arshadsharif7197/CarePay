@@ -281,7 +281,9 @@ public class PatientPaymentPresenter extends PaymentPresenter
     @Override
     public void onSubmitPaymentPlan(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO, getPracticeInfo(paymentsModel), PaymentPlanConfirmationFragment.MODE_CREATE);
+        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment
+                .newInstance(workflowDTO, getPracticeInfo(paymentsModel),
+                        PaymentPlanConfirmationFragment.MODE_CREATE);
         viewHandler.displayDialogFragment(confirmationFragment, false);
     }
 
@@ -306,8 +308,9 @@ public class PatientPaymentPresenter extends PaymentPresenter
 
     @Override
     public void onPaymentPlanAddedExisting(WorkflowDTO workflowDTO) {
-        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO, getPracticeInfo(paymentsModel), PaymentPlanConfirmationFragment.MODE_ADD);
+        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment
+                .newInstance(workflowDTO, getPracticeInfo(paymentsModel),
+                        PaymentPlanConfirmationFragment.MODE_ADD);
         viewHandler.displayDialogFragment(confirmationFragment, false);
     }
 
