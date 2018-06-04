@@ -63,6 +63,9 @@ public class LinksDTO extends BaseLinks {
     @SerializedName(value = "language_metadata", alternate = "language")
     @Expose
     private TransitionDTO language = new TransitionDTO();
+    @SerializedName("shop")
+    @Expose
+    private TransitionDTO shop = new TransitionDTO();
 
     /**
      * @return The demographics
@@ -213,5 +216,13 @@ public class LinksDTO extends BaseLinks {
 
     public void setLanguage(TransitionDTO language) {
         this.language = language;
+    }
+
+    public TransitionDTO getShop() {
+        return shop;
+    }
+
+    public void setShop(TransitionDTO shop) {
+        this.shop = shop;
     }
 }

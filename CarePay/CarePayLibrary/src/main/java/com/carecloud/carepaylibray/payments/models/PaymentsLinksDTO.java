@@ -46,6 +46,9 @@ public class PaymentsLinksDTO {
     @SerializedName("patient_statements")
     @Expose
     private TransitionDTO patientStatements = new TransitionDTO();
+    @SerializedName("shop")
+    @Expose
+    private TransitionDTO shop = new TransitionDTO();
 
     /**
      * @return The paymentsSelfRefresh
@@ -197,5 +200,13 @@ public class PaymentsLinksDTO {
 
     public void setPatientStatements(TransitionDTO patientStatements) {
         this.patientStatements = patientStatements;
+    }
+
+    public TransitionDTO getShop() {
+        return shop;
+    }
+
+    public void setShop(TransitionDTO shop) {
+        this.shop = shop;
     }
 }
