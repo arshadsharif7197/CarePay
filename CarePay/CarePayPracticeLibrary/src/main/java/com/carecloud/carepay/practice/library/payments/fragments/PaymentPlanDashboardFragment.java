@@ -177,7 +177,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
     }
 
     @Override
-    public void onDetailClicked(PaymentPlanDTO paymentPlan) {
-        callback.showPaymentPlanDetail(paymentsModel, paymentPlan);
+    public void onDetailClicked(PaymentPlanDTO paymentPlan, boolean completed) {
+        callback.showPaymentPlanDetail(paymentsModel, paymentPlan, completed);
     }
 }

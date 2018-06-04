@@ -79,7 +79,7 @@ public class PaymentPlanDashboardAdapter extends RecyclerView.Adapter<PaymentPla
         holder.detailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onDetailClicked(paymentPlan);
+                callback.onDetailClicked(paymentPlan, completed);
             }
         });
         holder.addBalanceButton.setEnabled(hasBalanceForPaymentPlan);
@@ -104,7 +104,7 @@ public class PaymentPlanDashboardAdapter extends RecyclerView.Adapter<PaymentPla
     public interface PaymentPlanDashboardItemInterface {
         void onAddBalanceClicked(PaymentPlanDTO paymentPlan);
 
-        void onDetailClicked(PaymentPlanDTO paymentPlan);
+        void onDetailClicked(PaymentPlanDTO paymentPlan, boolean completed);
     }
 
     public void setCallback(PaymentPlanDashboardItemInterface callback) {

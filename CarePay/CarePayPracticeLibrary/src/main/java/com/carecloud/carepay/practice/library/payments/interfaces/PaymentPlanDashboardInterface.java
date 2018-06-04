@@ -11,5 +11,5 @@ public interface PaymentPlanDashboardInterface extends PaymentPlanCreateInterfac
 
     void onAddBalanceToExistingPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlan);
 
-    void showPaymentPlanDetail(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlan);
+    void showPaymentPlanDetail(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlan, boolean completed);
 }

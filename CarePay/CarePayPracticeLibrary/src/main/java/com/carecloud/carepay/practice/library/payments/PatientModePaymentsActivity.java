@@ -166,7 +166,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
 
     @Override
     public void onPaymentPlanButonClicked(PaymentPlanDTO paymentPlanDTO) {
-        PracticePaymentPlanDetailsDialogFragment fragment = PracticePaymentPlanDetailsDialogFragment.newInstance(paymentResultModel, paymentPlanDTO);
+        PracticePaymentPlanDetailsDialogFragment fragment = PracticePaymentPlanDetailsDialogFragment.newInstance(paymentResultModel, paymentPlanDTO, true);
         displayDialogFragment(fragment, false);
     }
 
@@ -538,7 +538,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
     @Override
     public void onDismissEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
         PracticePaymentPlanDetailsDialogFragment fragment = PracticePaymentPlanDetailsDialogFragment
-                .newInstance(paymentsModel, paymentPlanDTO);
+                .newInstance(paymentsModel, paymentPlanDTO, true);
         displayDialogFragment(fragment, false);
     }
 

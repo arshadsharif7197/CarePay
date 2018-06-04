@@ -730,7 +730,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     public void onPaymentPlanSelected(final PaymentsModel paymentsModel,
                                       PaymentPlanDTO paymentPlanDTO) {
         PracticePaymentPlanDetailsDialogFragment fragment = PracticePaymentPlanDetailsDialogFragment
-                .newInstance(paymentsModel, paymentPlanDTO);
+                .newInstance(paymentsModel, paymentPlanDTO, true);
         fragment.setDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
@@ -974,7 +974,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     @Override
     public void onDismissEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
         PracticePaymentPlanDetailsDialogFragment fragment = PracticePaymentPlanDetailsDialogFragment
-                .newInstance(paymentsModel, paymentPlanDTO);
+                .newInstance(paymentsModel, paymentPlanDTO, true);
         displayDialogFragment(fragment, false);
     }
 
@@ -1020,9 +1020,11 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void showPaymentPlanDetail(final PaymentsModel paymentsModel, PaymentPlanDTO paymentPlan) {
+    public void showPaymentPlanDetail(final PaymentsModel paymentsModel,
+                                      PaymentPlanDTO paymentPlan,
+                                      boolean completed) {
         PracticePaymentPlanDetailsDialogFragment fragment = PracticePaymentPlanDetailsDialogFragment
-                .newInstance(paymentsModel, paymentPlan);
+                .newInstance(paymentsModel, paymentPlan, !completed);
         fragment.setDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {

@@ -26,16 +26,19 @@ public class PracticePaymentPlanDetailsDialogFragment extends PaymentPlanDetails
     private DialogInterface.OnDismissListener dismissListener;
 
     /**
-     * @param paymentsModel  the payment model
-     * @param paymentPlanDTO the Payment Plan Dto
+     * @param paymentsModel      the payment model
+     * @param paymentPlanDTO     the Payment Plan Dto
+     * @param enablePayNowButton
      * @return new instance of a PaymentPlanDetailsDialogFragment
      */
     public static PracticePaymentPlanDetailsDialogFragment newInstance(PaymentsModel paymentsModel,
-                                                                       PaymentPlanDTO paymentPlanDTO) {
+                                                                       PaymentPlanDTO paymentPlanDTO,
+                                                                       boolean enablePayNowButton) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanDTO);
+        args.putBoolean("enablePayNowButton", enablePayNowButton);
 
         PracticePaymentPlanDetailsDialogFragment dialog = new PracticePaymentPlanDetailsDialogFragment();
         dialog.setArguments(args);
@@ -87,7 +90,8 @@ public class PracticePaymentPlanDetailsDialogFragment extends PaymentPlanDetails
         if (((BasePracticeActivity) getActivity()).getApplicationMode().getApplicationType()
                 == ApplicationMode.ApplicationType.PRACTICE) {
             payButton.setEnabled(paymentReceiptModel.getPaymentPayload().getUserAuthModel()
-                    .getUserAuthPermissions().canMakePayment);
+                    .getUserAuthPermissions().canMakePayment
+                    && getArguments().getBoolean("enablePayNowButton", true));
         }
     }
 

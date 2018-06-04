@@ -163,7 +163,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             try {
                 progressDialog.dismiss();
                 progressDialog = null;
-            }catch (IllegalArgumentException iax){
+            } catch (IllegalArgumentException iax) {
                 iax.printStackTrace();
             }
         }
@@ -192,7 +192,9 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
                 }
 
             }
-            errorNotification.showPopWindow();
+            if (isVisible()) {
+                errorNotification.showPopWindow();
+            }
         } catch (Exception e) {
             Log.e("Base Activity", e.getMessage() + "");
         }
@@ -414,7 +416,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         }
     };
 
-    protected void onProgressDialogCancel(DialogInterface dialog){
+    protected void onProgressDialogCancel(DialogInterface dialog) {
 
     }
 
