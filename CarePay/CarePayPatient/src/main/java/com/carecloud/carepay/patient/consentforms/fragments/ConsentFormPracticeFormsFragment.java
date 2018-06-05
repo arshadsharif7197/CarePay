@@ -89,9 +89,6 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
             }
         });
 
-        //TODO: delete this line when pending forms are ready (SHMRK-5240)
-        signSelectedFormsButton.setVisibility(View.GONE);
-
         FormDTO practiceForms = consentFormDto.getPayload().getForms().get(selectedPracticeIndex);
         setModifiedDates(practiceForms.getPracticeForms(), practiceForms.getPatientFormsFilled());
         RecyclerView practiceConsentFormsRecyclerView = (RecyclerView) view
