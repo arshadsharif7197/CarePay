@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,7 +16,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckoutActivity;
-import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
@@ -149,6 +146,23 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
             }
         });
 
+        boolean paymentPlanEnabled = !paymentDTO.getPaymentPayload().isPaymentPlanCreated() &&
+                isPaymentPlanAvailable(selectedBalance.getMetadata().getPracticeId(), total);
+        Button paymentPlanButton = (Button) view.findViewById(R.id.create_payment_plan_button);
+        paymentPlanButton.setVisibility(paymentPlanEnabled ? View.VISIBLE : View.GONE);
+        paymentPlanButton.setEnabled(paymentPlanEnabled);
+        paymentPlanButton.setClickable(paymentPlanEnabled);
+        paymentPlanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actionCallback.onPaymentPlanAction(paymentDTO);
+            }
+        });
+        if(mustAddToExisting) {
+            paymentPlanButton.setText(Label.getLabel("payment_plan_add_existing_short"));
+        }
+
+
         return view;
     }
 
@@ -170,16 +184,6 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
 
     @Override
     public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
-        String tag = PaymentDetailsFragmentDialog.class.getName();
-        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-        Fragment prev = getChildFragmentManager().findFragmentByTag(tag);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-
-        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-                .newInstance(paymentDTO, paymentLineItem, false);
-        dialog.show(ft, tag);
+        actionCallback.displayBalanceDetails(paymentDTO, paymentLineItem, null);
     }
 }

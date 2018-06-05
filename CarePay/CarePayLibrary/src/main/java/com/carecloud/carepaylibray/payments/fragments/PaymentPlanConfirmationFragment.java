@@ -17,6 +17,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
@@ -65,7 +66,11 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
     @Override
     protected void attachCallback(Context context){
         try{
-            callback = (PaymentPlanCompletedInterface) context;
+            if (context instanceof PaymentViewHandler) {
+                callback = (PaymentPlanCompletedInterface) ((PaymentViewHandler) context).getPaymentPresenter();
+            } else {
+                callback = (PaymentPlanCompletedInterface) context;
+            }
         }catch (ClassCastException cce){
             throw new ClassCastException("Attached Context must implement PaymentPlanCompletedInterface");
         }

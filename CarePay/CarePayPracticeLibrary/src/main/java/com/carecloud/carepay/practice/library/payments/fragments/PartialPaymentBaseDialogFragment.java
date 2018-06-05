@@ -136,7 +136,7 @@ public abstract class PartialPaymentBaseDialogFragment extends BaseDialogFragmen
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.closeViewLayout) {
-            dismiss();
+            cancel();
         }
     }
 

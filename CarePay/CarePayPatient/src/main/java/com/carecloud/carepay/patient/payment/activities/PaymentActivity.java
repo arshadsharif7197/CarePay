@@ -11,6 +11,7 @@ import com.carecloud.carepay.patient.payment.PatientPaymentPresenter;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
@@ -20,6 +21,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class PaymentActivity extends BasePatientActivity implements PaymentViewHandler {
     PaymentsModel paymentsDTO;
+    AppointmentDTO appointmentDTO;
     PatientPaymentPresenter presenter;
 
     private boolean isFirstFragment = true;
@@ -31,7 +33,8 @@ public class PaymentActivity extends BasePatientActivity implements PaymentViewH
         setContentView(R.layout.activity_payment);
         paymentsDTO = getConvertedDTO(PaymentsModel.class);
         initPresenter();
-
+        Bundle info = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
+        appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, info);
         presenter.startPaymentProcess(paymentsDTO);
     }
 
@@ -106,13 +109,21 @@ public class PaymentActivity extends BasePatientActivity implements PaymentViewH
     @Nullable
     @Override
     public String getAppointmentId() {
+        if(appointmentDTO != null){
+            return appointmentDTO.getMetadata().getAppointmentId();
+        }
         return null;
     }
 
     @Nullable
     @Override
     public AppointmentDTO getAppointment() {
-        return null;
+        return appointmentDTO;
+    }
+
+    @Override
+    public ISession getISession() {
+        return this;
     }
 
 }

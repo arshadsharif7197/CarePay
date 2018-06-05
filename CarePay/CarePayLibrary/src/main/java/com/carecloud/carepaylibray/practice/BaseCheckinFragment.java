@@ -8,6 +8,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.IcicleInterface;
@@ -51,13 +52,13 @@ public abstract class BaseCheckinFragment extends BaseFragment implements Icicle
             AppointmentDTO appointmentDTO = getAppointmentById(checkInWorkflowDTO.getPayload()
                     .getAppointments(), callback.getAppointmentId());
             if ((appointmentDTO != null && appointmentDTO.getPayload().getAppointmentStatus().getCode()
-                    .equalsIgnoreCase(CarePayConstants.CHECKED_IN)) || "patient_home".equals(workflowDTO.getState())) {
+                    .equalsIgnoreCase(CarePayConstants.CHECKED_IN)) || NavigationStateConstants.PATIENT_HOME.equals(workflowDTO.getState())) {
                 callback.displayCheckInSuccess(workflowDTO);
             } else {
                 callback.navigateToWorkflow(workflowDTO);
             }
         } catch (Exception e) {
-            if ("patient_home".equals(workflowDTO.getState())) {
+            if (NavigationStateConstants.PATIENT_HOME.equals(workflowDTO.getState())) {
                 Gson gson = new Gson();
                 JsonObject appointmentJson = workflowDTO.getPayload().getAsJsonObject("appointments");
                 AppointmentDTO appointment = gson.fromJson(appointmentJson, AppointmentDTO.class);
