@@ -92,6 +92,7 @@ public class WelcomeActivity extends FullScreenActivity {
         TextView environment = (TextView) findViewById(R.id.environment_label);
         environment.setText(HttpConstants.getEnvironment());
 
+        setupNewRelic();
 
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(connectionStateChangedReceiver, intentFilter);
@@ -805,4 +806,17 @@ public class WelcomeActivity extends FullScreenActivity {
         NewRelic.recordCustomEvent(eventType, eventMap);
 
     }
+
+    private void setupNewRelic(){
+        NewRelic.setUserId(applicationHelper.getApplicationPreferences().getDeviceId());
+        NewRelic.setAttribute(getString(R.string.key_practice_id),
+                applicationHelper.getApplicationPreferences().getPracticeId());
+        NewRelic.setAttribute(getString(R.string.key_practice_name),
+                applicationHelper.getApplicationPreferences().getUserPracticeDTO().getPracticeName());
+        NewRelic.setAttribute(getString(R.string.key_location_id),
+                applicationHelper.getApplicationPreferences().getLocationId());
+        NewRelic.setAttribute(getString(R.string.key_device_name),
+                applicationHelper.getApplicationPreferences().getDeviceName());
+    }
+
 }
