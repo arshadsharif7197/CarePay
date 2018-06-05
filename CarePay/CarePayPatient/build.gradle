@@ -8,8 +8,8 @@ android {
         applicationId "com.carecloud.carepay.patient"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 72
-        versionName "1.1.10"
+        versionCode 76
+        versionName "1.1.11"
         multiDexEnabled true
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
@@ -80,7 +80,7 @@ android {
             buildConfigField 'String', 'X_API_KEY', '"WQRPwvVVL89qyr9TqzGOo9Qx8jKOYxmO9eRdNFpq"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
             buildConfigField 'String', 'MESSAGING_BASE_URL', '"https://messaging-staging.carecloud.com"'
-            buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze-settings-settings.carecloud.com"'
+            buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze-settings-staging.carecloud.com"'
             buildConfigField 'String', 'RETAIL_URL', '"https://breeze-staging.carecloud.com"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AAb24320f2a02bf87d9faf0d7aff73bbeca08d264f"'
