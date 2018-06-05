@@ -82,13 +82,12 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         toolBarTitle = Label.getLabel("payment_patient_balance_toolbar");
         displayToolbar(true, toolBarTitle);
         inflateDrawer();
-
         initFragments();
     }
 
     private void initFragments() {
         if (hasPayments() || hasPaymentPlans() || hasCharges()) {
-            replaceFragment(new PaymentBalanceHistoryFragment(), false);
+            replaceFragment(PaymentBalanceHistoryFragment.newInstance(), false);
         } else {
             showNoPaymentsLayout();
         }
@@ -257,7 +256,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
         boolean addExisting = false;
-        if(paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)){
+        if (paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)) {
             onAddBalanceToExistingPlan(paymentsModel, selectedBalance, amount);
             addExisting = true;
         } else {

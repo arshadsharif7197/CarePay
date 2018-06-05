@@ -115,7 +115,8 @@ public class PatientPaymentHistoryFragment extends BaseFragment
     private List<PaymentHistoryItem> filterPaymentHistory(List<PaymentHistoryItem> paymentHistoryItems) {
         List<PaymentHistoryItem> output = new ArrayList<>();
         for (PaymentHistoryItem item : paymentHistoryItems) {
-            if (item.getPayload().getTotalPaid() > 0 || item.getPayload().getProcessingErrors().isEmpty()) {
+            if (item.getPayload().getTotalPaid() > 0
+                    || item.getPayload().getProcessingErrors().isEmpty()) {
                 output.add(item);
             }
         }
@@ -175,7 +176,7 @@ public class PatientPaymentHistoryFragment extends BaseFragment
                 paging = nextPage;
                 List<PaymentHistoryItem> newItems = paymentsModel.getPaymentPayload()
                         .getTransactionHistory().getPaymentHistoryList();
-                List<PaymentHistoryItem>filteredItems = filterPaymentHistory(newItems);
+                List<PaymentHistoryItem> filteredItems = filterPaymentHistory(newItems);
                 setAdapter(filteredItems);
                 paymentHistoryItems.addAll(filteredItems);
             }
