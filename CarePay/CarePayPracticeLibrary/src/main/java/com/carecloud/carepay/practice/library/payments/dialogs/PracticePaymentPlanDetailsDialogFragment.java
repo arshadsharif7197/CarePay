@@ -2,6 +2,7 @@ package com.carecloud.carepay.practice.library.payments.dialogs;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -23,11 +26,12 @@ public class PracticePaymentPlanDetailsDialogFragment extends PaymentPlanDetails
     private DialogInterface.OnDismissListener dismissListener;
 
     /**
-     * @param paymentsModel      the payment model
-     * @param paymentPlanDTO     the Payment Plan Dto
+     * @param paymentsModel  the payment model
+     * @param paymentPlanDTO the Payment Plan Dto
      * @return new instance of a PaymentPlanDetailsDialogFragment
      */
-    public static PracticePaymentPlanDetailsDialogFragment newInstance(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+    public static PracticePaymentPlanDetailsDialogFragment newInstance(PaymentsModel paymentsModel,
+                                                                       PaymentPlanDTO paymentPlanDTO) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
@@ -44,11 +48,11 @@ public class PracticePaymentPlanDetailsDialogFragment extends PaymentPlanDetails
         super.onInitialization(view);
         //handle cancel button
         View closeButton = view.findViewById(R.id.closeViewLayout);
-        if(closeButton != null){
+        if (closeButton != null) {
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(dismissListener != null){
+                    if (dismissListener != null) {
                         dismissListener.onDismiss(getDialog());
                     }
                     dismiss();
@@ -62,25 +66,34 @@ public class PracticePaymentPlanDetailsDialogFragment extends PaymentPlanDetails
                              Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         View closeView = view.findViewById(R.id.closeViewLayout);
-        if(closeView != null) {
+        if (closeView != null) {
             closeView.setOnClickListener(this);
         }
         TextView closeText = (TextView) view.findViewById(R.id.closeTextView);
-        if(closeText != null) {
+        if (closeText != null) {
             closeText.setText(getCancelString());
         }
         ImageView cancelImage = (ImageView) view.findViewById(R.id.cancel_img);
-        if(cancelImage != null) {
+        if (cancelImage != null) {
             cancelImage.setImageResource(getCancelImageResource());
         }
 
         return view;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (((BasePracticeActivity) getActivity()).getApplicationMode().getApplicationType()
+                == ApplicationMode.ApplicationType.PRACTICE) {
+            payButton.setEnabled(paymentReceiptModel.getPaymentPayload().getUserAuthModel()
+                    .getUserAuthPermissions().canMakePayment);
+        }
+    }
 
     @Override
     protected int getCancelImageResource() {
-        if(dismissListener != null){
+        if (dismissListener != null) {
             return R.drawable.icn_arrow_left;
         }
         return R.drawable.icn_close;
@@ -88,9 +101,10 @@ public class PracticePaymentPlanDetailsDialogFragment extends PaymentPlanDetails
 
     /**
      * Set dismiss listener
+     *
      * @param dismissListener dismiss listener
      */
-    public void setDismissListener(DialogInterface.OnDismissListener dismissListener){
+    public void setDismissListener(DialogInterface.OnDismissListener dismissListener) {
         this.dismissListener = dismissListener;
     }
 

@@ -259,13 +259,24 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public void onPaymentPlanAction(PaymentsModel paymentsModel) {
         PendingBalanceDTO reducedBalancesItem = reduceBalanceItems(selectedBalancesItem, paymentsModel.getPaymentPayload()
                 .getActivePlans(selectedUserPractice.getPracticeId()));
+        boolean addExisting = false;
         if(mustAddToExisting(paymentsModel)){
             onAddBalanceToExitingPlan(paymentsModel, reducedBalancesItem);
+            addExisting = true;
         } else {
             PaymentPlanFragment fragment = PaymentPlanFragment.newInstance(paymentsModel, reducedBalancesItem);
             replaceFragment(fragment, true);
         }
         displayToolbar(false, null);
+
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_balance_amount),
+                getString(R.string.param_is_add_existing)};
+        Object[] values = {reducedBalancesItem.getMetadata().getPracticeId(),
+                reducedBalancesItem.getPayload().get(0).getAmount(),
+                addExisting};
+
+        MixPanelUtil.logEvent(getString(R.string.event_paymentplan_started), params, values);
     }
 
     @Override
@@ -476,6 +487,16 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                 .newInstance(paymentsModel, paymentPlanDTO, false);
         replaceFragment(fragment, true);
         displayToolbar(false, toolBarTitle);
+
+        String[] params = {getString(com.carecloud.carepaylibrary.R.string.param_practice_id),
+                getString(com.carecloud.carepaylibrary.R.string.param_payment_plan_id),
+                getString(com.carecloud.carepaylibrary.R.string.param_payment_plan_amount)};
+        Object[] values = {
+                paymentPlanDTO.getMetadata().getPracticeId(),
+                paymentPlanDTO.getMetadata().getPaymentPlanId(),
+                paymentPlanDTO.getPayload().getAmount()};
+        MixPanelUtil.logEvent(getString(R.string.event_paymentplan_onetime_payment), params, values);
+
     }
 
     @Override

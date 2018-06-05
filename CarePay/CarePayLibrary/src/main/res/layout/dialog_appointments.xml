@@ -33,7 +33,7 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
             android:gravity="end"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/light_blue_subtitle"
             android:textSize="@dimen/textview_textsize"
             android:visibility="gone"
             app:customAssetFont="proxima_nova_semi_bold"
@@ -56,13 +56,28 @@
             android:layout_gravity="center"
             android:background="@drawable/appointment_dialog_gray_bg"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="@dimen/dimen_5dp">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/appointmentVisitTypeTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_5dp"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:paddingEnd="@dimen/dimen_5dp"
+                android:paddingStart="@dimen/dimen_5dp"
+                android:singleLine="true"
+                android:textColor="@color/slateGray"
+                android:textSize="@dimen/apt_dl_textview_size"
+                app:customAssetFont="gotham_rounded_medium"
+                tools:text="Follow Up" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/appointDateTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/apt_dl_appt_date_margin"
                 android:gravity="center_horizontal"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/apt_dl_text_date"
@@ -74,7 +89,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/apt_dl_appt_time_margin"
+                android:ellipsize="end"
                 android:gravity="center_horizontal"
+                android:paddingEnd="@dimen/dimen_5dp"
+                android:paddingStart="@dimen/dimen_5dp"
+                android:singleLine="true"
                 android:textColor="@color/slateGray"
                 android:textSize="@dimen/apt_dl_textview_size"
                 app:customAssetFont="gotham_rounded_bold"

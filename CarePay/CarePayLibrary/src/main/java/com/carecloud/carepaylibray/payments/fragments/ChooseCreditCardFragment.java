@@ -276,7 +276,8 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
             queries.put("patient_id", metadata.getPatientId());
         }
 
-        if (!StringUtil.isNullOrEmpty(paymentsModel.getPaymentPayload().getPaymentPostModel().getOrderId())) {
+        if (paymentsModel.getPaymentPayload().getPaymentPostModel() != null &&
+                !StringUtil.isNullOrEmpty(paymentsModel.getPaymentPayload().getPaymentPostModel().getOrderId())) {
             IntegratedPaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
             queries.put("store_id", paymentPostModel.getStoreId());
             queries.put("transaction_id", paymentPostModel.getOrderId());
@@ -375,10 +376,10 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     private View.OnClickListener addNewCardButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            callback.showAddCard(amountToMakePayment, paymentsModel);
             if (getDialog() != null) {
                 dismiss();
             }
+            callback.showAddCard(amountToMakePayment, paymentsModel);
         }
     };
 
