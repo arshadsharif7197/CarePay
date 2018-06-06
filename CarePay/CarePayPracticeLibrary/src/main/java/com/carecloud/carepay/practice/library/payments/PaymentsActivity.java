@@ -23,6 +23,7 @@ import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog
 import com.carecloud.carepay.practice.library.payments.dialogs.IntegratedPaymentsChooseDeviceFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
+import com.carecloud.carepay.practice.library.payments.dialogs.PatientModePaymentPlanDetailsDialogFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PracticePaymentPlanDetailsDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.AddPaymentItemFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientModePaymentPlanEditFragment;
@@ -730,13 +731,13 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     public void onPaymentPlanSelected(final PaymentsModel paymentsModel,
                                       PaymentPlanDTO paymentPlanDTO) {
         PracticePaymentPlanDetailsDialogFragment fragment = PracticePaymentPlanDetailsDialogFragment
-                .newInstance(paymentsModel, paymentPlanDTO, true);
-        fragment.setDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                showPaymentHistory(paymentsModel);
-            }
-        });
+                .newInstance(paymentsModel, paymentPlanDTO, false);
+//        fragment.setDismissListener(new DialogInterface.OnDismissListener() {
+//            @Override
+//            public void onDismiss(DialogInterface dialog) {
+//                showPaymentHistory(paymentsModel);
+//            }
+//        });
         displayDialogFragment(fragment, false);
     }
 
@@ -974,7 +975,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     @Override
     public void onDismissEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
         PracticePaymentPlanDetailsDialogFragment fragment = PracticePaymentPlanDetailsDialogFragment
-                .newInstance(paymentsModel, paymentPlanDTO, true);
+                .newInstance(paymentsModel, paymentPlanDTO, false);
         displayDialogFragment(fragment, false);
     }
 
@@ -1022,15 +1023,15 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     @Override
     public void showPaymentPlanDetail(final PaymentsModel paymentsModel,
                                       PaymentPlanDTO paymentPlan,
-                                      boolean completed) {
+                                      boolean isCompleted) {
         PracticePaymentPlanDetailsDialogFragment fragment = PracticePaymentPlanDetailsDialogFragment
-                .newInstance(paymentsModel, paymentPlan, !completed);
-        fragment.setDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-
-            }
-        });
+                .newInstance(paymentsModel, paymentPlan, isCompleted);
+//        fragment.setDismissListener(new DialogInterface.OnDismissListener() {
+//            @Override
+//            public void onDismiss(DialogInterface dialog) {
+//
+//            }
+//        });
         displayDialogFragment(fragment, false);
     }
 }
