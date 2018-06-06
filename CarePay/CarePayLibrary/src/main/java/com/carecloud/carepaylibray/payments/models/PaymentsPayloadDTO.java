@@ -552,7 +552,11 @@ public class PaymentsPayloadDTO implements Serializable {
                                 maxPlanAmount = pendingAmount;
                             }
                         }
-                        return SystemUtil.safeSubtract(minPaymentPlanAmount, maxPlanAmount);
+                        if(minPaymentPlanAmount > maxPlanAmount) {
+                            return SystemUtil.safeSubtract(minPaymentPlanAmount, maxPlanAmount);
+                        }else{
+                            return minPaymentPlanAmount;
+                        }
                     } else {
                         return 0D;
                     }
