@@ -125,7 +125,7 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
                 if (consentFormUserResponseDTO.getFormId().equals(practiceForm.getPayload()
                         .get("uuid").getAsString())) {
                     practiceForm.setLastModifiedDate(consentFormUserResponseDTO.getMetadata()
-                            .get("updated_dt").toString());
+                            .get("updated_dt").getAsString());
                 }
                 practiceForm.setSelected(false);
             }

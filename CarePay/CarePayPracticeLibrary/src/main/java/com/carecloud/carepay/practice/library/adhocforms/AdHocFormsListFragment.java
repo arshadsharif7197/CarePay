@@ -202,9 +202,9 @@ public class AdHocFormsListFragment extends BaseDialogFragment
         for (PracticeForm practiceForm : allPracticeForms) {
             for (ConsentFormUserResponseDTO consentFormUserResponseDTO : patientFormsFilled) {
                 if (consentFormUserResponseDTO.getFormId().equals(practiceForm.getPayload()
-                        .get("uuid").toString().replace("\"", ""))) {
+                        .get("uuid").getAsString())) {
                     practiceForm.setLastModifiedDate(consentFormUserResponseDTO.getMetadata()
-                            .get("updated_dt").toString());
+                            .get("updated_dt").getAsString());
                 }
             }
         }
