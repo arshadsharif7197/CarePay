@@ -427,6 +427,11 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
     }
 
     @Override
+    public void onCashSelected(PaymentsModel paymentsModel) {
+        //Not Implemented
+    }
+
+    @Override
     public void onStartPaymentPlan(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
         PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
                 .newInstance(paymentsModel, paymentPlanPostModel);

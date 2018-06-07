@@ -13,4 +13,6 @@ public interface PaymentMethodDialogInterface extends PaymentMethodInterface {
      */
     void onDismissPaymentMethodDialog(PaymentsModel paymentsModel);
 
+    void onCashSelected(PaymentsModel paymentsModel);
+
 }

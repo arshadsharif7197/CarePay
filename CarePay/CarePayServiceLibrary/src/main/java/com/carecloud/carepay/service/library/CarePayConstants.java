@@ -156,6 +156,7 @@ public class CarePayConstants {
     public static final String EXTRA_APPOINTMENT_TRANSITIONS = "appointmentWorkflow";
     public static final String EXTRA_BUNDLE = "extra";
     public static final String EXTRA_CONFIRMATION_MODE = "confirmationMode";
+    public static final String EXTRA_PAYMENT_CASH ="makeCashPayment";
 
 
     public static final String OPEN_NOTIFICATIONS = "shouldOpenNotifications";

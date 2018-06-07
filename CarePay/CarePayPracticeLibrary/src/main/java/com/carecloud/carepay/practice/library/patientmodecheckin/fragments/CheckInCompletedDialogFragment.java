@@ -51,6 +51,7 @@ import java.util.Locale;
 public class CheckInCompletedDialogFragment extends BaseDialogFragment {
 
     private boolean hasPayment;
+    private boolean isCash;
     private boolean hasPaymentPlan;
     private boolean isAdHocForms;
     private  @PaymentPlanConfirmationFragment.ConfirmationMode int confirmationMode;
@@ -61,6 +62,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
     private IntegratedPatientPaymentPayload patientPaymentPayload;
     private PaymentPlanDTO paymentPlanDTO;
     private List<String> filledForms;
+    private PaymentsModel paymentsModel;
 
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
@@ -106,7 +108,8 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
         super.onCreate(icicle);
         Bundle args = getArguments();
         if(args != null){
-            hasPayment = getArguments().getBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, false);
+            hasPayment = args.getBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, false);
+            isCash = args.getBoolean(CarePayConstants.EXTRA_PAYMENT_CASH, false);
             isAdHocForms = getArguments().getBoolean(CarePayConstants.ADHOC_FORMS, false);
             confirmationMode = args.getInt(CarePayConstants.EXTRA_CONFIRMATION_MODE, -1);
         }
@@ -121,14 +124,14 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
             if (selectedAppointment == null) {
                 selectedAppointment = DtoHelper.getConvertedDTO(AppointmentDTO.class, icicle);
             }
-            if (hasPayment) {
-                PaymentsModel paymentsModel = (PaymentsModel) dto;
+            if (hasPayment||isCash) {
+                paymentsModel = (PaymentsModel) dto;
                 hasPaymentPlan = confirmationMode > -1;
                 if(hasPaymentPlan){
                     paymentPlanDTO = paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0);
                 }else {
                     patientPaymentPayload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-                    userImageUrl = ((PaymentsModel) dto).getPaymentPayload().getPatientBalances().get(0)
+                    userImageUrl = paymentsModel.getPaymentPayload().getPatientBalances().get(0)
                             .getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
                 }
             } else if (isAdHocForms) {
@@ -174,7 +177,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
             return;
         }
 
-        view.findViewById(R.id.paymentInformation).setVisibility(hasPayment && !hasPaymentPlan ? View.VISIBLE : View.GONE);
+        view.findViewById(R.id.paymentInformation).setVisibility((hasPayment && !hasPaymentPlan) || isCash ? View.VISIBLE : View.GONE);
         view.findViewById(R.id.paymentPlanInformation).setVisibility(hasPaymentPlan ? View.VISIBLE : View.GONE);
 
         final ImageView userImage = (ImageView) view.findViewById(R.id.userImage);
@@ -263,23 +266,57 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
 
             paymentTypeTextView.setText(getMessageLabel());
 
-            TextView totalAmount = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.payment_confirm_amount_value);
+            TextView totalAmount = (TextView) view.findViewById(R.id.payment_confirm_amount_value);
             totalAmount.setText(currencyFormatter.format(paymentPlanPayloadDTO.getAmount()));
 
-            TextView installments = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.payment_confirm_installments_value);
+            TextView installments = (TextView) view.findViewById(R.id.payment_confirm_installments_value);
             installments.setText(String.valueOf(paymentPlanPayloadDTO.getPaymentPlanDetails().getInstallments()));
 
             String paymentAmountString = currencyFormatter.format(paymentPlanPayloadDTO.getPaymentPlanDetails().getAmount()) +
                     paymentPlanPayloadDTO.getPaymentPlanDetails().getFrequencyString();
-            TextView paymentAmount = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.payment_confirm_payment_value);
+            TextView paymentAmount = (TextView) view.findViewById(R.id.payment_confirm_payment_value);
             paymentAmount.setText(paymentAmountString);
 
-            TextView dueDate = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.payment_confirm_due_value);
+            TextView dueDate = (TextView) view.findViewById(R.id.payment_confirm_due_value);
             dueDate.setText(StringUtil.getOrdinal(getApplicationPreferences().getUserLanguage(),
                     paymentPlanPayloadDTO.getPaymentPlanDetails().getDayOfMonth()));
 
         } else if (isAdHocForms) {
             setUpForAdHocForms(view);
+        } else if (isCash) {
+            view.findViewById(R.id.paymentTypeLayout).setVisibility(View.GONE);
+            view.findViewById(R.id.separator3).setVisibility(View.GONE);
+
+            view.findViewById(R.id.confirmationNumberLayout).setVisibility(View.GONE);
+            view.findViewById(R.id.separator6).setVisibility(View.GONE);
+
+            view.findViewById(R.id.continueTextView).setVisibility(View.GONE);
+
+            ImageView successImage = (ImageView) view.findViewById(R.id.checkImage);
+            successImage.setImageResource(R.drawable.cash_success);
+
+            TextView paymentMethodTextView = (TextView) view.findViewById(R.id.paymentMethodTextView);
+            paymentMethodTextView.setText(Label.getLabel("payment_method_cash"));
+
+            TextView totalLabel = (TextView) view.findViewById(R.id.totalPaidLabel);
+            totalLabel.setText(Label.getLabel("payment_confirm_cash_total"));
+
+            //only take first balance since this is practice app
+            double pendingAmount = paymentsModel.getPaymentPayload().getPatientBalances().get(0)
+                    .getBalances().get(0).getPayload().get(0).getAmount();
+            TextView totalAmount = (TextView) view.findViewById(R.id.totalPaidTextView);
+            totalAmount.setText(currencyFormatter.format(pendingAmount));
+
+            View main = view.findViewById(R.id.mainLayout);
+            main.setBackgroundResource(R.color.lightning_yellow);
+
+            TextView successMessage = (TextView) view.findViewById(R.id.successMessage);
+            if (appointmentNavigationType == Defs.NAVIGATE_CHECKOUT ) {
+                successMessage.setText(Label.getLabel("confirm_appointment_checkout_cash_payment_message"));
+            } else {
+                successMessage.setText(Label.getLabel("confirm_appointment_checkin_cash_payment_message"));
+            }
+
         } else {
             paymentTypeTextView.setText(Label.getLabel("payment_confirm_type_no_paid"));
 
