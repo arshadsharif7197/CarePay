@@ -200,9 +200,9 @@ public class AdHocFormsListFragment extends BaseDialogFragment
         for (PracticeForm practiceForm : allPracticeForms) {
             for (ConsentFormUserResponseDTO consentFormUserResponseDTO : patientFormsFilled) {
                 if (consentFormUserResponseDTO.getFormId().equals(practiceForm.getPayload()
-                        .get("uuid").toString().replace("\"", ""))) {
+                        .get("uuid").getAsString())) {
                     practiceForm.setLastModifiedDate(consentFormUserResponseDTO.getMetadata()
-                            .get("updated_dt").toString());
+                            .get("updated_dt").getAsString());
                 }
             }
         }
@@ -212,10 +212,10 @@ public class AdHocFormsListFragment extends BaseDialogFragment
     public void onFormSelected(PracticeForm practiceForm, boolean selected) {
         if (selected) {
             selectedForms.getForms()
-                    .add(practiceForm.getPayload().get("uuid").toString().replace("\"", ""));
+                    .add(practiceForm.getPayload().get("uuid").getAsString());
         } else {
             selectedForms.getForms()
-                    .remove(practiceForm.getPayload().get("uuid").toString().replace("\"", ""));
+                    .remove(practiceForm.getPayload().get("uuid").getAsString());
         }
         fillNowFormButton.setEnabled(!selectedForms.getForms().isEmpty());
         sendFormButton.setEnabled(!selectedForms.getForms().isEmpty());
