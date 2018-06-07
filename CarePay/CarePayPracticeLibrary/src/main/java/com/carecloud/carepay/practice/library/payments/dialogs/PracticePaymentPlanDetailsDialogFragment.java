@@ -165,7 +165,7 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
         oneTimePaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onStartOneTimePayment(paymentsModel, paymentPlan);
+                callback.onMakeOneTimePayment(paymentsModel, paymentPlan);
                 dismiss();
             }
         });

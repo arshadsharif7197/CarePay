@@ -122,9 +122,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
                 creditCardList = paymentsModel.getPaymentPayload().getPatientCreditCards();
                 userPracticeDTO = callback.getPracticeInfo(paymentsModel);
             }
-
         }
-
     }
 
     @Override
@@ -184,8 +182,15 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
 
         creditCardsRecyclerView = (RecyclerView) view.findViewById(R.id.list_credit_cards);
         creditCardsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        final CreditCardsListAdapter creditCardsListAdapter = new CreditCardsListAdapter(getContext(), creditCardList, this, false);
+        final CreditCardsListAdapter creditCardsListAdapter = new CreditCardsListAdapter(getContext(),
+                creditCardList, this, false);
         creditCardsRecyclerView.setAdapter(creditCardsListAdapter);
+        for (PaymentsPatientsCreditCardsPayloadListDTO creditCard : creditCardList) {
+            if (creditCard.getPayload().isDefault()) {
+                onCreditCardItemSelected(creditCard.getPayload());
+                break;
+            }
+        }
 
     }
 

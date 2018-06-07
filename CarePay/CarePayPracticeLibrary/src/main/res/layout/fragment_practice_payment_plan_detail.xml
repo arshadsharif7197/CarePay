@@ -85,10 +85,11 @@
                 android:background="@drawable/green_rounded_button_selector_always_click"
                 android:enabled="true"
                 android:gravity="center"
+                android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/respons_button_text_size"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="payment_create_payment_plan"
+                breeze:textKey="payment.paymentPlan.oneTimePayment.button.make"
                 tools:text="Create Payment Plan" />
 
         </LinearLayout>
@@ -212,8 +213,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/footer"
-            android:background="@color/white"
-            android:layout_below="@id/amountsContainer">
+            android:layout_below="@id/amountsContainer"
+            android:background="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
