@@ -70,6 +70,17 @@
                 breeze:textKey="payment_pay_total_amount_button" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/create_payment_plan_button"
+                style="@style/SigninNewAccountButtonStyle"
+                customAssetFont="gotham_rounded_medium"
+                android:layout_marginEnd="@dimen/dimen_17dp"
+                android:layout_marginStart="@dimen/dimen_17dp"
+                android:layout_marginTop="@dimen/dimen_12dp"
+                android:clickable="false"
+                android:enabled="false"
+                breeze:textKey="payment_create_payment_plan" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/make_partial_payment_button"
                 style="@style/SigninNewAccountButtonStyle"
                 customAssetFont="gotham_rounded_medium"

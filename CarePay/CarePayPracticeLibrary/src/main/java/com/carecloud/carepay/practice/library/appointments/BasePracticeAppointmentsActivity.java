@@ -185,7 +185,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
                     patientId};
             MixPanelUtil.logEvent(getString(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
                     R.string.event_appointment_requested : R.string.event_appointment_scheduled), params, values);
-            if(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            if (applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
                 MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
             }
         }
@@ -349,7 +349,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
-        PracticeAddNewCreditCardFragment fragment = PracticeAddNewCreditCardFragment.newInstance(paymentsModel,amount);
+        PracticeAddNewCreditCardFragment fragment = PracticeAddNewCreditCardFragment.newInstance(paymentsModel, amount);
         displayDialogFragment(fragment, false);
     }
 
@@ -408,7 +408,9 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
             builder.replace(last, builder.length(), "");
             showErrorNotification(builder.toString());
         } else {
-            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment.newInstance(workflowDTO);
+            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
+                    .newInstance(workflowDTO, Label.getLabel("appointment.confirmationScreen.type.label.paymentType"),
+                            Label.getLabel("add_appointment_back_to_appointments_button"));
             displayDialogFragment(confirmationFragment, false);
         }
     }

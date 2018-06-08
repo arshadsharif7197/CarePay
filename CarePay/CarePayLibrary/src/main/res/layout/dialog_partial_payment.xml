@@ -88,6 +88,21 @@
                     android:textSize="@dimen/payment_header_amount_size"
                     app:customAssetFont="gotham_rounded_medium" />
             </LinearLayout>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/partialPaymentHeaderBottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:paddingEnd="@dimen/dimen_10dp"
+                android:paddingStart="@dimen/dimen_10dp"
+                android:paddingBottom="@dimen/dimen_5dp"
+                android:textColor="@color/glitter"
+                android:visibility="gone"
+                tools:text="Enter amount between\n $100 and $500"
+                app:customAssetFont="gotham_rounded_book" />
+
         </LinearLayout>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView

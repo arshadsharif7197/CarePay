@@ -16,6 +16,9 @@ public class ConsentFormMetadataDTO {
     @SerializedName("data_models")
     @Expose
     private ConsentFormDataModelDTO dataModels = new ConsentFormDataModelDTO();
+    @SerializedName("links")
+    @Expose
+    private ConsentFormsLinksDTO links = new ConsentFormsLinksDTO();
 
     /**
      * @return The transitions
@@ -45,4 +48,11 @@ public class ConsentFormMetadataDTO {
         this.dataModels = dataModels;
     }
 
+    public ConsentFormsLinksDTO getLinks() {
+        return links;
+    }
+
+    public void setLinks(ConsentFormsLinksDTO links) {
+        this.links = links;
+    }
 }

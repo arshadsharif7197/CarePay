@@ -13,6 +13,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
 import com.carecloud.carepaylibray.payments.models.MerchantServiceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
@@ -25,6 +26,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentCa
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
+import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.payments.utils.CreditCardUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
@@ -52,6 +54,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     protected PaymentPlanDTO paymentPlanDTO;
     private PaymentCreditCardsPayloadDTO creditCard;
     private boolean canEditPaymentPlan;
+    protected PaymentPlanInterface callback;
 
     /**
      * @param paymentsModel  the payment model
@@ -72,8 +75,16 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     @Override
     protected void attachCallback(Context context) {
         super.attachCallback(context);
+        try {
+            if (context instanceof PaymentViewHandler) {
+                callback = (PaymentPlanInterface) ((PaymentViewHandler) context).getPaymentPresenter();
+            } else {
+                callback = (PaymentPlanInterface) context;
+            }
+        } catch (ClassCastException cce) {
+            throw new ClassCastException("Attached context must implement PaymentPlanInterface");
+        }
     }
-
 
     @Override
     public void onCreate(Bundle icicle) {

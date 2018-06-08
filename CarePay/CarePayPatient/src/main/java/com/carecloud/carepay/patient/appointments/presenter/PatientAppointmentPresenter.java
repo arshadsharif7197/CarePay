@@ -668,7 +668,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             builder.replace(last, builder.length(), "");
             ((ISession) viewHandler.getContext()).showErrorNotification(builder.toString());
         } else {
-            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment.newInstance(workflowDTO);
+            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
+                    .newInstance(workflowDTO, Label.getLabel("appointment.confirmationScreen.type.label.paymentType"),
+                            Label.getLabel("add_appointment_back_to_appointments_button"));
             viewHandler.displayDialogFragment(confirmationFragment, false);
         }
     }

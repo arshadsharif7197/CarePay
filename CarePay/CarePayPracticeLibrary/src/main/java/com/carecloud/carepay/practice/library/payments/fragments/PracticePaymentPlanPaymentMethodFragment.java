@@ -8,7 +8,8 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
+import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -25,7 +26,7 @@ import java.util.List;
 
 public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMethodDialogFragment {
 
-    private PaymentPlanInterface callback;
+    private PaymentPlanCreateInterface callback;
     private PaymentPlanPostModel paymentPlanPostModel;
     private PaymentPlanDTO paymentPlanDTO;
 
@@ -68,11 +69,11 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
         super.attachCallback(context);
         try {
             if (context instanceof PaymentViewHandler) {
-                callback = (PaymentPlanInterface) ((PaymentViewHandler) context).getPaymentPresenter();
+                callback = (PaymentPlanCreateInterface) ((PaymentViewHandler) context).getPaymentPresenter();
             } else if (context instanceof AppointmentViewHandler) {
-                callback = (PaymentPlanInterface) ((AppointmentViewHandler) context).getAppointmentPresenter();
+                callback = (PaymentPlanCreateInterface) ((AppointmentViewHandler) context).getAppointmentPresenter();
             } else {
-                callback = (PaymentPlanInterface) context;
+                callback = (PaymentPlanCreateInterface) context;
             }
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached Context must implement PaymentMethodInterface");
@@ -118,7 +119,7 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
                     callback.onSelectPaymentPlanMethod(paymentMethod, paymentsModel, paymentPlanPostModel, onlySelectMode);
                 }
                 if (paymentPlanDTO != null) {
-                    callback.onSelectPaymentPlanMethod(paymentMethod, paymentsModel, paymentPlanDTO, onlySelectMode);
+                    ((OneTimePaymentInterface) callback).onSelectPaymentPlanMethod(paymentMethod, paymentsModel, paymentPlanDTO, onlySelectMode);
                 }
                 logPaymentMethodSelection(getString(R.string.payment_credit_card));
                 dismiss();

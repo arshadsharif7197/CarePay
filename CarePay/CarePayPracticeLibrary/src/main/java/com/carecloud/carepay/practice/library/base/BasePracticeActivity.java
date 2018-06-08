@@ -113,6 +113,7 @@ public abstract class BasePracticeActivity extends BaseActivity
             if (home != null) {
                 home.setEnabled(true);
             }
+            getAppAuthorizationHelper().setUser(null);
             finish();
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }

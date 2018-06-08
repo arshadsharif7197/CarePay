@@ -8,7 +8,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
 
-    private PaymentPlanInterface callback;
+    private PaymentPlanCreateInterface callback;
     protected PaymentPlanPostModel paymentPlanPostModel;
     protected PaymentPlanDTO paymentPlanDTO;
 
@@ -70,11 +70,11 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
         super.attachCallback(context);
         try {
             if (context instanceof PaymentViewHandler) {
-                callback = (PaymentPlanInterface) ((PaymentViewHandler) context).getPaymentPresenter();
+                callback = (PaymentPlanCreateInterface) ((PaymentViewHandler) context).getPaymentPresenter();
             } else if (context instanceof AppointmentViewHandler) {
-                callback = (PaymentPlanInterface) ((AppointmentViewHandler) context).getAppointmentPresenter();
+                callback = (PaymentPlanCreateInterface) ((AppointmentViewHandler) context).getAppointmentPresenter();
             } else {
-                callback = (PaymentPlanInterface) context;
+                callback = (PaymentPlanCreateInterface) context;
             }
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement PaymentConfirmationInterface");
