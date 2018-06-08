@@ -85,7 +85,8 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.practice_payment_plan_detail_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_practice_payment_plan_detail, container,
+                false);
     }
 
     @Override

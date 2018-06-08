@@ -157,6 +157,41 @@
                 </FrameLayout>
 
                 <FrameLayout
+                    android:id="@+id/frequencyCodeLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                        android:id="@+id/frequencyCodeInputLayout"
+                        style="@style/SigninSignupTextInputStyle"
+                        android:tag="@string/tag_demographics_error_color"
+                        android:textColorHint="@color/demographics_color_error"
+                        app:customAssetFont="proxima_nova_semi_bold"
+                        app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                        <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                            android:id="@+id/frequencyCodeEditText"
+                            style="@style/SigninSignupEditStyle"
+                            android:clickable="false"
+                            android:cursorVisible="false"
+                            android:drawableEnd="@drawable/icon_drop_down"
+                            android:editable="false"
+                            android:focusableInTouchMode="false"
+                            android:imeOptions="actionNext"
+                            app:customAssetFont="proxima_nova_regular"
+                            app:hintTextAppearance="@style/FloatingLabelStyle"
+                            breeze:hintKey="payment.paymentPlan.frequency.field.hint"
+                            tools:hint="Frequency" />
+
+                    </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+                    <include
+                        android:id="@+id/frequencyCodeOptional"
+                        layout="@layout/layout_optional_text_view" />
+
+                </FrameLayout>
+
+                <FrameLayout
                     android:id="@+id/paymentDrawDayLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
