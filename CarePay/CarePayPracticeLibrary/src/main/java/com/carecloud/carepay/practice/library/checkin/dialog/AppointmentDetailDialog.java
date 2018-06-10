@@ -399,7 +399,13 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             updatePageOptions(workflowDTO);
-            updateQueueStatus(workflowDTO);
+            if (appointmentPayloadDTO.getAppointmentStatus().getOriginalName() == null) {
+                updateQueueStatus(workflowDTO);
+            }else{
+                queueTextLayout.setVisibility(View.GONE);
+                checkboxLayout.setVisibility(View.GONE);
+                queueText.setVisibility(View.GONE);
+            }
         }
 
         @Override
@@ -696,7 +702,8 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
             @Override
             public void run() {
                 PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-                pageButton.setEnabled(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getNotificationOptions().hasPushNotification());
+                pageButton.setEnabled(paymentsModel.getPaymentPayload().getPatientBalances().get(0)
+                        .getDemographics().getPayload().getNotificationOptions().hasPushNotification());
             }
         });
     }

@@ -32,8 +32,8 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
     private double maximumPaymentAmount = 0D;
 
     /**
-     * @param paymentsModel     the payment model
-     * @param selectedBalance   selected balance
+     * @param paymentsModel   the payment model
+     * @param selectedBalance selected balance
      * @return an instance of PracticePaymentPlanAmountFragment
      */
     public static PracticePaymentPlanAmountFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance) {
@@ -47,20 +47,20 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
     }
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
         try {
             callback = (PaymentDetailInterface) context;
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached Context must implement PaymentDetailInterface");
         }
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
-        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class,args);
+        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
         selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
         this.practiceId = selectedBalance.getMetadata().getPracticeId();
         fullAmount = calculateFullAmount();
@@ -68,25 +68,25 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         TextView header = (TextView) findViewById(R.id.partialPaymentHeader);
         header.setText(Label.getLabel("payment_plan_partial_amount_header"));
         applyButton.setEnabled(false);
         applyButton.setText(Label.getLabel("payment_create_payment_plan"));
         TextView footer = (TextView) findViewById(R.id.partialPaymentHeaderBottom);
-        if(minimumPaymentAmount > 0D && maximumPaymentAmount < fullAmount){
-            String amountBetween  = String.format(Label.getLabel("payment_partial_amount_between"),
+        if (minimumPaymentAmount > 0D && maximumPaymentAmount < fullAmount) {
+            String amountBetween = String.format(Label.getLabel("payment_partial_amount_between"),
                     currencyFormat.format(minimumPaymentAmount),
                     currencyFormat.format(maximumPaymentAmount));
             footer.setText(amountBetween);
             footer.setVisibility(View.VISIBLE);
-        }else if(minimumPaymentAmount > 0D) {
+        } else if (minimumPaymentAmount > 0D) {
             String minimumAmount = Label.getLabel("payment_partial_minimum_amount") +
                     currencyFormat.format(minimumPaymentAmount);
             footer.setText(minimumAmount);
             footer.setVisibility(View.VISIBLE);
-        }else if(maximumPaymentAmount < fullAmount){
+        } else if (maximumPaymentAmount < fullAmount) {
             String minimumAmount = Label.getLabel("payment_partial_maximum_amount") +
                     currencyFormat.format(maximumPaymentAmount);
             footer.setText(minimumAmount);
@@ -95,7 +95,7 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
     }
 
     @Override
-    protected double getMinimumPayment(){
+    protected double getMinimumPayment() {
         return minimumPaymentAmount;
     }
 
@@ -104,41 +104,42 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
         super.updateLayout();
         double planAmount = StringUtil.isNullOrEmpty(numberStr) ? 0D : Double.parseDouble(numberStr);
 
-        if(planAmount > fullAmount){
+        if (planAmount > fullAmount) {
             applyButton.setEnabled(false);
             applyButton.setText(Label.getLabel("payment_create_payment_plan"));
             return;
         }
 
         boolean canCreatePlan = ((!hasExistingPlans || canCreateMultiple) && hasApplicableRule(practiceId, planAmount));
-        if(canCreatePlan || (hasExistingPlans && canAddToExisting && canAddToExisting(planAmount))){
+        if ((canCreatePlan || (hasExistingPlans && canAddToExisting && canAddToExisting(planAmount)))
+                && planAmount > 0.0) {
             applyButton.setEnabled(true);
-            if(canCreatePlan){
+            if (canCreatePlan) {
                 applyButton.setText(Label.getLabel("payment_create_payment_plan"));
-            }else{//must add to existing
+            } else {//must add to existing
                 applyButton.setText(Label.getLabel("payment_plan_add_existing"));
             }
-        }else{
+        } else {
             applyButton.setEnabled(false);
             applyButton.setText(Label.getLabel("payment_create_payment_plan"));
         }
     }
 
     @Override
-    protected void onPaymentClick(double amount){
+    protected void onPaymentClick(double amount) {
         callback.onPaymentPlanAmount(paymentsModel, selectedBalance, amount);
         dismiss();
     }
 
     private double calculateFullAmount() {
         double amount = 0D;
-        for(PendingBalancePayloadDTO pendingBalancePayloadDTO : selectedBalance.getPayload()){
+        for (PendingBalancePayloadDTO pendingBalancePayloadDTO : selectedBalance.getPayload()) {
             amount = SystemUtil.safeAdd(amount, pendingBalancePayloadDTO.getAmount());
         }
         return amount;
     }
 
-    private boolean canAddToExisting(double amount){
+    private boolean canAddToExisting(double amount) {
         return !paymentsModel.getPaymentPayload().getValidPlans(practiceId, amount).isEmpty();
     }
 
@@ -157,8 +158,8 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
         return false;
     }
 
-    private void determineParameters(){
-        for(PaymentsPayloadSettingsDTO settingsDTO : paymentsModel.getPaymentPayload().getPaymentSettings()) {
+    private void determineParameters() {
+        for (PaymentsPayloadSettingsDTO settingsDTO : paymentsModel.getPaymentPayload().getPaymentSettings()) {
             if (practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())) {
                 canAddToExisting = settingsDTO.getPayload().getPaymentPlans().isAddBalanceToExisting();
                 canCreateMultiple = settingsDTO.getPayload().getPaymentPlans().isCanHaveMultiple();
