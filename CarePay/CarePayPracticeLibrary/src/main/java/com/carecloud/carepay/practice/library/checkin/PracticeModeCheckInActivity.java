@@ -887,6 +887,11 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     }
 
     @Override
+    public void onCashSelected(PaymentsModel paymentsModel) {
+        //TODO handle this from practice mode
+    }
+
+    @Override
     public void showPaymentHistory(PaymentsModel paymentsModel) {
         PaymentHistoryFragment fragment = PaymentHistoryFragment.newInstance(paymentsModel);
         displayDialogFragment(fragment, false);

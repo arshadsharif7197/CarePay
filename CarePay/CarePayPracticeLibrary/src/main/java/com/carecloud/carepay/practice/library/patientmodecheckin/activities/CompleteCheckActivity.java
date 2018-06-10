@@ -44,11 +44,12 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
         Gson gson = new Gson();
         Bundle extra = getIntent().getBundleExtra(CarePayConstants.EXTRA_BUNDLE);
         boolean hasPayment = extra.getBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, false);
+        boolean isCash = extra.getBoolean(CarePayConstants.EXTRA_PAYMENT_CASH, false);
         boolean isCheckOut = extra.getBoolean("isCheckOut", false);
         if (getWorkflowDto() != null) {
             String workflowString = getWorkflowDto().toString();
             AppointmentDTO appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, extra);
-            if (hasPayment) {
+            if (hasPayment || isCash) {
                 if (isCheckOut) {
                     appointmentDTO.getPayload().getAppointmentStatus().setName("Checked-Out");
                 } else if (appointmentDTO.getPayload().getAppointmentStatus().getName().toLowerCase()
