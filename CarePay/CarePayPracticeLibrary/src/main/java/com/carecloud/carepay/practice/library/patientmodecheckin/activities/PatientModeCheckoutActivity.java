@@ -682,6 +682,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
         appointmentsResultModel.getMetadata().getLinks().setPinpad(practiceAppointmentDTO
                 .getMetadata().getLinks().getPinpad());
+        appointmentsResultModel.getMetadata().getLinks().setShop(practiceAppointmentDTO
+                .getMetadata().getLinks().getShop());
         appointmentsResultModel.getMetadata().getTransitions()
                 .setPracticeMode(practiceAppointmentDTO.getMetadata().getTransitions().getPracticeMode());
         extra.putString(CarePayConstants.EXTRA_APPOINTMENT_TRANSITIONS,
@@ -847,6 +849,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                 break;
             }
         }
+        appointmentsResultModel.getMetadata().getLinks()
+                .setShop(practiceAppointmentDTO.getMetadata().getLinks().getShop());
         String appointmentWorkflowString = DtoHelper.getStringDTO(appointmentsResultModel);
         WorkflowDTO appointmentWorkflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class,
                 appointmentWorkflowString);
