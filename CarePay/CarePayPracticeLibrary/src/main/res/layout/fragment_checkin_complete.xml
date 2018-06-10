@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/lemonGreen"
@@ -38,6 +40,7 @@
                 android:layout_width="@dimen/dimen_120dp"
                 android:layout_height="@dimen/dimen_120dp"
                 android:layout_marginBottom="@dimen/dimen_40dp"
+                android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
                 android:src="@drawable/icn_payment_confirm_check_white"/>
 
@@ -104,7 +107,8 @@
             android:layout_marginEnd="@dimen/dimen_50dp"
             android:layout_marginStart="@dimen/dimen_50dp"
             android:layout_marginTop="@dimen/dimen_50dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:elevation="@dimen/dimen_15dp">
 
             <RelativeLayout
                 android:id="@+id/header"
@@ -408,6 +412,7 @@
                             android:background="@color/divider_color"/>
 
                         <LinearLayout
+                            android:id="@+id/confirmationNumberLayout"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
