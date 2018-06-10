@@ -49,6 +49,9 @@ public class PaymentsTransitionsDTO {
     /**
      * @return The makePayment
      */
+    /**
+     * @return The makePayment
+     */
     public TransitionDTO getMakePayment() {
         return makePayment;
     }
