@@ -28,7 +28,7 @@ import java.util.Locale;
  */
 
 public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAdapter.ViewHolder> {
-    public interface HistoryItemClickListener{
+    public interface HistoryItemClickListener {
         void onHistoryItemClicked(PaymentHistoryItem item);
     }
 
@@ -44,7 +44,8 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
 
     /**
      * Constructor
-     * @param context context
+     *
+     * @param context             context
      * @param paymentHistoryItems payment history
      */
     public PaymentHistoryAdapter(Context context, List<PaymentHistoryItem> paymentHistoryItems, List<UserPracticeDTO> userPractices, HistoryItemClickListener callback) {
@@ -57,9 +58,9 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
-        if(viewType == VIEW_TYPE_LOADING){
+        if (viewType == VIEW_TYPE_LOADING) {
             view = LayoutInflater.from(context).inflate(R.layout.item_loading, parent, false);
-        }else {
+        } else {
             view = LayoutInflater.from(context).inflate(R.layout.history_list_item, parent, false);
         }
         return new ViewHolder(view);
@@ -67,28 +68,20 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        if(position >= paymentHistoryItems.size()){
+        if (position >= paymentHistoryItems.size()) {
             return;
         }
 
-        holder.transactionFlag.setVisibility(View.GONE);
-
         final PaymentHistoryItem item = paymentHistoryItems.get(position);
-
-        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(item.getPayload().getDate());
-        holder.paymentDate.setText(dateUtil.getDateAsMonthAbbrDayOrdinalYear());
-
-        double totalPaid = item.getPayload().getTotalPaid();
-        holder.amount.setText(currencyFormatter.format(totalPaid));
 
         holder.image.setVisibility(View.GONE);
         UserPracticeDTO userPracticeDTO = getUserPractice(item.getMetadata().getPracticeId());
-        if(userPracticeDTO != null) {
+        if (userPracticeDTO != null) {
             holder.locationName.setText(userPracticeDTO.getPracticeName());
             holder.shortName.setText(StringUtil.getShortName(userPracticeDTO.getPracticeName()));
             Picasso.with(context)
                     .load(userPracticeDTO.getPracticePhoto())
-                    .resize(60,60)
+                    .resize(60, 60)
                     .centerCrop()
                     .transform(new CircleImageTransform())
                     .into(holder.image, new Callback() {
@@ -102,19 +95,36 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
                             holder.image.setVisibility(View.GONE);
                         }
                     });
-
         }
 
+        holder.historyPlanName.setVisibility(View.GONE);
+        holder.dateLabel.setVisibility(View.GONE);
+        double totalPaid = item.getPayload().getTotalPaid();
+        if (item.getPayload().getMetadata().getPaymentPlan() != null) {
+            holder.amount.setText(String.format(Label
+                            .getLabel("payment.history.item.label.amountPlaceHolder"),
+                    currencyFormatter.format(totalPaid)));
+            if (!StringUtil.isNullOrEmpty(item.getPayload().getMetadata().getPaymentPlan().getDescription())) {
+                holder.historyPlanName.setText(item.getPayload().getMetadata().getPaymentPlan().getDescription());
+                holder.historyPlanName.setVisibility(View.VISIBLE);
+            }
+            holder.dateLabel.setVisibility(View.VISIBLE);
+        } else {
+            holder.amount.setText(currencyFormatter.format(totalPaid));
+        }
+        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(item.getPayload().getDate());
+        holder.paymentDate.setText(dateUtil.getDateAsMonthAbbrDayOrdinalYear());
+
         double refunded = item.getPayload().getTotalRefunded();
-        if(refunded > 0){
-            if(refunded < totalPaid){
+        holder.transactionFlag.setVisibility(View.GONE);
+        if (refunded > 0) {
+            if (refunded < totalPaid) {
                 holder.transactionFlag.setText(Label.getLabel("payment_history_partial_refund_flag"));
-            }else{
+            } else {
                 holder.transactionFlag.setText(Label.getLabel("payment_history_full_refund_flag"));
             }
             holder.transactionFlag.setVisibility(View.VISIBLE);
         }
-
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,15 +136,15 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
 
     @Override
     public int getItemCount() {
-        if(isLoading && !paymentHistoryItems.isEmpty()){
-            return paymentHistoryItems.size()+1;
+        if (isLoading && !paymentHistoryItems.isEmpty()) {
+            return paymentHistoryItems.size() + 1;
         }
         return paymentHistoryItems.size();
     }
 
     @Override
-    public int getItemViewType(int position){
-        if(position >= paymentHistoryItems.size()){
+    public int getItemViewType(int position) {
+        if (position >= paymentHistoryItems.size()) {
             return VIEW_TYPE_LOADING;
         }
         return 0;
@@ -142,34 +152,37 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
 
     /**
      * Set the list
+     *
      * @param paymentHistoryItems list items
      */
-    public void setPaymentHistoryItems(List<PaymentHistoryItem> paymentHistoryItems){
+    public void setPaymentHistoryItems(List<PaymentHistoryItem> paymentHistoryItems) {
         this.paymentHistoryItems = paymentHistoryItems;
         notifyDataSetChanged();
     }
 
     /**
      * Add items to existing list
+     *
      * @param newItems new items
      */
-    public void addHistoryList(List<PaymentHistoryItem> newItems){
+    public void addHistoryList(List<PaymentHistoryItem> newItems) {
         this.paymentHistoryItems.addAll(newItems);
         notifyDataSetChanged();
     }
 
     /**
      * sets loading progress bar
+     *
      * @param isLoading true to show progress bar
      */
-    public void setLoading(boolean isLoading){
+    public void setLoading(boolean isLoading) {
         this.isLoading = isLoading;
         notifyDataSetChanged();
     }
 
-    private UserPracticeDTO getUserPractice(String practiceId){
-        for(UserPracticeDTO userPracticeDTO : userPractices){
-            if(userPracticeDTO.getPracticeId() != null && userPracticeDTO.getPracticeId().equals(practiceId)){
+    private UserPracticeDTO getUserPractice(String practiceId) {
+        for (UserPracticeDTO userPracticeDTO : userPractices) {
+            if (userPracticeDTO.getPracticeId() != null && userPracticeDTO.getPracticeId().equals(practiceId)) {
                 return userPracticeDTO;
             }
         }
@@ -184,6 +197,8 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
         private TextView paymentDate;
         private ImageView image;
         private TextView transactionFlag;
+        private TextView historyPlanName;
+        private TextView dateLabel;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -194,6 +209,8 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
             shortName = (TextView) itemView.findViewById(R.id.historyAvatarTextView);
             image = (ImageView) itemView.findViewById(R.id.historyImageView);
             transactionFlag = (TextView) itemView.findViewById(R.id.historyTransactionFlag);
+            historyPlanName = (TextView) itemView.findViewById(R.id.historyPlanName);
+            dateLabel = (TextView) itemView.findViewById(R.id.completedLabel);
         }
     }
 }

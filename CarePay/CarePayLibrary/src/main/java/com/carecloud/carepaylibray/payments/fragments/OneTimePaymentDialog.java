@@ -30,17 +30,17 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
     private Context context;
     private OneTimePaymentInterface callback;
 
-    private Map<String, PaymentPlanLineItem> currentPlanItems = new HashMap<>();
-    private Map<String, BalanceItemDTO> currentBalanceItems = new HashMap<>();
-
     /**
      * Contructor
      *
-     * @param context         context must implement PayNowClickListener
-     * @param paymentsDTO     payment model
-     * @param paymentPlanDTO  payment plan
+     * @param context        context must implement PayNowClickListener
+     * @param paymentsDTO    payment model
+     * @param paymentPlanDTO payment plan
      */
-    public OneTimePaymentDialog(Context context, PaymentsModel paymentsDTO, PaymentPlanDTO paymentPlanDTO, OneTimePaymentInterface callback) {
+    public OneTimePaymentDialog(Context context,
+                                PaymentsModel paymentsDTO,
+                                PaymentPlanDTO paymentPlanDTO,
+                                OneTimePaymentInterface callback) {
         super(context, paymentsDTO, null);
         this.context = context;
         this.paymentsDTO = paymentsDTO;
@@ -56,13 +56,14 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
     }
 
     @Override
-    protected double getMinimumPayment(String practiceId){
+    protected double getMinimumPayment(String practiceId) {
         return 0D;
     }
 
     @Override
     protected double calculateFullAmount() {
-        return SystemUtil.safeSubtract(paymentPlanDTO.getPayload().getAmount(), paymentPlanDTO.getPayload().getAmountPaid());
+        return SystemUtil.safeSubtract(paymentPlanDTO.getPayload().getAmount(),
+                paymentPlanDTO.getPayload().getAmountPaid());
     }
 
     @Override
@@ -78,8 +79,7 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
         }
     }
 
-
-    private void createPaymentModel(double amount){
+    private void createPaymentModel(double amount) {
         IntegratedPaymentPostModel postModel = paymentsDTO.getPaymentPayload().getPaymentPostModel();
         if (postModel == null) {
             postModel = new IntegratedPaymentPostModel();
@@ -88,6 +88,5 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
 
         paymentsDTO.getPaymentPayload().setPaymentPostModel(postModel);
     }
-
 
 }

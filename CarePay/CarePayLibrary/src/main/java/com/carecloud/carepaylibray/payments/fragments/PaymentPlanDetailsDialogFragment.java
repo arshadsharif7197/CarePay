@@ -13,7 +13,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customdialogs.BasePaymentDetailsFragmentDialog;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -35,7 +35,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
     private PaymentPlanDTO paymentPlanDTO;
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
-    private PaymentPlanInterface callback;
+    private PaymentPlanEditInterface callback;
     protected View payButton;
 
     /**
@@ -60,9 +60,9 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (PaymentPlanInterface) context;
+            callback = (PaymentPlanEditInterface) context;
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached context must implement PaymentPlanInterface");
+            throw new ClassCastException("Attached context must implement PaymentPlanEditInterface");
         }
     }
 

@@ -9,7 +9,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
  * Created by lmenendez on 1/23/18
  */
 
-public interface PaymentPlanInterface extends PaymentPlanCompletedInterface, PaymentPlanCreateInterface,
+public interface PaymentPlanEditInterface extends PaymentPlanCompletedInterface, PaymentPlanCreateInterface,
         OneTimePaymentInterface, DTOInterface {
 
     void onEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);

@@ -13,7 +13,6 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,38 +21,30 @@ import java.util.List;
 
 public class CreditCardsListAdapter extends RecyclerView.Adapter<CreditCardsListAdapter.ViewHolder> {
 
-    public interface CreditCardSelectionListener{
-        void onCreditCardItemSelected(int position);
-    }
-
+    private final boolean showSeparator;
     private Context context;
     private CreditCardSelectionListener callback;
-    private List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardsList = new ArrayList<>();
+    private List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardsList;
+    private ViewHolder lastHighlightedView = null;
 
-    private int selectedItem = -1;
+    private PaymentCreditCardsPayloadDTO selectedItem;
 
     /**
      * Constructor
-     * @param context Context
+     *
+     * @param context         Context
      * @param creditCardsList listof card info
-     * @param callback callback for selection
+     * @param callback        callback for selection
+     * @param showSeparator
      */
-    public CreditCardsListAdapter(Context context, List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardsList, CreditCardSelectionListener callback){
+    public CreditCardsListAdapter(Context context,
+                                  List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardsList,
+                                  CreditCardSelectionListener callback,
+                                  boolean showSeparator) {
         this.context = context;
         this.callback = callback;
         this.creditCardsList = creditCardsList;
-    }
-
-    /**
-     * set selected card for view
-     * @param position position in list
-     */
-    public void setSelectedItem(int position){
-        boolean shouldRefresh = selectedItem != -1 && selectedItem != position;
-        this.selectedItem = position;
-        if(shouldRefresh){
-            notifyDataSetChanged();
-        }
+        this.showSeparator = showSeparator;
     }
 
     @Override
@@ -64,43 +55,54 @@ public class CreditCardsListAdapter extends RecyclerView.Adapter<CreditCardsList
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
-        PaymentCreditCardsPayloadDTO creditCardInfo = creditCardsList.get(position).getPayload();
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+        final PaymentCreditCardsPayloadDTO creditCardInfo = creditCardsList.get(position).getPayload();
 
-        holder.creditCardText.setText(creditCardInfo.getCardType()+" "+creditCardInfo.getCardNumber());
+        holder.creditCardText.setText(String.format("%s %s", creditCardInfo.getCardType(),
+                creditCardInfo.getCardNumber()));
 
-        if(creditCardInfo.isDefault()){
+        if (creditCardInfo.isDefault()) {
             holder.defaultCardText.setVisibility(View.VISIBLE);
-            if(selectedItem == -1) {
-                setSelectedItem(position);
-                callback.onCreditCardItemSelected(position);
-            }
-        }else {
+        } else {
             holder.defaultCardText.setVisibility(View.GONE);
         }
 
-        if(selectedItem == position){
-            holder.creditCardText.setSelected(true);
-            holder.paymentMethodImage.setSelected(true);
-            holder.paymentMethodCheck.setSelected(true);
-
-            holder.creditCardText.setFontAttribute(CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD);
-        }else{
-            holder.creditCardText.setSelected(false);
-            holder.paymentMethodImage.setSelected(false);
-            holder.paymentMethodCheck.setSelected(false);
-
-            holder.creditCardText.setFontAttribute(CustomAssetStyleable.PROXIMA_NOVA_REGULAR);
+        if ((creditCardInfo.isDefault() && selectedItem == null) || isTheSameCard(creditCardInfo)) {
+            lastHighlightedView = holder;
+            highlightRow(holder, true, CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD);
+        } else {
+            highlightRow(holder, false, CustomAssetStyleable.PROXIMA_NOVA_REGULAR);
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(callback!=null){
-                    callback.onCreditCardItemSelected(position);
+                if (callback != null) {
+                    selectedItem = creditCardInfo;
+                    if (lastHighlightedView != null) {
+                        highlightRow(lastHighlightedView, false, CustomAssetStyleable.PROXIMA_NOVA_REGULAR);
+                    }
+                    highlightRow(holder, true, CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD);
+                    lastHighlightedView = holder;
+                    callback.onCreditCardItemSelected(creditCardInfo);
                 }
             }
         });
+    }
+
+    protected boolean isTheSameCard(PaymentCreditCardsPayloadDTO creditCardInfo) {
+        return selectedItem != null
+                && ((creditCardInfo.getCreditCardsId() != null
+                && creditCardInfo.getCreditCardsId().equals(selectedItem.getCreditCardsId()))
+                || (creditCardInfo.getCompleteNumber() != null
+                && creditCardInfo.getCompleteNumber().equals(selectedItem.getCompleteNumber())));
+    }
+
+    protected void highlightRow(ViewHolder holder, boolean selected, int proximaNovaSemiBold) {
+        holder.creditCardText.setSelected(selected);
+        holder.paymentMethodImage.setSelected(selected);
+        holder.paymentMethodCheck.setSelected(selected);
+        holder.creditCardText.setFontAttribute(proximaNovaSemiBold);
     }
 
     @Override
@@ -108,11 +110,20 @@ public class CreditCardsListAdapter extends RecyclerView.Adapter<CreditCardsList
         return creditCardsList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    public void setSelectedCreditCard(PaymentCreditCardsPayloadDTO creditCardPayload) {
+        selectedItem = creditCardPayload;
+    }
+
+    public interface CreditCardSelectionListener {
+        void onCreditCardItemSelected(PaymentCreditCardsPayloadDTO creditCard);
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
         View paymentMethodImage;
         View paymentMethodCheck;
         TextView defaultCardText;
         CarePayTextView creditCardText;
+        View divider;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -120,7 +131,10 @@ public class CreditCardsListAdapter extends RecyclerView.Adapter<CreditCardsList
             paymentMethodCheck = itemView.findViewById(R.id.credit_card_check);
             defaultCardText = (TextView) itemView.findViewById(R.id.credit_card_default);
             creditCardText = (CarePayTextView) itemView.findViewById(R.id.credit_card_text);
-
+            divider = itemView.findViewById(R.id.divider);
+            if (showSeparator) {
+                divider.setVisibility(View.VISIBLE);
+            }
         }
     }
 
