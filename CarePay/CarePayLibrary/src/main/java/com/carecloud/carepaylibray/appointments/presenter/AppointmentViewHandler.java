@@ -20,7 +20,7 @@ public interface AppointmentViewHandler extends ISession {
 
     void displayDialogFragment(DialogFragment fragment, boolean addToBackStack);
 
-    void confirmAppointment(boolean showSuccess);
+    void confirmAppointment(boolean showSuccess, boolean isAutoScheduled);
 
     void refreshAppointments();
 }

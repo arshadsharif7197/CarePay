@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.appointments.interfaces;
 
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 
 /**
@@ -21,4 +22,6 @@ public interface AppointmentNavigationCallback extends VisitTypeInterface, Avail
     void onAppointmentRequestSuccess();
 
     ApplicationMode getApplicationMode();
+
+    AppointmentsSettingDTO getAppointmentsSettings();
 }
