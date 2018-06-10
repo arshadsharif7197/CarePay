@@ -14,7 +14,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
-import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payments.interfaces.ResponsibilityPaymentInterface;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
@@ -113,15 +112,6 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
         payPartialAmountString = Label.getLabel("payment_partial_amount_button");
         payLaterString = Label.getLabel("payment_responsibility_pay_later");
         paymentsTitleString = Label.getLabel("payment_patient_balance_toolbar");
-    }
-
-    /**
-     * For tests
-     *
-     * @param activity The activity
-     */
-    public void setActivity(KeyboardHolderActivity activity) {
-        appCompatActivity = activity;
     }
 
     protected void createPaymentModel(double payAmount) {
