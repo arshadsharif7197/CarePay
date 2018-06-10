@@ -1,20 +1,20 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
@@ -23,20 +23,22 @@ import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Locale;
 
 public class ResponsibilityFragment extends ResponsibilityBaseFragment {
 
     private PendingBalanceDTO selectedBalance;
     private PaymentFragmentActivityInterface toolbarCallback;
+    private NumberFormat currencyFormat;
 
     /**
      * @param paymentsDTO              the payments DTO
      * @param payLaterButtonVisibility a boolean that indicates the visibility of the pay later button
      * @return an instance of ResponsibilityFragment
      */
-    public static ResponsibilityFragment newInstance(PaymentsModel paymentsDTO, PendingBalanceDTO selectedBalance,
+    public static ResponsibilityFragment newInstance(PaymentsModel paymentsDTO,
+                                                     PendingBalanceDTO selectedBalance,
                                                      boolean payLaterButtonVisibility) {
         return newInstance(paymentsDTO, selectedBalance, payLaterButtonVisibility, null);
     }
@@ -46,8 +48,10 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
      * @param payLaterButtonVisibility a boolean that indicates the visibility of the pay later button
      * @return an instance of ResponsibilityFragment
      */
-    public static ResponsibilityFragment newInstance(PaymentsModel paymentsDTO, PendingBalanceDTO selectedBalance,
-                                                     boolean payLaterButtonVisibility, String title) {
+    public static ResponsibilityFragment newInstance(PaymentsModel paymentsDTO,
+                                                     PendingBalanceDTO selectedBalance,
+                                                     boolean payLaterButtonVisibility,
+                                                     String title) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsDTO);
         if (selectedBalance != null) {
@@ -108,86 +112,119 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         }
 
 
-        Button payTotalAmountButton = (Button) view.findViewById(R.id.pay_total_amount_button);
-        Button makePartialPaymentButton = (Button) view.findViewById(R.id.make_partial_payment_button);
-        Button payLaterButton = (Button) view.findViewById(R.id.pay_later_button);
-        payLaterButton.setVisibility(getArguments().getBoolean("payLaterButtonVisibility") ? View.VISIBLE : View.GONE);
-        payLaterButton.setOnClickListener(new View.OnClickListener() {
+        total = 0;
+        fillDetailAdapter(view, selectedBalance.getPayload());
+        for (PendingBalancePayloadDTO payment : selectedBalance.getPayload()) {
+            total += payment.getAmount();
+        }
+        currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+        TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);
+        responseTotal.setText(currencyFormat.format(total));
+
+        setUpBottomSheet(view);
+
+    }
+
+    protected void setUpBottomSheet(final View view) {
+        View payTotalAmountContainer = view.findViewById(R.id.payTotalAmountContainer);
+        View partialPaymentContainer = view.findViewById(R.id.partialPaymentContainer);
+        View payLaterContainer = view.findViewById(R.id.payLaterContainer);
+        payLaterContainer.setVisibility(getArguments().getBoolean("payLaterButtonVisibility") ? View.VISIBLE : View.GONE);
+        payLaterContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 actionCallback.onPayLaterClicked(selectedBalance);
             }
         });
 
-        total = 0;
-        fillDetailAdapter(view, selectedBalance.getPayload());
-        for (PendingBalancePayloadDTO payment : selectedBalance.getPayload()) {
-            total += payment.getAmount();
-        }
         if (total > 0) {
-            payTotalAmountButton.setClickable(true);
-            payTotalAmountButton.setEnabled(true);
-            makePartialPaymentButton.setEnabled(true);
-            makePartialPaymentButton.setEnabled(true);
-            payLaterButton.setEnabled(true);
-            payLaterButton.setEnabled(true);
+            payTotalAmountContainer.setClickable(true);
+            payTotalAmountContainer.setEnabled(true);
+            partialPaymentContainer.setEnabled(true);
+            partialPaymentContainer.setEnabled(true);
+            payLaterContainer.setEnabled(true);
+            payLaterContainer.setEnabled(true);
 
-            payTotalAmountButton.setTextColor(Color.WHITE);
+//            payTotalAmountContainer.setTextColor(Color.WHITE);
             int color = ContextCompat.getColor(getContext(), R.color.colorPrimary);
-            makePartialPaymentButton.setTextColor(color);
-            payLaterButton.setTextColor(color);
-        }
-
-        try {
-            NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
-
-            TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);
-            responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
-
-        } catch (NumberFormatException ex) {
-            ex.printStackTrace();
-            Log.e(LOG_TAG, ex.getMessage());
+//            partialPaymentContainer.setTextColor(color);
+//            payLaterContainer.setTextColor(color);
         }
 
 
-        payTotalAmountButton.setOnClickListener(new View.OnClickListener() {
+        payTotalAmountContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 doPayment();
             }
         });
 
-        makePartialPaymentButton.setOnClickListener(new View.OnClickListener() {
+        partialPaymentContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 actionCallback.onPartialPaymentClicked(total, selectedBalance);
             }
         });
 
-        makePartialPaymentButton.setVisibility(isPartialPayAvailable(selectedBalance.getMetadata().getPracticeId(), total) ? View.VISIBLE : View.GONE);
+        partialPaymentContainer.setVisibility(isPartialPayAvailable(selectedBalance.getMetadata()
+                .getPracticeId(), total) ? View.VISIBLE : View.GONE);
 
-        boolean canMakePayments = paymentDTO.getPaymentPayload().canMakePayments(selectedBalance.getMetadata().getPracticeId());
-        if(!canMakePayments){
-            payTotalAmountButton.setVisibility(View.GONE);
-            makePartialPaymentButton.setVisibility(View.GONE);
+        boolean canMakePayments = paymentDTO.getPaymentPayload()
+                .canMakePayments(selectedBalance.getMetadata().getPracticeId());
+        if (!canMakePayments) {
+            payTotalAmountContainer.setVisibility(View.GONE);
+            partialPaymentContainer.setVisibility(View.GONE);
         }
 
         boolean paymentPlanEnabled = !paymentDTO.getPaymentPayload().isPaymentPlanCreated() &&
                 isPaymentPlanAvailable(selectedBalance.getMetadata().getPracticeId(), total);
-        TextView paymentPlanButton = (TextView) view.findViewById(com.carecloud.carepay.patient.R.id.create_payment_plan_button);
-        paymentPlanButton.setVisibility(paymentPlanEnabled ? View.VISIBLE : View.GONE);
-        paymentPlanButton.setEnabled(paymentPlanEnabled);
-        paymentPlanButton.setClickable(paymentPlanEnabled);
-        paymentPlanButton.setOnClickListener(new View.OnClickListener() {
+        View paymentPlanContainer = view.findViewById(R.id.paymentPlanContainer);
+        paymentPlanContainer.setVisibility(paymentPlanEnabled ? View.VISIBLE : View.GONE);
+        paymentPlanContainer.setEnabled(paymentPlanEnabled);
+        paymentPlanContainer.setClickable(paymentPlanEnabled);
+        paymentPlanContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 actionCallback.onPaymentPlanAction(paymentDTO);
             }
         });
-        if(mustAddToExisting) {
-            paymentPlanButton.setText(Label.getLabel("payment_plan_add_existing"));
+        if (mustAddToExisting) {
+            TextView paymentPlanTextView = (TextView) paymentPlanContainer.findViewById(R.id.paymentPlanTextView);
+            paymentPlanTextView.setText(Label.getLabel("payment_plan_add_existing"));
         }
 
+        final View shadow = view.findViewById(R.id.shadow);
+        LinearLayout llBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
+        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                shadow.setAlpha(slideOffset);
+            }
+        });
+        Button consolidatedPaymentButton = (Button) view.findViewById(R.id.consolidatedPaymentButton);
+        consolidatedPaymentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            }
+        });
+
+        Button cancelButton = (Button) view.findViewById(R.id.cancelButton);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
+        });
+
+        TextView totalPatientResponsibilityValue = (TextView) view.findViewById(R.id.totalPatientResponsibilityValue);
+        totalPatientResponsibilityValue.setText(currencyFormat.format(total));
     }
 
     @Override
