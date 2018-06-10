@@ -36,12 +36,15 @@ public class PaymentPlanAmountDialog extends PartialPaymentDialog {
     /**
      * Contructor
      *
-     * @param context           context must implement PayNowClickListener
-     * @param paymentsModel     payment model
-     * @param selectedBalance   selected balance
-     * @param callback          callback
+     * @param context         context must implement PayNowClickListener
+     * @param paymentsModel   payment model
+     * @param selectedBalance selected balance
+     * @param callback        callback
      */
-    public PaymentPlanAmountDialog(Context context, PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentDetailInterface callback) {
+    public PaymentPlanAmountDialog(Context context,
+                                   PaymentsModel paymentsModel,
+                                   PendingBalanceDTO selectedBalance,
+                                   PaymentDetailInterface callback) {
         super(context, paymentsModel, null);
         this.context = context;
         this.paymentsModel = paymentsModel;
@@ -61,18 +64,18 @@ public class PaymentPlanAmountDialog extends PartialPaymentDialog {
 
         TextView footer = (TextView) findViewById(R.id.partialPaymentHeaderBottom);
         double fullAmount = calculateFullAmount();
-        if(minimumPaymentAmount > 0D && maximumPaymentAmount < fullAmount){
-            String amountBetween  = String.format(Label.getLabel("payment_partial_amount_between"),
+        if (minimumPaymentAmount > 0D && maximumPaymentAmount < fullAmount) {
+            String amountBetween = String.format(Label.getLabel("payment_partial_amount_between"),
                     currencyFormat.format(minimumPaymentAmount),
                     currencyFormat.format(maximumPaymentAmount));
             footer.setText(amountBetween);
             footer.setVisibility(View.VISIBLE);
-        }else if(minimumPaymentAmount > 0D) {
+        } else if (minimumPaymentAmount > 0D) {
             String minimumAmount = Label.getLabel("payment_partial_minimum_amount") +
                     currencyFormat.format(minimumPaymentAmount);
             footer.setText(minimumAmount);
             footer.setVisibility(View.VISIBLE);
-        }else if(maximumPaymentAmount < fullAmount){
+        } else if (maximumPaymentAmount < fullAmount) {
             String minimumAmount = Label.getLabel("payment_partial_maximum_amount") +
                     currencyFormat.format(maximumPaymentAmount);
             footer.setText(minimumAmount);
@@ -81,14 +84,14 @@ public class PaymentPlanAmountDialog extends PartialPaymentDialog {
     }
 
     @Override
-    protected double getMinimumPayment(String practiceId){
+    protected double getMinimumPayment(String practiceId) {
         return minimumPaymentAmount;
     }
 
     @Override
     protected double calculateFullAmount() {
         double amount = 0D;
-        for(PendingBalancePayloadDTO pendingBalancePayloadDTO : selectedBalance.getPayload()){
+        for (PendingBalancePayloadDTO pendingBalancePayloadDTO : selectedBalance.getPayload()) {
             amount = SystemUtil.safeAdd(amount, pendingBalancePayloadDTO.getAmount());
         }
         return amount;
@@ -104,11 +107,11 @@ public class PaymentPlanAmountDialog extends PartialPaymentDialog {
             double planAmount = Double.parseDouble(amountEditText);
 
             boolean canCreatePlan = ((!hasExistingPlans || canCreateMultiple) && hasApplicableRule(practiceId, planAmount));
-            if(canCreatePlan || (hasExistingPlans && canAddToExisting && canAddToExisting(planAmount))){
+            if (canCreatePlan || (hasExistingPlans && canAddToExisting && canAddToExisting(planAmount))) {
                 payPartialButton.setEnabled(true);
-                if(canCreatePlan){
+                if (canCreatePlan) {
                     payPartialButton.setText(Label.getLabel("payment_create_payment_plan"));
-                }else{//must add to existing
+                } else {//must add to existing
                     payPartialButton.setText(Label.getLabel("payment_plan_add_existing"));
                 }
             } else {
@@ -133,12 +136,12 @@ public class PaymentPlanAmountDialog extends PartialPaymentDialog {
         }
     }
 
-    private boolean canAddToExisting(double amount){
+    private boolean canAddToExisting(double amount) {
         return !paymentsModel.getPaymentPayload().getValidPlans(practiceId, amount).isEmpty();
     }
 
     private boolean hasApplicableRule(String practiceId, double amount) {
-        if(amount > maximumPaymentAmount){
+        if (amount > maximumPaymentAmount) {
             return false;
         }
         for (PaymentsPayloadSettingsDTO settingsDTO : paymentsModel.getPaymentPayload().getPaymentSettings()) {
@@ -155,8 +158,8 @@ public class PaymentPlanAmountDialog extends PartialPaymentDialog {
         return false;
     }
 
-    private void determineParameters(){
-        for(PaymentsPayloadSettingsDTO settingsDTO : paymentsModel.getPaymentPayload().getPaymentSettings()) {
+    private void determineParameters() {
+        for (PaymentsPayloadSettingsDTO settingsDTO : paymentsModel.getPaymentPayload().getPaymentSettings()) {
             if (practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())) {
                 canAddToExisting = settingsDTO.getPayload().getPaymentPlans().isAddBalanceToExisting();
                 canCreateMultiple = settingsDTO.getPayload().getPaymentPlans().isCanHaveMultiple();

@@ -82,7 +82,7 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
         setupToolBar(view);
         setAdapter(view);
         TextView amount = (TextView) view.findViewById(R.id.payment_plan_amount);
-        if(amount != null) {
+        if (amount != null) {
             amount.setText(NumberFormat.getCurrencyInstance().format(paymentPlanAmount));
         }
     }
