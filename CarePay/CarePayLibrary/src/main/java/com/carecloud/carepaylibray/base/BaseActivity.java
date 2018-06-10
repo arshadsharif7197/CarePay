@@ -41,7 +41,7 @@ import com.google.gson.internal.Primitives;
 public abstract class BaseActivity extends AppCompatActivity implements ISession {
 
     private static final int FULLSCREEN_VALUE = 0x10000000;
-    private static final long LOGOUT_SESSION_TIMEOUT = 1000 * 60 * 10;
+    private static final long LOGOUT_SESSION_TIMEOUT = 1000 * 60 * 10;//10 minutes
     private static boolean isForeground = false;
     private static Handler handler;
 
@@ -164,7 +164,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             try {
                 progressDialog.dismiss();
                 progressDialog = null;
-            }catch (IllegalArgumentException iax){
+            } catch (IllegalArgumentException iax) {
                 iax.printStackTrace();
             }
         }
@@ -403,7 +403,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
                 authHelper.setAccessToken(null);
                 authHelper.setIdToken(null);
                 authHelper.setRefreshToken(null);
-                finishAffinity();
+                restartApp(null, false);
             }
         }
     };
@@ -415,7 +415,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         }
     };
 
-    protected void onProgressDialogCancel(){
+    protected void onProgressDialogCancel() {
 
     }
 
@@ -423,22 +423,29 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread thread, Throwable throwable) {
-                onAtomicRestart();
-                Log.e("CareCloud", "" + throwable.getMessage(), throwable);
-                Intent intent = new Intent();
-                intent.setAction("com.carecloud.carepay.restart");
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-                intent.putExtra(CarePayConstants.CRASH, true);
-                PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(),
-                        0, intent, PendingIntent.FLAG_ONE_SHOT);
-                AlarmManager mgr = (AlarmManager) getBaseContext()
-                        .getSystemService(Context.ALARM_SERVICE);
-                mgr.set(AlarmManager.RTC, System.currentTimeMillis(), pendingIntent);
-                finishAffinity();
-                System.exit(2);
+                restartApp(throwable, true);
             }
         });
 
+    }
+
+    protected void restartApp(Throwable throwable, boolean crash) {
+        onAtomicRestart();
+        if (throwable!=null){
+            Log.e("CareCloud", "" + throwable.getMessage(), throwable);
+        }
+        Intent intent = new Intent();
+        intent.setAction("com.carecloud.carepay.restart");
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+        intent.putExtra(CarePayConstants.CRASH, crash);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(),
+                0, intent, PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager mgr = (AlarmManager) getBaseContext()
+                .getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis(), pendingIntent);
+        finishAffinity();
+        System.exit(2);
     }
 
 }
