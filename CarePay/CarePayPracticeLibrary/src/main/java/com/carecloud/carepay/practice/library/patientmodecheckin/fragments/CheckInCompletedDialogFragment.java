@@ -35,14 +35,14 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import static com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment.MODE_ADD;
+import static com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment.MODE_CREATE;
+import static com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment.MODE_EDIT;
+
 import java.text.NumberFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import static com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment.MODE_ADD;
-import static com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment.MODE_CREATE;
-import static com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment.MODE_EDIT;
 
 /**
  * Created by lmenendez on 4/11/17
@@ -240,7 +240,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
             }
         });
         TextView goToStoreTextView = (TextView) view.findViewById(R.id.browseOurShopTextView);
-        goToStoreTextView.setVisibility(storeButtonEnabled ? View.VISIBLE : View.GONE);
+        goToStoreTextView.setVisibility(storeButtonEnabled && !isCash ? View.VISIBLE : View.GONE);
         goToStoreTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
