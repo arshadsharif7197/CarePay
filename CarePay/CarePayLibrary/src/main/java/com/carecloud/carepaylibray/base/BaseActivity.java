@@ -83,6 +83,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             public void onClick(View view) {
                 SystemUtil.hideSoftKeyboard(BaseActivity.this);
                 view.requestFocus();
+                onProgressDialogCancel();
             }
         });
         setLastInteraction(System.currentTimeMillis());
@@ -410,11 +411,11 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     private DialogInterface.OnCancelListener progressCancelListener = new DialogInterface.OnCancelListener() {
         @Override
         public void onCancel(DialogInterface dialog) {
-            onProgressDialogCancel(dialog);
+            onProgressDialogCancel();
         }
     };
 
-    protected void onProgressDialogCancel(DialogInterface dialog){
+    protected void onProgressDialogCancel(){
 
     }
 

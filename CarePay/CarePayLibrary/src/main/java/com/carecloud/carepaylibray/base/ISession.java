@@ -14,4 +14,6 @@ public interface ISession extends IApplicationSession {
     void showErrorNotification(String errorMessage);
 
     void hideErrorNotification();
+
+    void setNavigationBarVisibility();
 }

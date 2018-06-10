@@ -300,9 +300,6 @@ public abstract class BaseWebFormFragment extends BaseFragment {
          */
         @JavascriptInterface
         public void loadedForm() {
-            if (getActivity() != null) {
-                hideProgressDialog();
-            }
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -311,11 +308,12 @@ public abstract class BaseWebFormFragment extends BaseFragment {
                             @Override
                             public void run() {
                                 nextButton.setEnabled(true);
+                                hideProgressDialog();
                             }
                         });
                     }
                 }
-            }, 1000);
+            }, 500);
         }
 
     }

@@ -329,9 +329,6 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
          */
         @JavascriptInterface
         public void loadedForm() {
-            if (getActivity() != null) {
-                hideProgressDialog();
-            }
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -340,11 +337,12 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
                             @Override
                             public void run() {
                                 nextButton.setEnabled(true);
+                                hideProgressDialog();
                             }
                         });
                     }
                 }
-            }, 1000);
+            }, 500);
 
         }
 
@@ -353,9 +351,6 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
          */
         @JavascriptInterface
         public void loadedIntake() {
-            if (getActivity() != null) {
-                hideProgressDialog();
-            }
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -364,11 +359,12 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
                             @Override
                             public void run() {
                                 nextButton.setEnabled(true);
+                                hideProgressDialog();
                             }
                         });
                     }
                 }
-            }, 1000);
+            }, 500);
         }
 
     }
