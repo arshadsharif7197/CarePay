@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.PermissionChecker;
 import android.support.v7.widget.LinearLayoutManager;
@@ -74,6 +75,8 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         super.onCreate(icicle);
         selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, getArguments());
         currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+
+        setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_NoTitleBar_Fullscreen);
     }
 
     @Override
