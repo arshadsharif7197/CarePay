@@ -627,7 +627,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="@dimen/dimen_30dp"
-                android:background="@drawable/bottom_rounded_white"
+                android:background="@drawable/button_rounded_white"
                 android:padding="@dimen/dimen_10dp"
                 android:textColor="@color/lemonGreen"
                 android:textSize="@dimen/text_size_22sp"
