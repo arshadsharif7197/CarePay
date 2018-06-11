@@ -119,7 +119,8 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
             appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, getWorkflowDto());
         }
         ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this,
-                appointmentsResultModel.getMetadata().getLinks().getPinpad(), false);
+                appointmentsResultModel.getMetadata().getLinks().getPinpad(), false,
+                appointmentsResultModel.getMetadata().getLinks().getLanguage());
         confirmationPinDialog.show();
     }
 

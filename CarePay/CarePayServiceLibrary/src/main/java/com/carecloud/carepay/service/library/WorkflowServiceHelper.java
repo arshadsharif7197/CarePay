@@ -136,7 +136,7 @@ public class WorkflowServiceHelper {
         Map<String, String> appStartHeaders = new HashMap<>();
         appStartHeaders.put("x-api-key", HttpConstants.getApiStartKey());
         if (applicationPreferences.getUserLanguage().isEmpty()) {
-            appStartHeaders.put("Accept-Language", "en");
+            appStartHeaders.put("Accept-Language", CarePayConstants.DEFAULT_LANGUAGE);
         } else {
             appStartHeaders.put("Accept-Language", applicationPreferences.getUserLanguage());
         }
@@ -149,7 +149,7 @@ public class WorkflowServiceHelper {
     public Map<String, String> getPreferredLanguageHeader() {
         Map<String, String> prefredLanguage = new HashMap<>();
         if (applicationPreferences.getUserLanguage().isEmpty()) {
-            prefredLanguage.put("Accept-Language", "en");
+            prefredLanguage.put("Accept-Language", CarePayConstants.DEFAULT_LANGUAGE);
         } else {
             prefredLanguage.put("Accept-Language", applicationPreferences.getUserLanguage());
         }

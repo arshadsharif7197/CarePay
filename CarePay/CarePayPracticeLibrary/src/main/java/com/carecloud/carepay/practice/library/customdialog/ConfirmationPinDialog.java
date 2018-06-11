@@ -14,6 +14,7 @@ import android.widget.EditText;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSwitchPinResponseDTO;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -47,6 +48,7 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
 
     private boolean isDynamicLabels;
     private TransitionDTO transitionDTOPinLink;
+    private TransitionDTO languageTransition;
 
     /**
      * Constructor calling from  Patient screen for Switching to Practice Mode.
@@ -54,11 +56,12 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
      * @param context context
      */
     public ConfirmationPinDialog(Context context, TransitionDTO transitionDTOPinLink,
-                                 boolean isDynamicLabels) {
+                                 boolean isDynamicLabels, TransitionDTO languageTransition) {
         super(context);
         this.context = context;
         this.transitionDTOPinLink = transitionDTOPinLink;
         this.isDynamicLabels = isDynamicLabels;
+        this.languageTransition = languageTransition;
     }
 
     /**
@@ -214,13 +217,26 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
             Gson gson = new Gson();
             PatientModeSwitchPinResponseDTO patientModeSwitchPinResponseDTO = gson.fromJson(workflowDTO.toString(), PatientModeSwitchPinResponseDTO.class);
             if (patientModeSwitchPinResponseDTO.getPayload().getPinpad().getPayload()) {
-                ISession iSession = (ISession) context;
-                if(iSession.getApplicationMode().getUserPracticeDTO() != null) {
-                    iSession.getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
-                    iSession.getAppAuthorizationHelper().setUser(iSession.getApplicationMode().getUserPracticeDTO().getUserName());
-                    ((BasePracticeActivity) context).onPinConfirmationCheck(true, pinEditText.getText().toString());
+                BasePracticeActivity practiceActivity = (BasePracticeActivity) context;
+                if(practiceActivity.getApplicationMode().getUserPracticeDTO() != null) {
+                    String patientLanguage = practiceActivity.getApplicationPreferences().getUserLanguage();
+                    if(!patientLanguage.equals(CarePayConstants.DEFAULT_LANGUAGE)) {
+                        final Map<String, String> headers = practiceActivity.getWorkflowServiceHelper().getApplicationStartHeaders();
+                        headers.put("username", practiceActivity.getApplicationPreferences().getUserName());
+                        practiceActivity.getApplicationPreferences().setUserLanguage(CarePayConstants.DEFAULT_LANGUAGE);
+                        practiceActivity.changeLanguage(languageTransition, CarePayConstants.DEFAULT_LANGUAGE, headers, new BasePracticeActivity.SimpleCallback() {
+                            @Override
+                            public void callback() {
+                                //do nothing more
+                            }
+                        });
+                    }
+                    practiceActivity.getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
+                    practiceActivity.getAppAuthorizationHelper().setUser(practiceActivity.getApplicationMode().getUserPracticeDTO().getUserName());
+                    practiceActivity.onPinConfirmationCheck(true, pinEditText.getText().toString());
                     dismiss();
                     identifyPracticeUser(patientModeSwitchPinResponseDTO.getPayload().getUserPracticesList().get(0).getUserId());
+
                 }
             }
         }
