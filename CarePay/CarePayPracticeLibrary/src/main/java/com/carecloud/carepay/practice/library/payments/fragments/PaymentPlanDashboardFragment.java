@@ -121,6 +121,10 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
                         true), true, false);
         adapter.setCallback(this);
         completedPaymentPlansRecycler.setAdapter(adapter);
+
+        View completedLabel = view.findViewById(R.id.completedLabel);
+        completedLabel.setVisibility(completedPaymentPlansRecycler.getAdapter().getItemCount() == 0 ?
+                View.GONE : View.VISIBLE);
     }
 
     private List<PaymentPlanDTO> getPaymentPlansFiltered(List<PaymentPlanDTO> patientPaymentPlans,

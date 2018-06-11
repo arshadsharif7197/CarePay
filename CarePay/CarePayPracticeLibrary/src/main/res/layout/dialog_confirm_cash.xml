@@ -83,7 +83,7 @@
                 android:background="@drawable/bg_yellow_overlay"
                 android:textColor="@color/white"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="payment_method_cash"
+                breeze:textKey="payment_cash_confirm_button"
                 tools:text="Pay in Cash"/>
 
         </FrameLayout>
