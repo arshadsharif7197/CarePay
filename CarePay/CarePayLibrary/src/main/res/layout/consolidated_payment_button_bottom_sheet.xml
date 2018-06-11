@@ -45,7 +45,7 @@
             android:maxLines="1"
             android:singleLine="true"
             android:textColor="@color/textview_default_textcolor"
-            android:textSize="@dimen/text_size_17"
+            android:textSize="@dimen/text_size_15"
             app:customAssetFont="proxima_nova_regular"
             breeze:textKey="payments.paymentOptions.title.label.responsibility"
             tools:text="Total Patient Responsibility" />
@@ -216,6 +216,7 @@
         android:id="@+id/cancelButton"
         style="@style/SigninNewAccountButtonStyle"
         customAssetFont="gotham_rounded_medium"
+        android:layout_height="@dimen/dimen_50dp"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="@dimen/dimen_20dp"
         android:foreground="?android:selectableItemBackground"

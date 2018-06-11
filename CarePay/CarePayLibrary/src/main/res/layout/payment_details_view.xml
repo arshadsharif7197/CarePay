@@ -40,7 +40,7 @@
         android:textSize="@dimen/text_size_14"
         android:visibility="gone"
         app:customAssetFont="gotham_rounded_medium"
-        breeze:textKey="payment.detail.button.label.statement"
+        breeze:textKey="payment_details_patient_statement"
         tools:text="Statement" />
 
     <View

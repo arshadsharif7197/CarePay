@@ -3,11 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_opacity_90" />
+
     <include
         layout="@layout/fragment_dialog_payment_details_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/dimen_10dp" />
+        android:layout_margin="@dimen/dimen_20dp"/>
 
     <View
         android:id="@+id/shadow"

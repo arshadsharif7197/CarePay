@@ -88,7 +88,7 @@
             android:id="@+id/consolidatedPaymentButton"
             style="@style/ResponsButtonStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dimen_50dp"
             android:layout_margin="0dp"
             android:background="@drawable/bg_green_selector"
             app:customAssetFont="gotham_rounded_medium"
