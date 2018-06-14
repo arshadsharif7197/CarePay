@@ -31,6 +31,7 @@ import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.IntakeFormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
 import com.carecloud.carepaylibray.demographics.fragments.SearchPhysicianFragment;
+import com.carecloud.carepaylibray.demographics.fragments.ThirdPartyTaskFragment;
 import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactFragmentInterface;
 import com.carecloud.carepaylibray.demographics.interfaces.PhysicianFragmentInterface;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
@@ -39,6 +40,7 @@ import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearch
 import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
+import com.carecloud.carepaylibray.third_party.models.ThirdPartyWorkflowDto;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -134,6 +136,9 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             case NavigationStateConstants.INTAKE_FORMS:
                 navigateToIntakeForms(workflowDTO);
                 break;
+            case NavigationStateConstants.THIRD_PARTY:
+                navigateToThirdParty(workflowDTO);
+                break;
             default:
                 navigateToDemographicFragment(currentDemographicStep);
 
@@ -195,6 +200,14 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
         IntakeFormsFragment fragment = new IntakeFormsFragment();
         fragment.setArguments(bundle);
+        navigateToFragment(fragment, true);
+    }
+
+    @Override
+    public void navigateToThirdParty(WorkflowDTO workflowDTO){
+        ThirdPartyWorkflowDto thirdPartyWorkflow = DtoHelper
+                .getConvertedDTO(ThirdPartyWorkflowDto.class, workflowDTO);
+        ThirdPartyTaskFragment fragment = ThirdPartyTaskFragment.newInstance(thirdPartyWorkflow);
         navigateToFragment(fragment, true);
     }
 

@@ -32,4 +32,5 @@ public class NavigationStateConstants {
     public static final String PATIENT_MY_HEALTH = "myhealth";
     public static final String EXTRA_INFO = "extra_info";
     public static final String RETAIL = "retail";
+    public static final String THIRD_PARTY = "third_party_process";
 }

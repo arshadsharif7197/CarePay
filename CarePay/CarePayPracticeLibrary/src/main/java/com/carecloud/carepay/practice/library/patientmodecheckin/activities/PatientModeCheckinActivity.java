@@ -682,6 +682,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
+    public void navigateToThirdParty(WorkflowDTO workflowDTO) {
+        presenter.navigateToThirdParty(workflowDTO);
+    }
+
+    @Override
     public void navigateToMedicationsAllergy(WorkflowDTO workflowDTO) {
         presenter.navigateToMedicationsAllergy(workflowDTO);
     }
