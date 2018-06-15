@@ -22,12 +22,12 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.third_party.models.ThirdPartyTask;
 import com.carecloud.carepaylibray.third_party.models.ThirdPartyWorkflowDto;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.HashMap;
@@ -82,6 +82,7 @@ public class ThirdPartyTaskFragment extends BaseCheckinFragment {
         setRetainInstance(true);
         Bundle args = getArguments();
         thirdPartyWorkflow = DtoHelper.getConvertedDTO(ThirdPartyWorkflowDto.class, args);
+        callback.setCheckinFlow(CheckinFlowState.INTAKE, 0, 0);
     }
 
     @Override
@@ -157,8 +158,7 @@ public class ThirdPartyTaskFragment extends BaseCheckinFragment {
 
 
         TextView header = (TextView) view.findViewById(R.id.toolbar_title);
-        header.setText(StringUtil.captialize(thirdPartyWorkflow.getPayload()
-                .getThirdPartyProcess().getTask().getHost()));
+        header.setText(thirdPartyWorkflow.getPayload().getThirdPartyProcess().getTask().getHost());
     }
 
     public boolean handleBackButton() {
