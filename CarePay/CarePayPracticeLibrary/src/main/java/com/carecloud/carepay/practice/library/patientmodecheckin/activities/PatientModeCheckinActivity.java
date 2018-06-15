@@ -641,7 +641,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 section.setSelected(true);
                 section.setEnabled(true);
                 if(totalPages > 0) {
-                    String progressLabel = currentPage + Label.getLabel("of") + totalPages;
+                    String progressLabel = currentPage + " " + Label.getLabel("of") + " " + totalPages;
                     progress.setVisibility(View.VISIBLE);
                     progress.setText(progressLabel);
                 }
