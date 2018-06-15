@@ -39,7 +39,7 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "development"
     mkdir $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp/
     find $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/ -name "*development*.apk" -exec cp {}  $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp/ \;
 
-    PATIENT_APP=$(echo $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp/$(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp/ | grep -i '.*patient-*release.*\.apk') )
+    PATIENT_APP=$(echo $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp/$(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp/ | grep -i '.*patient.*release.*\.apk') )
 
     AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp s3://automation-zeus/ --recursive
 
