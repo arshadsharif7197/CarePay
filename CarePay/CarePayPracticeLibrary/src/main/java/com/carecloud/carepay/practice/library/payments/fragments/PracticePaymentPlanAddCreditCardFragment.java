@@ -48,7 +48,9 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
                                                                        boolean onlySelectMode) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
-        DtoHelper.bundleDto(args, paymentPlanDTO);
+        if (paymentPlanDTO != null) {
+            DtoHelper.bundleDto(args, paymentPlanDTO);
+        }
         args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
         PracticePaymentPlanAddCreditCardFragment fragment = new PracticePaymentPlanAddCreditCardFragment();
         fragment.setArguments(args);
@@ -86,6 +88,8 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
                 }
             }
         });
+        saveCardOnFileCheckBox.setChecked(false);
+        saveCardOnFileCheckBox.setEnabled(true);
 
     }
 

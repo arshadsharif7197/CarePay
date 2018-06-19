@@ -141,10 +141,10 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
         @Override
         public void onClick(View view) {
 
-            if (selectedCreditCard > -1) {
+            if (selectedCreditCard != null) {
                 if (onlySelectMode) {
                     dismiss();
-                    callback.onCreditCardSelected(creditCardList.get(selectedCreditCard).getPayload());
+                    callback.onCreditCardSelected(selectedCreditCard);
                 } else {
                     PapiPaymentMethod papiPaymentMethod = getPapiPaymentMethod();
 

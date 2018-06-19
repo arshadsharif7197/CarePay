@@ -51,7 +51,9 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
     protected  @ConfirmationMode int mode;
     private UserPracticeDTO userPracticeDTO;
 
-    public static PaymentPlanConfirmationFragment newInstance(WorkflowDTO workflowDTO, UserPracticeDTO userPracticeDTO, @ConfirmationMode int mode){
+    public static PaymentPlanConfirmationFragment newInstance(WorkflowDTO workflowDTO,
+                                                              UserPracticeDTO userPracticeDTO,
+                                                              @ConfirmationMode int mode){
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, workflowDTO);
         DtoHelper.bundleDto(args, userPracticeDTO);
@@ -67,7 +69,8 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
     protected void attachCallback(Context context){
         try{
             if (context instanceof PaymentViewHandler) {
-                callback = (PaymentPlanCompletedInterface) ((PaymentViewHandler) context).getPaymentPresenter();
+                callback = (PaymentPlanCompletedInterface) ((PaymentViewHandler) context)
+                        .getPaymentPresenter();
             } else {
                 callback = (PaymentPlanCompletedInterface) context;
             }
@@ -85,7 +88,9 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
             mode = args.getInt(KEY_MODE, MODE_CREATE);
             workflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class, args);
             PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-            PaymentPlanDTO paymentPlanDTO = paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0);//should only be one when plan is just created
+            //should only be one when plan is just created
+            PaymentPlanDTO paymentPlanDTO = paymentsModel.getPaymentPayload()
+                    .getPatientPaymentPlans().get(0);
             paymentPlanPayloadDTO = paymentPlanDTO.getPayload();
             paymentPlanMetadataDTO = paymentPlanDTO.getMetadata();
             userPracticeDTO = DtoHelper.getConvertedDTO(UserPracticeDTO.class, args);
@@ -125,9 +130,11 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
         totalAmount.setText(currencyFormatter.format(paymentPlanPayloadDTO.getAmount()));
 
         TextView installments = (TextView) view.findViewById(R.id.payment_confirm_installments_value);
-        installments.setText(String.valueOf(paymentPlanPayloadDTO.getPaymentPlanDetails().getInstallments()));
+        installments.setText(String.valueOf(paymentPlanPayloadDTO
+                .getPaymentPlanDetails().getInstallments()));
 
-        String paymentAmountString = currencyFormatter.format(paymentPlanPayloadDTO.getPaymentPlanDetails().getAmount()) +
+        String paymentAmountString = currencyFormatter.format(paymentPlanPayloadDTO
+                .getPaymentPlanDetails().getAmount()) +
                 paymentPlanPayloadDTO.getPaymentPlanDetails().getFrequencyString();
         TextView paymentAmount = (TextView) view.findViewById(R.id.payment_confirm_payment_value);
         paymentAmount.setText(paymentAmountString);
@@ -185,7 +192,8 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
                 paymentPlanPayloadDTO.getAmount(),
                 paymentPlanPayloadDTO.getPaymentPlanDetails().getFrequencyString(),
                 paymentPlanPayloadDTO.getPaymentPlanDetails().getAmount(),
-                StringUtil.getOrdinal("en", paymentPlanPayloadDTO.getPaymentPlanDetails().getDayOfMonth()),
+                StringUtil.getOrdinal("en", paymentPlanPayloadDTO.getPaymentPlanDetails()
+                        .getDayOfMonth()),
                 paymentPlanPayloadDTO.getPaymentPlanDetails().getInstallments()};
 
         switch (mode){

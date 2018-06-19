@@ -8,8 +8,8 @@ android {
         applicationId "com.carecloud.carepay.practice.tablet"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 87
-        versionName "1.2.11"
+        versionCode 89
+        versionName "1.2.12"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -139,7 +139,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':CarePayPracticeLibrary')
-    compile 'com.newrelic.agent.android:android-agent:5.12.3'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':CarePayPracticeLibrary')
+    implementation 'com.newrelic.agent.android:android-agent:5.12.3'
 }

@@ -72,8 +72,10 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View childActionView = inflater.inflate(R.layout.dialog_request_appointment, null);
 
+        boolean autoScheduleAppointments = callback.getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests();
         Button appointmentRequestButton = (Button) childActionView.findViewById(R.id.requestAppointmentButton);
-        appointmentRequestButton.setText(Label.getLabel("appointments_request_heading"));
+        appointmentRequestButton.setText(Label.getLabel(autoScheduleAppointments ?
+                "appointments_schedule_button" : "appointments_request_heading"));
         appointmentRequestButton.setOnClickListener(this);
         appointmentRequestButton.requestFocus();
 

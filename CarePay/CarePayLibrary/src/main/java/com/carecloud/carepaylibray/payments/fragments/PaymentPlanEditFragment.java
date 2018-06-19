@@ -13,7 +13,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.MerchantServiceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
@@ -54,7 +54,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     protected PaymentPlanDTO paymentPlanDTO;
     private PaymentCreditCardsPayloadDTO creditCard;
     private boolean canEditPaymentPlan;
-    protected PaymentPlanInterface callback;
+    protected PaymentPlanEditInterface callback;
 
     /**
      * @param paymentsModel  the payment model
@@ -77,12 +77,12 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         super.attachCallback(context);
         try {
             if (context instanceof PaymentViewHandler) {
-                callback = (PaymentPlanInterface) ((PaymentViewHandler) context).getPaymentPresenter();
+                callback = (PaymentPlanEditInterface) ((PaymentViewHandler) context).getPaymentPresenter();
             } else {
-                callback = (PaymentPlanInterface) context;
+                callback = (PaymentPlanEditInterface) context;
             }
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached context must implement PaymentPlanInterface");
+            throw new ClassCastException("Attached context must implement PaymentPlanEditInterface");
         }
     }
 
@@ -144,7 +144,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
             addExistingPlan.setVisibility(View.GONE);
         }
         setUpPaymentMethodLabel(view);
-        isCalclatingTime = false;
+        isCalculatingTime = false;
         isCalculatingAmount = false;
         if(!canEditPaymentPlan){
             TextView parameters = (TextView) view.findViewById(R.id.paymentPlanParametersTextView);
@@ -231,9 +231,13 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         }
 
         postModel.setPaymentPlanModel(paymentPlanModel);
+
+        callEditPaymentPlanService(postModel);
+    }
+
+    private void callEditPaymentPlanService(PaymentPlanPostModel postModel) {
         TransitionDTO updatePaymentTransition = paymentsModel.getPaymentsMetadata()
                 .getPaymentsTransitions().getUpdatePaymentPlan();
-
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("practice_mgmt", paymentPlanDTO.getMetadata().getPracticeMgmt());
         queryMap.put("practice_id", paymentPlanDTO.getMetadata().getPracticeId());

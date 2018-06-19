@@ -232,53 +232,57 @@ public class WorkflowServiceHelper {
         queryMap = updateQueryMapWithDefault(queryMap);
         //, String token, String searchString
         WorkflowService workflowService = ServiceGenerator.getInstance().createService(WorkflowService.class, headers);
-        Call<WorkflowDTO> call;
-        if (transitionDTO.isGet()) {
-            if (jsonBody != null && queryMap == null) {
-                call = workflowService.executeGet(transitionDTO.getUrl(), jsonBody);
-            } else if (jsonBody == null && queryMap != null) {
-                call = workflowService.executeGet(transitionDTO.getUrl(), queryMap);
-            } else if (jsonBody != null && queryMap.size() > 0) {
-                call = workflowService.executeGet(transitionDTO.getUrl(), jsonBody, queryMap);
+        if (transitionDTO != null) {
+            Call<WorkflowDTO> call;
+            if (transitionDTO.isGet()) {
+                if (jsonBody != null && queryMap == null) {
+                    call = workflowService.executeGet(transitionDTO.getUrl(), jsonBody);
+                } else if (jsonBody == null && queryMap != null) {
+                    call = workflowService.executeGet(transitionDTO.getUrl(), queryMap);
+                } else if (jsonBody != null && queryMap.size() > 0) {
+                    call = workflowService.executeGet(transitionDTO.getUrl(), jsonBody, queryMap);
+                } else {
+                    call = workflowService.executeGet(transitionDTO.getUrl());
+                }
+            } else if (transitionDTO.isPost()) {
+                if (jsonBody != null && queryMap == null) {
+                    call = workflowService.executePost(transitionDTO.getUrl(), jsonBody);
+                } else if (jsonBody == null && queryMap != null) {
+                    call = workflowService.executePost(transitionDTO.getUrl(), queryMap);
+                } else if (jsonBody != null && queryMap.size() > 0) {
+                    call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
+                } else if (jsonBody != null) {
+                    call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
+                } else {
+                    call = workflowService.executePost(transitionDTO.getUrl());
+                }
+            } else if (transitionDTO.isDelete()) {
+                if (jsonBody != null && queryMap == null) {
+                    call = workflowService.executeDelete(transitionDTO.getUrl(), jsonBody);
+                } else if (jsonBody == null && queryMap != null) {
+                    call = workflowService.executeDelete(transitionDTO.getUrl(), queryMap);
+                } else if (jsonBody != null && queryMap.size() > 0) {
+                    call = workflowService.executeDelete(transitionDTO.getUrl(), jsonBody, queryMap);
+                } else {
+                    call = workflowService.executeDelete(transitionDTO.getUrl());
+                }
             } else {
-                call = workflowService.executeGet(transitionDTO.getUrl());
+                if (jsonBody != null && queryMap == null) {
+                    call = workflowService.executePut(transitionDTO.getUrl(), jsonBody);
+                } else if (jsonBody == null && queryMap != null) {
+                    call = workflowService.executePut(transitionDTO.getUrl(), queryMap);
+                } else if (jsonBody != null && queryMap.size() > 0) {
+                    call = workflowService.executePut(transitionDTO.getUrl(), jsonBody, queryMap);
+                } else if (jsonBody != null) {
+                    call = workflowService.executePut(transitionDTO.getUrl(), jsonBody, queryMap);
+                } else {
+                    call = workflowService.executePut(transitionDTO.getUrl());
+                }
             }
-        } else if (transitionDTO.isPost()) {
-            if (jsonBody != null && queryMap == null) {
-                call = workflowService.executePost(transitionDTO.getUrl(), jsonBody);
-            } else if (jsonBody == null && queryMap != null) {
-                call = workflowService.executePost(transitionDTO.getUrl(), queryMap);
-            } else if (jsonBody != null && queryMap.size() > 0) {
-                call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
-            } else if (jsonBody != null) {
-                call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
-            } else {
-                call = workflowService.executePost(transitionDTO.getUrl());
-            }
-        } else if (transitionDTO.isDelete()) {
-            if (jsonBody != null && queryMap == null) {
-                call = workflowService.executeDelete(transitionDTO.getUrl(), jsonBody);
-            } else if (jsonBody == null && queryMap != null) {
-                call = workflowService.executeDelete(transitionDTO.getUrl(), queryMap);
-            } else if (jsonBody != null && queryMap.size() > 0) {
-                call = workflowService.executeDelete(transitionDTO.getUrl(), jsonBody, queryMap);
-            } else {
-                call = workflowService.executeDelete(transitionDTO.getUrl());
-            }
+            executeCallback(transitionDTO, callback, jsonBody, queryMap, headers, attemptCount, call);
         } else {
-            if (jsonBody != null && queryMap == null) {
-                call = workflowService.executePut(transitionDTO.getUrl(), jsonBody);
-            } else if (jsonBody == null && queryMap != null) {
-                call = workflowService.executePut(transitionDTO.getUrl(), queryMap);
-            } else if (jsonBody != null && queryMap.size() > 0) {
-                call = workflowService.executePut(transitionDTO.getUrl(), jsonBody, queryMap);
-            } else if (jsonBody != null) {
-                call = workflowService.executePut(transitionDTO.getUrl(), jsonBody, queryMap);
-            } else {
-                call = workflowService.executePut(transitionDTO.getUrl());
-            }
+            Log.e("Carepay Error", "null Transition");
         }
-        executeCallback(transitionDTO, callback, jsonBody, queryMap, headers, attemptCount, call);
     }
 
     private void executeCallback(@NonNull final TransitionDTO transitionDTO,
