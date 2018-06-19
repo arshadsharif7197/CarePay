@@ -13,11 +13,23 @@ public class UnifiedPatientModeModel {
     @Expose
     private UnifiedPatientModeMetadata metadata = new UnifiedPatientModeMetadata();
 
+    @SerializedName("payload")
+    @Expose
+    private boolean payload;
+
     public UnifiedPatientModeMetadata getMetadata() {
         return metadata;
     }
 
     public void setMetadata(UnifiedPatientModeMetadata metadata) {
         this.metadata = metadata;
+    }
+
+    public boolean isPayload() {
+        return payload;
+    }
+
+    public void setPayload(boolean payload) {
+        this.payload = payload;
     }
 }

@@ -28,6 +28,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticeOneTime
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePartialPaymentDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanAddCreditCardFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanAmountFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanConfirmationFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanPaymentMethodFragment;
@@ -40,7 +41,6 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
@@ -55,16 +55,12 @@ import com.carecloud.carepaylibray.payments.models.PaymentListItem;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -214,24 +210,35 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onPaymentPlanAction(PaymentsModel paymentsModel) {
+    public void onPaymentPlanAction(final PaymentsModel paymentsModel) {
         PendingBalanceDTO selectedPendingBalance = selectedBalance.getBalances().get(0);
-        selectedPendingBalance = reduceBalanceItems(selectedPendingBalance, paymentsModel.getPaymentPayload()
-                .getActivePlans(selectedPendingBalance.getMetadata().getPracticeId()));
+        selectedPendingBalance = paymentsModel.getPaymentPayload().reduceBalanceItems(selectedPendingBalance, false);
+        PracticePaymentPlanAmountFragment fragment = PracticePaymentPlanAmountFragment.newInstance(paymentsModel, selectedPendingBalance);
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                startPaymentProcess(paymentsModel);
+            }
+        });
+        displayDialogFragment(fragment, false);
+    }
+
+    @Override
+    public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
         boolean addExisting = false;
-        if(mustAddToExisting(paymentsModel)){
-            onAddBalanceToExitingPlan(paymentsModel, selectedPendingBalance);
+        if(paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)){
+            onAddBalanceToExitingPlan(paymentsModel, selectedBalance, amount);
             addExisting = true;
         } else {
-            PatientModePaymentPlanFragment fragment = PatientModePaymentPlanFragment.newInstance(paymentsModel, selectedPendingBalance);
+            PatientModePaymentPlanFragment fragment = PatientModePaymentPlanFragment.newInstance(paymentsModel, selectedBalance, amount);
             displayDialogFragment(fragment, false);
         }
 
         String[] params = {getString(R.string.param_practice_id),
                 getString(R.string.param_balance_amount),
                 getString(R.string.param_is_add_existing)};
-        Object[] values = {selectedPendingBalance.getMetadata().getPracticeId(),
-                selectedPendingBalance.getPayload().get(0).getAmount(),
+        Object[] values = {selectedBalance.getMetadata().getPracticeId(),
+                selectedBalance.getPayload().get(0).getAmount(),
                 addExisting};
 
         MixPanelUtil.logEvent(getString(R.string.event_paymentplan_started), params, values);
@@ -542,23 +549,14 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance) {
-        String practiceId = selectedBalance.getMetadata().getPracticeId();
-        if(paymentsModel.getPaymentPayload().getValidPlans(practiceId,
-                selectedBalance.getPayload().get(0).getAmount()).size() == 1){
-            onSelectedPlanToAdd(paymentsModel,
-                    selectedBalance,
-                    paymentsModel.getPaymentPayload().getValidPlans(practiceId,
-                            selectedBalance.getPayload().get(0).getAmount()).get(0));
-        } else {
-            PracticeValidPlansFragment fragment = PracticeValidPlansFragment.newInstance(paymentsModel, selectedBalance);
-            displayDialogFragment(fragment, false);
-        }
+    public void onAddBalanceToExitingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
+        PracticeValidPlansFragment fragment = PracticeValidPlansFragment.newInstance(paymentsModel, selectedBalance, amount);
+        displayDialogFragment(fragment, false);
     }
 
     @Override
-    public void onSelectedPlanToAdd(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO selectedPlan) {
-        PatientModeAddExistingPaymentPlanFragment fragment = PatientModeAddExistingPaymentPlanFragment.newInstance(paymentsModel, selectedBalance, selectedPlan);
+    public void onSelectedPlanToAdd(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO selectedPlan, double amount) {
+        PatientModeAddExistingPaymentPlanFragment fragment = PatientModeAddExistingPaymentPlanFragment.newInstance(paymentsModel, selectedBalance, selectedPlan, amount);
         displayDialogFragment(fragment, false);
     }
 
@@ -567,51 +565,6 @@ public class PatientModePaymentsActivity extends BasePracticeActivity implements
         displayDialogFragment(PracticePaymentPlanPaymentMethodFragment
                 .newInstance(paymentsModel, new PaymentPlanDTO(), true), false);
     }
-
-    private boolean mustAddToExisting(PaymentsModel paymentsModel) {
-        PaymentsPayloadSettingsDTO settingsDTO = paymentsModel.getPaymentPayload().getPaymentSettings().get(0);
-        if (paymentsModel.getPaymentPayload().getActivePlans(settingsDTO.getMetadata().getPracticeId()).isEmpty()) {
-            return false;
-        }
-        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = settingsDTO.getPayload().getPaymentPlans();
-        return !paymentPlanSettings.isCanHaveMultiple() && paymentPlanSettings.isAddBalanceToExisting();
-    }
-
-    private PendingBalanceDTO reduceBalanceItems(PendingBalanceDTO selectedBalance, List<PaymentPlanDTO> currentPaymentPlans){
-        Map<String, Double> paymentPlanItems = new HashMap<>();
-        for(PaymentPlanDTO paymentPlanDTO : currentPaymentPlans){
-            for(PaymentPlanLineItem lineItem : paymentPlanDTO.getPayload().getLineItems()){
-                Double amount = lineItem.getAmount();
-                if(paymentPlanItems.containsKey(lineItem.getTypeId())){//we may have the line item split on more than one plan potentially
-                    amount = SystemUtil.safeAdd(paymentPlanItems.get(lineItem.getTypeId()), lineItem.getAmount());//sum both items
-                }
-                paymentPlanItems.put(lineItem.getTypeId(), amount);
-            }
-        }
-
-        String balanceHolder = DtoHelper.getStringDTO(selectedBalance);
-        PendingBalanceDTO copyPendingBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, balanceHolder);
-
-        List<BalanceItemDTO> reducedBalances;
-        for(PendingBalancePayloadDTO pendingBalancePayloadDTO : copyPendingBalance.getPayload()){
-            reducedBalances = new ArrayList<>();
-            for(BalanceItemDTO balanceItemDTO : pendingBalancePayloadDTO.getDetails()){
-                if(paymentPlanItems.containsKey(balanceItemDTO.getId().toString())){
-                    Double paymentPlanLineItemAmount = paymentPlanItems.get(balanceItemDTO.getId().toString());
-                    if(paymentPlanLineItemAmount < balanceItemDTO.getBalance()){//reduce the balance item by the payment plan item amount
-                        double originalBalanceItemBalance = balanceItemDTO.getBalance();
-                        balanceItemDTO.setBalance(SystemUtil.safeSubtract(originalBalanceItemBalance, paymentPlanLineItemAmount));
-                        reducedBalances.add(balanceItemDTO);
-                    }//else the entire balance item will be dropped
-                }else{
-                    reducedBalances.add(balanceItemDTO); //since this item was not already on PP we need to keep it
-                }
-            }
-            pendingBalancePayloadDTO.setDetails(reducedBalances);
-        }
-        return copyPendingBalance;
-    }
-
 
     @Override
     public DTO getDto() {

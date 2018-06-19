@@ -243,7 +243,9 @@ public class UpdateEmailFragment extends BaseFragment {
             String newEmail = updatedSettings.getPayload().getCurrentEmail();
             demographicsSettingsDTO.getPayload().setCurrentEmail(newEmail);
             getApplicationPreferences().setUserId(newEmail);
-//            PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
+            getAppAuthorizationHelper().setAuthorizationTokens(updatedSettings.getPayload().getCognito().getAuthenticationTokens());
+            getAppAuthorizationHelper().setUser(newEmail);
+            getWorkflowServiceHelper().setAppAuthorizationHelper(getAppAuthorizationHelper());
             getActivity().onBackPressed();
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
         }

@@ -95,6 +95,13 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         this.onCancelListener = cancelListener;
     }
 
+    public void cancel(){
+        if (onCancelListener != null && getDialog() != null) {
+            onCancelListener.onCancel(getDialog());
+        }
+        dismiss();
+    }
+
 
     public boolean enableViewById(int id) {
         return setEnabledViewById(id, true);

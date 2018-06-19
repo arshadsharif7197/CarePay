@@ -8,7 +8,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAddCreditCardFragment;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
@@ -21,7 +21,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 
 public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCreditCardFragment {
 
-    private PaymentPlanInterface callback;
+    private PaymentPlanCreateInterface callback;
 
     /**
      * @param paymentsModel        payment model
@@ -61,11 +61,11 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
         super.attachCallback(context);
         try {
             if (context instanceof PaymentViewHandler) {
-                callback = (PaymentPlanInterface) ((PaymentViewHandler) context).getPaymentPresenter();
+                callback = (PaymentPlanCreateInterface) ((PaymentViewHandler) context).getPaymentPresenter();
             } else if (context instanceof AppointmentViewHandler) {
-                callback = (PaymentPlanInterface) ((AppointmentViewHandler) context).getAppointmentPresenter();
+                callback = (PaymentPlanCreateInterface) ((AppointmentViewHandler) context).getAppointmentPresenter();
             } else {
-                callback = (PaymentPlanInterface) context;
+                callback = (PaymentPlanCreateInterface) context;
             }
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement PaymentConfirmationInterface");

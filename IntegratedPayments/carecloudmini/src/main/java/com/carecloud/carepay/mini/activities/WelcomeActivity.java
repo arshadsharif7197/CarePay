@@ -92,6 +92,7 @@ public class WelcomeActivity extends FullScreenActivity {
         TextView environment = (TextView) findViewById(R.id.environment_label);
         environment.setText(HttpConstants.getEnvironment());
 
+        setupNewRelic();
 
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(connectionStateChangedReceiver, intentFilter);
@@ -409,6 +410,9 @@ public class WelcomeActivity extends FullScreenActivity {
                 switch (connectedDevice.getState()){
                     case DeviceDef.STATE_READY: //Device is ready to process payments
                         if(paymentRequestId == null ) {
+                            if(!connectedDevice.getState().equals(device.getState())) {
+                                updateConnectedDevice();
+                            }
                             updateMessage(getString(R.string.welcome_waiting));
                             return;
                         }
@@ -428,17 +432,22 @@ public class WelcomeActivity extends FullScreenActivity {
 
                         break;
                     case DeviceDef.STATE_IN_USE:
-                        if(connectedDevice.getPaymentRequestId() == null){
+                        if(connectedDevice.getPaymentRequestId() != null && !connectedDevice.getState().equals(device.getState()) ) {
+                            updateConnectedDevice();
+                        }
+                        else if(connectedDevice.getPaymentRequestId() == null){
                             Log.d(TAG, "Error state, device is in use but no request id, reset device state");
                             //this device should not be in use without a payment request
                             connectedDevice.setState(DeviceDef.STATE_READY);
                             updateConnectedDevice();
                             return;
                         }
+
                         if(paymentRequestId!=null && !connectedDevice.getPaymentRequestId().equals(paymentRequestId)){
                             Log.d(TAG, "Cannot process this request device is in use");
                             //this is an error because device should be processing a transaction already
                             showErrorToast(getString(R.string.error_device_in_use));
+
                         }else if(!connectedDevice.isProcessing()){
                             //start processing payment
                             Log.d(TAG, "start processing payment request");
@@ -797,4 +806,17 @@ public class WelcomeActivity extends FullScreenActivity {
         NewRelic.recordCustomEvent(eventType, eventMap);
 
     }
+
+    private void setupNewRelic(){
+        NewRelic.setUserId(applicationHelper.getApplicationPreferences().getDeviceId());
+        NewRelic.setAttribute(getString(R.string.key_practice_id),
+                applicationHelper.getApplicationPreferences().getPracticeId());
+        NewRelic.setAttribute(getString(R.string.key_practice_name),
+                applicationHelper.getApplicationPreferences().getUserPracticeDTO().getPracticeName());
+        NewRelic.setAttribute(getString(R.string.key_location_id),
+                applicationHelper.getApplicationPreferences().getLocationId());
+        NewRelic.setAttribute(getString(R.string.key_device_name),
+                applicationHelper.getApplicationPreferences().getDeviceName());
+    }
+
 }

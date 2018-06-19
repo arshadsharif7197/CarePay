@@ -17,8 +17,10 @@ import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payments.interfaces.ResponsibilityPaymentInterface;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
@@ -43,6 +45,8 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
     protected String paymentsTitleString;
     protected String payLaterString;
     protected double total;
+    protected boolean mustAddToExisting = false;
+
 
     protected ResponsibilityPaymentInterface actionCallback;
 
@@ -220,4 +224,43 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
     public DTO getDto() {
         return paymentDTO;
     }
+
+    protected boolean isPaymentPlanAvailable(String practiceId, double balance) {
+        if (practiceId != null) {
+            for (PaymentsPayloadSettingsDTO payloadSettingsDTO : paymentDTO.getPaymentPayload().getPaymentSettings()) {
+                if (practiceId.equals(payloadSettingsDTO.getMetadata().getPracticeId())) {
+                    PaymentsSettingsPaymentPlansDTO paymentPlanSettings = payloadSettingsDTO.getPayload().getPaymentPlans();
+                    if(!paymentPlanSettings.isPaymentPlansEnabled()){
+                        return false;
+                    }
+
+                    double maxAllowablePayment = paymentDTO.getPaymentPayload().getMaximumAllowablePlanAmount(practiceId);
+                    for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
+                        if (maxAllowablePayment >= rule.getMinBalance().getValue() &&
+                                maxAllowablePayment <= rule.getMaxBalance().getValue()) {
+                            //found a valid rule that covers this balance
+                            if(paymentDTO.getPaymentPayload().getActivePlans(practiceId).isEmpty()){
+                                //don't already have an existing plan so this is the first plan
+                                return true;
+                            }else if(paymentPlanSettings.isCanHaveMultiple()){
+                                // already have a plan so need to see if I can create a new one
+                                return true;
+                            }
+                            break;//don't need to continue going through these rules
+                        }
+                    }
+
+                    //check if balance can be added to existing
+                    double minAllowablePayment = paymentDTO.getPaymentPayload().getMinimumAllowablePlanAmount(practiceId);
+                    if(paymentPlanSettings.isAddBalanceToExisting() &&
+                            !paymentDTO.getPaymentPayload().getValidPlans(practiceId, minAllowablePayment).isEmpty()) {
+                        mustAddToExisting = true;
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
 }
