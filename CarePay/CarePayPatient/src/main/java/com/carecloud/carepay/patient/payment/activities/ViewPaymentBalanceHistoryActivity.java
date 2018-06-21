@@ -557,6 +557,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         if(paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()){
             //no changes to plan
+            initFragments();
             return;
         }
         String practiceId = paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0).getMetadata().getPracticeId();
