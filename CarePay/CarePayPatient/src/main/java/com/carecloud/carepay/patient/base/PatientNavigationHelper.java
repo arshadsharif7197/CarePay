@@ -120,7 +120,7 @@ public class PatientNavigationHelper {
                 }
                 break;
             }
-            case NavigationStateConstants.THIRD_PARTY: {
+            case NavigationStateConstants.THIRD_PARTY_CHECK_IN: {
                 if (context instanceof ReviewDemographicsActivity) {
                     ((ReviewDemographicsActivity) context).navigateToThirdParty(workflowDTO);
                     return;

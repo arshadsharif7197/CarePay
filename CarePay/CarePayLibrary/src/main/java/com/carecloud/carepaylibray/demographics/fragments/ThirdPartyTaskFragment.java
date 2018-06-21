@@ -105,13 +105,17 @@ public class ThirdPartyTaskFragment extends BaseCheckinFragment {
             });
 
             nextButton = view.findViewById(R.id.consentButtonNext);
-            nextButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    continueWorkflow();
-                }
-            });
-            nextButton.setEnabled(false);
+            if(thirdPartyWorkflow.getPayload().getThirdPartyProcess().getTask().handlesNext()){
+                nextButton.setVisibility(View.GONE);
+            }else{
+                nextButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        continueWorkflow();
+                    }
+                });
+                nextButton.setEnabled(false);
+            }
 
             webView = (WebView) view.findViewById(R.id.taskWebView);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -219,7 +223,11 @@ public class ThirdPartyTaskFragment extends BaseCheckinFragment {
                 }
                 String baseUrl = url.replace(query, "").replace("?", "");
                 if (returnUrl.equals(baseUrl)) {
-                    nextButton.setEnabled(true);
+                    if(thirdPartyWorkflow.getPayload().getThirdPartyProcess().getTask().handlesNext()){
+                        continueWorkflow();
+                    }else {
+                        nextButton.setEnabled(true);
+                    }
                     return true;
                 }
             }

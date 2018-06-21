@@ -136,7 +136,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             case NavigationStateConstants.INTAKE_FORMS:
                 navigateToIntakeForms(workflowDTO);
                 break;
-            case NavigationStateConstants.THIRD_PARTY:
+            case NavigationStateConstants.THIRD_PARTY_CHECK_IN:
                 navigateToThirdParty(workflowDTO);
                 break;
             default:

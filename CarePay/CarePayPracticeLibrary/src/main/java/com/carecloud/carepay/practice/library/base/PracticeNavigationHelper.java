@@ -184,7 +184,7 @@ public class PracticeNavigationHelper {
                 break;
             }
 
-            case NavigationStateConstants.THIRD_PARTY: {
+            case NavigationStateConstants.THIRD_PARTY_CHECK_IN: {
                 if (context instanceof PatientModeCheckinActivity) {
                     ((PatientModeCheckinActivity) context).navigateToThirdParty(workflowDTO);
                     return;

@@ -34,6 +34,8 @@ public class ThirdPartyTask {
     @SerializedName("access_url")
     private String accessUrl;
 
+    @SerializedName("handles_next")
+    private boolean handlesNext = true;
 
     public String getHost() {
         return host;
@@ -113,5 +115,13 @@ public class ThirdPartyTask {
 
     public void setAccessUrl(String accessUrl) {
         this.accessUrl = accessUrl;
+    }
+
+    public boolean handlesNext() {
+        return handlesNext;
+    }
+
+    public void setHandlesNext(boolean handlesNext) {
+        this.handlesNext = handlesNext;
     }
 }
