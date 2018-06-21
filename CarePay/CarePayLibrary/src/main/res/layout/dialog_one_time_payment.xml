@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/containerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@color/transparent_apt"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/closeViewLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/cancel_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/icn_patient_mode_nav_close"/>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/white"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/partialPaymentHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:paddingEnd="@dimen/dimen_10dp"
+                android:paddingStart="@dimen/dimen_10dp"
+                android:paddingTop="@dimen/dimen_10dp"
+                tools:text="How much will you be paying today?"
+                android:textColor="@color/glitter"
+                app:customAssetFont="gotham_rounded_book"
+                breeze:textKey="payment_how_much_text" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimen_100dp"
+                android:layout_margin="@dimen/dimen_15dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                    android:id="@+id/amountSymbolTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:textColor="@color/white_transparent"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    tools:text="$"
+                    android:textSize="@dimen/payment_header_amount_size"
+                    app:customAssetFont="gotham_rounded_medium" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                    android:id="@+id/enterPartialAmountEditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:hint="0.00"
+                    android:inputType="numberDecimal"
+                    android:textCursorDrawable="@color/transparent_apt"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white_transparent"
+                    android:textSize="@dimen/payment_header_amount_size"
+                    app:customAssetFont="gotham_rounded_medium" />
+            </LinearLayout>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/partialPaymentHeaderBottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:paddingEnd="@dimen/dimen_10dp"
+                android:paddingStart="@dimen/dimen_10dp"
+                android:paddingBottom="@dimen/dimen_5dp"
+                android:textColor="@color/glitter"
+                android:visibility="gone"
+                tools:text="Enter amount between\n $100 and $500"
+                app:customAssetFont="gotham_rounded_book" />
+
+        </LinearLayout>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/partialPaymentTotalAmountTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/dimen_20dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:gravity="center_horizontal"
+            android:textSize="@dimen/text_size_16"
+            android:textColor="@color/payne_gray"
+            app:customAssetFont="proxima_nova_semi_bold"
+            android:visibility="gone"/>
+
+        <FrameLayout
+            android:id="@+id/schedulePaymentDateLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_8dp">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                android:id="@+id/schedulePaymentDateInputLayout"
+                style="@style/SigninSignupTextInputStyle"
+                app:customAssetFont="proxima_nova_semi_bold"
+                app:hintTextAppearance="@style/FloatingLabelStyle"
+                android:textColorHint="@color/demographics_color_error">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                    android:id="@+id/schedulePaymentDateEditText"
+                    style="@style/SigninSignupEditStyle"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:drawableEnd="@drawable/icon_drop_down"
+                    android:editable="false"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    android:imeOptions="actionNext"
+                    android:paddingTop="@dimen/dimen_4dp"
+                    app:customAssetFont="proxima_nova_regular"
+                    app:hintTextAppearance="@style/FloatingLabelStyle"
+                    breeze:hintKey="payment.oneTimePayment.input.label.date"
+                    tools:hint="Payment Date"
+                    tools:text="Today"/>
+
+            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/payPartialButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_20dp"
+                android:background="@drawable/button_green_selector"
+                android:foreground="?android:selectableItemBackground"
+                android:textColor="@color/white"
+                android:textSize="@dimen/apt_dl_textview_size"
+                tools:text="PAY PARTIAL AMOUNT"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="payment_Pay_label" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
