@@ -27,5 +27,5 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     api project(':CarePayLibrary')
     implementation 'com.newrelic.agent.android:android-agent:5.12.3'
-    implementation 'com.android.support:support-v4:25.3.1'
+    implementation 'com.android.support:support-v4:25.4.0'
 }
