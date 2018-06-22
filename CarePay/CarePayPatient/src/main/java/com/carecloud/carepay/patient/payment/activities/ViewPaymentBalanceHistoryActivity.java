@@ -593,6 +593,11 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void onPaymentPlanEdited(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+        if(paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()){
+            //no changes to plan
+            initFragments();
+            return;
+        }
         String practiceId = paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0).getMetadata().getPracticeId();
 
         PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO, getUserPracticeById(practiceId), PaymentPlanConfirmationFragment.MODE_EDIT);
