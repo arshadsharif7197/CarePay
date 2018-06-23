@@ -54,6 +54,8 @@ public class ThirdPartyTaskFragment extends BaseCheckinFragment {
     private WebView webView;
     private View nextButton;
 
+    private boolean returnUrlCalled = false;
+
 
     public static ThirdPartyTaskFragment newInstance(ThirdPartyWorkflowDto thirdPartyWorkflow) {
         Bundle args = new Bundle();
@@ -116,8 +118,13 @@ public class ThirdPartyTaskFragment extends BaseCheckinFragment {
             }
             nextButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    continueWorkflow();
+                public void onClick(View view) {
+                    if(returnUrlCalled) {
+                        continueWorkflow();
+                    }else{
+                        //TODO prompt before continuing maybe??
+                        continueWorkflow();
+                    }
                 }
             });
             nextButton.setEnabled(false);
@@ -229,6 +236,7 @@ public class ThirdPartyTaskFragment extends BaseCheckinFragment {
                 }
                 String baseUrl = url.replace(query, "").replace("?", "");
                 if (returnUrl.equals(baseUrl)) {
+                    returnUrlCalled = true;
                     if(thirdPartyWorkflow.getPayload().getThirdPartyProcess().getTask().handlesNext()){
                         continueWorkflow();
                     }else {
