@@ -3,14 +3,20 @@ package com.carecloud.carepaylibray.demographics.fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -107,15 +113,15 @@ public class ThirdPartyTaskFragment extends BaseCheckinFragment {
             nextButton = view.findViewById(R.id.consentButtonNext);
             if(thirdPartyWorkflow.getPayload().getThirdPartyProcess().getTask().handlesNext()){
                 nextButton.setVisibility(View.GONE);
-            }else{
-                nextButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        continueWorkflow();
-                    }
-                });
-                nextButton.setEnabled(false);
             }
+            nextButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    continueWorkflow();
+                }
+            });
+            nextButton.setEnabled(false);
+
 
             webView = (WebView) view.findViewById(R.id.taskWebView);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -240,6 +246,36 @@ public class ThirdPartyTaskFragment extends BaseCheckinFragment {
             lastUrl = url;
             refreshLayout.setRefreshing(false);
         }
+
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            super.onReceivedError(view, request, error);
+            nextButton.setEnabled(true);
+            nextButton.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            super.onReceivedError(view, errorCode, description, failingUrl);
+            nextButton.setEnabled(true);
+            nextButton.setVisibility(View.VISIBLE);
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+        @Override
+        public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+            super.onReceivedHttpError(view, request, errorResponse);
+            nextButton.setEnabled(true);
+            nextButton.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            super.onReceivedSslError(view, handler, error);
+            nextButton.setEnabled(true);
+            nextButton.setVisibility(View.VISIBLE);
+        }
+
     }
 
 }
