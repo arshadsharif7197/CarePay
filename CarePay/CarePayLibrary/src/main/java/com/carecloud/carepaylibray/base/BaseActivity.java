@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -40,7 +41,7 @@ import com.google.gson.internal.Primitives;
 public abstract class BaseActivity extends AppCompatActivity implements ISession {
 
     private static final int FULLSCREEN_VALUE = 0x10000000;
-    private static final long LOGOUT_SESSION_TIMEOUT = 1000 * 60 * 10;
+    private static final long LOGOUT_SESSION_TIMEOUT = 1000 * 60 * 10;//10 minutes
     private static boolean isForeground = false;
     private static Handler handler;
 
@@ -82,6 +83,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             public void onClick(View view) {
                 SystemUtil.hideSoftKeyboard(BaseActivity.this);
                 view.requestFocus();
+                onProgressDialogCancel();
             }
         });
         setLastInteraction(System.currentTimeMillis());
@@ -150,6 +152,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             progressDialog = new ProgressDialogUtil(isPracticeAppPatientMode, this);
         }
 
+        progressDialog.setOnCancelListener(progressCancelListener);
         progressDialog.setCancelable(false);
         progressDialog.show();
     }
@@ -161,7 +164,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             try {
                 progressDialog.dismiss();
                 progressDialog = null;
-            }catch (IllegalArgumentException iax){
+            } catch (IllegalArgumentException iax) {
                 iax.printStackTrace();
             }
         }
@@ -190,7 +193,9 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
                 }
 
             }
-            errorNotification.showPopWindow();
+            if (isVisible()) {
+                errorNotification.showPopWindow();
+            }
         } catch (Exception e) {
             Log.e("Base Activity", e.getMessage() + "");
         }
@@ -400,31 +405,49 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
                 authHelper.setAccessToken(null);
                 authHelper.setIdToken(null);
                 authHelper.setRefreshToken(null);
-                finishAffinity();
+                restartApp(null, false);
             }
         }
     };
+
+    private DialogInterface.OnCancelListener progressCancelListener = new DialogInterface.OnCancelListener() {
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            onProgressDialogCancel();
+        }
+    };
+
+    protected void onProgressDialogCancel() {
+
+    }
 
     protected void setUncaughtExceptionHandler() {
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread thread, Throwable throwable) {
-                onAtomicRestart();
-                Log.e("CareCloud", "" + throwable.getMessage(), throwable);
-                Intent intent = new Intent();
-                intent.setAction("com.carecloud.carepay.restart");
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-                intent.putExtra(CarePayConstants.CRASH, true);
-                PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(),
-                        0, intent, PendingIntent.FLAG_ONE_SHOT);
-                AlarmManager mgr = (AlarmManager) getBaseContext()
-                        .getSystemService(Context.ALARM_SERVICE);
-                mgr.set(AlarmManager.RTC, System.currentTimeMillis(), pendingIntent);
-                finishAffinity();
-                System.exit(2);
+                restartApp(throwable, true);
             }
         });
 
+    }
+
+    protected void restartApp(Throwable throwable, boolean crash) {
+        onAtomicRestart();
+        if (throwable!=null){
+            Log.e("CareCloud", "" + throwable.getMessage(), throwable);
+        }
+        Intent intent = new Intent();
+        intent.setAction("com.carecloud.carepay.restart");
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+        intent.putExtra(CarePayConstants.CRASH, crash);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(),
+                0, intent, PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager mgr = (AlarmManager) getBaseContext()
+                .getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis(), pendingIntent);
+        finishAffinity();
+        System.exit(2);
     }
 
 }

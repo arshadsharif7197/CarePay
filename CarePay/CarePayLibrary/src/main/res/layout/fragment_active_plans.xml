@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar_layout"
+        layout="@layout/toolbar_responsibility" />
+
+    <LinearLayout
+        android:id="@+id/payment_plan_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/Feldgrau"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="@dimen/dimen_10dp">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/headerMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dimen_10dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_16"
+            app:customAssetFont="gotham_rounded_book"
+            breeze:textKey="payment_plan_select_existing"
+            tools:text="Please select which existing plan to use" />
+
+        <com.carecloud.carepaylibray.customcomponents.AutoResizeTextView
+            android:id="@+id/payment_plan_amount"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_70dp"
+            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_60"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="payment_lets_establish_payment_plan"
+            tools:text="$10,008.00" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/paymentPlanParametersTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dimen_10dp"
+            android:textColor="@color/light_gray"
+            android:textSize="@dimen/text_size_13"
+            app:customAssetFont="proxima_nova_regular"
+            tools:text="This balance must be paid over a maximum of 6 months and requires a downpayment of $20."
+            android:visibility="invisible"/>
+
+    </LinearLayout>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/plans_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"/>
+
+</LinearLayout>

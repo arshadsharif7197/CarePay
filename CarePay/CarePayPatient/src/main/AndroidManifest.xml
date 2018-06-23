@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.SET_DEBUG_APP" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
     <uses-feature android:name="android.hardware.camera" />
 
@@ -87,8 +88,7 @@
         <activity
             android:name=".notifications.activities.NotificationActivity"
             android:screenOrientation="sensorPortrait" />
-        <activity
-            android:name=".notifications.activities.NotificationProxyActivity" />
+        <activity android:name=".notifications.activities.NotificationProxyActivity" />
         <activity
             android:name=".retail.activities.RetailActivity"
             android:screenOrientation="sensorPortrait" />
@@ -104,10 +104,11 @@
             </intent-filter>
         </service>
         <service android:name="com.carecloud.carepaylibray.fcm.RegistrationIntentService" />
+
         <receiver
             android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
             android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <category android:name="com.carecloud.carepay.patient" />
@@ -130,7 +131,9 @@
             android:name=".consentforms.ConsentFormsActivity"
             android:screenOrientation="sensorPortrait" />
 
-        <service android:name=".payment.androidpay.AndroidPayQueueUploadService" android:enabled="true"/>
+        <service
+            android:name=".payment.androidpay.AndroidPayQueueUploadService"
+            android:enabled="true" />
     </application>
 
 </manifest>

@@ -17,16 +17,16 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 public class PatientModePaymentPlanFragment extends PaymentPlanFragment {
 
 
-    public static PatientModePaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance) {
+    public static PatientModePaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
+        args.putDouble(KEY_PLAN_AMOUNT, amount);
 
         PatientModePaymentPlanFragment fragment = new PatientModePaymentPlanFragment();
         fragment.setArguments(args);
         return fragment;
     }
-
 
     @Override
     protected void setupToolBar(View view) {
@@ -38,7 +38,6 @@ public class PatientModePaymentPlanFragment extends PaymentPlanFragment {
                 callback.onDismissPaymentPlan(paymentsModel);
             }
         });
-
     }
 
     @Override
@@ -52,11 +51,18 @@ public class PatientModePaymentPlanFragment extends PaymentPlanFragment {
     }
 
     @Override
-    protected void createPaymentPlan(){
-        super.createPaymentPlan();
-        if(validateFields(false)){
+    protected void createPaymentPlanPostModel(boolean userInteraction){
+        super.createPaymentPlanPostModel(userInteraction);
+        if(validateFields(true)){
             dismiss();
         }
     }
+
+    @Override
+    protected void addBalanceToExisting(){
+        super.addBalanceToExisting();
+        dismiss();
+    }
+
 
 }

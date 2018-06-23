@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -60,7 +61,10 @@ public class InsuranceLineItemsListAdapter extends
         String provider = lineItem.getInsuranceProvider();
         holder.name.setText(provider + " " + (plan != null ? plan : ""));
         if (applicationType == ApplicationMode.ApplicationType.PATIENT) {
-            if (lineItem.getInsurancePhotos().size() == 0) {
+            if (hasAnotherOfTheSameType(lineItem)) {
+                holder.separator.setBackgroundColor(context.getResources().getColor(R.color.redAlert));
+                holder.name.setTextColor(context.getResources().getColor(R.color.redAlert));
+            } else if (lineItem.getInsurancePhotos().size() == 0) {
                 holder.separator.setBackgroundColor(context.getResources().getColor(R.color.lightning_yellow));
                 holder.name.setTextColor(context.getResources().getColor(R.color.lightning_yellow));
                 holder.edit.setText(Label.getLabel("demographics_insurance_add_photos_button"));
@@ -82,11 +86,19 @@ public class InsuranceLineItemsListAdapter extends
             }
             holder.type.setText(StringUtil.getOrdinal(language, numeral));
         } else {
-            if (lineItem.getInsurancePhotos().size() == 0) {
-                holder.alertLayout.setVisibility(View.VISIBLE);
+            if (hasAnotherOfTheSameType(lineItem)) {
+                showAlert(holder, R.drawable.icn_alert_red, R.color.redAlert);
+                holder.separator.setBackgroundColor(context.getResources().getColor(R.color.redAlert));
+                holder.name.setTextColor(context.getResources().getColor(R.color.redAlert));
+            } else if (lineItem.getInsurancePhotos().size() == 0) {
+                showAlert(holder, R.drawable.icn_alert, R.color.lightning_yellow);
+                holder.separator.setBackgroundColor(context.getResources().getColor(R.color.lightning_yellow));
+                holder.name.setTextColor(context.getResources().getColor(R.color.lightning_yellow));
                 holder.edit.setText(Label.getLabel("demographics_insurance_add_photos_button"));
             } else {
                 holder.alertLayout.setVisibility(View.INVISIBLE);
+                holder.separator.setBackgroundColor(context.getResources().getColor(R.color.gray_divider));
+                holder.name.setTextColor(context.getResources().getColor(R.color.textview_default_textcolor));
                 holder.edit.setText(Label.getLabel("practice_checin_edit_clickable_label"));
             }
             holder.type.setText(StringUtil.capitalize(lineItem.getInsuranceType()));
@@ -99,6 +111,23 @@ public class InsuranceLineItemsListAdapter extends
             }
         });
 
+    }
+
+    private void showAlert(InsuranceDetailsListViewHolder holder, int alertImage, int alertColor) {
+        holder.alertLayout.setVisibility(View.VISIBLE);
+        holder.alertImage.setImageDrawable(context.getResources().getDrawable(alertImage));
+        holder.alertVertical.setBackgroundColor(context.getResources().getColor(alertColor));
+        holder.alertHorizontal.setBackgroundColor(context.getResources().getColor(alertColor));
+    }
+
+    private boolean hasAnotherOfTheSameType(DemographicInsurancePayloadDTO lineItem) {
+        int counter = 0;
+        for (DemographicInsurancePayloadDTO insurance : insuranceList) {
+            if (lineItem.getInsuranceType().toLowerCase().equals(insurance.getInsuranceType().toLowerCase())) {
+                counter++;
+            }
+        }
+        return counter > 1;
     }
 
     /**
@@ -119,6 +148,9 @@ public class InsuranceLineItemsListAdapter extends
         CarePayTextView type;
         CarePayTextView edit;
         View alertLayout;
+        View alertHorizontal;
+        View alertVertical;
+        ImageView alertImage;
         View separator;
 
         InsuranceDetailsListViewHolder(View itemView) {
@@ -127,6 +159,9 @@ public class InsuranceLineItemsListAdapter extends
             type = (CarePayTextView) itemView.findViewById(R.id.health_insurance_type);
             edit = (CarePayTextView) itemView.findViewById(R.id.health_insurance_edit);
             alertLayout = itemView.findViewById(R.id.alertLayout);
+            alertHorizontal = itemView.findViewById(R.id.horizontal);
+            alertVertical = itemView.findViewById(R.id.vertical);
+            alertImage = (ImageView) itemView.findViewById(R.id.alertImage);
             separator = itemView.findViewById(R.id.separator);
         }
     }

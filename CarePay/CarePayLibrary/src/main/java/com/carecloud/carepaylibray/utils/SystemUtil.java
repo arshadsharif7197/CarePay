@@ -397,4 +397,25 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler {
                 .show();
 
     }
+
+    /**
+     * Convenience method to safely subtract two numbers and avoid floating point errors
+     * @param minuend number to subtract from
+     * @param subtrahend number being subtracted
+     * @return floating point safe difference
+     */
+    public static double safeSubtract(double minuend, double subtrahend){
+        return Math.round((minuend - subtrahend)*100)/100D;
+    }
+
+    /**
+     * Convenience method to safely add two numbers and avoid floating point errors
+     * @param addend1 first addend
+     * @param addend2 second addend
+     * @return sum
+     */
+    public static double safeAdd(double addend1, double addend2){
+        return Math.round((addend1 + addend2)*100)/100D;
+    }
+
 }

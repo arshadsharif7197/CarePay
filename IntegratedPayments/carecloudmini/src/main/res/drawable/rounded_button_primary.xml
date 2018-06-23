@@ -5,6 +5,6 @@
 
     <solid android:color="@color/colorPrimary" />
     <!--<padding android:top="@dimen/button_padding_vertical" android:bottom="@dimen/button_padding_vertical"/>-->
-    <corners android:radius="@dimen/dp_100" />
+    <corners android:radius="@dimen/button_radius" />
 
 </shape>

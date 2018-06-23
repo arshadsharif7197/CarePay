@@ -4,6 +4,8 @@ package com.carecloud.carepay.service.library.dtos;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by Jahirul Bhuiyan on 10/27/2016
  */
@@ -49,6 +51,12 @@ public class UserPracticeDTO {
     @SerializedName("clover")
     @Expose
     private boolean cloverEnabled = false;
+    @SerializedName("is_retail_enabled")
+    @Expose
+    private boolean isRetailEnabled = false;
+    @SerializedName("locations")
+    @Expose
+    private List<AvailableLocationDTO> locations;
 
     /**
      * @return The prefix
@@ -176,5 +184,21 @@ public class UserPracticeDTO {
 
     public void setCloverEnabled(boolean cloverEnabled) {
         this.cloverEnabled = cloverEnabled;
+    }
+
+    public boolean isRetailEnabled() {
+        return isRetailEnabled;
+    }
+
+    public void setRetailEnabled(boolean retailEnabled) {
+        isRetailEnabled = retailEnabled;
+    }
+
+    public List<AvailableLocationDTO> getLocations() {
+        return locations;
+    }
+
+    public void setLocations(List<AvailableLocationDTO> locations) {
+        this.locations = locations;
     }
 }

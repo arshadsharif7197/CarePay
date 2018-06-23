@@ -161,13 +161,17 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
      */
     @Override
     public void navigateToFragment(Fragment fragment, boolean addToBackStack) {
+        navigateToFragment(fragment, addToBackStack, false);
+    }
+
+    public void navigateToFragment(Fragment fragment, boolean addToBackStack, boolean clearPrevious) {
         String tag = fragment.getClass().getName();
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
 
         Fragment prev = fm.findFragmentByTag(tag);
         if (prev != null) {
-            fm.popBackStackImmediate(tag, 0);
+            fm.popBackStackImmediate(tag, clearPrevious ? FragmentManager.POP_BACK_STACK_INCLUSIVE : 0);
         }
 
         transaction.replace(R.id.root_layout, fragment, tag);

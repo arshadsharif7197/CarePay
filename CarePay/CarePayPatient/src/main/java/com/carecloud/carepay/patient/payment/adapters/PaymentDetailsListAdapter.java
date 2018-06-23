@@ -12,6 +12,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentDetailsItemDTO;
 
 import java.util.List;
 
+@Deprecated
 public class PaymentDetailsListAdapter extends RecyclerView.Adapter<PaymentDetailsListAdapter.PaymentDetailsListViewHolder> {
 
     private Context context;

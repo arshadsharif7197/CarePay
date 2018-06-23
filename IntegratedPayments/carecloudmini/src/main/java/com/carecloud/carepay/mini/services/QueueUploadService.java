@@ -21,9 +21,12 @@ import com.carecloud.shamrocksdk.payment.models.StreamRecord;
 import com.carecloud.shamrocksdk.utils.AuthorizationUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.newrelic.agent.android.NewRelic;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -88,6 +91,7 @@ public class QueueUploadService extends IntentService {
                 return true;
             }else{
                 String errorMessage = RestCallServiceHelper.parseError(response, "error", "message");
+                logNewRelicPaymentError(errorMessage, streamRecord, false);
                 return errorMessage.contains("payment request has already been completed"); //this processing error indicates that the payment should not be retried
             }
         } catch (IOException e) {
@@ -115,6 +119,7 @@ public class QueueUploadService extends IntentService {
                 return true;
             }else{
                 String errorMessage = RestCallServiceHelper.parseError(response, "error", "message");
+                logNewRelicPaymentError(errorMessage, streamRecord, true);
                 return errorMessage.contains("payment request has already been completed"); //this processing error indicates that the payment should not be retried
             }
         } catch (IOException e) {
@@ -135,14 +140,14 @@ public class QueueUploadService extends IntentService {
         DevicePayment.updatePaymentRequest(this, record.getPaymentRequestId(), queuedPaymentRequest, new PaymentRequestCallback() {
             @Override
             public void onPaymentRequestUpdate(String paymentRequestId, PaymentRequest paymentRequest) {
-                //confirm that we are working with an updated record
-                if(paymentRequest != null &&
-                        paymentRequest.getTransactionResponse() != null &&
-                        paymentRequest.getPaymentMethod() != null &&
-                        paymentRequest.getPaymentMethod().getCardData() != null){
+                PaymentRequest ackRequest = DevicePayment.getPaymentAck(paymentRequestId);
 
-                    //Record is now updated so we no longer need to be keeping this in the queue
-                    record.delete();
+                //confirm that we are working with an updated record
+                if(ackRequest != null &&
+                        ackRequest.getTransactionResponse() != null &&
+                        ackRequest.getPaymentMethod() != null &&
+                        ackRequest.getPaymentMethod().getCardData() != null){
+
 
                     //Lets add this updated record to the send queue
                     QueuePaymentRecord queuePaymentRecord = new QueuePaymentRecord();
@@ -150,16 +155,21 @@ public class QueueUploadService extends IntentService {
                     queuePaymentRecord.setRefund(false);
                     queuePaymentRecord.save();
 
+                   //Record is now updated so we no longer need to be keeping this in the queue
+                    record.delete();
+
                     if(postPaymentRequest(paymentRequestId)){
                         queuePaymentRecord.delete();
                     }
 
+                }else{
+                    logNewRelicPaymentError("Queue ACK Failed", paymentRequest, false);
                 }
             }
 
             @Override
             public void onPaymentRequestUpdateFail(String paymentRequestId, JsonElement recordObject) {
-
+                logNewRelicPaymentError("Queue Update Payment Request Failed", recordObject, false);
             }
 
             @Override
@@ -180,12 +190,11 @@ public class QueueUploadService extends IntentService {
         DeviceRefund.updateRefundRequest(this, record.getPaymentRequestId(), queuedRefundRequest, new RefundRequestCallback() {
             @Override
             public void onRefundRequestUpdate(String refundRequestId, RefundRequest refundRequest) {
-                //confirm that we are working with an updated record
-                if(refundRequest != null &&
-                        refundRequest.getTransactionResponse() != null){
+                RefundRequest ackRequest = DeviceRefund.getRefundAck(refundRequestId);
 
-                    //Record is now updated so we no longer need to be keeping this in the queue
-                    record.delete();
+                //confirm that we are working with an updated record
+                if(ackRequest != null &&
+                        ackRequest.getTransactionResponse() != null){
 
                     //Lets add this updated record to the send queue
                     QueuePaymentRecord queuePaymentRecord = new QueuePaymentRecord();
@@ -193,16 +202,21 @@ public class QueueUploadService extends IntentService {
                     queuePaymentRecord.setRefund(true);
                     queuePaymentRecord.save();
 
+                    //Record is now updated so we no longer need to be keeping this in the queue
+                    record.delete();
+
                     if(postRefundRequest(refundRequestId)){
                         queuePaymentRecord.delete();
                     }
 
+                }else{
+                    logNewRelicPaymentError("Queue ACK Failed", refundRequest, true);
                 }
             }
 
             @Override
             public void onRefundRequestUpdateFail(String refundRequestId, JsonElement recordObject) {
-
+                logNewRelicPaymentError("Queue Update Refund Request Failed", recordObject, true);
             }
 
             @Override
@@ -215,6 +229,17 @@ public class QueueUploadService extends IntentService {
 
             }
         });
+    }
+
+    private void logNewRelicPaymentError(String errorMessage, Object payload, boolean isRefund){
+        Map<String, Object> eventMap = new HashMap<>();
+        eventMap.put("Error Message", errorMessage);
+        eventMap.put("Request Payload", payload);
+
+        String eventType = isRefund ? "RefundRequestFail" : "PaymentRequestFail";
+
+        NewRelic.recordCustomEvent(eventType, eventMap);
+
     }
 
 

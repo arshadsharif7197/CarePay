@@ -13,11 +13,10 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customdialogs.BasePaymentDetailsFragmentDialog;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
@@ -36,14 +35,16 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
     private PaymentPlanDTO paymentPlanDTO;
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
-    private PaymentPlanInterface callback;
+    private PaymentPlanEditInterface callback;
+    protected View payButton;
 
     /**
-     * @param paymentsModel      the payment model
-     * @param paymentPlanDTO     the Payment Plan Dto
+     * @param paymentsModel  the payment model
+     * @param paymentPlanDTO the Payment Plan Dto
      * @return new instance of a PaymentPlanDetailsDialogFragment
      */
-    public static PaymentPlanDetailsDialogFragment newInstance(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+    public static PaymentPlanDetailsDialogFragment newInstance(PaymentsModel paymentsModel,
+                                                               PaymentPlanDTO paymentPlanDTO) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
@@ -56,17 +57,17 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
     }
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
-        try{
-            callback = (PaymentPlanInterface) context;
-        }catch (ClassCastException cce){
-            throw new ClassCastException("Attached context must implement PaymentPlanInterface");
+        try {
+            callback = (PaymentPlanEditInterface) context;
+        } catch (ClassCastException cce) {
+            throw new ClassCastException("Attached context must implement PaymentPlanEditInterface");
         }
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
         paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
@@ -82,7 +83,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         installmentDetail.setText(currencyFormatter.format(planPayload.getPaymentPlanDetails().getAmount()));
 
         TextView installmentFrequency = (TextView) view.findViewById(R.id.planInstallmentFrequency);
-        installmentFrequency.setText(getFrequencyString(planPayload.getPaymentPlanDetails().getFrequencyCode()));
+        installmentFrequency.setText(planPayload.getPaymentPlanDetails().getFrequencyString());
 
         String practiceName = userPracticeDTO.getPracticeName();
         TextView practiceNameText = (TextView) view.findViewById(R.id.practice_name);
@@ -90,7 +91,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         TextView practiceInitials = (TextView) view.findViewById(R.id.avTextView);
         practiceInitials.setText(StringUtil.getShortName(practiceName));
 
-        int paymentCount = planPayload.getPaymentPlanDetails().getPaymentPlanHistoryList().size();
+        int paymentCount = planPayload.getPaymentPlanDetails().getFilteredHistory().size();
         int installmentTotal = planPayload.getPaymentPlanDetails().getInstallments();
         TextView installmentCount = (TextView) view.findViewById(R.id.paymentsInstallmentsCount);
         installmentCount.setText(String.format(Label.getLabel("payment_plan_payments_made_value"), paymentCount, installmentTotal));
@@ -107,8 +108,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         balance.setText(currencyFormatter.format(totalAmount - amountPaid));
 
         ProgressBar planProgress = (ProgressBar) view.findViewById(R.id.paymentPlanProgress);
-        planProgress.setMax(installmentTotal);
-        planProgress.setProgress(paymentCount);
+        planProgress.setProgress(planPayload.getPaymentPlanProgress());
 
         ImageView dialogCloseHeader = (ImageView) view.findViewById(R.id.dialog_close_header);
         if (dialogCloseHeader != null) {
@@ -120,11 +120,21 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
             });
         }
 
-        View payButton = view.findViewById(R.id.payment_details_pay_now_button);
+        payButton = view.findViewById(R.id.payment_details_pay_now_button);
         payButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 callback.onMakeOneTimePayment(paymentsModel, paymentPlanDTO);
+                dismiss();
+            }
+        });
+
+        View editPlanButton = view.findViewById(R.id.editPlanButton);
+        editPlanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.onEditPaymentPlan(paymentsModel, paymentPlanDTO);
+                dismiss();
             }
         });
     }
@@ -139,19 +149,11 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         return R.layout.fragment_payment_plan_details;
     }
 
-    private String getFrequencyString(String planFrequency){
-        switch (planFrequency){
-            case PaymentPlanModel.FREQUENCY_MONTHLY:
-            default:
-                return Label.getLabel("payment_plan_frequency_month");
-        }
-    }
-
-    private String getNextDate(PaymentPlanPayloadDTO planPayload){
+    private String getNextDate(PaymentPlanPayloadDTO planPayload) {
         int drawDay = planPayload.getPaymentPlanDetails().getDayOfMonth();
         Calendar calendar = Calendar.getInstance();
         int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
-        if(currentDay > drawDay){
+        if (currentDay > drawDay) {
             calendar.add(Calendar.MONTH, 1);
         }
         calendar.set(Calendar.DAY_OF_MONTH, drawDay);

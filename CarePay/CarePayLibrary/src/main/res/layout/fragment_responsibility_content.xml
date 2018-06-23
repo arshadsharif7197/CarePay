@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <include
+        android:id="@+id/toolbar_layout"
+        layout="@layout/toolbar_responsibility" />
+
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_layout"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/respons_total_label"
+            style="@style/ResponsTotalLabelStyle"
+            android:layout_marginTop="@dimen/dimen_30dp"
+            app:customAssetFont="gotham_rounded_book"
+            breeze:textKey="your_total_patient_responsibility" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/respons_total"
+            style="@style/ResponsTotalStyle"
+            android:layout_marginBottom="@dimen/dimen_30dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            app:customAssetFont="gotham_rounded_medium" />
+    </LinearLayout>
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        android:id="@+id/consolidatedPaymentButton"
+        style="@style/ResponsButtonStyle"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/dimen_17dp"
+        android:background="@drawable/bg_green_selector"
+        app:customAssetFont="gotham_rounded_medium"
+        breeze:textKey="payment_options_button" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/responsibility_line_item_recycle_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/consolidatedPaymentButton"
+        android:layout_below="@id/header"
+        android:layout_marginTop="@dimen/dimen_10dp" />
+
+</RelativeLayout>

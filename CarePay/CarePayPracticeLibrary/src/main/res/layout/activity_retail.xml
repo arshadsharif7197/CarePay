@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_retail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight=".3">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="@color/left_panel_color"
+            android:orientation="vertical"
+            android:paddingEnd="@dimen/dimen_5dp"
+            android:paddingStart="@dimen/checkin_main_panel_start_padding">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/logoutTextview"
+                android:layout_width="@dimen/nav_header_height"
+                android:layout_height="@dimen/dimen_48dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="@dimen/dimen_30dp"
+                android:background="@drawable/bg_blue_overlay"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_22sp"
+                breeze:textKey="practice_app_logout_text"
+                app:customAssetFont="gotham_rounded_medium"
+                tools:text="Logout" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/retailMessageTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/logoutTextview"
+                android:layout_marginEnd="@dimen/dimen_30dp"
+                android:layout_marginTop="@dimen/dimen_70dp"
+                android:gravity="start"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_36sp"
+                app:customAssetFont="gotham_rounded_bold"
+                tools:text="Dr. Wellington's Breeze Shop" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/retailSubMessageTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/retailMessageTextView"
+                android:layout_marginEnd="@dimen/dimen_30dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:gravity="start"
+                android:textColor="@color/light_blue_subtitle"
+                android:textSize="@dimen/text_size_22sp"
+                app:customAssetFont="gotham_rounded_book"
+                breeze:textKey="retail.patientModeRetail.leftPanel.message.subtitle"
+                tools:text="Use the right panel to browse and purchase products" />
+
+            <RelativeLayout
+                android:id="@+id/optionsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/dimen_25dp">
+
+                <ImageView
+                    android:id="@+id/btnHome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:clickable="true"
+                    android:contentDescription="@string/content_description_check_in_home"
+                    android:src="@drawable/checkin_ic_icn_home" />
+
+                <include
+                    layout="@layout/lang_spinner"
+                    android:layout_width="@dimen/home_spinner_width"
+                    android:layout_height="@dimen/home_spinner_height"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/dimen_20dp"
+                    android:layout_toEndOf="@id/btnHome" />
+
+            </RelativeLayout>
+
+            <FrameLayout
+                android:id="@+id/languageContainer"
+                android:layout_width="@dimen/dimen_180dp"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/optionsLayout"
+                android:animateLayoutChanges="true"
+                android:visibility="gone">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_15dp"
+                    android:background="@drawable/bottom_rounded_white"
+                    android:minHeight="@dimen/dimen_60dp">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/languageList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_25dp"
+                    android:layout_height="@dimen/dimen_25dp"
+                    android:layout_gravity="center|bottom"
+                    android:src="@drawable/sort_down" />
+            </FrameLayout>
+
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="-25dp"
+            android:src="@drawable/side_shadow" />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/retailContainer"
+        style="@style/CheckinContainerStyle"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight=".7">
+
+    </FrameLayout>
+
+</LinearLayout>

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
@@ -53,63 +55,115 @@
 
         </FrameLayout>
 
-        <FrameLayout
-            android:id="@+id/search_edit_frame"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:padding="@dimen/dimen_30dp">
-
-            <com.carecloud.carepaylibray.customcomponents.CarePaySearchView
-                android:id="@+id/search_entry_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:theme="@style/SearchViewStyleDark_NoLine"
-                android:background="@drawable/search_rounded_border"
-                app:customAssetFont="proxima_nova_regular"
-                app:iconifiedByDefault="false" />
-
-        </FrameLayout>
-
-        <FrameLayout
+        <RelativeLayout
+            android:id="@+id/emptyStateScreen"
             android:layout_width="@dimen/dialog_width"
             android:layout_height="@dimen/list_dialog_min_height"
-            android:background="@color/white">
+            android:background="@drawable/round_bottom_white_background"
+            android:visibility="gone">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/search_recycler"
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/title"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="@dimen/padding_xlarge"
-                android:contentDescription="@string/content_description_provider_list"/>
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:padding="@dimen/dimen_10dp"
+                android:textColor="@color/charcoal"
+                android:textSize="@dimen/text_size_26sp"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="appointment.chooseProvider.message.label.emptyScreenTitle"
+                tools:text="No provider available" />
 
-        </FrameLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/title"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:src="@drawable/icn_empty_state_providers" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_1dp"
-            android:background="@color/light_gray" />
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:paddingEnd="@dimen/dimen_25dp"
+                android:paddingStart="@dimen/dimen_25dp"
+                android:textColor="@color/cadet_gray"
+                android:textSize="@dimen/text_size_20"
+                app:customAssetFont="proxima_nova_regular"
+                breeze:textKey="appointment.chooseProvider.message.label.emptyScreenSubTitle"
+                tools:text="There are currently no providers available to schedule an appointment with" />
+
+        </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/mainContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/patient_mode_dialog_body_bg"
-            android:orientation="horizontal"
-            android:padding="@dimen/dimen_10dp">
+            android:orientation="vertical">
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/nextButton"
-                style="@style/BreezeButtonStyleDark"
-                android:layout_width="0dp"
+            <FrameLayout
+                android:id="@+id/search_edit_frame"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_10dp"
-                android:layout_weight="1"
-                android:background="@drawable/green_rounded_button_selector"
-                android:enabled="false"
-                android:textSize="@dimen/text_size_22sp"
-                app:customAssetFont="gotham_rounded_medium"
-                android:contentDescription="@string/content_description_continue"/>
+                android:background="@color/white"
+                android:padding="@dimen/dimen_30dp">
 
+                <com.carecloud.carepaylibray.customcomponents.CarePaySearchView
+                    android:id="@+id/search_entry_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/search_rounded_border"
+                    android:theme="@style/SearchViewStyleDark_NoLine"
+                    app:customAssetFont="proxima_nova_regular"
+                    app:iconifiedByDefault="false" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="@dimen/dialog_width"
+                android:layout_height="@dimen/list_dialog_min_height"
+                android:background="@color/white">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/search_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/content_description_provider_list"
+                    android:padding="@dimen/padding_xlarge" />
+
+            </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_1dp"
+                android:background="@color/light_gray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/patient_mode_dialog_body_bg"
+                android:orientation="horizontal"
+                android:padding="@dimen/dimen_10dp">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                    android:id="@+id/nextButton"
+                    style="@style/BreezeButtonStyleDark"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dimen_10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/green_rounded_button_selector"
+                    android:contentDescription="@string/content_description_continue"
+                    android:enabled="false"
+                    android:textSize="@dimen/text_size_22sp"
+                    app:customAssetFont="gotham_rounded_medium" />
+
+
+            </LinearLayout>
 
         </LinearLayout>
 

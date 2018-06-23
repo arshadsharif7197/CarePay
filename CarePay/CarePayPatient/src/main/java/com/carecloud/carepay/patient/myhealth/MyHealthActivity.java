@@ -2,17 +2,15 @@ package com.carecloud.carepay.patient.myhealth;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.DownloadManager;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.PermissionChecker;
+import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
@@ -29,12 +27,16 @@ import com.carecloud.carepay.patient.myhealth.fragments.MedicationDetailFragment
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthListFragment;
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthMainFragment;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.PdfUtil;
 
 import java.util.List;
 
@@ -69,8 +71,10 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
         setTransitionRetail(myHealthDto.getMetadata().getLinks().getRetail());
         setTransitionForms(myHealthDto.getMetadata().getLinks().getFormsHistory());
 
-        getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants
+        ApplicationPreferences.getInstance().writeObjectToSharedPreference(CarePayConstants
                 .DEMOGRAPHICS_ADDRESS_BUNDLE, myHealthDto.getPayload().getDemographicDTO().getAddress());
+
+        ApplicationPreferences.getInstance().setPracticesWithBreezeEnabled(myHealthDto.getPayload().getPracticeInformation());
 
         String userImageUrl = myHealthDto.getPayload().getDemographicDTO()
                 .getPersonalDetails().getProfilePhoto();
@@ -165,17 +169,33 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
 
     @SuppressLint("NewApi")
     @Override
-    public void onLabClicked(LabDto lab) {
-        selectedLab = lab;
-        MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewLabResult));
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PermissionChecker.PERMISSION_GRANTED && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    MY_PERMISSIONS_LAB_REQUEST_WRITE_EXTERNAL_STORAGE);
-
-        } else {
-            prepareLabPdf(lab);
-        }
+    public void onLabClicked(final LabDto lab) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(String.format(Label
+                        .getLabel("myHealth.labs.button.dialogMessage.downloadMessage"), lab.getName(),
+                DateUtil.getInstance().setDateRaw(lab.getCreatedAt()).getDateAsDayMonthDayOrdinal()))
+                .setPositiveButton(Label.getLabel("my_health_confirm_download_button_label"),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                selectedLab = lab;
+                                MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewLabResult));
+                                if (ContextCompat.checkSelfPermission(MyHealthActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                        != PermissionChecker.PERMISSION_GRANTED
+                                        && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+                                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                            MY_PERMISSIONS_LAB_REQUEST_WRITE_EXTERNAL_STORAGE);
+                                } else {
+                                    prepareLabPdf(lab);
+                                }
+                            }
+                        })
+                .setNegativeButton(Label.getLabel("my_health_cancel"),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+        builder.create().show();
     }
 
     @Override
@@ -198,7 +218,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
             String url = String.format("%s?%s=%s", transitionDTO.getUrl(), "patient_id",
                     String.valueOf(patientDto.getId()));
 
-            downloadPdf(url, patientDto.getFullName(), ".pdf", "Medical Record");
+            PdfUtil.downloadPdf(getContext(), url, patientDto.getFullName(), ".pdf", "Medical Record");
             MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewMedicalRecord));
         } else {
             showErrorNotification("Unable to find Patient Record");
@@ -223,25 +243,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     private void prepareLabPdf(final LabDto lab) {
         TransitionDTO getPdfTransition = myHealthDto.getMetadata().getLinks().getLabsPdf();
         String url = String.format("%s?%s=%s", getPdfTransition.getUrl(), "labs_id", lab.getId());
-        downloadPdf(url, lab.getName(), ".pdf", lab.getPractice());
+        PdfUtil.downloadPdf(getContext(), url, lab.getName(), ".pdf", lab.getPractice());
     }
 
-    private void downloadPdf(String url, String title,
-                             String fileExtension, String description) {
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-        request.setTitle(title + fileExtension);
-        request.setDescription(description);
-        request.setVisibleInDownloadsUi(true);
-        request.allowScanningByMediaScanner();
-        request.setMimeType("application/pdf");
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.addRequestHeader("Accept", "application/pdf");
-        request.addRequestHeader("username", getAppAuthorizationHelper().getCurrUser());
-        request.addRequestHeader("Authorization", getAppAuthorizationHelper().getIdToken());
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, title + fileExtension);
-
-        DownloadManager downloadManager = (DownloadManager) getContext()
-                .getSystemService(Context.DOWNLOAD_SERVICE);
-        downloadManager.enqueue(request);
-    }
 }

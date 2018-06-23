@@ -35,6 +35,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by lmenendez on 5/9/17
@@ -49,8 +50,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
 
     private View header;
     private View cancelAppointment;
-    private TextView appointmentDate;
-    private TextView appointmentTime;
+    private TextView appointmentDateTextView;
+    private TextView appointmentVisitTypeTextView;
+    private TextView appointmentTimeTextView;
     private TextView providerInitials;
     private ImageView providerPhoto;
     private TextView providerName;
@@ -144,8 +146,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         cancelAppointment.setOnClickListener(cancelAppointmentClick);
 
         header = view.findViewById(R.id.dialogHeaderLayout);
-        appointmentDate = (TextView) view.findViewById(R.id.appointDateTextView);
-        appointmentTime = (TextView) view.findViewById(R.id.appointTimeTextView);
+        appointmentDateTextView = (TextView) view.findViewById(R.id.appointDateTextView);
+        appointmentTimeTextView = (TextView) view.findViewById(R.id.appointTimeTextView);
+        appointmentVisitTypeTextView = (TextView) view.findViewById(R.id.appointmentVisitTypeTextView);
 
         providerInitials = (TextView) view.findViewById(R.id.appointShortnameTextView);
         providerPhoto = (ImageView) view.findViewById(R.id.appointUserPicImageView);
@@ -172,8 +175,10 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private void setCommonValues() {
         if (appointmentDTO != null) {
             DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime());
-            appointmentDate.setText(dateUtil.getDateAsDayShortMonthDayOrdinal());
-            appointmentTime.setText(dateUtil.getTime12Hour());
+            appointmentDateTextView.setText(dateUtil.getDateAsDayShortMonthDayOrdinal());
+            appointmentTimeTextView.setText(dateUtil.getTime12Hour());
+            appointmentVisitTypeTextView.setText(StringUtil.
+                    capitalize(appointmentDTO.getPayload().getVisitType().getName()));
 
             final ProviderDTO provider = appointmentDTO.getPayload().getProvider();
             providerInitials.setText(StringUtil.getShortName(provider.getName()));
@@ -211,15 +216,20 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private void applyStyle() {
         cleanupViews();
         if (appointmentDTO != null && appointmentDTO.getPayload().getDisplayStyle() != null) {
+            Set<String> enabledLocations = ApplicationPreferences.getInstance()
+                    .getPracticesWithBreezeEnabled(appointmentDTO.getMetadata().getPracticeId());
             AppointmentDisplayStyle style = appointmentDTO.getPayload().getDisplayStyle();
             switch (style) {
                 case CHECKED_IN: {
                     header.setBackgroundResource(R.drawable.appointment_dialog_green_bg);
-                    appointmentDate.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
-                    appointmentTime.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentDateTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentTimeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentVisitTypeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                     if (appointmentDTO.getPayload().isAppointmentToday() || !appointmentDTO.getPayload().isAppointmentOver()) {
-                        callback.getQueueStatus(appointmentDTO, queueStatusCallback);
-                        if (isBreezePractice) {
+                        if (appointmentDTO.getPayload().getAppointmentStatus().getOriginalName() == null) {
+                            callback.getQueueStatus(appointmentDTO, queueStatusCallback);
+                        }
+                        if (shouldShowCheckInButton(enabledLocations)) {
                             actionsLayout.setVisibility(View.VISIBLE);
                             leftButton.setVisibility(View.VISIBLE);
                             leftButton.setText(Label.getLabel("appointment_request_checkout_now"));
@@ -230,14 +240,15 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 }
                 case PENDING: {
                     header.setBackgroundResource(R.drawable.appointment_dialog_gray_bg);
-                    appointmentDate.setTextColor(ContextCompat.getColor(getContext(), R.color.textview_default_textcolor));
-                    appointmentTime.setTextColor(ContextCompat.getColor(getContext(), R.color.slateGray));
+                    appointmentDateTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.textview_default_textcolor));
+                    appointmentTimeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.slateGray));
+                    appointmentVisitTypeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.slateGray));
                     actionsLayout.setVisibility(View.VISIBLE);
                     if (!appointmentDTO.getPayload().isAppointmentOver() && appointmentDTO.getPayload().isAppointmentToday()) {
-                        if (appointmentDTO.getPayload().isAppointmentCancellable(callback.getPracticeSettings())) {
+                        if (shouldShowCancelButton(enabledLocations)) {
                             cancelAppointment.setVisibility(View.VISIBLE);
                         }
-                        if (isBreezePractice) {
+                        if (shouldShowCheckInButton(enabledLocations)) {
                             leftButton.setVisibility(View.VISIBLE);
                             leftButton.setText(Label.getLabel("appointments_check_in_at_office"));
                             leftButton.setOnClickListener(scanClick);
@@ -255,8 +266,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 case REQUESTED_UPCOMING:
                 case REQUESTED: {
                     header.setBackgroundResource(R.drawable.appointment_dialog_yellow_bg);
-                    appointmentDate.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
-                    appointmentTime.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentDateTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentTimeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentVisitTypeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                     appointmentStatus.setVisibility(View.VISIBLE);
                     appointmentStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.lightning_yellow));
                     appointmentStatus.setText(Label.getLabel("appointments_request_pending_heading"));
@@ -264,8 +276,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 }
                 case MISSED: {
                     header.setBackgroundResource(R.drawable.appointment_dialog_red_bg);
-                    appointmentDate.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
-                    appointmentTime.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentDateTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentTimeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentVisitTypeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                     appointmentStatus.setVisibility(View.VISIBLE);
                     appointmentStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.remove_red));
                     appointmentStatus.setText(Label.getLabel("appointments_missed_heading"));
@@ -278,8 +291,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 case CANCELED_UPCOMING:
                 case CANCELED: {
                     header.setBackgroundResource(R.drawable.appointment_dialog_med_gray_bg);
-                    appointmentDate.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
-                    appointmentTime.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentDateTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentTimeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentVisitTypeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                     appointmentStatus.setVisibility(View.VISIBLE);
                     appointmentStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.optional_gray));
                     appointmentStatus.setText(Label.getLabel("appointments_canceled_heading"));
@@ -287,13 +301,14 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 }
                 case PENDING_UPCOMING: {
                     header.setBackgroundResource(R.drawable.appointment_dialog_gray_bg);
-                    appointmentDate.setTextColor(ContextCompat.getColor(getContext(), R.color.textview_default_textcolor));
-                    appointmentTime.setTextColor(ContextCompat.getColor(getContext(), R.color.slateGray));
+                    appointmentDateTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.textview_default_textcolor));
+                    appointmentTimeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.slateGray));
+                    appointmentVisitTypeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.slateGray));
                     if (!appointmentDTO.getPayload().isAppointmentOver()) {
-                        if (appointmentDTO.getPayload().isAppointmentCancellable(callback.getPracticeSettings())) {
+                        if (shouldShowCancelButton(enabledLocations)) {
                             cancelAppointment.setVisibility(View.VISIBLE);
                         }
-                        if (isBreezePractice) {
+                        if (shouldShowCheckInButton(enabledLocations)) {
                             actionsLayout.setVisibility(View.VISIBLE);
                             rightButton.setVisibility(View.VISIBLE);
                             rightButton.setText(Label.getLabel("appointments_check_in_early"));
@@ -304,8 +319,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 }
                 case CHECKED_OUT: {
                     header.setBackgroundResource(R.drawable.appointment_dialog_dark_gray_bg);
-                    appointmentDate.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
-                    appointmentTime.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentDateTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentTimeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentVisitTypeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                     appointmentStatus.setVisibility(View.VISIBLE);
                     appointmentStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.grayRound));
                     appointmentStatus.setText(Label.getLabel("appointment_checked_out_label"));
@@ -316,6 +332,24 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 }
             }
         }
+    }
+
+    private boolean shouldShowCancelButton(Set<String> enabledLocations) {
+        return appointmentDTO.getPayload().isAppointmentCancellable(callback.getPracticeSettings())
+                && shouldShowCheckInButton(enabledLocations);
+    }
+
+    private boolean shouldShowCheckInButton(Set<String> enabledLocations) {
+        boolean isTheLocationWithBreezeEnabled = enabledLocations == null;
+        if (enabledLocations != null) {
+            for (String locationId : enabledLocations) {
+                if (locationId.equals(appointmentDTO.getPayload().getLocation().getGuid())) {
+                    isTheLocationWithBreezeEnabled = true;
+                    break;
+                }
+            }
+        }
+        return isBreezePractice && isTheLocationWithBreezeEnabled;
     }
 
     private void cleanupViews() {

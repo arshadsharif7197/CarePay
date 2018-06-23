@@ -8,8 +8,8 @@ android {
         applicationId "com.carecloud.carepay.practice.clover"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 61
-        versionName "1.2.6"
+        versionCode 75
+        versionName "1.2.12"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -48,10 +48,11 @@ android {
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.development.carecloud.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
-            buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze.development.carecloud.com"'
+            buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze-settings.development.carecloud.com"'
             buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream.development.carecloud.com:443"'
             buildConfigField 'String', 'PAYMENTS_BASE_URL', '"https://payments.development.carecloud.com/"'
             buildConfigField 'String', 'PAYMENTS_API_KEY', '"jLA75b9L3I5r5lkuqMZQF2v41kyPBMLZ29OvGciV"'
+            buildConfigField 'String', 'RETAIL_URL', '"https://breeze.development.carecloud.com"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AAbf82b0d56666f5c6c2e080a83b2c9786ee2c99df"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"09be4f20d726e7d212b454d6625f8f04"'
@@ -65,10 +66,11 @@ android {
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.qa.carecloud.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"VMGQTfHsuP5PSi3UbyXWh7xGWMflwZtHa55LZyXr"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
-            buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze.development.carecloud.com"'
+            buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze-settings.development.carecloud.com"'
             buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream.qa.carecloud.com:443"'
             buildConfigField 'String', 'PAYMENTS_BASE_URL', '"https://payments.qa.carecloud.com/"'
             buildConfigField 'String', 'PAYMENTS_API_KEY', '"8RSwxNIMfv30WxgpTOuTza0fEvAFJJH07xDxgP4i"'
+            buildConfigField 'String', 'RETAIL_URL', '"https://breeze.qa.carecloud.com"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AA4b18a2f2c8c5dca5576296b3a0e5bc67b7629718"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"09be4f20d726e7d212b454d6625f8f04"'
@@ -82,10 +84,11 @@ android {
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry-staging.carecloud.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"WQRPwvVVL89qyr9TqzGOo9Qx8jKOYxmO9eRdNFpq"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
-            buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze.development.carecloud.com"'
+            buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze-settings.development.carecloud.com"'
             buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream-staging.carecloud.com:443"'
             buildConfigField 'String', 'PAYMENTS_BASE_URL', '"https://payments-staging.carecloud.com/"'
             buildConfigField 'String', 'PAYMENTS_API_KEY', '"Wvshvhv5RI5VUrqNTIvU784p7Bq8iEcjauySfh8O"'
+            buildConfigField 'String', 'RETAIL_URL', '"https://breeze-staging.carecloud.com"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AA4b18a2f2c8c5dca5576296b3a0e5bc67b7629718"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"09be4f20d726e7d212b454d6625f8f04"'
@@ -93,29 +96,35 @@ android {
             buildConfigField 'boolean', 'useUnifiedAuth', 'true'
             buildConfigField 'String', 'ENVIRONMENT', '"Staging"'
         }
+        demo {
+            applicationId "com.carecloud.carepay.practice.clover"
+            buildConfigField 'String', 'API_BASE_URL', '"https://breeze-entry.careclouddemo.com"'
+            buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.careclouddemo.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
+            buildConfigField 'String', 'X_API_KEY', '"Z6WciAK2WiauCKTdc5daYbteUrnwFio83zPfb39a"'
+            buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
+            buildConfigField 'String', 'FORMS_BASE_URL', '"https://settings.gobreeze.com"'
+            buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream-staging.carecloud.com:443"'
+            buildConfigField 'String', 'PAYMENTS_BASE_URL', '"https://payments-staging.carecloud.com/"'
+            buildConfigField 'String', 'PAYMENTS_API_KEY', '"Wvshvhv5RI5VUrqNTIvU784p7Bq8iEcjauySfh8O"'
+            buildConfigField 'String', 'RETAIL_URL', '"https://web.gobreeze.com"'
 
-//        clover_sandbox {
-//            applicationId "com.carecloud.carepay.practice.clover"
-//            buildConfigField 'String', 'API_BASE_URL', '"https://breeze-entry.development.carecloud.com"'
-//            buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.development.carecloud.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
-//            buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'
-//            buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
-//            buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze.development.carecloud.com"'
-//
-//            buildConfigField 'String', 'NEW_RELIC_ID', '"AA4b18a2f2c8c5dca5576296b3a0e5bc67b7629718"'
-//
-//            buildConfigField 'boolean', 'useUnifiedAuth', 'true'
-//        }
+            buildConfigField 'String', 'NEW_RELIC_ID', '"AA4b18a2f2c8c5dca5576296b3a0e5bc67b7629718"'
+            buildConfigField 'String', 'MIX_PANEL_TOKEN', '"09be4f20d726e7d212b454d6625f8f04"'
+
+            buildConfigField 'boolean', 'useUnifiedAuth', 'true'
+            buildConfigField 'String', 'ENVIRONMENT', '"Demo"'
+        }
         production {
             applicationId "com.carecloud.carepay.practice.clover"
             buildConfigField 'String', 'API_BASE_URL', '"https://breeze-entry.gobreeze.com"'
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.gobreeze.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"Jbr3ZMKbC54bezcc7DWjn7I5I4M8cEHl6Be9cAYT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
-            buildConfigField 'String', 'FORMS_BASE_URL', '"https://web.gobreeze.com"'
+            buildConfigField 'String', 'FORMS_BASE_URL', '"https://settings.gobreeze.com"'
             buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream.carecloud.com:443"'
             buildConfigField 'String', 'PAYMENTS_BASE_URL', '"https://payments.carecloud.com/"'
             buildConfigField 'String', 'PAYMENTS_API_KEY', '"m4I4rb4DW5469Jzn1Glev3kKl6RvWT6o8guq2NA9"'
+            buildConfigField 'String', 'RETAIL_URL', '"https://web.gobreeze.com"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AA35b4f8a06cf80fa183849e8159ae58f2a9c8a0b0"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"2fe22aeabd463e5dc1ecf8a050605eae"'
@@ -130,9 +139,9 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':CarePayPracticeLibrary')
-    compile 'com.clover.sdk:clover-android-sdk:latest.release'
-    compile 'com.clover.sdk:clover-android-connector-sdk:168'
-    compile 'com.newrelic.agent.android:android-agent:5.12.3'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':CarePayPracticeLibrary')
+    implementation 'com.clover.sdk:clover-android-sdk:latest.release'
+    implementation 'com.clover.sdk:clover-android-connector-sdk:168'
+    implementation 'com.newrelic.agent.android:android-agent:5.12.3'
 }

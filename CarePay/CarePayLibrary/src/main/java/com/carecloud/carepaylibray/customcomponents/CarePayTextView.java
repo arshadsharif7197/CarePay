@@ -31,7 +31,7 @@ import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.PROXIMA
  * This is a custom textview component that allow t set custom font from assets
  */
 
-public class CarePayTextView extends TextView {
+public class CarePayTextView extends android.support.v7.widget.AppCompatTextView {
     Context context;
     int fontAttribute;
 

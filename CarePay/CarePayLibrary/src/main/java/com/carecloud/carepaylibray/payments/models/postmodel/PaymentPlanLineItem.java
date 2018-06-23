@@ -21,6 +21,9 @@ public class PaymentPlanLineItem {
     @SerializedName("type_id")
     private String typeId;
 
+    @SerializedName("amount_paid")
+    private double amountPaid;
+
     public double getAmount() {
         return amount;
     }
@@ -52,5 +55,13 @@ public class PaymentPlanLineItem {
 
     public void setTypeId(String typeId) {
         this.typeId = typeId;
+    }
+
+    public double getAmountPaid() {
+        return amountPaid;
+    }
+
+    public void setAmountPaid(double amountPaid) {
+        this.amountPaid = amountPaid;
     }
 }

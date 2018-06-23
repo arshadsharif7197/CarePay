@@ -34,7 +34,8 @@ public class AvailableHoursFragment extends BaseAvailableHoursFragment {
     }
 
     public static AvailableHoursFragment newInstance(AppointmentsResultModel appointmentsResultModel,
-                                                     AppointmentResourcesItemDTO appointmentResource, Date startDate, Date endDate,
+                                                     AppointmentResourcesItemDTO appointmentResource,
+                                                     Date startDate, Date endDate,
                                                      VisitTypeDTO visitTypeDTO) {
         Bundle args = new Bundle();
         args.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
@@ -81,7 +82,9 @@ public class AvailableHoursFragment extends BaseAvailableHoursFragment {
         }
     };
 
-
-
+    @Override
+    protected void updateDateRange() {
+        updateDateRange(false);
+    }
 
 }

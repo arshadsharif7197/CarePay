@@ -19,29 +19,38 @@
                      android:id="@+id/registration_toolbar" />
         </FrameLayout>
 
-        <ImageView
-            android:id="@+id/button_exit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/close_blue"
-            android:padding="@dimen/dp_30"
-            android:layout_gravity="top|start"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <com.electapps.fontviews.FontButton
-            android:id="@+id/button_signout"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dp_20"
-            style="@style/ButtonRoundedOutlineSmall"
-            android:text="@string/settings_exit"
-            android:layout_gravity="center_vertical|end"
-            app:customFont="gotham_rounded_medium.otf"/>
+            <ImageView
+                android:id="@+id/button_exit"
+                android:layout_width="@dimen/dp_48"
+                android:layout_height="@dimen/dp_48"
+                android:src="@drawable/close_blue"
+                android:scaleType="centerInside"
+                android:padding="@dimen/dp_10"
+                android:layout_gravity="top|start"/>
 
+            <com.electapps.fontviews.FontButton
+                android:id="@+id/button_signout"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dp_10"
+                style="@style/ButtonRoundedOutlineSmall"
+                android:text="@string/settings_exit"
+                android:layout_gravity="center_vertical|end"
+                app:customFont="gotham_rounded_medium.otf"/>
+
+        </FrameLayout>
 
     </FrameLayout>
 
     <LinearLayout
-        android:layout_width="@dimen/content_width_wide"
-        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_20"
+        android:layout_marginEnd="@dimen/dp_20"
+        android:layout_marginTop="@dimen/dp_5"
         android:layout_gravity="center"
         android:layout_marginBottom="@dimen/dp_20"
         android:gravity="center_horizontal"
@@ -117,7 +126,7 @@
             android:id="@+id/button_edit_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_5"
             android:gravity="center"
             android:text="@string/registration_review_edit_image"
             android:textAllCaps="true"
@@ -128,7 +137,7 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp_130"
+            android:layout_height="@dimen/dp_100"
             android:orientation="horizontal"
             android:layout_marginTop="@dimen/dp_20">
 
@@ -196,8 +205,9 @@
 
                     <com.carecloud.carepay.mini.views.CarePayTextView
                         android:id="@+id/device_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:lines="1"
                         android:maxLines="1"
                         android:ellipsize="end"
@@ -242,8 +252,9 @@
 
                     <com.carecloud.carepay.mini.views.CarePayTextView
                         android:id="@+id/location_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:lines="1"
                         android:maxLines="1"
                         android:ellipsize="end"
@@ -288,11 +299,12 @@
 
                     <com.carecloud.carepay.mini.views.CarePayTextView
                         android:id="@+id/practice_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
                         android:lines="1"
                         android:maxLines="1"
-                        android:ellipsize="end"
                         android:textColor="@color/listItemText"
                         android:textSize="@dimen/list_item_text"
                         app:customFont="gotham_rounded_book.otf"
@@ -328,16 +340,10 @@
 
         </LinearLayout>
 
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-
         <LinearLayout
             android:layout_width="@dimen/content_width_buttons"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_20"
+            android:layout_marginTop="@dimen/dp_40"
             android:orientation="horizontal">
 
             <FrameLayout

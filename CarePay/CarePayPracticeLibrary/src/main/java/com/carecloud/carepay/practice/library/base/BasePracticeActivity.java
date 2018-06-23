@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -25,6 +26,7 @@ import java.util.Map;
 public abstract class BasePracticeActivity extends BaseActivity
         implements IConfirmPracticeAppPin {
 
+    private long lastFullScreenSet;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,6 +36,25 @@ public abstract class BasePracticeActivity extends BaseActivity
         setSystemUiVisibility();
         setNavigationBarVisibility();
         Log.d("New Relic", getClass().getName());
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            final View rootView = findViewById(android.R.id.content);
+            rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    long now = System.currentTimeMillis();
+                    if(now - lastFullScreenSet > 1000) {
+                        Log.d("Base", "Display Full Screen");
+                        onProgressDialogCancel();
+                        lastFullScreenSet = now;
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -112,6 +133,7 @@ public abstract class BasePracticeActivity extends BaseActivity
             if (home != null) {
                 home.setEnabled(true);
             }
+            getAppAuthorizationHelper().setUser(null);
             finish();
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
@@ -157,6 +179,12 @@ public abstract class BasePracticeActivity extends BaseActivity
         Map<String, String> query = new HashMap<>();
         query.put("language", languageCode);
         getWorkflowServiceHelper().execute(transition, getLanguageCallback(callback), null, query, headers);
+    }
+
+    @Override
+    protected void onProgressDialogCancel(){
+        setSystemUiVisibility();
+        setNavigationBarVisibility();
     }
 
     private WorkflowServiceCallback getLanguageCallback(final SimpleCallback callback) {

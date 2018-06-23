@@ -49,6 +49,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
     private DemographicsSettingsFragmentListener callback;
     private CheckBox pushNotificationCheckBox;
     private CheckBox emailNotificationCheckBox;
+    private CheckBox smsNotificationCheckBox;
 
     /**
      * @return an instance of DemographicsSettingsFragment
@@ -120,9 +121,13 @@ public class DemographicsSettingsFragment extends BaseFragment {
         pushNotificationCheckBox.setChecked(demographicsSettingsDTO.getPayload().getDemographicSettingsNotificationDTO().getPayload().isPush());
         emailNotificationCheckBox = (CheckBox) view.findViewById(R.id.emailNotificationCheckBox);
         emailNotificationCheckBox.setChecked(demographicsSettingsDTO.getPayload().getDemographicSettingsNotificationDTO().getPayload().isEmail());
+        smsNotificationCheckBox = (CheckBox) view.findViewById(R.id.smsNotificationCheckBox);
+        smsNotificationCheckBox.setChecked(demographicsSettingsDTO.getPayload().getDemographicSettingsNotificationDTO().getPayload().isSms());
+        smsNotificationCheckBox.setVisibility(View.VISIBLE);
 
         MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_enabled_push), pushNotificationCheckBox.isChecked());
         MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_enabled_email), emailNotificationCheckBox.isChecked());
+        MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_enabled_sms), smsNotificationCheckBox.isChecked());
     }
 
     @Override
@@ -192,12 +197,14 @@ public class DemographicsSettingsFragment extends BaseFragment {
         };
         pushNotificationCheckBox.setOnClickListener(checkBoxClickListener);
         emailNotificationCheckBox.setOnClickListener(checkBoxClickListener);
+        smsNotificationCheckBox.setOnClickListener(checkBoxClickListener);
     }
 
     private void updateNotificationPreferences() {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("push", pushNotificationCheckBox.isChecked());
         jsonObject.addProperty("email", emailNotificationCheckBox.isChecked());
+        jsonObject.addProperty("sms", smsNotificationCheckBox.isChecked());
         jsonObject.addProperty("device_token", ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences()
                 .getString(CarePayConstants.FCM_TOKEN, null));
         jsonObject.addProperty("device_type", "android");
@@ -239,10 +246,15 @@ public class DemographicsSettingsFragment extends BaseFragment {
             demographicsSettingsDTO.getPayload().getDemographicSettingsNotificationDTO().getPayload().setEmail(hasEmail);
             emailNotificationCheckBox.setChecked(hasEmail);
 
+            boolean hasSms = settingsPayloadDTO.getPayload().getDemographicSettingsNotificationDTO().getPayload().isSms();
+            demographicsSettingsDTO.getPayload().getDemographicSettingsNotificationDTO().getPayload().setSms(hasSms);
+            smsNotificationCheckBox.setChecked(hasSms);
+
             MixPanelUtil.logEvent(getString(R.string.event_updated_notifications));
 
             MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_enabled_push), pushNotificationCheckBox.isChecked());
             MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_enabled_email), emailNotificationCheckBox.isChecked());
+            MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_enabled_sms), smsNotificationCheckBox.isChecked());
         }
 
         @Override
@@ -252,6 +264,8 @@ public class DemographicsSettingsFragment extends BaseFragment {
                     .getDemographicSettingsNotificationDTO().getPayload().isPush());
             emailNotificationCheckBox.setChecked(demographicsSettingsDTO.getPayload()
                     .getDemographicSettingsNotificationDTO().getPayload().isEmail());
+            smsNotificationCheckBox.setChecked(demographicsSettingsDTO.getPayload()
+                    .getDemographicSettingsNotificationDTO().getPayload().isSms());
 
         }
     };

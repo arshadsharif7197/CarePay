@@ -32,11 +32,12 @@ public class PracticeSearchAdapter extends RecyclerView.Adapter<PracticeSearchAd
 
     /**
      * Constructor
-     * @param context Context
+     *
+     * @param context      Context
      * @param practiceList list of practices
-     * @param callback select practice callback
+     * @param callback     select practice callback
      */
-    public PracticeSearchAdapter(Context context, List<PracticeSelectionUserPractice> practiceList, SelectPracticeAdapterCallback callback){
+    public PracticeSearchAdapter(Context context, List<PracticeSelectionUserPractice> practiceList, SelectPracticeAdapterCallback callback) {
         this.context = context;
         this.practiceList = practiceList;
         this.callback = callback;
@@ -54,15 +55,17 @@ public class PracticeSearchAdapter extends RecyclerView.Adapter<PracticeSearchAd
         final PracticeSelectionUserPractice practice = practiceList.get(position);
 
         holder.getPracticeName().setText(practice.getPracticeName());
-//        PicassoHelper.getPicassoInstance(context).load(practice.getPracticePhoto()).into(holder.getPracticeImage());
-
-        holder.getPracticeCheck().setSelected(practice == selectedPractice);
+        if (selectedPractice == null || !practice.getPracticeId().equals(selectedPractice.getPracticeId())) {
+            holder.getPracticeCheck().setSelected(false);
+        } else {
+            holder.getPracticeCheck().setSelected(true);
+        }
 
         holder.getItem().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 selectedPractice = practice;
-                if(callback!=null){
+                if (callback != null) {
                     callback.onSelectPractice(practice);
                 }
                 notifyDataSetChanged();
@@ -85,7 +88,7 @@ public class PracticeSearchAdapter extends RecyclerView.Adapter<PracticeSearchAd
     }
 
 
-    class PracticeViewHolder extends RecyclerView.ViewHolder{
+    class PracticeViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView practiceImage;
         private TextView practiceName;

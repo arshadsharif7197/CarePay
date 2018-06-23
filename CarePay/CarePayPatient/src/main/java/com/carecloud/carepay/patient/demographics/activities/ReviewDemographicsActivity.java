@@ -12,12 +12,13 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
-import com.carecloud.carepay.patient.demographics.fragments.ConfirmExitDialogFragment;
+import com.carecloud.carepay.patient.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepay.patient.payment.PatientPaymentPresenter;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenterImpl;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
@@ -42,7 +43,7 @@ import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class ReviewDemographicsActivity extends BasePatientActivity implements DemographicsView,
-        PaymentViewHandler, ConfirmExitDialogFragment.ExitConfirmationCallback {
+        PaymentViewHandler, ConfirmDialogFragment.ConfirmationCallback {
 
 
     private static final String KEY_PAYMENT_DTO = "KEY_PAYMENT_DTO";
@@ -117,7 +118,9 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.exitFlow) {
-            displayDialogFragment(new ConfirmExitDialogFragment(), false);
+            ConfirmDialogFragment fragment = ConfirmDialogFragment.newInstance();
+            fragment.setCallback(this);
+            displayDialogFragment(fragment, false);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -259,6 +262,11 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     }
 
     @Override
+    public ISession getISession() {
+        return this;
+    }
+
+    @Override
     public void onBackPressed() {
         try {
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -274,7 +282,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     }
 
     @Override
-    public void onExit() {
+    public void onConfirm() {
         finish();
 
         Fragment currentFragment = demographicsPresenter.getCurrentFragment();

@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
@@ -43,8 +44,8 @@ public class CarePayPracticeApplication extends CarePayApplication
     private void setHttpConstants() {
         DeviceIdentifierDTO deviceIdentifierDTO = new DeviceIdentifierDTO();
         deviceIdentifierDTO.setDeviceIdentifier(Settings.Secure.ANDROID_ID);
-        deviceIdentifierDTO.setDeviceType("Android");
-        deviceIdentifierDTO.setDevicePlatform("android");
+        deviceIdentifierDTO.setDeviceType(CarePayConstants.ANDROID_DEVICE);
+        deviceIdentifierDTO.setDevicePlatform(CarePayConstants.PLATFORM_ANDROID);
         deviceIdentifierDTO.setDeviceOSVersion(Build.VERSION.RELEASE);
         deviceIdentifierDTO.setVersion(BuildConfig.VERSION_NAME);
         HttpConstants.setDeviceInformation(deviceIdentifierDTO);
@@ -59,6 +60,7 @@ public class CarePayPracticeApplication extends CarePayApplication
         HttpConstants.setDeepStreamUrl(BuildConfig.DEEPSTREAM_URL);
         HttpConstants.setPaymentsUrl(BuildConfig.PAYMENTS_BASE_URL);
         HttpConstants.setPaymentsApiKey(BuildConfig.PAYMENTS_API_KEY);
+        HttpConstants.setRetailUrl(BuildConfig.RETAIL_URL);
     }
 
     @Override

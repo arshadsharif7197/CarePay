@@ -1,22 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <include
         android:id="@+id/toolbar_layout"
         layout="@layout/toolbar_responsibility" />
 
-
-    <ScrollView
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        android:id="@+id/createButton"
+        style="@style/BreezeButtonStyleDark"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/button_selector_green"
+        android:enabled="false"
+        android:textAllCaps="true"
+        app:customAssetFont="gotham_rounded_medium"
+        breeze:textKey="payment_agree_and_pay" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/createButton"
+        android:layout_below="@id/toolbar_layout"
         android:background="@color/white"
         android:fillViewport="true"
         android:paddingBottom="@dimen/dimen_26dp"
@@ -32,18 +44,8 @@
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/text_size_18sp"
             app:customAssetFont="proxima_nova_regular"
-            tools:text="Employees and partners of the practice will have access to confidential information, both written and oral, in the course of their employment and job responsibilities. It is imperative that this information is not disclosed to any unauthorized individuals to maintain the integrity of the patient information. An unauthorized individual would be any person that is not currently an employee of the practice and/or any information. Any other disclosures may only occur at the direction may only occur at the direction of the Privacy Office or by patient authorization. I have read and understand the practice’s policies with regards to privacy and Security of personal health information. I agree to maintain confidentiality of all information obtained in the course of my employment including, but not limited to, financial, technical, or propriety information of the organization and personal and sensitive information regarding patients, employees, and vendors. I understand that inappropriate disclosure or release of patient information is grounds for termination."/>
+            tools:text="Employees and partners of the practice will have access to confidential information, both written and oral, in the course of their employment and job responsibilities. It is imperative that this information is not disclosed to any unauthorized individuals to maintain the integrity of the patient information. An unauthorized individual would be any person that is not currently an employee of the practice and/or any information. Any other disclosures may only occur at the direction may only occur at the direction of the Privacy Office or by patient authorization. I have read and understand the practice’s policies with regards to privacy and Security of personal health information. I agree to maintain confidentiality of all information obtained in the course of my employment including, but not limited to, financial, technical, or propriety information of the organization and personal and sensitive information regarding patients, employees, and vendors. I understand that inappropriate disclosure or release of patient information is grounds for termination." />
 
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
-    <com.carecloud.carepaylibray.customcomponents.CarePayButton
-        android:id="@+id/createButton"
-        style="@style/BreezeButtonStyleDark"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_selector_green"
-        android:textAllCaps="true"
-        app:customAssetFont="gotham_rounded_medium"
-        breeze:textKey="payment_agree_and_pay" />
-
-</LinearLayout>
+</RelativeLayout>

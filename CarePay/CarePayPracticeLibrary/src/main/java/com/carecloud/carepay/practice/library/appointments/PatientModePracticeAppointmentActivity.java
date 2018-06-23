@@ -22,6 +22,8 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -163,21 +165,21 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
                                     .compareTo(object2.getResource().getProvider().getName());
                         }
                     });
+
+                    ProvidersListAdapter appointmentsListAdapter = new ProvidersListAdapter(
+                            PatientModePracticeAppointmentActivity.this, resources, resourcesToSchedule,
+                            PatientModePracticeAppointmentActivity.this);
+                    appointmentsRecyclerView.setAdapter(appointmentsListAdapter);
+
+                    //Layout manager for the Recycler View
+                    RecyclerView.LayoutManager appointmentsLayoutManager = new LinearLayoutManager(
+                            PatientModePracticeAppointmentActivity.this, LinearLayoutManager.HORIZONTAL, false);
+                    appointmentsRecyclerView.setLayoutManager(appointmentsLayoutManager);
+                } else {
+                    showEmptyScreen();
                 }
-
-                ProvidersListAdapter appointmentsListAdapter = new ProvidersListAdapter(
-                        PatientModePracticeAppointmentActivity.this, resources, resourcesToSchedule,
-                        PatientModePracticeAppointmentActivity.this);
-                appointmentsRecyclerView.setAdapter(appointmentsListAdapter);
-
-                //Layout manager for the Recycler View
-                RecyclerView.LayoutManager appointmentsLayoutManager = new LinearLayoutManager(
-                        PatientModePracticeAppointmentActivity.this, LinearLayoutManager.HORIZONTAL, false);
-                appointmentsRecyclerView.setLayoutManager(appointmentsLayoutManager);
             } else {
-                findViewById(R.id.provider_screen_header).setVisibility(View.INVISIBLE);
-                findViewById(R.id.provider_screen_sub_header).setVisibility(View.INVISIBLE);
-                noAppointmentView.setVisibility(View.VISIBLE);
+                showEmptyScreen();
             }
 
             populateWithLabels();
@@ -188,6 +190,12 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
             SystemUtil.doDefaultFailureBehavior((BaseActivity) getContext(), exceptionMessage);
         }
     };
+
+    private void showEmptyScreen() {
+        findViewById(R.id.provider_screen_header).setVisibility(View.INVISIBLE);
+        findViewById(R.id.provider_screen_sub_header).setVisibility(View.INVISIBLE);
+        noAppointmentView.setVisibility(View.VISIBLE);
+    }
 
     @Override
     public void onProviderListItemClickListener(int position) {
@@ -210,11 +218,11 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
         return appointmentsResultModel.getMetadata().getLinks();
     }
 
-    private ResourcesToScheduleDTO getSelectedResourcesToSchedule(AppointmentResourcesDTO selectedResource){
+    private ResourcesToScheduleDTO getSelectedResourcesToSchedule(AppointmentResourcesDTO selectedResource) {
         List<ResourcesToScheduleDTO> resourcesToScheduleDTOList = resourcesToSchedule.getPayload().getResourcesToSchedule();
-        for(ResourcesToScheduleDTO resourcesToScheduleDTO : resourcesToScheduleDTOList){
-            for(AppointmentResourcesDTO appointmentResourcesDTO : resourcesToScheduleDTO.getResources()){
-                if(appointmentResourcesDTO == selectedResource){
+        for (ResourcesToScheduleDTO resourcesToScheduleDTO : resourcesToScheduleDTOList) {
+            for (AppointmentResourcesDTO appointmentResourcesDTO : resourcesToScheduleDTO.getResources()) {
+                if (appointmentResourcesDTO == selectedResource) {
                     return resourcesToScheduleDTO;
                 }
             }
@@ -222,4 +230,13 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
         return null;
     }
 
+    @Override
+    public void onCreditCardSelected(PaymentCreditCardsPayloadDTO papiPaymentMethod) {
+
+    }
+
+    @Override
+    public void onCashSelected(PaymentsModel paymentsModel) {
+        //Not Implemented
+    }
 }

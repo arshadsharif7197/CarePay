@@ -42,6 +42,10 @@ public class TransitionsDTO {
     @Expose
     private TransitionDTO deleteNotifications = new TransitionDTO();
 
+    @SerializedName("delete_all_notifications")
+    @Expose
+    private TransitionDTO deleteAllNotifications = new TransitionDTO();
+
     @SerializedName("mark_as_read")
     @Expose
     private TransitionDTO readNotifications = new TransitionDTO();
@@ -175,6 +179,14 @@ public class TransitionsDTO {
 
     public void setDeleteNotifications(TransitionDTO deleteNotifications) {
         this.deleteNotifications = deleteNotifications;
+    }
+
+    public TransitionDTO getDeleteAllNotifications() {
+        return deleteAllNotifications;
+    }
+
+    public void setDeleteAllNotifications(TransitionDTO deleteAllNotifications) {
+        this.deleteAllNotifications = deleteAllNotifications;
     }
 
     public TransitionDTO getReadNotifications() {

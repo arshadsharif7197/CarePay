@@ -16,6 +16,18 @@ public class PaymentsSettingsPaymentPlansDTO {
     @Expose
     private boolean paymentPlansEnabled = false;
 
+    @SerializedName("request_new_plan")
+    @Expose
+    private boolean requestNewPlan = false;
+
+    @SerializedName("can_create_multiple_plans")
+    @Expose
+    private boolean canHaveMultiple = false;
+
+    @SerializedName("add_balance_to_existing")
+    @Expose
+    private boolean addBalanceToExisting = false;
+
     @SerializedName("payment_methods")
     @Expose
     private List<PaymentsMethodsDTO> paymentMethods = new ArrayList<>();
@@ -24,9 +36,9 @@ public class PaymentsSettingsPaymentPlansDTO {
     @Expose
     private List<PaymentSettingsBalanceRangeRule> balanceRangeRules = new ArrayList<>();
 
-    @SerializedName("add_balance_to_new_plan")
+    @SerializedName("terms_and_conditions")
     @Expose
-    private boolean addBalanceToNew = true;
+    private TermsAndConditionsDTO termsAndConditions = new TermsAndConditionsDTO();
 
     public boolean isPaymentPlansEnabled() {
         return paymentPlansEnabled;
@@ -52,11 +64,35 @@ public class PaymentsSettingsPaymentPlansDTO {
         this.balanceRangeRules = balanceRangeRules;
     }
 
-    public boolean isAddBalanceToNew() {
-        return addBalanceToNew;
+    public boolean isAddBalanceToExisting() {
+        return addBalanceToExisting;
     }
 
-    public void setAddBalanceToNew(boolean addBalanceToNew) {
-        this.addBalanceToNew = addBalanceToNew;
+    public void setAddBalanceToExisting(boolean addBalanceToExisting) {
+        this.addBalanceToExisting = addBalanceToExisting;
+    }
+
+    public boolean isCanHaveMultiple() {
+        return canHaveMultiple;
+    }
+
+    public void setCanHaveMultiple(boolean canHaveMultiple) {
+        this.canHaveMultiple = canHaveMultiple;
+    }
+
+    public boolean isRequestNewPlan() {
+        return requestNewPlan;
+    }
+
+    public void setRequestNewPlan(boolean requestNewPlan) {
+        this.requestNewPlan = requestNewPlan;
+    }
+
+    public TermsAndConditionsDTO getTermsAndConditions() {
+        return termsAndConditions;
+    }
+
+    public void setTermsAndConditions(TermsAndConditionsDTO termsAndConditions) {
+        this.termsAndConditions = termsAndConditions;
     }
 }
