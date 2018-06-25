@@ -200,7 +200,7 @@ public class ThirdPartyTaskFragment extends BaseCheckinFragment {
         queryMap.put("patient_id", task.getPatientId());
         queryMap.put("appointment_id", task.getAppointmentId());
 
-        TransitionDTO transitionDTO = thirdPartyWorkflow.getMetadata().getPaymentsTransitions().getContinueTransition();
+        TransitionDTO transitionDTO = thirdPartyWorkflow.getMetadata().getThirdPartyPayload().getContinueTransition();
         getWorkflowServiceHelper().execute(transitionDTO, continueCallback, queryMap);
 
     }

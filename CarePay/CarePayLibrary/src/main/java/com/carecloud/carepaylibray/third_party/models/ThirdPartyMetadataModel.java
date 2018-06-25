@@ -7,24 +7,24 @@ public class ThirdPartyMetadataModel {
 
     @SerializedName("links")
     @Expose
-    private ThirdPartyLinksDTO paymentsLinks = new ThirdPartyLinksDTO();
+    private ThirdPartyLinksDTO thirdPartyLinks = new ThirdPartyLinksDTO();
     @SerializedName("transitions")
     @Expose
-    private ThirdPartyTransitionsDTO paymentsTransitions = new ThirdPartyTransitionsDTO();
+    private ThirdPartyTransitionsDTO thirdPartyPayload = new ThirdPartyTransitionsDTO();
 
-    public ThirdPartyLinksDTO getPaymentsLinks() {
-        return paymentsLinks;
+    public ThirdPartyLinksDTO getThirdPartyLinks() {
+        return thirdPartyLinks;
     }
 
-    public void setPaymentsLinks(ThirdPartyLinksDTO paymentsLinks) {
-        this.paymentsLinks = paymentsLinks;
+    public void setThirdPartyLinks(ThirdPartyLinksDTO thirdPartyLinks) {
+        this.thirdPartyLinks = thirdPartyLinks;
     }
 
-    public ThirdPartyTransitionsDTO getPaymentsTransitions() {
-        return paymentsTransitions;
+    public ThirdPartyTransitionsDTO getThirdPartyPayload() {
+        return thirdPartyPayload;
     }
 
-    public void setPaymentsTransitions(ThirdPartyTransitionsDTO paymentsTransitions) {
-        this.paymentsTransitions = paymentsTransitions;
+    public void setThirdPartyPayload(ThirdPartyTransitionsDTO thirdPartyPayload) {
+        this.thirdPartyPayload = thirdPartyPayload;
     }
 }
