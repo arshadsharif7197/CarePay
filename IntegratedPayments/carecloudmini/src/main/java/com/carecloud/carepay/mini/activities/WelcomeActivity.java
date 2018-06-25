@@ -20,7 +20,6 @@ import com.carecloud.carepay.mini.HttpConstants;
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
 import com.carecloud.carepay.mini.models.queue.QueuePaymentRecord;
-import com.carecloud.carepay.mini.models.queue.QueueUnprocessedPaymentRecord;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
 import com.carecloud.carepay.mini.services.QueueUploadService;
 import com.carecloud.carepay.mini.services.carepay.RestCallServiceCallback;
@@ -40,8 +39,6 @@ import com.carecloud.shamrocksdk.payment.interfaces.PaymentRequestCallback;
 import com.carecloud.shamrocksdk.payment.interfaces.RefundRequestCallback;
 import com.carecloud.shamrocksdk.payment.models.PaymentRequest;
 import com.carecloud.shamrocksdk.payment.models.RefundRequest;
-import com.carecloud.shamrocksdk.payment.models.StreamRecord;
-import com.carecloud.shamrocksdk.payment.models.defs.StateDef;
 import com.carecloud.shamrocksdk.utils.AuthorizationUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -502,6 +499,13 @@ public class WelcomeActivity extends FullScreenActivity {
         public void onPaymentCompleteWithError(String paymentRequestId, JsonElement paymentPayload, String errorMessage) {
             logNewRelicPaymentError(errorMessage, paymentPayload.toString());
 
+            if(connectedDevice.isRefunding()){
+                postRefundRequest(paymentRequestId, paymentPayload);
+            }else {
+                postPaymentRequest(paymentRequestId, paymentPayload);
+            }
+
+/*
             Gson gson = new Gson();
             QueueUnprocessedPaymentRecord unprocessedPaymentRecord = new QueueUnprocessedPaymentRecord();
             unprocessedPaymentRecord.setPaymentRequestId(paymentRequestId);
@@ -522,7 +526,7 @@ public class WelcomeActivity extends FullScreenActivity {
                     updateMessage(getString(R.string.welcome_waiting));
                 }
             }, PAYMENT_COMPLETE_RESET);
-
+*/
         }
 
         @Override
@@ -625,12 +629,9 @@ public class WelcomeActivity extends FullScreenActivity {
     }
 
     private void postRefundRequest(String paymentRequestId, JsonElement requestObject){
-        StreamRecord streamRecord = new StreamRecord();
-        streamRecord.setDeepstreamRecordId(paymentRequestId);
-
         Gson gson = new Gson();
         String token = AuthorizationUtil.getAuthorizationToken(this).replace("\n", "");
-        getRestHelper().executePostRefund(getPostPaymentCallback(paymentRequestId, true, requestObject), token, gson.toJson(streamRecord));
+        getRestHelper().executePostRefund(getPostPaymentCallback(paymentRequestId, true, requestObject), token, gson.toJson(requestObject));
     }
 
 
@@ -666,7 +667,7 @@ public class WelcomeActivity extends FullScreenActivity {
                 if(shouldRetry(errorMessage)) {
                     CustomErrorToast.showWithMessage(WelcomeActivity.this, errorMessage);
                     updateMessage(String.format(getString(R.string.welcome_retrying), paymentAttempt + 1));
-                    if(verifyPersisted(errorMessage, paymentRequestId, isRefund, requestObject)){
+//                    if(verifyPersisted(errorMessage, paymentRequestId, isRefund, requestObject)){
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -677,22 +678,23 @@ public class WelcomeActivity extends FullScreenActivity {
                                 }
                             }
                         }, paymentAttempt * POST_RETRY_DELAY);
-                    }
+//                    }
                 }else{
                     if(paymentAttempt >= MAX_RETRIES){
-                        if(!verifyPersisted(errorMessage, paymentRequestId, isRefund, requestObject)) {
-                            Gson gson = new Gson();
-                            QueueUnprocessedPaymentRecord unprocessedPaymentRecord = new QueueUnprocessedPaymentRecord();
-                            unprocessedPaymentRecord.setPaymentRequestId(paymentRequestId);
-                            unprocessedPaymentRecord.setRefund(connectedDevice.isRefunding());
-                            unprocessedPaymentRecord.setPayload(gson.toJson(requestObject));
-                            unprocessedPaymentRecord.save();
-                        }else{
+//                        if(!verifyPersisted(errorMessage, paymentRequestId, isRefund, requestObject)) {
+//                            Gson gson = new Gson();
+//                            QueueUnprocessedPaymentRecord unprocessedPaymentRecord = new QueueUnprocessedPaymentRecord();
+//                            unprocessedPaymentRecord.setPaymentRequestId(paymentRequestId);
+//                            unprocessedPaymentRecord.setRefund(connectedDevice.isRefunding());
+//                            unprocessedPaymentRecord.setPayload(gson.toJson(requestObject));
+//                            unprocessedPaymentRecord.save();
+//                        }else{
                             QueuePaymentRecord queuePaymentRecord = new QueuePaymentRecord();
                             queuePaymentRecord.setPaymentRequestId(paymentRequestId);
                             queuePaymentRecord.setRefund(isRefund);
+                            queuePaymentRecord.setRequestObject(requestObject);
                             queuePaymentRecord.save();
-                        }
+//                        }
                         launchQueueService();
                     }
                     resetDevice(paymentRequestId);
@@ -711,7 +713,7 @@ public class WelcomeActivity extends FullScreenActivity {
         return !errorMessage.contains("payment request has already been completed") && paymentAttempt <= MAX_RETRIES;
     }
 
-    private boolean verifyPersisted(String errorMessage, final String requestId, boolean isRefunding, final JsonElement requestObject){
+/*    private boolean verifyPersisted(String errorMessage, final String requestId, boolean isRefunding, final JsonElement requestObject){
         if(errorMessage != null && errorMessage.contains("transaction response needed")){
             final Gson gson = new Gson();
             if(!isRefunding){
@@ -748,7 +750,7 @@ public class WelcomeActivity extends FullScreenActivity {
             return false;
         }
         return true;
-    }
+    }*/
 
     private void resetDevice(String paymentRequestId){
         releasePaymentRequest(paymentRequestId);

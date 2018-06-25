@@ -8,15 +8,8 @@ import android.support.annotation.Nullable;
 
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
 import com.carecloud.carepay.mini.models.queue.QueuePaymentRecord;
-import com.carecloud.carepay.mini.models.queue.QueueUnprocessedPaymentRecord;
 import com.carecloud.carepay.mini.services.carepay.RestCallServiceHelper;
 import com.carecloud.carepay.mini.utils.StringUtil;
-import com.carecloud.shamrocksdk.payment.DevicePayment;
-import com.carecloud.shamrocksdk.payment.DeviceRefund;
-import com.carecloud.shamrocksdk.payment.interfaces.PaymentRequestCallback;
-import com.carecloud.shamrocksdk.payment.interfaces.RefundRequestCallback;
-import com.carecloud.shamrocksdk.payment.models.PaymentRequest;
-import com.carecloud.shamrocksdk.payment.models.RefundRequest;
 import com.carecloud.shamrocksdk.payment.models.StreamRecord;
 import com.carecloud.shamrocksdk.utils.AuthorizationUtil;
 import com.google.gson.Gson;
@@ -47,25 +40,25 @@ public class QueueUploadService extends IntentService {
         List<QueuePaymentRecord> queuedRecords = QueuePaymentRecord.listAll(QueuePaymentRecord.class);
         for(QueuePaymentRecord record : queuedRecords){
             if(record.isRefund()){
-                if (postRefundRequest(record.getPaymentRequestId())){
+                if (postRefundRequest(record.getPaymentRequestId(), record.getRequestObject())) {
                     record.delete();
                 }
             }else {
-                if (postPaymentRequest(record.getPaymentRequestId())) {
+                if (postPaymentRequest(record.getPaymentRequestId(), record.getRequestObject())) {
                     record.delete();
                 }
             }
         }
 
 
-        List<QueueUnprocessedPaymentRecord> unprocessedPaymentRecords = QueueUnprocessedPaymentRecord.listAll(QueueUnprocessedPaymentRecord.class);
-        for(QueueUnprocessedPaymentRecord record : unprocessedPaymentRecords){
-            if(record.isRefund()){
-                processQueuedRefundRecord(record);
-            }else {
-                processQueuedPaymentRecord(record);
-            }
-        }
+//        List<QueueUnprocessedPaymentRecord> unprocessedPaymentRecords = QueueUnprocessedPaymentRecord.listAll(QueueUnprocessedPaymentRecord.class);
+//        for(QueueUnprocessedPaymentRecord record : unprocessedPaymentRecords){
+//            if(record.isRefund()){
+//                processQueuedRefundRecord(record);
+//            }else {
+//                processQueuedPaymentRecord(record);
+//            }
+//        }
 
         Intent scheduledService = new Intent(getBaseContext(), QueueUploadService.class);
         PendingIntent pendingIntent = PendingIntent.getService(getBaseContext(), 0x222, scheduledService, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -73,25 +66,29 @@ public class QueueUploadService extends IntentService {
         alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+INTERVAL, pendingIntent);
     }
 
-    private boolean postPaymentRequest(String paymentRequestId){
+    private boolean postPaymentRequest(String paymentRequestId, JsonElement requestObject){
         if(StringUtil.isNullOrEmpty(paymentRequestId)){
             return true;// this will clear the empty record
         }
 
-        StreamRecord streamRecord = new StreamRecord();
-        streamRecord.setDeepstreamRecordId(paymentRequestId);
-
         Gson gson = new Gson();
+        if(requestObject == null){
+            StreamRecord streamRecord = new StreamRecord();
+            streamRecord.setDeepstreamRecordId(paymentRequestId);
+
+            requestObject = gson.toJsonTree(streamRecord);
+        }
+
         String token = AuthorizationUtil.getAuthorizationToken(this).replace("\n", "");
 
-        Call<JsonElement> call = getApplicationHelper().getRestHelper().getPostPaymentCall(token, gson.toJson(streamRecord));
+        Call<JsonElement> call = getApplicationHelper().getRestHelper().getPostPaymentCall(token, gson.toJson(requestObject));
         try{
             Response<JsonElement> response = call.execute();
             if(response.isSuccessful()){
                 return true;
             }else{
                 String errorMessage = RestCallServiceHelper.parseError(response, "error", "message");
-                logNewRelicPaymentError(errorMessage, streamRecord, false);
+                logNewRelicPaymentError(errorMessage, requestObject, false);
                 return errorMessage.contains("payment request has already been completed"); //this processing error indicates that the payment should not be retried
             }
         } catch (IOException e) {
@@ -101,25 +98,29 @@ public class QueueUploadService extends IntentService {
 
     }
 
-    private boolean postRefundRequest(String paymentRequestId){
+    private boolean postRefundRequest(String paymentRequestId, JsonElement requestObject){
         if(StringUtil.isNullOrEmpty(paymentRequestId)){
             return true;// this will clear the empty record
         }
 
-        StreamRecord streamRecord = new StreamRecord();
-        streamRecord.setDeepstreamRecordId(paymentRequestId);
-
         Gson gson = new Gson();
+        if(requestObject == null){
+            StreamRecord streamRecord = new StreamRecord();
+            streamRecord.setDeepstreamRecordId(paymentRequestId);
+
+            requestObject = gson.toJsonTree(streamRecord);
+        }
+
         String token = AuthorizationUtil.getAuthorizationToken(this).replace("\n", "");
 
-        Call<JsonElement> call = getApplicationHelper().getRestHelper().getPostRefundCall(token, gson.toJson(streamRecord));
+        Call<JsonElement> call = getApplicationHelper().getRestHelper().getPostRefundCall(token, gson.toJson(requestObject));
         try{
             Response<JsonElement> response = call.execute();
             if(response.isSuccessful()){
                 return true;
             }else{
                 String errorMessage = RestCallServiceHelper.parseError(response, "error", "message");
-                logNewRelicPaymentError(errorMessage, streamRecord, true);
+                logNewRelicPaymentError(errorMessage, requestObject, true);
                 return errorMessage.contains("payment request has already been completed"); //this processing error indicates that the payment should not be retried
             }
         } catch (IOException e) {
@@ -134,102 +135,102 @@ public class QueueUploadService extends IntentService {
         return (ApplicationHelper) getApplication();
     }
 
-    private void processQueuedPaymentRecord(final QueueUnprocessedPaymentRecord record){
-        Gson gson = new Gson();
-        final PaymentRequest queuedPaymentRequest = gson.fromJson(record.getPayload(), PaymentRequest.class);
-        DevicePayment.updatePaymentRequest(this, record.getPaymentRequestId(), queuedPaymentRequest, new PaymentRequestCallback() {
-            @Override
-            public void onPaymentRequestUpdate(String paymentRequestId, PaymentRequest paymentRequest) {
-                PaymentRequest ackRequest = DevicePayment.getPaymentAck(paymentRequestId);
+//    private void processQueuedPaymentRecord(final QueueUnprocessedPaymentRecord record){
+//        Gson gson = new Gson();
+//        final PaymentRequest queuedPaymentRequest = gson.fromJson(record.getPayload(), PaymentRequest.class);
+//        DevicePayment.updatePaymentRequest(this, record.getPaymentRequestId(), queuedPaymentRequest, new PaymentRequestCallback() {
+//            @Override
+//            public void onPaymentRequestUpdate(String paymentRequestId, PaymentRequest paymentRequest) {
+//                PaymentRequest ackRequest = DevicePayment.getPaymentAck(paymentRequestId);
+//
+//                //confirm that we are working with an updated record
+//                if(ackRequest != null &&
+//                        ackRequest.getTransactionResponse() != null &&
+//                        ackRequest.getPaymentMethod() != null &&
+//                        ackRequest.getPaymentMethod().getCardData() != null){
+//
+//
+//                    //Lets add this updated record to the send queue
+//                    QueuePaymentRecord queuePaymentRecord = new QueuePaymentRecord();
+//                    queuePaymentRecord.setPaymentRequestId(paymentRequestId);
+//                    queuePaymentRecord.setRefund(false);
+//                    queuePaymentRecord.save();
+//
+//                   //Record is now updated so we no longer need to be keeping this in the queue
+//                    record.delete();
+//
+//                    if(postPaymentRequest(paymentRequestId)){
+//                        queuePaymentRecord.delete();
+//                    }
+//
+//                }else{
+//                    logNewRelicPaymentError("Queue ACK Failed", paymentRequest, false);
+//                }
+//            }
+//
+//            @Override
+//            public void onPaymentRequestUpdateFail(String paymentRequestId, JsonElement recordObject) {
+//                logNewRelicPaymentError("Queue Update Payment Request Failed", recordObject, false);
+//            }
+//
+//            @Override
+//            public void onPaymentConnectionFailure(String message) {
+//
+//            }
+//
+//            @Override
+//            public void onPaymentRequestDestroyed(String paymentRequestId) {
+//
+//            }
+//        });
+//    }
 
-                //confirm that we are working with an updated record
-                if(ackRequest != null &&
-                        ackRequest.getTransactionResponse() != null &&
-                        ackRequest.getPaymentMethod() != null &&
-                        ackRequest.getPaymentMethod().getCardData() != null){
-
-
-                    //Lets add this updated record to the send queue
-                    QueuePaymentRecord queuePaymentRecord = new QueuePaymentRecord();
-                    queuePaymentRecord.setPaymentRequestId(paymentRequestId);
-                    queuePaymentRecord.setRefund(false);
-                    queuePaymentRecord.save();
-
-                   //Record is now updated so we no longer need to be keeping this in the queue
-                    record.delete();
-
-                    if(postPaymentRequest(paymentRequestId)){
-                        queuePaymentRecord.delete();
-                    }
-
-                }else{
-                    logNewRelicPaymentError("Queue ACK Failed", paymentRequest, false);
-                }
-            }
-
-            @Override
-            public void onPaymentRequestUpdateFail(String paymentRequestId, JsonElement recordObject) {
-                logNewRelicPaymentError("Queue Update Payment Request Failed", recordObject, false);
-            }
-
-            @Override
-            public void onPaymentConnectionFailure(String message) {
-
-            }
-
-            @Override
-            public void onPaymentRequestDestroyed(String paymentRequestId) {
-
-            }
-        });
-    }
-
-    private void processQueuedRefundRecord(final QueueUnprocessedPaymentRecord record){
-        Gson gson = new Gson();
-        final RefundRequest queuedRefundRequest = gson.fromJson(record.getPayload(), RefundRequest.class);
-        DeviceRefund.updateRefundRequest(this, record.getPaymentRequestId(), queuedRefundRequest, new RefundRequestCallback() {
-            @Override
-            public void onRefundRequestUpdate(String refundRequestId, RefundRequest refundRequest) {
-                RefundRequest ackRequest = DeviceRefund.getRefundAck(refundRequestId);
-
-                //confirm that we are working with an updated record
-                if(ackRequest != null &&
-                        ackRequest.getTransactionResponse() != null){
-
-                    //Lets add this updated record to the send queue
-                    QueuePaymentRecord queuePaymentRecord = new QueuePaymentRecord();
-                    queuePaymentRecord.setPaymentRequestId(refundRequestId);
-                    queuePaymentRecord.setRefund(true);
-                    queuePaymentRecord.save();
-
-                    //Record is now updated so we no longer need to be keeping this in the queue
-                    record.delete();
-
-                    if(postRefundRequest(refundRequestId)){
-                        queuePaymentRecord.delete();
-                    }
-
-                }else{
-                    logNewRelicPaymentError("Queue ACK Failed", refundRequest, true);
-                }
-            }
-
-            @Override
-            public void onRefundRequestUpdateFail(String refundRequestId, JsonElement recordObject) {
-                logNewRelicPaymentError("Queue Update Refund Request Failed", recordObject, true);
-            }
-
-            @Override
-            public void onRefundConnectionFailure(String message) {
-
-            }
-
-            @Override
-            public void onRefundRequestDestroyed(String refundRequestId) {
-
-            }
-        });
-    }
+//    private void processQueuedRefundRecord(final QueueUnprocessedPaymentRecord record){
+//        Gson gson = new Gson();
+//        final RefundRequest queuedRefundRequest = gson.fromJson(record.getPayload(), RefundRequest.class);
+//        DeviceRefund.updateRefundRequest(this, record.getPaymentRequestId(), queuedRefundRequest, new RefundRequestCallback() {
+//            @Override
+//            public void onRefundRequestUpdate(String refundRequestId, RefundRequest refundRequest) {
+//                RefundRequest ackRequest = DeviceRefund.getRefundAck(refundRequestId);
+//
+//                //confirm that we are working with an updated record
+//                if(ackRequest != null &&
+//                        ackRequest.getTransactionResponse() != null){
+//
+//                    //Lets add this updated record to the send queue
+//                    QueuePaymentRecord queuePaymentRecord = new QueuePaymentRecord();
+//                    queuePaymentRecord.setPaymentRequestId(refundRequestId);
+//                    queuePaymentRecord.setRefund(true);
+//                    queuePaymentRecord.save();
+//
+//                    //Record is now updated so we no longer need to be keeping this in the queue
+//                    record.delete();
+//
+//                    if(postRefundRequest(refundRequestId)){
+//                        queuePaymentRecord.delete();
+//                    }
+//
+//                }else{
+//                    logNewRelicPaymentError("Queue ACK Failed", refundRequest, true);
+//                }
+//            }
+//
+//            @Override
+//            public void onRefundRequestUpdateFail(String refundRequestId, JsonElement recordObject) {
+//                logNewRelicPaymentError("Queue Update Refund Request Failed", recordObject, true);
+//            }
+//
+//            @Override
+//            public void onRefundConnectionFailure(String message) {
+//
+//            }
+//
+//            @Override
+//            public void onRefundRequestDestroyed(String refundRequestId) {
+//
+//            }
+//        });
+//    }
 
     private void logNewRelicPaymentError(String errorMessage, Object payload, boolean isRefund){
         Map<String, Object> eventMap = new HashMap<>();
