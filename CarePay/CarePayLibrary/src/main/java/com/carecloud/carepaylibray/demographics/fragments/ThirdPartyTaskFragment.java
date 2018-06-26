@@ -10,6 +10,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -150,10 +151,13 @@ public class ThirdPartyTaskFragment extends BaseCheckinFragment {
         ThirdPartyTask task = thirdPartyWorkflow.getPayload().getThirdPartyProcess().getTask();
         returnUrl = task.getReturnUrl();
         Uri startUrl = Uri.parse(task.getAccessUrl());
-        startUrl.buildUpon().appendQueryParameter("return_url", returnUrl);
+        startUrl = startUrl.buildUpon()
+                .appendQueryParameter("return_url", returnUrl)
+                .build();
 
         webView.clearCache(true);
         webView.clearHistory();
+        Log.d("start url", startUrl.toString());
         webView.loadUrl(startUrl.toString());
     }
 
@@ -251,6 +255,7 @@ public class ThirdPartyTaskFragment extends BaseCheckinFragment {
         @Override
         public void onPageFinished(WebView webView, String url) {
             super.onPageFinished(webView, url);
+            Log.d("Loaded URL", url);
             lastUrl = url;
             refreshLayout.setRefreshing(false);
         }
