@@ -189,7 +189,11 @@ public abstract class BaseWebFormFragment extends BaseFragment {
 
     protected void loadFormUrl(String formString, String function) {
         showProgressDialog();
-        webView.loadUrl("javascript:window." + function + "('" + formString + "')");
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            webView.evaluateJavascript("javascript:window." + function + "('" + formString + "')", null);
+        }else {
+            webView.loadUrl("javascript:window." + function + "('" + formString + "')");
+        }
         if (displayedFormsIndex > -1 && progressIndicator.getNumDots() > displayedFormsIndex) {
             progressIndicator.setCurrentProgressDot(displayedFormsIndex);
         }

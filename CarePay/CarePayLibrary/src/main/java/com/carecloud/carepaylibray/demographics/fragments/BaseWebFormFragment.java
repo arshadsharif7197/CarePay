@@ -224,7 +224,11 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
 
     protected void loadFormUrl(String formString, String function) {
         showProgressDialog();
-        webView.loadUrl("javascript:window." + function + "('" + formString + "')");
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            webView.evaluateJavascript("javascript:window." + function + "('" + formString + "')", null);
+        }else {
+            webView.loadUrl("javascript:window." + function + "('" + formString + "')");
+        }
         progressIndicator.setCurrentProgressDot(displayedFormsIndex);
 
         callback.setCheckinFlow(getCheckinFlowState(), totalForms, displayedFormsIndex + 1);//adjust for zero index
