@@ -171,8 +171,6 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         settings.setJavaScriptEnabled(true);
         settings.setSaveFormData(false);
         settings.setDomStorageEnabled(true);
-        settings.setAppCacheEnabled(true);
-        settings.setAppCachePath(getContext().getCacheDir().getPath());
 
         WebViewDatabase.getInstance(getContext()).clearFormData();
 
