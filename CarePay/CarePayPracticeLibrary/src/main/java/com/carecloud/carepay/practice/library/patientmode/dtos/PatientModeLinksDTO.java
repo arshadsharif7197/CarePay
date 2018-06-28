@@ -16,6 +16,9 @@ public class PatientModeLinksDTO {
     @SerializedName("pinpad")
     @Expose
     private TransitionDTO pinpad = new TransitionDTO();
+    @SerializedName("language")
+    @Expose
+    private TransitionDTO language = new TransitionDTO();
 
     /**
      * @return The self
@@ -37,5 +40,13 @@ public class PatientModeLinksDTO {
 
     public void setPinpad(TransitionDTO pinpad) {
         this.pinpad = pinpad;
+    }
+
+    public TransitionDTO getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(TransitionDTO language) {
+        this.language = language;
     }
 }
