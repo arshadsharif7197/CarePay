@@ -347,8 +347,8 @@
             android:textColor="@color/white"
             android:textSize="@dimen/apt_dl_textview_size"
             app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="payment_plan_one_time_payment"
-            tools:text="One time payment" />
+            breeze:textKey="payment.paymentPlan.oneTimePayment.button.make"
+            tools:text="Make One time payment" />
 
     </LinearLayout>
 </LinearLayout>
