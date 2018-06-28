@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
@@ -90,27 +92,55 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Map<String, String> queryMap = new HashMap<>();
-                queryMap.put("practice_mgmt", scheduledPaymentModel.getMetadata().getPracticeMgmt());
-                queryMap.put("practice_id", scheduledPaymentModel.getMetadata().getPracticeId());
-                queryMap.put("patient_id", scheduledPaymentModel.getMetadata().getPatientId());
-                queryMap.put("one_time_payment_id", scheduledPaymentModel.getMetadata().getOneTimePaymentId());
-
-                TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata()
-                        .getPaymentsTransitions().getDeleteScheduledPayment();
-                getWorkflowServiceHelper().execute(transitionDTO, deleteScheduledPaymentCallback, queryMap);
+                deletePayment();
             }
         });
 
         updateLayout();
     }
 
+    private void deletePayment(){
+        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(
+                Label.getLabel("payment.oneTimePayment.scheduled.delete.title"),
+                Label.getLabel("payment.oneTimePayment.scheduled.delete.subtitle"),
+                Label.getLabel("button_no"),
+                Label.getLabel("button_yes"));
+        confirmDialogFragment.setCallback(confirmDeleteCallback);
+        confirmDialogFragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                showDialog();
+            }
+        });
+        confirmDialogFragment.show(getFragmentManager(), null);
+        hideDialog();
+    }
+
+    private ConfirmDialogFragment.ConfirmationCallback confirmDeleteCallback = new ConfirmDialogFragment.ConfirmationCallback() {
+        @Override
+        public void onConfirm() {
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("practice_mgmt", scheduledPaymentModel.getMetadata().getPracticeMgmt());
+            queryMap.put("practice_id", scheduledPaymentModel.getMetadata().getPracticeId());
+            queryMap.put("patient_id", scheduledPaymentModel.getMetadata().getPatientId());
+            queryMap.put("one_time_payment_id", scheduledPaymentModel.getMetadata().getOneTimePaymentId());
+
+            TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata()
+                    .getPaymentsTransitions().getDeleteScheduledPayment();
+            getWorkflowServiceHelper().execute(transitionDTO, deleteScheduledPaymentCallback, queryMap);
+        }
+    };
+
     @Override
     protected void onPaymentClick(double amount) {
         createPaymentModel(amount);
+
         IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
         postModel.setPapiPaymentMethod(scheduledPaymentModel.getPayload().getPaymentMethod());
         postModel.setExecution(scheduledPaymentModel.getPayload().getExecution());
+
+        DateUtil.getInstance().setDate(paymentDate);
+        postModel.setPaymentDate(DateUtil.getInstance().toStringWithFormatYyyyDashMmDashDd());
 
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("practice_mgmt", scheduledPaymentModel.getMetadata().getPracticeMgmt());
