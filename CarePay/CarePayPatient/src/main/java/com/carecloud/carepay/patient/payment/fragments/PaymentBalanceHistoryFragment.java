@@ -23,16 +23,29 @@ import com.carecloud.carepaylibray.base.BaseFragment;
  * Created by jorge on 29/12/16
  */
 public class PaymentBalanceHistoryFragment extends BaseFragment {
+    public static final int PAGE_BALANCES = 0;
+    public static final int PAGE_HISTORY = 1;
+    private static final String KEY_INDEX = "index";
+
+    int requestedPage;
 
     /**
      *
      * @return a new instance of PaymentBalanceHistoryFragment
      */
-    public static PaymentBalanceHistoryFragment newInstance() {
+    public static PaymentBalanceHistoryFragment newInstance(int displayPage) {
         PaymentBalanceHistoryFragment fragment = new PaymentBalanceHistoryFragment();
         Bundle args = new Bundle();
+        args.putInt(KEY_INDEX, displayPage);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle icicle){
+        super.onCreate(icicle);
+        Bundle args = getArguments();
+        requestedPage = args.getInt(KEY_INDEX, PAGE_BALANCES);
     }
 
     @Nullable
@@ -81,6 +94,7 @@ public class PaymentBalanceHistoryFragment extends BaseFragment {
             setTabTitle(history, historyTabTitle);
         }
 
+        viewPager.setCurrentItem(requestedPage);
     }
 
     private void setShadow(View view){

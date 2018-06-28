@@ -13,7 +13,10 @@ import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+
+import java.util.Date;
 
 /**
  * Created by lmenendez on 2/2/18
@@ -41,22 +44,40 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
     /**
      * @param paymentsModel  payment model
      * @param paymentPlanDTO payment plan details
+     * @param onlySelectMode select mode
      * @return new instance
      */
     public static PracticePaymentPlanAddCreditCardFragment newInstance(PaymentsModel paymentsModel,
                                                                        PaymentPlanDTO paymentPlanDTO,
                                                                        boolean onlySelectMode) {
+        return newInstance(paymentsModel, paymentPlanDTO, onlySelectMode, null);
+    }
+
+    /**
+     * @param paymentsModel  payment model
+     * @param paymentPlanDTO payment plan details
+     * @param onlySelectMode select mode
+     * @param paymentDate    paymentDate
+     * @return new instance
+     */
+    public static PracticePaymentPlanAddCreditCardFragment newInstance(PaymentsModel paymentsModel,
+                                                                       PaymentPlanDTO paymentPlanDTO,
+                                                                       boolean onlySelectMode,
+                                                                       Date paymentDate) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         if (paymentPlanDTO != null) {
             DtoHelper.bundleDto(args, paymentPlanDTO);
+        }
+        if(paymentDate != null) {
+            DateUtil.getInstance().setDate(paymentDate);
+            args.putString(KEY_DATE, DateUtil.getInstance().toStringWithFormatYyyyDashMmDashDd());
         }
         args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
         PracticePaymentPlanAddCreditCardFragment fragment = new PracticePaymentPlanAddCreditCardFragment();
         fragment.setArguments(args);
         return fragment;
     }
-
 
     @Override
     protected void attachCallback(Context context) {

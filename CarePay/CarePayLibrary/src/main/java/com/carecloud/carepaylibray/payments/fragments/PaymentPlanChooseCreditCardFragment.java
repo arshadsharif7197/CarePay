@@ -6,7 +6,9 @@ import android.view.View;
 import android.widget.Button;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
@@ -18,9 +20,11 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPo
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,11 +33,13 @@ import java.util.Map;
  */
 
 public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragment {
+    private static final String KEY_DATE = "date";
 
     private PaymentPlanCreateInterface callback;
     private PaymentPlanPostModel paymentPlanPostModel;
     private PaymentPlanDTO paymentPlanDTO;
 
+    private Date paymentDate;
 
     /**
      * @param paymentsDTO                the payment model
@@ -60,23 +66,42 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
      * @param paymentsDTO                the payment model
      * @param selectedPaymentMethodLabel the selected payment method label
      * @param paymentPlanDTO             payment plan details
-     * @param onlySelectMode
+     * @param onlySelectMode            select mode
      * @return an instance of PaymentPlanChooseCreditCardFragment
      */
     public static PaymentPlanChooseCreditCardFragment newInstance(PaymentsModel paymentsDTO,
                                                                   String selectedPaymentMethodLabel,
                                                                   PaymentPlanDTO paymentPlanDTO,
                                                                   boolean onlySelectMode) {
+        return newInstance(paymentsDTO, selectedPaymentMethodLabel, paymentPlanDTO, onlySelectMode, null);
+    }
+
+    /**
+     * @param paymentsDTO                the payment model
+     * @param selectedPaymentMethodLabel the selected payment method label
+     * @param paymentPlanDTO             payment plan details
+     * @param onlySelectMode            select mode
+     * @param paymentDate               payment Date
+     * @return an instance of PaymentPlanChooseCreditCardFragment
+     */
+    public static PaymentPlanChooseCreditCardFragment newInstance(PaymentsModel paymentsDTO,
+                                                                  String selectedPaymentMethodLabel,
+                                                                  PaymentPlanDTO paymentPlanDTO,
+                                                                  boolean onlySelectMode,
+                                                                  Date paymentDate) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsDTO);
         DtoHelper.bundleDto(args, paymentPlanDTO);
         args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethodLabel);
         args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
+        if(paymentDate != null) {
+            DateUtil.getInstance().setDate(paymentDate);
+            args.putString(KEY_DATE, DateUtil.getInstance().toStringWithFormatYyyyDashMmDashDd());
+        }
         PaymentPlanChooseCreditCardFragment chooseCreditCardFragment = new PaymentPlanChooseCreditCardFragment();
         chooseCreditCardFragment.setArguments(args);
         return chooseCreditCardFragment;
     }
-
 
     @Override
     protected void attachCallback(Context context) {
@@ -101,6 +126,12 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
         paymentPlanPostModel = DtoHelper.getConvertedDTO(PaymentPlanPostModel.class, args);
         paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
         onlySelectMode = args.getBoolean(CarePayConstants.ONLY_SELECT_MODE);
+
+        String dateString = args.getString(KEY_DATE);
+        if(dateString != null){
+            DateUtil.getInstance().setDateRaw(dateString);
+            paymentDate = DateUtil.getInstance().getDate();
+        }
     }
 
     @Override
@@ -123,7 +154,7 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
                 callback.onAddPaymentPlanCard(paymentsModel, paymentPlanPostModel, onlySelectMode);
             }
             if (paymentPlanDTO != null && callback instanceof OneTimePaymentInterface) {
-                ((OneTimePaymentInterface) callback).onAddPaymentPlanCard(paymentsModel, paymentPlanDTO, onlySelectMode);
+                ((OneTimePaymentInterface) callback).onAddPaymentPlanCard(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
             }
             if (getDialog() != null) {
                 dismiss();
@@ -158,6 +189,10 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
                         postModel.setPapiPaymentMethod(papiPaymentMethod);
                         postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
 
+                        if(paymentDate != null){
+                            DateUtil.getInstance().setDate(paymentDate);
+                            postModel.setPaymentDate(DateUtil.getInstance().toStringWithFormatYyyyDashMmDashDd());
+                        }
                         makePlanPayment();
                     }
                 }
@@ -178,8 +213,35 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
         Gson gson = new Gson();
         String paymentModelJson = gson.toJson(paymentsModel.getPaymentPayload().getPaymentPostModel());
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePlanPayment();
-        getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, paymentModelJson, queries, header);
+
+        if(paymentDate != null){
+            getWorkflowServiceHelper().execute(transitionDTO, schedulePaymentCallback, paymentModelJson, queries, header);
+        }else {
+            getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, paymentModelJson, queries, header);
+        }
     }
 
+
+    private WorkflowServiceCallback schedulePaymentCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            ((OneTimePaymentInterface)callback).showScheduledPaymentConfirmation(workflowDTO);
+            if (getDialog() != null) {
+                dismiss();
+            }
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+        }
+    };
 
 }
