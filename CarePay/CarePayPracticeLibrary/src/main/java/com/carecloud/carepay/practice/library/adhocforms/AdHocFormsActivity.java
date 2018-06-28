@@ -194,7 +194,6 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
                 adhocFormsModel.getPayload().getAdhocFormsPatientModeInfo().getMetadata().getPatientId(),
                 forms.size()};
         MixPanelUtil.logEvent(getString(R.string.event_adhoc_forms_completed), params, values);
-
     }
 
     @Override

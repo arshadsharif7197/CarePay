@@ -3,21 +3,31 @@ package com.carecloud.carepay.patient.consentforms.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormInterface;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.checkout.BaseWebFormFragment;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
+import com.carecloud.carepaylibray.consentforms.models.payload.FormDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
+import com.carecloud.carepaylibray.intake.models.AppointmentMetadataModel;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 
 /**
@@ -29,6 +39,7 @@ public class FilledFormFragment extends BaseWebFormFragment {
     private ConsentFormInterface callback;
     private List<PracticeForm> formsList;
     private List<JsonObject> jsonFormSaveResponseArray = new ArrayList<>();
+    private FormDTO formDto;
 
     /**
      * @param selectedProviderIndex the provider index
@@ -57,8 +68,9 @@ public class FilledFormFragment extends BaseWebFormFragment {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         consentFormDto = (ConsentFormDTO) callback.getDto();
-        filledForms = consentFormDto.getPayload().getForms()
-                .get(getArguments().getInt("selectedProviderIndex")).getPatientFormsResponses();
+        formDto = consentFormDto.getPayload().getForms()
+                .get(getArguments().getInt("selectedProviderIndex"));
+        filledForms = formDto.getPatientFormsResponses();
         formsList = callback.getAllFormsToShow();
         setTotalForms(formsList.size());
     }
@@ -132,8 +144,41 @@ public class FilledFormFragment extends BaseWebFormFragment {
 
     @Override
     protected void submitAllForms() {
-        /*NOT IMPLEMENTED YET*/
+        Map<String, String> queries = new HashMap<>();
+        queries.put("practice_mgmt", formDto.getMetadata().getPracticeMgmt());
+        queries.put("practice_id", formDto.getMetadata().getPracticeId());
+        queries.put("patient_id", formDto.getMetadata().getPatientId());
+
+        Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
+        header.put("username_patient", formDto.getMetadata().getUsername());
+
+        Gson gson = new Gson();
+        String body = gson.toJson(jsonFormSaveResponseArray);
+        TransitionDTO transitionDTO = consentFormDto.getMetadata().getLinks().getUpdateForms();
+        getWorkflowServiceHelper().execute(transitionDTO, updateFormCallBack, body, queries, header);
     }
+
+    WorkflowServiceCallback updateFormCallBack = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            callback.showAllDone(workflowDTO);
+            nextButton.setEnabled(true);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            nextButton.setEnabled(true);
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 
     @Override
     protected void validateForm() {
