@@ -31,14 +31,15 @@ import java.util.Date;
 
 public class OneTimePaymentDialog extends PartialPaymentDialog {
 
-    private PaymentPlanDTO paymentPlanDTO;
-    private PaymentsModel paymentsDTO;
-    private Context context;
-    private OneTimePaymentInterface callback;
+    protected PaymentPlanDTO paymentPlanDTO;
+    protected PaymentsModel paymentsDTO;
+    protected Context context;
+    protected OneTimePaymentInterface callback;
 
-    private Date paymentDate;
-    private EditText schedulePaymentDateText;
-    private Button paymentButton;
+    protected Date paymentDate;
+    protected EditText schedulePaymentDateText;
+    protected Button paymentButton;
+    protected long minDate;
 
     /**
      * Contructor
@@ -63,11 +64,16 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
         super.onCreate(savedInstanceState);
         DateUtil.getInstance().setDate(new Date());
         paymentDate = DateUtil.getInstance().getDate();
+        minDate = System.currentTimeMillis();
+    }
+
+    @Override
+    protected int getContentLayout(){
+        return R.layout.dialog_one_time_payment;
     }
 
     @Override
     protected void initViews(){
-        setContentView(R.layout.dialog_one_time_payment);
         super.initViews();
         paymentButton = (Button) findViewById(R.id.payPartialButton);
         paymentButton.setText(Label.getLabel("payment_Pay_label"));
@@ -118,7 +124,7 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
         }
     }
 
-    private void createPaymentModel(double amount) {
+    protected void createPaymentModel(double amount) {
         IntegratedPaymentPostModel postModel = paymentsDTO.getPaymentPayload().getPaymentPostModel();
         if (postModel == null) {
             postModel = new IntegratedPaymentPostModel();
@@ -128,7 +134,7 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
         paymentsDTO.getPaymentPayload().setPaymentPostModel(postModel);
     }
 
-    private View.OnClickListener selectDateButtonListener = new View.OnClickListener() {
+    protected View.OnClickListener selectDateButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(final View view) {
             // Use the current date as the default date in the picker
@@ -169,7 +175,7 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
             dueCal.add(Calendar.MONTH, monthsRemaining);
 
             datePickerDialog.getDatePicker().setMaxDate(dueCal.getTimeInMillis());
-            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
+            datePickerDialog.getDatePicker().setMinDate(minDate);
             datePickerDialog.getDatePicker().setCalendarViewShown(false);
             datePickerDialog.show();
         }

@@ -34,11 +34,12 @@ import java.util.Date;
 
 public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialogFragment {
 
-    private PaymentPlanDTO paymentPlanDTO;
-    private OneTimePaymentInterface callback;
+    protected PaymentPlanDTO paymentPlanDTO;
+    protected OneTimePaymentInterface callback;
 
-    private Date paymentDate;
-    private EditText schedulePaymentDateText;
+    protected Date paymentDate;
+    protected EditText schedulePaymentDateText;
+    protected long minDate;
 
     /**
      * @param paymentResultModel the payment model
@@ -78,6 +79,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
         fullAmount = calculateFullAmount();
         DateUtil.getInstance().setDate(new Date());
         paymentDate = DateUtil.getInstance().getDate();
+        minDate = System.currentTimeMillis();
     }
 
     @Override
@@ -126,7 +128,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
         dismiss();
     }
 
-    private void createPaymentModel(double amount){
+    protected void createPaymentModel(double amount){
         IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
         if (postModel == null) {
             postModel = new IntegratedPaymentPostModel();
@@ -144,7 +146,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
     }
 
 
-    private View.OnClickListener selectDateButtonListener = new View.OnClickListener() {
+    protected View.OnClickListener selectDateButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(final View view) {
             // Use the current date as the default date in the picker
@@ -186,7 +188,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
             dueCal.add(Calendar.MONTH, monthsRemaining);
 
             datePickerDialog.getDatePicker().setMaxDate(dueCal.getTimeInMillis());
-            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
+            datePickerDialog.getDatePicker().setMinDate(minDate);
             datePickerDialog.getDatePicker().setCalendarViewShown(false);
             datePickerDialog.show();
             hideDialog();

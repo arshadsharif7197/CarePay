@@ -140,7 +140,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
             }
         });
 
-        ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload().
+        final ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload().
                 findScheduledPayment(paymentPlanDTO);
         if(scheduledPayment != null){
             View scheduledPaymentLayout = view.findViewById(R.id.scheduledPaymentLayout);
@@ -150,6 +150,13 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
                     StringUtil.getFormattedBalanceAmount(scheduledPayment.getPayload().getAmount()),
                     DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal());
             scheduledPaymentMessage.setText(message);
+            scheduledPaymentLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callback.onStartEditScheduledPayment(paymentsModel, paymentPlanDTO, scheduledPayment);
+                    dismiss();
+                }
+            });
         }
     }
 
