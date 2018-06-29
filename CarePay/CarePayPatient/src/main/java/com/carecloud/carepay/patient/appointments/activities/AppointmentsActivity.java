@@ -141,11 +141,11 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
     @Override
     public void refreshAppointments() {
-        AppointmentsListFragment fragment = (AppointmentsListFragment)
-                getSupportFragmentManager().findFragmentById(R.id.container_main);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_main);
 
-        if (fragment != null) {
-            fragment.refreshAppointmentList();
+        if (fragment != null && fragment instanceof AppointmentsListFragment) {
+            AppointmentsListFragment appointmentsListFragment = (AppointmentsListFragment) fragment;
+            appointmentsListFragment.refreshAppointmentList();
         }
 
     }
