@@ -15,6 +15,7 @@ import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentHistoryDetailDialogFragment;
+import com.carecloud.carepay.patient.payment.dialogs.PaymentPlanHistoryDetailDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.NoPaymentsFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment;
@@ -50,6 +51,7 @@ import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -390,6 +392,29 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public void onRequestRefresh(int requestedPage) {
         displayPage = requestedPage;
         refreshBalance(false);
+    }
+
+    @Override
+    public void displayPaymentPlanHistoryDetails(final PaymentHistoryItem historyItem, PaymentPlanPayloadDTO paymentPlanPayloadDTO) {
+        String taskId = paymentPlanPayloadDTO.getMetadata().getTaskId();
+        PaymentPlanDTO selectedPaymentPlan = null;
+        for(PaymentPlanDTO paymentPlanDTO : paymentsDTO.getPaymentPayload().getPatientPaymentPlans()){
+            if(taskId.equals(paymentPlanDTO.getPayload().getMetadata().getTaskId())){
+                selectedPaymentPlan =paymentPlanDTO;
+                break;
+            }
+        }
+
+        selectedUserPractice = getUserPracticeById(historyItem.getMetadata().getPracticeId());
+        PaymentPlanHistoryDetailDialogFragment planHistoryFragment = PaymentPlanHistoryDetailDialogFragment.newInstance(selectedPaymentPlan, selectedUserPractice);
+        planHistoryFragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                PaymentHistoryDetailDialogFragment historyFragment = PaymentHistoryDetailDialogFragment.newInstance(historyItem, selectedUserPractice);
+                displayDialogFragment(historyFragment, false);
+            }
+        });
+        displayDialogFragment(planHistoryFragment, false);
     }
 
     @Override
