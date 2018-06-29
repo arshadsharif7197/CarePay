@@ -81,3 +81,6 @@
 -keep class com.carecloud.carepay.service.library.dtos.** { *; }
 -keep class com.carecloud.carepay.practice.library.payments.models.** { *; }
 -keep class com.carecloud.carepay.practice.clover.models.** { *; }
+
+#Clover SDK
+-keep class com.clover.sdk.** { *; }

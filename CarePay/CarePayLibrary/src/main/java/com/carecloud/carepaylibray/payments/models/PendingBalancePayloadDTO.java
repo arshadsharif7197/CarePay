@@ -24,6 +24,9 @@ public class PendingBalancePayloadDTO {
     @SerializedName("unapplied_credit")
     @Expose
     private double unappliedCredit;
+    @SerializedName("payment_plans")
+    @Expose
+    private double paymentPlansAmount;
     @SerializedName("details")
     @Expose
     private List<BalanceItemDTO> details = new ArrayList<>();
@@ -60,4 +63,11 @@ public class PendingBalancePayloadDTO {
         this.unappliedCredit = unappliedCredit;
     }
 
+    public double getPaymentPlansAmount() {
+        return paymentPlansAmount;
+    }
+
+    public void setPaymentPlansAmount(double paymentPlansAmount) {
+        this.paymentPlansAmount = paymentPlansAmount;
+    }
 }

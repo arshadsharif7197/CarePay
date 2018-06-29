@@ -43,7 +43,7 @@
         <RelativeLayout
             android:id="@+id/header"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_210dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/practice_mode_dialog_header_bg"
             android:focusable="true"
             android:focusableInTouchMode="true"
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="@dimen/dimen_15dp"
+                android:layout_margin="@dimen/dimen_10dp"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_18sp"
                 app:customAssetFont="gotham_rounded_book"
@@ -67,8 +67,8 @@
             <com.carecloud.carepaylibray.customcomponents.AutoResizeTextView
                 android:id="@+id/headerPlanTotal"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_centerInParent="true"
+                android:layout_height="100dp"
+                android:layout_below="@id/headerMessage"
                 android:gravity="center"
                 android:paddingEnd="@dimen/dimen_5dp"
                 android:paddingStart="@dimen/dimen_5dp"
@@ -78,10 +78,23 @@
                 tools:text="$1,840.09" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/paymentPlanParametersTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/headerPlanTotal"
+                android:gravity="center"
+                android:padding="@dimen/dimen_10dp"
+                android:textColor="@color/light_gray"
+                android:textSize="@dimen/text_size_13"
+                android:visibility="visible"
+                app:customAssetFont="proxima_nova_regular"
+                tools:text="This balance must be paid over a maximum of 6 months and requires a downpayment of $20." />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/payment_plan_add_existing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
+                android:layout_below="@id/paymentPlanParametersTextView"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="@dimen/dimen_10dp"
                 android:background="@drawable/round_border_button_bg"
@@ -108,7 +121,7 @@
                 android:orientation="vertical"
                 android:padding="@dimen/payment_method_parent_layout_padding">
 
-                <RelativeLayout
+                <FrameLayout
                     android:id="@+id/paymentMethodContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -116,40 +129,58 @@
                     android:layout_marginTop="@dimen/dimen_15dp"
                     android:visibility="gone">
 
-                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginBottom="@dimen/dimen_15dp"
-                        android:layout_marginTop="@dimen/dimen_15dp"
-                        android:textColor="@color/charcoal"
-                        android:textSize="@dimen/text_size_21sp"
-                        app:customAssetFont="gotham_rounded_medium"
-                        breeze:hintKey="payment_method_title"
-                        tools:text="Payment Method" />
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                        android:id="@+id/paymentMethodInputLayout"
+                        style="@style/SigninSignupTextInputStyle"
+                        android:tag="@string/tag_demographics_error_scroll"
+                        app:customAssetFont="proxima_nova_semi_bold"
+                        app:hintTextAppearance="@style/FloatingLabelStyle">
 
-                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                        android:id="@+id/creditCardNumberTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginBottom="@dimen/dimen_15dp"
-                        android:layout_marginEnd="@dimen/dimen_12dp"
-                        android:layout_marginTop="@dimen/dimen_15dp"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/text_size_21sp"
-                        app:customAssetFont="gotham_rounded_medium"
-                        tools:text="MASTERCARD ***2345" />
+                        <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                            android:id="@+id/creditCardNumberTextView"
+                            style="@style/DemographicsReviewEditTextStyle"
+                            android:cursorVisible="false"
+                            android:editable="false"
+                            android:focusableInTouchMode="false"
+                            android:imeOptions="actionNext"
+                            android:maxLength="250"
+                            android:textColor="@color/colorPrimary"
+                            app:customAssetFont="proxima_nova_regular"
+                            app:hintTextAppearance="@style/FloatingLabelStyle"
+                            breeze:hintKey="payment_method_title"
+                            tools:hint="Payment Method"
+                            tools:text="MASTERCARD ***2345" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/divider_color" />
+                    </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
-                </RelativeLayout>
+                    <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentStart="true"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_marginBottom="@dimen/dimen_15dp"-->
+                    <!--android:layout_marginTop="@dimen/dimen_15dp"-->
+                    <!--android:textColor="@color/charcoal"-->
+                    <!--android:textSize="@dimen/text_size_20sp"-->
+                    <!--app:customAssetFont="gotham_rounded_medium"-->
+                    <!--breeze:hintKey="payment_method_title"-->
+                    <!--tools:text="Payment Method" />-->
+
+                    <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
+                    <!--android:id="@+id/creditCardNumberTextView"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentEnd="true"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_marginBottom="@dimen/dimen_15dp"-->
+                    <!--android:layout_marginEnd="@dimen/dimen_12dp"-->
+                    <!--android:layout_marginTop="@dimen/dimen_15dp"-->
+                    <!--android:textColor="@color/colorPrimary"-->
+                    <!--android:textSize="@dimen/text_size_20sp"-->
+                    <!--app:customAssetFont="gotham_rounded_medium"-->
+                    <!--tools:text="MASTERCARD ***2345" />-->
+
+                </FrameLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -246,6 +277,7 @@
                                     style="@style/DemographicsReviewEditTextStyle"
                                     android:imeOptions="actionNext"
                                     android:inputType="number"
+                                    android:textColor="@color/primary_color_enabled_selector"
                                     app:customAssetFont="proxima_nova_regular"
                                     app:hintTextAppearance="@style/FloatingLabelStyle"
                                     breeze:hintKey="payment_number_of_months"
@@ -278,6 +310,7 @@
                                 style="@style/DemographicsReviewEditTextStyle"
                                 android:imeOptions="actionNext"
                                 android:inputType="numberDecimal"
+                                android:textColor="@color/primary_color_enabled_selector"
                                 app:customAssetFont="proxima_nova_regular"
                                 app:hintTextAppearance="@style/FloatingLabelStyle"
                                 breeze:hintKey="payment_monthly_payment"
@@ -413,7 +446,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimen_10dp"
-                android:background="@drawable/green_rounded_button_selector"
+                android:background="@drawable/green_rounded_button_selector_always_click"
                 android:gravity="center"
                 android:textAllCaps="true"
                 android:textColor="@color/white"

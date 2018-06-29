@@ -66,6 +66,11 @@ public class BalanceItemDTO {
     @Expose(serialize = false)
     private double maxAmount;
 
+    private transient double amountInPaymentPlan = 0.0;
+    private transient double amountSelected = 0.0;
+    private transient boolean isInMoreThanOnePaymentPlan;
+    private transient boolean selected;
+
     public Long getId() {
         return id;
     }
@@ -210,5 +215,37 @@ public class BalanceItemDTO {
 
     public void setMaxAmount(double maxAmount) {
         this.maxAmount = maxAmount;
+    }
+
+    public double getAmountInPaymentPlan() {
+        return amountInPaymentPlan;
+    }
+
+    public void setAmountInPaymentPlan(double amountInPaymentPlan) {
+        this.amountInPaymentPlan = amountInPaymentPlan;
+    }
+
+    public boolean isInMoreThanOnePaymentPlan() {
+        return isInMoreThanOnePaymentPlan;
+    }
+
+    public void setInMoreThanOnePaymentPlan(boolean inMoreThanOnePaymentPlan) {
+        isInMoreThanOnePaymentPlan = inMoreThanOnePaymentPlan;
+    }
+
+    public double getAmountSelected() {
+        return amountSelected;
+    }
+
+    public void setAmountSelected(double amountSelected) {
+        this.amountSelected = amountSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public boolean isSelected() {
+        return selected;
     }
 }

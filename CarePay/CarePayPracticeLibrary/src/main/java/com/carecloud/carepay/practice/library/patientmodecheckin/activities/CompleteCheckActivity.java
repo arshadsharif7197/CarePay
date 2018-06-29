@@ -44,12 +44,12 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
         Gson gson = new Gson();
         Bundle extra = getIntent().getBundleExtra(CarePayConstants.EXTRA_BUNDLE);
         boolean hasPayment = extra.getBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, false);
-        boolean isAdHocForms = extra.getBoolean(CarePayConstants.ADHOC_FORMS, false);
+        boolean isCash = extra.getBoolean(CarePayConstants.EXTRA_PAYMENT_CASH, false);
         boolean isCheckOut = extra.getBoolean("isCheckOut", false);
         if (getWorkflowDto() != null) {
             String workflowString = getWorkflowDto().toString();
             AppointmentDTO appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, extra);
-            if (hasPayment) {
+            if (hasPayment || isCash) {
                 if (isCheckOut) {
                     appointmentDTO.getPayload().getAppointmentStatus().setName("Checked-Out");
                 } else if (appointmentDTO.getPayload().getAppointmentStatus().getName().toLowerCase()
@@ -66,13 +66,12 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
                         appointmentTransitionsWorkflow);
             }
 
-            replaceFragment(CheckInCompletedDialogFragment.newInstance(appointmentDTO,
-                    hasPayment, isAdHocForms), false);
+            replaceFragment(CheckInCompletedDialogFragment.newInstance(appointmentDTO, extra), false);
         }
     }
 
-    private WorkflowDTO getWorkflowDto(){
-        if(workflowDTO == null) {
+    private WorkflowDTO getWorkflowDto() {
+        if (workflowDTO == null) {
             Bundle extra = getIntent().getBundleExtra(CarePayConstants.EXTRA_BUNDLE);
             if (extra != null) {
                 long id = extra.getLong(CarePayConstants.EXTRA_WORKFLOW);
@@ -83,7 +82,7 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         //kill this action on this activity as it leads to instability in the app
     }
 
@@ -120,8 +119,25 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
             appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, getWorkflowDto());
         }
         ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this,
-                appointmentsResultModel.getMetadata().getLinks().getPinpad(), false);
+                appointmentsResultModel.getMetadata().getLinks().getPinpad(), false,
+                appointmentsResultModel.getMetadata().getLinks().getLanguage());
         confirmationPinDialog.show();
+    }
+
+    @Override
+    public void goToShop() {
+        TransitionDTO shopTransition;
+        if (dto instanceof PaymentsModel) {
+            shopTransition = appointmentsResultModel.getMetadata().getLinks().getShop();
+        } else {
+            shopTransition = ((AppointmentsResultModel) dto).getMetadata().getLinks().getShop();
+        }
+
+        Map<String, String> query = new HashMap<>();
+        query.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+        query.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
+
+        getWorkflowServiceHelper().execute(shopTransition, patientHomeCallback, query);
     }
 
     @Override
@@ -149,7 +165,7 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             showErrorNotification(exceptionMessage);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 

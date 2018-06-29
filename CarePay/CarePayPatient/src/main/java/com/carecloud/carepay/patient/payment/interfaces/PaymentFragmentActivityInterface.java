@@ -20,4 +20,6 @@ public interface PaymentFragmentActivityInterface extends FragmentActivityInterf
     void displayToolbar(boolean visible, String title);
 
     void displayPaymentHistoryDetails(PaymentHistoryItem paymentHistoryItem);
+
+    void onRequestRefresh(int requestedPage);
 }

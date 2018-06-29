@@ -28,6 +28,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentMe
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -39,9 +40,19 @@ import java.util.Map;
 /**
  * Created by lmenendez on 3/1/17
  */
-public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implements BaseAddCreditCardFragment.IAuthoriseCreditCardResponse {
+public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
+        implements BaseAddCreditCardFragment.IAuthoriseCreditCardResponse {
 
     private UserPracticeDTO userPracticeDTO;
+
+    public static AddNewCreditCardFragment newInstance(PaymentsModel paymentsDTO, double amount) {
+        Bundle args = new Bundle();
+        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+        DtoHelper.bundleDto(args, paymentsDTO);
+        AddNewCreditCardFragment addNewCreditCardFragment = new AddNewCreditCardFragment();
+        addNewCreditCardFragment.setArguments(args);
+        return addNewCreditCardFragment;
+    }
 
     @Override
     protected void attachCallback(Context context) {
@@ -71,9 +82,8 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         if (arguments != null) {
-            Gson gson = new Gson();
-            String paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
-            paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
+//            String paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
+            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
             if (paymentsModel != null) {
                 if (!paymentsModel.getPaymentPayload().getPatientBalances().isEmpty()) {
                     addressPayloadDTO = paymentsModel.getPaymentPayload().getPatientBalances().get(0)
@@ -95,7 +105,6 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         title.setText(Label.getLabel("payment_new_credit_card"));
         nextButton.setText(Label.getLabel("add_credit_card_save_button_label"));
     }
-
 
     private WorkflowServiceCallback addNewCreditCardCallback = new WorkflowServiceCallback() {
         @Override
@@ -133,7 +142,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             hideProgressDialog();
             nextButton.setEnabled(true);
             Log.d("makePaymentCallback", "=========================>\nworkflowDTO=" + workflowDTO.toString());
-            callback.showPaymentConfirmation(workflowDTO);
+
             if (getDialog() != null) {
                 dismiss();
             }
@@ -143,6 +152,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             MixPanelUtil.logEvent(getString(R.string.event_payment_complete), params, values);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payments_completed), 1);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.total_payments_amount), amountToMakePayment);
+            callback.showPaymentConfirmation(workflowDTO);
         }
 
         @Override
@@ -150,7 +160,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             hideProgressDialog();
             nextButton.setEnabled(true);
             SystemUtil.showErrorToast(getContext(), exceptionMessage);
-            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+            Log.e("Server Error", exceptionMessage);
 
             String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
             Object[] values = {amountToMakePayment, getString(R.string.payment_new_card)};
@@ -237,7 +247,8 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             queries.put("patient_id", metadata.getPatientId());
         }
 
-        if(!StringUtil.isNullOrEmpty(paymentsModel.getPaymentPayload().getPaymentPostModel().getOrderId())){
+        if (paymentsModel.getPaymentPayload().getPaymentPostModel() != null &&
+                !StringUtil.isNullOrEmpty(paymentsModel.getPaymentPayload().getPaymentPostModel().getOrderId())) {
             IntegratedPaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
             queries.put("store_id", paymentPostModel.getStoreId());
             queries.put("transaction_id", paymentPostModel.getOrderId());
@@ -247,13 +258,13 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             queries.put("appointment_id", callback.getAppointmentId());
         }
 
-        if(queries.get("patient_id") == null) {
+        if (queries.get("patient_id") == null) {
             queries.remove("patient_id");
             if (callback.getAppointment() != null) {
                 queries.put("patient_id", callback.getAppointment().getMetadata().getPatientId());
-            }else{
-                for(PatientBalanceDTO patientBalanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()){
-                    if(patientBalanceDTO.getBalances().get(0).getMetadata().getPracticeId().equals(queries.get("practice_id"))){
+            } else {
+                for (PatientBalanceDTO patientBalanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()) {
+                    if (patientBalanceDTO.getBalances().get(0).getMetadata().getPracticeId().equals(queries.get("practice_id"))) {
                         queries.put("patient_id", patientBalanceDTO.getBalances().get(0).getMetadata().getPatientId());
                     }
                 }

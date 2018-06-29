@@ -1,5 +1,6 @@
 package com.carecloud.carepay.mini.models.queue;
 
+import com.google.gson.JsonElement;
 import com.orm.SugarRecord;
 
 /**
@@ -11,6 +12,8 @@ public class QueuePaymentRecord extends SugarRecord {
     private String paymentRequestId;
 
     private boolean isRefund = false;
+
+    private JsonElement requestObject;
 
     public QueuePaymentRecord(){}
 
@@ -28,5 +31,13 @@ public class QueuePaymentRecord extends SugarRecord {
 
     public void setRefund(boolean refund) {
         isRefund = refund;
+    }
+
+    public JsonElement getRequestObject() {
+        return requestObject;
+    }
+
+    public void setRequestObject(JsonElement requestObject) {
+        this.requestObject = requestObject;
     }
 }

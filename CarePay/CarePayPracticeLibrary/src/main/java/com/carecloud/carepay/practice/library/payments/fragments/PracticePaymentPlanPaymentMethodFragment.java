@@ -8,15 +8,18 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
+import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,17 +27,21 @@ import java.util.List;
  */
 
 public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMethodDialogFragment {
+    private static final String KEY_DATE = "date";
 
-    private PaymentPlanInterface callback;
+    private PaymentPlanCreateInterface callback;
     private PaymentPlanPostModel paymentPlanPostModel;
     private PaymentPlanDTO paymentPlanDTO;
 
+    private Date paymentDate;
+
     /**
-     * @param paymentsModel the payments DTO
+     * @param paymentsModel        the payments DTO
      * @param paymentPlanPostModel post model for payment plan to execute
      * @return an instance of PatientPaymentMethodFragment
      */
-    public static PracticePaymentPlanPaymentMethodFragment newInstance(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
+    public static PracticePaymentPlanPaymentMethodFragment newInstance(PaymentsModel paymentsModel,
+                                                                       PaymentPlanPostModel paymentPlanPostModel) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanPostModel);
@@ -45,14 +52,44 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
     }
 
     /**
-     * @param paymentsModel the payments DTO
+     * @param paymentsModel  the payments DTO
      * @param paymentPlanDTO existing payment plan to make payment for
+     * @param onlySelectMode select mode
      * @return an instance of PracticePaymentPlanPaymentMethodFragment
      */
-    public static PracticePaymentPlanPaymentMethodFragment newInstance(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+    public static PracticePaymentPlanPaymentMethodFragment newInstance(PaymentsModel paymentsModel,
+                                                                       PaymentPlanDTO paymentPlanDTO,
+                                                                       boolean onlySelectMode) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanDTO);
+        args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
+
+        PracticePaymentPlanPaymentMethodFragment fragment = new PracticePaymentPlanPaymentMethodFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    /**
+     * @param paymentsModel  the payments DTO
+     * @param paymentPlanDTO existing payment plan to make payment for
+     * @param onlySelectMode select mode
+     * @param paymentDate    payment date
+     * @return an instance of PracticePaymentPlanPaymentMethodFragment
+     */
+    public static PracticePaymentPlanPaymentMethodFragment newInstance(PaymentsModel paymentsModel,
+                                                                       PaymentPlanDTO paymentPlanDTO,
+                                                                       boolean onlySelectMode,
+                                                                       Date paymentDate) {
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, paymentsModel);
+        DtoHelper.bundleDto(args, paymentPlanDTO);
+        args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
+
+        if(paymentDate != null) {
+            DateUtil.getInstance().setDate(paymentDate);
+            args.putString(KEY_DATE, DateUtil.getInstance().toStringWithFormatYyyyDashMmDashDd());
+        }
 
         PracticePaymentPlanPaymentMethodFragment fragment = new PracticePaymentPlanPaymentMethodFragment();
         fragment.setArguments(args);
@@ -64,11 +101,11 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
         super.attachCallback(context);
         try {
             if (context instanceof PaymentViewHandler) {
-                callback = (PaymentPlanInterface) ((PaymentViewHandler) context).getPaymentPresenter();
-            }else if (context instanceof AppointmentViewHandler){
-                callback = (PaymentPlanInterface) ((AppointmentViewHandler) context).getAppointmentPresenter();
+                callback = (PaymentPlanCreateInterface) ((PaymentViewHandler) context).getPaymentPresenter();
+            } else if (context instanceof AppointmentViewHandler) {
+                callback = (PaymentPlanCreateInterface) ((AppointmentViewHandler) context).getAppointmentPresenter();
             } else {
-                callback = (PaymentPlanInterface) context;
+                callback = (PaymentPlanCreateInterface) context;
             }
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached Context must implement PaymentMethodInterface");
@@ -77,19 +114,36 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
 
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
         paymentPlanPostModel = DtoHelper.getConvertedDTO(PaymentPlanPostModel.class, args);
         paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
+
+        String dateString = args.getString(KEY_DATE);
+        if(dateString != null){
+            DateUtil.getInstance().setDateRaw(dateString);
+            paymentDate = DateUtil.getInstance().getDate();
+        }
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         //hide swipe card because these cards are not reusable
         View swipeCreditCardNowLayout = view.findViewById(R.id.swipeCreditCardNowLayout);
         swipeCreditCardNowLayout.setVisibility(View.GONE);
+
+        View closeButton = view.findViewById(R.id.closeViewLayout);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cancel();
+                if (!onlySelectMode) {
+                    dialogCallback.onDismissPaymentMethodDialog(paymentsModel);
+                }
+            }
+        });
     }
 
     @Override
@@ -99,11 +153,11 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
                 super.handlePaymentButton(paymentMethod, amount);
                 break;
             case CarePayConstants.TYPE_CREDIT_CARD:
-                if(paymentPlanPostModel != null) {
-                    callback.onSelectPaymentPlanMethod(paymentMethod, paymentsModel, paymentPlanPostModel);
+                if (paymentPlanPostModel != null) {
+                    callback.onSelectPaymentPlanMethod(paymentMethod, paymentsModel, paymentPlanPostModel, onlySelectMode);
                 }
-                if(paymentPlanDTO != null){
-                    callback.onSelectPaymentPlanMethod(paymentMethod, paymentsModel, paymentPlanDTO);
+                if (paymentPlanDTO != null) {
+                    ((OneTimePaymentInterface) callback).onSelectPaymentPlanMethod(paymentMethod, paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
                 }
                 logPaymentMethodSelection(getString(R.string.payment_credit_card));
                 dismiss();
@@ -115,9 +169,9 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
     @Override
     protected List<PaymentsMethodsDTO> getPaymentMethodList() {
         UserPracticeDTO userPracticeDTO = callback.getPracticeInfo(paymentsModel);
-        for(PaymentsPayloadSettingsDTO paymentSetting : paymentsModel.getPaymentPayload().getPaymentSettings()){
-            if(paymentSetting.getMetadata().getPracticeId().equals(userPracticeDTO.getPracticeId()) &&
-                    paymentSetting.getMetadata().getPracticeMgmt().equals(userPracticeDTO.getPracticeMgmt())){
+        for (PaymentsPayloadSettingsDTO paymentSetting : paymentsModel.getPaymentPayload().getPaymentSettings()) {
+            if (paymentSetting.getMetadata().getPracticeId().equals(userPracticeDTO.getPracticeId()) &&
+                    paymentSetting.getMetadata().getPracticeMgmt().equals(userPracticeDTO.getPracticeMgmt())) {
                 return paymentSetting.getPayload().getPaymentPlans().getPaymentMethods();
             }
         }

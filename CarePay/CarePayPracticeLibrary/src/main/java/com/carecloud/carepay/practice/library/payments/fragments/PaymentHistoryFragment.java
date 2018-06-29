@@ -129,7 +129,8 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
         });
 
         String plansLabel = Label.getLabel("payment_plan_heading");
-        final int plans = paymentsModel.getPaymentPayload().getPatientPaymentPlans().size();
+        final String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
+        final int plans = paymentsModel.getPaymentPayload().getActivePlans(practiceId).size();
         if(plans > 1){
             plansLabel = String.format(Label.getLabel("payment_plan_count"), plans);
         }
@@ -143,7 +144,7 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
                     callback.displayPaymentPlansList(paymentsModel);
                 }else{
                     callback.onPaymentPlanSelected(paymentsModel,
-                            paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0));
+                            paymentsModel.getPaymentPayload().getActivePlans(practiceId).get(0));
                 }
                 dismiss();
             }

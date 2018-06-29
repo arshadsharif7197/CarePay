@@ -181,7 +181,7 @@
     <dimen name="list_apt_padding_right">17dp</dimen>
     <dimen name="apt_imgview_ht">24dp</dimen>
     <dimen name="apt_dl_margin_bottom">5dp</dimen>
-    <dimen name="apt_dl_header_ht">110dp</dimen>
+    <dimen name="apt_dl_header_ht">140dp</dimen>
     <dimen name="apt_dl_text_ht">37dp</dimen>
     <dimen name="apt_dl_text_big">20sp</dimen>
     <dimen name="apt_dl_text_date">26sp</dimen>
@@ -453,7 +453,7 @@
     <dimen name="checkin_complete_divider_width">350dp</dimen>
     <dimen name="completeCheckInItemTextSize">22sp</dimen>
     <dimen name="completeCheckInItemValueTextSize">16sp</dimen>
-    <dimen name="completeCheckInItemMargin">10dp</dimen>
+    <dimen name="completeCheckInItemMargin">14dp</dimen>
     <dimen name="dimen_50dp">50dp</dimen>
     <dimen name="confirmationNumberTextSize">11sp</dimen>
     <dimen name="icon_check_size">130dp</dimen>

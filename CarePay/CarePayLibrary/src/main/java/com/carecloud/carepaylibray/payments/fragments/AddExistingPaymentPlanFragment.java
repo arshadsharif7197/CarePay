@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 
 import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,11 +37,12 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
 
     private PaymentPlanDTO existingPlan;
 
-    public static AddExistingPaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO existingPlan){
+    public static AddExistingPaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO existingPlan, double amount) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
         DtoHelper.bundleDto(args, existingPlan);
+        args.putDouble(KEY_PLAN_AMOUNT, amount);
 
         AddExistingPaymentPlanFragment fragment = new AddExistingPaymentPlanFragment();
         fragment.setArguments(args);
@@ -49,7 +51,7 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
 
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         Bundle args = getArguments();
         existingPlan = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
         super.onCreate(icicle);
@@ -57,48 +59,41 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
 
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         View addToExisting = view.findViewById(R.id.payment_plan_add_existing);
         addToExisting.setVisibility(View.GONE);
-        if(numberPayments.getOnFocusChangeListener() != null){
-            numberPayments.getOnFocusChangeListener().onFocusChange(numberPayments, true);
+        if (numberPaymentsEditText.getOnFocusChangeListener() != null) {
+            numberPaymentsEditText.getOnFocusChangeListener().onFocusChange(numberPaymentsEditText, true);
         }
-        numberPayments.setText(String.valueOf(getRemainingPayments()));
-        planName.setText(existingPlan.getPayload().getDescription());
+        numberPaymentsEditText.setText(String.valueOf(getRemainingPayments()));
+        planNameEditText.setText(existingPlan.getPayload().getDescription());
 
         createPlanButton.setText(Label.getLabel("demographics_save_changes_button"));
     }
 
 
     @Override
-    protected double calculateTotalAmount(PendingBalanceDTO selectedBalance){
+    protected double calculateTotalAmount(double amount) {
         double totalAmount = SystemUtil.safeSubtract(existingPlan.getPayload().getAmount(),
                 existingPlan.getPayload().getAmountPaid());
-        if(selectedBalance != null) {
-            for (PendingBalancePayloadDTO balancePayloadDTO : selectedBalance.getPayload()) {
-                if(StringUtil.isNullOrEmpty(balancePayloadDTO.getType()) || balancePayloadDTO.getType().equals(PATIENT_BALANCE)) {//prevent responsibility types from being added
-                    totalAmount += balancePayloadDTO.getAmount();
-                }
-            }
-        }
-        return totalAmount;
+        return SystemUtil.safeAdd(totalAmount, amount);
     }
 
-    private int getRemainingPayments(){
-        return existingPlan.getPayload().getPaymentPlanDetails().getInstallments()-
+    private int getRemainingPayments() {
+        return existingPlan.getPayload().getPaymentPlanDetails().getInstallments() -
                 existingPlan.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
     }
 
 
     @Override
-    protected void createPaymentPlan() {
+    protected void createPaymentPlanPostModel(boolean userInteraction) {
         if (validateFields(false)) {
             PaymentPlanPostModel postModel = new PaymentPlanPostModel();
             postModel.setMetadata(selectedBalance.getMetadata());
             postModel.setAmount(SystemUtil.safeAdd(existingPlan.getPayload().getAmount(),
                     getAdditionalAmount()));
-            postModel.setDescription(planName.getText().toString());
+            postModel.setDescription(planNameEditText.getText().toString());
             postModel.setLineItems(getPaymentPlanLineItems());
 
             PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
@@ -113,7 +108,7 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
 
             try {
                 paymentPlanModel.setDayOfMonth(Integer.parseInt(paymentDateOption.getName()));
-            }catch (NumberFormatException nfe){
+            } catch (NumberFormatException nfe) {
                 nfe.printStackTrace();
             }
 
@@ -123,19 +118,20 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
         }
     }
 
-    private double getAdditionalAmount(){
+    private double getAdditionalAmount() {
         double remainingBalance = SystemUtil.safeSubtract(existingPlan.getPayload().getAmount(),
                 existingPlan.getPayload().getAmountPaid());
         return SystemUtil.safeSubtract(paymentPlanAmount, remainingBalance);
     }
 
-    protected List<PaymentPlanLineItem> getPaymentPlanLineItems(){
+    protected List<PaymentPlanLineItem> getPaymentPlanLineItems() {
         double amountHolder = getAdditionalAmount();
-        List<PaymentPlanLineItem> lineItems = existingPlan.getPayload().getLineItems();
-        for(PendingBalancePayloadDTO pendingBalance : selectedBalance.getPayload()){
-            if(StringUtil.isNullOrEmpty(pendingBalance.getType()) || pendingBalance.getType().equals(PATIENT_BALANCE)){//ignore responsibility types
-                for(BalanceItemDTO balanceItem : pendingBalance.getDetails()){
-                    if(amountHolder <= 0){
+        List<PaymentPlanLineItem> lineItems = new ArrayList<>();
+        lineItems.addAll(existingPlan.getPayload().getLineItems());
+        for (PendingBalancePayloadDTO pendingBalance : selectedBalance.getPayload()) {
+            if (StringUtil.isNullOrEmpty(pendingBalance.getType()) || pendingBalance.getType().equals(PATIENT_BALANCE)) {//ignore responsibility types
+                for (BalanceItemDTO balanceItem : pendingBalance.getDetails()) {
+                    if (amountHolder <= 0) {
                         break;
                     }
 
@@ -144,9 +140,9 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
                     lineItem.setType(IntegratedPaymentLineItem.TYPE_APPLICATION);
                     lineItem.setTypeId(balanceItem.getId().toString());
 
-                    if(amountHolder >= balanceItem.getAmount()){
-                        lineItem.setAmount(balanceItem.getAmount());
-                        amountHolder -= balanceItem.getAmount();
+                    if(amountHolder >= balanceItem.getBalance()){
+                        lineItem.setAmount(balanceItem.getBalance());
+                        amountHolder -= balanceItem.getBalance();
                     }else{
                         lineItem.setAmount(amountHolder);
                         amountHolder = 0;
@@ -159,7 +155,7 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
         return lineItems;
     }
 
-    private void submitPaymentPlanUpdate(PaymentPlanPostModel paymentPlanPostModel){
+    private void submitPaymentPlanUpdate(PaymentPlanPostModel paymentPlanPostModel) {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("practice_mgmt", paymentPlanPostModel.getMetadata().getPracticeMgmt());
         queryMap.put("practice_id", paymentPlanPostModel.getMetadata().getPracticeId());
@@ -192,8 +188,8 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
         }
     };
 
-    protected void onPlanEdited(WorkflowDTO workflowDTO){
-        callback.onPaymentPlanEdited(workflowDTO);
+    protected void onPlanEdited(WorkflowDTO workflowDTO) {
+        callback.onPaymentPlanAddedExisting(workflowDTO);
     }
 
 }

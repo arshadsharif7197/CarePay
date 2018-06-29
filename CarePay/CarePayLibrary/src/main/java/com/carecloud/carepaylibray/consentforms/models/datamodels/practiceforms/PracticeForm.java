@@ -7,13 +7,15 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class PracticeForm implements Serializable{
+public class PracticeForm implements Serializable {
 
     @SerializedName("payload")
     @Expose
     private JsonObject payload;
 
     private transient String lastModifiedDate;
+
+    private boolean selected;
 
     public JsonObject getPayload() {
         return payload;
@@ -29,5 +31,13 @@ public class PracticeForm implements Serializable{
 
     public void setLastModifiedDate(String lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

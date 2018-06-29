@@ -51,6 +51,9 @@ public class UserPracticeDTO {
     @SerializedName("clover")
     @Expose
     private boolean cloverEnabled = false;
+    @SerializedName("is_retail_enabled")
+    @Expose
+    private boolean isRetailEnabled = false;
     @SerializedName("locations")
     @Expose
     private List<AvailableLocationDTO> locations;
@@ -181,6 +184,14 @@ public class UserPracticeDTO {
 
     public void setCloverEnabled(boolean cloverEnabled) {
         this.cloverEnabled = cloverEnabled;
+    }
+
+    public boolean isRetailEnabled() {
+        return isRetailEnabled;
+    }
+
+    public void setRetailEnabled(boolean retailEnabled) {
+        isRetailEnabled = retailEnabled;
     }
 
     public List<AvailableLocationDTO> getLocations() {

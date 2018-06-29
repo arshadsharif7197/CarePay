@@ -33,11 +33,13 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
 
     /**
      * Get new instance of PaymentHistoryDetailDialogFragment
-     * @param historyItem history item
+     *
+     * @param historyItem     history item
      * @param userPracticeDTO user practice info
      * @return new PaymentHistoryDetailDialogFragment
      */
-    public static PaymentHistoryDetailDialogFragment newInstance(PaymentHistoryItem historyItem, UserPracticeDTO userPracticeDTO){
+    public static PaymentHistoryDetailDialogFragment newInstance(PaymentHistoryItem historyItem,
+                                                                 UserPracticeDTO userPracticeDTO) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, historyItem);
         DtoHelper.bundleDto(args, userPracticeDTO);
@@ -49,19 +51,28 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    protected void attachCallback(Context context) {
+        try {
+            callback = (PaymentFragmentActivityInterface) context;
+        } catch (ClassCastException cce) {
+            throw new ClassCastException("Attached context must implement PaymentFragmentActivityInterface");
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
         userPracticeDTO = DtoHelper.getConvertedDTO(UserPracticeDTO.class, args);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_payment_history_detail, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         View closeButton = view.findViewById(R.id.dialog_close_header);
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,53 +81,53 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
             }
         });
 
-        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(historyItem.getPayload().getDate()).shiftDateToGMT();
+        String paymentMethod = getPaymentMethod(historyItem.getPayload().getPapiPaymentMethod());
+        TextView transactionNumber = (TextView) view.findViewById(R.id.transaction_number);
+        if (historyItem.getPayload().getMetadata().getPaymentPlan() != null) {
+            paymentMethod = "Payment Plan";
+            TextView paymentPlanNameTextView = (TextView) view.findViewById(R.id.paymentPlanNameTextView);
+            paymentPlanNameTextView.setText(historyItem.getPayload().getMetadata()
+                    .getPaymentPlan().getDescription());
+            paymentPlanNameTextView.setVisibility(View.VISIBLE);
+        }
+        TextView transactionType = (TextView) view.findViewById(R.id.transaction_type);
+        transactionType.setText(paymentMethod);
 
+        TextView practiceName = (TextView) view.findViewById(R.id.practice_name);
+        practiceName.setText(userPracticeDTO.getPracticeName());
+
+        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(historyItem.getPayload().getDate())
+                .shiftDateToGMT();
         TextView transactionDate = (TextView) view.findViewById(R.id.transaction_date);
         transactionDate.setText(dateUtil.getDateAsMonthLiteralDayOrdinalYear());
 
-        TextView transactionType = (TextView) view.findViewById(R.id.transaction_type);
-        transactionType.setText(getPaymentMethod(historyItem.getPayload().getPapiPaymentMethod()));
-
-        TextView transactionNumber = (TextView) view.findViewById(R.id.transaction_number);
         transactionNumber.setText(historyItem.getPayload().getConfirmation());
 
         TextView transactionTotal = (TextView) view.findViewById(R.id.transaction_total);
         transactionTotal.setText(NumberFormat.getCurrencyInstance(Locale.US).format(totalPaid));
 
-        TextView practiceName = (TextView) view.findViewById(R.id.practice_name);
-        practiceName.setText(userPracticeDTO.getPracticeName());
-
         RecyclerView itemsRecycler = (RecyclerView) view.findViewById(R.id.items_recycler);
-        itemsRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        itemsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         initItemsRecycler(itemsRecycler);
 
         final NestedScrollView scrollView = (NestedScrollView) view.findViewById(R.id.scrollView);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                scrollView.scrollTo(0,0);
+                scrollView.scrollTo(0, 0);
             }
         }, 100);
 
         double refundedAmount = historyItem.getPayload().getTotalRefunded();
-        if(refundedAmount > 0D){
+        if (refundedAmount > 0D) {
             View refundLayout = view.findViewById(R.id.refund_layout);
             refundLayout.setVisibility(View.VISIBLE);
 
             TextView refundAmount = (TextView) view.findViewById(R.id.transaction_refunded);
-            refundAmount.setText(NumberFormat.getCurrencyInstance(Locale.US).format(historyItem.getPayload().getTotalRefunded()));
+            refundAmount.setText(NumberFormat.getCurrencyInstance(Locale.US)
+                    .format(historyItem.getPayload().getTotalRefunded()));
         }
 
-    }
-
-    @Override
-    protected void attachCallback(Context context) {
-        try{
-            callback = (PaymentFragmentActivityInterface) context;
-        }catch (ClassCastException cce){
-            throw new ClassCastException("Attached context must implement PaymentFragmentActivityInterface");
-        }
     }
 
     @Override

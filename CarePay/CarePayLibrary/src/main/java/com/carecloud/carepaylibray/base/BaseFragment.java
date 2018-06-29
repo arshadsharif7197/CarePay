@@ -18,6 +18,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
  */
 
 public abstract class BaseFragment extends Fragment implements ISession {
+    private static final int FULLSCREEN_VALUE = 0x10000000;
     private boolean isPracticeAppPatientMode;
 
     @Override
@@ -184,5 +185,18 @@ public abstract class BaseFragment extends Fragment implements ISession {
             actionBar.show();
         }
     }
+
+    @Override
+    public void setNavigationBarVisibility() {
+        if(getView() != null) {
+            View decorView = getView().getRootView();
+            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE
+                    | FULLSCREEN_VALUE;
+            decorView.setSystemUiVisibility(uiOptions);
+        }
+    }
+
 
 }

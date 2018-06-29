@@ -53,8 +53,8 @@ import java.util.Map;
 
 public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFragment implements FilterableAvailableHoursAdapter.SelectAppointmentTimeSlotCallback, AvailableLocationsAdapter.SelectLocationCallback {
 
-    private Date startDate;
-    private Date endDate;
+    protected Date startDate;
+    protected Date endDate;
     private AppointmentAvailabilityDTO availabilityDTO;
     private VisitTypeDTO selectedVisitTypeDTO;
     private AppointmentsResultModel appointmentsResultModel;
@@ -138,7 +138,7 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
         handler.post(new Runnable() {
             @Override
             public void run() {
-                if(isAdded()) {
+                if (isAdded()) {
                     getAvailableHoursTimeSlots();
                     if (progressView != null) {
                         progressView.setVisibility(View.GONE);
@@ -192,11 +192,11 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
         noApptMessage.setText(Label.getLabel("no_appointment_slots_message"));
 
         TextView prepaymentMessage = (TextView) view.findViewById(R.id.prepaymentMessage);
-        if(selectedVisitTypeDTO.getAmount() > 0) {
+        if (selectedVisitTypeDTO.getAmount() > 0) {
             String message = Label.getLabel("appointments_prepayment_message") + NumberFormat.getCurrencyInstance(Locale.US).format(selectedVisitTypeDTO.getAmount());
             prepaymentMessage.setText(message);
             prepaymentMessage.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             prepaymentMessage.setVisibility(View.GONE);
         }
     }
@@ -250,29 +250,12 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
         onAdapterRefresh(hoursAdapter.getItemCount());
     }
 
-    private void updateDateRange() {
-        if (startDate == null || endDate == null) {
-            startDate = Calendar.getInstance().getTime();//today
-            endDate = startDate;
-        }
-
-        if (titleView != null) {
-            String today = Label.getLabel("today_label");
-            String tomorrow = Label.getLabel("add_appointment_tomorrow");
-            String thisMonth = Label.getLabel("this_month_label");
-            String nextDay = Label.getLabel("next_days_label");
-
-            String formattedDate = DateUtil.getFormattedDate(startDate, endDate, today, tomorrow, thisMonth, nextDay);
-            titleView.setText(formattedDate);
-        }
-    }
-
-
     protected void selectDateRange() {
         callback.selectDateRange(startDate, endDate, selectedVisitTypeDTO, selectedResource, appointmentsResultModel);
     }
 
-    protected void onAdapterRefresh(int count){}
+    protected void onAdapterRefresh(int count) {
+    }
 
     private void resetLocationSelections(boolean clearAll) {
         RecyclerView.LayoutManager layoutManager = availableLocationsRecycleView.getLayoutManager();
@@ -409,21 +392,39 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
         return appointmentsSlots;
     }
 
-    private ResourcesToScheduleDTO getSelectedResourcesToSchedule(AppointmentResourcesItemDTO selectedResource){
+    private ResourcesToScheduleDTO getSelectedResourcesToSchedule(AppointmentResourcesItemDTO selectedResource) {
         List<ResourcesToScheduleDTO> resourcesToScheduleDTOList = appointmentsResultModel.getPayload().getResourcesToSchedule();
-        for(ResourcesToScheduleDTO resourcesToScheduleDTO : resourcesToScheduleDTOList){
-            for(AppointmentResourcesDTO appointmentResourcesDTO : resourcesToScheduleDTO.getResources()){
-                if(appointmentResourcesDTO.getResource().getBusinessEntityId().equals(selectedResource.getBusinessEntityId())){
+        for (ResourcesToScheduleDTO resourcesToScheduleDTO : resourcesToScheduleDTOList) {
+            for (AppointmentResourcesDTO appointmentResourcesDTO : resourcesToScheduleDTO.getResources()) {
+                if (appointmentResourcesDTO.getResource().getBusinessEntityId().equals(selectedResource.getBusinessEntityId())) {
                     return resourcesToScheduleDTO;
                 }
             }
         }
-        if(appointmentsResultModel.getPayload().getResourcesToSchedule().isEmpty()){
+        if (appointmentsResultModel.getPayload().getResourcesToSchedule().isEmpty()) {
             return new ResourcesToScheduleDTO();
         }
         return appointmentsResultModel.getPayload().getResourcesToSchedule().get(0);
     }
 
-
     protected abstract void setupEditDateButton(View view);
+
+    protected abstract void updateDateRange();
+
+    protected void updateDateRange(boolean includeYears) {
+        if (startDate == null || endDate == null) {
+            startDate = Calendar.getInstance().getTime();//today
+            endDate = startDate;
+        }
+
+        if (titleView != null) {
+            String today = Label.getLabel("today_label");
+            String tomorrow = Label.getLabel("add_appointment_tomorrow");
+            String thisMonth = Label.getLabel("this_month_label");
+            String nextDay = Label.getLabel("next_days_label");
+
+            String formattedDate = DateUtil.getFormattedDate(startDate, endDate, today, tomorrow, thisMonth, nextDay, includeYears);
+            titleView.setText(formattedDate);
+        }
+    }
 }

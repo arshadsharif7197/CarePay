@@ -85,7 +85,10 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         Button requestAppointmentButton = (Button)
                 view.findViewById(R.id.requestAppointmentButton);
         ApplicationMode.ApplicationType applicationType = callback.getApplicationMode().getApplicationType();
-        requestAppointmentButton.setText(Label.getLabel(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ? "appointments_request_heading" : "schedule_appointment_button_label"));
+        boolean autoScheduleAppointments = callback.getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests();
+
+        requestAppointmentButton.setText(Label.getLabel(applicationType == ApplicationMode.ApplicationType.PRACTICE ||
+                autoScheduleAppointments ? "schedule_appointment_button_label" : "appointments_request_heading"));
         requestAppointmentButton.setOnClickListener(requestAppointmentClickListener);
         requestAppointmentButton.requestFocus();
 

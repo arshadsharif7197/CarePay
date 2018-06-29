@@ -22,6 +22,8 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -228,4 +230,13 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
         return null;
     }
 
+    @Override
+    public void onCreditCardSelected(PaymentCreditCardsPayloadDTO papiPaymentMethod) {
+
+    }
+
+    @Override
+    public void onCashSelected(PaymentsModel paymentsModel) {
+        //Not Implemented
+    }
 }

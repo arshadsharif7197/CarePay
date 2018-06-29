@@ -26,10 +26,13 @@ import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment implements
         InsuranceLineItemsListAdapter.OnInsuranceEditClickListener {
@@ -37,6 +40,8 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     private TextView insurancePhotoAlert;
     private boolean showAlert = false;
     private boolean noPrimaryInsuranceFound;
+    private boolean insuranceTypeRepeated = false;
+    private String insuranceTypeRepeatedErrorMessage;
 
     public interface InsuranceDocumentScannerListener {
         void editInsurance(DemographicDTO demographicDTO, Integer editedIndex, boolean showAsDialog);
@@ -105,6 +110,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     private List<DemographicInsurancePayloadDTO> getInsurances(DemographicDTO demographicDTO) {
         List<DemographicInsurancePayloadDTO> insuranceList = new ArrayList<>();
         boolean hasOnePhoto = false;
+        Map<String, Integer> insurancesTypeMap = new HashMap<>();
         if (demographicDTO != null) {
             boolean isThereAnyPrimaryInsurance = false;
             for (DemographicInsurancePayloadDTO insurance : demographicDTO.getPayload().getDemographics()
@@ -116,8 +122,14 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
                     }
                     if (insurance.getInsurancePhotos().size() == 0) {
                         showAlert = true;
-                    }else if(!hasOnePhoto){
+                    } else if (!hasOnePhoto) {
                         hasOnePhoto = true;
+                    }
+                    String insuranceType = StringUtil.captialize(insurance.getInsuranceType()).trim();
+                    if (insurancesTypeMap.containsKey(insuranceType)) {
+                        insurancesTypeMap.put(insuranceType, insurancesTypeMap.get(insuranceType) + 1);
+                    } else {
+                        insurancesTypeMap.put(insuranceType, 1);
                     }
                 }
             }
@@ -125,12 +137,45 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
                     && !isThereAnyPrimaryInsurance) {
                 noPrimaryInsuranceFound = true;
                 showAlert = true;
+            } else {
+                checkIfHasDuplicateInsuranceType(insurancesTypeMap);
+                checkIfEnableButton(getView());
             }
         }
 
         MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_has_identity_doc), hasOnePhoto);
 
         return insuranceList;
+    }
+
+    private boolean checkIfHasDuplicateInsuranceType(Map<String, Integer> insurancesTypeMap) {
+        insuranceTypeRepeated = true;
+        insuranceTypeRepeatedErrorMessage = Label.getLabel("insurance.insuranceList.alert.message.duplicatedInsuranceAlert");
+        String insuranceType = "";
+        if (insurancesTypeMap.containsKey("Primary") && insurancesTypeMap.get("Primary") > 1) {
+            showAlert = true;
+            insuranceType = "Primary";
+            insuranceTypeRepeatedErrorMessage = String.format(insuranceTypeRepeatedErrorMessage,
+                    insurancesTypeMap.get(insuranceType), insuranceType, insuranceType);
+        } else if (insurancesTypeMap.containsKey("Secondary") && insurancesTypeMap.get("Secondary") > 1) {
+            showAlert = true;
+            insuranceType = "Secondary";
+            insuranceTypeRepeatedErrorMessage = String.format(insuranceTypeRepeatedErrorMessage,
+                    insurancesTypeMap.get(insuranceType), insuranceType, insuranceType);
+        } else if (insurancesTypeMap.containsKey("Tertiary") && insurancesTypeMap.get("Tertiary") > 1) {
+            showAlert = true;
+            insuranceType = "Tertiary";
+            insuranceTypeRepeatedErrorMessage = String.format(insuranceTypeRepeatedErrorMessage,
+                    insurancesTypeMap.get(insuranceType), insuranceType, insuranceType);
+        } else if (insurancesTypeMap.containsKey("Quaternary") && insurancesTypeMap.get("Quaternary") > 1) {
+            showAlert = true;
+            insuranceType = "Quaternary";
+            insuranceTypeRepeatedErrorMessage = String.format(insuranceTypeRepeatedErrorMessage,
+                    insurancesTypeMap.get(insuranceType), insuranceType, insuranceType);
+        } else {
+            insuranceTypeRepeated = false;
+        }
+        return insuranceTypeRepeated;
     }
 
     private void initializeViews() {
@@ -152,16 +197,33 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
     private void showAlert() {
         String alertMessage = Label.getLabel("demographics_insurance_no_photo_alert");
+        int notificationType = CustomMessageToast.NOTIFICATION_TYPE_WARNING;
+
         if (noPrimaryInsuranceFound) {
             alertMessage = Label.getLabel("demographics_insurance_no_primary_alert");
+        } else if (insuranceTypeRepeated) {
+            alertMessage = insuranceTypeRepeatedErrorMessage;
+            notificationType = CustomMessageToast.NOTIFICATION_TYPE_ERROR;
         }
         if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT) {
-            new CustomMessageToast(getActivity(), alertMessage,
-                    CustomMessageToast.NOTIFICATION_TYPE_WARNING).show();
+            new CustomMessageToast(getActivity(), alertMessage, notificationType).show();
         } else {
-            insurancePhotoAlert.setText(alertMessage);
-            insurancePhotoAlert.setVisibility(View.VISIBLE);
+            showPracticeAlert(alertMessage, notificationType);
         }
+    }
+
+    private void showPracticeAlert(String alertMessage, int notificationType) {
+        if (notificationType == CustomMessageToast.NOTIFICATION_TYPE_WARNING) {
+            insurancePhotoAlert.setTextColor(getContext().getResources().getColor(R.color.lightning_yellow));
+            insurancePhotoAlert.setBackground(getContext().getResources()
+                    .getDrawable(R.drawable.bg_round_border_lighting_yellow));
+        } else {
+            insurancePhotoAlert.setTextColor(getContext().getResources().getColor(R.color.redAlert));
+            insurancePhotoAlert.setBackground(getContext().getResources()
+                    .getDrawable(R.drawable.bg_round_border_red));
+        }
+        insurancePhotoAlert.setText(alertMessage);
+        insurancePhotoAlert.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -179,6 +241,9 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
     @Override
     protected boolean passConstraints(View view) {
+        if (insuranceTypeRepeated) {
+            return false;
+        }
         return true;
     }
 

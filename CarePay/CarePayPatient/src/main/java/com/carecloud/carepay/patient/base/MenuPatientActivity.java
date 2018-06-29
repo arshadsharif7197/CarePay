@@ -44,6 +44,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
     private static TransitionDTO transitionBalance;
     private static TransitionDTO transitionProfile;
     private static TransitionDTO transitionAppointments;
+    private static TransitionDTO transitionForms;
     private static TransitionDTO transitionLogout;
     private static TransitionDTO transitionNotifications;
     private static TransitionDTO transitionMyHealth;
@@ -60,11 +61,11 @@ public abstract class MenuPatientActivity extends BasePatientActivity
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.activity_navigation);
-        toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.toolbar);
-        drawer = (DrawerLayout) findViewById(com.carecloud.carepaylibrary.R.id.drawer_layout);
-        navigationView = (NavigationView) findViewById(com.carecloud.carepaylibrary.R.id.nav_view);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0)
-                .findViewById(com.carecloud.carepaylibrary.R.id.appointmentsDrawerIdTextView);
+                .findViewById(R.id.appointmentsDrawerIdTextView);
 
         inflateDrawer();
     }
@@ -72,7 +73,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
     protected void inflateDrawer() {
         setSupportActionBar(toolbar);
         toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, com.carecloud.carepaylibrary.R.string.navigation_drawer_open, com.carecloud.carepaylibrary.R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.getDrawerArrowDrawable().setColor(ContextCompat.getColor(this, R.color.white));
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -125,6 +126,11 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         return toggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle icicle) {
+        super.onSaveInstanceState(icicle);
+        icicle.clear();
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -146,6 +152,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity
                 displayMessagesScreen();
                 transition = null;
                 callback = null;
+                break;
+            case R.id.nav_forms:
+                callback = appointmentsWorkflowCallback;
+                transition = transitionForms;
                 break;
             case R.id.nav_appointments:
                 callback = appointmentsWorkflowCallback;
@@ -226,7 +236,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             showErrorNotification(exceptionMessage);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -247,7 +257,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         public void onFailure(String exceptionMessage) {
             showErrorNotification(exceptionMessage);
             hideProgressDialog();
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -268,7 +278,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             showErrorNotification(exceptionMessage);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -289,7 +299,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             showErrorNotification(exceptionMessage);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -331,7 +341,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             showErrorNotification(exceptionMessage);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -352,7 +362,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             showErrorNotification(exceptionMessage);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -367,6 +377,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity
 
     public static void setTransitionAppointments(TransitionDTO transitionAppointments) {
         MenuPatientActivity.transitionAppointments = transitionAppointments;
+    }
+
+    public static void setTransitionForms(TransitionDTO transitionForms) {
+        MenuPatientActivity.transitionForms = transitionForms;
     }
 
     public static void setTransitionMyHealth(TransitionDTO transitionMyHealth) {
@@ -387,6 +401,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity
 
     public static TransitionDTO getTransitionAppointments() {
         return transitionAppointments;
+    }
+
+    public static TransitionDTO getTransitionForms() {
+        return transitionForms;
     }
 
     public static TransitionDTO getTransitionNotifications() {

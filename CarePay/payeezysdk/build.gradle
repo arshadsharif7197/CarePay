@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '26.0.3'
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         minSdkVersion 14
@@ -29,16 +29,16 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:25.3.1'
-    compile files('libs/com.fasterxml.jackson.databind.jar')
-    compile files('libs/com.fasterxml.jackson.jsonschema.jar')
-    compile files('libs/jackson-annotations-2.5.1.jar')
-    compile files('libs/jackson-core-asl-1.8.8.jar')
-    compile files('libs/jackson-mapper-asl-1.8.8.jar')
-    compile files('libs/jxl-2.6.12.jar')
-    compile files('libs/org.apache.httpclient.jar')
-    compile files('libs/org.apache.httpcomponents.httpcore_4.2.1.jar')
-    compile files('libs/spring-android-core-1.0.0.RELEASE.jar')
-    compile files('libs/spring-android-rest-template-1.0.0.RELEASE.jar')
-    testCompile 'junit:junit:4.12'
+    implementation 'com.android.support:support-v4:25.4.0'
+    implementation files('libs/com.fasterxml.jackson.databind.jar')
+    implementation files('libs/com.fasterxml.jackson.jsonschema.jar')
+    implementation files('libs/jackson-annotations-2.5.1.jar')
+    implementation files('libs/jackson-core-asl-1.8.8.jar')
+    implementation files('libs/jackson-mapper-asl-1.8.8.jar')
+    implementation files('libs/jxl-2.6.12.jar')
+    implementation files('libs/org.apache.httpclient.jar')
+    implementation files('libs/org.apache.httpcomponents.httpcore_4.2.1.jar')
+    implementation files('libs/spring-android-core-1.0.0.RELEASE.jar')
+    implementation files('libs/spring-android-rest-template-1.0.0.RELEASE.jar')
+    testImplementation 'junit:junit:4.12'
 }

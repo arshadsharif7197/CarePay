@@ -223,7 +223,9 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
     private void onCancelAppointment() {
         int selectedIndex = getSelectedCancellationIndex();
         if (selectedIndex != -1) {
-            callback.onCancelReasonAppointmentDialogCancelClicked(appointmentDTO, getSelectedCancellationIndex(), reasonEditText.getText().toString());
+            AppointmentCancellationReasonDTO cancellationReason
+                    = cancellationReasons.get(selectedIndex).getAppointmentCancellationReason();
+            callback.onCancelReasonAppointmentDialogCancelClicked(appointmentDTO, cancellationReason.getId(), reasonEditText.getText().toString());
         }
     }
 

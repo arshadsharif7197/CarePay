@@ -15,6 +15,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -72,6 +73,7 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, getArguments());
+        filledForms = appointmentsResultModel.getPayload().getPatientFormsResponse();
         formsList = appointmentsResultModel.getMetadata().getDataModels().getPracticeForms();
         setTotalForms(formsList.size());
     }
@@ -89,7 +91,7 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
     }
 
     @Override
-    protected void displayNextForm() {
+    protected void displayNextForm(List<ConsentFormUserResponseDTO> filledForms) {
         int displayedFormsIndex = getDisplayedFormsIndex();
         if (getDisplayedFormsIndex() < getTotalForms()) {
             PracticeForm practiceForm = formsList.get(displayedFormsIndex);
@@ -98,9 +100,8 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
             if (!jsonFormSaveResponseArray.isEmpty() && jsonFormSaveResponseArray.size() > displayedFormsIndex) {
                 userResponse = jsonFormSaveResponseArray.get(displayedFormsIndex);
             } else {
-                String uuid = payload.get("uuid").toString().replace("\"", "");
-                for (ConsentFormUserResponseDTO response : appointmentsResultModel.getPayload()
-                        .getPatientFormsResponse()) {
+                String uuid = payload.get("uuid").getAsString();
+                for (ConsentFormUserResponseDTO response : filledForms) {
                     if (uuid.equals(response.getFormId())) {
                         JsonObject json = new JsonObject();
                         json.addProperty("uuid", response.getFormId());
@@ -166,7 +167,11 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
             hideProgressDialog();
             callback.navigateToWorkflow(workflowDTO);
             nextButton.setEnabled(true);
-            if(!workflowDTO.getState().contains("checkout")){
+            if (NavigationStateConstants.APPOINTMENTS.equals(workflowDTO.getState())
+                    || NavigationStateConstants.PATIENT_HOME.equals(workflowDTO.getState())) {
+                callback.showAllDone(workflowDTO);
+            }
+            if (!workflowDTO.getState().contains("checkout")) {
                 callback.completeCheckout();
             }
         }

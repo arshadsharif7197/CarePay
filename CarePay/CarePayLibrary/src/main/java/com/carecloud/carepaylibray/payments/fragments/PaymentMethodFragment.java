@@ -24,7 +24,6 @@ import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayload
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
@@ -51,6 +50,7 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
     protected HashMap<String, Integer> paymentTypeMap;
 
     protected PaymentMethodInterface callback;
+    protected boolean onlySelectMode;
 
     public abstract View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle);//make sure all implementations create a proper view
 
@@ -77,8 +77,8 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
         if (bundle != null) {
             amountToMakePayment = bundle.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
             paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, bundle);
+            onlySelectMode = bundle.getBoolean(CarePayConstants.ONLY_SELECT_MODE);
             if (!paymentsModel.getPaymentPayload().getPaymentSettings().isEmpty()) {
-
                 paymentMethodsList = getPaymentMethodList();
             }
             paymentList = paymentsModel.getPaymentPayload().getPatientBalances();

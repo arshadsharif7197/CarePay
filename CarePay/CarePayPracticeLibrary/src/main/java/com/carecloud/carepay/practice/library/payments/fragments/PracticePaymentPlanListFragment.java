@@ -4,13 +4,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentHistoryCallback;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.payments.fragments.ActivePlansFragment;
+import com.carecloud.carepaylibray.payments.fragments.ValidPlansFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -21,7 +23,7 @@ import java.util.List;
  * Created by lmenendez on 2/15/18
  */
 
-public class PracticePaymentPlanListFragment extends ActivePlansFragment {
+public class PracticePaymentPlanListFragment extends ValidPlansFragment {
     private static final String KEY_PRACTICE_ID = "practice_id";
 
     private String practiceId;
@@ -57,6 +59,11 @@ public class PracticePaymentPlanListFragment extends ActivePlansFragment {
         if(args != null){
             practiceId = args.getString(KEY_PRACTICE_ID);
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
+        return inflater.inflate(R.layout.fragment_payment_plans_list, container, false);
     }
 
     @Override

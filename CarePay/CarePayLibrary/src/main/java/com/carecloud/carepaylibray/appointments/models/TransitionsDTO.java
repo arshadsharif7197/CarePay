@@ -42,6 +42,10 @@ public class TransitionsDTO {
     @Expose
     private TransitionDTO deleteNotifications = new TransitionDTO();
 
+    @SerializedName("delete_all_notifications")
+    @Expose
+    private TransitionDTO deleteAllNotifications = new TransitionDTO();
+
     @SerializedName("mark_as_read")
     @Expose
     private TransitionDTO readNotifications = new TransitionDTO();
@@ -53,6 +57,10 @@ public class TransitionsDTO {
     @SerializedName("update_forms")
     @Expose
     private TransitionDTO updateForms = new TransitionDTO();
+
+    @SerializedName("update_pending_forms")
+    @Expose
+    private TransitionDTO updatePendingForms = new TransitionDTO();
 
     @SerializedName("practice_mode")
     @Expose
@@ -173,6 +181,14 @@ public class TransitionsDTO {
         this.deleteNotifications = deleteNotifications;
     }
 
+    public TransitionDTO getDeleteAllNotifications() {
+        return deleteAllNotifications;
+    }
+
+    public void setDeleteAllNotifications(TransitionDTO deleteAllNotifications) {
+        this.deleteAllNotifications = deleteAllNotifications;
+    }
+
     public TransitionDTO getReadNotifications() {
         return readNotifications;
     }
@@ -227,5 +243,13 @@ public class TransitionsDTO {
 
     public void setAddCreditCard(TransitionDTO addCreditCard) {
         this.addCreditCard = addCreditCard;
+    }
+
+    public TransitionDTO getUpdatePendingForms() {
+        return updatePendingForms;
+    }
+
+    public void setUpdatePendingForms(TransitionDTO updatePendingForms) {
+        this.updatePendingForms = updatePendingForms;
     }
 }

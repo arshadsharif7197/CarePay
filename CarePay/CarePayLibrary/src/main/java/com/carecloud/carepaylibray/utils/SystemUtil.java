@@ -405,7 +405,7 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler {
      * @return floating point safe difference
      */
     public static double safeSubtract(double minuend, double subtrahend){
-        return Math.round((minuend - subtrahend)*100)/100;
+        return Math.round((minuend - subtrahend)*100)/100D;
     }
 
     /**
@@ -415,7 +415,7 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler {
      * @return sum
      */
     public static double safeAdd(double addend1, double addend2){
-        return Math.round((addend1 + addend2)*100)/100;
+        return Math.round((addend1 + addend2)*100)/100D;
     }
 
 }

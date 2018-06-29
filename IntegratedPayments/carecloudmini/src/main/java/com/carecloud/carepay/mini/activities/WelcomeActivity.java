@@ -20,7 +20,6 @@ import com.carecloud.carepay.mini.HttpConstants;
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
 import com.carecloud.carepay.mini.models.queue.QueuePaymentRecord;
-import com.carecloud.carepay.mini.models.queue.QueueUnprocessedPaymentRecord;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
 import com.carecloud.carepay.mini.services.QueueUploadService;
 import com.carecloud.carepay.mini.services.carepay.RestCallServiceCallback;
@@ -40,14 +39,15 @@ import com.carecloud.shamrocksdk.payment.interfaces.PaymentRequestCallback;
 import com.carecloud.shamrocksdk.payment.interfaces.RefundRequestCallback;
 import com.carecloud.shamrocksdk.payment.models.PaymentRequest;
 import com.carecloud.shamrocksdk.payment.models.RefundRequest;
-import com.carecloud.shamrocksdk.payment.models.StreamRecord;
-import com.carecloud.shamrocksdk.payment.models.defs.StateDef;
 import com.carecloud.shamrocksdk.utils.AuthorizationUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.newrelic.agent.android.NewRelic;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
@@ -89,6 +89,7 @@ public class WelcomeActivity extends FullScreenActivity {
         TextView environment = (TextView) findViewById(R.id.environment_label);
         environment.setText(HttpConstants.getEnvironment());
 
+        setupNewRelic();
 
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(connectionStateChangedReceiver, intentFilter);
@@ -406,6 +407,9 @@ public class WelcomeActivity extends FullScreenActivity {
                 switch (connectedDevice.getState()){
                     case DeviceDef.STATE_READY: //Device is ready to process payments
                         if(paymentRequestId == null ) {
+                            if(!connectedDevice.getState().equals(device.getState())) {
+                                updateConnectedDevice();
+                            }
                             updateMessage(getString(R.string.welcome_waiting));
                             return;
                         }
@@ -425,17 +429,22 @@ public class WelcomeActivity extends FullScreenActivity {
 
                         break;
                     case DeviceDef.STATE_IN_USE:
-                        if(connectedDevice.getPaymentRequestId() == null){
+                        if(connectedDevice.getPaymentRequestId() != null && !connectedDevice.getState().equals(device.getState()) ) {
+                            updateConnectedDevice();
+                        }
+                        else if(connectedDevice.getPaymentRequestId() == null){
                             Log.d(TAG, "Error state, device is in use but no request id, reset device state");
                             //this device should not be in use without a payment request
                             connectedDevice.setState(DeviceDef.STATE_READY);
                             updateConnectedDevice();
                             return;
                         }
+
                         if(paymentRequestId!=null && !connectedDevice.getPaymentRequestId().equals(paymentRequestId)){
                             Log.d(TAG, "Cannot process this request device is in use");
                             //this is an error because device should be processing a transaction already
                             showErrorToast(getString(R.string.error_device_in_use));
+
                         }else if(!connectedDevice.isProcessing()){
                             //start processing payment
                             Log.d(TAG, "start processing payment request");
@@ -488,6 +497,15 @@ public class WelcomeActivity extends FullScreenActivity {
 
         @Override
         public void onPaymentCompleteWithError(String paymentRequestId, JsonElement paymentPayload, String errorMessage) {
+            logNewRelicPaymentError(errorMessage, paymentPayload.toString());
+
+            if(connectedDevice.isRefunding()){
+                postRefundRequest(paymentRequestId, paymentPayload);
+            }else {
+                postPaymentRequest(paymentRequestId, paymentPayload);
+            }
+
+/*
             Gson gson = new Gson();
             QueueUnprocessedPaymentRecord unprocessedPaymentRecord = new QueueUnprocessedPaymentRecord();
             unprocessedPaymentRecord.setPaymentRequestId(paymentRequestId);
@@ -508,7 +526,7 @@ public class WelcomeActivity extends FullScreenActivity {
                     updateMessage(getString(R.string.welcome_waiting));
                 }
             }, PAYMENT_COMPLETE_RESET);
-
+*/
         }
 
         @Override
@@ -519,7 +537,9 @@ public class WelcomeActivity extends FullScreenActivity {
 
         @Override
         public void onPaymentFailed(String paymentRequestId, String message) {
-            Log.d(TAG, "Payment failed for: "+paymentRequestId);
+            String printMessage = "Payment failed for: "+paymentRequestId;
+            logNewRelicPaymentError(message, printMessage);
+            Log.d(TAG, printMessage);
             Log.d(TAG, message);
             showErrorToast(message);
             releasePaymentRequest(paymentRequestId);
@@ -603,21 +623,15 @@ public class WelcomeActivity extends FullScreenActivity {
     };
 
     private void postPaymentRequest(String paymentRequestId, JsonElement requestObject){
-        StreamRecord streamRecord = new StreamRecord();
-        streamRecord.setDeepstreamRecordId(paymentRequestId);
-
         Gson gson = new Gson();
         String token = AuthorizationUtil.getAuthorizationToken(this).replace("\n", "");
-        getRestHelper().executePostPayment(getPostPaymentCallback(paymentRequestId, false, requestObject), token, gson.toJson(streamRecord));
+        getRestHelper().executePostPayment(getPostPaymentCallback(paymentRequestId, false, requestObject), token, gson.toJson(requestObject));
     }
 
     private void postRefundRequest(String paymentRequestId, JsonElement requestObject){
-        StreamRecord streamRecord = new StreamRecord();
-        streamRecord.setDeepstreamRecordId(paymentRequestId);
-
         Gson gson = new Gson();
         String token = AuthorizationUtil.getAuthorizationToken(this).replace("\n", "");
-        getRestHelper().executePostRefund(getPostPaymentCallback(paymentRequestId, true, requestObject), token, gson.toJson(streamRecord));
+        getRestHelper().executePostRefund(getPostPaymentCallback(paymentRequestId, true, requestObject), token, gson.toJson(requestObject));
     }
 
 
@@ -649,10 +663,11 @@ public class WelcomeActivity extends FullScreenActivity {
 
             @Override
             public void onFailure(String errorMessage) {
+                logNewRelicPaymentError(errorMessage, requestObject.toString());
                 if(shouldRetry(errorMessage)) {
                     CustomErrorToast.showWithMessage(WelcomeActivity.this, errorMessage);
                     updateMessage(String.format(getString(R.string.welcome_retrying), paymentAttempt + 1));
-                    if(verifyPersisted(errorMessage, paymentRequestId, isRefund, requestObject)){
+//                    if(verifyPersisted(errorMessage, paymentRequestId, isRefund, requestObject)){
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -663,22 +678,23 @@ public class WelcomeActivity extends FullScreenActivity {
                                 }
                             }
                         }, paymentAttempt * POST_RETRY_DELAY);
-                    }
+//                    }
                 }else{
                     if(paymentAttempt >= MAX_RETRIES){
-                        if(!verifyPersisted(errorMessage, paymentRequestId, isRefund, requestObject)) {
-                            Gson gson = new Gson();
-                            QueueUnprocessedPaymentRecord unprocessedPaymentRecord = new QueueUnprocessedPaymentRecord();
-                            unprocessedPaymentRecord.setPaymentRequestId(paymentRequestId);
-                            unprocessedPaymentRecord.setRefund(connectedDevice.isRefunding());
-                            unprocessedPaymentRecord.setPayload(gson.toJson(requestObject));
-                            unprocessedPaymentRecord.save();
-                        }else{
+//                        if(!verifyPersisted(errorMessage, paymentRequestId, isRefund, requestObject)) {
+//                            Gson gson = new Gson();
+//                            QueueUnprocessedPaymentRecord unprocessedPaymentRecord = new QueueUnprocessedPaymentRecord();
+//                            unprocessedPaymentRecord.setPaymentRequestId(paymentRequestId);
+//                            unprocessedPaymentRecord.setRefund(connectedDevice.isRefunding());
+//                            unprocessedPaymentRecord.setPayload(gson.toJson(requestObject));
+//                            unprocessedPaymentRecord.save();
+//                        }else{
                             QueuePaymentRecord queuePaymentRecord = new QueuePaymentRecord();
                             queuePaymentRecord.setPaymentRequestId(paymentRequestId);
                             queuePaymentRecord.setRefund(isRefund);
+                            queuePaymentRecord.setRequestObject(requestObject);
                             queuePaymentRecord.save();
-                        }
+//                        }
                         launchQueueService();
                     }
                     resetDevice(paymentRequestId);
@@ -697,7 +713,7 @@ public class WelcomeActivity extends FullScreenActivity {
         return !errorMessage.contains("payment request has already been completed") && paymentAttempt <= MAX_RETRIES;
     }
 
-    private boolean verifyPersisted(String errorMessage, final String requestId, boolean isRefunding, final JsonElement requestObject){
+/*    private boolean verifyPersisted(String errorMessage, final String requestId, boolean isRefunding, final JsonElement requestObject){
         if(errorMessage != null && errorMessage.contains("transaction response needed")){
             final Gson gson = new Gson();
             if(!isRefunding){
@@ -734,7 +750,7 @@ public class WelcomeActivity extends FullScreenActivity {
             return false;
         }
         return true;
-    }
+    }*/
 
     private void resetDevice(String paymentRequestId){
         releasePaymentRequest(paymentRequestId);
@@ -774,4 +790,32 @@ public class WelcomeActivity extends FullScreenActivity {
             scheduleDeviceRefresh();
         }
     };
+
+    private void logNewRelicPaymentError(String errorMessage, Object payload){
+        Map<String, Object> eventMap = new HashMap<>();
+        eventMap.put("Error Message", errorMessage);
+        eventMap.put("Request Payload", payload);
+        eventMap.put("DeepStream ID", connectedDevice.getPaymentRequestId());
+        eventMap.put("Is Refunding", connectedDevice.isRefunding());
+        eventMap.put("Device ID", connectedDevice.getDeviceId());
+        eventMap.put("Device Name", connectedDevice.getName());
+
+        String eventType = connectedDevice.isRefunding() ? "RefundRequestFail" : "PaymentRequestFail";
+
+        NewRelic.recordCustomEvent(eventType, eventMap);
+
+    }
+
+    private void setupNewRelic(){
+        NewRelic.setUserId(applicationHelper.getApplicationPreferences().getDeviceId());
+        NewRelic.setAttribute(getString(R.string.key_practice_id),
+                applicationHelper.getApplicationPreferences().getPracticeId());
+        NewRelic.setAttribute(getString(R.string.key_practice_name),
+                applicationHelper.getApplicationPreferences().getUserPracticeDTO().getPracticeName());
+        NewRelic.setAttribute(getString(R.string.key_location_id),
+                applicationHelper.getApplicationPreferences().getLocationId());
+        NewRelic.setAttribute(getString(R.string.key_device_name),
+                applicationHelper.getApplicationPreferences().getDeviceName());
+    }
+
 }

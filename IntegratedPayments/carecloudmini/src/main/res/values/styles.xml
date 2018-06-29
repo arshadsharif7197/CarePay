@@ -12,7 +12,7 @@
         <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
-    <style name="ButtonRounded" parent="Widget.AppCompat.Button">
+    <style name="ButtonRounded" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:layout_width">@dimen/content_width_buttons</item>
         <item name="android:minHeight">@dimen/dp_30</item>
         <item name="android:background">@drawable/rounded_button_primary</item>
@@ -24,7 +24,7 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="ButtonRoundedOutline" parent="Widget.AppCompat.Button">
+    <style name="ButtonRoundedOutline" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:layout_width">@dimen/content_width_buttons</item>
         <item name="android:minHeight">@dimen/dp_30</item>
         <item name="android:background">@drawable/rounded_button_outline</item>
@@ -36,7 +36,7 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="ButtonRoundedOutlineSmall" parent="Widget.AppCompat.Button">
+    <style name="ButtonRoundedOutlineSmall" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:layout_width">@dimen/content_width_buttons_small</item>
         <item name="android:background">@drawable/rounded_button_outline</item>
         <item name="android:paddingTop">@dimen/button_small_padding_vertical</item>

@@ -1,11 +1,11 @@
 package com.carecloud.carepay.practice.library.base;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -26,6 +26,7 @@ import java.util.Map;
 public abstract class BasePracticeActivity extends BaseActivity
         implements IConfirmPracticeAppPin {
 
+    private long lastFullScreenSet;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,6 +36,25 @@ public abstract class BasePracticeActivity extends BaseActivity
         setSystemUiVisibility();
         setNavigationBarVisibility();
         Log.d("New Relic", getClass().getName());
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            final View rootView = findViewById(android.R.id.content);
+            rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    long now = System.currentTimeMillis();
+                    if(now - lastFullScreenSet > 1000) {
+                        Log.d("Base", "Display Full Screen");
+                        onProgressDialogCancel();
+                        lastFullScreenSet = now;
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -113,6 +133,7 @@ public abstract class BasePracticeActivity extends BaseActivity
             if (home != null) {
                 home.setEnabled(true);
             }
+            getAppAuthorizationHelper().setUser(null);
             finish();
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
@@ -143,7 +164,7 @@ public abstract class BasePracticeActivity extends BaseActivity
      * @param languageCode the language code (eg. "en", "es")
      * @param headers      any additional header
      */
-    protected void changeLanguage(TransitionDTO transition, String languageCode, Map<String, String> headers) {
+    public void changeLanguage(TransitionDTO transition, String languageCode, Map<String, String> headers) {
         changeLanguage(transition, languageCode, headers, null);
     }
 
@@ -153,7 +174,7 @@ public abstract class BasePracticeActivity extends BaseActivity
      * @param headers      any additional header
      * @param callback     an additional callback
      */
-    protected void changeLanguage(TransitionDTO transition, String languageCode, Map<String, String> headers,
+    public void changeLanguage(TransitionDTO transition, String languageCode, Map<String, String> headers,
                                   SimpleCallback callback) {
         Map<String, String> query = new HashMap<>();
         query.put("language", languageCode);
@@ -161,7 +182,7 @@ public abstract class BasePracticeActivity extends BaseActivity
     }
 
     @Override
-    protected void onProgressDialogCancel(DialogInterface dialog){
+    protected void onProgressDialogCancel(){
         setSystemUiVisibility();
         setNavigationBarVisibility();
     }

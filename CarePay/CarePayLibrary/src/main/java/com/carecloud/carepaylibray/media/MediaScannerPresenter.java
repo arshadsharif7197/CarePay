@@ -22,14 +22,12 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-
 /**
  * Created by lmenendez on 4/24/17.
  */
-
 public class MediaScannerPresenter {
 
+    private static final String LOG_TAG = "MediaScannerPresenter";
     public static final int REQUEST_CODE_CAMERA = 0x555;
     public static final int REQUEST_CODE_GALLERY = 0x666;
     public static final int REQUEST_CODE_CAPTURE = 0x777;

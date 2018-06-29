@@ -15,7 +15,6 @@ import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodPrepaymentFragment;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -88,12 +87,13 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
      * Shows Confirmation after Appointment Created
      */
     public void showAppointmentConfirmation() {
-
         if (isVisible()) {
             ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
+            boolean autoScheduleAppointments = getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests();
+
             SystemUtil.showSuccessToast(getContext(),
-                    Label.getLabel(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
-                            "appointment_request_success_message_HTML" : "appointment_schedule_success_message_HTML"));
+                    Label.getLabel(applicationType == ApplicationMode.ApplicationType.PRACTICE || autoScheduleAppointments ?
+                            "appointment_schedule_success_message_HTML" : "appointment_request_success_message_HTML"));
         }
 
         onAppointmentRequestSuccess();
@@ -186,7 +186,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
                     patientId};
             MixPanelUtil.logEvent(getString(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
                     R.string.event_appointment_requested : R.string.event_appointment_scheduled), params, values);
-            if(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            if (applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
                 MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
             }
         }
@@ -313,7 +313,8 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     protected abstract LinksDTO getLinks();
 
-    private AppointmentsSettingDTO getAppointmentsSettings() {
+    @Override
+    public AppointmentsSettingDTO getAppointmentsSettings() {
         List<AppointmentsSettingDTO> appointmentsSettingDTOList = appointmentsResultModel
                 .getPayload().getAppointmentsSettings();
         if (!appointmentsSettingDTOList.isEmpty()) {
@@ -350,13 +351,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
-        Gson gson = new Gson();
-        Bundle args = new Bundle();
-        String paymentsDTOString = gson.toJson(paymentsModel);
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
-        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-        DialogFragment fragment = new PracticeAddNewCreditCardFragment();
-        fragment.setArguments(args);
+        PracticeAddNewCreditCardFragment fragment = PracticeAddNewCreditCardFragment.newInstance(paymentsModel, amount);
         displayDialogFragment(fragment, false);
     }
 
@@ -415,11 +410,9 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
             builder.replace(last, builder.length(), "");
             showErrorNotification(builder.toString());
         } else {
-            Bundle args = new Bundle();
-            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
-
-            PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
-            confirmationFragment.setArguments(args);
+            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
+                    .newInstance(workflowDTO, Label.getLabel("appointment.confirmationScreen.type.label.paymentType"),
+                            Label.getLabel("add_appointment_back_to_appointments_button"));
             displayDialogFragment(confirmationFragment, false);
         }
     }

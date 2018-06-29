@@ -17,7 +17,6 @@ import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragme
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -52,7 +51,9 @@ import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
+import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
@@ -263,12 +264,18 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void onAppointmentRequestSuccess() {
-        viewHandler.confirmAppointment(true);
+        viewHandler.confirmAppointment(true,
+                getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests());
     }
 
     @Override
     public ApplicationMode getApplicationMode() {
         return viewHandler.getApplicationMode();
+    }
+
+    @Override
+    public AppointmentsSettingDTO getAppointmentsSettings() {
+        return getPracticeSettings();
     }
 
     @Override
@@ -583,21 +590,20 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         startCancelationFeePayment = false;
         if (appointmentDTO != null) {
             onHoursAndLocationSelected(appointmentSlot, null);
-        }else{
+        } else {
             viewHandler.refreshAppointments();
         }
     }
 
     @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
-        Gson gson = new Gson();
-        Bundle args = new Bundle();
-        String paymentsDTOString = gson.toJson(paymentsModel);
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
-        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-        Fragment fragment = new AddNewCreditCardFragment();
-        fragment.setArguments(args);
+        Fragment fragment = AddNewCreditCardFragment.newInstance(paymentsModel, amount);
         viewHandler.navigateToFragment(fragment, true);
+    }
+
+    @Override
+    public void onCreditCardSelected(PaymentCreditCardsPayloadDTO papiPaymentMethod) {
+        //Works only when chooseCreditCardFragment is used in selectMode
     }
 
     @Override
@@ -668,11 +674,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             builder.replace(last, builder.length(), "");
             ((ISession) viewHandler.getContext()).showErrorNotification(builder.toString());
         } else {
-            Bundle args = new Bundle();
-            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
-
-            PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
-            confirmationFragment.setArguments(args);
+            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
+                    .newInstance(workflowDTO, Label.getLabel("appointment.confirmationScreen.type.label.paymentType"),
+                            Label.getLabel("add_appointment_back_to_appointments_button"));
             viewHandler.displayDialogFragment(confirmationFragment, false);
         }
     }
@@ -693,9 +697,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         return androidPayTargetFragment;
     }
 
-    private UserPracticeDTO getPracticeInfo(AppointmentDTO appointmentDTO){
-        for(UserPracticeDTO userPracticeDTO : appointmentsResultModel.getPayload().getUserPractices()){
-            if(userPracticeDTO.getPracticeId() != null && userPracticeDTO.getPracticeId().equals(practiceId)){
+    private UserPracticeDTO getPracticeInfo(AppointmentDTO appointmentDTO) {
+        for (UserPracticeDTO userPracticeDTO : appointmentsResultModel.getPayload().getUserPractices()) {
+            if (userPracticeDTO.getPracticeId() != null && userPracticeDTO.getPracticeId().equals(practiceId)) {
                 return userPracticeDTO;
             }
         }
@@ -750,15 +754,15 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
-        if(startCancelationFeePayment){
+        if (startCancelationFeePayment) {
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_cancellation_success_message_HTML"));
-            viewHandler.confirmAppointment(false);
+            viewHandler.confirmAppointment(false, false);
             //log appt cancelation to mixpanel
             String[] params = {getString(R.string.param_appointment_cancel_reason), getString(R.string.param_practice_id), getString(R.string.param_practice_name)};
             Object[] values = {cancellationReasonString, practiceId, practiceName};
             MixPanelUtil.logEvent(getString(R.string.event_appointment_cancelled), params, values);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_cancelled), 1);
-        }else {
+        } else {
             onAppointmentRequestSuccess();
         }
         startCancelationFeePayment = false;
@@ -777,7 +781,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         }
     }
 
-    private String getString(int id){
+    private String getString(int id) {
         return getContext().getString(id);
     }
 }
