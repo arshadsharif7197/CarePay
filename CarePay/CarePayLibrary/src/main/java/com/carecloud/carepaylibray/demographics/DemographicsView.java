@@ -23,6 +23,8 @@ public interface DemographicsView {
 
     void navigateToIntakeForms(WorkflowDTO workflowDTO);
 
+    void navigateToThirdParty(WorkflowDTO workflowDTO);
+
     void navigateToMedicationsAllergy(WorkflowDTO workflowDTO);
 
     FragmentManager getSupportFragmentManager();

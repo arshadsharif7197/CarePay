@@ -108,7 +108,7 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
 
         searchView = (SearchView) view.findViewById(R.id.search_entry_view);
         for (TextView textView : ViewUtils.findChildrenByClass(searchView, TextView.class)) {
-            textView.setHintTextColor(getResources().getColor(R.color.textview_default_textcolor));
+            textView.setHintTextColor(getResources().getColor(R.color.optional_gray));
             textView.setTextColor(getResources().getColor(R.color.textview_default_textcolor));
         }
 
