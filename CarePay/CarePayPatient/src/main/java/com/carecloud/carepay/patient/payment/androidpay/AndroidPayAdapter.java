@@ -404,6 +404,7 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
      * Initialize Google Payment Request
      * @param amount amount to pay
      */
+    @Deprecated
     public void createAndroidPayRequest(double amount){
         setGoogleApiClient();
         PaymentDataRequest paymentDataRequest = createPaymentDataRequest(amount);
@@ -439,6 +440,7 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
      * @param paymentAmount amount of payment
      * @param callback callback
      */
+    @Deprecated
     public void sendRequestToPayeezy(FullWallet fullWallet, PapiAccountsDTO papiAccountsDTO, Double paymentAmount, @NonNull AndroidPayProcessingCallback callback) {
         try {
             //  Parse the Json token retrieved from the Full Wallet.
@@ -528,6 +530,7 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
 
     }
 
+    @Deprecated
     private JSONObject getRequestPayload(String data, String signature, String ephemeralPublicKey, MerchantServicesDTO payeezyMerchantService, Double paymentAmount) {
         Map<String, Object> pm = new HashMap<>();
         pm.put("merchant_ref", "orderid");
@@ -611,7 +614,7 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
                 headerMap.put("Authorization", authorizeString);
                 headerMap.put("token", token);
                 headerMap.put("apikey", apiKey);
-//                headerMap.put("content-type", "Application/json");
+                headerMap.put("content-type", "Application/json");
             } catch (Exception e) {
                 //  Nothing to do
             }
