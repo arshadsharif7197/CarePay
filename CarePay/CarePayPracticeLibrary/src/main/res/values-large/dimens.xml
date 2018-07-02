@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="list_dialog_min_height">300dp</dimen>
+    <dimen name="toolbar_vertical_padding">0dp</dimen>
+    <dimen name="search_container_padding">10dp</dimen>
+    <dimen name="bottom_button_container_padding">0dp</dimen>
+    <dimen name="list_padding">6dp</dimen>
+    <dimen name="practice_item_margin">3dp</dimen>
+    <dimen name="practice_item_text_size">15sp</dimen>
+    <dimen name="dialog_width">450dp</dimen>
+    <dimen name="sigin_main_container_margin_top">0dp</dimen>
+    <dimen name="signin_main_width">400dp</dimen>
+</resources>

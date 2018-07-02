@@ -85,13 +85,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/headerLayout"
-        android:layout_marginTop="@dimen/dimen_60dp"
+        android:layout_marginTop="@dimen/sigin_main_container_margin_top"
         android:paddingBottom="@dimen/dimen_20dp"
         android:paddingTop="@dimen/dimen_20dp">
 
         <RelativeLayout
             android:id="@+id/mainLayout"
-            android:layout_width="500dp"
+            android:layout_width="@dimen/signin_main_width"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:background="@drawable/layout_shadow"

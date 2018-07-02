@@ -47,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/patient_mode_dialog_header_bg"
-            android:padding="@dimen/dimen_10dp">
+            android:padding="@dimen/toolbar_vertical_padding">
 
             <include
                 android:id="@+id/search_toolbar"
@@ -110,7 +110,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:padding="@dimen/dimen_30dp">
+                android:padding="@dimen/search_container_padding">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePaySearchView
                     android:id="@+id/search_entry_view"
@@ -133,7 +133,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/content_description_provider_list"
-                    android:padding="@dimen/padding_xlarge" />
+                    android:padding="@dimen/list_padding" />
 
             </FrameLayout>
 
@@ -147,7 +147,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/patient_mode_dialog_body_bg"
                 android:orientation="horizontal"
-                android:padding="@dimen/dimen_10dp">
+                android:padding="@dimen/bottom_button_container_padding">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayButton
                     android:id="@+id/nextButton"
