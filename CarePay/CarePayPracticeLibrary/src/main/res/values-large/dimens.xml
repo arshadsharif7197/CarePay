@@ -7,7 +7,29 @@
     <dimen name="list_padding">6dp</dimen>
     <dimen name="practice_item_margin">3dp</dimen>
     <dimen name="practice_item_text_size">15sp</dimen>
-    <dimen name="dialog_width">450dp</dimen>
+    <dimen name="dialog_width">420dp</dimen>
+
+    <!--Sign In-->
     <dimen name="sigin_main_container_margin_top">0dp</dimen>
     <dimen name="signin_main_width">400dp</dimen>
+
+    <!--Main-->
+    <dimen name="mainTitleHeaderMarginTop">10dp</dimen>
+    <dimen name="mainLayoutContainerHorizontalMargin">20dp</dimen>
+    <dimen name="mainLayoutContainerTopMargin">140dp</dimen>
+    <dimen name="home_button_width">210dp</dimen>
+    <dimen name="home_button_height">170dp</dimen>
+    <dimen name="homeItemVerticalPadding">20dp</dimen>
+    <dimen name="home_shadow_width">600dp</dimen>
+    <dimen name="home_shadow_margin_top">-15dp</dimen>
+    <dimen name="home_main_margin_top">10dp</dimen>
+    <dimen name="officeNewsHeaderTopMargin">40dp</dimen>
+    <dimen name="officeNewsItemWidth">240dp</dimen>
+    <dimen name="officeNewListItemTextSize">16sp</dimen>
+    <dimen name="home_button_font_size">18sp</dimen>
+    <dimen name="home_alert_font_size">16sp</dimen>
+    <dimen name="home_alert_checkin_number_wrapper_height">30dp</dimen>
+    <dimen name="home_alert_checkin_number_wrapper_width">30dp</dimen>
+    <dimen name="officeNewsHeaderTextSize">22sp</dimen>
+
 </resources>

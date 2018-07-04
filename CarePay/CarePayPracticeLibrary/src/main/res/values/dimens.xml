@@ -136,7 +136,6 @@
     <dimen name="home_button_height">250dp</dimen>
 
     <dimen name="home_shadow_width">800dp</dimen>
-
     <dimen name="home_shadow_margin_top">-7dp</dimen>
 
     <dimen name="home_settings_icon_width">30dp</dimen>
@@ -147,6 +146,14 @@
     <dimen name="home_spinner_padding_righ_left">8dp</dimen>
     <dimen name="patient_splash_button_width">150dp</dimen>
     <dimen name="patient_splash_button_height">51dp</dimen>
+    <dimen name="mainTitleHeaderMarginTop">40dp</dimen>
+    <dimen name="mainLayoutContainerHorizontalMargin">50dp</dimen>
+    <dimen name="mainLayoutContainerTopMargin">200dp</dimen>
+    <dimen name="homeItemVerticalPadding">40dp</dimen>
+    <dimen name="officeNewsHeaderTopMargin">60dp</dimen>
+    <dimen name="officeNewsItemWidth">300dp</dimen>
+    <dimen name="officeNewListItemTextSize">20sp</dimen>
+    <dimen name="officeNewsHeaderTextSize">26sp</dimen>
 
     <!--Signature view dialog-->
 
