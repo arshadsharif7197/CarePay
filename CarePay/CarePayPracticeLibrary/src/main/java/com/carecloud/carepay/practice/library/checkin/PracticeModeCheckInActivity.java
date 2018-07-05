@@ -121,12 +121,11 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     private Handler handler;
 
     CheckedInAppointmentAdapter checkingInAdapter;
-
     CheckedInAppointmentAdapter checkedInAdapter;
     CheckedInAppointmentAdapter checkingOutAdapter;
     CheckedInAppointmentAdapter checkedOutAdapter;
-    CarePayTextView goBackTextView;
 
+    CarePayTextView goBackTextView;
     CarePayTextView filterOnTextView;
     CarePayTextView filterTextView;
     CarePayTextView checkingInCounterTextView;
@@ -1062,8 +1061,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload()
                 .getScheduledPaymentModel();
         List<ScheduledPaymentModel> scheduledPaymentModels = this.selectedPaymentModel.getPaymentPayload().getScheduledOneTimePayments();
-        for(ScheduledPaymentModel scheduledPaymentModel : scheduledPaymentModels){
-            if(scheduledPaymentModel.getMetadata().getOneTimePaymentId().equals(scheduledPayment.getMetadata().getOneTimePaymentId())){
+        for (ScheduledPaymentModel scheduledPaymentModel : scheduledPaymentModels) {
+            if (scheduledPaymentModel.getMetadata().getOneTimePaymentId().equals(scheduledPayment.getMetadata().getOneTimePaymentId())) {
                 scheduledPaymentModels.remove(scheduledPayment);
                 break;
             }
@@ -1148,7 +1147,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     @Override
     public void onPaymentPlanEdited(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        if(paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()){
+        if (paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()) {
             //no changes to plan
             return;
         }

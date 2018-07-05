@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!--Common-->
     <dimen name="list_dialog_min_height">300dp</dimen>
     <dimen name="toolbar_vertical_padding">0dp</dimen>
     <dimen name="search_container_padding">10dp</dimen>
@@ -8,6 +10,7 @@
     <dimen name="practice_item_margin">3dp</dimen>
     <dimen name="practice_item_text_size">15sp</dimen>
     <dimen name="dialog_width">420dp</dimen>
+    <dimen name="profile_pic_size">50dp</dimen>
 
     <!--Sign In-->
     <dimen name="sigin_main_container_margin_top">0dp</dimen>
@@ -31,5 +34,26 @@
     <dimen name="home_alert_checkin_number_wrapper_height">30dp</dimen>
     <dimen name="home_alert_checkin_number_wrapper_width">30dp</dimen>
     <dimen name="officeNewsHeaderTextSize">22sp</dimen>
+
+    <!--CheckIn Practice Mode-->
+    <dimen name="checkInPanelWidth">1200dp</dimen>
+    <dimen name="patientImageNameMargin">6dp</dimen>
+    <dimen name="patientShortNameTextSize">20sp</dimen>
+    <dimen name="patientNameTextSize">18sp</dimen>
+    <dimen name="providerNameTextSize">12sp</dimen>
+    <dimen name="timeTextSize">16sp</dimen>
+    <dimen name="timeElapsedTextSize">10sp</dimen>
+    <dimen name="infoTextSize">11sp</dimen>
+    <dimen name="checkinColumnTitleTextSize">15sp</dimen>
+    <dimen name="checkInTitleCounterTextSize">13sp</dimen>
+    <dimen name="checkInColumnTopMargin">5dp</dimen>
+    <dimen name="cardQueueMinHeight">70dp</dimen>
+    <dimen name="goBackTextSize">16sp</dimen>
+    <dimen name="filterLabelTextSize">16sp</dimen>
+    <dimen name="goBackHeight">36dp</dimen>
+    <dimen name="checkInMainPanelTopPadding">10dp</dimen>
+    <dimen name="queueTimeMarginTop">0dp</dimen>
+    <dimen name="queueCounterNoBorderWidth">27dp</dimen>
+    <dimen name="queueCounterNoBorderHeight">27dp</dimen>
 
 </resources>

@@ -213,4 +213,25 @@
     <dimen name="sigin_main_container_margin_top">60dp</dimen>
     <dimen name="signin_main_width">500dp</dimen>
 
+    <!--CheckIn Practice Mode-->
+    <dimen name="checkInPanelWidth">1600dp</dimen>
+    <dimen name="patientImageNameMargin">16dp</dimen>
+    <dimen name="patientShortNameTextSize">24sp</dimen>
+    <dimen name="patientNameTextSize">22sp</dimen>
+    <dimen name="providerNameTextSize">17sp</dimen>
+    <dimen name="timeTextSize">19sp</dimen>
+    <dimen name="timeElapsedTextSize">11sp</dimen>
+    <dimen name="infoTextSize">14sp</dimen>
+    <dimen name="checkinColumnTitleTextSize">20sp</dimen>
+    <dimen name="checkInTitleCounterTextSize">16sp</dimen>
+    <dimen name="checkInColumnTopMargin">15dp</dimen>
+    <dimen name="cardQueueMinHeight">90dp</dimen>
+    <dimen name="goBackTextSize">20sp</dimen>
+    <dimen name="filterLabelTextSize">20sp</dimen>
+    <dimen name="goBackHeight">53dp</dimen>
+    <dimen name="checkInMainPanelTopPadding">15dp</dimen>
+    <dimen name="queueTimeMarginTop">5dp</dimen>
+    <dimen name="queueCounterNoBorderWidth">34dp</dimen>
+    <dimen name="queueCounterNoBorderHeight">34dp</dimen>
+
 </resources>
