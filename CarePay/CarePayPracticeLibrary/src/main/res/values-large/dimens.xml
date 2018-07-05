@@ -30,7 +30,7 @@
     <dimen name="officeNewsItemWidth">240dp</dimen>
     <dimen name="officeNewListItemTextSize">16sp</dimen>
     <dimen name="home_button_font_size">18sp</dimen>
-    <dimen name="home_alert_font_size">16sp</dimen>
+    <dimen name="home_alert_font_size">14sp</dimen>
     <dimen name="home_alert_checkin_number_wrapper_height">30dp</dimen>
     <dimen name="home_alert_checkin_number_wrapper_width">30dp</dimen>
     <dimen name="officeNewsHeaderTextSize">22sp</dimen>
@@ -55,5 +55,6 @@
     <dimen name="queueTimeMarginTop">0dp</dimen>
     <dimen name="queueCounterNoBorderWidth">27dp</dimen>
     <dimen name="queueCounterNoBorderHeight">27dp</dimen>
+    <dimen name="queueCounterStrokeWidth">2dp</dimen>
 
 </resources>

@@ -54,5 +54,6 @@
     <dimen name="queueTimeMarginTop">5dp</dimen>
     <dimen name="queueCounterNoBorderWidth">34dp</dimen>
     <dimen name="queueCounterNoBorderHeight">34dp</dimen>
+    <dimen name="queueCounterStrokeWidth">3dp</dimen>
 
 </resources>
