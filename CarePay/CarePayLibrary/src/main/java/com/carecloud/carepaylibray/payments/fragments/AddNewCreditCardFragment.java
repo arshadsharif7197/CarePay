@@ -313,7 +313,9 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
     @Override
     public void onAuthorizeCreditCardFailed() {
         nextButton.setEnabled(true);
-        new LargeAlertDialog(getActivity(), Label.getLabel("payment_failed_error"), Label.getLabel("payment_change_payment_label"), R.color.Feldgrau, R.drawable.icn_card_error, getLargeAlertInterface()).show();
+        new LargeAlertDialog(getActivity(), Label.getLabel("payment_failed_error"),
+                Label.getLabel("payment_change_payment_label"),
+                R.color.Feldgrau, R.drawable.icn_card_error, getLargeAlertInterface()).show();
     }
 
     protected LargeAlertDialog.LargeAlertInterface getLargeAlertInterface() {
