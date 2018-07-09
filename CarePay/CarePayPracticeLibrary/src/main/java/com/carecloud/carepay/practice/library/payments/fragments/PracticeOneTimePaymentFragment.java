@@ -150,55 +150,6 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
         @Override
         public void onClick(final View view) {
             showCalendar();
-//            // Use the current date as the default date in the picker
-//            Calendar calendar = Calendar.getInstance();
-//            calendar.setTime(paymentDate);
-//
-//            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
-//                    android.R.style.Theme_DeviceDefault_Light_Dialog_MinWidth,
-//                    new DatePickerDialog.OnDateSetListener() {
-//                        @Override
-//                        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-//                            Calendar calendar = Calendar.getInstance();
-//                            calendar.set(year, month, day);
-//
-//                            DateUtil.getInstance().setDate(calendar);
-//                            paymentDate = DateUtil.getInstance().getDate();
-//                            if(DateUtil.isSameDay(paymentDate, new Date())){
-//                                schedulePaymentDateText.setText(Label.getLabel("today_label"));
-//                                applyButton.setText(Label.getLabel("payment_Pay_label"));
-//                            }else {
-//                                schedulePaymentDateText.setText(DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
-//                                applyButton.setText(Label.getLabel("payment_plan_schedule_payment"));
-//                            }
-//                            showDialog();
-//                        }
-//                    }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-//
-//            TextView title = new TextView(getContext());
-//            title.setText(Label.getLabel("payment.oneTimePayment.input.label.date"));
-//            title.setPadding(10,10,10,10);
-//            title.setTextColor(ContextCompat.getColor(getContext(), R.color.textview_default_textcolor));
-//            datePickerDialog.setCustomTitle(title);
-//
-//            int paymentDueDay = paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfMonth();
-//            Calendar dueCal = Calendar.getInstance();
-//            dueCal.set(Calendar.DAY_OF_MONTH, paymentDueDay);
-//            int monthsRemaining = paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments() -
-//                    paymentPlanDTO.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
-//            dueCal.add(Calendar.MONTH, monthsRemaining);
-//
-//            datePickerDialog.getDatePicker().setMaxDate(dueCal.getTimeInMillis());
-//            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
-//            datePickerDialog.getDatePicker().setCalendarViewShown(false);
-//            datePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-//                @Override
-//                public void onCancel(DialogInterface dialog) {
-//                    showDialog();
-//                }
-//            });
-//            datePickerDialog.show();
-//            hideDialog();
         }
     };
 
