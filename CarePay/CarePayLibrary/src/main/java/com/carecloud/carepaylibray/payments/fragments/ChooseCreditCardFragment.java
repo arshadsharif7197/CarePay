@@ -356,7 +356,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payments_completed), 1);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.total_payments_amount), amountToMakePayment);
 
-            callback.showPaymentConfirmation(workflowDTO);
+            showConfirmation(workflowDTO);
             if (getDialog() != null) {
                 dismiss();
             }
@@ -389,6 +389,10 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     public void onCreditCardItemSelected(PaymentCreditCardsPayloadDTO creditCard) {
         selectedCreditCard = creditCard;
         nextButton.setEnabled(true);
+    }
+
+    protected void showConfirmation(WorkflowDTO workflowDTO){
+        callback.showPaymentConfirmation(workflowDTO);
     }
 
 }

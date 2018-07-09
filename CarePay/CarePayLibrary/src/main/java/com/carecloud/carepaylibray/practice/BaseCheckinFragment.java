@@ -67,6 +67,8 @@ public abstract class BaseCheckinFragment extends BaseFragment implements Icicle
                 workflowDTO.getPayload().remove("appointments");
                 workflowDTO.getPayload().add("appointments", gson.toJsonTree(list));
                 callback.displayCheckInSuccess(workflowDTO);
+            }else{
+                callback.navigateToWorkflow(workflowDTO);
             }
             Log.e("WorkflowUpdate", e.getMessage());
         }

@@ -32,4 +32,7 @@ public class NavigationStateConstants {
     public static final String PATIENT_MY_HEALTH = "myhealth";
     public static final String EXTRA_INFO = "extra_info";
     public static final String RETAIL = "retail";
+    public static final String THIRD_PARTY_CHECK_IN = "third_party_checkin";
+    public static final String THIRD_PARTY_CHECK_OUT = "third_party_checkout";
+
 }

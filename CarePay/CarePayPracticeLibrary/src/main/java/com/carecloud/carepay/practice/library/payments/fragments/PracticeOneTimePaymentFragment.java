@@ -2,6 +2,7 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -190,6 +191,12 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
             datePickerDialog.getDatePicker().setMaxDate(dueCal.getTimeInMillis());
             datePickerDialog.getDatePicker().setMinDate(minDate);
             datePickerDialog.getDatePicker().setCalendarViewShown(false);
+            datePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    showDialog();
+                }
+            });
             datePickerDialog.show();
             hideDialog();
         }
