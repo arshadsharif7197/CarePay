@@ -91,6 +91,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.google.gson.Gson;
+import com.squareup.timessquare.CalendarPickerView;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -613,8 +614,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                 endDate,
                 dateUtil.getDate(),
                 dateUtil.addDays(92).getDate(),
-                this
-        );
+                this,
+                CalendarPickerView.SelectionMode.RANGE.name());
 
         displayDialogFragment(dialog, false);
     }
@@ -751,6 +752,11 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     public void onDateRangeCancelled() {
         onDateRangeSelected(startDate, endDate, visitTypeDTO, appointmentResourcesDTO.getResource(),
                 resourcesToSchedule);
+    }
+
+    @Override
+    public void onDateSelected(Date selectedDate) {
+        //Not Implemented
     }
 
     WorkflowServiceCallback resourcesToScheduleCallback = new WorkflowServiceCallback() {

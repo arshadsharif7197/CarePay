@@ -30,6 +30,7 @@ import com.google.gson.JsonSyntaxException;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -237,6 +238,11 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
 
     @Override
     public void onCashSelected(PaymentsModel paymentsModel) {
+        //Not Implemented
+    }
+
+    @Override
+    public void onDateSelected(Date selectedDate) {
         //Not Implemented
     }
 }
