@@ -86,6 +86,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
+import com.squareup.timessquare.CalendarPickerView;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -757,8 +758,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                     endDate,
                     DateRangePickerDialog.getPreviousSixMonthCalendar(),
                     DateRangePickerDialog.getNextSixMonthCalendar(),
-                    PaymentsActivity.this
-            );
+                    PaymentsActivity.this,
+                    CalendarPickerView.SelectionMode.RANGE.name());
             displayDialogFragment(dialog, false);
         }
     };
@@ -784,7 +785,12 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void onDateRangeCancelled() {
+        //Not Implemented
+    }
 
+    @Override
+    public void onDateSelected(Date selectedDate) {
+        //Not Implemented
     }
 
     private String getFormattedDate(Date date) {
@@ -900,8 +906,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload()
                 .getScheduledPaymentModel();
         List<ScheduledPaymentModel> scheduledPaymentModels = this.paymentsModel.getPaymentPayload().getScheduledOneTimePayments();
-        for(ScheduledPaymentModel scheduledPaymentModel : scheduledPaymentModels){
-            if(scheduledPaymentModel.getMetadata().getOneTimePaymentId().equals(scheduledPayment.getMetadata().getOneTimePaymentId())){
+        for (ScheduledPaymentModel scheduledPaymentModel : scheduledPaymentModels) {
+            if (scheduledPaymentModel.getMetadata().getOneTimePaymentId().equals(scheduledPayment.getMetadata().getOneTimePaymentId())) {
                 scheduledPaymentModels.remove(scheduledPayment);
                 break;
             }
@@ -995,7 +1001,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     @Override
     public void onPaymentPlanEdited(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        if(paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()){
+        if (paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()) {
             //no changes to plan
             return;
         }
