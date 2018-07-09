@@ -254,4 +254,9 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
         }
     };
 
+    @Override
+    protected void showConfirmation(WorkflowDTO workflowDTO){
+        ((OneTimePaymentInterface)callback).showPaymentConfirmation(workflowDTO, true);
+    }
+
 }

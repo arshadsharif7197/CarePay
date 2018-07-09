@@ -527,26 +527,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
-        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload()
-                .getPatientPayments().getPayload();
-        if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
-            StringBuilder builder = new StringBuilder();
-            for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload
-                    .getProcessingErrors()) {
-                builder.append(processingError.getError());
-                builder.append("\n");
-            }
-            int last = builder.lastIndexOf("\n");
-            builder.replace(last, builder.length(), "");
-            new CustomMessageToast(this, builder.toString(),
-                    CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
-            onDismissPaymentMethodDialog(paymentsModel);
-        } else {
-            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
-                    .newInstance(workflowDTO);
-            displayDialogFragment(confirmationFragment, false);
-        }
+        showPaymentConfirmation(workflowDTO, false);
     }
 
     @Override
@@ -915,6 +896,30 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal());
         showSuccessToast(message);
 
+    }
+
+    @Override
+    public void showPaymentConfirmation(WorkflowDTO workflowDTO, boolean isOneTimePayment) {
+        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload()
+                .getPatientPayments().getPayload();
+        if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
+            StringBuilder builder = new StringBuilder();
+            for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload
+                    .getProcessingErrors()) {
+                builder.append(processingError.getError());
+                builder.append("\n");
+            }
+            int last = builder.lastIndexOf("\n");
+            builder.replace(last, builder.length(), "");
+            new CustomMessageToast(this, builder.toString(),
+                    CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
+            onDismissPaymentMethodDialog(paymentsModel);
+        } else {
+            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
+                    .newInstance(workflowDTO, isOneTimePayment);
+            displayDialogFragment(confirmationFragment, false);
+        }
     }
 
     @Override

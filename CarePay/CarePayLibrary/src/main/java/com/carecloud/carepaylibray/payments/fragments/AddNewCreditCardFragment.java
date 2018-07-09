@@ -152,7 +152,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
             MixPanelUtil.logEvent(getString(R.string.event_payment_complete), params, values);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payments_completed), 1);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.total_payments_amount), amountToMakePayment);
-            callback.showPaymentConfirmation(workflowDTO);
+            showConfirmation(workflowDTO);
         }
 
         @Override
@@ -183,6 +183,10 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
         } else {
             processPayment();
         }
+    }
+
+    protected void showConfirmation(WorkflowDTO workflowDTO){
+        callback.showPaymentConfirmation(workflowDTO);
     }
 
     private void processPayment(IntegratedPaymentPostModel postModel) {

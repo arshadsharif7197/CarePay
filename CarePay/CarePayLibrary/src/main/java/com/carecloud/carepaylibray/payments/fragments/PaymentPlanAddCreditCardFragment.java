@@ -213,4 +213,9 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
         }
     };
 
+    @Override
+    protected void showConfirmation(WorkflowDTO workflowDTO){
+        ((OneTimePaymentInterface)callback).showPaymentConfirmation(workflowDTO, true);
+    }
+
 }
