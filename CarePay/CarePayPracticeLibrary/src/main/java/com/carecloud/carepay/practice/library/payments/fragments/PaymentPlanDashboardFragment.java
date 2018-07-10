@@ -119,7 +119,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
         currentPaymentPlansRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         PaymentPlanDashboardAdapter adapter = new PaymentPlanDashboardAdapter(
                 getPaymentPlansFiltered(paymentsModel.getPaymentPayload().getPatientPaymentPlans(),
-                        false), false, hasBalanceForPaymentPlan);
+                        false), paymentsModel, false, hasBalanceForPaymentPlan);
         adapter.setCallback(this);
         currentPaymentPlansRecycler.setAdapter(adapter);
     }
@@ -129,7 +129,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
         completedPaymentPlansRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         PaymentPlanDashboardAdapter adapter = new PaymentPlanDashboardAdapter(
                 getPaymentPlansFiltered(paymentsModel.getPaymentPayload().getPatientPaymentPlans(),
-                        true), true, false);
+                        true), paymentsModel, true, false);
         adapter.setCallback(this);
         completedPaymentPlansRecycler.setAdapter(adapter);
 

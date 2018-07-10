@@ -174,7 +174,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
                 Label.getLabel("payment.oneTimePayment.input.label.date"),
                 Label.getLabel("datepicker_cancel_option"),
                 false,
-                calendar.getTime(),
+                paymentDate,
                 dueCal.getTime(),
                 calendar.getTime(),
                 dueCal.getTime(),

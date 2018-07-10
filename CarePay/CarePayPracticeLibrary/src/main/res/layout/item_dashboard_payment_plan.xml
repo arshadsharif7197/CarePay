@@ -9,23 +9,38 @@
     android:paddingEnd="@dimen/dimen_15dp"
     android:paddingStart="@dimen/dimen_15dp">
 
-    <ProgressBar
-        android:id="@+id/paymentPlanProgressBar"
-        style="?android:attr/progressBarStyleHorizontal"
+    <FrameLayout
+        android:id="@+id/progress_layout"
         android:layout_width="@dimen/dimen_60dp"
         android:layout_height="@dimen/dimen_60dp"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="@dimen/dimen_10dp"
-        android:indeterminate="false"
-        android:max="100"
-        android:progress="25"
-        android:progressDrawable="@drawable/payment_plan_progress" />
+        android:layout_marginEnd="@dimen/dimen_10dp">
+
+        <ProgressBar
+            android:id="@+id/paymentPlanProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="@dimen/dimen_60dp"
+            android:layout_height="@dimen/dimen_60dp"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="25"
+            android:progressDrawable="@drawable/payment_plan_progress" />
+
+        <ImageView
+            android:id="@+id/scheduledPaymentIndicator"
+            android:layout_width="@dimen/dimen_30dp"
+            android:layout_height="@dimen/dimen_30dp"
+            android:layout_gravity="center"
+            android:src="@drawable/icn_pending"
+            android:visibility="gone"/>
+
+    </FrameLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_1dp"
         android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@id/paymentPlanProgressBar"
+        android:layout_toEndOf="@id/progress_layout"
         android:background="@color/divider_color" />
 
     <RelativeLayout
@@ -33,7 +48,7 @@
         android:layout_height="@dimen/dimen_60dp"
         android:layout_marginBottom="@dimen/dimen_10dp"
         android:layout_marginTop="@dimen/dimen_10dp"
-        android:layout_toEndOf="@id/paymentPlanProgressBar">
+        android:layout_toEndOf="@id/progress_layout">
 
         <LinearLayout
             android:layout_width="wrap_content"
