@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
     android:background="@drawable/side_nav_bar"
     android:gravity="bottom"
-    android:orientation="vertical"
     android:paddingBottom="13dp"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -23,15 +21,32 @@
         android:src="@drawable/icn_placeholder_user_profile_png" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/userNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/appointmentDrawerIdImageView"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_toEndOf="@id/appointmentDrawerIdImageView"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_20"
+        android:textStyle="bold"
+        app:customAssetFont="proxima_nova_extra_bold"
+        tools:text="Pablo Johnson" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/appointmentsDrawerIdTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:maxLines="1"
+        android:layout_below="@id/appointmentDrawerIdImageView"
         android:ellipsize="end"
         android:gravity="start"
-        tools:text="someemail.that.is.too.long.to.show@on.asingleline.com"
-        app:customAssetFont="proxima_nova_semi_bold"/>
+        android:maxLines="1"
+        android:textColor="@color/white"
+        app:customAssetFont="proxima_nova_semi_bold"
+        tools:text="someemail.that.is.too.long.to.show@on.asingleline.com" />
 
 
-</LinearLayout>
+</RelativeLayout>

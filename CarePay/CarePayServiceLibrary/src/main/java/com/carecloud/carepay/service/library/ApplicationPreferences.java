@@ -55,6 +55,7 @@ public class ApplicationPreferences {
 
     private static ApplicationPreferences instance;
     private String userPassword;
+    private String fullName;
 
 
     public static ApplicationPreferences getInstance() {
@@ -390,5 +391,13 @@ public class ApplicationPreferences {
     public void setUserPassword(String userPassword) {
         writeStringToSharedPref(PREFERENCE_PASSWORD, userPassword);
         this.userPassword = userPassword;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setUserFullName(String fullName) {
+        this.fullName = fullName;
     }
 }

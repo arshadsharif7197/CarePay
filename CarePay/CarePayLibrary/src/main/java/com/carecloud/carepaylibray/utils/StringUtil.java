@@ -7,6 +7,7 @@ import android.util.Log;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 
 import java.text.NumberFormat;
 import java.util.Collection;
@@ -474,5 +475,15 @@ public class StringUtil {
 
         }
 
+    }
+
+    public static String getCapitalizedUserName(String firstName, String lastName) {
+        if (firstName == null) {
+            firstName = "";
+        }
+        if (lastName == null) {
+            lastName = "";
+        }
+        return (StringUtil.capitalize(firstName + " " + lastName));
     }
 }
