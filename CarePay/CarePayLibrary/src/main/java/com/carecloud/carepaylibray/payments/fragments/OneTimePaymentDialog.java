@@ -3,7 +3,6 @@ package com.carecloud.carepaylibray.payments.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +12,7 @@ import android.widget.Toast;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.common.DatePickerFragment;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -177,7 +177,7 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
                             }
                         });
         SystemUtil.hideSoftKeyboard(context, getCurrentFocus());
-        callback.displayDialogFragment(fragment, true);
+        ((FragmentActivityInterface) callback).displayDialogFragment(fragment, true);
     }
 
 }

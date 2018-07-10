@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.payments.interfaces;
 
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -12,7 +11,7 @@ import java.util.Date;
  * Created by lmenendez on 2/7/18
  */
 
-public interface OneTimePaymentInterface extends PaymentMethodInterface, FragmentActivityInterface{
+public interface OneTimePaymentInterface extends PaymentMethodInterface {
     void onMakeOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
 
     void onStartOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
