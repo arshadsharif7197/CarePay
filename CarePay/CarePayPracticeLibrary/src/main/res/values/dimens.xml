@@ -145,7 +145,7 @@
     <dimen name="home_spinner_width">100dp</dimen>
     <dimen name="home_spinner_height">40dp</dimen>
     <dimen name="home_spinner_padding_righ_left">8dp</dimen>
-    <dimen name="patient_splash_button_width">150dp</dimen>
+    <dimen name="patient_splash_button_width">250dp</dimen>
     <dimen name="patient_splash_button_height">51dp</dimen>
 
     <!--Signature view dialog-->

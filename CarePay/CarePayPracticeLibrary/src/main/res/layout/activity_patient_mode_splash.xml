@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -41,7 +40,7 @@
                 android:background="@drawable/bg_blue_overlay"
                 android:paddingEnd="@dimen/home_spinner_padding_righ_left"
                 android:paddingStart="@dimen/home_spinner_padding_righ_left"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </LinearLayout>
 
         <ImageView
@@ -56,7 +55,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".35" />
+        android:layout_weight=".25" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -68,8 +67,8 @@
             android:id="@+id/practicelogo"
             android:layout_width="@dimen/patient_splash_button_width"
             android:layout_height="@dimen/patient_splash_button_width"
-            android:src="@drawable/checkin_patient_pic_rounded_border"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            android:src="@drawable/checkin_patient_pic_rounded_border" />
     </LinearLayout>
 
     <FrameLayout
@@ -92,6 +91,7 @@
             android:hint="Welcome"
             android:textColor="@color/white"
             android:textSize="@dimen/signin_title_textsize"
+            android:maxLines="4"
             app:customAssetFont="gotham_rounded_medium" />
     </LinearLayout>
 
