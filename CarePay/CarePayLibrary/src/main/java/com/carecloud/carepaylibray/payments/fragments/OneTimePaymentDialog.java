@@ -1,19 +1,18 @@
 package com.carecloud.carepaylibray.payments.fragments;
 
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.common.DatePickerFragment;
 import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -59,6 +58,8 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
         this.callback = callback;
     }
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +74,8 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
     }
 
     @Override
-    protected void initViews(){
+    protected void initViews() {
+        setContentView(R.layout.dialog_one_time_payment);
         super.initViews();
         paymentButton = (Button) findViewById(R.id.payPartialButton);
         paymentButton.setText(Label.getLabel("payment_Pay_label"));
@@ -86,7 +88,7 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
 
         ScheduledPaymentModel scheduledPayment = paymentsDTO.getPaymentPayload().
                 findScheduledPayment(paymentPlanDTO);
-        if(scheduledPayment == null) {//only allow scheduling payment if there is not one already scheduled
+        if (scheduledPayment == null) {//only allow scheduling payment if there is not one already scheduled
             schedulePaymentDateText.setOnClickListener(selectDateButtonListener);
         }
 
@@ -112,9 +114,9 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
         try {
             double amount = Double.parseDouble(enterPartialAmountEditText.getText().toString());
             createPaymentModel(amount);
-            if(DateUtil.isSameDay(paymentDate, new Date())) {
+            if (DateUtil.isSameDay(paymentDate, new Date())) {
                 callback.onStartOneTimePayment(paymentsDTO, paymentPlanDTO);
-            }else{
+            } else {
                 callback.onScheduleOneTimePayment(paymentsDTO, paymentPlanDTO, paymentDate);
             }
             dismiss();
@@ -137,48 +139,45 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
     protected View.OnClickListener selectDateButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(final View view) {
-            // Use the current date as the default date in the picker
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(paymentDate);
-
-            DatePickerDialog datePickerDialog = new DatePickerDialog(context,
-                    android.R.style.Theme_DeviceDefault_Light_Dialog_MinWidth,
-                    new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                            Calendar calendar = Calendar.getInstance();
-                            calendar.set(year, month, day);
-
-                            DateUtil.getInstance().setDate(calendar);
-                            paymentDate = DateUtil.getInstance().getDate();
-                            if(DateUtil.isSameDay(paymentDate, new Date())){
-                                schedulePaymentDateText.setText(Label.getLabel("today_label"));
-                                paymentButton.setText(Label.getLabel("payment_Pay_label"));
-                            }else {
-                                schedulePaymentDateText.setText(DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
-                                paymentButton.setText(Label.getLabel("payment_plan_schedule_payment"));
-                            }
-                        }
-                    }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-
-            TextView title = new TextView(context);
-            title.setText(Label.getLabel("payment.oneTimePayment.input.label.date"));
-            title.setPadding(10,10,10,10);
-            title.setTextColor(ContextCompat.getColor(context, R.color.textview_default_textcolor));
-            datePickerDialog.setCustomTitle(title);
-
-            int paymentDueDay = paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfMonth();
-            Calendar dueCal = Calendar.getInstance();
-            dueCal.set(Calendar.DAY_OF_MONTH, paymentDueDay);
-            int monthsRemaining = paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments() -
-                    paymentPlanDTO.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
-            dueCal.add(Calendar.MONTH, monthsRemaining);
-
-            datePickerDialog.getDatePicker().setMaxDate(dueCal.getTimeInMillis());
-            datePickerDialog.getDatePicker().setMinDate(minDate);
-            datePickerDialog.getDatePicker().setCalendarViewShown(false);
-            datePickerDialog.show();
+            showDatePickerFragment();
         }
     };
+
+    private void showDatePickerFragment() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(minDate);
+        int paymentDueDay = paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfMonth();
+        Calendar dueCal = Calendar.getInstance();
+        dueCal.set(Calendar.DAY_OF_MONTH, paymentDueDay);
+        int monthsRemaining = paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments() -
+                paymentPlanDTO.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
+        int offset = 0;
+        if (paymentDueDay >= calendar.get(Calendar.DAY_OF_MONTH)) {
+            offset = 1;
+        }
+        dueCal.add(Calendar.MONTH, monthsRemaining - offset);
+        dueCal.add(Calendar.DAY_OF_MONTH, 1);
+
+        DatePickerFragment fragment = DatePickerFragment
+                .newInstance(Label.getLabel("payment.oneTimePayment.input.label.date"),
+                        calendar.getTime(),
+                        dueCal.getTime(),
+                        new DatePickerFragment.DateRangePickerDialogListener() {
+                            @Override
+                            public void onDateSelected(Date selectedDate) {
+                                paymentDate = selectedDate;
+                                DateUtil.getInstance().setDate(paymentDate);
+                                if (DateUtil.isSameDay(paymentDate, new Date())) {
+                                    schedulePaymentDateText.setText(Label.getLabel("today_label"));
+                                    paymentButton.setText(Label.getLabel("payment_Pay_label"));
+                                } else {
+                                    schedulePaymentDateText.setText(DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
+                                    paymentButton.setText(Label.getLabel("payment_plan_schedule_payment"));
+                                }
+                            }
+                        });
+        SystemUtil.hideSoftKeyboard(context, getCurrentFocus());
+        callback.displayDialogFragment(fragment, true);
+    }
 
 }
