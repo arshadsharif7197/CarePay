@@ -7,6 +7,7 @@ import android.view.View;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAddCreditCardFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
@@ -25,6 +26,7 @@ import java.util.Date;
 public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCreditCardFragment {
 
     private PaymentPlanCreateInterface callback;
+    private LargeAlertDialog.LargeAlertInterface largeAlertInterface;
 
     /**
      * @param paymentsModel        payment model
@@ -69,7 +71,7 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
         if (paymentPlanDTO != null) {
             DtoHelper.bundleDto(args, paymentPlanDTO);
         }
-        if(paymentDate != null) {
+        if (paymentDate != null) {
             DateUtil.getInstance().setDate(paymentDate);
             args.putString(KEY_DATE, DateUtil.getInstance().toStringWithFormatYyyyDashMmDashDd());
         }
@@ -130,6 +132,20 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
             callback.onCreditCardSelected(creditCardsPayloadDTO);
         } else {
             authorizeCreditCard();
+        }
+    }
+
+    public void setChangePaymentMethodListener(LargeAlertDialog.LargeAlertInterface largeAlertInterface) {
+        this.largeAlertInterface = largeAlertInterface;
+    }
+
+    @Override
+    protected LargeAlertDialog.LargeAlertInterface getLargeAlertInterface() {
+        if (largeAlertInterface != null) {
+            dismiss();
+            return largeAlertInterface;
+        } else {
+            return super.getLargeAlertInterface();
         }
     }
 
