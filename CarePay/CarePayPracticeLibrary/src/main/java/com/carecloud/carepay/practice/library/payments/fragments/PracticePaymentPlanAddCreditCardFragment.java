@@ -6,9 +6,11 @@ import android.view.View;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAddCreditCardFragment;
+import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -149,5 +151,9 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
         }
     }
 
+    @Override
+    protected void showConfirmation(WorkflowDTO workflowDTO){
+        ((OneTimePaymentInterface)callback).showPaymentConfirmation(workflowDTO, true);
+    }
 
 }
