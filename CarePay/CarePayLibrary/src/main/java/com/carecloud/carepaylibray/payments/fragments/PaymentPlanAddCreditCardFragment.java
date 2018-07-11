@@ -53,6 +53,7 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanPostModel);
         args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
+        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, paymentPlanPostModel.getAmount());
         PaymentPlanAddCreditCardFragment fragment = new PaymentPlanAddCreditCardFragment();
         fragment.setArguments(args);
         return fragment;

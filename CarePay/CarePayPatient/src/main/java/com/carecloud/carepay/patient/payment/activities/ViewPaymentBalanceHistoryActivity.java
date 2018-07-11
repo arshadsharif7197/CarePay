@@ -444,11 +444,20 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void onAddPaymentPlanCard(PaymentsModel paymentsModel,
-                                     PaymentPlanPostModel paymentPlanPostModel,
+    public void onAddPaymentPlanCard(final PaymentsModel paymentsModel,
+                                     final PaymentPlanPostModel paymentPlanPostModel,
                                      boolean onlySelectMode) {
         PaymentPlanAddCreditCardFragment fragment = PaymentPlanAddCreditCardFragment
                 .newInstance(paymentsModel, paymentPlanPostModel, onlySelectMode);
+        fragment.setChangePaymentMethodListener(new LargeAlertDialog.LargeAlertInterface() {
+            @Override
+            public void onActionButton() {
+                PaymentPlanPaymentMethodFragment fragment = PaymentPlanPaymentMethodFragment
+                        .newInstance(paymentsModel, paymentPlanPostModel);
+                replaceFragment(fragment, true);
+                displayToolbar(false, toolBarTitle);
+            }
+        });
         replaceFragment(fragment, true);
     }
 
