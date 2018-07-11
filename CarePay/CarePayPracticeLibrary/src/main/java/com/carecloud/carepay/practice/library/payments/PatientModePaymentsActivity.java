@@ -551,14 +551,14 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
     public void onAddPaymentPlanCard(final PaymentsModel paymentsModel,
                                      final PaymentPlanDTO paymentPlanDTO,
                                      boolean onlySelectMode,
-                                     Date paymentDate) {
+                                     final Date paymentDate) {
         PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
                 .newInstance(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
         fragment.setChangePaymentMethodListener(new LargeAlertDialog.LargeAlertInterface() {
             @Override
             public void onActionButton() {
                 PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
-                        .newInstance(paymentsModel, paymentPlan, false);
+                        .newInstance(paymentsModel, paymentPlan, false, paymentDate);
                 fragment.setOnCancelListener(new Dialog.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
