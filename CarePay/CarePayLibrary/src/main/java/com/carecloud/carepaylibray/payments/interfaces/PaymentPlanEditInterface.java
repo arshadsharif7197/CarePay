@@ -19,7 +19,7 @@ public interface PaymentPlanEditInterface extends PaymentPlanCompletedInterface,
 
     void onDismissEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
 
-    void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel);
+    void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
 
     void onStartEditScheduledPayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO, ScheduledPaymentModel scheduledPaymentModel);
 }

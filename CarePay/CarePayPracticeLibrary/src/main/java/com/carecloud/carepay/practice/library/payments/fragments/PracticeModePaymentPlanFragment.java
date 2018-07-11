@@ -113,8 +113,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
-                callback.onDismissPaymentPlan(paymentsModel);
+                cancel();
             }
         });
     }

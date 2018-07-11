@@ -161,6 +161,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
             @Override
             public void onClick(View v) {
                 callback.onPaymentPlanAction(paymentsModel);
+                dismiss();
             }
         };
 
@@ -196,10 +197,12 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
     @Override
     public void onAddBalanceClicked(PaymentPlanDTO paymentPlan) {
         callback.onAddBalanceToExistingPlan(paymentsModel, paymentPlan);
+        dismiss();
     }
 
     @Override
     public void onDetailClicked(PaymentPlanDTO paymentPlan, boolean completed) {
         callback.showPaymentPlanDetail(paymentsModel, paymentPlan, completed);
+        dismiss();
     }
 }

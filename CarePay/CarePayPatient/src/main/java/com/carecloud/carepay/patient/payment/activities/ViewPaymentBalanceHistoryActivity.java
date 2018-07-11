@@ -644,9 +644,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel) {
+    public void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
         addFragment(PaymentPlanPaymentMethodFragment
-                .newInstance(paymentsModel, new PaymentPlanDTO(), true), true);
+                .newInstance(paymentsModel, paymentPlanDTO, true), true);
     }
 
     @Override

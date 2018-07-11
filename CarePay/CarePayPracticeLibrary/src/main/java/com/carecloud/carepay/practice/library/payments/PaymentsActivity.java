@@ -113,6 +113,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     private Date endDate;
 
     private PaymentHistoryItem recentRefundItem;
+    private boolean paymentMethodCancelled = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -502,11 +503,17 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void onPaymentPlanAction(PaymentsModel paymentsModel) {
+    public void onPaymentPlanAction(final PaymentsModel paymentsModel) {
         PendingBalanceDTO selectedBalance = paymentsModel.getPaymentPayload()
                 .getPatientBalances().get(0).getBalances().get(0);
         PracticeModePaymentPlanFragment fragment = PracticeModePaymentPlanFragment
                 .newInstance(paymentsModel, selectedBalance);
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                showPaymentPlanDashboard(paymentsModel);
+            }
+        });
         displayDialogFragment(fragment, false);
 
         String[] params = {getString(R.string.param_practice_id),
@@ -648,6 +655,10 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
+        if(paymentMethodCancelled){
+            paymentMethodCancelled = false;
+            return;
+        }
         FragmentManager fragmentManager = getSupportFragmentManager();
         PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager
                 .findFragmentByTag(PaymentDistributionFragment.class.getName());
@@ -720,12 +731,6 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                                       PaymentPlanDTO paymentPlanDTO) {
         PracticePaymentPlanDetailsDialogFragment fragment = PracticePaymentPlanDetailsDialogFragment
                 .newInstance(paymentsModel, paymentPlanDTO, false);
-//        fragment.setDismissListener(new DialogInterface.OnDismissListener() {
-//            @Override
-//            public void onDismiss(DialogInterface dialog) {
-//                showPaymentHistory(paymentsModel);
-//            }
-//        });
         displayDialogFragment(fragment, false);
     }
 
@@ -826,16 +831,29 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void onMakeOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+    public void onMakeOneTimePayment(final PaymentsModel paymentsModel, final PaymentPlanDTO paymentPlanDTO) {
         PracticeOneTimePaymentFragment fragment = PracticeOneTimePaymentFragment.newInstance(paymentsModel,
                 0, paymentPlanDTO);
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                showPaymentPlanDetail(paymentsModel, paymentPlanDTO, false);
+            }
+        });
         displayDialogFragment(fragment, false);
     }
 
     @Override
-    public void onStartOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+    public void onStartOneTimePayment(final PaymentsModel paymentsModel, final PaymentPlanDTO paymentPlanDTO) {
         PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
                 .newInstance(paymentsModel, paymentPlanDTO, false);
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                paymentMethodCancelled = true;
+                showPaymentPlanDetail(paymentsModel, paymentPlanDTO, false);
+            }
+        });
         displayDialogFragment(fragment, false);
 
         String[] params = {getString(com.carecloud.carepaylibrary.R.string.param_practice_id),
@@ -850,15 +868,25 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void onSelectPaymentPlanMethod(PaymentsMethodsDTO selectedPaymentMethod,
-                                          PaymentsModel paymentsModel,
-                                          PaymentPlanDTO paymentPlanDTO,
+                                          final PaymentsModel paymentsModel,
+                                          final PaymentPlanDTO paymentPlanDTO,
                                           boolean onlySelectMode,
-                                          Date paymentDate) {
+                                          final Date paymentDate) {
         if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
                 && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             PracticePaymentPlanChooseCreditCardFragment fragment = PracticePaymentPlanChooseCreditCardFragment
                     .newInstance(paymentsModel, selectedPaymentMethod.getLabel(), paymentPlanDTO,
                             onlySelectMode, paymentDate);
+            fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    if (paymentDate == null) {
+                        onStartOneTimePayment(paymentsModel, paymentPlanDTO);
+                    } else {
+                        onScheduleOneTimePayment(paymentsModel, paymentPlanDTO, paymentDate);
+                    }
+                }
+            });
             displayDialogFragment(fragment, false);
         } else {
             onAddPaymentPlanCard(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
@@ -866,19 +894,36 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void onAddPaymentPlanCard(PaymentsModel paymentsModel,
-                                     PaymentPlanDTO paymentPlanDTO,
+    public void onAddPaymentPlanCard(final PaymentsModel paymentsModel,
+                                     final PaymentPlanDTO paymentPlanDTO,
                                      boolean onlySelectMode,
-                                     Date paymentDate) {
+                                     final Date paymentDate) {
         PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
                 .newInstance(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                if (paymentDate == null) {
+                    onStartOneTimePayment(paymentsModel, paymentPlanDTO);
+                } else {
+                    onScheduleOneTimePayment(paymentsModel, paymentPlanDTO, paymentDate);
+                }
+            }
+        });
         displayDialogFragment(fragment, false);
     }
 
     @Override
-    public void onScheduleOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO, Date paymentDate) {
+    public void onScheduleOneTimePayment(final PaymentsModel paymentsModel, final PaymentPlanDTO paymentPlanDTO, Date paymentDate) {
         PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
                 .newInstance(paymentsModel, paymentPlanDTO, false, paymentDate);
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                paymentMethodCancelled = true;
+                showPaymentPlanDetail(paymentsModel, paymentPlanDTO, false);
+            }
+        });
         displayDialogFragment(fragment, false);
     }
 
@@ -1033,9 +1078,15 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void onDismissEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+    public void onDismissEditPaymentPlan(final PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
         PracticePaymentPlanDetailsDialogFragment fragment = PracticePaymentPlanDetailsDialogFragment
                 .newInstance(paymentsModel, paymentPlanDTO, false);
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                showPaymentPlanDashboard(paymentsModel);
+            }
+        });
         displayDialogFragment(fragment, false);
     }
 
@@ -1057,14 +1108,27 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel) {
-        displayDialogFragment(PracticePaymentPlanPaymentMethodFragment
-                .newInstance(paymentsModel, new PaymentPlanDTO(), true), false);
+    public void onEditPaymentPlanPaymentMethod(final PaymentsModel paymentsModel, final PaymentPlanDTO paymentPlanDTO) {
+        PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
+                .newInstance(paymentsModel, paymentPlanDTO, true);
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                showPaymentPlanDetail(paymentsModel, paymentPlanDTO, false);
+            }
+        });
+        displayDialogFragment(fragment, false);
     }
 
     @Override
-    public void onStartEditScheduledPayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO, ScheduledPaymentModel scheduledPaymentModel) {
+    public void onStartEditScheduledPayment(final PaymentsModel paymentsModel, final PaymentPlanDTO paymentPlanDTO, ScheduledPaymentModel scheduledPaymentModel) {
         PracticeEditOneTimePaymentFragment fragment = PracticeEditOneTimePaymentFragment.newInstance(paymentsModel, 0, paymentPlanDTO, scheduledPaymentModel);
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                showPaymentPlanDetail(paymentsModel, paymentPlanDTO, false);
+            }
+        });
         displayDialogFragment(fragment, false);
     }
 
@@ -1080,9 +1144,15 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void onAddBalanceToExistingPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlan) {
+    public void onAddBalanceToExistingPlan(final PaymentsModel paymentsModel, PaymentPlanDTO paymentPlan) {
         PracticeModeAddToExistingPaymentPlanFragment fragment = PracticeModeAddToExistingPaymentPlanFragment
                 .newInstance(paymentsModel, paymentPlan);
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                showPaymentPlanDashboard(paymentsModel);
+            }
+        });
         displayDialogFragment(fragment, false);
     }
 
@@ -1092,12 +1162,12 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                                       boolean isCompleted) {
         PracticePaymentPlanDetailsDialogFragment fragment = PracticePaymentPlanDetailsDialogFragment
                 .newInstance(paymentsModel, paymentPlan, isCompleted);
-//        fragment.setDismissListener(new DialogInterface.OnDismissListener() {
-//            @Override
-//            public void onDismiss(DialogInterface dialog) {
-//
-//            }
-//        });
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                showPaymentPlanDashboard(paymentsModel);
+            }
+        });
         displayDialogFragment(fragment, false);
     }
 }

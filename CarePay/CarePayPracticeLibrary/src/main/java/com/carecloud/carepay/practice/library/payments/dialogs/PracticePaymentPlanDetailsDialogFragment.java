@@ -111,7 +111,7 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
+                cancel();
             }
         });
     }
@@ -172,6 +172,7 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
                 @Override
                 public void onClick(View view) {
                     callback.onStartEditScheduledPayment(paymentsModel, paymentPlan, scheduledPayment);
+                    dismiss();
                 }
             });
         }
