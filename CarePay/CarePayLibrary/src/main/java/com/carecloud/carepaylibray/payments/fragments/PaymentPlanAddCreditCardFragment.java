@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -10,6 +11,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
@@ -36,6 +38,7 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
     private PaymentPlanCreateInterface callback;
     protected PaymentPlanPostModel paymentPlanPostModel;
     protected PaymentPlanDTO paymentPlanDTO;
+    protected LargeAlertDialog.LargeAlertInterface largeAlertInterface;
 
     private Date paymentDate;
 
@@ -216,6 +219,21 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
     @Override
     protected void showConfirmation(WorkflowDTO workflowDTO){
         ((OneTimePaymentInterface)callback).showPaymentConfirmation(workflowDTO, true);
+    }
+
+    public void setChangePaymentMethodListener(LargeAlertDialog.LargeAlertInterface largeAlertInterface) {
+        this.largeAlertInterface = largeAlertInterface;
+    }
+
+    @Override
+    protected LargeAlertDialog.LargeAlertInterface getLargeAlertInterface() {
+        if (largeAlertInterface != null) {
+            getActivity().getSupportFragmentManager()
+                    .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            return largeAlertInterface;
+        } else {
+            return super.getLargeAlertInterface();
+        }
     }
 
 }

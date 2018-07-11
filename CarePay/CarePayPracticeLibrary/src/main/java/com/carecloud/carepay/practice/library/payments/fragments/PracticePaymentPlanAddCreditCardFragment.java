@@ -26,7 +26,6 @@ import java.util.Date;
 public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCreditCardFragment {
 
     private PaymentPlanCreateInterface callback;
-    private LargeAlertDialog.LargeAlertInterface largeAlertInterface;
 
     /**
      * @param paymentsModel        payment model
@@ -135,10 +134,6 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
         }
     }
 
-    public void setChangePaymentMethodListener(LargeAlertDialog.LargeAlertInterface largeAlertInterface) {
-        this.largeAlertInterface = largeAlertInterface;
-    }
-
     @Override
     protected LargeAlertDialog.LargeAlertInterface getLargeAlertInterface() {
         if (largeAlertInterface != null) {
@@ -148,6 +143,4 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
             return super.getLargeAlertInterface();
         }
     }
-
-
 }
