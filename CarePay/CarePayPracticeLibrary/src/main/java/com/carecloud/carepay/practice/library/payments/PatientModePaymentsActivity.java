@@ -474,11 +474,28 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
     }
 
     @Override
-    public void onAddPaymentPlanCard(PaymentsModel paymentsModel,
-                                     PaymentPlanPostModel paymentPlanPostModel,
+    public void onAddPaymentPlanCard(final PaymentsModel paymentsModel,
+                                     final PaymentPlanPostModel paymentPlanPostModel,
                                      boolean onlySelectMode) {
         PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
                 .newInstance(paymentsModel, paymentPlanPostModel);
+        fragment.setChangePaymentMethodListener(new LargeAlertDialog.LargeAlertInterface() {
+            @Override
+            public void onActionButton() {
+                PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
+                        .newInstance(paymentsModel, paymentPlanPostModel);
+                fragment.setOnCancelListener(new Dialog.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogg) {
+                        ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newClinicHeader(paymentsModel);
+                        ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
+                                .newInstance(paymentsModel, headerModel, selectedBalance);
+                        displayDialogFragment(dialog, false);
+                    }
+                });
+                displayDialogFragment(fragment, false);
+            }
+        });
         displayDialogFragment(fragment, false);
     }
 

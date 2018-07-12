@@ -28,7 +28,6 @@ import java.util.Date;
 public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCreditCardFragment {
 
     private PaymentPlanCreateInterface callback;
-    private LargeAlertDialog.LargeAlertInterface largeAlertInterface;
 
     /**
      * @param paymentsModel        payment model
@@ -40,6 +39,7 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanPostModel);
+        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, paymentPlanPostModel.getAmount());
         PracticePaymentPlanAddCreditCardFragment fragment = new PracticePaymentPlanAddCreditCardFragment();
         fragment.setArguments(args);
         return fragment;
@@ -135,10 +135,6 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
         } else {
             authorizeCreditCard();
         }
-    }
-
-    public void setChangePaymentMethodListener(LargeAlertDialog.LargeAlertInterface largeAlertInterface) {
-        this.largeAlertInterface = largeAlertInterface;
     }
 
     @Override
