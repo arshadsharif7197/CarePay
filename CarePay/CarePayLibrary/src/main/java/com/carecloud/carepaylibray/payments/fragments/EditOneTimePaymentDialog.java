@@ -5,7 +5,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -19,18 +21,21 @@ import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
+import com.carecloud.carepaylibray.payments.models.ScheduledPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
 
     private ScheduledPaymentModel scheduledPaymentModel;
+    private EditText amountEditText;
 
     /**
      * Contructor
@@ -46,7 +51,7 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         String dateString = scheduledPaymentModel.getPayload().getPaymentDate();
         paymentDate = DateUtil.getInstance().setDateRaw(dateString).getDate();
@@ -62,7 +67,7 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
     }
 
     @Override
-    protected void initViews(){
+    protected void initViews() {
         super.initViews();
 
         paymentButton.setText(Label.getLabel("payment_plan_reschedule_payment_short"));
@@ -70,7 +75,7 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
         schedulePaymentDateText.setText(DateUtil.getInstance().setDateRaw(dateString).toStringWithFormatMmSlashDdSlashYyyy());
         schedulePaymentDateText.setOnClickListener(selectDateButtonListener);
 
-        EditText amountEditText = (EditText) findViewById(R.id.enterPartialAmountEditText);
+        amountEditText = (EditText) findViewById(R.id.enterPartialAmountEditText);
         amountEditText.setText(String.valueOf(scheduledPaymentModel.getPayload().getAmount()));
 
         View deleteButton = findViewById(R.id.deleteButton);
@@ -84,7 +89,7 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
 
     }
 
-    private void deletePayment(){
+    private void deletePayment() {
         ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(
                 Label.getLabel("payment.oneTimePayment.scheduled.delete.title"),
                 Label.getLabel("payment.oneTimePayment.scheduled.delete.subtitle"),
@@ -97,7 +102,7 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
                 show();
             }
         });
-        confirmDialogFragment.show(((AppCompatActivity)context).getSupportFragmentManager(), null);
+        confirmDialogFragment.show(((AppCompatActivity) context).getSupportFragmentManager(), null);
         hide();
     }
 
@@ -153,20 +158,20 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
     private WorkflowServiceCallback deleteScheduledPaymentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ((ISession)context).showProgressDialog();
+            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ((ISession)context).hideProgressDialog();
+            ((ISession) context).hideProgressDialog();
             dismiss();
             callback.showDeleteScheduledPaymentConfirmation(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ((ISession)context).hideProgressDialog();
-            ((ISession)context).showErrorNotification(exceptionMessage);
+            ((ISession) context).hideProgressDialog();
+            ((ISession) context).showErrorNotification(exceptionMessage);
 
         }
     };
@@ -174,22 +179,56 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
     private WorkflowServiceCallback editScheduledPaymentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ((ISession)context).showProgressDialog();
+            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ((ISession)context).hideProgressDialog();
+            ((ISession) context).hideProgressDialog();
             callback.showScheduledPaymentConfirmation(workflowDTO);
             dismiss();
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ((ISession)context).hideProgressDialog();
-            ((ISession)context).showErrorNotification(exceptionMessage);
+            ((ISession) context).hideProgressDialog();
+            ((ISession) context).showErrorNotification(exceptionMessage);
 
         }
     };
+
+    @Override
+    protected void onPendingAmountValidation(String amountEditText, Button payPartialButton, TextView partialPaymentTotalAmountTitle) {
+        super.onPendingAmountValidation(amountEditText, payPartialButton, partialPaymentTotalAmountTitle);
+
+        validatePaymentRescheduled();
+    }
+
+    @Override
+    protected void setSelectedDate(Date selectedDate) {
+        super.setSelectedDate(selectedDate);
+        validatePaymentRescheduled();
+    }
+
+    private void validatePaymentRescheduled() {
+        String amountText = amountEditText.getText().toString();
+        if (amountText != null && amountText.length() > 0) {
+            if (amountText.length() == 1 && amountText.equalsIgnoreCase(".")) {
+                amountText = "0.";
+            }
+
+            ScheduledPaymentPayload scheduledPayload = scheduledPaymentModel.getPayload();
+            Date originalDate = DateUtil.getInstance().setDateRaw(scheduledPayload.getPaymentDate()).getDate();
+            double originalAmount = scheduledPayload.getAmount();
+
+            double amountPay = Double.parseDouble(amountText);
+            paymentButton.setEnabled(paymentDate != null &&
+                    (!DateUtil.isSameDay(originalDate, paymentDate) ||
+                            originalAmount != amountPay));
+
+        }
+
+    }
+
 
 }

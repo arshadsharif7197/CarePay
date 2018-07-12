@@ -191,21 +191,25 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
 
                     @Override
                     public void onDateSelected(Date selectedDate) {
-                        paymentDate = selectedDate;
-                        DateUtil.getInstance().setDate(paymentDate);
-                        if (DateUtil.isSameDay(paymentDate, new Date())) {
-                            schedulePaymentDateText.setText(Label.getLabel("today_label"));
-                            applyButton.setText(Label.getLabel("payment_Pay_label"));
-                        } else {
-                            schedulePaymentDateText.setText(DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
-                            applyButton.setText(Label.getLabel("payment_plan_schedule_payment"));
-                        }
+                        setSelectedDate(selectedDate);
                         showDialog();
                     }
                 }, CalendarPickerView.SelectionMode.SINGLE.name());
 
         displayDialogFragment(dialog, false);
 
+    }
+
+    protected void setSelectedDate(Date selectedDate){
+        paymentDate = selectedDate;
+        DateUtil.getInstance().setDate(paymentDate);
+        if (DateUtil.isSameDay(paymentDate, new Date())) {
+            schedulePaymentDateText.setText(Label.getLabel("today_label"));
+            applyButton.setText(Label.getLabel("payment_Pay_label"));
+        } else {
+            schedulePaymentDateText.setText(DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
+            applyButton.setText(Label.getLabel("payment_plan_schedule_payment"));
+        }
     }
 
     /**

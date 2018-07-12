@@ -17,12 +17,14 @@ import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
+import com.carecloud.carepaylibray.payments.models.ScheduledPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -197,5 +199,38 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
 
         }
     };
+
+    @Override
+    protected void updateLayout() {
+        super.updateLayout();
+        validatePaymentRescheduled();
+    }
+
+    @Override
+    protected void setSelectedDate(Date selectedDate) {
+        super.setSelectedDate(selectedDate);
+        applyButton.setText(Label.getLabel("payment_plan_reschedule_payment"));
+        validatePaymentRescheduled();
+    }
+
+    private void validatePaymentRescheduled() {
+        String amountText = numberStr;
+        if (amountText != null && amountText.length() > 0) {
+            if (amountText.length() == 1 && amountText.equalsIgnoreCase(".")) {
+                amountText = "0.";
+            }
+
+            ScheduledPaymentPayload scheduledPayload = scheduledPaymentModel.getPayload();
+            Date originalDate = DateUtil.getInstance().setDateRaw(scheduledPayload.getPaymentDate()).getDate();
+            double originalAmount = scheduledPayload.getAmount();
+
+            double amountPay = Double.parseDouble(amountText);
+            applyButton.setEnabled(paymentDate != null &&
+                    (!DateUtil.isSameDay(originalDate, paymentDate) ||
+                            originalAmount != amountPay));
+
+        }
+
+    }
 
 }

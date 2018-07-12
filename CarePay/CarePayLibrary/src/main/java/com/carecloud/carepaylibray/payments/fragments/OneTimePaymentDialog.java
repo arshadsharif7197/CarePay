@@ -75,7 +75,6 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
 
     @Override
     protected void initViews() {
-        setContentView(R.layout.dialog_one_time_payment);
         super.initViews();
         paymentButton = (Button) findViewById(R.id.payPartialButton);
         paymentButton.setText(Label.getLabel("payment_Pay_label"));
@@ -165,19 +164,24 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
                         new DatePickerFragment.DateRangePickerDialogListener() {
                             @Override
                             public void onDateSelected(Date selectedDate) {
-                                paymentDate = selectedDate;
-                                DateUtil.getInstance().setDate(paymentDate);
-                                if (DateUtil.isSameDay(paymentDate, new Date())) {
-                                    schedulePaymentDateText.setText(Label.getLabel("today_label"));
-                                    paymentButton.setText(Label.getLabel("payment_Pay_label"));
-                                } else {
-                                    schedulePaymentDateText.setText(DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
-                                    paymentButton.setText(Label.getLabel("payment_plan_schedule_payment"));
-                                }
+                                setSelectedDate(selectedDate);
                             }
                         });
         SystemUtil.hideSoftKeyboard(context, getCurrentFocus());
         ((FragmentActivityInterface) callback).displayDialogFragment(fragment, true);
+    }
+
+    protected void setSelectedDate(Date selectedDate){
+        paymentDate = selectedDate;
+        DateUtil.getInstance().setDate(paymentDate);
+        if (DateUtil.isSameDay(paymentDate, new Date())) {
+            schedulePaymentDateText.setText(Label.getLabel("today_label"));
+            paymentButton.setText(Label.getLabel("payment_Pay_label"));
+        } else {
+            schedulePaymentDateText.setText(DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
+            paymentButton.setText(Label.getLabel("payment_plan_schedule_payment"));
+        }
+
     }
 
 }
