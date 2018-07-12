@@ -144,7 +144,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
     protected void updateLayout() {
         super.updateLayout();
         double entry = StringUtil.isNullOrEmpty(numberStr) ? 0D : Double.parseDouble(numberStr);
-        applyButton.setEnabled(entry > 0D && entry < fullAmount);
+        applyButton.setEnabled(entry > 0D && entry <= fullAmount);
     }
 
 

@@ -246,7 +246,7 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
 
     @Override
     protected void showConfirmation(WorkflowDTO workflowDTO){
-        ((OneTimePaymentInterface)callback).showPaymentConfirmation(workflowDTO, true);
+        ((OneTimePaymentInterface)callback).showPaymentConfirmation(workflowDTO, false);
     }
 
 }

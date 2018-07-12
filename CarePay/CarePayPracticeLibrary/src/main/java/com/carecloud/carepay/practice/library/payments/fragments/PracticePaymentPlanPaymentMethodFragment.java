@@ -86,7 +86,7 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
         DtoHelper.bundleDto(args, paymentPlanDTO);
         args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
 
-        if(paymentDate != null) {
+        if (paymentDate != null) {
             DateUtil.getInstance().setDate(paymentDate);
             args.putString(KEY_DATE, DateUtil.getInstance().toStringWithFormatYyyyDashMmDashDd());
         }
@@ -121,7 +121,7 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
         paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
 
         String dateString = args.getString(KEY_DATE);
-        if(dateString != null){
+        if (dateString != null) {
             DateUtil.getInstance().setDateRaw(dateString);
             paymentDate = DateUtil.getInstance().getDate();
         }
@@ -139,7 +139,7 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
             @Override
             public void onClick(View view) {
                 cancel();
-                if (!onlySelectMode) {
+                if (!onlySelectMode && onCancelListener == null) {
                     dialogCallback.onDismissPaymentMethodDialog(paymentsModel);
                 }
             }

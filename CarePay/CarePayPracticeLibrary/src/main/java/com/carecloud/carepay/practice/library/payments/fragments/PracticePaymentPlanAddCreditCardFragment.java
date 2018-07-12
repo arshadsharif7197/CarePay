@@ -6,8 +6,11 @@ import android.view.View;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAddCreditCardFragment;
+import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -36,6 +39,7 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanPostModel);
+        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, paymentPlanPostModel.getAmount());
         PracticePaymentPlanAddCreditCardFragment fragment = new PracticePaymentPlanAddCreditCardFragment();
         fragment.setArguments(args);
         return fragment;
@@ -69,7 +73,7 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
         if (paymentPlanDTO != null) {
             DtoHelper.bundleDto(args, paymentPlanDTO);
         }
-        if(paymentDate != null) {
+        if (paymentDate != null) {
             DateUtil.getInstance().setDate(paymentDate);
             args.putString(KEY_DATE, DateUtil.getInstance().toStringWithFormatYyyyDashMmDashDd());
         }
@@ -133,5 +137,19 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
         }
     }
 
+    @Override
+    protected LargeAlertDialog.LargeAlertInterface getLargeAlertInterface() {
+        if (largeAlertInterface != null) {
+            dismiss();
+            return largeAlertInterface;
+        } else {
+            return super.getLargeAlertInterface();
+        }
+    }
+
+    @Override
+    protected void showConfirmation(WorkflowDTO workflowDTO){
+        ((OneTimePaymentInterface)callback).showPaymentConfirmation(workflowDTO, true);
+    }
 
 }
