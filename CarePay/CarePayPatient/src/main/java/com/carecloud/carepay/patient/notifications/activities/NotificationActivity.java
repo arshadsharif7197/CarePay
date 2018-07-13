@@ -219,7 +219,7 @@ public class NotificationActivity extends MenuPatientActivity
         properties.put("notification_id", notificationItem.getPayload().getNotificationId());
         JSONObject payload = new JSONObject(properties);
 
-        getWorkflowServiceHelper().execute(readNotifications, readNotificationsCallback, payload.toString());
+        getWorkflowServiceHelper().execute(readNotifications, readNotificationsCallback, payload.toString(), properties);
 
     }
 
