@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.payments;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -62,6 +63,7 @@ import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
@@ -859,12 +861,26 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void onAddPaymentPlanCard(PaymentsModel paymentsModel,
-                                     PaymentPlanDTO paymentPlanDTO,
+    public void onAddPaymentPlanCard(final PaymentsModel paymentsModel,
+                                     final PaymentPlanDTO paymentPlanDTO,
                                      boolean onlySelectMode,
-                                     Date paymentDate) {
+                                     final Date paymentDate) {
         PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
                 .newInstance(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
+        fragment.setChangePaymentMethodListener(new LargeAlertDialog.LargeAlertInterface() {
+            @Override
+            public void onActionButton() {
+                PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
+                        .newInstance(paymentsModel, paymentPlanDTO, false, paymentDate);
+                fragment.setOnCancelListener(new Dialog.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+
+                    }
+                });
+                displayDialogFragment(fragment, false);
+            }
+        });
         displayDialogFragment(fragment, false);
     }
 
