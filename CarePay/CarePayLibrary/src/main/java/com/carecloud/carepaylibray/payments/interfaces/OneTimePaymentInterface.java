@@ -24,4 +24,6 @@ public interface OneTimePaymentInterface extends PaymentMethodInterface{
 
     void showScheduledPaymentConfirmation(WorkflowDTO workflowDTO);
 
+    void showPaymentConfirmation(WorkflowDTO workflowDTO, boolean isOneTimePayment);
+
 }

@@ -20,18 +20,21 @@ import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
-import java.text.NumberFormat;
-import java.util.Locale;
-
 import static com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod.PAYMENT_METHOD_ACCOUNT;
 import static com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod.PAYMENT_METHOD_CARD;
 import static com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod.PAYMENT_METHOD_NEW_CARD;
+
+import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  * Created by lmenendez on 3/24/17
  */
 
 public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
+    private static final String KEY_ONE_TIME_PAYMENT = "one_time_payment";
+    private static final String KEY_PAYMENT_TYPE = "paymentType";
+    private static final String KEY_BUTTON_LABEL = "buttonLabel";
 
     private PaymentCompletedInterface callback;
     private PaymentsModel paymentsModel;
@@ -40,20 +43,25 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
 
     private NumberFormat currencyFormatter;
 
-    public static PaymentConfirmationFragment newInstance(WorkflowDTO workflowDTO) {
+    public static PaymentConfirmationFragment newInstance(WorkflowDTO workflowDTO, boolean isOneTimePayment) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, workflowDTO);
+        args.putBoolean(KEY_ONE_TIME_PAYMENT, isOneTimePayment);
         PaymentConfirmationFragment fragment = new PaymentConfirmationFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public static PaymentConfirmationFragment newInstance(WorkflowDTO workflowDTO) {
+        return newInstance(workflowDTO, false);
     }
 
     public static PaymentConfirmationFragment newInstance(WorkflowDTO workflowDTO,
                                                           String paymentType,
                                                           String buttonLabel) {
         PaymentConfirmationFragment fragment = newInstance(workflowDTO);
-        fragment.getArguments().putString("paymentType", paymentType);
-        fragment.getArguments().putString("buttonLabel", buttonLabel);
+        fragment.getArguments().putString(KEY_PAYMENT_TYPE, paymentType);
+        fragment.getArguments().putString(KEY_BUTTON_LABEL, buttonLabel);
         return fragment;
     }
 
@@ -103,8 +111,8 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
     public void onViewCreated(View view, Bundle icicle) {
         Button okButton = (Button) view.findViewById(R.id.button_ok);
         okButton.setOnClickListener(dismissPopupListener);
-        if (getArguments().getString("buttonLabel") != null) {
-            okButton.setText(getArguments().getString("buttonLabel"));
+        if (getArguments().getString(KEY_BUTTON_LABEL) != null) {
+            okButton.setText(getArguments().getString(KEY_BUTTON_LABEL));
         }
 
         View closeButton = view.findViewById(R.id.dialog_close_header);
@@ -112,9 +120,9 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
             closeButton.setOnClickListener(dismissPopupListener);
         }
 
-        if (getArguments().getString("paymentType") != null) {
+        if (getArguments().getString(KEY_PAYMENT_TYPE) != null) {
             TextView typeTextView = (TextView) view.findViewById(R.id.payment_confirm_type_value);
-            typeTextView.setText(getArguments().getString("paymentType"));
+            typeTextView.setText(getArguments().getString(KEY_PAYMENT_TYPE));
         }
 
 
@@ -134,6 +142,10 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
         TextView practice = (TextView) view.findViewById(R.id.payment_confirm_practice_name);
         String practiceName = getPracticeName(patientPaymentPayload.getMetadata().getBusinessEntityId());
         practice.setText(practiceName);
+
+        if(getArguments().getBoolean(KEY_ONE_TIME_PAYMENT, false)){
+            practice.setText(Label.getLabel("payment_queued_patient"));
+        }
 
         //todo display possible errors
 

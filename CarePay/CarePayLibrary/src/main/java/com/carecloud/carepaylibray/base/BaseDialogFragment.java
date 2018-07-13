@@ -32,7 +32,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     private boolean isPracticeAppPracticeMode;
 
     private DialogInterface.OnDismissListener onDismissListener;
-    private DialogInterface.OnCancelListener onCancelListener;
+    protected DialogInterface.OnCancelListener onCancelListener;
 
     private long lastFullScreenSet;
 

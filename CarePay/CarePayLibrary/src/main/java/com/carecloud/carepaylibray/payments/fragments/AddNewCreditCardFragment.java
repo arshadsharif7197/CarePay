@@ -152,7 +152,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
             MixPanelUtil.logEvent(getString(R.string.event_payment_complete), params, values);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payments_completed), 1);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.total_payments_amount), amountToMakePayment);
-            callback.showPaymentConfirmation(workflowDTO);
+            showConfirmation(workflowDTO);
         }
 
         @Override
@@ -183,6 +183,10 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
         } else {
             processPayment();
         }
+    }
+
+    protected void showConfirmation(WorkflowDTO workflowDTO){
+        callback.showPaymentConfirmation(workflowDTO);
     }
 
     private void processPayment(IntegratedPaymentPostModel postModel) {
@@ -313,7 +317,9 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
     @Override
     public void onAuthorizeCreditCardFailed() {
         nextButton.setEnabled(true);
-        new LargeAlertDialog(getActivity(), Label.getLabel("payment_failed_error"), Label.getLabel("payment_change_payment_label"), R.color.Feldgrau, R.drawable.icn_card_error, getLargeAlertInterface()).show();
+        new LargeAlertDialog(getActivity(), Label.getLabel("payment_failed_error"),
+                Label.getLabel("payment_change_payment_label"),
+                R.color.Feldgrau, R.drawable.icn_card_error, getLargeAlertInterface()).show();
     }
 
     protected LargeAlertDialog.LargeAlertInterface getLargeAlertInterface() {
