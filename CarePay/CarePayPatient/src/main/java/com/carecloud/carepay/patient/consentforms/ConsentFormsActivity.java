@@ -1,7 +1,9 @@
 package com.carecloud.carepay.patient.consentforms;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -12,6 +14,7 @@ import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormPracticeF
 import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormProvidersListFragment;
 import com.carecloud.carepay.patient.consentforms.fragments.FilledFormFragment;
 import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormActivityInterface;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -91,7 +94,7 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
     public void showAllDone(WorkflowDTO workflowDTO) {
         TransitionDTO transition = consentFormsDTO.getMetadata().getLinks().getSelf();
         getWorkflowServiceHelper().execute(transition, updateFormCallBack);
-
+        updateBadgeCounters();
     }
 
     WorkflowServiceCallback updateFormCallBack = new WorkflowServiceCallback() {

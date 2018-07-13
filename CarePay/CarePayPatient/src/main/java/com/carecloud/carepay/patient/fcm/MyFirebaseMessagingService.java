@@ -6,14 +6,24 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.base.CarePayPatientApplication;
 import com.carecloud.carepay.patient.notifications.activities.NotificationProxyActivity;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepaylibray.fcm.NotificationModel;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -52,7 +62,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             PendingIntent.FLAG_UPDATE_CURRENT
                     );
             builder.setContentIntent(resultPendingIntent);
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M){
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                 builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
             }
             // Sets an ID for the notification
@@ -61,6 +71,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             // Builds the notification and issues it.
             notificationManager.notify(notificationId, builder.build());
+            updateBadgeCounters();
+
         }
 
         // Check if message contains a notification payload.
@@ -78,6 +90,36 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         notificationModel.setPracticeId(data.get("practice_id"));
         notificationModel.setPracticeMgmt(data.get("practice_mgmt"));
         return notificationModel;
+    }
+
+    public void updateBadgeCounters() {
+        Intent intent = new Intent(CarePayConstants.UPDATE_BADGES_BROADCAST);
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+
+//        TransitionDTO badgeCounterTransition = ApplicationPreferences.getInstance().getBadgeCounterTransition();
+//        Map<String, String> queryMap = new HashMap<>();
+//        ((CarePayPatientApplication) getApplicationContext()).getWorkflowServiceHelper()
+//                .execute(badgeCounterTransition, new WorkflowServiceCallback() {
+//                    @Override
+//                    public void onPreExecute() {
+//
+//                    }
+//
+//                    @Override
+//                    public void onPostExecute(WorkflowDTO workflowDTO) {
+//                        UnifiedSignInResponse dto = DtoHelper
+//                                .getConvertedDTO(UnifiedSignInResponse.class, workflowDTO);
+//                        ApplicationPreferences.getInstance()
+//                                .setMessagesBadgeCounter(dto.getPayload().getBadgeCounter().getMessages());
+//                        ApplicationPreferences.getInstance()
+//                                .setFormsBadgeCounter(dto.getPayload().getBadgeCounter().getPendingForms());
+//                    }
+//
+//                    @Override
+//                    public void onFailure(String exceptionMessage) {
+//
+//                    }
+//                }, queryMap);
     }
 
 

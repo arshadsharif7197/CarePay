@@ -267,6 +267,12 @@ public class SigninFragment extends BaseFragment {
                 String signInResponseString = gson.toJson(workflowDTO);
                 UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString,
                         UnifiedSignInResponse.class);
+                ApplicationPreferences.getInstance().setBadgeCounterTransition(signInResponse
+                        .getMetadata().getTransitions().getBadgeCounter());
+                ApplicationPreferences.getInstance()
+                        .setMessagesBadgeCounter(signInResponse.getPayload().getBadgeCounter().getMessages());
+                ApplicationPreferences.getInstance()
+                        .setFormsBadgeCounter(signInResponse.getPayload().getBadgeCounter().getPendingForms());
                 authenticate(signInResponse, signInDTO.getMetadata().getTransitions().getRefresh(),
                         signInDTO.getMetadata().getTransitions().getAuthenticate(), user, password);
             }

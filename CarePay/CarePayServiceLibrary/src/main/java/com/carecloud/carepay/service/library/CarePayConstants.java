@@ -5,6 +5,7 @@ package com.carecloud.carepay.service.library;
  */
 public class CarePayConstants {
 
+
     private CarePayConstants() {
     }
 
@@ -173,5 +174,6 @@ public class CarePayConstants {
 
     public static final String SEARCH_MODE = "searchMode";
     public static final String PATIENT_MODE_LABELS_PREFIX = "P-";
+    public static final String UPDATE_BADGES_BROADCAST = "updateBadges";
 
 }
