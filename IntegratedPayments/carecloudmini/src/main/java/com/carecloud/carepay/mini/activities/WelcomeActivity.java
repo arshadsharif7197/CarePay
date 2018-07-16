@@ -62,6 +62,7 @@ public class WelcomeActivity extends FullScreenActivity {
     private static final int PAYMENT_COMPLETE_RESET = 1000 * 3;
     private static final int POST_RETRY_DELAY = 1000 * 10;
     private static final int DEVICE_KEEP_ALIVE_PERIOD = 1000 * 30;
+    private static final int MAX_FAIL_COUNT = 60;
 
     private ApplicationHelper applicationHelper;
     private TextView message;
@@ -374,7 +375,10 @@ public class WelcomeActivity extends FullScreenActivity {
                 Looper.getMainLooper().getThread().interrupt();
                 updateMessage(getString(R.string.welcome_connect_error));
             }
-            failCount++;
+
+            if(failCount < MAX_FAIL_COUNT) {
+                failCount++;
+            }
         }
 
         @Override
