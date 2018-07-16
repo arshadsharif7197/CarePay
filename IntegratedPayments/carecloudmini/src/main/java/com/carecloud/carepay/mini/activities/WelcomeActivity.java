@@ -58,10 +58,11 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class WelcomeActivity extends FullScreenActivity {
     private static final String TAG = WelcomeActivity.class.getName();
     private static final int MAX_RETRIES = 2;
-    private static final int CONNECTION_RETRY_DELAY = 1000 * 3;
+    private static final int CONNECTION_RETRY_DELAY = 1000;
     private static final int PAYMENT_COMPLETE_RESET = 1000 * 3;
     private static final int POST_RETRY_DELAY = 1000 * 10;
     private static final int DEVICE_KEEP_ALIVE_PERIOD = 1000 * 30;
+    private static final int MAX_FAIL_COUNT = 60;
 
     private ApplicationHelper applicationHelper;
     private TextView message;
@@ -76,6 +77,8 @@ public class WelcomeActivity extends FullScreenActivity {
 
     private PowerManager.WakeLock wakeLock;
     private WifiManager.WifiLock wifiLock;
+
+    private int failCount = 0;
 
     @Override
     protected void onCreate(Bundle icicle){
@@ -349,6 +352,7 @@ public class WelcomeActivity extends FullScreenActivity {
         public void onDeviceConnected(Device device) {
             updateMessage(getString(R.string.welcome_waiting));
             connectedDevice = device;
+            failCount = 0;
         }
 
         @Override
@@ -356,15 +360,24 @@ public class WelcomeActivity extends FullScreenActivity {
             Log.d(TAG, "Connection Failure: " + errorMessage);
 
             if(!hasNetworkFailed && isResumed) {
-                handler.postDelayed(new Runnable() {
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        connectDevice();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                connectDevice();
+                            }
+                        }, CONNECTION_RETRY_DELAY * failCount);
                     }
-                }, CONNECTION_RETRY_DELAY);
+                });
             }else{
                 Looper.getMainLooper().getThread().interrupt();
                 updateMessage(getString(R.string.welcome_connect_error));
+            }
+
+            if(failCount < MAX_FAIL_COUNT) {
+                failCount++;
             }
         }
 
@@ -543,6 +556,11 @@ public class WelcomeActivity extends FullScreenActivity {
             Log.d(TAG, message);
             showErrorToast(message);
             releasePaymentRequest(paymentRequestId);
+        }
+
+        @Override
+        public void onConnectionFailed(String message) {
+            connectionCallback.onConnectionFailure(message);
         }
 
     };
@@ -786,6 +804,8 @@ public class WelcomeActivity extends FullScreenActivity {
         public void run() {
             if(!hasNetworkFailed && (connectedDevice == null || !connectedDevice.getState().equals(DeviceDef.STATE_IN_USE))){
                 connectDevice();
+            }else if(hasNetworkFailed){
+                updateMessage(getString(R.string.welcome_connect_error));
             }
             scheduleDeviceRefresh();
         }
