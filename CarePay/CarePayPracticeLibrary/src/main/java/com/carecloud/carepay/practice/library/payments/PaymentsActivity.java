@@ -867,6 +867,16 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                                      final Date paymentDate) {
         PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
                 .newInstance(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                if (paymentDate == null) {
+                    onStartOneTimePayment(paymentsModel, paymentPlanDTO);
+                } else {
+                    onScheduleOneTimePayment(paymentsModel, paymentPlanDTO, paymentDate);
+                }
+            }
+        });
         fragment.setChangePaymentMethodListener(new LargeAlertDialog.LargeAlertInterface() {
             @Override
             public void onActionButton() {
@@ -897,8 +907,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload()
                 .getScheduledPaymentModel();
         List<ScheduledPaymentModel> scheduledPaymentModels = this.paymentsModel.getPaymentPayload().getScheduledOneTimePayments();
-        for(ScheduledPaymentModel scheduledPaymentModel : scheduledPaymentModels){
-            if(scheduledPaymentModel.getMetadata().getOneTimePaymentId().equals(scheduledPayment.getMetadata().getOneTimePaymentId())){
+        for (ScheduledPaymentModel scheduledPaymentModel : scheduledPaymentModels) {
+            if (scheduledPaymentModel.getMetadata().getOneTimePaymentId().equals(scheduledPayment.getMetadata().getOneTimePaymentId())) {
                 scheduledPaymentModels.remove(scheduledPayment);
                 break;
             }
@@ -1016,7 +1026,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     @Override
     public void onPaymentPlanEdited(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        if(paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()){
+        if (paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()) {
             //no changes to plan
             return;
         }
