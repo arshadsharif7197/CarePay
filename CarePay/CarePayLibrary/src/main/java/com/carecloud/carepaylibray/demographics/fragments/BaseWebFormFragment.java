@@ -33,6 +33,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
@@ -67,6 +68,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
 
     private int totalForms;
     private int displayedFormsIndex;
+    protected List<PracticeForm> formsList;
 
     protected List<JsonObject> jsonFormSaveResponseArray = new ArrayList<>();
     private CheckinFlowCallback callback;
@@ -224,9 +226,9 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
 
     protected void loadFormUrl(String formString, String function) {
         showProgressDialog();
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             webView.evaluateJavascript("javascript:window." + function + "('" + formString + "')", null);
-        }else {
+        } else {
             webView.loadUrl("javascript:window." + function + "('" + formString + "')");
         }
         progressIndicator.setCurrentProgressDot(displayedFormsIndex);
@@ -288,11 +290,12 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
                 @Override
                 public void run() {
                     JsonObject jsonResponse = new JsonParser().parse(response).getAsJsonObject();
-
+                    if (formsList != null) {
+                        jsonResponse.addProperty("version",
+                                formsList.get(getDisplayedFormsIndex()).getMetadata().getVersion());
+                    }
                     saveForm(jsonResponse);
-
                     getNextStep();
-
                 }
             });
 
