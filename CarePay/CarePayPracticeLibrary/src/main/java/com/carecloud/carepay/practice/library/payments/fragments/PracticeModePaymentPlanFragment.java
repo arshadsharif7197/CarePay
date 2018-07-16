@@ -543,7 +543,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
 
     @Override
     public void onAuthorizeCreditCardFailed() {
-        showProgressDialog();
+        hideProgressDialog();
         SystemUtil.showErrorToast(getContext(), "Choose a different payment method");
     }
 
