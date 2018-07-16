@@ -78,8 +78,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
                 .findViewById(R.id.appointmentsDrawerIdTextView);
 
         inflateDrawer();
-//        updateBadgeCounters();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+        LocalBroadcastManager.getInstance(this).registerReceiver(badgeReceiver,
                 new IntentFilter(CarePayConstants.UPDATE_BADGES_BROADCAST));
     }
 
@@ -474,7 +473,9 @@ public abstract class MenuPatientActivity extends BasePatientActivity
                         .setMessagesBadgeCounter(dto.getPayload().getBadgeCounter().getMessages());
                 ApplicationPreferences.getInstance()
                         .setFormsBadgeCounter(dto.getPayload().getBadgeCounter().getPendingForms());
-                updateBadgeCounterViews();
+                if (isVisible) {
+                    updateBadgeCounterViews();
+                }
             }
 
             @Override
@@ -507,6 +508,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
 
         int badgeSums = messageBadgeCounter + formBadgeCounter;
         if (badgeSums > 0) {
+            //Uncomment this for showing the number of pending badges in the hamburger menu
 //            badgeDrawable.setText(String.valueOf(badgeSums));
             badgeDrawable.setEnabled(true);
         } else {
@@ -514,10 +516,18 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         }
     }
 
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver badgeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             updateBadgeCounters();
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (badgeReceiver != null) {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(badgeReceiver);
+        }
+    }
 }
