@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.payments.interfaces;
 
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.interfaces.DTOInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -19,4 +20,8 @@ public interface PaymentPlanEditInterface extends PaymentPlanCompletedInterface,
     void onDismissEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
 
     void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel);
+
+    void onPaymentPlanCanceled(WorkflowDTO workflowDTO);
+
+    void showCancelPaymentPlanConfirmDialog(ConfirmationCallback confirmationCallback);
 }

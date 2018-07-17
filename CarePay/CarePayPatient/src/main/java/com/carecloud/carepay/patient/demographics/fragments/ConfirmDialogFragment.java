@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 
 /**
  * Created by lmenendez on 10/9/17
@@ -81,9 +82,5 @@ public class ConfirmDialogFragment extends BaseDialogFragment implements View.On
                 callback.onConfirm();
             }
         }
-    }
-
-    public interface ConfirmationCallback {
-        void onConfirm();
     }
 }
