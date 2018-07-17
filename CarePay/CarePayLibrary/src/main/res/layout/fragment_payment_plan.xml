@@ -303,9 +303,10 @@
                     android:id="@+id/cancelPaymentPlanButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/button_selector_always_click"
+                    android:background="@drawable/button_red_border"
                     android:textAllCaps="true"
-                    android:textColor="@color/white"
+                    android:textColor="@color/harvard_crimson"
+                    android:foreground="?selectableItemBackground"
                     android:textSize="@dimen/respons_button_text_size"
                     breeze:textKey="payment_plan_cancel"
                     tools:text="Cancel Plan" />
