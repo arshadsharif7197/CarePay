@@ -69,6 +69,7 @@ import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.interfaces.DTO;
@@ -1192,6 +1193,16 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     public void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel) {
         displayDialogFragment(PracticePaymentPlanPaymentMethodFragment
                 .newInstance(paymentsModel, new PaymentPlanDTO(), true), false);
+    }
+
+    @Override
+    public void onPaymentPlanCanceled(WorkflowDTO workflowDTO) {
+
+    }
+
+    @Override
+    public void showCancelPaymentPlanConfirmDialog(ConfirmationCallback confirmationCallback) {
+
     }
 
     @Override

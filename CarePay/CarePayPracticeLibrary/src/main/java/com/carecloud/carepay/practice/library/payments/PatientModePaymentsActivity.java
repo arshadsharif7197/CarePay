@@ -42,6 +42,7 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
@@ -707,6 +708,16 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
     public void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel) {
         displayDialogFragment(PracticePaymentPlanPaymentMethodFragment
                 .newInstance(paymentsModel, new PaymentPlanDTO(), true), false);
+    }
+
+    @Override
+    public void onPaymentPlanCanceled(WorkflowDTO workflowDTO) {
+
+    }
+
+    @Override
+    public void showCancelPaymentPlanConfirmDialog(ConfirmationCallback confirmationCallback) {
+
     }
 
     @Override

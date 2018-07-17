@@ -7,7 +7,7 @@
     android:layout_marginEnd="@dimen/dimen_26dp"
     android:layout_marginStart="@dimen/dimen_26dp"
     android:orientation="vertical"
-    tools:context="com.carecloud.carepaylibray.demographics.fragments.HomeAlertDialogFragment">
+    tools:context="com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment">
 
     <ImageView
         android:id="@+id/closeViewLayout"

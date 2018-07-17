@@ -57,7 +57,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     private PaymentCreditCardsPayloadDTO creditCard;
     private boolean canEditPaymentPlan;
     protected PaymentPlanEditInterface callback;
-    private Button editPaymentPlanButton;
+    protected Button editPaymentPlanButton;
 
     /**
      * @param paymentsModel  the payment model
