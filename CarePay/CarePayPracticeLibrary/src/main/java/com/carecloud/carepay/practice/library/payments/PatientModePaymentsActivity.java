@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -44,6 +46,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
@@ -712,12 +715,20 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
 
     @Override
     public void onPaymentPlanCanceled(WorkflowDTO workflowDTO) {
-
+        getSupportFragmentManager().popBackStackImmediate(PatientModePaymentPlanDetailsDialogFragment.class.getName(),
+                FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        refreshBalance();
     }
 
     @Override
     public void showCancelPaymentPlanConfirmDialog(ConfirmationCallback confirmationCallback) {
-
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment
+                .newInstance(Label.getLabel("payment.cancelPaymentPlan.confirmDialog.title.cancelPaymentPlanTitle"),
+                        Label.getLabel("payment.cancelPaymentPlan.confirmDialog.message.cancelPaymentPlanMessage"));
+        confirmDialogFragment.setCallback(confirmationCallback);
+        String tag = confirmDialogFragment.getClass().getName();
+        confirmDialogFragment.show(ft, tag);
     }
 
     @Override
