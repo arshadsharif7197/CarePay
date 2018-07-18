@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/lemonGreen"
@@ -13,7 +15,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="3"
         android:layout_marginTop="@dimen/dimen_10dp">
 
         <ImageView
@@ -38,6 +40,7 @@
                 android:layout_width="@dimen/dimen_120dp"
                 android:layout_height="@dimen/dimen_120dp"
                 android:layout_marginBottom="@dimen/dimen_40dp"
+                android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
                 android:src="@drawable/icn_payment_confirm_check_white"/>
 
@@ -56,37 +59,34 @@
                 android:id="@+id/divider1"
                 android:layout_width="@dimen/checkin_complete_divider_width"
                 android:layout_height="@dimen/dimen_1dp"
-                android:background="@color/white"/>
+                android:background="@color/white" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/giveDeviceBackMessage"
-                android:layout_width="wrap_content"
+                android:id="@+id/browseOurShopTextView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="@dimen/dimen_10dp"
-                android:textColor="@color/white"
-                android:textSize="17sp"
-                app:customAssetFont="gotham_rounded_light"
-                breeze:textKey="checkin_complete_device_back_message"
-                tools:text="Now you can give the device back."/>
-
-            <View
-                android:id="@+id/divider2"
-                android:layout_width="@dimen/checkin_complete_divider_width"
-                android:layout_height="@dimen/dimen_1dp"
-                android:background="@color/white"/>
+                android:background="@drawable/button_rounded_white"
+                android:padding="@dimen/dimen_10dp"
+                android:textColor="@color/lemonGreen"
+                android:textSize="@dimen/text_size_22sp"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="check_in-out.succcess.button.label.shop"
+                tools:text="Browse Our Shop" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/continueTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:layout_marginTop="@dimen/dimen_20dp"
+                android:background="@drawable/bottom_rounded_white_alpha"
+                android:padding="@dimen/dimen_10dp"
                 android:textColor="@color/white"
-                android:textSize="17sp"
-                app:customAssetFont="gotham_rounded_light"
-                breeze:textKey="checkin_complete_continue_app_message"
-                tools:text="Continue using the app? >>"/>
+                android:textSize="@dimen/text_size_22sp"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="check_in-out.succcess.button.label.home"
+                tools:text="Go Home" />
 
         </LinearLayout>
 
@@ -95,7 +95,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="4"
         android:elevation="@dimen/dimen_14dp"
         android:orientation="vertical">
 
@@ -107,7 +107,8 @@
             android:layout_marginEnd="@dimen/dimen_50dp"
             android:layout_marginStart="@dimen/dimen_50dp"
             android:layout_marginTop="@dimen/dimen_50dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:elevation="@dimen/dimen_15dp">
 
             <RelativeLayout
                 android:id="@+id/header"
@@ -411,6 +412,7 @@
                             android:background="@color/divider_color"/>
 
                         <LinearLayout
+                            android:id="@+id/confirmationNumberLayout"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"

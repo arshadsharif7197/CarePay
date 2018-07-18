@@ -619,12 +619,9 @@ public class WelcomeActivity extends FullScreenActivity {
     };
 
     private void postPaymentRequest(String paymentRequestId, JsonElement requestObject){
-        StreamRecord streamRecord = new StreamRecord();
-        streamRecord.setDeepstreamRecordId(paymentRequestId);
-
         Gson gson = new Gson();
         String token = AuthorizationUtil.getAuthorizationToken(this).replace("\n", "");
-        getRestHelper().executePostPayment(getPostPaymentCallback(paymentRequestId, false, requestObject), token, gson.toJson(streamRecord));
+        getRestHelper().executePostPayment(getPostPaymentCallback(paymentRequestId, false, requestObject), token, gson.toJson(requestObject));
     }
 
     private void postRefundRequest(String paymentRequestId, JsonElement requestObject){

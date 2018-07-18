@@ -54,7 +54,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     protected Button nextButton;
     private RecyclerView creditCardsRecyclerView;
 
-    protected int selectedCreditCard = -1;
+    protected PaymentCreditCardsPayloadDTO selectedCreditCard;
     protected PaymentsModel paymentsModel;
     private UserPracticeDTO userPracticeDTO;
     protected double amountToMakePayment;
@@ -122,9 +122,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
                 creditCardList = paymentsModel.getPaymentPayload().getPatientCreditCards();
                 userPracticeDTO = callback.getPracticeInfo(paymentsModel);
             }
-
         }
-
     }
 
     @Override
@@ -183,18 +181,25 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
 
         creditCardsRecyclerView = (RecyclerView) view.findViewById(R.id.list_credit_cards);
-        creditCardsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        final CreditCardsListAdapter creditCardsListAdapter = new CreditCardsListAdapter(getContext(), creditCardList, this);
+        creditCardsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        final CreditCardsListAdapter creditCardsListAdapter = new CreditCardsListAdapter(getContext(),
+                creditCardList, this, false);
         creditCardsRecyclerView.setAdapter(creditCardsListAdapter);
+        for (PaymentsPatientsCreditCardsPayloadListDTO creditCard : creditCardList) {
+            if (creditCard.getPayload().isDefault()) {
+                onCreditCardItemSelected(creditCard.getPayload());
+                break;
+            }
+        }
 
     }
 
     private View.OnClickListener nextButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (selectedCreditCard > -1) {
+            if (selectedCreditCard != null) {
                 if (onlySelectMode) {
-                    callback.onCreditCardSelected(creditCardList.get(selectedCreditCard).getPayload());
+                    callback.onCreditCardSelected(selectedCreditCard);
                 } else {
                     IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
                     if (postModel != null && postModel.getAmount() > 0) {
@@ -312,27 +317,24 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     }
 
     protected IntegratedPaymentCardData getCreditCardModel() {
-        PaymentCreditCardsPayloadDTO creditCardPayload = creditCardList.get(selectedCreditCard).getPayload();
-
         IntegratedPaymentCardData creditCardModel = new IntegratedPaymentCardData();
-        creditCardModel.setCardType(creditCardPayload.getCardType());
-        creditCardModel.setCardNumber(creditCardPayload.getCardNumber());
-        creditCardModel.setExpiryDate(creditCardPayload.getExpireDt().replaceAll("/", ""));
-        creditCardModel.setNameOnCard(creditCardPayload.getNameOnCard());
-        creditCardModel.setToken(creditCardPayload.getToken());
+        creditCardModel.setCardType(selectedCreditCard.getCardType());
+        creditCardModel.setCardNumber(selectedCreditCard.getCardNumber());
+        creditCardModel.setExpiryDate(selectedCreditCard.getExpireDt().replaceAll("/", ""));
+        creditCardModel.setNameOnCard(selectedCreditCard.getNameOnCard());
+        creditCardModel.setToken(selectedCreditCard.getToken());
 
         return creditCardModel;
     }
 
     protected PapiPaymentMethod getPapiPaymentMethod() {
-        PaymentCreditCardsPayloadDTO creditCardPayload = creditCardList.get(selectedCreditCard).getPayload();
-        if (creditCardPayload.getCreditCardsId() == null) {
+        if (selectedCreditCard == null) {
             return null;
         }
 
         PapiPaymentMethod papiPaymentMethod = new PapiPaymentMethod();
         papiPaymentMethod.setPaymentMethodType(PapiPaymentMethod.PAYMENT_METHOD_CARD);
-        papiPaymentMethod.setPapiPaymentID(creditCardPayload.getCreditCardsId());
+        papiPaymentMethod.setPapiPaymentID(selectedCreditCard.getCreditCardsId());
 
         return papiPaymentMethod;
     }
@@ -384,10 +386,8 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     };
 
     @Override
-    public void onCreditCardItemSelected(int position) {
-        selectedCreditCard = position;
-        CreditCardsListAdapter creditCardsListAdapter = (CreditCardsListAdapter) creditCardsRecyclerView.getAdapter();
-        creditCardsListAdapter.setSelectedItem(position);
+    public void onCreditCardItemSelected(PaymentCreditCardsPayloadDTO creditCard) {
+        selectedCreditCard = creditCard;
         nextButton.setEnabled(true);
     }
 

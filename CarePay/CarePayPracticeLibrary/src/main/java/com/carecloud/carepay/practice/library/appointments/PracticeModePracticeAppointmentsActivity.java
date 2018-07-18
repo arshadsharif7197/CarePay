@@ -779,4 +779,9 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     public void onCreditCardSelected(PaymentCreditCardsPayloadDTO papiPaymentMethod) {
 
     }
+
+    @Override
+    public void onCashSelected(PaymentsModel paymentsModel) {
+        //TODO handle this from practice mode
+    }
 }

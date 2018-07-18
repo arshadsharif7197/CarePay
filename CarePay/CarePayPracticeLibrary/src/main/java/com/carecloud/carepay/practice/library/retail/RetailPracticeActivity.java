@@ -273,4 +273,9 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
         setSystemUiVisibility();
         setNavigationBarVisibility();
     }
+
+    @Override
+    public void onCashSelected(PaymentsModel paymentsModel) {
+        //Not implemented
+    }
 }

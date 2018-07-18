@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.payments.models.history;
 
+import com.carecloud.carepaylibray.payments.models.PaymentPlanPayloadDTO;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -28,6 +29,9 @@ public class PaymentHistoryItemPayloadMetadata {
 
     @SerializedName("externally_processed")
     private boolean externallyProcessed = false;
+
+    @SerializedName("payment_plan")
+    private PaymentPlanPayloadDTO paymentPlan;
 
 
     public String getPracticeMgmt() {
@@ -84,5 +88,13 @@ public class PaymentHistoryItemPayloadMetadata {
 
     public void setExternallyProcessed(boolean externallyProcessed) {
         this.externallyProcessed = externallyProcessed;
+    }
+
+    public PaymentPlanPayloadDTO getPaymentPlan() {
+        return paymentPlan;
+    }
+
+    public void setPaymentPlan(PaymentPlanPayloadDTO paymentPlan) {
+        this.paymentPlan = paymentPlan;
     }
 }

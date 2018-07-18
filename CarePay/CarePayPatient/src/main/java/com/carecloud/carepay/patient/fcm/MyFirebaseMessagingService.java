@@ -3,6 +3,8 @@ package com.carecloud.carepay.patient.fcm;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -33,10 +35,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             NotificationModel notificationModel = getRemoteMessageInfo(remoteMessage.getData());
             NotificationCompat.Builder builder =
                     new NotificationCompat.Builder(this)
+                            .setDefaults(NotificationCompat.DEFAULT_ALL)
                             .setAutoCancel(true)
                             .setSmallIcon(R.drawable.notification_icon)
-                            .setContentTitle("Breeze")
-                            .setContentText(notificationModel.getAlert());
+                            .setPriority(NotificationCompat.PRIORITY_MAX)
+                            .setContentTitle(getString(R.string.app_name))
+                            .setContentText(notificationModel.getAlert())
+                            .setStyle(new NotificationCompat.BigTextStyle()
+                                    .bigText(notificationModel.getAlert()));
             Intent resultIntent = new Intent(this, NotificationProxyActivity.class);
             PendingIntent resultPendingIntent =
                     PendingIntent.getActivity(
@@ -46,6 +52,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             PendingIntent.FLAG_UPDATE_CURRENT
                     );
             builder.setContentIntent(resultPendingIntent);
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M){
+                builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
+            }
             // Sets an ID for the notification
             int notificationId = 001;
             // Gets an instance of the NotificationManager service

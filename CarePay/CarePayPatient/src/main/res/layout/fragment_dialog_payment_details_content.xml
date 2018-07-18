@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
@@ -11,6 +10,7 @@
         android:id="@+id/headerContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@null"
         android:orientation="horizontal">
 
         <ImageView
@@ -84,45 +84,15 @@
 
         </FrameLayout>
 
-        <LinearLayout
-            android:id="@+id/paymentButtonsContainer"
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/consolidatedPaymentButton"
+            style="@style/ResponsButtonStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/dimen_10dp"
-            android:visibility="gone">
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/make_partial_payment_button"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/dimen_40dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="@dimen/dimen_5dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_default_background"
-                android:foreground="?android:selectableItemBackground"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/apt_dl_textview_size"
-                app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="payment_partial_payment_text"
-                tools:text="Partial Payment" />
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/payment_details_pay_now_button"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/dimen_40dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/dimen_5dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_green_fill_background"
-                android:foreground="?android:selectableItemBackground"
-                android:textColor="@color/white"
-                android:textSize="@dimen/apt_dl_textview_size"
-                app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="practice_payments_detail_dialog_pay_total"
-                tools:text="Pay Now" />
-
-        </LinearLayout>
+            android:layout_height="@dimen/dimen_50dp"
+            android:layout_margin="0dp"
+            android:background="@drawable/bg_green_selector"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="payment_options_button" />
 
     </LinearLayout>
 </LinearLayout>

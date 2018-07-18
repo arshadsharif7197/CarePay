@@ -134,9 +134,9 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
     private View.OnClickListener nextButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (selectedCreditCard > -1) {
+            if (selectedCreditCard != null) {
                 if (onlySelectMode) {
-                    callback.onCreditCardSelected(creditCardList.get(selectedCreditCard).getPayload());
+                    callback.onCreditCardSelected(selectedCreditCard);
                 } else {
                     PapiPaymentMethod papiPaymentMethod = getPapiPaymentMethod();
 

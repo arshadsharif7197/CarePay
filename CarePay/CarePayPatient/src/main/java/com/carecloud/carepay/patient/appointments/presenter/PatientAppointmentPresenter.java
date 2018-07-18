@@ -264,12 +264,18 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void onAppointmentRequestSuccess() {
-        viewHandler.confirmAppointment(true);
+        viewHandler.confirmAppointment(true,
+                getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests());
     }
 
     @Override
     public ApplicationMode getApplicationMode() {
         return viewHandler.getApplicationMode();
+    }
+
+    @Override
+    public AppointmentsSettingDTO getAppointmentsSettings() {
+        return getPracticeSettings();
     }
 
     @Override
@@ -750,7 +756,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
         if (startCancelationFeePayment) {
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_cancellation_success_message_HTML"));
-            viewHandler.confirmAppointment(false);
+            viewHandler.confirmAppointment(false, false);
             //log appt cancelation to mixpanel
             String[] params = {getString(R.string.param_appointment_cancel_reason), getString(R.string.param_practice_id), getString(R.string.param_practice_name)};
             Object[] values = {cancellationReasonString, practiceId, practiceName};

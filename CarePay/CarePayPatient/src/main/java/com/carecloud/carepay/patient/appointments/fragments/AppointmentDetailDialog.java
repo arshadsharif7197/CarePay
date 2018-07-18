@@ -226,7 +226,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     appointmentTimeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                     appointmentVisitTypeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                     if (appointmentDTO.getPayload().isAppointmentToday() || !appointmentDTO.getPayload().isAppointmentOver()) {
-                        callback.getQueueStatus(appointmentDTO, queueStatusCallback);
+                        if (appointmentDTO.getPayload().getAppointmentStatus().getOriginalName() == null) {
+                            callback.getQueueStatus(appointmentDTO, queueStatusCallback);
+                        }
                         if (shouldShowCheckInButton(enabledLocations)) {
                             actionsLayout.setVisibility(View.VISIBLE);
                             leftButton.setVisibility(View.VISIBLE);
