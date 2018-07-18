@@ -36,7 +36,6 @@ import java.util.Map;
 /**
  * Created by jorge on 10/01/17
  */
-
 public abstract class MenuPatientActivity extends BasePatientActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -134,8 +133,6 @@ public abstract class MenuPatientActivity extends BasePatientActivity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-
         WorkflowServiceCallback callback;
         TransitionDTO transition;
         Map<String, String> headersMap = new HashMap<>();

@@ -15,6 +15,7 @@ import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormActivity
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.consentforms.models.payload.FormDTO;
@@ -34,6 +35,15 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
         if (savedInstanceState == null) {
             replaceFragment(ConsentFormProvidersListFragment.newInstance(), false);
         }
+        Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
+        if (extra != null && !extra.isEmpty()) {
+            String practiceId = extra.getString("practiceId");
+            for (int i = 0; i < consentFormsDTO.getPayload().getForms().size(); i++) {
+                if (practiceId.equals(consentFormsDTO.getPayload().getForms().get(i).getMetadata().getPracticeId())) {
+                    addFragment(ConsentFormPracticeFormsFragment.newInstance(i), true);
+                }
+            }
+        }
     }
 
     @Override
@@ -51,7 +61,8 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
     public void onBackPressed() {
         super.onBackPressed();
         if (getSupportFragmentManager().getBackStackEntryCount() < 1) {
-            displayToolbar(true, null);
+            MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_forms);
+            displayToolbar(true, menuItem.getTitle().toString());
         }
     }
 
