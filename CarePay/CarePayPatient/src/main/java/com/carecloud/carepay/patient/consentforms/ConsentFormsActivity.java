@@ -2,14 +2,19 @@ package com.carecloud.carepay.patient.consentforms;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormPracticeFormsFragment;
 import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormProvidersListFragment;
 import com.carecloud.carepay.patient.consentforms.fragments.FilledFormFragment;
 import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormActivityInterface;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.consentforms.models.payload.FormDTO;
@@ -81,4 +86,32 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
     public List<PracticeForm> getAllFormsToShow() {
         return selectedForms;
     }
+
+    @Override
+    public void showAllDone(WorkflowDTO workflowDTO) {
+        TransitionDTO transition = consentFormsDTO.getMetadata().getLinks().getSelf();
+        getWorkflowServiceHelper().execute(transition, updateFormCallBack);
+
+    }
+
+    WorkflowServiceCallback updateFormCallBack = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            finish();
+            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 }

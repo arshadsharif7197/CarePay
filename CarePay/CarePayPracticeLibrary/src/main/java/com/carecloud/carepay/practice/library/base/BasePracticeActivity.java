@@ -164,7 +164,7 @@ public abstract class BasePracticeActivity extends BaseActivity
      * @param languageCode the language code (eg. "en", "es")
      * @param headers      any additional header
      */
-    protected void changeLanguage(TransitionDTO transition, String languageCode, Map<String, String> headers) {
+    public void changeLanguage(TransitionDTO transition, String languageCode, Map<String, String> headers) {
         changeLanguage(transition, languageCode, headers, null);
     }
 
@@ -174,7 +174,7 @@ public abstract class BasePracticeActivity extends BaseActivity
      * @param headers      any additional header
      * @param callback     an additional callback
      */
-    protected void changeLanguage(TransitionDTO transition, String languageCode, Map<String, String> headers,
+    public void changeLanguage(TransitionDTO transition, String languageCode, Map<String, String> headers,
                                   SimpleCallback callback) {
         Map<String, String> query = new HashMap<>();
         query.put("language", languageCode);

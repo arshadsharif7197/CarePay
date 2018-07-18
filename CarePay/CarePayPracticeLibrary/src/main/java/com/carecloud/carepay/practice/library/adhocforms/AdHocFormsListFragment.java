@@ -135,8 +135,6 @@ public class AdHocFormsListFragment extends BaseDialogFragment
                 }
             });
 
-            //TODO: delete this line when pending forms are ready (SHMRK-5240)
-            sendFormButton.setVisibility(View.GONE);
         } else {
             view.findViewById(R.id.noFormsContainer).setVisibility(View.VISIBLE);
         }
@@ -214,10 +212,10 @@ public class AdHocFormsListFragment extends BaseDialogFragment
     public void onFormSelected(PracticeForm practiceForm, boolean selected) {
         if (selected) {
             selectedForms.getForms()
-                    .add(practiceForm.getPayload().get("uuid").toString().replace("\"", ""));
+                    .add(practiceForm.getPayload().get("uuid").getAsString());
         } else {
             selectedForms.getForms()
-                    .remove(practiceForm.getPayload().get("uuid").toString().replace("\"", ""));
+                    .remove(practiceForm.getPayload().get("uuid").getAsString());
         }
         fillNowFormButton.setEnabled(!selectedForms.getForms().isEmpty());
         sendFormButton.setEnabled(!selectedForms.getForms().isEmpty());

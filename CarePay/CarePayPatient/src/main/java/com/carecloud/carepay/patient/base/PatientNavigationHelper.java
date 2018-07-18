@@ -120,6 +120,16 @@ public class PatientNavigationHelper {
                 }
                 break;
             }
+            case NavigationStateConstants.THIRD_PARTY_CHECK_IN: {
+                if (context instanceof ReviewDemographicsActivity) {
+                    ((ReviewDemographicsActivity) context).navigateToThirdParty(workflowDTO);
+                    return;
+                } else {
+                    intent = new Intent(context, ReviewDemographicsActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                }
+                break;
+            }
             case NavigationStateConstants.PAYMENTS: {
                 if (context instanceof ReviewDemographicsActivity) {
                     ((ReviewDemographicsActivity) context).getPaymentInformation(workflowDTO.toString());

@@ -223,6 +223,10 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
     }
 
     protected void loadFormUrl(String formString, String function) {
+        if(!isAdded()){
+            hideProgressDialog();
+            return;
+        }
         showProgressDialog();
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
             webView.evaluateJavascript("javascript:window." + function + "('" + formString + "')", null);

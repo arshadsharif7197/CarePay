@@ -295,8 +295,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     private void initializeLeftNavigation() {
-        ((TextView) findViewById(R.id.checkInLeftNavigationTitle))
-                .setText(Label.getLabel("practice_checkin_header_label"));
+        TextView title = (TextView) findViewById(R.id.checkInLeftNavigationTitle);
+        if(title != null) {
+            title.setText(Label.getLabel("practice_checkin_header_label"));
+        }
         checkInFlowViews = new View[]{
                 findViewById(R.id.checkin_flow_demographics),
                 findViewById(R.id.checkin_flow_consent),
@@ -640,8 +642,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 }
                 section.setSelected(true);
                 section.setEnabled(true);
-                progress.setVisibility(View.VISIBLE);
-                progress.setText(currentPage + " of " + totalPages); //TODO label for "of"
+                if(totalPages > 0) {
+                    String progressLabel = currentPage + " " + Label.getLabel("of") + " " + totalPages;
+                    progress.setVisibility(View.VISIBLE);
+                    progress.setText(progressLabel);
+                }
             } else {
                 if (section.getFontAttribute() == CustomAssetStyleable.GOTHAM_ROUNDED_BOLD) {
                     section.setFontAttribute(CustomAssetStyleable.GOTHAM_ROUNDED_LIGHT);
@@ -679,6 +684,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     @Override
     public void navigateToIntakeForms(WorkflowDTO workflowDTO) {
         presenter.navigateToIntakeForms(workflowDTO);
+    }
+
+    @Override
+    public void navigateToThirdParty(WorkflowDTO workflowDTO) {
+        presenter.navigateToThirdParty(workflowDTO);
     }
 
     @Override

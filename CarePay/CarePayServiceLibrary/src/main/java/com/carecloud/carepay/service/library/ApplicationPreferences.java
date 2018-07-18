@@ -111,13 +111,13 @@ public class ApplicationPreferences {
                 .equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)) {
             if (patientUserLanguage == null) {
                 patientUserLanguage = readStringFromSharedPref(PATIENT_USER_LANGUAGE,
-                        "en");//Resources.getSystem().getConfiguration().locale.getLanguage());
+                        CarePayConstants.DEFAULT_LANGUAGE);//Resources.getSystem().getConfiguration().locale.getLanguage());
             }
             return patientUserLanguage;
         }
         if (userLanguage == null) {
             userLanguage = readStringFromSharedPref(PRACTICE_USER_LANGUAGE,
-                    "en");//Resources.getSystem().getConfiguration().locale.getLanguage());
+                    CarePayConstants.DEFAULT_LANGUAGE);//Resources.getSystem().getConfiguration().locale.getLanguage());
         }
         return userLanguage;
     }

@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.payment.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,6 +24,8 @@ import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
+import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_HISTORY;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +43,7 @@ public class PatientPaymentHistoryFragment extends BaseFragment
 
     private RecyclerView historyRecyclerView;
     private View noPaymentsLayout;
+    private SwipeRefreshLayout refreshLayout;
     private boolean isPaging = false;
 
     @Override
@@ -78,6 +82,13 @@ public class PatientPaymentHistoryFragment extends BaseFragment
         super.onViewCreated(view, savedInstanceState);
         noPaymentsLayout = view.findViewById(R.id.no_payment_layout);
         setUpRecyclerView(view);
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                callback.onRequestRefresh(PAGE_HISTORY);
+            }
+        });
     }
 
     private void setUpRecyclerView(View view) {
@@ -193,6 +204,8 @@ public class PatientPaymentHistoryFragment extends BaseFragment
 
     @Override
     public void onHistoryItemClicked(PaymentHistoryItem item) {
-        callback.displayPaymentHistoryDetails(item);
+        if(!refreshLayout.isRefreshing()) {
+            callback.displayPaymentHistoryDetails(item);
+        }
     }
 }

@@ -12,6 +12,7 @@ import com.carecloud.carepaylibray.payments.models.history.PaymentsTransactionHi
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanLineItem;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.annotations.Expose;
@@ -19,6 +20,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,7 +108,10 @@ public class PaymentsPayloadDTO implements Serializable {
     private List<PatientStatementDTO> patientStatements = new ArrayList<>();
     @SerializedName("payment_plan_created")
     private boolean paymentPlanCreated = false;
-
+    @SerializedName("one_time_payment")
+    private ScheduledPaymentModel scheduledPaymentModel = new ScheduledPaymentModel();
+    @SerializedName("one_time_payments")
+    private List<ScheduledPaymentModel> scheduledOneTimePayments = new ArrayList<>();
 
     public List<PatientModel> getPatients() {
         return patients;
@@ -350,6 +355,22 @@ public class PaymentsPayloadDTO implements Serializable {
 
     public void setPatientStatements(List<PatientStatementDTO> patientStatements) {
         this.patientStatements = patientStatements;
+    }
+
+    public ScheduledPaymentModel getScheduledPaymentModel() {
+        return scheduledPaymentModel;
+    }
+
+    public void setScheduledPaymentModel(ScheduledPaymentModel scheduledPaymentModel) {
+        this.scheduledPaymentModel = scheduledPaymentModel;
+    }
+
+    public List<ScheduledPaymentModel> getScheduledOneTimePayments() {
+        return scheduledOneTimePayments;
+    }
+
+    public void setScheduledOneTimePayments(List<ScheduledPaymentModel> scheduledOneTimePayments) {
+        this.scheduledOneTimePayments = scheduledOneTimePayments;
     }
 
     /**
@@ -606,4 +627,24 @@ public class PaymentsPayloadDTO implements Serializable {
         }
         return 0D;
     }
+
+    /**
+     * Find a scheduled payment for a specific plan that is scheduled for a future date
+     * @param paymentPlanDTO payment plan
+     * @return future scheduled payment or null if none
+     */
+    public ScheduledPaymentModel findScheduledPayment(PaymentPlanDTO paymentPlanDTO){
+        String planId = paymentPlanDTO.getMetadata().getPaymentPlanId();
+        for(ScheduledPaymentModel scheduledPaymentModel : getScheduledOneTimePayments()){
+            if(scheduledPaymentModel.getMetadata().getPaymentPlanId().equals(planId)){
+                Date scheduledDate = DateUtil.getInstance()
+                        .setDateRaw(scheduledPaymentModel.getPayload().getPaymentDate()).getDate();
+                if(scheduledDate.after(new Date())) {
+                    return scheduledPaymentModel;
+                }
+            }
+        }
+        return null;
+    }
+
 }

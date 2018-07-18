@@ -136,7 +136,7 @@ public class WorkflowServiceHelper {
         Map<String, String> appStartHeaders = new HashMap<>();
         appStartHeaders.put("x-api-key", HttpConstants.getApiStartKey());
         if (applicationPreferences.getUserLanguage().isEmpty()) {
-            appStartHeaders.put("Accept-Language", "en");
+            appStartHeaders.put("Accept-Language", CarePayConstants.DEFAULT_LANGUAGE);
         } else {
             appStartHeaders.put("Accept-Language", applicationPreferences.getUserLanguage());
         }
@@ -149,7 +149,7 @@ public class WorkflowServiceHelper {
     public Map<String, String> getPreferredLanguageHeader() {
         Map<String, String> prefredLanguage = new HashMap<>();
         if (applicationPreferences.getUserLanguage().isEmpty()) {
-            prefredLanguage.put("Accept-Language", "en");
+            prefredLanguage.put("Accept-Language", CarePayConstants.DEFAULT_LANGUAGE);
         } else {
             prefredLanguage.put("Accept-Language", applicationPreferences.getUserLanguage());
         }
@@ -326,7 +326,7 @@ public class WorkflowServiceHelper {
 
             private void handleException(Exception exception) {
                 if (exception.getMessage() != null) {
-                    callback.onFailure(exception.getMessage());
+                    callback.onFailure(capitalizeMessage(exception.getMessage()));
                     Log.e("WorkflowServiceHelper", exception.getMessage(), exception);
                 } else {
                     callback.onFailure(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
@@ -434,7 +434,7 @@ public class WorkflowServiceHelper {
                     // Re-try failed request with increased attempt count
                     executeRequest(transitionDTO, callback, jsonBody, queryMap, headers, attemptCount + 1);
                 } else {
-                    callback.onFailure("" + errorMessage);
+                    callback.onFailure(capitalizeMessage(errorMessage));
                 }
             }
         });
@@ -461,7 +461,7 @@ public class WorkflowServiceHelper {
 
             @Override
             public void onLoginFailure(String exceptionMessage) {
-                callback.onFailure("" + exceptionMessage);
+                callback.onFailure(capitalizeMessage(exceptionMessage));
             }
         };
     }
@@ -506,7 +506,7 @@ public class WorkflowServiceHelper {
 
             @Override
             public void onFailure(String exceptionMessage) {
-                callback.onFailure("" + exceptionMessage);
+                callback.onFailure(capitalizeMessage(exceptionMessage));
             }
         };
     }
@@ -613,4 +613,11 @@ public class WorkflowServiceHelper {
         return null;
     }
 
+
+    private static @NonNull String capitalizeMessage(String message) {
+        if(message == null){
+            return "";
+        }
+        return message.substring(0,1).toUpperCase() + message.substring(1);
+    }
 }

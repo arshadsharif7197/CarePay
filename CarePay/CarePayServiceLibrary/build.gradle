@@ -31,7 +31,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
     implementation 'com.squareup.okhttp3:okhttp:3.6.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
-    implementation 'com.android.support:support-annotations:25.3.1'
+    implementation 'com.android.support:support-annotations:25.4.0'
     //Cognito
     api 'com.amazonaws:aws-android-sdk-cognitoidentityprovider:2.3.1'
 
