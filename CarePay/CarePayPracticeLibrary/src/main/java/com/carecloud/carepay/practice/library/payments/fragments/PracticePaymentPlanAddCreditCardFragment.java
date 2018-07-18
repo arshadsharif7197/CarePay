@@ -119,12 +119,6 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
     }
 
     @Override
-    protected void makePaymentCall() {
-        super.makePaymentCall();
-        dismiss();
-    }
-
-    @Override
     protected void authorizeOrSelectCreditCard() {
         if (onlySelectMode) {
             creditCardsPayloadDTO.setCompleteNumber(creditCardNoEditText.getText().toString().replace(" ", "").trim());
