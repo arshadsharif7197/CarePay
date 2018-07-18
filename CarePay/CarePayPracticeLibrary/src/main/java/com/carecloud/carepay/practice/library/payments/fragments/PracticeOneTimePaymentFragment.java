@@ -97,7 +97,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
 
         ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload().
                 findScheduledPayment(paymentPlanDTO);
-        if(scheduledPayment == null) {//only allow scheduling payment if there is not one already scheduled
+        if (scheduledPayment == null) {//only allow scheduling payment if there is not one already scheduled
             schedulePaymentDateText.setOnClickListener(selectDateButtonListener);
         }
 
@@ -108,7 +108,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
     }
 
     @Override
-    protected double getMinimumPayment(){
+    protected double getMinimumPayment() {
         return 0D;
     }
 
@@ -119,15 +119,15 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
     @Override
     protected void onPaymentClick(double amount) {
         createPaymentModel(amount);
-        if(DateUtil.isSameDay(paymentDate, new Date())) {
+        if (DateUtil.isSameDay(paymentDate, new Date())) {
             callback.onStartOneTimePayment(paymentsModel, paymentPlanDTO);
-        }else{
+        } else {
             callback.onScheduleOneTimePayment(paymentsModel, paymentPlanDTO, paymentDate);
         }
         dismiss();
     }
 
-    private void createPaymentModel(double amount){
+    private void createPaymentModel(double amount) {
         IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
         if (postModel == null) {
             postModel = new IntegratedPaymentPostModel();
@@ -141,7 +141,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
     protected void updateLayout() {
         super.updateLayout();
         double entry = StringUtil.isNullOrEmpty(numberStr) ? 0D : Double.parseDouble(numberStr);
-        applyButton.setEnabled(entry > 0D && entry < fullAmount);
+        applyButton.setEnabled(entry > 0D && entry <= fullAmount);
     }
 
 
@@ -162,10 +162,10 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
 
                             DateUtil.getInstance().setDate(calendar);
                             paymentDate = DateUtil.getInstance().getDate();
-                            if(DateUtil.isSameDay(paymentDate, new Date())){
+                            if (DateUtil.isSameDay(paymentDate, new Date())) {
                                 schedulePaymentDateText.setText(Label.getLabel("today_label"));
                                 applyButton.setText(Label.getLabel("payment_Pay_label"));
-                            }else {
+                            } else {
                                 schedulePaymentDateText.setText(DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
                                 applyButton.setText(Label.getLabel("payment_plan_schedule_payment"));
                             }
@@ -175,7 +175,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
 
             TextView title = new TextView(getContext());
             title.setText(Label.getLabel("payment.oneTimePayment.input.label.date"));
-            title.setPadding(10,10,10,10);
+            title.setPadding(10, 10, 10, 10);
             title.setTextColor(ContextCompat.getColor(getContext(), R.color.textview_default_textcolor));
             datePickerDialog.setCustomTitle(title);
 

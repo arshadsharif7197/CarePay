@@ -496,7 +496,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
             addressModel.setPhone(StringUtil.revertToRawFormat(phoneNumberString));
         }
 
-        String phoneType = phoneNumberTypeEditText.getText().toString().trim();
+        String phoneType = selectedPhoneType.getName();
         if (!StringUtil.isNullOrEmpty(phoneType)) {
             // 'de-format' before saving to model
             addressModel.setPhoneNumberType(phoneType);
