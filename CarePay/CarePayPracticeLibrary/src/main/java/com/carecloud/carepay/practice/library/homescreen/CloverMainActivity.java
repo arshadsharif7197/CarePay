@@ -239,16 +239,18 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             boolean showShop = practiceHomeScreenPayloadDTO.getUserPractices().get(0).isRetailEnabled();
             if (showShop) {
                 View shopContainer = findViewById(R.id.homeShopClickable);
-                shopContainer.setVisibility(View.VISIBLE);
-                shopContainer.setOnClickListener(this);
-                findViewById(R.id.separator).setVisibility(View.VISIBLE);
+                if(shopContainer != null) {
+                    shopContainer.setVisibility(View.VISIBLE);
+                    shopContainer.setOnClickListener(this);
+                    findViewById(R.id.separator).setVisibility(View.VISIBLE);
 
-                ImageView checkinImageView = (ImageView) findViewById(R.id.homeCheckinImageView);
-                redesignTopLayouts(checkinLabelTextView, checkinImageView, R.id.checkInFakeCenter);
+                    ImageView checkinImageView = (ImageView) findViewById(R.id.homeCheckinImageView);
+                    redesignTopLayouts(checkinLabelTextView, checkinImageView, R.id.checkInFakeCenter);
 
-                TextView checkOutLabelTextView = (TextView) findViewById(R.id.homeCheckoutLabel);
-                ImageView checkoutImageView = (ImageView) findViewById(R.id.checkoutImageView);
-                redesignTopLayouts(checkOutLabelTextView, checkoutImageView, R.id.checkoutFakeCenter);
+                    TextView checkOutLabelTextView = (TextView) findViewById(R.id.homeCheckoutLabel);
+                    ImageView checkoutImageView = (ImageView) findViewById(R.id.checkoutImageView);
+                    redesignTopLayouts(checkOutLabelTextView, checkoutImageView, R.id.checkoutFakeCenter);
+                }
             }
         } else {
             if (homeCheckInLl != null) {
