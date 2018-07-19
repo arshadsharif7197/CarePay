@@ -247,5 +247,7 @@
     <dimen name="languageItemStartMargin">20dp</dimen>
     <dimen name="languageItemEndMargin">10dp</dimen>
     <dimen name="languageItemTextSize">19sp</dimen>
+    <dimen name="nextButtonTextSize">22sp</dimen>
+    <dimen name="searchViewHeight">35dp</dimen>
 
 </resources>

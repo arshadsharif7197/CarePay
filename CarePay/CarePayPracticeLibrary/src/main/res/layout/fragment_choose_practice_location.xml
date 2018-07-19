@@ -58,7 +58,7 @@
             <com.carecloud.carepaylibray.customcomponents.CarePaySearchView
                 android:id="@+id/search_entry_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/searchViewHeight"
                 android:background="@drawable/search_rounded_border"
                 android:theme="@style/SearchViewStyleDark_NoLine"
                 app:customAssetFont="proxima_nova_regular"
@@ -76,7 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/content_description_provider_list"
-                android:padding="@dimen/list_padding"/>
+                android:padding="@dimen/list_padding" />
 
         </FrameLayout>
 
@@ -95,14 +95,13 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/nextButton"
                 style="@style/BreezeButtonStyleDark"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/signInButtonHeight"
                 android:layout_margin="@dimen/dimen_10dp"
-                android:layout_weight="1"
                 android:background="@drawable/green_rounded_button_selector"
                 android:contentDescription="@string/content_description_continue"
                 android:enabled="false"
-                android:textSize="@dimen/text_size_22sp"
+                android:textSize="@dimen/nextButtonTextSize"
                 app:customAssetFont="gotham_rounded_medium" />
 
 

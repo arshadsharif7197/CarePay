@@ -3,8 +3,8 @@
 
     <!--Common-->
     <dimen name="errorTextSize">10sp</dimen>
+    <dimen name="hint_floating_size">10sp</dimen>
     <dimen name="textview_default_textsize">17sp</dimen>
-    <dimen name="hint_floating_size">10dp</dimen>
 
     <!-- Default dimens which will be use for any default styling  -->
     <dimen name="dimen_1dp">1dp</dimen>

@@ -6,14 +6,29 @@
     <dimen name="search_container_padding">30dp</dimen>
     <dimen name="bottom_button_container_padding">10dp</dimen>
     <dimen name="list_padding">16dp</dimen>
-    <dimen name="practice_item_margin">13dp</dimen>
-    <dimen name="practice_item_text_size">17sp</dimen>
     <dimen name="dialog_width">510dp</dimen>
     <dimen name="profile_pic_size">60dp</dimen>
+
+    <!--Language-->
+    <dimen name="langSpinnerTextSize">20sp</dimen>
+    <dimen name="languageSpinnerWidth">100dp</dimen>
+    <dimen name="languageSpinnerHeight">40dp</dimen>
+    <dimen name="languageContainerWidth">140dp</dimen>
+    <dimen name="languageContainerMarginTop">15dp</dimen>
+    <dimen name="languageIndicatorSize">25dp</dimen>
+    <dimen name="languageItemStartMargin">20dp</dimen>
+    <dimen name="languageItemEndMargin">10dp</dimen>
+    <dimen name="languageItemTextSize">19sp</dimen>
+    <dimen name="practice_item_margin">13dp</dimen>
+    <dimen name="practice_item_text_size">17sp</dimen>
 
     <!--Sign In-->
     <dimen name="sigin_main_container_margin_top">60dp</dimen>
     <dimen name="signin_main_width">500dp</dimen>
+    <dimen name="signInMainLayoutPadding">20dp</dimen>
+    <dimen name="signInButtonHeight">48dp</dimen>
+    <dimen name="signInButtonMarginTop">30dp</dimen>
+    <dimen name="signInButtonTextSize">22sp</dimen>
 
     <!-- Home Screen -->
     <dimen name="mainTitleHeaderMarginTop">40dp</dimen>
@@ -55,19 +70,7 @@
     <dimen name="queueCounterNoBorderWidth">34dp</dimen>
     <dimen name="queueCounterNoBorderHeight">34dp</dimen>
     <dimen name="queueCounterStrokeWidth">3dp</dimen>
-    <dimen name="signInMainLayoutPadding">20dp</dimen>
-    <dimen name="signInButtonHeight">48dp</dimen>
-    <dimen name="signInButtonMarginTop">30dp</dimen>
-    <dimen name="signInButtonTextSize">22sp</dimen>
-
-    <dimen name="langSpinnerTextSize">20sp</dimen>
-    <dimen name="languageSpinnerWidth">100dp</dimen>
-    <dimen name="languageSpinnerHeight">40dp</dimen>
-    <dimen name="languageContainerWidth">140dp</dimen>
-    <dimen name="languageContainerMarginTop">15dp</dimen>
-    <dimen name="languageIndicatorSize">25dp</dimen>
-    <dimen name="languageItemStartMargin">20dp</dimen>
-    <dimen name="languageItemEndMargin">10dp</dimen>
-    <dimen name="languageItemTextSize">19sp</dimen>
+    <dimen name="nextButtonTextSize">22sp</dimen>
+    <dimen name="searchViewHeight">50dp</dimen>
 
 </resources>

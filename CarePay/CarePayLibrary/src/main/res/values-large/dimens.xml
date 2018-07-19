@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="hint_floating_size">10sp</dimen>
+    <dimen name="errorTextSize">10sp</dimen>
+    <dimen name="textview_default_textsize">16sp</dimen>
+</resources>
