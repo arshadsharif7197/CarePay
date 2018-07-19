@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
@@ -31,6 +32,9 @@ import java.util.Locale;
  */
 
 public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
+    private static final String KEY_ONE_TIME_PAYMENT = "one_time_payment";
+    private static final String KEY_PAYMENT_TYPE = "paymentType";
+    private static final String KEY_BUTTON_LABEL = "buttonLabel";
 
     private PaymentCompletedInterface callback;
     private PaymentsModel paymentsModel;
@@ -39,13 +43,25 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
 
     private NumberFormat currencyFormatter;
 
-
-    public static PaymentConfirmationFragment newInstance(WorkflowDTO workflowDTO){
+    public static PaymentConfirmationFragment newInstance(WorkflowDTO workflowDTO, boolean isOneTimePayment) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, workflowDTO);
-
+        args.putBoolean(KEY_ONE_TIME_PAYMENT, isOneTimePayment);
         PaymentConfirmationFragment fragment = new PaymentConfirmationFragment();
         fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static PaymentConfirmationFragment newInstance(WorkflowDTO workflowDTO) {
+        return newInstance(workflowDTO, false);
+    }
+
+    public static PaymentConfirmationFragment newInstance(WorkflowDTO workflowDTO,
+                                                          String paymentType,
+                                                          String buttonLabel) {
+        PaymentConfirmationFragment fragment = newInstance(workflowDTO);
+        fragment.getArguments().putString(KEY_PAYMENT_TYPE, paymentType);
+        fragment.getArguments().putString(KEY_BUTTON_LABEL, buttonLabel);
         return fragment;
     }
 
@@ -55,7 +71,7 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
         try {
             if (context instanceof PaymentViewHandler) {
                 callback = ((PaymentViewHandler) context).getPaymentPresenter();
-            }else if (context instanceof AppointmentViewHandler){
+            } else if (context instanceof AppointmentViewHandler) {
                 callback = (PaymentCompletedInterface) ((AppointmentViewHandler) context).getAppointmentPresenter();
             } else {
                 callback = (PaymentCompletedInterface) context;
@@ -93,25 +109,31 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
-        View okButton = view.findViewById(R.id.button_ok);
+        Button okButton = (Button) view.findViewById(R.id.button_ok);
         okButton.setOnClickListener(dismissPopupListener);
+        if (getArguments().getString(KEY_BUTTON_LABEL) != null) {
+            okButton.setText(getArguments().getString(KEY_BUTTON_LABEL));
+        }
 
         View closeButton = view.findViewById(R.id.dialog_close_header);
         if (closeButton != null) {
             closeButton.setOnClickListener(dismissPopupListener);
         }
 
-        TextView type = (TextView) view.findViewById(R.id.payment_confirm_type_value);
-        type.setText(Label.getLabel("payment_type_one_time"));
+        if (getArguments().getString(KEY_PAYMENT_TYPE) != null) {
+            TextView typeTextView = (TextView) view.findViewById(R.id.payment_confirm_type_value);
+            typeTextView.setText(getArguments().getString(KEY_PAYMENT_TYPE));
+        }
 
-        TextView method = (TextView) view.findViewById(R.id.payment_confirm_method_value);
-        method.setText(getPaymentMethod(patientPaymentPayload));
 
-        TextView total = (TextView) view.findViewById(R.id.payment_confirm_total_value);
-        total.setText(currencyFormatter.format(patientPaymentPayload.getTotalPaid()));
+        TextView methodTextView = (TextView) view.findViewById(R.id.payment_confirm_method_value);
+        methodTextView.setText(getPaymentMethod(patientPaymentPayload));
 
-        TextView confirmation = (TextView) view.findViewById(R.id.payment_confirm_value);
-        confirmation.setText(patientPaymentPayload.getConfirmation());
+        TextView totalTextView = (TextView) view.findViewById(R.id.payment_confirm_total_value);
+        totalTextView.setText(currencyFormatter.format(patientPaymentPayload.getTotalPaid()));
+
+        TextView confirmationTextView = (TextView) view.findViewById(R.id.payment_confirm_value);
+        confirmationTextView.setText(patientPaymentPayload.getConfirmation());
 
         DateUtil dateUtil = DateUtil.getInstance().setToCurrent();
         TextView date = (TextView) view.findViewById(R.id.payment_confirm_date);
@@ -120,6 +142,10 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
         TextView practice = (TextView) view.findViewById(R.id.payment_confirm_practice_name);
         String practiceName = getPracticeName(patientPaymentPayload.getMetadata().getBusinessEntityId());
         practice.setText(practiceName);
+
+        if(getArguments().getBoolean(KEY_ONE_TIME_PAYMENT, false)){
+            practice.setText(Label.getLabel("payment_queued_patient"));
+        }
 
         //todo display possible errors
 
@@ -136,11 +162,12 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
 
     /**
      * Get Display label for payment method
+     *
      * @param patientPaymentPayload payload
      * @return label
      */
-    public static String getPaymentMethod(IntegratedPatientPaymentPayload patientPaymentPayload){
-        switch (patientPaymentPayload.getPaymentMethod().getPaymentMethodType()){
+    public static String getPaymentMethod(IntegratedPatientPaymentPayload patientPaymentPayload) {
+        switch (patientPaymentPayload.getPaymentMethod().getPaymentMethodType()) {
             case PAYMENT_METHOD_ACCOUNT:
                 return Label.getLabel("payment_method_account");
             case PAYMENT_METHOD_CARD:
@@ -150,9 +177,9 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
         }
     }
 
-    private String getPracticeName(String practiceId){
-        for(UserPracticeDTO userPracticeDTO : paymentsModel.getPaymentPayload().getUserPractices()){
-            if(userPracticeDTO.getPracticeId().equals(practiceId)){
+    private String getPracticeName(String practiceId) {
+        for (UserPracticeDTO userPracticeDTO : paymentsModel.getPaymentPayload().getUserPractices()) {
+            if (userPracticeDTO.getPracticeId().equals(practiceId)) {
                 return userPracticeDTO.getPracticeName();
             }
         }

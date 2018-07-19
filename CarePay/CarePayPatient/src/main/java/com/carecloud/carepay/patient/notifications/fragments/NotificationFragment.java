@@ -10,10 +10,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepay.patient.notifications.adapters.NotificationsAdapter;
 import com.carecloud.carepay.patient.notifications.models.NotificationItem;
 import com.carecloud.carepay.patient.notifications.models.NotificationType;
@@ -21,6 +25,7 @@ import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.SwipeViewHolder;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -37,7 +42,9 @@ import java.util.Set;
  * Created by lmenendez on 2/8/17
  */
 
-public class NotificationFragment extends BaseFragment implements NotificationsAdapter.SelectNotificationCallback, SwipeHelper.SwipeHelperListener {
+public class NotificationFragment extends BaseFragment
+        implements NotificationsAdapter.SelectNotificationCallback, SwipeHelper.SwipeHelperListener {
+
 
     public interface NotificationCallback {
         void displayNotification(NotificationItem notificationItem);
@@ -54,7 +61,6 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
     private RecyclerView notificationsRecycler;
     private NotificationsAdapter notificationsAdapter;
     private SwipeRefreshLayout refreshLayout;
-    private SwipeHelper swipeHelper;
     private Set<NotificationType> supportedNotificationTypes = new HashSet<>();
 
     private Handler handler;
@@ -88,12 +94,14 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         supportedNotificationTypes.add(NotificationType.appointment);
-
+        supportedNotificationTypes.add(NotificationType.pending_forms);
+        setHasOptionsMenu(true);
         Bundle args = getArguments();
         if (args != null) {
             notificationsDTO = DtoHelper.getConvertedDTO(NotificationsDTO.class, args);
             if (notificationsDTO != null) {
-                notificationItems = filterNotifications(notificationsDTO.getPayload().getNotifications(), supportedNotificationTypes);
+                notificationItems = filterNotifications(notificationsDTO.getPayload().getNotifications(),
+                        supportedNotificationTypes);
             }
         }
 
@@ -117,12 +125,13 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
             }
         });
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL, true);
         linearLayoutManager.setStackFromEnd(true);
         notificationsRecycler = (RecyclerView) view.findViewById(R.id.notifications_recycler);
         notificationsRecycler.setLayoutManager(linearLayoutManager);
 
-        swipeHelper = new SwipeHelper(this);
+        SwipeHelper swipeHelper = new SwipeHelper(this);
         ItemTouchHelper notificationsTouchHelper = new ItemTouchHelper(swipeHelper);
         notificationsTouchHelper.attachToRecyclerView(notificationsRecycler);
 
@@ -141,6 +150,65 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
 
         setAdapter();
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.notifications_menu, menu);
+        menu.findItem(R.id.deleteAllNotifications)
+                .setTitle(Label.getLabel("notification.notificationList.button.label.deleteAllTitle")
+                        .replace("?", ""));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.deleteAllNotifications) {
+            showDeleteAllNotificationsConfirmDialog();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showDeleteAllNotificationsConfirmDialog() {
+        ConfirmDialogFragment fragment = ConfirmDialogFragment
+                .newInstance(Label.getLabel("notification.notificationList.button.label.deleteAllTitle"),
+                        Label.getLabel("notification.notificationList.button.label.deleteAllMessage"),
+                        Label.getLabel("cancel"),
+                        Label.getLabel("confirm"));
+        fragment.setCallback(new ConfirmDialogFragment.ConfirmationCallback() {
+            @Override
+            public void onConfirm() {
+                deleteAllNotifications();
+            }
+        });
+        String tag = fragment.getClass().getName();
+        fragment.show(getFragmentManager().beginTransaction(), tag);
+    }
+
+    private void deleteAllNotifications() {
+        TransitionDTO transitionDTO = notificationsDTO.getMetadata().getTransitions()
+                .getDeleteAllNotifications();
+        Map<String, String> queryMap = new HashMap<>();
+        getWorkflowServiceHelper().execute(transitionDTO, deleteAllNotificationsCallback, queryMap);
+    }
+
+    private WorkflowServiceCallback deleteAllNotificationsCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            notificationItems = new ArrayList<>();
+            setAdapter();
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+        }
+    };
 
     @Override
     public void onResume() {
@@ -199,7 +267,8 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
             refreshLayout.setRefreshing(false);
             NotificationsDTO notificationsDTO = DtoHelper.getConvertedDTO(NotificationsDTO.class, workflowDTO);
             if (notificationsDTO != null) {
-                notificationItems = filterNotifications(notificationsDTO.getPayload().getNotifications(), supportedNotificationTypes);
+                notificationItems = filterNotifications(notificationsDTO.getPayload().getNotifications(),
+                        supportedNotificationTypes);
             }
             setAdapter();
         }
@@ -254,7 +323,8 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
         }
 
         private void deleteNotification(NotificationItem notificationItem) {
-            TransitionDTO transitionDTO = notificationsDTO.getMetadata().getTransitions().getDeleteNotifications();
+            TransitionDTO transitionDTO = notificationsDTO.getMetadata().getTransitions()
+                    .getDeleteNotifications();
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("notification_id", notificationItem.getPayload().getNotificationId());
 
@@ -280,11 +350,16 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
     }
 
     private List<NotificationItem> filterNotifications(@NonNull List<NotificationItem> notificationItems,
-                                                       @NonNull Set<NotificationType> notificationTypes){
+                                                       @NonNull Set<NotificationType> notificationTypes) {
         List<NotificationItem> filteredList = new ArrayList<>();
-        for(NotificationItem notificationItem : notificationItems){
-            NotificationType notificationType = notificationItem.getPayload().getNotificationType();
-            if(notificationType != null && notificationTypes.contains(notificationType)){
+        for (NotificationItem notificationItem : notificationItems) {
+            NotificationType notificationType = notificationItem.getMetadata().getNotificationType();
+            if (notificationType != null && notificationTypes.contains(notificationType)) {
+                if (notificationType.equals(NotificationType.pending_forms)
+                        && notificationItem.getPayload().getPracticeName() == null) {
+                    //Prevent showing old notifications without pending form data
+                    continue;
+                }
                 filteredList.add(notificationItem);
             }
         }

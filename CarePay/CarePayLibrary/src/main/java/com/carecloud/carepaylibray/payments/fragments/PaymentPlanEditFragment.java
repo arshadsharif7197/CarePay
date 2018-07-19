@@ -6,22 +6,27 @@ import android.support.design.widget.TextInputLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.MerchantServiceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentCardData;
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
+import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.payments.utils.CreditCardUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
@@ -48,6 +53,8 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
 
     protected PaymentPlanDTO paymentPlanDTO;
     private PaymentCreditCardsPayloadDTO creditCard;
+    private boolean canEditPaymentPlan;
+    protected PaymentPlanEditInterface callback;
 
     /**
      * @param paymentsModel  the payment model
@@ -68,8 +75,16 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     @Override
     protected void attachCallback(Context context) {
         super.attachCallback(context);
+        try {
+            if (context instanceof PaymentViewHandler) {
+                callback = (PaymentPlanEditInterface) ((PaymentViewHandler) context).getPaymentPresenter();
+            } else {
+                callback = (PaymentPlanEditInterface) context;
+            }
+        } catch (ClassCastException cce) {
+            throw new ClassCastException("Attached context must implement PaymentPlanEditInterface");
+        }
     }
-
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -82,6 +97,10 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         paymentDateOption = dateOptions.get(0);
         getPaymentPlanSettings(paymentPlanDTO.getMetadata().getPracticeId());
         currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
+        canEditPaymentPlan = checkCanEditPaymentPlan(paymentPlanDTO.getMetadata().getPracticeId());
+        if(!canEditPaymentPlan){
+            setValidationRules();
+        }
     }
 
 
@@ -116,17 +135,22 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
                 }
             }
         });
-        View headerMessage = view.findViewById(R.id.headerMessage);
+        TextView headerMessage = (TextView) view.findViewById(R.id.headerMessage);
         if (headerMessage != null) {
-            headerMessage.setVisibility(View.GONE);
+                headerMessage.setVisibility(View.GONE);
         }
         View addExistingPlan = view.findViewById(R.id.payment_plan_add_existing);
         if (addExistingPlan != null) {
             addExistingPlan.setVisibility(View.GONE);
         }
         setUpPaymentMethodLabel(view);
-        isCalclatingTime = false;
+        isCalculatingTime = false;
         isCalculatingAmount = false;
+        if(!canEditPaymentPlan){
+            TextView parameters = (TextView) view.findViewById(R.id.paymentPlanParametersTextView);
+            parameters.setText(Label.getLabel("payment_plan_edit_fields_disabled"));
+            disableFields();
+        }
     }
 
     private void setUpPaymentMethodLabel(View view) {
@@ -207,9 +231,13 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         }
 
         postModel.setPaymentPlanModel(paymentPlanModel);
+
+        callEditPaymentPlanService(postModel);
+    }
+
+    private void callEditPaymentPlanService(PaymentPlanPostModel postModel) {
         TransitionDTO updatePaymentTransition = paymentsModel.getPaymentsMetadata()
                 .getPaymentsTransitions().getUpdatePaymentPlan();
-
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("practice_mgmt", paymentPlanDTO.getMetadata().getPracticeMgmt());
         queryMap.put("practice_id", paymentPlanDTO.getMetadata().getPracticeId());
@@ -336,7 +364,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
 
     @Override
     public void onAuthorizeCreditCardFailed() {
-        showProgressDialog();
+        hideProgressDialog();
         SystemUtil.showErrorToast(getContext(), "Choose a different payment method");
     }
 
@@ -371,4 +399,36 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
             Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+    private boolean checkCanEditPaymentPlan(String practiceId) {
+        for (PaymentsPayloadSettingsDTO settings : paymentsModel.getPaymentPayload().getPaymentSettings()) {
+            if (settings.getMetadata().getPracticeId().equals(practiceId)) {
+                for (PaymentSettingsBalanceRangeRule rules : settings.getPayload().getPaymentPlans().getBalanceRangeRules()) {
+                    if (rules.getMaxBalance().getValue() >= paymentPlanDTO.getPayload().getAmount()
+                            && rules.getMinBalance().getValue() <= paymentPlanDTO.getPayload().getAmount()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private void disableFields(){
+        numberPaymentsEditText.setEnabled(false);
+        numberPaymentsEditText.setFocusable(false);
+        numberPaymentsEditText.setFocusableInTouchMode(false);
+
+        monthlyPaymentEditText.setEnabled(false);
+        monthlyPaymentEditText.setFocusable(false);
+        monthlyPaymentEditText.setFocusableInTouchMode(false);
+    }
+
+    private void setValidationRules(){
+        paymentPlanBalanceRules.getMaxBalance().setValue(paymentPlanAmount);
+        paymentPlanBalanceRules.getMinBalance().setValue(paymentPlanAmount);
+        paymentPlanBalanceRules.getMaxDuration().setValue(paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments());
+        paymentPlanBalanceRules.getMinPaymentRequired().setValue(paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount());
+    }
+
 }

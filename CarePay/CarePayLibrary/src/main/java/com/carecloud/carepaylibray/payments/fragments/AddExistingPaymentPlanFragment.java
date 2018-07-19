@@ -37,11 +37,12 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
 
     private PaymentPlanDTO existingPlan;
 
-    public static AddExistingPaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO existingPlan) {
+    public static AddExistingPaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO existingPlan, double amount) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
         DtoHelper.bundleDto(args, existingPlan);
+        args.putDouble(KEY_PLAN_AMOUNT, amount);
 
         AddExistingPaymentPlanFragment fragment = new AddExistingPaymentPlanFragment();
         fragment.setArguments(args);
@@ -73,17 +74,10 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
 
 
     @Override
-    protected double calculateTotalAmount(PendingBalanceDTO selectedBalance) {
+    protected double calculateTotalAmount(double amount) {
         double totalAmount = SystemUtil.safeSubtract(existingPlan.getPayload().getAmount(),
                 existingPlan.getPayload().getAmountPaid());
-        if (selectedBalance != null) {
-            for (PendingBalancePayloadDTO balancePayloadDTO : selectedBalance.getPayload()) {
-                if (StringUtil.isNullOrEmpty(balancePayloadDTO.getType()) || balancePayloadDTO.getType().equals(PATIENT_BALANCE)) {//prevent responsibility types from being added
-                    totalAmount += balancePayloadDTO.getAmount();
-                }
-            }
-        }
-        return totalAmount;
+        return SystemUtil.safeAdd(totalAmount, amount);
     }
 
     private int getRemainingPayments() {
@@ -93,7 +87,7 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
 
 
     @Override
-    protected void createPaymentPlan(boolean userInteraction) {
+    protected void createPaymentPlanPostModel(boolean userInteraction) {
         if (validateFields(false)) {
             PaymentPlanPostModel postModel = new PaymentPlanPostModel();
             postModel.setMetadata(selectedBalance.getMetadata());

@@ -18,7 +18,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
@@ -39,7 +39,7 @@ public class PaymentPlanTermsFragment extends BasePaymentDialogFragment {
 
     protected PaymentsModel paymentsModel;
     protected PaymentPlanPostModel paymentPlanPostModel;
-    protected PaymentPlanInterface callback;
+    protected PaymentPlanCreateInterface callback;
     private NestedScrollView scrollView;
     private TextView termsText;
     private View createButton;
@@ -66,9 +66,9 @@ public class PaymentPlanTermsFragment extends BasePaymentDialogFragment {
     protected void attachCallback(Context context) {
         try {
             if (context instanceof PaymentViewHandler) {
-                callback = (PaymentPlanInterface) ((PaymentViewHandler) context).getPaymentPresenter();
+                callback = (PaymentPlanCreateInterface) ((PaymentViewHandler) context).getPaymentPresenter();
             } else {
-                callback = (PaymentPlanInterface) context;
+                callback = (PaymentPlanCreateInterface) context;
             }
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement PaymentNavigationCallback");

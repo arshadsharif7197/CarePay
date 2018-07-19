@@ -18,7 +18,10 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.adhoc.SelectedAdHocForms;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
@@ -41,6 +44,7 @@ public class AdHocFormsListFragment extends BaseDialogFragment
     private AppointmentsResultModel dto;
     private SelectedAdHocForms selectedForms;
     private Button fillNowFormButton;
+    private Button sendFormButton;
     private String patientId;
 
     public AdHocFormsListFragment() {
@@ -49,7 +53,7 @@ public class AdHocFormsListFragment extends BaseDialogFragment
 
     /**
      * @param appointmentsResultModel the appoinment model
-     * @param patientId           the appointment id
+     * @param patientId               the appointment id
      * @return a new instance of AdHocFormsListFragment
      */
     public static AdHocFormsListFragment newInstance(AppointmentsResultModel appointmentsResultModel,
@@ -108,6 +112,29 @@ public class AdHocFormsListFragment extends BaseDialogFragment
                             jsonObject.toString(), queryMap);
                 }
             });
+
+            sendFormButton = (Button) view.findViewById(R.id.sendFormButton);
+            sendFormButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Map<String, String> queryMap = new HashMap<>();
+                    queryMap.put("patient_id", patientId);
+                    queryMap.put("practice_mgmt", dto.getPayload().getUserPractices().get(0).getPracticeMgmt());
+                    queryMap.put("practice_id", dto.getPayload().getUserPractices().get(0).getPracticeId());
+                    JsonObject jsonObject = new JsonObject();
+                    JsonArray jsonArray = new JsonArray();
+                    for (String uuidForm : selectedForms.getForms()) {
+                        JsonObject uuiiJson = new JsonObject();
+                        uuiiJson.addProperty("form_uuid", uuidForm);
+                        jsonArray.add(uuiiJson);
+                    }
+                    jsonObject.add("pending_forms", jsonArray);
+                    TransitionDTO adHocFormsTransition = dto.getMetadata().getTransitions().getUpdatePendingForms();
+                    getWorkflowServiceHelper().execute(adHocFormsTransition, sendFormsServiceCallback,
+                            jsonObject.toString(), queryMap);
+                }
+            });
+
         } else {
             view.findViewById(R.id.noFormsContainer).setVisibility(View.VISIBLE);
         }
@@ -120,6 +147,31 @@ public class AdHocFormsListFragment extends BaseDialogFragment
             }
         });
     }
+
+    WorkflowServiceCallback sendFormsServiceCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            dismiss();
+            String successMessage = Label.getLabel("adhoc.forms.message.label.formSentSingular");
+            if (selectedForms.getForms().size() > 1) {
+                successMessage = Label.getLabel("adhoc.forms.message.label.formSentPlural");
+            }
+            ((BaseActivity) getActivity()).showSuccessToast(successMessage);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 
     WorkflowServiceCallback adHocServiceCallback = new WorkflowServiceCallback() {
         @Override
@@ -148,9 +200,9 @@ public class AdHocFormsListFragment extends BaseDialogFragment
         for (PracticeForm practiceForm : allPracticeForms) {
             for (ConsentFormUserResponseDTO consentFormUserResponseDTO : patientFormsFilled) {
                 if (consentFormUserResponseDTO.getFormId().equals(practiceForm.getPayload()
-                        .get("uuid").toString().replace("\"", ""))) {
+                        .get("uuid").getAsString())) {
                     practiceForm.setLastModifiedDate(consentFormUserResponseDTO.getMetadata()
-                            .get("updated_dt").toString());
+                            .get("updated_dt").getAsString());
                 }
             }
         }
@@ -160,11 +212,12 @@ public class AdHocFormsListFragment extends BaseDialogFragment
     public void onFormSelected(PracticeForm practiceForm, boolean selected) {
         if (selected) {
             selectedForms.getForms()
-                    .add(practiceForm.getPayload().get("uuid").toString().replace("\"", ""));
+                    .add(practiceForm.getPayload().get("uuid").getAsString());
         } else {
             selectedForms.getForms()
-                    .remove(practiceForm.getPayload().get("uuid").toString().replace("\"", ""));
+                    .remove(practiceForm.getPayload().get("uuid").getAsString());
         }
         fillNowFormButton.setEnabled(!selectedForms.getForms().isEmpty());
+        sendFormButton.setEnabled(!selectedForms.getForms().isEmpty());
     }
 }

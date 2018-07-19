@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'newrelic'
 android {
     compileSdkVersion 25
-    buildToolsVersion "26.0.3"
+    buildToolsVersion "27.0.3"
 
     defaultConfig {
         applicationId "com.carecloud.carepay.practice.tablet"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 81
-        versionName "1.2.9"
+        versionCode 91
+        versionName "1.2.12"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -48,10 +48,11 @@ android {
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.development.carecloud.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
-            buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze.development.carecloud.com"'
+            buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze-settings.development.carecloud.com"'
             buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream.development.carecloud.com:443"'
             buildConfigField 'String', 'PAYMENTS_BASE_URL', '"https://payments.development.carecloud.com/"'
             buildConfigField 'String', 'PAYMENTS_API_KEY', '"jLA75b9L3I5r5lkuqMZQF2v41kyPBMLZ29OvGciV"'
+            buildConfigField 'String', 'RETAIL_URL', '"https://breeze.development.carecloud.com"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AAa1dc91ad54786d7f8f9cce36898810d795f1f75a"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"0191c29a6357d500973052dcfb314c55"'
@@ -65,10 +66,11 @@ android {
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.qa.carecloud.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"VMGQTfHsuP5PSi3UbyXWh7xGWMflwZtHa55LZyXr"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
-            buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze.qa.carecloud.com"'
+            buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze-settings.qa.carecloud.com"'
             buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream.qa.carecloud.com:443"'
             buildConfigField 'String', 'PAYMENTS_BASE_URL', '"https://payments.qa.carecloud.com/"'
             buildConfigField 'String', 'PAYMENTS_API_KEY', '"8RSwxNIMfv30WxgpTOuTza0fEvAFJJH07xDxgP4i"'
+            buildConfigField 'String', 'RETAIL_URL', '"https://breeze.qa.carecloud.com"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AA8bbfbf57d80019455e6c05822d9d5038a718b924"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"0191c29a6357d500973052dcfb314c55"'
@@ -82,10 +84,11 @@ android {
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry-staging.carecloud.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"WQRPwvVVL89qyr9TqzGOo9Qx8jKOYxmO9eRdNFpq"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
-            buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze-staging.carecloud.com"'
+            buildConfigField 'String', 'FORMS_BASE_URL', '"https://breeze-settings-staging.carecloud.com"'
             buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream-staging.carecloud.com:443"'
             buildConfigField 'String', 'PAYMENTS_BASE_URL', '"https://payments-staging.carecloud.com/"'
             buildConfigField 'String', 'PAYMENTS_API_KEY', '"Wvshvhv5RI5VUrqNTIvU784p7Bq8iEcjauySfh8O"'
+            buildConfigField 'String', 'RETAIL_URL', '"https://breeze-staging.carecloud.com"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AA8bbfbf57d80019455e6c05822d9d5038a718b924"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"0191c29a6357d500973052dcfb314c55"'
@@ -99,10 +102,11 @@ android {
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.careclouddemo.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"Z6WciAK2WiauCKTdc5daYbteUrnwFio83zPfb39a"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
-            buildConfigField 'String', 'FORMS_BASE_URL', '"https://web.gobreeze.com"'
+            buildConfigField 'String', 'FORMS_BASE_URL', '"https://settings.gobreeze.com"'
             buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream-staging.carecloud.com:443"'
             buildConfigField 'String', 'PAYMENTS_BASE_URL', '"https://payments-staging.carecloud.com/"'
             buildConfigField 'String', 'PAYMENTS_API_KEY', '"Wvshvhv5RI5VUrqNTIvU784p7Bq8iEcjauySfh8O"'
+            buildConfigField 'String', 'RETAIL_URL', '"https://web.gobreeze.com"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AA8bbfbf57d80019455e6c05822d9d5038a718b924"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"0191c29a6357d500973052dcfb314c55"'
@@ -116,10 +120,11 @@ android {
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.gobreeze.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"Jbr3ZMKbC54bezcc7DWjn7I5I4M8cEHl6Be9cAYT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
-            buildConfigField 'String', 'FORMS_BASE_URL', '"https://web.gobreeze.com"'
+            buildConfigField 'String', 'FORMS_BASE_URL', '"https://settings.gobreeze.com"'
             buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream.carecloud.com:443"'
             buildConfigField 'String', 'PAYMENTS_BASE_URL', '"https://payments.carecloud.com/"'
             buildConfigField 'String', 'PAYMENTS_API_KEY', '"m4I4rb4DW5469Jzn1Glev3kKl6RvWT6o8guq2NA9"'
+            buildConfigField 'String', 'RETAIL_URL', '"https://web.gobreeze.com"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AAae417ce2d433e6eb08fb05d2beffd8ac08f5917c"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"2fe22aeabd463e5dc1ecf8a050605eae"'
@@ -134,7 +139,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':CarePayPracticeLibrary')
-    compile 'com.newrelic.agent.android:android-agent:5.12.3'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':CarePayPracticeLibrary')
+    implementation 'com.newrelic.agent.android:android-agent:5.12.3'
 }

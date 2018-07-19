@@ -21,7 +21,7 @@ public class DtoHelper {
      * @return Dynamic converted class object
      */
     public static <S> S getConvertedDTO(Class<S> dtoClass, Bundle bundle) {
-        if(bundle == null){
+        if (bundle == null) {
             return null;
         }
         String jsonString = bundle.getString(dtoClass.getName());
@@ -66,8 +66,8 @@ public class DtoHelper {
     /**
      * Converts to the desire DTO object from JsonObject DTO
      *
-     * @param dtoClass class to convert
-     * @param workflowDTO  generic workflow to be converted
+     * @param dtoClass    class to convert
+     * @param workflowDTO generic workflow to be converted
      * @return Dynamic converted class object
      */
     public static <S> S getConvertedDTO(Class<S> dtoClass, WorkflowDTO workflowDTO) {
@@ -87,7 +87,9 @@ public class DtoHelper {
     }
 
     public static void bundleDto(Bundle bundle, Object dto) {
-        bundle.putString(dto.getClass().getName(), getStringDTO(dto));
+        if (dto != null) {
+            bundle.putString(dto.getClass().getName(), getStringDTO(dto));
+        }
     }
 
     public static void putExtra(Intent intent, Object dto) {

@@ -14,10 +14,12 @@ import java.lang.annotation.RetentionPolicy;
 
 public class PaymentPlanModel {
     public static final String FREQUENCY_MONTHLY = "monthly";
+    public static final String FREQUENCY_WEEKLY = "weekly";
 
     @Retention(RetentionPolicy.SOURCE)
-    @StringDef({FREQUENCY_MONTHLY})
-    public @interface FrequencyDef {}
+    @StringDef({FREQUENCY_MONTHLY, FREQUENCY_WEEKLY})
+    public @interface FrequencyDef {
+    }
 
     @SerializedName("start_dt")
     private String startDate;

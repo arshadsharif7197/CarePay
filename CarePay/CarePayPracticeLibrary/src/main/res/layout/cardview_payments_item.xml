@@ -100,8 +100,8 @@
                 android:paddingTop="@dimen/dimen_10dp"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22sp"
-                tools:text="Pay"
-                breeze:textKey="payment_pay_button"
+                tools:text="Details"
+                breeze:textKey="details"
                 app:customAssetFont="gotham_rounded_medium"/>
 
         </LinearLayout>

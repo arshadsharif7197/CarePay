@@ -123,7 +123,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
     @Override
-    public void confirmAppointment(boolean showSuccess) {
+    public void confirmAppointment(boolean showSuccess, boolean isAutoScheduled) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         int backStackCount = fragmentManager.getBackStackEntryCount();
         for (int i = 0; i < backStackCount; i++) {
@@ -135,23 +135,25 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
         refreshAppointments();
         if(showSuccess) {
-            showAppointmentConfirmation();
+            showAppointmentConfirmation(isAutoScheduled);
         }
     }
 
     @Override
     public void refreshAppointments() {
-        AppointmentsListFragment fragment = (AppointmentsListFragment)
-                getSupportFragmentManager().findFragmentById(R.id.container_main);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_main);
 
-        if (fragment != null) {
-            fragment.refreshAppointmentList();
+        if (fragment != null && fragment instanceof AppointmentsListFragment) {
+            AppointmentsListFragment appointmentsListFragment = (AppointmentsListFragment) fragment;
+            appointmentsListFragment.refreshAppointmentList();
         }
 
     }
 
-    private void showAppointmentConfirmation() {
-        String appointmentRequestSuccessMessage = Label.getLabel("appointment_request_success_message_HTML");
+    private void showAppointmentConfirmation(boolean isAutoScheduled) {
+        String appointmentRequestSuccessMessage = Label.getLabel(isAutoScheduled ?
+                "appointment_schedule_success_message_HTML" :
+                "appointment_request_success_message_HTML");
         SystemUtil.showSuccessToast(getContext(), appointmentRequestSuccessMessage);
     }
 

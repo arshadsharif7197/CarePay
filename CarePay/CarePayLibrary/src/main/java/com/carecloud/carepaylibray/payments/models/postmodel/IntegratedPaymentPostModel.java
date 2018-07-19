@@ -35,6 +35,14 @@ public class IntegratedPaymentPostModel {
         this.storeId = storeId;
     }
 
+    public String getPaymentDate() {
+        return paymentDate;
+    }
+
+    public void setPaymentDate(String paymentDate) {
+        this.paymentDate = paymentDate;
+    }
+
     @StringDef({EXECUTION_CLOVER, EXECUTION_ANDROID, EXECUTION_PAYEEZY})
     @Retention(RetentionPolicy.SOURCE)
     public @interface ExecutionType{};
@@ -62,6 +70,9 @@ public class IntegratedPaymentPostModel {
 
     @SerializedName("store_id")
     private String storeId;
+
+    @SerializedName("payment_date")
+    private String paymentDate;
 
     public double getAmount() {
         return amount;

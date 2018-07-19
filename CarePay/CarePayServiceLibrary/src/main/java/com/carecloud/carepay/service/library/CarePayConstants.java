@@ -10,7 +10,7 @@ public class CarePayConstants {
 
     // Default data
 
-    public static final String DEFAULT_LANGUAGE = "English";
+    public static final String DEFAULT_LANGUAGE = "en";
 
     // Generic Constants
     public static final int HOME_PRESSED = 999;
@@ -155,6 +155,8 @@ public class CarePayConstants {
     public static final String EXTRA_HAS_PAYMENT = "hasPayment";
     public static final String EXTRA_APPOINTMENT_TRANSITIONS = "appointmentWorkflow";
     public static final String EXTRA_BUNDLE = "extra";
+    public static final String EXTRA_CONFIRMATION_MODE = "confirmationMode";
+    public static final String EXTRA_PAYMENT_CASH ="makeCashPayment";
 
 
     public static final String OPEN_NOTIFICATIONS = "shouldOpenNotifications";

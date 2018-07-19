@@ -15,13 +15,14 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.adapter.PaymentPlanListAdapter;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
+import java.text.NumberFormat;
 import java.util.List;
 
 /**
@@ -29,16 +30,19 @@ import java.util.List;
  */
 
 public class ValidPlansFragment extends BaseDialogFragment implements PaymentPlanListAdapter.OnPaymentPlanSelectedListener {
+    protected static final String KEY_PLAN_AMOUNT = "plan_amount";
 
-    protected PaymentPlanInterface callback;
+    protected PaymentPlanCreateInterface callback;
     protected PaymentsModel paymentsModel;
     protected PendingBalanceDTO selectedBalance;
+    private double paymentPlanAmount;
 
 
-    public static ValidPlansFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance) {
+    public static ValidPlansFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
+        args.putDouble(KEY_PLAN_AMOUNT, amount);
 
         ValidPlansFragment fragment = new ValidPlansFragment();
         fragment.setArguments(args);
@@ -50,12 +54,12 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
         super.onAttach(context);
         try {
             if (context instanceof PaymentViewHandler) {
-                callback = (PaymentPlanInterface) ((PaymentViewHandler) context).getPaymentPresenter();
+                callback = (PaymentPlanCreateInterface) ((PaymentViewHandler) context).getPaymentPresenter();
             } else {
-                callback = (PaymentPlanInterface) context;
+                callback = (PaymentPlanCreateInterface) context;
             }
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached context must implement PaymentPlanInterface");
+            throw new ClassCastException("Attached context must implement PaymentPlanEditInterface");
         }
     }
 
@@ -70,12 +74,17 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
         Bundle args = getArguments();
         paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
         selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
+        paymentPlanAmount = args.getDouble(KEY_PLAN_AMOUNT);
     }
 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
         setupToolBar(view);
         setAdapter(view);
+        TextView amount = (TextView) view.findViewById(R.id.payment_plan_amount);
+        if (amount != null) {
+            amount.setText(NumberFormat.getCurrencyInstance().format(paymentPlanAmount));
+        }
     }
 
     protected void setupToolBar(View view) {
@@ -104,13 +113,12 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
 
     protected List<PaymentPlanDTO> getPaymentPlansList() {
         String practiceId = selectedBalance.getMetadata().getPracticeId();
-        return paymentsModel.getPaymentPayload().getValidPlans(practiceId,
-                selectedBalance.getPayload().get(0).getAmount());
+        return paymentsModel.getPaymentPayload().getValidPlans(practiceId, paymentPlanAmount);
     }
 
 
     @Override
     public void onPaymentPlanItemSelected(PaymentPlanDTO paymentPlan) {
-        callback.onSelectedPlanToAdd(paymentsModel, selectedBalance, paymentPlan);
+        callback.onSelectedPlanToAdd(paymentsModel, selectedBalance, paymentPlan, paymentPlanAmount);
     }
 }

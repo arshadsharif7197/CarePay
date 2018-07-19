@@ -10,4 +10,6 @@ public interface CheckCompleteInterface extends FragmentActivityInterface {
     void logout();
 
     void showConfirmationPinDialog();
+
+    void goToShop();
 }

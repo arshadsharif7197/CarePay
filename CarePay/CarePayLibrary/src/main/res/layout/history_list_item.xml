@@ -1,125 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-              android:paddingLeft="@dimen/list_apt_padding_right"
-              android:paddingRight="@dimen/list_apt_padding_right">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/history_item_linear_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/list_apt_padding_right"
+    android:paddingRight="@dimen/list_apt_padding_right"
+    android:visibility="visible">
 
-    <LinearLayout
-        android:id="@+id/history_item_linear_layout"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="visible">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/apt_dl_image_elevation"
+        android:layout_marginTop="@dimen/apt_dl_image_elevation">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/apt_dl_image_elevation"
-            android:layout_marginTop="@dimen/apt_dl_image_elevation"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
+        <RelativeLayout
+            android:id="@+id/historyImageContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/dimen_10dp">
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/historyImageView"
+                android:layout_width="@dimen/dimen_60dp"
+                android:layout_height="@dimen/dimen_60dp"
+                android:visibility="gone" />
 
-                <ImageView
-                    android:id="@+id/historyImageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone"/>
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/historyAvatarTextView"
+                android:layout_width="@dimen/dimen_60dp"
+                android:layout_height="@dimen/dimen_60dp"
+                android:layout_gravity="end"
+                android:background="@drawable/round_list_tv"
+                android:gravity="center_vertical|center_horizontal"
+                android:src="@drawable/icn_placeholder_user_profile_png"
+                android:textColor="@color/lightSlateGray"
+                android:textSize="@dimen/apt_dl_text_big"
+                app:customAssetFont="gotham_rounded_medium"
+                tools:text="MH" />
+        </RelativeLayout>
 
-                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                    android:id="@+id/historyAvatarTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:background="@drawable/round_list_tv"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:src="@drawable/icn_placeholder_user_profile_png"
-                    android:textColor="@color/lightSlateGray"
-                    android:textSize="@dimen/apt_dl_text_big"
-                    app:customAssetFont="gotham_rounded_medium" />
-            </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/historyDateContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/dimen_10dp">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/textview_margin"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                        android:id="@+id/historyTotalAmount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="start"
-                        android:textColor="@color/Feldgrau"
-                        android:textSize="@dimen/textview_default_textsize"
-                        android:textStyle="bold"
-                        app:customAssetFont="proxima_nova_semi_bold" />
-
-                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                        android:id="@+id/historyTransactionFlag"
-                        style="@style/DemographicsOptionalLabelStyle"
-                        android:layout_gravity="center_vertical|end"
-                        android:layout_marginStart="@dimen/dimen_5dp"
-                        app:customAssetFont="proxima_nova_semi_bold"/>
-
-                </LinearLayout>
-
-                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                    android:id="@+id/historyLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="start"
-                    android:textColor="@color/lightSlateGray"
-                    android:textSize="@dimen/textview_textsize"
-                    app:customAssetFont="proxima_nova_regular" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/historyDateLinearlayout"
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/completedLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingEnd="@dimen/default_title_indicator_title_padding"
-                android:paddingStart="0dp">
+                android:gravity="end"
+                android:textColor="@color/lemonGreen"
+                android:textSize="@dimen/text_size_13"
+                android:visibility="gone"
+                app:customAssetFont="proxima_nova_regular"
+                breeze:textKey="payment.history.item.label.completedOn"
+                tools:text="Completed on" />
 
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/historyDateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/completedLabel"
+                android:gravity="end"
+                android:textColor="@color/cadet_gray"
+                android:textSize="@dimen/text_size_13"
+                app:customAssetFont="proxima_nova_regular"
+                tools:text="July 13th, 2018" />
+        </RelativeLayout>
 
-                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                    android:id="@+id/historyDateTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:paddingEnd="@dimen/default_title_indicator_title_padding"
-                    android:paddingStart="0dp"
-                    android:textColor="@color/cadet_gray"
-                    android:textSize="@dimen/apt_list_upcoming_month_txt_size"
-                    app:customAssetFont="proxima_nova_regular" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <View
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginBottom="3dp"
-            android:background="@color/divider_color" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/historyImageContainer"
+            android:layout_toStartOf="@id/historyDateContainer"
+            android:gravity="center_vertical">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/historyTotalAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="start"
+                android:textColor="@color/Feldgrau"
+                android:textSize="@dimen/textview_default_textsize"
+                android:textStyle="bold"
+                app:customAssetFont="proxima_nova_semi_bold"
+                tools:text="$1,200.00" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/historyTransactionFlag"
+                style="@style/DemographicsOptionalLabelStyle"
+                android:layout_gravity="center_vertical|end"
+                android:layout_marginStart="@dimen/dimen_5dp"
+                android:layout_toEndOf="@id/historyTotalAmount"
+                app:customAssetFont="proxima_nova_semi_bold"
+                tools:text="processing" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/historyLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/historyTotalAmount"
+                android:layout_gravity="center_vertical"
+                android:gravity="start"
+                android:textColor="@color/lightSlateGray"
+                android:textSize="@dimen/textview_textsize"
+                app:customAssetFont="proxima_nova_regular"
+                tools:text="CareCloud Clinic" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/historyPlanName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/historyLocation"
+                android:layout_gravity="center_vertical"
+                android:ellipsize="end"
+                android:gravity="start"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/textview_textsize"
+                android:visibility="gone"
+                app:customAssetFont="proxima_nova_regular"
+                tools:text="Payment Plan Name" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color" />
 </LinearLayout>

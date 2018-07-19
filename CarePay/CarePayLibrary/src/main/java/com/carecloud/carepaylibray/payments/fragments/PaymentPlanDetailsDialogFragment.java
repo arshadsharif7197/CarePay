@@ -13,12 +13,12 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customdialogs.BasePaymentDetailsFragmentDialog;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanPayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
+import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
@@ -37,7 +37,8 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
     private PaymentPlanDTO paymentPlanDTO;
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
-    private PaymentPlanInterface callback;
+    private PaymentPlanEditInterface callback;
+    protected View payButton;
 
     /**
      * @param paymentsModel  the payment model
@@ -61,9 +62,9 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (PaymentPlanInterface) context;
+            callback = (PaymentPlanEditInterface) context;
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached context must implement PaymentPlanInterface");
+            throw new ClassCastException("Attached context must implement PaymentPlanEditInterface");
         }
     }
 
@@ -121,7 +122,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
             });
         }
 
-        View payButton = view.findViewById(R.id.payment_details_pay_now_button);
+        payButton = view.findViewById(R.id.payment_details_pay_now_button);
         payButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -131,7 +132,6 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         });
 
         View editPlanButton = view.findViewById(R.id.editPlanButton);
-        editPlanButton.setVisibility(getEditPlanButtonVisibility(paymentPlanDTO.getMetadata().getPracticeId()));
         editPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,20 +139,18 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
                 dismiss();
             }
         });
-    }
 
-    private int getEditPlanButtonVisibility(String practiceId) {
-        for (PaymentsPayloadSettingsDTO settings : paymentsModel.getPaymentPayload().getPaymentSettings()) {
-            if (settings.getMetadata().getPracticeId().equals(practiceId)) {
-                for (PaymentSettingsBalanceRangeRule rules : settings.getPayload().getPaymentPlans().getBalanceRangeRules()) {
-                    if (rules.getMaxBalance().getValue() >= paymentPlanDTO.getPayload().getAmount()
-                            && rules.getMinBalance().getValue() <= paymentPlanDTO.getPayload().getAmount()) {
-                        return View.VISIBLE;
-                    }
-                }
-            }
+        ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload().
+                findScheduledPayment(paymentPlanDTO);
+        if(scheduledPayment != null){
+            View scheduledPaymentLayout = view.findViewById(R.id.scheduledPaymentLayout);
+            scheduledPaymentLayout.setVisibility(View.VISIBLE);
+            TextView scheduledPaymentMessage = (TextView) view.findViewById(R.id.scheduledPaymentMessage);
+            String message = String.format(Label.getLabel("payment.oneTimePayment.schedule.success"),
+                    StringUtil.getFormattedBalanceAmount(scheduledPayment.getPayload().getAmount()),
+                    DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal());
+            scheduledPaymentMessage.setText(message);
         }
-        return View.GONE;
     }
 
     @Override

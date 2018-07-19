@@ -37,7 +37,7 @@ import java.util.List;
 
 public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.NotificationViewHolder> {
 
-    public interface SelectNotificationCallback{
+    public interface SelectNotificationCallback {
         void notificationSelected(NotificationItem notificationItem);
 
         void undoDeleteNotification(SwipeViewHolder viewHolder);
@@ -52,26 +52,29 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     /**
      * Constructor
-     * @param context context
+     *
+     * @param context           context
      * @param notificationItems list of notifications
-     * @param callback callback
+     * @param callback          callback
      */
-    public NotificationsAdapter(Context context, List<NotificationItem> notificationItems, SelectNotificationCallback callback){
+    public NotificationsAdapter(Context context,
+                                List<NotificationItem> notificationItems,
+                                SelectNotificationCallback callback) {
         this.context = context;
         this.notificationItems = notificationItems;
         this.callback = callback;
     }
 
-    public void setNotificationItems(List<NotificationItem> notificationItems){
+    public void setNotificationItems(List<NotificationItem> notificationItems) {
         this.notificationItems = notificationItems;
         notifyDataSetChanged();
     }
 
-    public void scheduleNotificationRemoval(NotificationItem notificationItem){
+    public void scheduleNotificationRemoval(NotificationItem notificationItem) {
         removeItems.add(notificationItem);
     }
 
-    public void clearRemovedNotification(NotificationItem notificationItem){
+    public void clearRemovedNotification(NotificationItem notificationItem) {
         removeItems.remove(notificationItem);
     }
 
@@ -90,7 +93,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     @Override
     public void onBindViewHolder(final NotificationViewHolder holder, int position) {
         final NotificationItem notificationItem = notificationItems.get(position);
-        NotificationType notificationType = notificationItem.getPayload().getNotificationType();
+        NotificationType notificationType = notificationItem.getMetadata().getNotificationType();
 
         resetViews(holder);
         if (notificationType != null) {
@@ -101,6 +104,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 case credit_card:
                     displayCreditCardNotification(holder, notificationItem);
                     break;
+                case pending_forms:
+                    displayPendingFormNotification(holder, notificationItem);
+                    break;
                 default:
                 case appointment:
                     displayAppointmentNotification(holder, notificationItem);
@@ -110,7 +116,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
         holder.time.setText(getTimeStamp(notificationItem));
 
-        if(removeItems.contains(notificationItem)) {
+        if (removeItems.contains(notificationItem)) {
             holder.notificationItemView.setVisibility(View.INVISIBLE);
             holder.displayUndoOption();
         }
@@ -131,19 +137,44 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     }
 
-    private void displayPaymentNotification(NotificationViewHolder holder, NotificationItem notificationItem){
+    private void displayPendingFormNotification(NotificationViewHolder holder, NotificationItem notificationItem) {
+        holder.initials.setText(StringUtil.getShortName(notificationItem.getPayload().getPracticeName()));
+        holder.initials.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));
+        holder.initials.setBackgroundResource(R.drawable.round_list_tv_yellow_border);
+
+        String headerText = Label.getLabel("consentForms.providersList.item.label.pendingFormCount");
+        if (notificationItem.getPayload().getPendingForms() > 1) {
+            headerText = String.format(Label.getLabel("consentForms.providersList.item.label.pendingFormsCount"),
+                    notificationItem.getPayload().getPendingForms());
+        }
+        holder.header.setText(headerText);
+        holder.header.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));
+
+        String practiceName = notificationItem.getPayload().getPracticeName();
+        holder.message.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
+        SpannableStringBuilder stringBuilder = new SpannableStringBuilder(String
+                .format("%s needs you to fill and sign some pending forms.", practiceName));
+        stringBuilder.setSpan(new CarePayCustomSpan(context,
+                        CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD), 0, practiceName.length(),
+                Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        holder.message.setText(stringBuilder);
+    }
+
+    private void displayPaymentNotification(NotificationViewHolder holder, NotificationItem notificationItem) {
 
     }
 
-    private void displayCreditCardNotification(NotificationViewHolder holder, NotificationItem notificationItem){
+    private void displayCreditCardNotification(NotificationViewHolder holder, NotificationItem notificationItem) {
 
     }
 
-    private void displayAppointmentNotification(final NotificationViewHolder holder, NotificationItem notificationItem){
+    private void displayAppointmentNotification(final NotificationViewHolder holder,
+                                                NotificationItem notificationItem) {
         AppointmentDTO appointment = notificationItem.getPayload().getAppointment();
 
         ProviderDTO provider = appointment.getPayload().getProvider();
-        String appointmentDate = DateUtil.getInstance().setDateRaw(appointment.getPayload().getStartTime()).toStringWithFormatMmSlashDdSlashYyyy();
+        String appointmentDate = DateUtil.getInstance().setDateRaw(appointment.getPayload()
+                .getStartTime()).toStringWithFormatMmSlashDdSlashYyyy();
 
         holder.message.setText(notificationItem.getPayload().getAlertMessage());
         holder.initials.setText(StringUtil.getShortName(provider.getName()));
@@ -152,11 +183,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         AppointmentDisplayStyle displayStyle = AppointmentDisplayUtil.determineDisplayStyle(appointment);
         notificationItem.getPayload().getAppointment().getPayload().setDisplayStyle(displayStyle);
 
-        switch (displayStyle){
-            case MISSED:{
+        switch (displayStyle) {
+            case MISSED: {
                 holder.header.setText(Label.getLabel("notification_missed_appointment_title"));
                 holder.header.setTextColor(ContextCompat.getColor(context, R.color.remove_red));
-                setFormattedMessage(holder.message, Label.getLabel("notification_missed_appointment_message"), appointmentDate, provider.getName());
+                setFormattedMessage(holder.message, Label.getLabel("notification_missed_appointment_message"),
+                        appointmentDate, provider.getName());
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
                 holder.initials.setBackgroundResource(R.drawable.round_list_tv_red);
                 holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_missed);
@@ -164,39 +196,43 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 break;
             }
             case PENDING:
-            case PENDING_UPCOMING:{
+            case PENDING_UPCOMING: {
                 holder.header.setText(Label.getLabel("notification_confirmed_appointment_title"));
                 holder.header.setTextColor(ContextCompat.getColor(context, R.color.emerald));
-                setFormattedMessage(holder.message, Label.getLabel("notification_confirmed_appointment_message"), appointmentDate, provider.getName());
+                setFormattedMessage(holder.message, Label.getLabel("notification_confirmed_appointment_message"),
+                        appointmentDate, provider.getName());
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.emerald));
                 holder.initials.setBackgroundResource(R.drawable.round_list_tv_green_border);
                 holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_upcoming);
                 break;
             }
             case CANCELED:
-            case CANCELED_UPCOMING:{
+            case CANCELED_UPCOMING: {
                 holder.header.setText(Label.getLabel("notification_cancelled_appointment_title"));
                 holder.header.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
-                setFormattedMessage(holder.message, Label.getLabel("notification_cancelled_appointment_message"), appointmentDate, provider.getName());
+                setFormattedMessage(holder.message, Label.getLabel("notification_cancelled_appointment_message"),
+                        appointmentDate, provider.getName());
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
                 holder.initials.setBackgroundResource(R.drawable.round_list_tv);
                 holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_canceled);
                 holder.cellAvatar.setVisibility(View.VISIBLE);
                 break;
             }
-            case CHECKED_IN:{
+            case CHECKED_IN: {
                 holder.header.setText(Label.getLabel("notification_checked-in_appointment_title"));
                 holder.header.setTextColor(ContextCompat.getColor(context, R.color.emerald));
-                setFormattedMessage(holder.message, Label.getLabel("notification_checked-in_appointment_message"), appointmentDate, provider.getName());
+                setFormattedMessage(holder.message, Label.getLabel("notification_checked-in_appointment_message"),
+                        appointmentDate, provider.getName());
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
                 holder.initials.setBackgroundResource(R.drawable.round_list_tv_green);
                 holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_checked_in);
                 break;
             }
-            case CHECKED_OUT:{
+            case CHECKED_OUT: {
                 holder.header.setText(Label.getLabel("notification_checked-out_appointment_title"));
                 holder.header.setTextColor(ContextCompat.getColor(context, R.color.grayRound));
-                setFormattedMessage(holder.message, Label.getLabel("notification_checked-out_appointment_message"), appointmentDate, provider.getName());
+                setFormattedMessage(holder.message, Label.getLabel("notification_checked-out_appointment_message"),
+                        appointmentDate, provider.getName());
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
                 holder.initials.setBackgroundResource(R.drawable.round_tv);
                 holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_checked_out);
@@ -228,34 +264,38 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     }
 
-    private String getFormattedMessge(String messageBase, String... fields){
-        if(!messageBase.contains("%s")) {
+    private String getFormattedMessge(String messageBase, String... fields) {
+        if (!messageBase.contains("%s")) {
             return messageBase;
         }
         return String.format(messageBase, fields);
     }
 
-    private void setFormattedMessage(TextView textView, String messageBase, String... fields){
+    private void setFormattedMessage(TextView textView, String messageBase, String... fields) {
         String formattedMessage = getFormattedMessge(messageBase, fields);
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder(formattedMessage);
 
-        for(String field : fields) {
-            int start = formattedMessage.indexOf(field);
-            if(start > -1) {
-                stringBuilder.setSpan(new CarePayCustomSpan(context, CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD), start, start + field.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        for (String field : fields) {
+            if (field != null) {
+                int start = formattedMessage.indexOf(field);
+                if (start > -1) {
+                    stringBuilder.setSpan(new CarePayCustomSpan(context,
+                                    CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD), start, start + field.length(),
+                            Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                }
             }
         }
 
         textView.setText(stringBuilder);
     }
 
-    private String getTimeStamp(NotificationItem notificationItem){
+    private String getTimeStamp(NotificationItem notificationItem) {
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(notificationItem.getMetadata().getCreatedDt());
 
         return dateUtil.toStringWithFormatMmSlashDdSlashYyyy();
     }
 
-    private void resetViews(NotificationViewHolder holder){
+    private void resetViews(NotificationViewHolder holder) {
         holder.header.setTextColor(ContextCompat.getColor(context, R.color.textview_default_textcolor));
         holder.initials.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
         holder.initials.setBackgroundResource(R.drawable.round_list_tv);
@@ -267,7 +307,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.notificationItemView.setVisibility(View.VISIBLE);
     }
 
-    class NotificationViewHolder extends SwipeViewHolder{
+    class NotificationViewHolder extends SwipeViewHolder {
         TextView initials;
         ImageView cellAvatar;
         ImageView image;

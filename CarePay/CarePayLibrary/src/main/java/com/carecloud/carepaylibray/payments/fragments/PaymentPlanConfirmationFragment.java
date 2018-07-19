@@ -17,8 +17,10 @@ import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.lang.annotation.Retention;
@@ -49,7 +51,9 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
     protected  @ConfirmationMode int mode;
     private UserPracticeDTO userPracticeDTO;
 
-    public static PaymentPlanConfirmationFragment newInstance(WorkflowDTO workflowDTO, UserPracticeDTO userPracticeDTO, @ConfirmationMode int mode){
+    public static PaymentPlanConfirmationFragment newInstance(WorkflowDTO workflowDTO,
+                                                              UserPracticeDTO userPracticeDTO,
+                                                              @ConfirmationMode int mode){
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, workflowDTO);
         DtoHelper.bundleDto(args, userPracticeDTO);
@@ -64,7 +68,12 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
     @Override
     protected void attachCallback(Context context){
         try{
-            callback = (PaymentPlanCompletedInterface) context;
+            if (context instanceof PaymentViewHandler) {
+                callback = (PaymentPlanCompletedInterface) ((PaymentViewHandler) context)
+                        .getPaymentPresenter();
+            } else {
+                callback = (PaymentPlanCompletedInterface) context;
+            }
         }catch (ClassCastException cce){
             throw new ClassCastException("Attached Context must implement PaymentPlanCompletedInterface");
         }
@@ -79,7 +88,9 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
             mode = args.getInt(KEY_MODE, MODE_CREATE);
             workflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class, args);
             PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-            PaymentPlanDTO paymentPlanDTO = paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0);//should only be one when plan is just created
+            //should only be one when plan is just created
+            PaymentPlanDTO paymentPlanDTO = paymentsModel.getPaymentPayload()
+                    .getPatientPaymentPlans().get(0);
             paymentPlanPayloadDTO = paymentPlanDTO.getPayload();
             paymentPlanMetadataDTO = paymentPlanDTO.getMetadata();
             userPracticeDTO = DtoHelper.getConvertedDTO(UserPracticeDTO.class, args);
@@ -119,9 +130,11 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
         totalAmount.setText(currencyFormatter.format(paymentPlanPayloadDTO.getAmount()));
 
         TextView installments = (TextView) view.findViewById(R.id.payment_confirm_installments_value);
-        installments.setText(String.valueOf(paymentPlanPayloadDTO.getPaymentPlanDetails().getInstallments()));
+        installments.setText(String.valueOf(paymentPlanPayloadDTO
+                .getPaymentPlanDetails().getInstallments()));
 
-        String paymentAmountString = currencyFormatter.format(paymentPlanPayloadDTO.getPaymentPlanDetails().getAmount()) +
+        String paymentAmountString = currencyFormatter.format(paymentPlanPayloadDTO
+                .getPaymentPlanDetails().getAmount()) +
                 paymentPlanPayloadDTO.getPaymentPlanDetails().getFrequencyString();
         TextView paymentAmount = (TextView) view.findViewById(R.id.payment_confirm_payment_value);
         paymentAmount.setText(paymentAmountString);
@@ -142,6 +155,7 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
             practiceNameTextView.setText(practiceName);
         }
 
+        logPaymentPlanEvent();
     }
 
     private View.OnClickListener dismissPopupListener = new View.OnClickListener() {
@@ -161,6 +175,35 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
             case MODE_CREATE:
             default:
                 return Label.getLabel("payment_plan_success_create_short");
+        }
+    }
+
+    private void logPaymentPlanEvent(){
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_payment_plan_id),
+                getString(R.string.param_payment_plan_amount),
+                getString(R.string.param_payment_plan_frequency),
+                getString(R.string.param_payment_plan_payment),
+                getString(R.string.param_payment_plan_day),
+                getString(R.string.param_payment_plan_installments)};
+        Object[] values = {
+                paymentPlanMetadataDTO.getPracticeId(),
+                paymentPlanMetadataDTO.getPaymentPlanId(),
+                paymentPlanPayloadDTO.getAmount(),
+                paymentPlanPayloadDTO.getPaymentPlanDetails().getFrequencyString(),
+                paymentPlanPayloadDTO.getPaymentPlanDetails().getAmount(),
+                StringUtil.getOrdinal("en", paymentPlanPayloadDTO.getPaymentPlanDetails()
+                        .getDayOfMonth()),
+                paymentPlanPayloadDTO.getPaymentPlanDetails().getInstallments()};
+
+        switch (mode){
+            case MODE_EDIT:
+                MixPanelUtil.logEvent(getString(R.string.event_paymentplan_edited), params, values);
+                break;
+            case MODE_ADD:
+            case MODE_CREATE:
+            default:
+                MixPanelUtil.logEvent(getString(R.string.event_paymentplan_submitted), params, values);
         }
     }
 

@@ -26,6 +26,14 @@ public class NotificationItemPayload {
     @Expose
     private String alertMessage;
 
+    @SerializedName("practice_name")
+    @Expose
+    private String practiceName;
+
+    @SerializedName("pending_forms")
+    @Expose
+    private int pendingForms;
+
     @SerializedName("appointment")
     @Expose
     private AppointmentDTO appointment = new AppointmentDTO();
@@ -68,5 +76,21 @@ public class NotificationItemPayload {
 
     public void setAppointment(AppointmentDTO appointment) {
         this.appointment = appointment;
+    }
+
+    public String getPracticeName() {
+        return practiceName;
+    }
+
+    public void setPracticeName(String practiceName) {
+        this.practiceName = practiceName;
+    }
+
+    public int getPendingForms() {
+        return pendingForms;
+    }
+
+    public void setPendingForms(int pendingForms) {
+        this.pendingForms = pendingForms;
     }
 }

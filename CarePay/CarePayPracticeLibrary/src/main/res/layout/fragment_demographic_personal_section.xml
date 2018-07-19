@@ -100,8 +100,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 app:customAssetFont="proxima_nova_semi_bold"
-                app:hintTextAppearance="@style/FloatingLabelStyle"
-                android:visibility="gone">
+                app:hintTextAppearance="@style/FloatingLabelStyle">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                     android:id="@+id/phoneTypeEditText"

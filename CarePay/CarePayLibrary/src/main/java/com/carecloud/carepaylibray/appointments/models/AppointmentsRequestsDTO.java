@@ -11,13 +11,13 @@ import java.io.Serializable;
 public class AppointmentsRequestsDTO implements Serializable {
     @SerializedName("automatically_approve_requests")
     @Expose
-    private Boolean automaticallyApproveRequests;
+    private boolean automaticallyApproveRequests;
 
-    public Boolean getAutomaticallyApproveRequests() {
+    public boolean getAutomaticallyApproveRequests() {
         return automaticallyApproveRequests;
     }
 
-    public void setAutomaticallyApproveRequests(Boolean automaticallyApproveRequests) {
+    public void setAutomaticallyApproveRequests(boolean automaticallyApproveRequests) {
         this.automaticallyApproveRequests = automaticallyApproveRequests;
     }
 }

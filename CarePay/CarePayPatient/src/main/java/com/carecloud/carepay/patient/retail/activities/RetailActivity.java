@@ -12,29 +12,32 @@ import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
-import com.carecloud.carepay.patient.retail.fragments.RetailFragment;
 import com.carecloud.carepay.patient.retail.fragments.RetailListFragment;
-import com.carecloud.carepay.patient.retail.interfaces.RetailInterface;
-import com.carecloud.carepay.patient.retail.models.RetailModel;
-import com.carecloud.carepay.patient.retail.models.RetailPracticeDTO;
+import com.carecloud.carepay.patient.retail.interfaces.RetailPatientInterface;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.retail.RetailModel;
+import com.carecloud.carepaylibray.retail.RetailPracticeDTO;
+import com.carecloud.carepaylibray.retail.fragments.RetailFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.google.android.gms.wallet.MaskedWallet;
 
 /**
  * Created by lmenendez on 2/8/17
  */
 
-public class RetailActivity extends MenuPatientActivity implements RetailInterface {
+public class RetailActivity extends MenuPatientActivity implements RetailPatientInterface {
 
     private RetailModel retailModel;
     private PaymentsModel paymentsModel;
@@ -49,6 +52,8 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
 
     private Bundle webViewBundle = new Bundle();
 
+    private boolean hasMultipleStores = false;
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -60,6 +65,7 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
             selectedPractice = retailModel.getPayload().getRetailPracticeList().get(0);
             displayRetailStore(retailModel, selectedPractice, lookupUserPractice(selectedPractice), false);
         } else {
+            hasMultipleStores = true;
             fragment = RetailListFragment.newInstance(retailModel);
             replaceFragment(fragment, false);
         }
@@ -75,6 +81,14 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
         if (!hideToolbar) {
             displayToolbar(true);
         }
+    }
+
+    @Override
+    public void onStop(){
+        if(retailModel != null && !retailModel.getPayload().getRetailPracticeList().isEmpty()){
+            MixPanelUtil.logEvent(getString(R.string.event_retail_ended));
+        }
+        super.onStop();
     }
 
     @Override
@@ -132,12 +146,18 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
         return webViewBundle;
     }
 
-    private void replaceFragment(Fragment fragment, boolean addToBackStack) {
+    @Override
+    public void replaceFragment(Fragment fragment, boolean addToBackStack) {
         replaceFragment(R.id.container_main, fragment, addToBackStack);
     }
 
+    @Override
+    public void addFragment(Fragment fragment, boolean addToBackStack) {
+        addFragment(R.id.container_main, fragment, addToBackStack);
+    }
+
     private UserPracticeDTO lookupUserPractice(RetailPracticeDTO retailPracticeDTO) {
-        for (UserPracticeDTO userPracticeDTO : retailModel.getPayload().getUserPractices()) {
+        for (UserPracticeDTO userPracticeDTO : retailModel.getPayload().getPracticeInformation()) {
             if (retailPracticeDTO.getPracticeId() != null && retailPracticeDTO.getPracticeId().equals(userPracticeDTO.getPracticeId())) {
                 userPracticeDTO.setPatientId(retailPracticeDTO.getPatientId());
                 this.userPracticeDTO = userPracticeDTO;
@@ -185,15 +205,22 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
         RetailModel retailModel = DtoHelper.getConvertedDTO(RetailModel.class, workflowDTO);
-        getSupportFragmentManager().popBackStack(RetailFragment.class.getName(), 0);
+        if (hasMultipleStores) {
+            getSupportFragmentManager().popBackStack(RetailFragment.class.getName(), 0);
+        } else {
+            while(getSupportFragmentManager().getBackStackEntryCount() > 1){
+                getSupportFragmentManager().popBackStackImmediate();//these need to go immediately
+            }
+            getSupportFragmentManager().popBackStack();//last one needs to go after we load the redirect
+        }
         RetailFragment retailFragment = (RetailFragment) getSupportFragmentManager().findFragmentByTag(RetailFragment.class.getName());
         if (retailFragment != null) {
-            retailFragment.loadPaymentRedirectUrl(retailModel.getPayload().getReturnUrl());
+            retailFragment.loadPaymentRedirectUrl(retailModel.getPayload().getReturnUrl(), false);
         } else {
             retailFragment = RetailFragment.newInstance(retailModel,
                     selectedPractice, userPracticeDTO,
                     getSupportFragmentManager().getBackStackEntryCount() > 0);
-            retailFragment.loadPaymentRedirectUrl(retailModel.getPayload().getReturnUrl());
+            retailFragment.loadPaymentRedirectUrl(retailModel.getPayload().getReturnUrl(), false);
             replaceFragment(retailFragment, true);
         }
     }
@@ -240,5 +267,10 @@ public class RetailActivity extends MenuPatientActivity implements RetailInterfa
     @Override
     public void onCreditCardSelected(PaymentCreditCardsPayloadDTO papiPaymentMethod) {
         //Works only when chooseCreditCardFragment is used in selectMode
+    }
+
+    @Override
+    public DTO getDto() {
+        return retailModel;
     }
 }

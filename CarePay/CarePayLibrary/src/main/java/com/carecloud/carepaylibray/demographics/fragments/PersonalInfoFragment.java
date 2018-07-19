@@ -155,7 +155,6 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         phoneNumberEditText.setOnClickListener(selectEndOnClick);
 
 
-/*
         TextInputLayout phoneTypeInputLayout = (TextInputLayout) view.findViewById(R.id.phoneTypeInputLayout);
         phoneNumberTypeEditText = (EditText) view.findViewById(R.id.phoneTypeEditText);
         phoneNumberTypeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(phoneTypeInputLayout, null));
@@ -168,7 +167,6 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         initSelectableInput(phoneNumberTypeEditText, selectedPhoneType,
                 demographicPayload.getAddress().getPhoneNumberType(), null);
         phoneNumberTypeEditText.setText(demographicPayload.getAddress().getPhoneNumberType());
-*/
 
     }
 
@@ -264,7 +262,6 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
                 unsetFieldError(phoneLayout);
             }
 
-/*
             if (validateField(view, dataModel.getDemographic().getAddress().getProperties()
                             .getPhoneType().isRequired(), selectedPhoneType.getName(), R.id.phoneNumberContainer,
                     R.id.phoneTypeInputLayout, isUserAction())) {
@@ -272,7 +269,6 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
             } else {
                 unsetFieldError((TextInputLayout) view.findViewById(R.id.phoneTypeInputLayout));
             }
-*/
 
             return true;
         } finally {
@@ -339,6 +335,12 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
             // 'de-format' before saving to model
             demographicAddressPayloadDTO.setPhone(StringUtil.revertToRawFormat(phoneNumber));
         }
+
+        String phoneType = selectedPhoneType.getName();
+        if (!StringUtil.isNullOrEmpty(phoneType)) {
+            demographicAddressPayloadDTO.setPhoneNumberType(phoneType);
+        }
+
         updatableDemographicDTO.getPayload().getDemographics().getPayload().setAddress(demographicAddressPayloadDTO);
         updatableDemographicDTO.getPayload().setAppointmentpayloaddto(demographicDTO.getPayload().getAppointmentpayloaddto());
         updatableDemographicDTO.setMetadata(demographicDTO.getMetadata());

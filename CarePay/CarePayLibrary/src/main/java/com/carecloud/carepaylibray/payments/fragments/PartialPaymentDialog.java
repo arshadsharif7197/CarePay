@@ -54,7 +54,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private PaymentsModel paymentsDTO;
     private double minimumPayment;
     private PendingBalanceDTO selectedBalance;
-    private NumberFormat currencyFormat;
+    protected NumberFormat currencyFormat;
 
 
     private boolean amountChangeFlag = true;
@@ -103,7 +103,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         initViews();
     }
 
-    private void initViews() {
+    protected void initViews() {
         amountText = (EditText) findViewById(R.id.enterPartialAmountEditText);
         partialPaymentTotalAmountTitle = (TextView) findViewById(R.id.partialPaymentTotalAmountTitle);
         payPartialButton = (Button) findViewById(R.id.payPartialButton);
@@ -250,7 +250,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         onPendingAmountValidation(amountEditText, payPartialButton, partialPaymentTotalAmountTitle);
     }
 
-    private void onPendingAmountValidation(String amountEditText, Button payPartialButton, TextView partialPaymentTotalAmountTitle) {
+    protected void onPendingAmountValidation(String amountEditText, Button payPartialButton, TextView partialPaymentTotalAmountTitle) {
         if (amountEditText != null && amountEditText.length() > 0) {
             if (amountEditText.length() == 1 && amountEditText.equalsIgnoreCase(".")) {
                 amountEditText = "0.";

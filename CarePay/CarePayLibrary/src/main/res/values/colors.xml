@@ -82,6 +82,7 @@
     <color name="white_opacity_60">#99ffffff</color>
     <color name="black_opacity_70">#3c000000</color>
     <color name="black_opacity_30">#4D000000</color>
+    <color name="black_opacity_90">#D9263238</color>
     <color name="white_opacity_30">#4Dffffff</color>
 
     <color name="transparent_20">#33ffffff</color>
@@ -96,9 +97,11 @@
     <color name="cameraBackground">#aa575555</color>
     <color name="sky">#60C5CF</color>
     <color name="myHealthRecyclerViewBackground">#FBFCFC</color>
-    <color name="myHealthTextColor">#607D8B</color>
+    <color name="myHealthTextColor">@color/customGrey</color>
+    <color name="customGrey">#607D8B</color>
     <color name="providerTextColor">#546E7A</color>
     <color name="newsBackgroundColor">#5F969E</color>
 
     <color name="physicianFilterBackground">#FF2B6369</color>
+    <color name="redAlert">#FFE22B41</color>
 </resources>

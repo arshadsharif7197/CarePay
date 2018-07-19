@@ -32,10 +32,7 @@ import com.carecloud.carepaylibray.base.models.UserAuthPermissions;
 import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
@@ -62,9 +59,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         AddPaymentItemFragment.AddItemCallback, PaymentDistributionEntryFragment.PaymentDistributionAmountCallback,
         BounceHelper.BounceHelperListener {
 
-    private TextView balance;
-    private TextView paymentTotal;
-    private TextView unapplied;
+    private TextView balanceTextView;
+    private TextView paymentTotalTextView;
+    private TextView unAppliedTextView;
     private View unappliedLayout;
 
     private NestedScrollView scrollView;
@@ -104,8 +101,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     private boolean hasPaymentError = false;
     private UserAuthPermissions authPermissions;
 
-    private boolean mustAddToExisting = false;
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -141,8 +136,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
         setupButtons(view);
 
-        balance = (TextView) view.findViewById(R.id.balance_value);
-        unapplied = (TextView) view.findViewById(R.id.unapplied_value);
+        balanceTextView = (TextView) view.findViewById(R.id.balance_value);
+        unAppliedTextView = (TextView) view.findViewById(R.id.unapplied_value);
 
         unappliedLayout = view.findViewById(R.id.unapplied_layout);
 
@@ -187,18 +182,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment
                 clearLastSwipeView();
             }
         });
-
-        paymentPlanButton.setVisibility(isPaymentPlanAvailable(paymentAmount)
-                ? View.VISIBLE : View.GONE);
-        paymentPlanButton.setEnabled(userHasPermissionsToCreatePaymentPlan());
-        if (mustAddToExisting) {
-            paymentPlanButton.setText(Label.getLabel("payment_plan_add_existing"));
-        }
-    }
-
-    private boolean userHasPermissionsToCreatePaymentPlan() {
-        return paymentsModel.getPaymentPayload()
-                .getUserAuthModel().getUserAuthPermissions().canCreatePaymentPlan;
     }
 
     private void setupToolbar(View view, String titleString) {
@@ -235,7 +218,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         paymentPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.onPaymentPlanAction(paymentsModel);
+                callback.showPaymentPlanDashboard(paymentsModel);
                 hideDialog();
             }
         });
@@ -256,8 +239,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             }
         });
 
-        paymentTotal = (TextView) view.findViewById(R.id.payment_value);
-        paymentTotal.setOnClickListener(new View.OnClickListener() {
+        paymentTotalTextView = (TextView) view.findViewById(R.id.payment_value);
+        paymentTotalTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 callback.showAmountEntry(PaymentDistributionFragment.this,
@@ -290,7 +273,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             balanceAmount = calculateTotalBalance();
             paymentAmount = balanceAmount;
 
-            setCurrency(balance, balanceAmount);
+            setCurrency(balanceTextView, balanceAmount);
             updatePaymentAmount();
 
             PatientBalanceDTO patientBalanceDTO = null;
@@ -314,10 +297,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
             if (unappliedCredit > 0D) {
                 originalUnapplied = unappliedCredit;
-                unappliedLayout.setVisibility(View.VISIBLE);
-                setCurrency(unapplied, unappliedCredit);
+                setCurrency(unAppliedTextView, unappliedCredit);
             } else {
-                unappliedLayout.setVisibility(View.GONE);
+                setCurrency(unAppliedTextView, 0.00);
             }
 
             setMaxAmounts();
@@ -326,9 +308,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     }
 
     private void getPaymentPlansInformation() {
-        if (paymentsModel.getPaymentPayload().getPatientBalances().size() > 0
-                && paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().size() > 0
-                && paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload().size() > 0) {
+        if (hasBalance()) {
             for (BalanceItemDTO balanceItem : paymentsModel.getPaymentPayload().getPatientBalances()
                     .get(0).getBalances().get(0).getPayload().get(0).getDetails()) {
                 String balanceItemId = String.valueOf(balanceItem.getId());
@@ -372,14 +352,14 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
         if (balanceItems.isEmpty() && chargeItems.isEmpty()) {
             emptyBalanceLayout.setVisibility(View.VISIBLE);
-            paymentTotal.setClickable(false);
+            paymentTotalTextView.setClickable(false);
         } else {
             if (balanceItems.isEmpty()) {
                 balanceDetailsRecycler.setVisibility(View.GONE);
-                paymentTotal.setClickable(false);
+                paymentTotalTextView.setClickable(false);
             } else {
                 balanceDetailsRecycler.setVisibility(View.VISIBLE);
-                paymentTotal.setClickable(true);
+                paymentTotalTextView.setClickable(true);
             }
             emptyBalanceLayout.setVisibility(View.GONE);
         }
@@ -557,17 +537,17 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
     private void updatePaymentAmount() {
         if (paymentAmount >= balanceAmount) {
-            paymentTotal.setBackgroundResource(R.drawable.bg_green_border_trans);
-            paymentTotal.setTextColor(ContextCompat.getColor(getContext(), R.color.emerald));
+            paymentTotalTextView.setBackgroundResource(R.drawable.bg_green_border_trans);
+            paymentTotalTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.emerald));
         } else {
-            paymentTotal.setBackgroundResource(R.drawable.bg_orange_border_trans);
-            paymentTotal.setTextColor(ContextCompat.getColor(getContext(), R.color.lightning_yellow));
+            paymentTotalTextView.setBackgroundResource(R.drawable.bg_orange_border_trans);
+            paymentTotalTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.lightning_yellow));
         }
 
         double totalAmount = round(paymentAmount + chargesAmount);
         payButton.setEnabled(totalAmount > 0 && authPermissions.canMakePayment);
 
-        setCurrency(paymentTotal, totalAmount);
+        setCurrency(paymentTotalTextView, totalAmount);
     }
 
     private void setCurrency(TextView textView, double amount) {
@@ -870,28 +850,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         return (double) Math.round(amount * 100) / 100;
     }
 
-    private boolean isPaymentPlanAvailable(double balance) {
-        PaymentsPayloadSettingsDTO settingsDTO = paymentsModel.getPaymentPayload()
-                .getPaymentSettings().get(0);
-        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = settingsDTO.getPayload().getPaymentPlans();
-        if (paymentPlanSettings.isPaymentPlansEnabled()) {
-            for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
-                if (balance >= rule.getMinBalance().getValue() &&
-                        balance <= rule.getMaxBalance().getValue()) {
-                    if (paymentsModel.getPaymentPayload()
-                            .getFilteredPlans(settingsDTO.getMetadata().getPracticeId()).isEmpty()) {
-                        return true;
-                    } else if (paymentPlanSettings.isCanHaveMultiple()) {//need to check if multiple plans is enabled
-                        return true;
-                    } else if (paymentPlanSettings.isAddBalanceToExisting()) {//check if balance can be added to existing
-                        mustAddToExisting = true;
-                        return true;
-                    }
-                    return false;
-                }
-            }
-        }
-        return false;
+    private boolean hasBalance(){
+        return paymentsModel.getPaymentPayload().getPatientBalances().size() > 0
+                && paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().size() > 0
+                && paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload().size() > 0;
     }
-
 }

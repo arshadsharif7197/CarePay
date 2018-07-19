@@ -2,8 +2,6 @@ package com.carecloud.carepay.practice.library.appointments;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -684,17 +682,9 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void onDetailItemClick(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem) {
-        String tag = PaymentDetailsFragmentDialog.class.getName();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-
         PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-                .newInstance(paymentsModel, paymentLineItem, true);
-        dialog.show(ft, tag);
+                .newInstance(paymentsModel, paymentLineItem, false);
+        displayDialogFragment(dialog, false);
     }
 
 
@@ -761,6 +751,11 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     @Override
+    public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
+
+    }
+
+    @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
 
     }
@@ -776,7 +771,17 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     @Override
+    public void displayBalanceDetails(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem, PendingBalanceDTO selectedBalance) {
+        onDetailItemClick(paymentsModel, paymentLineItem);
+    }
+
+    @Override
     public void onCreditCardSelected(PaymentCreditCardsPayloadDTO papiPaymentMethod) {
 
+    }
+
+    @Override
+    public void onCashSelected(PaymentsModel paymentsModel) {
+        //TODO handle this from practice mode
     }
 }

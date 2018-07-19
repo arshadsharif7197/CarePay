@@ -29,7 +29,7 @@ import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanInterface;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -42,10 +42,9 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-
-import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -53,13 +52,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
+
 public class PaymentPlanFragment extends BasePaymentDialogFragment implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
+    protected static final String KEY_PLAN_AMOUNT = "plan_amount";
 
     protected PaymentsModel paymentsModel;
     protected PendingBalanceDTO selectedBalance;
-    protected PaymentPlanInterface callback;
+    protected PaymentPlanCreateInterface callback;
 
-    private PaymentSettingsBalanceRangeRule paymentPlanBalanceRules = new PaymentSettingsBalanceRangeRule();
+    protected PaymentSettingsBalanceRangeRule paymentPlanBalanceRules = new PaymentSettingsBalanceRangeRule();
 
     protected NumberFormat currencyFormatter;
     protected double paymentPlanAmount;
@@ -77,17 +79,18 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     protected int monthlyPaymentCount;
 
     protected boolean isCalculatingAmount = false;
-    protected boolean isCalclatingTime = false;
+    protected boolean isCalculatingTime = false;
 
     /**
      * @param paymentsModel   the payment model
      * @param selectedBalance the selected balance
      * @return an empty PaymentPlanFragment instance for creating a new payment plan
      */
-    public static PaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance) {
+    public static PaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double paymentPlanAmount) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
+        args.putDouble(KEY_PLAN_AMOUNT, paymentPlanAmount);
 
         PaymentPlanFragment fragment = new PaymentPlanFragment();
         fragment.setArguments(args);
@@ -98,12 +101,12 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     protected void attachCallback(Context context) {
         try {
             if (context instanceof PaymentViewHandler) {
-                callback = (PaymentPlanInterface) ((PaymentViewHandler) context).getPaymentPresenter();
+                callback = (PaymentPlanCreateInterface) ((PaymentViewHandler) context).getPaymentPresenter();
             } else {
-                callback = (PaymentPlanInterface) context;
+                callback = (PaymentPlanCreateInterface) context;
             }
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached context must implement PaymentPlanInterface");
+            throw new ClassCastException("Attached context must implement PaymentPlanEditInterface");
         }
     }
 
@@ -113,7 +116,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         Bundle args = getArguments();
         paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
         selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
-        paymentPlanAmount = calculateTotalAmount(selectedBalance);
+        paymentPlanAmount = calculateTotalAmount(args.getDouble(KEY_PLAN_AMOUNT));//calculateTotalAmount(selectedBalance);
         dateOptions = generateDateOptions();
         paymentDateOption = dateOptions.get(0);
         if (selectedBalance != null) {
@@ -205,22 +208,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         numberPaymentsEditText.addTextChangedListener(getRequiredTextWatcher(numberPaymentsInputLayout, new ValueInputCallback() {
             @Override
             public void onValueInput(String input) {
-                if (isCalclatingTime) {
-                    isCalclatingTime = false;
-                    return;
-                }
-                isCalculatingAmount = true;
-                try {
-                    monthlyPaymentCount = Integer.parseInt(input);
-                    monthlyPaymentAmount = calculateMonthlyPayment(monthlyPaymentCount);
-                    if (monthlyPaymentEditText.getOnFocusChangeListener() != null) {
-                        monthlyPaymentEditText.getOnFocusChangeListener().onFocusChange(monthlyPaymentEditText, true);
-                    }
-                    monthlyPaymentEditText.setText(currencyFormatter.format(monthlyPaymentAmount));
-                    setLastPaymentMessage(monthlyPaymentAmount);
-                } catch (NumberFormatException nfe) {
-                    nfe.printStackTrace();
-                }
+                refreshNumberOfPayments(input);
             }
         }));
 
@@ -236,7 +224,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
                     isCalculatingAmount = false;
                     return;
                 }
-                isCalclatingTime = true;
+                isCalculatingTime = true;
                 try {
                     monthlyPaymentAmount = Double.parseDouble(input);
                     monthlyPaymentAmount = Math.round(monthlyPaymentAmount * 100) / 100D;//make sure we don't consider eztra decimals here.. these will get formatted out
@@ -256,12 +244,29 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         lastPaymentMessage.setVisibility(View.INVISIBLE);
     }
 
-    private void setupButtons(View view) {
-        if (selectedBalance != null) {
-            View addToExisting = view.findViewById(R.id.payment_plan_add_existing);
-            if (hasExistingPlans() && canAddToExisting()
-                    && !paymentsModel.getPaymentPayload().getValidPlans(selectedBalance.getMetadata().getPracticeId(),
-                    selectedBalance.getPayload().get(0).getAmount()).isEmpty()) {
+    protected void refreshNumberOfPayments(String day) {
+        if (isCalculatingTime) {
+            isCalculatingTime = false;
+            return;
+        }
+        isCalculatingAmount = true;
+        try {
+            monthlyPaymentCount = Integer.parseInt(day);
+            monthlyPaymentAmount = calculateMonthlyPayment(monthlyPaymentCount);
+            if (monthlyPaymentEditText.getOnFocusChangeListener() != null) {
+                monthlyPaymentEditText.getOnFocusChangeListener().onFocusChange(monthlyPaymentEditText, true);
+            }
+            monthlyPaymentEditText.setText(currencyFormatter.format(monthlyPaymentAmount));
+            setLastPaymentMessage(monthlyPaymentAmount);
+        } catch (NumberFormatException nfe) {
+            nfe.printStackTrace();
+        }
+    }
+
+    protected void setupButtons(View view) {
+        View addToExisting = view.findViewById(R.id.payment_plan_add_existing);
+        if (selectedBalance != null && addToExisting != null) {
+            if (enableAddToExisting()) {
                 addToExisting.setVisibility(View.VISIBLE);
             } else {
                 addToExisting.setVisibility(View.GONE);
@@ -278,7 +283,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         createPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createPaymentPlan(true);
+                createPaymentPlanPostModel(true);
                 SystemUtil.hideSoftKeyboard(getContext(), view);
             }
         });
@@ -287,7 +292,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
             @Override
             public boolean onTouch(View buttonView, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN && !buttonView.isSelected()) {
-                    createPaymentPlan(true);
+                    createPaymentPlanPostModel(true);
                     SystemUtil.hideSoftKeyboard(getContext(), buttonView);
                     return true;
                 }
@@ -307,22 +312,14 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
         }
     }
 
-    private void enableCreatePlanButton() {
+    protected void enableCreatePlanButton() {
         boolean isEnabled = validateFields(false);
         createPlanButton.setSelected(isEnabled);
         createPlanButton.setClickable(isEnabled);
     }
 
-    protected double calculateTotalAmount(PendingBalanceDTO selectedBalance) {
-        double totalAmount = 0;
-        if (selectedBalance != null) {
-            for (PendingBalancePayloadDTO balancePayloadDTO : selectedBalance.getPayload()) {
-                if (StringUtil.isNullOrEmpty(balancePayloadDTO.getType()) || balancePayloadDTO.getType().equals(PATIENT_BALANCE)) {//prevent responsibility types from being added
-                    totalAmount += balancePayloadDTO.getAmount();
-                }
-            }
-        }
-        return totalAmount;
+    protected double calculateTotalAmount(double amount) {
+        return amount;
     }
 
     private double calculateMonthlyPayment(int numberPayments) {
@@ -454,10 +451,15 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     }
 
     protected void addBalanceToExisting() {
-        callback.onAddBalanceToExitingPlan(paymentsModel, selectedBalance);
+        callback.onAddBalanceToExistingPlan(paymentsModel, selectedBalance, paymentPlanAmount);
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_balance_amount),
+                getString(R.string.param_is_add_existing)};
+        Object[] values = {selectedBalance.getMetadata().getPracticeId(), paymentPlanAmount, true};
+        MixPanelUtil.logEvent(getString(R.string.event_paymentplan_started), params, values);
     }
 
-    protected void createPaymentPlan(boolean userInteraction) {
+    protected void createPaymentPlanPostModel(boolean userInteraction) {
         if (validateFields(userInteraction)) {
             PaymentPlanPostModel postModel = new PaymentPlanPostModel();
             postModel.setMetadata(selectedBalance.getMetadata());
@@ -478,16 +480,20 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
             }
 
             postModel.setPaymentPlanModel(paymentPlanModel);
-
-            callback.onStartPaymentPlan(paymentsModel, postModel);
+            createPaymentPlanNextStep(postModel);
         }
+    }
+
+    protected void createPaymentPlanNextStep(PaymentPlanPostModel postModel) {
+        callback.onStartPaymentPlan(paymentsModel, postModel);
     }
 
     protected List<PaymentPlanLineItem> getPaymentPlanLineItems() {
         double amountHolder = paymentPlanAmount;
         List<PaymentPlanLineItem> lineItems = new ArrayList<>();
         for (PendingBalancePayloadDTO pendingBalance : selectedBalance.getPayload()) {
-            if (StringUtil.isNullOrEmpty(pendingBalance.getType()) || pendingBalance.getType().equals(PATIENT_BALANCE)) {//ignore responsibility types
+            if (StringUtil.isNullOrEmpty(pendingBalance.getType())
+                    || pendingBalance.getType().equals(PATIENT_BALANCE)) {//ignore responsibility types
                 for (BalanceItemDTO balanceItem : pendingBalance.getDetails()) {
                     if (amountHolder <= 0) {
                         break;
@@ -498,29 +504,31 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
                     lineItem.setType(IntegratedPaymentLineItem.TYPE_APPLICATION);
                     lineItem.setTypeId(balanceItem.getId().toString());
 
-                    if (amountHolder >= balanceItem.getBalance()) {
-                        lineItem.setAmount(balanceItem.getBalance());
-                        amountHolder -= balanceItem.getBalance();
-                    } else {
-                        lineItem.setAmount(amountHolder);
-                        amountHolder = 0;
-                    }
+                    if(balanceItem.getBalance() > 0){
+                        if (amountHolder >= balanceItem.getBalance()) {
+                            lineItem.setAmount(balanceItem.getBalance());
+                            amountHolder = SystemUtil.safeSubtract(amountHolder, balanceItem.getBalance());
+                        } else {
+                            lineItem.setAmount(amountHolder);
+                            amountHolder = 0;
+                        }
 
-                    lineItems.add(lineItem);
+                        lineItems.add(lineItem);
+                    }
                 }
             }
         }
         return lineItems;
     }
 
-    private void setError(int id, String error, boolean requestFocus) {
+    protected void setError(int id, String error, boolean requestFocus) {
         if (getView() != null) {
             TextInputLayout inputLayout = (TextInputLayout) getView().findViewById(id);
             setError(inputLayout, error, requestFocus);
         }
     }
 
-    private void setError(TextInputLayout inputLayout, String errorMessage, boolean requestFocus) {
+    protected void setError(TextInputLayout inputLayout, String errorMessage, boolean requestFocus) {
         inputLayout.setErrorEnabled(true);
         inputLayout.setError(errorMessage);
         if (requestFocus) {
@@ -529,14 +537,14 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
 
     }
 
-    private void clearError(int id) {
+    protected void clearError(int id) {
         if (getView() != null) {
             TextInputLayout inputLayout = (TextInputLayout) getView().findViewById(id);
             clearError(inputLayout);
         }
     }
 
-    private void clearError(TextInputLayout inputLayout) {
+    protected void clearError(TextInputLayout inputLayout) {
         inputLayout.setError(null);
         inputLayout.setErrorEnabled(false);
     }
@@ -561,6 +569,12 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
             }
         }
         return false;
+    }
+
+    protected boolean enableAddToExisting() {
+        return hasExistingPlans() && canAddToExisting()
+                && !paymentsModel.getPaymentPayload().getValidPlans(selectedBalance.getMetadata().getPracticeId(),
+                selectedBalance.getPayload().get(0).getAmount()).isEmpty();
     }
 
     @Override
@@ -621,7 +635,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment implements Pa
     private View.OnFocusChangeListener currencyFocusChangeListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View view, boolean hasFocus) {
-            if (isCalculatingAmount || isCalclatingTime) {
+            if (isCalculatingAmount || isCalculatingTime) {
                 return;
             }
             EditText editText = (EditText) view;

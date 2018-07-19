@@ -17,6 +17,7 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.activities.Pati
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckoutActivity;
 import com.carecloud.carepay.practice.library.payments.PatientModePaymentsActivity;
 import com.carecloud.carepay.practice.library.payments.PaymentsActivity;
+import com.carecloud.carepay.practice.library.retail.RetailPracticeActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.constants.Defs;
@@ -32,8 +33,8 @@ public class PracticeNavigationHelper {
     /**
      * Navigation using application context
      *
-     * @param context       activity context
-     * @param workflowDTO   response DTO
+     * @param context     activity context
+     * @param workflowDTO response DTO
      */
     public static void navigateToWorkflow(Context context, WorkflowDTO workflowDTO) {
         navigateToWorkflow(context, workflowDTO, false, 0);
@@ -42,9 +43,9 @@ public class PracticeNavigationHelper {
     /**
      * Navigation using application context
      *
-     * @param context       activity context
-     * @param workflowDTO   response DTO
-     * @param info          extra Bundle info
+     * @param context     activity context
+     * @param workflowDTO response DTO
+     * @param info        extra Bundle info
      */
     public static void navigateToWorkflow(Context context, WorkflowDTO workflowDTO, Bundle info) {
         navigateToWorkflow(context, workflowDTO, false, 0, info);
@@ -114,7 +115,7 @@ public class PracticeNavigationHelper {
             case NavigationStateConstants.APPOINTMENTS: {
                 ApplicationPreferences applicationPreferences = ((ISession) context).getApplicationPreferences();
                 @Defs.AppointmentNavigationTypeDef int navigationOption = applicationPreferences.getAppointmentNavigationOption();
-                switch (navigationOption){
+                switch (navigationOption) {
                     case Defs.NAVIGATE_APPOINTMENT:
                         intent = new Intent(context, PatientModePracticeAppointmentActivity.class);
                         break;
@@ -125,7 +126,7 @@ public class PracticeNavigationHelper {
                     default:
                         //do nothing
                 }
-                if(intent != null) {
+                if (intent != null) {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 }
                 break;
@@ -151,11 +152,11 @@ public class PracticeNavigationHelper {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
-            case NavigationStateConstants.MEDICATION_ALLERGIES:{
+            case NavigationStateConstants.MEDICATION_ALLERGIES: {
                 if (context instanceof PatientModeCheckinActivity) {
                     ((PatientModeCheckinActivity) context).navigateToMedicationsAllergy(workflowDTO);
                     return;
-                }else{
+                } else {
                     intent = new Intent(context, PatientModeCheckinActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 }
@@ -165,7 +166,7 @@ public class PracticeNavigationHelper {
                 if (context instanceof PatientModeCheckinActivity) {
                     ((PatientModeCheckinActivity) context).navigateToConsentForms(workflowDTO);
                     return;
-                }else{
+                } else {
                     intent = new Intent(context, PatientModeCheckinActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 }
@@ -176,7 +177,18 @@ public class PracticeNavigationHelper {
                 if (context instanceof PatientModeCheckinActivity) {
                     ((PatientModeCheckinActivity) context).navigateToIntakeForms(workflowDTO);
                     return;
-                }else{
+                } else {
+                    intent = new Intent(context, PatientModeCheckinActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                }
+                break;
+            }
+
+            case NavigationStateConstants.THIRD_PARTY_CHECK_IN: {
+                if (context instanceof PatientModeCheckinActivity) {
+                    ((PatientModeCheckinActivity) context).navigateToThirdParty(workflowDTO);
+                    return;
+                } else {
                     intent = new Intent(context, PatientModeCheckinActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 }
@@ -203,7 +215,7 @@ public class PracticeNavigationHelper {
             case NavigationStateConstants.PATIENT_APP_CHECKOUT:
             case NavigationStateConstants.PATIENT_FORM_CHECKOUT:
             case NavigationStateConstants.PATIENT_PAY_CHECKOUT: {
-                if(context instanceof PatientModeCheckoutActivity){
+                if (context instanceof PatientModeCheckoutActivity) {
                     ((PatientModeCheckoutActivity) context).initDto(workflowDTO);
                     return;
                 }
@@ -212,6 +224,10 @@ public class PracticeNavigationHelper {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
+            case NavigationStateConstants.RETAIL:
+                intent = new Intent(context, RetailPracticeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                break;
 
             default: {
                 //do nothing, otherwise the screen will fail if it doesnt have the required DTO
