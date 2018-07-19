@@ -60,8 +60,8 @@
     <dimen name="patientShortNameTextSize">20sp</dimen>
     <dimen name="patientNameTextSize">18sp</dimen>
     <dimen name="providerNameTextSize">12sp</dimen>
-    <dimen name="timeTextSize">16sp</dimen>
-    <dimen name="timeElapsedTextSize">10sp</dimen>
+    <dimen name="timeTextSize">14sp</dimen>
+    <dimen name="timeElapsedTextSize">8sp</dimen>
     <dimen name="infoTextSize">11sp</dimen>
     <dimen name="checkinColumnTitleTextSize">15sp</dimen>
     <dimen name="checkInTitleCounterTextSize">13sp</dimen>
