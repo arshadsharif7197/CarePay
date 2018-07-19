@@ -484,6 +484,6 @@ public class StringUtil {
         if (lastName == null) {
             lastName = "";
         }
-        return (StringUtil.capitalize(firstName + " " + lastName));
+        return (StringUtil.capitalize(firstName + " " + lastName)).trim();
     }
 }

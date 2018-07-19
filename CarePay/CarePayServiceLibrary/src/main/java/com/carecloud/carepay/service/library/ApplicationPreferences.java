@@ -398,6 +398,8 @@ public class ApplicationPreferences {
     }
 
     public void setUserFullName(String fullName) {
-        this.fullName = fullName;
+        if (!fullName.isEmpty()) {
+            this.fullName = fullName;
+        }
     }
 }
