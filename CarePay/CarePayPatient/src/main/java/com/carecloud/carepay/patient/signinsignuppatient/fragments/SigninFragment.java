@@ -57,6 +57,7 @@ import com.google.gson.Gson;
 import com.newrelic.agent.android.NewRelic;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyPairGenerator;
@@ -65,6 +66,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
+import java.security.ProviderException;
 import java.security.Signature;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
@@ -585,7 +587,7 @@ public class SigninFragment extends BaseFragment {
                             .setUserAuthenticationRequired(true)
                             .build());
             mKeyPairGenerator.generateKeyPair();
-        } catch (InvalidAlgorithmParameterException e) {
+        } catch (GeneralSecurityException | ProviderException e) {
             Log.e("Breeze", e.getLocalizedMessage());
         }
     }
