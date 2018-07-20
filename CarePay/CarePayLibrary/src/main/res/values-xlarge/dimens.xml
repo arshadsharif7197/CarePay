@@ -3,4 +3,5 @@
     <dimen name="hint_floating_size">10sp</dimen>
     <dimen name="errorTextSize">10sp</dimen>
     <dimen name="textview_default_textsize">18sp</dimen>
+    <dimen name="closeIconSize">19dp</dimen>
 </resources>

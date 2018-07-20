@@ -75,8 +75,24 @@
     <dimen name="queueCounterNoBorderWidth">27dp</dimen>
     <dimen name="queueCounterNoBorderHeight">27dp</dimen>
     <dimen name="queueCounterStrokeWidth">2dp</dimen>
-
     <dimen name="nextButtonTextSize">19sp</dimen>
     <dimen name="searchViewHeight">35dp</dimen>
+
+    <!-- Custom Filter Popup -->
+    <dimen name="custom_filter_popup_header_padding">2dp</dimen>
+    <dimen name="view_padding">10dp</dimen>
+    <dimen name="drawable_padding">3dp</dimen>
+    <dimen name="filterTitleTextSize">15sp</dimen>
+    <dimen name="view_margin">5dp</dimen>
+    <dimen name="search_edittext_padding_right">10dp</dimen>
+    <dimen name="clear_search_button_margin">-40dp</dimen>
+    <dimen name="clearFiltersButtonHeight">35dp</dimen>
+    <dimen name="custom_filter_text_size">14sp</dimen>
+    <dimen name="customFilterHeaderPadding">5dp</dimen>
+    <dimen name="cutomFilterItemTextSize">13sp</dimen>
+    <dimen name="custom_filter_view_margin">3dp</dimen>
+    <dimen name="searchEditTextTextSize">13sp</dimen>
+    <dimen name="clearFiltersButtonTextSize">12sp</dimen>
+    <dimen name="custom_filter_patient_image_size">26dp</dimen>
 
 </resources>
