@@ -153,7 +153,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         String practiceName = notificationItem.getPayload().getPracticeName();
         holder.message.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder(String
-                .format("%s needs you to fill and sign some pending forms.", practiceName));
+                .format(Label.getLabel("consentForms.notification.message.label.pendingFormNotification")
+                        , practiceName));
         stringBuilder.setSpan(new CarePayCustomSpan(context,
                         CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD), 0, practiceName.length(),
                 Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
