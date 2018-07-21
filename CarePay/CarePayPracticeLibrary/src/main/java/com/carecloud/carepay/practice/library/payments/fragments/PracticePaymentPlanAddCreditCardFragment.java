@@ -113,9 +113,6 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
                 }
             }
         });
-        saveCardOnFileCheckBox.setChecked(false);
-        saveCardOnFileCheckBox.setEnabled(true);
-
     }
 
     @Override
