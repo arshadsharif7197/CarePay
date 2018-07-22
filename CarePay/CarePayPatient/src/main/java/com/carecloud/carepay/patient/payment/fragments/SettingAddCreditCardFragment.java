@@ -65,6 +65,11 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
         saveCardOnFileCheckBox.setEnabled(false);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
+
+        if(demographicsSettingsDTO.getPayload().getPatientCreditCards().isEmpty()){
+            setAsDefaultCheckBox.setChecked(true);
+            setAsDefaultCheckBox.setEnabled(false);
+        }
     }
 
     private WorkflowServiceCallback addNewCreditCardCallback = new WorkflowServiceCallback() {

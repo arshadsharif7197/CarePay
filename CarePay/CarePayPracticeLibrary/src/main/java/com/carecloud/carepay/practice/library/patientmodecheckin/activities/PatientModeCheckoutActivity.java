@@ -878,12 +878,12 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                 break;
             }
         }
-        appointmentsResultModel.getMetadata().getLinks()
-                .setShop(practiceAppointmentDTO.getMetadata().getLinks().getShop());
+
         String appointmentWorkflowString = DtoHelper.getStringDTO(appointmentsResultModel);
         WorkflowDTO appointmentWorkflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class,
                 appointmentWorkflowString);
         if (appointmentWorkflowDTO != null) {
+            appointmentWorkflowDTO.setMetadata(workflowDTO.getMetadata());
             appointmentWorkflowDTO.setState(workflowDTO.getState());
         }
         return appointmentWorkflowDTO;
