@@ -15,6 +15,7 @@ import com.carecloud.carepay.patient.messages.fragments.MessagesProvidersFragmen
 import com.carecloud.carepay.patient.messages.models.Messages;
 import com.carecloud.carepay.patient.messages.models.MessagingDataModel;
 import com.carecloud.carepay.patient.messages.models.ProviderContact;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.RestCallServiceCallback;
 import com.carecloud.carepay.service.library.RestCallServiceHelper;
 import com.carecloud.carepay.service.library.RestDef;
@@ -40,9 +41,8 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
     private List<ProviderContact> providerContacts = new ArrayList<>();
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-
         restCallServiceHelper = new RestCallServiceHelper(getAppAuthorizationHelper(), getApplicationMode());
         replaceFragment(new MessagesListFragment(), false);
     }
@@ -53,7 +53,7 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
         setupToolbar();
     }
 
-    private void setupToolbar(){
+    private void setupToolbar() {
         MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_messages);
         menuItem.setChecked(true);
         displayToolbar(true, menuItem.getTitle().toString());
@@ -66,6 +66,11 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
 
     @Override
     public void displayThreadMessages(Messages.Reply thread) {
+        if (!thread.isRead()) {
+            ApplicationPreferences.getInstance()
+                    .setMessagesBadgeCounter(ApplicationPreferences.getInstance().getMessagesBadgeCounter() - 1);
+            updateBadgeCounterViews();
+        }
         replaceFragment(MessagesConversationFragment.newInstance(thread), true);
     }
 
@@ -178,8 +183,8 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
     }
 
     @Override
-    public void onBackPressed(){
-        if(getSupportFragmentManager().getBackStackEntryCount() == 1){
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             setupToolbar();
         }
         super.onBackPressed();
@@ -202,7 +207,7 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 MessagesListFragment messagesListFragment = (MessagesListFragment) fragmentManager.findFragmentById(R.id.container_main);
                 messagesListFragment.updateDisplayDataModel(messagingDataModel);
-            }catch (ClassCastException cce){
+            } catch (ClassCastException cce) {
                 cce.printStackTrace();
             }
         }
@@ -299,7 +304,7 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
         }
     };
 
-    private void loadConversationsList(JsonElement jsonElement){
+    private void loadConversationsList(JsonElement jsonElement) {
         Gson gson = new Gson();
         Messages.Reply thread = gson.fromJson(jsonElement, Messages.Reply.class);
 
@@ -307,14 +312,14 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
             FragmentManager fragmentManager = getSupportFragmentManager();
             MessagesConversationFragment conversationFragment = (MessagesConversationFragment) fragmentManager.findFragmentById(R.id.container_main);
             conversationFragment.updateThreadMessages(thread);
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             cce.printStackTrace();
         }
     }
 
-    private static String lookupName(Messages.Reply thread, String userId){
+    private static String lookupName(Messages.Reply thread, String userId) {
         for (Messages.Participant participant : thread.getParticipants()) {
-            if(participant.getUserId().equals(userId)){
+            if (participant.getUserId().equals(userId)) {
                 return participant.getName();
             }
         }
