@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
-import com.carecloud.carepay.patient.demographics.fragments.ConfirmDialogFragment;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepay.patient.payment.PatientPaymentPresenter;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -119,7 +119,11 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.exitFlow) {
-            ConfirmDialogFragment fragment = ConfirmDialogFragment.newInstance();
+            ConfirmDialogFragment fragment = ConfirmDialogFragment
+                    .newInstance(Label.getLabel("checkin_confirm_exit_title"),
+                            Label.getLabel("checkin_confirm_exit_message"),
+                            Label.getLabel("button_no"),
+                            Label.getLabel("button_yes"));
             fragment.setCallback(this);
             displayDialogFragment(fragment, false);
             return true;

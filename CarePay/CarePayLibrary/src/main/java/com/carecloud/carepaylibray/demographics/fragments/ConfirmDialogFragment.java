@@ -40,6 +40,20 @@ public class ConfirmDialogFragment extends BaseDialogFragment {
         return fragment;
     }
 
+    public static ConfirmDialogFragment newInstance(String title,
+                                                    String message,
+                                                    String negativeButtonLabel,
+                                                    String positiveButtonLabel) {
+        Bundle args = new Bundle();
+        args.putString("title", title);
+        args.putString("message", message);
+        args.putString("negativeButtonLabel", negativeButtonLabel);
+        args.putString("positiveButtonLabel", positiveButtonLabel);
+        ConfirmDialogFragment fragment = new ConfirmDialogFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -58,6 +72,10 @@ public class ConfirmDialogFragment extends BaseDialogFragment {
             ((TextView) view.findViewById(R.id.dialogMessageTextView)).setText(message);
         }
         Button yesButton = (Button) view.findViewById(R.id.button_right_action);
+        String positiveButtonLabel = getArguments().getString("positiveButtonLabel");
+        if (positiveButtonLabel != null) {
+            yesButton.setText(positiveButtonLabel);
+        }
         yesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,7 +83,11 @@ public class ConfirmDialogFragment extends BaseDialogFragment {
                 callback.onConfirm();
             }
         });
-        View noButton = view.findViewById(R.id.button_left_action);
+        Button noButton = (Button) view.findViewById(R.id.button_left_action);
+        String negativeButtonLabel = getArguments().getString("negativeButtonLabel");
+        if (negativeButtonLabel != null) {
+            noButton.setText(negativeButtonLabel);
+        }
         if (noButton != null) {
             noButton.setOnClickListener(new View.OnClickListener() {
                 @Override

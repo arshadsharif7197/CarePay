@@ -151,19 +151,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     public void selectDateRange(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO,
                                 AppointmentResourcesItemDTO appointmentResource,
                                 AppointmentsResultModel appointmentsResultModel) {
-        Bundle bundle = new Bundle();
-        Gson gson = new Gson();
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(appointmentResource));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(visitTypeDTO));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE,
-                gson.toJson(appointmentsResultModel));
-
-        AppointmentDateRangeFragment appointmentDateRangeFragment = new AppointmentDateRangeFragment();
-        appointmentDateRangeFragment.setArguments(bundle);
-
-        viewHandler.navigateToFragment(appointmentDateRangeFragment, false);
+        AppointmentDateRangeFragment fragment = AppointmentDateRangeFragment
+                .newInstance(appointmentsResultModel, startDate, endDate, appointmentResource, visitTypeDTO);
+        viewHandler.navigateToFragment(fragment, false);
     }
 
     @Override

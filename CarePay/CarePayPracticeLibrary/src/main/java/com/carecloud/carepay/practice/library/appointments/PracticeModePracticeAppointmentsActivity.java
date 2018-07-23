@@ -49,6 +49,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
+import com.squareup.timessquare.CalendarPickerView;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -304,8 +305,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                                 endDate,
                                 DateRangePickerDialog.getPreviousSixMonthCalendar(),
                                 DateRangePickerDialog.getNextSixMonthCalendar(),
-                                PracticeModePracticeAppointmentsActivity.this
-                        );
+                                PracticeModePracticeAppointmentsActivity.this,
+                                CalendarPickerView.SelectionMode.RANGE.name());
                         displayDialogFragment(dialog, false);
 
                         wasCalledFromThisClass = true;
@@ -334,6 +335,11 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         } else {
             wasCalledFromThisClass = false;
         }
+    }
+
+    @Override
+    public void onDateSelected(Date selectedDate) {
+        //Not Implemented
     }
 
     private View.OnClickListener getFindPatientListener(final boolean needsConfirmation) {

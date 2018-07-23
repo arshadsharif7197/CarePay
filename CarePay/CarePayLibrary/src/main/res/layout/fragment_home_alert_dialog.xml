@@ -46,26 +46,42 @@
         breeze:textKey="home_alert_dialog_message"
         tools:text="Are you sure you want to exit this \n workflow? Some or all of your \n information may be lost." />
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/background_bottom_rounded_white_border"
+        android:orientation="horizontal"
         android:padding="@dimen/dimen_10dp">
 
-        <View
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/button_left_action"
-            android:layout_width="1dp"
-            android:layout_height="1dp" />
+            style="@style/ResponsButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dimen_5dp"
+            android:layout_marginStart="0dp"
+            android:layout_weight="2"
+            android:textSize="@dimen/text_size_13"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="button_no"
+            tools:text="no" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/button_right_action"
-            style="@style/SigninNewAccountButtonStyle"
-            android:text="@string/signup_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="@dimen/dimen_5dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_red_border"
+            android:textAllCaps="true"
+            android:textColor="@color/remove_red"
+            android:textSize="@dimen/text_size_13"
             app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="demographics_insurance_primary_alert_button"
+            breeze:textKey="button_yes"
             tools:text="Yes" />
 
-    </FrameLayout>
+    </LinearLayout>
 
 </LinearLayout>
 

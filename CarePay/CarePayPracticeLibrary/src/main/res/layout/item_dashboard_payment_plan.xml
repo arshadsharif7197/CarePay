@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,107 +9,132 @@
     android:paddingEnd="@dimen/dimen_15dp"
     android:paddingStart="@dimen/dimen_15dp">
 
-    <ProgressBar
-        android:id="@+id/paymentPlanProgressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="@dimen/dimen_60dp"
-        android:layout_height="@dimen/dimen_60dp"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="@dimen/dimen_10dp"
-        android:indeterminate="false"
-        android:max="100"
-        android:progress="25"
-        android:progressDrawable="@drawable/payment_plan_progress" />
+    <FrameLayout
+        android:id="@+id/progress_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="@dimen/dimen_10dp">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_1dp"
-        android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@id/paymentPlanProgressBar"
-        android:background="@color/divider_color" />
+        <ProgressBar
+            android:id="@+id/paymentPlanProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="@dimen/dimen_60dp"
+            android:layout_height="@dimen/dimen_60dp"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="25"
+            android:progressDrawable="@drawable/payment_plan_progress" />
 
-    <RelativeLayout
+        <ImageView
+            android:id="@+id/scheduledPaymentIndicator"
+            android:layout_width="@dimen/dimen_30dp"
+            android:layout_height="@dimen/dimen_30dp"
+            android:layout_gravity="center"
+            android:src="@drawable/icn_pending"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_60dp"
-        android:layout_marginBottom="@dimen/dimen_10dp"
-        android:layout_marginTop="@dimen/dimen_10dp"
-        android:layout_toEndOf="@id/paymentPlanProgressBar">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_60dp"
+            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:layout_marginTop="@dimen/dimen_10dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/totalAmountTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:textColor="@color/textview_default_textcolor"
+                    android:textSize="@dimen/text_size_20sp"
+                    app:customAssetFont="gotham_rounded_medium"
+                    tools:text="$400.00" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/nameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textColor="@color/lightSlateGray"
+                    android:textSize="@dimen/text_size_15"
+                    app:customAssetFont="proxima_nova_regular"
+                    tools:text="Payment Plan Name that is super long and does not fit on a line" />
+
+            </LinearLayout>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/totalAmountTextView"
+                android:id="@+id/periodicAmountTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="start"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_gravity="center_vertical"
                 android:textColor="@color/textview_default_textcolor"
-                android:textSize="@dimen/text_size_20sp"
+                android:textSize="@dimen/textview_default_textsize"
                 app:customAssetFont="gotham_rounded_medium"
-                tools:text="$400.00" />
+                tools:text="$400.00/month" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/nameTextView"
-                android:layout_width="wrap_content"
+                android:id="@+id/detailsButton"
+                style="@style/BreezeButtonStyleDark"
+                android:layout_width="@dimen/dimen_130dp"
                 android:layout_height="wrap_content"
-                android:gravity="start"
-                android:textColor="@color/lightSlateGray"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/dimen_15dp"
+                android:background="@drawable/blue_border_rounded_button_selector"
+                android:paddingTop="@dimen/dimen_8dp"
+                android:paddingBottom="@dimen/dimen_8dp"
+                android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_15"
-                app:customAssetFont="proxima_nova_regular"
-                tools:text="Payment Plan Name" />
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="payment.paymentPlanDashboard.item.button.detail"
+                tools:text="Details" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/addBalanceButton"
+                android:layout_width="@dimen/dimen_130dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/dimen_15dp"
+                android:background="@drawable/bg_yellow_overlay"
+                android:gravity="center"
+                android:paddingTop="@dimen/dimen_8dp"
+                android:paddingBottom="@dimen/dimen_8dp"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_15"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="payment.paymentPlanDashboard.item.button.addBalance"
+                tools:text="Add Balance" />
+
+
+
 
         </LinearLayout>
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayButton
-            android:id="@+id/addBalanceButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/dimen_15dp"
-            android:background="@drawable/bg_yellow_overlay"
-            android:gravity="center"
-            android:paddingEnd="@dimen/dimen_15dp"
-            android:paddingStart="@dimen/dimen_15dp"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="@dimen/respons_button_text_size"
-            app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="payment.paymentPlanDashboard.item.button.addBalance"
-            tools:text="Add Balance" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_1dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toEndOf="@id/progress_layout"
+            android:background="@color/divider_color" />
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayButton
-            android:id="@+id/detailsButton"
-            style="@style/BreezeButtonStyleDark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/dimen_15dp"
-            android:layout_toStartOf="@id/addBalanceButton"
-            android:background="@drawable/blue_border_rounded_button_selector"
-            android:paddingEnd="@dimen/dimen_15dp"
-            android:paddingStart="@dimen/dimen_15dp"
-            android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/text_size_15"
-            app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="payment.paymentPlanDashboard.item.button.detail"
-            tools:text="Details" />
-
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/periodicAmountTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toStartOf="@id/detailsButton"
-            android:textColor="@color/textview_default_textcolor"
-            android:textSize="@dimen/textview_default_textsize"
-            app:customAssetFont="gotham_rounded_medium"
-            tools:text="$400.00/month" />
+    </LinearLayout>
 
 
-    </RelativeLayout>
-
-</RelativeLayout>
+</LinearLayout>

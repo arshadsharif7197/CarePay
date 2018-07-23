@@ -296,8 +296,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     private void initializeLeftNavigation() {
-        ((TextView) findViewById(R.id.checkInLeftNavigationTitle))
-                .setText(Label.getLabel("practice_checkin_header_label"));
+        TextView title = (TextView) findViewById(R.id.checkInLeftNavigationTitle);
+        if(title != null) {
+            title.setText(Label.getLabel("practice_checkin_header_label"));
+        }
         checkInFlowViews = new View[]{
                 findViewById(R.id.checkin_flow_demographics),
                 findViewById(R.id.checkin_flow_consent),

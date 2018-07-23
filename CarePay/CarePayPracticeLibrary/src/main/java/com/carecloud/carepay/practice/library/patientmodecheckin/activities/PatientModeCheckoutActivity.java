@@ -91,6 +91,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.google.gson.Gson;
+import com.squareup.timessquare.CalendarPickerView;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -613,8 +614,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                 endDate,
                 dateUtil.getDate(),
                 dateUtil.addDays(92).getDate(),
-                this
-        );
+                this,
+                CalendarPickerView.SelectionMode.RANGE.name());
 
         displayDialogFragment(dialog, false);
     }
@@ -753,6 +754,11 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                 resourcesToSchedule);
     }
 
+    @Override
+    public void onDateSelected(Date selectedDate) {
+        //Not Implemented
+    }
+
     WorkflowServiceCallback resourcesToScheduleCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -872,12 +878,12 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                 break;
             }
         }
-        appointmentsResultModel.getMetadata().getLinks()
-                .setShop(practiceAppointmentDTO.getMetadata().getLinks().getShop());
+
         String appointmentWorkflowString = DtoHelper.getStringDTO(appointmentsResultModel);
         WorkflowDTO appointmentWorkflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class,
                 appointmentWorkflowString);
         if (appointmentWorkflowDTO != null) {
+            appointmentWorkflowDTO.setMetadata(workflowDTO.getMetadata());
             appointmentWorkflowDTO.setState(workflowDTO.getState());
         }
         return appointmentWorkflowDTO;
