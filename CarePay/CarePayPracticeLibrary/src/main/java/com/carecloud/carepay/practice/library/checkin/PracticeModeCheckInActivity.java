@@ -126,12 +126,11 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     private Handler handler;
 
     CheckedInAppointmentAdapter checkingInAdapter;
-
     CheckedInAppointmentAdapter checkedInAdapter;
     CheckedInAppointmentAdapter checkingOutAdapter;
     CheckedInAppointmentAdapter checkedOutAdapter;
-    CarePayTextView goBackTextView;
 
+    CarePayTextView goBackTextView;
     CarePayTextView filterOnTextView;
     CarePayTextView filterTextView;
     CarePayTextView checkingInCounterTextView;
