@@ -108,7 +108,7 @@ public class NotificationActivity extends MenuPatientActivity
 
     @Override
     public void displayNotification(NotificationItem notificationItem) {
-        switch (notificationItem.getPayload().getNotificationType()) {
+        switch (notificationItem.getMetadata().getNotificationType()) {
             case appointment:
                 AppointmentDTO appointment = notificationItem.getPayload().getAppointment();
                 if (appointmentPresenter != null) {
@@ -120,10 +120,41 @@ public class NotificationActivity extends MenuPatientActivity
                     initPresenter(appointment);
                 }
                 break;
+            case pending_forms:
+                if (notificationItem.getPayload().getReadStatus() == NotificationStatus.unread) {
+                    markNotificationRead(notificationItem);
+                    callFormsScreen(notificationItem);
+                }
+                break;
             default:
                 //todo handle other notification types
                 break;
         }
+    }
+
+    private void callFormsScreen(final NotificationItem notificationItem) {
+        Map<String, String> queryMap = new HashMap<>();
+        getWorkflowServiceHelper().execute(getTransitionForms(), new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                Bundle bundle = new Bundle();
+                bundle.putString("practiceId", notificationItem.getMetadata().getPracticeId());
+                navigateToWorkflow(workflowDTO, bundle);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+                Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+            }
+        }, queryMap);
     }
 
     @Override
@@ -134,7 +165,7 @@ public class NotificationActivity extends MenuPatientActivity
     @Override
     public void navigateToFragment(Fragment fragment, boolean addToBackStack) {
         replaceFragment(R.id.container_main, fragment, addToBackStack);
-        if (fragment instanceof PaymentMethodPrepaymentFragment){
+        if (fragment instanceof PaymentMethodPrepaymentFragment) {
             displayToolbar(false, null);
         }
     }
@@ -219,7 +250,7 @@ public class NotificationActivity extends MenuPatientActivity
         properties.put("notification_id", notificationItem.getPayload().getNotificationId());
         JSONObject payload = new JSONObject(properties);
 
-        getWorkflowServiceHelper().execute(readNotifications, readNotificationsCallback, payload.toString());
+        getWorkflowServiceHelper().execute(readNotifications, readNotificationsCallback, payload.toString(), properties);
 
     }
 

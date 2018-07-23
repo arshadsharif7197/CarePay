@@ -95,6 +95,7 @@ public class NotificationFragment extends BaseFragment
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         supportedNotificationTypes.add(NotificationType.appointment);
+        supportedNotificationTypes.add(NotificationType.pending_forms);
         setHasOptionsMenu(true);
         Bundle args = getArguments();
         if (args != null) {
@@ -353,8 +354,13 @@ public class NotificationFragment extends BaseFragment
                                                        @NonNull Set<NotificationType> notificationTypes) {
         List<NotificationItem> filteredList = new ArrayList<>();
         for (NotificationItem notificationItem : notificationItems) {
-            NotificationType notificationType = notificationItem.getPayload().getNotificationType();
+            NotificationType notificationType = notificationItem.getMetadata().getNotificationType();
             if (notificationType != null && notificationTypes.contains(notificationType)) {
+                if (notificationType.equals(NotificationType.pending_forms)
+                        && notificationItem.getPayload().getPracticeName() == null) {
+                    //Prevent showing old notifications without pending form data
+                    continue;
+                }
                 filteredList.add(notificationItem);
             }
         }
