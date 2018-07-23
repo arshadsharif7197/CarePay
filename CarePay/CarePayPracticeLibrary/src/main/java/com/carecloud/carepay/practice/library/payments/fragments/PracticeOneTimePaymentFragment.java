@@ -105,8 +105,10 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
         }
 
         TextView paymentHeader = (TextView) findViewById(R.id.partialPaymentHeader);
+        currencyFormat.setMinimumFractionDigits(2);
         String maxAmount = Label.getLabel("payment_partial_maximum_amount") +
                 currencyFormat.format(fullAmount);
+        currencyFormat.setMinimumFractionDigits(0);
         paymentHeader.setText(maxAmount);
     }
 
@@ -200,7 +202,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
 
     }
 
-    protected void setSelectedDate(Date selectedDate){
+    protected void setSelectedDate(Date selectedDate) {
         paymentDate = selectedDate;
         DateUtil.getInstance().setDate(paymentDate);
         if (DateUtil.isSameDay(paymentDate, new Date())) {
