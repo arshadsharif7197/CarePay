@@ -57,6 +57,7 @@ public class ApplicationPreferences {
 
     private static ApplicationPreferences instance;
     private String userPassword;
+    private String fullName;
     private TransitionDTO badgeCounterTransition;
     private int messagesBadgeCounter;
     private int formsBadgeCounter;
@@ -396,6 +397,16 @@ public class ApplicationPreferences {
     public void setUserPassword(String userPassword) {
         writeStringToSharedPref(PREFERENCE_PASSWORD, userPassword);
         this.userPassword = userPassword;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setUserFullName(String fullName) {
+        if (!fullName.isEmpty()) {
+            this.fullName = fullName;
+        }
     }
 
     public void setBadgeCounterTransition(TransitionDTO badgeCounterTransition) {
