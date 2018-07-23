@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.demographics.fragments;
+package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.R;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 
 /**
@@ -75,11 +75,13 @@ public class ConfirmDialogFragment extends BaseDialogFragment implements View.On
 
     @Override
     public void onClick(View view) {
-        dismiss();
         if (view.getId() == R.id.button_yes) {
+            dismiss();
             if (callback != null) {
                 callback.onConfirm();
             }
+        } else {
+            cancel();
         }
     }
 

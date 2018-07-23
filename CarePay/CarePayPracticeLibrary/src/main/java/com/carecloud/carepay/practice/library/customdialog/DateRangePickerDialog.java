@@ -35,11 +35,52 @@ public class DateRangePickerDialog extends BasePracticeDialogFragment {
     private String dialogTitle;
     private String cancelString;
     private boolean isCancelable;
+    private CalendarPickerView.SelectionMode selectionMode;
+    private Date selectedDate;
 
     public interface DateRangePickerDialogListener {
         void onRangeSelected(Date start, Date end);
 
         void onDateRangeCancelled();
+
+        void onDateSelected(Date selectedDate);
+    }
+
+    /**
+     * @param dialogTitle   title to be shown at the top of the dialog
+     * @param closeText     label below the close icon
+     * @param startDate     current start date
+     * @param endDate       current end date
+     * @param minDate       minimum date to be picked
+     * @param maxDate       maximum date to be picked
+     * @param selectionMode
+     * @return new instance of DateRangePickerDialog
+     */
+    public static DateRangePickerDialog newInstance(String dialogTitle,
+                                                    String closeText,
+                                                    boolean isCancelable,
+                                                    Date startDate,
+                                                    Date endDate,
+                                                    Date minDate,
+                                                    Date maxDate,
+                                                    DateRangePickerDialogListener callback,
+                                                    String selectionMode) {
+        // Supply inputs as an argument
+        Bundle args = new Bundle();
+        args.putBoolean("isCancelable", isCancelable);
+        args.putString("cancelString", closeText);
+        args.putString("dialogTitle", dialogTitle);
+        args.putSerializable("startDate", startDate);
+        args.putSerializable("endDate", endDate);
+        args.putSerializable("minDate", minDate);
+        args.putSerializable("maxDate", maxDate);
+        args.putString("selectionMode", selectionMode);
+
+        DateRangePickerDialog dialog = new DateRangePickerDialog();
+        dialog.setArguments(args);
+        dialog.setCallback(callback);
+
+        return dialog;
     }
 
     @Override
@@ -55,35 +96,6 @@ public class DateRangePickerDialog extends BasePracticeDialogFragment {
         }
     }
 
-    /**
-     * @param dialogTitle title to be shown at the top of the dialog
-     * @param closeText   label below the close icon
-     * @param startDate   current start date
-     * @param endDate     current end date
-     * @param minDate     minimum date to be picked
-     * @param maxDate     maximum date to be picked
-     * @return new instance of DateRangePickerDialog
-     */
-    public static DateRangePickerDialog newInstance(String dialogTitle, String closeText,
-                                                    boolean isCancelable, Date startDate, Date endDate, Date minDate, Date maxDate,
-                                                    DateRangePickerDialogListener callback) {
-        // Supply inputs as an argument
-        Bundle args = new Bundle();
-        args.putBoolean("isCancelable", isCancelable);
-        args.putString("cancelString", closeText);
-        args.putString("dialogTitle", dialogTitle);
-        args.putSerializable("startDate", startDate);
-        args.putSerializable("endDate", endDate);
-        args.putSerializable("minDate", minDate);
-        args.putSerializable("maxDate", maxDate);
-
-        DateRangePickerDialog dialog = new DateRangePickerDialog();
-        dialog.setArguments(args);
-        dialog.setCallback(callback);
-
-        return dialog;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +108,7 @@ public class DateRangePickerDialog extends BasePracticeDialogFragment {
         this.minDate = (Date) arguments.getSerializable("minDate");
         this.maxDate = (Date) arguments.getSerializable("maxDate");
         this.isCancelable = arguments.getBoolean("isCancelable");
+        this.selectionMode = CalendarPickerView.SelectionMode.valueOf(arguments.getString("selectionMode"));
 
         checkDates();
     }
@@ -122,7 +135,7 @@ public class DateRangePickerDialog extends BasePracticeDialogFragment {
             endDate = today;
         }
         // If Start Date is after End Date, set End Date to Start Date
-        if(startDate.after(endDate)){
+        if (startDate.after(endDate)) {
             //switch them
             Date temp = endDate;
             endDate = startDate;
@@ -165,11 +178,15 @@ public class DateRangePickerDialog extends BasePracticeDialogFragment {
         applyDateRangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (null != callback) {
-                    if(endDate == null){
-                        endDate = startDate;
+                if (callback != null) {
+                    if (selectionMode == CalendarPickerView.SelectionMode.RANGE) {
+                        if (endDate == null) {
+                            endDate = startDate;
+                        }
+                        callback.onRangeSelected(startDate, endDate);
+                    } else {
+                        callback.onDateSelected(selectedDate);
                     }
-                    callback.onRangeSelected(startDate, endDate);
                 }
                 dismiss();
             }
@@ -187,11 +204,16 @@ public class DateRangePickerDialog extends BasePracticeDialogFragment {
         selectedDates.add(startDate);
         selectedDates.add(endDate);
 
+
         calendarPickerView = (CalendarPickerView) view.findViewById(com.carecloud.carepaylibrary.R.id.calendarView);
         calendarPickerView.setOnInvalidDateSelectedListener(null);
-        calendarPickerView.init(minDate, maxDate)
-                .inMode(CalendarPickerView.SelectionMode.RANGE)
-                .withSelectedDates(selectedDates);
+        if (selectionMode == CalendarPickerView.SelectionMode.RANGE) {
+            calendarPickerView.init(minDate, maxDate)
+                    .inMode(selectionMode)
+                    .withSelectedDates(selectedDates);
+        } else {
+            calendarPickerView.init(minDate, maxDate).inMode(selectionMode);
+        }
 
         calendarPickerView.setOnDateSelectedListener(new CalendarPickerView.OnDateSelectedListener() {
             @Override
@@ -207,20 +229,23 @@ public class DateRangePickerDialog extends BasePracticeDialogFragment {
     }
 
     private void updateSelectedDates() {
-        List<Date> dateList = calendarPickerView.getSelectedDates();
-
-        if (dateList.size() > 1) {
-            startDate = dateList.get(0);
-            endDate = dateList.get(dateList.size() - 1);
-        } else if (dateList.size() == 1) {
-            if (startDate != null) {
-                endDate = dateList.get(0);
-            } else {
+        if (selectionMode == CalendarPickerView.SelectionMode.RANGE) {
+            List<Date> dateList = calendarPickerView.getSelectedDates();
+            if (dateList.size() > 1) {
                 startDate = dateList.get(0);
+                endDate = dateList.get(dateList.size() - 1);
+            } else if (dateList.size() == 1) {
+                if (startDate != null) {
+                    endDate = dateList.get(0);
+                } else {
+                    startDate = dateList.get(0);
+                }
             }
+            applyDateRangeButton.setEnabled(startDate != null);
+        } else {
+            selectedDate = calendarPickerView.getSelectedDate();
+            applyDateRangeButton.setEnabled(selectedDate != null);
         }
-
-        applyDateRangeButton.setEnabled(startDate != null);
     }
 
     /**
@@ -230,6 +255,7 @@ public class DateRangePickerDialog extends BasePracticeDialogFragment {
         /*removing previously selected dates*/
         startDate = null;
         endDate = null;
+        selectedDate = null;
     }
 
     /**

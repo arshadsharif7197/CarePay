@@ -11,7 +11,7 @@ import java.util.Date;
  * Created by lmenendez on 2/7/18
  */
 
-public interface OneTimePaymentInterface extends PaymentMethodInterface{
+public interface OneTimePaymentInterface extends PaymentMethodInterface {
     void onMakeOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
 
     void onStartOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
@@ -23,6 +23,8 @@ public interface OneTimePaymentInterface extends PaymentMethodInterface{
     void onScheduleOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO, Date paymentDate);
 
     void showScheduledPaymentConfirmation(WorkflowDTO workflowDTO);
+
+    void showDeleteScheduledPaymentConfirmation(WorkflowDTO workflowDTO);
 
     void showPaymentConfirmation(WorkflowDTO workflowDTO, boolean isOneTimePayment);
 
