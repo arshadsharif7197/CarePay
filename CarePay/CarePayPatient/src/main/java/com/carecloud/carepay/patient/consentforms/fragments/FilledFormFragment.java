@@ -14,13 +14,11 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.checkout.BaseWebFormFragment;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.consentforms.models.payload.FormDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
-import com.carecloud.carepaylibray.intake.models.AppointmentMetadataModel;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -37,7 +35,6 @@ public class FilledFormFragment extends BaseWebFormFragment {
 
     private ConsentFormDTO consentFormDto;
     private ConsentFormInterface callback;
-    private List<PracticeForm> formsList;
     private List<JsonObject> jsonFormSaveResponseArray = new ArrayList<>();
     private FormDTO formDto;
 
@@ -79,8 +76,8 @@ public class FilledFormFragment extends BaseWebFormFragment {
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         lastFormButtonLabel = Label.getLabel("adhoc_sign_form_button_label");
-        nextButton.setVisibility(getArguments()
-                .getBoolean("showSignButton", false) ? View.VISIBLE : View.GONE);
+        boolean showSignButton = getArguments().getBoolean("showSignButton", false);
+        nextButton.setVisibility(showSignButton ? View.VISIBLE : View.GONE);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         ((TextView) toolbar.findViewById(R.id.toolbar_title))
@@ -104,7 +101,7 @@ public class FilledFormFragment extends BaseWebFormFragment {
             if (!jsonFormSaveResponseArray.isEmpty() && jsonFormSaveResponseArray.size() > displayedFormsIndex) {
                 userResponse = jsonFormSaveResponseArray.get(displayedFormsIndex);
             } else {
-                String uuid = payload.get("uuid").toString().replace("\"", "");
+                String uuid = payload.get("uuid").getAsString();
                 for (ConsentFormUserResponseDTO response : filledForms) {
                     if (uuid.equals(response.getFormId())) {
                         JsonObject json = new JsonObject();
