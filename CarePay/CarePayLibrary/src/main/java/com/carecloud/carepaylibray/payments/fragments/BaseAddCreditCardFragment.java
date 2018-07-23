@@ -113,7 +113,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         Gson gson = new Gson();
         String payloadString;
         if (arguments != null) {
-            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
+            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
             if (paymentsModel != null) {
                 merchantServicesList = paymentsModel.getPaymentPayload().getMerchantServices();
             }
@@ -319,9 +319,12 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 setAsDefaultCheckBox.setEnabled(isChecked);
-                if (!isChecked) {
-                    setAsDefaultCheckBox.setChecked(false);
+                setAsDefaultCheckBox.setChecked(false);
+                if(isChecked && paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()){
+                    setAsDefaultCheckBox.setChecked(true);
+                    setAsDefaultCheckBox.setEnabled(false);
                 }
+
             }
         });
 

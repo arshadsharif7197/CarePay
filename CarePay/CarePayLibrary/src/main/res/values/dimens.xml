@@ -467,5 +467,6 @@
     <dimen name="fragmentDialogPaddingBottom">20dp</dimen>
     <dimen name="fragmentDialogPaddingTop">0dp</dimen>
     <dimen name="closeIconSize">19dp</dimen>
+    <dimen name="calendarSelectedDimen">10dp</dimen>
 
 </resources>

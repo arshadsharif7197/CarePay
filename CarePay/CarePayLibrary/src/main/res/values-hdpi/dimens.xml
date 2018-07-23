@@ -3,4 +3,5 @@
     <dimen name="confirmationNumberTextSize">10sp</dimen>
     <dimen name="icon_check_size">100dp</dimen>
     <dimen name="confirmationPracticeNameMargin">10dp</dimen>
+    <dimen name="calendarSelectedDimen">10dp</dimen>
 </resources>

@@ -33,6 +33,7 @@ import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.AddExistingPaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
+import com.carecloud.carepaylibray.payments.fragments.EditOneTimePaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.OneTimePaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
@@ -63,6 +64,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.wallet.MaskedWallet;
 
 import java.util.Date;
@@ -562,17 +564,19 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload()
                 .getScheduledPaymentModel();
-        List<ScheduledPaymentModel> scheduledPaymentModels = this.paymentsDTO.getPaymentPayload()
-                .getScheduledOneTimePayments();
-        for (ScheduledPaymentModel scheduledPaymentModel : scheduledPaymentModels) {
-            if (scheduledPaymentModel.getMetadata().getOneTimePaymentId()
-                    .equals(scheduledPayment.getMetadata().getOneTimePaymentId())) {
+        if(scheduledPayment.getMetadata().getOneTimePaymentId() == null &&
+                !paymentsModel.getPaymentPayload().getScheduledOneTimePayments().isEmpty()){
+            scheduledPayment = paymentsModel.getPaymentPayload().getScheduledOneTimePayments().get(0);
+        }
+        List<ScheduledPaymentModel> scheduledPaymentModels = this.paymentsDTO.getPaymentPayload().getScheduledOneTimePayments();
+        for(ScheduledPaymentModel scheduledPaymentModel : scheduledPaymentModels){
+            if(scheduledPaymentModel.getMetadata().getOneTimePaymentId().equals(scheduledPayment.getMetadata().getOneTimePaymentId())){
                 scheduledPaymentModels.remove(scheduledPayment);
                 break;
             }
         }
         scheduledPaymentModels.add(scheduledPayment);
-        completePaymentPlanProcess(workflowDTO);
+        completePaymentProcess(workflowDTO);
 
         DateUtil.getInstance().setDateRaw(scheduledPayment.getPayload().getPaymentDate());
         String message = String.format(Label.getLabel("payment.oneTimePayment.schedule.success"),
@@ -580,6 +584,12 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                 DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal());
         showSuccessToast(message);
 
+    }
+
+    @Override
+    public void showDeleteScheduledPaymentConfirmation(WorkflowDTO workflowDTO) {
+        SystemUtil.hideSoftKeyboard(this);
+        completePaymentProcess(workflowDTO);
     }
 
     @Override
@@ -683,9 +693,15 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel) {
+    public void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
         addFragment(PaymentPlanPaymentMethodFragment
-                .newInstance(paymentsModel, new PaymentPlanDTO(), true), true);
+                .newInstance(paymentsModel, paymentPlanDTO, true), true);
+    }
+
+    @Override
+    public void onStartEditScheduledPayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO, ScheduledPaymentModel scheduledPaymentModel) {
+        new EditOneTimePaymentDialog(this, paymentsDTO, paymentPlanDTO,
+                scheduledPaymentModel, this).show();
     }
 
     @Override

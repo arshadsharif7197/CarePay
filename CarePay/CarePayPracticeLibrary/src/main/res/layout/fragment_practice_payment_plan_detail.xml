@@ -227,6 +227,66 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+                <LinearLayout
+                    android:id="@+id/scheduledPaymentLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dimen_10dp"
+                        android:layout_marginStart="@dimen/dimen_15dp"
+                        android:layout_marginTop="@dimen/dimen_25dp"
+                        android:textAllCaps="true"
+                        android:textColor="@color/textview_default_textcolor"
+                        android:textSize="@dimen/text_size_18sp"
+                        app:customAssetFont="proxima_nova_semi_bold"
+                        breeze:textKey="payment.paymentPlanDetails.section.title.scheduledPayment"
+                        tools:text="Scheduled Payment" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/dimen_24dp"
+                        android:paddingEnd="@dimen/dimen_24dp"
+                        android:paddingTop="@dimen/dimen_18dp"
+                        android:paddingBottom="@dimen/dimen_18dp">
+
+                        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                            android:id="@+id/scheduledPaymentMessage"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:textSize="@dimen/text_size_24sp"
+                            android:textColor="@color/textview_default_textcolor"
+                            app:customAssetFont="gotham_rounded_book"
+                            tools:text="$20.00 scheduled for 04/20/2018"/>
+
+                        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                            android:id="@+id/editScheduledPaymentButton"
+                            style="@style/BreezeButtonStyleDark"
+                            android:layout_width="@dimen/dimen_130dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dimen_15dp"
+                            android:background="@drawable/blue_border_rounded_button_selector"
+                            android:paddingTop="@dimen/dimen_8dp"
+                            android:paddingBottom="@dimen/dimen_8dp"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/text_size_15"
+                            app:customAssetFont="gotham_rounded_medium"
+                            breeze:textKey="payment.paymentPlanDashboard.item.button.detail"
+                            tools:text="Details" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/detailsLabel"
                     android:layout_width="wrap_content"
@@ -237,7 +297,7 @@
                     android:textAllCaps="true"
                     android:textColor="@color/textview_default_textcolor"
                     android:textSize="@dimen/text_size_18sp"
-                    app:customAssetFont="proxima_nova_extra_bold"
+                    app:customAssetFont="proxima_nova_semi_bold"
                     breeze:textKey="payment_responsibility_details"
                     tools:text="Details" />
 

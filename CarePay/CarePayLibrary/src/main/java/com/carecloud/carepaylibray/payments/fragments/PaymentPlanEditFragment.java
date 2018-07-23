@@ -174,7 +174,8 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         paymentMethodEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onEditPaymentPlanPaymentMethod(paymentsModel);
+                callback.onEditPaymentPlanPaymentMethod(paymentsModel, paymentPlanDTO);
+                dismiss();
             }
         });
     }
