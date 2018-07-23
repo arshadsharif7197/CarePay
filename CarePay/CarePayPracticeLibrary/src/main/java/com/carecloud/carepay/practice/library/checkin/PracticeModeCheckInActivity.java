@@ -72,6 +72,7 @@ import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
@@ -1070,6 +1071,14 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                 }
             }
         });
+        fragment.setChangePaymentMethodListener(new LargeAlertDialog.LargeAlertInterface() {
+            @Override
+            public void onActionButton() {
+                PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
+                        .newInstance(paymentsModel, paymentPlanDTO, false, paymentDate);
+                displayDialogFragment(fragment, false);
+            }
+        });
         displayDialogFragment(fragment, false);
     }
 
@@ -1093,8 +1102,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload()
                 .getScheduledPaymentModel();
         List<ScheduledPaymentModel> scheduledPaymentModels = this.selectedPaymentModel.getPaymentPayload().getScheduledOneTimePayments();
-        for(ScheduledPaymentModel scheduledPaymentModel : scheduledPaymentModels){
-            if(scheduledPaymentModel.getMetadata().getOneTimePaymentId().equals(scheduledPayment.getMetadata().getOneTimePaymentId())){
+        for (ScheduledPaymentModel scheduledPaymentModel : scheduledPaymentModels) {
+            if (scheduledPaymentModel.getMetadata().getOneTimePaymentId().equals(scheduledPayment.getMetadata().getOneTimePaymentId())) {
                 scheduledPaymentModels.remove(scheduledPayment);
                 break;
             }
@@ -1205,7 +1214,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     @Override
     public void onPaymentPlanEdited(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        if(paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()){
+        if (paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()) {
             //no changes to plan
             return;
         }

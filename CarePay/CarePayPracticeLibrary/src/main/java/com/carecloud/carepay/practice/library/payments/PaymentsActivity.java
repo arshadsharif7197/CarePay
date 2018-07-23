@@ -63,6 +63,7 @@ import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
@@ -908,6 +909,14 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 } else {
                     onScheduleOneTimePayment(paymentsModel, paymentPlanDTO, paymentDate);
                 }
+            }
+        });
+        fragment.setChangePaymentMethodListener(new LargeAlertDialog.LargeAlertInterface() {
+            @Override
+            public void onActionButton() {
+                PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
+                        .newInstance(paymentsModel, paymentPlanDTO, false, paymentDate);
+                displayDialogFragment(fragment, false);
             }
         });
         displayDialogFragment(fragment, false);
