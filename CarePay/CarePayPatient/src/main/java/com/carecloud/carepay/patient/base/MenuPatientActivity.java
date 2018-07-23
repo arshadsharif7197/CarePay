@@ -107,21 +107,6 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         navigationView.getMenu().findItem(R.id.nav_logout).setTitle(Label.getLabel("navigation_link_sign_out"));
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        setUserImage();
-        setUserFullName();
-        if (appointmentsDrawerUserIdTextView != null) {
-            String userId = ApplicationPreferences.getInstance().getUserId();
-            if (userId != null) {
-                appointmentsDrawerUserIdTextView.setText(userId);
-            } else {
-                appointmentsDrawerUserIdTextView.setText("");
-            }
-        }
-    }
-
     private void setUserImage() {
         String imageUrl = ApplicationPreferences.getInstance().getUserPhotoUrl();
         ImageView userImageView = (ImageView) navigationView.getHeaderView(0)
